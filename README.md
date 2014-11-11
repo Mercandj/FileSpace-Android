@@ -1,7 +1,7 @@
-J.A.R.V.I.S
+J.A.R.V.I.S   ANDROID
 =====================
 
-**_Unfinished project, still in development_**
+**_Unfinished project, still in development_** [API Required](https://github.com/Mercandj/Jarvis-API)
 
 <p align="center">
 <img src="https://raw.github.com/Mercandj/Jarvis-Android/master/screenshot/1.png" width="250" />
@@ -23,7 +23,7 @@ Remote and secure file manager. (upload files + download files + management)
 * Theme : Before Android 5.0 Lollipop Holo.Light, after Material.Light !!!!
 
 
-## Required
+## REQUIRED
 
 * [Jarvis Rest API PHP](https://github.com/Mercandj/Jarvis-API)
 
