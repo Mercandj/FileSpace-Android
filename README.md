@@ -1,4 +1,4 @@
-J.A.R.V.I.S   ANDROID
+J.A.R.V.I.S - ANDROID
 =====================
 
 **_Unfinished project, still in development_** [API Required](https://github.com/Mercandj/Jarvis-API)
