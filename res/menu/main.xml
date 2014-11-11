@@ -1,0 +1,31 @@
+<!--
+	Personal Project : Control server
+		MERCANDALLI Jonathan
+-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_delete"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_action_delete"/>
+    
+    <item
+        android:id="@+id/action_add"
+        android:icon="@android:drawable/ic_menu_add"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_action_add"/>
+    
+    <item
+        android:id="@+id/action_download"
+        android:icon="@android:drawable/ic_menu_save"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_action_download"/>
+    
+    <item
+        android:id="@+id/action_upload"
+        android:icon="@android:drawable/ic_menu_upload_you_tube"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_action_upload"/>
+
+</menu>

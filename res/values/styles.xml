@@ -1,0 +1,21 @@
+<!--
+	Personal Project : Control server
+		MERCANDALLI Jonathan
+-->
+<resources>
+
+    <style name="AppTheme" parent="AppBaseTheme"></style>
+    
+    <style name="whiteedittext" parent="@android:style/Widget.Button">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#41443A</item>
+        <item name="android:gravity">left</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">0</item>
+        <item name="android:background">@drawable/whiteedittext</item>
+        <item name="android:padding">10dip</item>
+    </style>
+
+</resources>

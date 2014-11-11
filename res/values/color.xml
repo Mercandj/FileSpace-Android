@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Personal Project : Control server
+		MERCANDALLI Jonathan
+
+-->
+<resources>    
+    <color name="actionbar">#26AEEE</color>
+    <color name="notificationsbar">#01579b</color>    
+</resources>

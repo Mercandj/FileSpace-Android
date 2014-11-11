@@ -1,0 +1,40 @@
+<!--
+	Personal Project : Control server
+		MERCANDALLI Jonathan
+-->
+<resources>
+
+    <string name="app_name" translate="false">Jarvis</string>
+    <string name="app_name_full" translate="false">Just A Remote Very Intelligent System</string>
+    <string name="author_full_name" translate="false">Jonathan Mercandalli</string>
+    
+    <string name="image_description">Description Image</string>
+    
+    <string name="dialog_server_route">Server Route</string>
+    <string name="dialog_server_url">Server URL</string>
+    <string name="dialog_username">Username</string>
+    <string name="dialog_password">Password</string>
+    <string name="dialog_register">Register</string>
+    <string name="dialog_login">Log in</string>
+    <string name="dialog_json">Json</string>
+    
+    <string name="action_failed">Action failed</string>
+    <string name="no_file">No File</string>
+    <string name="no_file_server">No File on server.</string>
+    <string name="no_file_local">No File on local Jarvis folder.</string>
+    <string name="file">File</string>
+    <string name="request">Request</string>
+    <string name="signin">Sign in</string>
+    <string name="login">Log in</string>
+    <string name="cancel">Cancel</string>
+    <string name="up">Up</string>
+    <string name="console">Console</string>
+    <string name="server_error">No server response.</string>
+    <string name="method">Method</string>
+    
+    <string name="menu_action_delete">Delete</string>
+    <string name="menu_action_add">Add</string>
+    <string name="menu_action_upload">Upload</string>
+    <string name="menu_action_download">Download</string>
+    
+</resources>
