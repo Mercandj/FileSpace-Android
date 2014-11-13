@@ -24,5 +24,8 @@
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
+    
+    <style name="AppBaseTheme_NoActionBar" parent="@android:Theme.Holo.Light.NoActionBar">
+    </style>
 
 </resources>

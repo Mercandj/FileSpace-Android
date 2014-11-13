@@ -23,7 +23,6 @@ public class Config {
 
 	public final String localFolderName			= "Jarvis";
 	public final String aboutURL 				= "http://mercandalli.com/";
-	public boolean isLoginSucceed 				= false;
 	public final String routeFile	 			= "file";
 	public final String routeUserRegister 		= "user";
 	public final String routeUserLogin 			= "user";

@@ -5,6 +5,7 @@
 <resources>
 
     <style name="AppTheme" parent="AppBaseTheme"></style>
+    <style name="AppTheme_NoActionBar" parent="AppBaseTheme_NoActionBar"></style>
     
     <style name="whiteedittext" parent="@android:style/Widget.Button">
         <item name="android:textSize">15sp</item>

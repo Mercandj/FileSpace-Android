@@ -48,8 +48,7 @@ public class FileManagerFragmentServer extends Fragment {
         message = (TextView) rootView.findViewById(R.id.message);
         listView = (ListView) rootView.findViewById(R.id.listView);
         
-        if(this.app.config.isLoginSucceed)
-        	refreshList();
+        refreshList();
         
         return rootView;
     }	

@@ -5,12 +5,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="AppBaseTheme" parent="android:Theme.Material.Light">
-        <!--
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:statusBarColor">#000</item>
-        -->
-        
         <item name="android:statusBarColor">@color/notificationsbar</item>
         
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
@@ -24,6 +18,9 @@
 
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/actionbar</item>        
+    </style>
+    
+    <style name="AppBaseTheme_NoActionBar" parent="@android:Theme.Material.Light.NoActionBar">
     </style>
     
 </resources>
