@@ -15,9 +15,13 @@ import org.json.JSONObject;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,10 +40,11 @@ public class FileManagerFragmentServer extends Fragment {
 	List<ModelFile> listModelFile;
 	ProgressBar circulerProgressBar;
 	TextView message;
+	SwipeRefreshLayout swipeRefreshLayout;
 	
 	public FileManagerFragmentServer(Application app) {
 		this.app = app;
-	}	
+	}
 	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {		
@@ -49,6 +54,19 @@ public class FileManagerFragmentServer extends Fragment {
         listView = (ListView) rootView.findViewById(R.id.listView);
         
         refreshList();
+        
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+				android.R.color.holo_green_light,
+				android.R.color.holo_orange_light,
+				android.R.color.holo_red_light);
+		
+        swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				refreshList();
+			}
+		});
         
         return rootView;
     }	
@@ -64,11 +82,7 @@ public class FileManagerFragmentServer extends Fragment {
 						if(json.has("result")) {							
 							JSONArray array = json.getJSONArray("result");
 							for(int i=0; i<array.length();i++) {
-								ModelFile modelFile = new ModelFile();
-								JSONObject fileJson = array.getJSONObject(i);
-								if(fileJson.has("url")) {
-									modelFile.url = fileJson.getString("url");
-								}
+								ModelFile modelFile = new ModelFile(app, array.getJSONObject(i));
 								listModelFile.add(modelFile);
 							}
 							circulerProgressBar.setVisibility(View.INVISIBLE);
@@ -94,6 +108,14 @@ public class FileManagerFragmentServer extends Fragment {
 				message.setVisibility(View.GONE);
 			
 			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, listModelFile ));
+			listView.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					listModelFile.get(position).execute();
+				}
+			});
+			
+			swipeRefreshLayout.setRefreshing(false);
 		}
 	}
 }
