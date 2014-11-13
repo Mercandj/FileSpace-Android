@@ -30,6 +30,7 @@ import com.mercandalli.jarvis.net.TaskPost;
 public class ActivityRegisterLogin extends Application {
 	
 	private boolean firstUse = true;
+	private boolean requestLaunch = false; // Block the second task if one launch
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,10 @@ public class ActivityRegisterLogin extends Application {
         ((ImageView) this.findViewById(R.id.signin)).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				if(requestLaunch)
+					return;
+				requestLaunch = true;
+					
 				ModelUser user = new ModelUser();
 				
 				if(!((EditText) ActivityRegisterLogin.this.findViewById(R.id.username)).getText().toString().equals("")) {
@@ -109,6 +114,7 @@ public class ActivityRegisterLogin extends Application {
 								else
 									Toast.makeText(ActivityRegisterLogin.this, ActivityRegisterLogin.this.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
 							} catch (JSONException e) {e.printStackTrace();}
+							requestLaunch = false;
 						}						
 					}, parameters)).execute();
 				}
@@ -127,8 +133,10 @@ public class ActivityRegisterLogin extends Application {
 								else
 									Toast.makeText(ActivityRegisterLogin.this, ActivityRegisterLogin.this.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
 							} catch (JSONException e) {e.printStackTrace();}
+							requestLaunch = false;
 						}
-					})).execute();				
+					})).execute();
+				
 			}        	
         });
         
