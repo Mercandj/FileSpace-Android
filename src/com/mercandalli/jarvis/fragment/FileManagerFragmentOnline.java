@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mercandalli.jarvis.Application;
 import com.mercandalli.jarvis.R;
@@ -104,6 +105,8 @@ public class FileManagerFragmentOnline extends Fragment {
 							circulerProgressBar.setVisibility(View.INVISIBLE);
 						}
 					}
+					else
+						Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}

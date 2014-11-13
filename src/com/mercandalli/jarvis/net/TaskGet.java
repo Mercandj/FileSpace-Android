@@ -31,7 +31,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.mercandalli.jarvis.Application;
-import com.mercandalli.jarvis.R;
 import com.mercandalli.jarvis.listener.IPostExecuteListener;
 
 /**
@@ -137,8 +136,7 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 				if(json.has("toast"))										
 					Toast.makeText(app, json.getString("toast"), Toast.LENGTH_SHORT).show();				
 			} catch (JSONException e) {
-				e.printStackTrace();
-				Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+				e.printStackTrace();				
 				this.listener.execute(null, response);
 			}
 		}

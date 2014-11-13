@@ -1,3 +1,9 @@
+/**
+ * Personal Project : Control server
+ *
+ * MERCANDALLI Jonathan
+ */
+
 package com.mercandalli.jarvis.model;
 
 import java.io.IOException;
@@ -17,9 +23,12 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.mercandalli.jarvis.Application;
+import com.mercandalli.jarvis.dialog.DialogShowTxt;
 import com.mercandalli.jarvis.listener.IBitmapListener;
+import com.mercandalli.jarvis.listener.IPostExecuteListener;
 import com.mercandalli.jarvis.net.Base64;
 import com.mercandalli.jarvis.net.TaskDownloadImage;
+import com.mercandalli.jarvis.net.TaskGet;
 
 public class ModelFile {
 	
@@ -76,8 +85,17 @@ public class ModelFile {
 	
 	public void execute() {
 		switch(this.type) {
-		case "mp3":
+		
+		case "txt":		
+			new TaskGet(this.app, this.app.config.getUrlServer()+this.app.config.routeFile+"/"+id, new IPostExecuteListener() {
+				@Override
+				public void execute(JSONObject json, String body) {
+					new DialogShowTxt(app, body);
+				}				
+			}).execute();			
+			break;
 			
+		case "mp3":			
 			try {
 				Uri uri = Uri.parse(this.app.config.getUrlServer()+this.app.config.routeFile+"/"+id);
 				
