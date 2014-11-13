@@ -19,9 +19,11 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,11 +31,12 @@ import android.widget.TextView;
 import com.mercandalli.jarvis.Application;
 import com.mercandalli.jarvis.R;
 import com.mercandalli.jarvis.adapter.AdapterModelFile;
+import com.mercandalli.jarvis.dialog.DialogUpload;
 import com.mercandalli.jarvis.listener.IPostExecuteListener;
 import com.mercandalli.jarvis.model.ModelFile;
 import com.mercandalli.jarvis.net.TaskGet;
 
-public class FileManagerFragmentServer extends Fragment {
+public class FileManagerFragmentOnline extends Fragment {
 	
 	Application app;
 	ListView listView;
@@ -42,7 +45,7 @@ public class FileManagerFragmentServer extends Fragment {
 	TextView message;
 	SwipeRefreshLayout swipeRefreshLayout;
 	
-	public FileManagerFragmentServer(Application app) {
+	public FileManagerFragmentOnline(Application app) {
 		this.app = app;
 	}
 	
@@ -65,6 +68,19 @@ public class FileManagerFragmentServer extends Fragment {
 			@Override
 			public void onRefresh() {
 				refreshList();
+			}
+		});
+        
+        ((ImageView) rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				app.dialog = new DialogUpload(app, new IPostExecuteListener() {
+					@Override
+					public void execute(JSONObject json, String body) {
+						if(json!=null)
+							refreshList();
+					}
+				});
 			}
 		});
         

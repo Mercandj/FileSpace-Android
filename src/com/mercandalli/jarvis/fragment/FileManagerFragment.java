@@ -75,7 +75,7 @@ public class FileManagerFragment extends Fragment {
         public Fragment getItem(int i) {
 			Fragment fragment = null;
 			switch(i) {
-			case 0:		fragment = new FileManagerFragmentServer(FileManagerFragment.this.app); 	break;
+			case 0:		fragment = new FileManagerFragmentOnline(FileManagerFragment.this.app); 	break;
 			case 1:		fragment = new FileManagerFragmentLocal(FileManagerFragment.this.app);		break;
 			default:	fragment = new FileManagerFragmentLocal(FileManagerFragment.this.app);		break;
 			}
@@ -101,8 +101,8 @@ public class FileManagerFragment extends Fragment {
 	
 	public void refreshListServer() {
 		if(this.listFragment[0]!=null)
-			if(this.listFragment[0] instanceof FileManagerFragmentServer) {
-				FileManagerFragmentServer fragmentFileManagerFragment = (FileManagerFragmentServer) this.listFragment[0];
+			if(this.listFragment[0] instanceof FileManagerFragmentOnline) {
+				FileManagerFragmentOnline fragmentFileManagerFragment = (FileManagerFragmentOnline) this.listFragment[0];
 				fragmentFileManagerFragment.refreshList();
 			}
 	}
