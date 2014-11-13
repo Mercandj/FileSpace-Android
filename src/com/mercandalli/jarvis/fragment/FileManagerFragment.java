@@ -107,6 +107,14 @@ public class FileManagerFragment extends Fragment {
 			}
 	}
 	
+	public void updateAdapterListServer() {
+		if(this.listFragment[0]!=null)
+			if(this.listFragment[0] instanceof FileManagerFragmentOnline) {
+				FileManagerFragmentOnline fragmentFileManagerFragment = (FileManagerFragmentOnline) this.listFragment[0];
+				fragmentFileManagerFragment.updateAdapter();
+			}
+	}
+	
 	public void add() {
 		app.dialog = new DialogUpload(app, new IPostExecuteListener() {
 			@Override

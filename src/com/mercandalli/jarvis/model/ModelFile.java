@@ -14,9 +14,12 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.util.Log;
 
 import com.mercandalli.jarvis.Application;
+import com.mercandalli.jarvis.listener.IBitmapListener;
 import com.mercandalli.jarvis.net.Base64;
+import com.mercandalli.jarvis.net.TaskDownloadImage;
 
 public class ModelFile {
 	
@@ -43,6 +46,7 @@ public class ModelFile {
 	
 	public ModelFile(Application app, JSONObject json) {
 		this.app = app;
+		
 		try {
 			if(json.has("id"))
 				this.id = json.getInt("id");
@@ -53,11 +57,26 @@ public class ModelFile {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+		
+		
+		switch(this.type) {
+		case "jpg":
+			new TaskDownloadImage(app, this.app.config.getUrlServer()+this.app.config.routeFile+"/"+this.id, new IBitmapListener() {
+				@Override
+				public void execute(Bitmap bitmap) {
+					ModelFile.this.bitmap = bitmap;
+					
+					Log.d("2 COUCOU coucou", "coucou "+bitmap);
+					ModelFile.this.app.updateAdapters();
+				}
+			}).execute();
+			break;
+		}
 	}
 	
 	public void execute() {
 		switch(this.type) {
-		case "mp3":			
+		case "mp3":
 			
 			try {
 				Uri uri = Uri.parse(this.app.config.getUrlServer()+this.app.config.routeFile+"/"+id);

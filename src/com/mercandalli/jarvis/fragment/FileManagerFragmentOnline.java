@@ -113,7 +113,7 @@ public class FileManagerFragmentOnline extends Fragment {
 			
 	}
 	
-	private void updateAdapter() {
+	public void updateAdapter() {
 		if(listView!=null && listModelFile!=null) {
 			
 			if(listModelFile.size()==0) {

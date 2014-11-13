@@ -10,14 +10,12 @@ import java.io.File;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,7 +34,6 @@ import com.mercandalli.jarvis.listener.IBitmapListener;
 public class TaskDownloadImage extends AsyncTask<Void, Void, Void> {
 
 	String url;
-	List<BasicNameValuePair> parameters;
 	Bitmap bitmap;
 	IBitmapListener listener;
 	File file;
@@ -63,13 +60,13 @@ public class TaskDownloadImage extends AsyncTask<Void, Void, Void> {
 	public Bitmap drawable_from_url_Authorization(String url) {
 		Bitmap x = null;
 		HttpResponse response;
-		HttpPost httppost = new HttpPost(url.replaceAll(" ", "%20"));
+		HttpGet httpget = new HttpGet(url);
     	StringBuilder authentication = new StringBuilder().append(app.config.getUser().getAccessLogin()).append(":").append(app.config.getUser().getAccessPassword());
         String result = Base64.encodeBytes(authentication.toString().getBytes());
-        httppost.setHeader("Authorization", "Basic " + result);
+        httpget.setHeader("Authorization", "Basic " + result);
 		HttpClient httpclient = new DefaultHttpClient();
 		try {
-			response = httpclient.execute(httppost);
+			response = httpclient.execute(httpget);
 			InputStream inputStream = response.getEntity().getContent();
 			x = BitmapFactory.decodeStream(new FlushedInputStream(inputStream));
 		} catch (ClientProtocolException e) {

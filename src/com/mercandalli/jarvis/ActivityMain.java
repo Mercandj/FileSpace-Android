@@ -29,4 +29,12 @@ public class ActivityMain extends ApplicationDrawer {
 		this.finish();
 		return super.onKeyDown(keyCode, event);
 	}
+	
+	@Override
+	public void updateAdapters() {
+		if(fragment instanceof FileManagerFragment) {
+			FileManagerFragment fragmentFileManager = (FileManagerFragment) fragment;					
+			fragmentFileManager.updateAdapterListServer();					
+		}
+	}
 }

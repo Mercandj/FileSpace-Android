@@ -29,7 +29,7 @@ import com.mercandalli.jarvis.navdrawer.NavDrawerItem;
 import com.mercandalli.jarvis.navdrawer.NavDrawerItemListe;
 import com.mercandalli.jarvis.navdrawer.NavDrawerListAdapter;
 
-public class ApplicationDrawer extends Application {	
+public abstract class ApplicationDrawer extends Application {	
 	
 	public static final int TYPE_PROFIL		= 0;
 	public static final int TYPE_NORMAL	 	= 1;
@@ -241,4 +241,6 @@ public class ApplicationDrawer extends Application {
     	}
         return super.onPrepareOptionsMenu(menu);
     }
+    
+    public abstract void updateAdapters();
 }

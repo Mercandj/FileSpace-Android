@@ -168,4 +168,9 @@ public class ActivityRegisterLogin extends Application {
 		 }
 		 return super.onOptionsItemSelected(item);
 	}
+
+	@Override
+	public void updateAdapters() {
+		
+	}
 }

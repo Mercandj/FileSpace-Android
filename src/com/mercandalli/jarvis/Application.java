@@ -15,7 +15,7 @@ import android.os.Bundle;
 import com.mercandalli.jarvis.config.Config;
 import com.mercandalli.jarvis.listener.IListener;
 
-public class Application extends Activity {
+public abstract class Application extends Activity {
 	
 	public Config config;
 	public Dialog dialog;
@@ -49,5 +49,7 @@ public class Application extends Activity {
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
+	
+	public abstract void updateAdapters();
 }
 

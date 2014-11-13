@@ -29,13 +29,14 @@
         android:textColor="#000"
         android:textSize="20sp" />
 
-    <ImageView
+    <com.mercandalli.jarvis.view.CircularImageView
         android:id="@+id/icon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
+        android:contentDescription="@string/image_description"
         android:src="@drawable/file" />
 
 </RelativeLayout>
