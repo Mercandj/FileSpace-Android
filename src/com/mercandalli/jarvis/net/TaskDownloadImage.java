@@ -37,7 +37,7 @@ public class TaskDownloadImage extends AsyncTask<Void, Void, Void> {
 
 	String url;
 	List<BasicNameValuePair> parameters;
-	Bitmap bmp;
+	Bitmap bitmap;
 	IBitmapListener listener;
 	File file;
 	Application app;
@@ -50,21 +50,21 @@ public class TaskDownloadImage extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... urls) {		
-		bmp = drawable_from_url_Authorization(this.url);
+		bitmap = drawable_from_url_Authorization(this.url);
 		return null;		
 	}
 
 	@Override
 	protected void onPostExecute(Void response) {
 		Log.d("onPostExecute", "" + response);
-		this.listener.execute(bmp);
+		this.listener.execute(bitmap);
 	}
 	
 	public Bitmap drawable_from_url_Authorization(String url) {
 		Bitmap x = null;
 		HttpResponse response;
 		HttpPost httppost = new HttpPost(url.replaceAll(" ", "%20"));
-    	StringBuilder authentication = new StringBuilder().append("jonathan").append(":").append("nexus5");
+    	StringBuilder authentication = new StringBuilder().append(app.config.getUser().getAccessLogin()).append(":").append(app.config.getUser().getAccessPassword());
         String result = Base64.encodeBytes(authentication.toString().getBytes());
         httppost.setHeader("Authorization", "Basic " + result);
 		HttpClient httpclient = new DefaultHttpClient();

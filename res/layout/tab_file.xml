@@ -12,22 +12,30 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/icon"
+        android:ellipsize="marquee"
+        android:focusable="false"
         android:gravity="center_vertical"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxLines="1"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
-        android:paddingLeft="25dp"
-        android:paddingRight="47dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="#000"
-        android:textSize="22sp"
-        
-        android:maxLines="1"
-        android:singleLine="true"
-        android:ellipsize="marquee"
-		android:marqueeRepeatLimit="marquee_forever"
-		android:focusable="false"
-		android:scrollHorizontally="true"/>
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:src="@drawable/file" />
 
 </RelativeLayout>

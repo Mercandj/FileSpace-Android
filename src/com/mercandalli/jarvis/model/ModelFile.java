@@ -10,6 +10,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -27,6 +28,7 @@ public class ModelFile {
 	public String size;
 	public String type;
 	public boolean isDirectory;
+	public Bitmap bitmap;
 	
 	public List<BasicNameValuePair> getForUpload() {
 		List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();

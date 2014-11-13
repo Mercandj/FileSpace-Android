@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mercandalli.jarvis.Application;
@@ -35,6 +36,10 @@ public class AdapterModelFile extends ArrayAdapter<ModelFile> {
 				((TextView) convertView.findViewById(R.id.title)).setText(file.name);
 			else
 				((TextView) convertView.findViewById(R.id.title)).setText(file.url);
+			
+			if(file.bitmap!=null)
+				((ImageView) convertView.findViewById(R.id.icon)).setImageBitmap(file.bitmap);
+			
 		}
 		return convertView;
 	}

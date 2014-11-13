@@ -43,7 +43,7 @@
         android:layout_alignRight="@+id/circle"
         android:layout_alignTop="@+id/circle"
         android:contentDescription="@string/image_description"
-        android:padding="22dp"
+        android:padding="25dp"
         android:src="@drawable/add" />
     
 
