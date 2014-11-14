@@ -18,7 +18,11 @@ J.A.R.V.I.S - ANDROID
 
 ## ANDROID DESCRIPTION
 
-Remote and secure file manager. (upload files + download files + management)
+Remote and secure file manager.
+* Upload files
+* Download files
+* Manage files
+* Streaming Audio & Video
 
 * Android : SDK supported : 14 (Ice Cream Sandwich) to 21 (Lollipop)
 * Theme : Before Android 5.0 Lollipop Holo.Light, after Material.Light !!!!

@@ -20,7 +20,6 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.util.Log;
 
 import com.mercandalli.jarvis.Application;
 import com.mercandalli.jarvis.dialog.DialogShowTxt;
@@ -74,8 +73,6 @@ public class ModelFile {
 				@Override
 				public void execute(Bitmap bitmap) {
 					ModelFile.this.bitmap = bitmap;
-					
-					Log.d("2 COUCOU coucou", "coucou "+bitmap);
 					ModelFile.this.app.updateAdapters();
 				}
 			}).execute();
