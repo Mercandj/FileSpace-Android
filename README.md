@@ -15,14 +15,13 @@ J.A.R.V.I.S - ANDROID
 * Location : Paris
 * Starting Date : October 2014
 
-
-## ANDROID DESCRIPTION
-
 Remote and secure file manager.
 * Upload files
 * Download files
 * Manage files
 * Streaming Audio & Video
+
+## ANDROID DESCRIPTION
 
 * Android : SDK supported : 14 (Ice Cream Sandwich) to 21 (Lollipop)
 * Theme : Before Android 5.0 Lollipop Holo.Light, after Material.Light !!!!
