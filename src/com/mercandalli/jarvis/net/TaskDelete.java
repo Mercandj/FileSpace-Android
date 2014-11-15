@@ -19,7 +19,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -34,12 +34,12 @@ import com.mercandalli.jarvis.Application;
 import com.mercandalli.jarvis.listener.IPostExecuteListener;
 
 /**
- * Global behavior : http Get
+ * Global behavior : http Delete
  * 
  * @author Jonathan
  * 
  */
-public class TaskGet extends AsyncTask<Void, Void, String> {
+public class TaskDelete extends AsyncTask<Void, Void, String> {
 
 	String url;
 	IPostExecuteListener listener;
@@ -47,13 +47,13 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 	Application app;
 	List<BasicNameValuePair> parameters;
 
-	public TaskGet(Application app, String url, IPostExecuteListener listener) {
+	public TaskDelete(Application app, String url, IPostExecuteListener listener) {
 		this.app = app;
 		this.url = url;
 		this.listener = listener;
 	}
 	
-	public TaskGet(Application app, String url, IPostExecuteListener listener, List<BasicNameValuePair> parameters) {
+	public TaskDelete(Application app, String url, IPostExecuteListener listener, List<BasicNameValuePair> parameters) {
 		this.app = app;
 		this.url = url;
 		this.listener = listener;
@@ -72,14 +72,14 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 		    	url += "?"+paramString;	
 			}
 			
-			HttpGet httpget = new HttpGet(url);						
+			HttpDelete httpdelete = new HttpDelete(url);						
 
 	    	StringBuilder authentication = new StringBuilder().append(app.config.getUser().getAccessLogin()).append(":").append(app.config.getUser().getAccessPassword());
 	        String result = Base64.encodeBytes(authentication.toString().getBytes());
-	        httpget.setHeader("Authorization", "Basic " + result);
+	        httpdelete.setHeader("Authorization", "Basic " + result);
 			
 			HttpClient httpclient = new DefaultHttpClient();
-			HttpResponse response = httpclient.execute(httpget);
+			HttpResponse response = httpclient.execute(httpdelete);
 
 			// receive response as inputStream
 			InputStream inputStream = response.getEntity().getContent();
@@ -106,7 +106,7 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 	}
 
 	/**
-	 * Get http response to String
+	 * Delete http response to String
 	 * 
 	 * @param inputStream
 	 * @return
