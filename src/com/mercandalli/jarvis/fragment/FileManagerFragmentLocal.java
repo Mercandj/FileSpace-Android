@@ -64,6 +64,7 @@ public class FileManagerFragmentLocal extends Fragment {
 			for(File file : fs) {
 				ModelFile modelFile = new ModelFile(app);
 				modelFile.url = file.getAbsolutePath();
+				modelFile.name = file.getName();
 				modelFile.size = ""+file.getTotalSpace();
 				modelFile.isDirectory = file.isDirectory();
 				listModelFile.add(modelFile);
@@ -72,7 +73,7 @@ public class FileManagerFragmentLocal extends Fragment {
 		updateAdapter();		
 	}
 	
-	private void updateAdapter() {
+	public void updateAdapter() {
 		if(listView!=null && listModelFile!=null) {
 			
 			if(listModelFile.size()==0) {
@@ -82,7 +83,7 @@ public class FileManagerFragmentLocal extends Fragment {
 			else
 				message.setVisibility(View.GONE);
 			
-			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, listModelFile ));
+			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, listModelFile, null));
 		}
 	}
 }

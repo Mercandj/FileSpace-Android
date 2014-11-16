@@ -7,9 +7,10 @@
 package com.mercandalli.jarvis.net;
 
 import java.io.File;
-import java.io.FilterInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -17,48 +18,47 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.mercandalli.jarvis.Application;
-import com.mercandalli.jarvis.listener.IBitmapListener;
+import com.mercandalli.jarvis.listener.IListener;
 
 /**
- * Global behavior : DDL Image
+ * Global behavior : DDL file
  * 
  * @author Jonathan
  * 
  */
-public class TaskDownloadImage extends AsyncTask<Void, Void, Void> {
+public class TaskGetDownload extends AsyncTask<Void, Void, Void> {
 
 	String url;
-	Bitmap bitmap;
-	IBitmapListener listener;
+	String url_ouput;
+	IListener listener;
 	File file;
 	Application app;
 	
-	public TaskDownloadImage(Application app, String url, IBitmapListener listener) {
+	public TaskGetDownload(Application app, String url, String url_ouput, IListener listener) {
 		this.app = app;
 		this.url = url;
+		this.url_ouput = url_ouput;
 		this.listener = listener;
 	}
 
 	@Override
 	protected Void doInBackground(Void... urls) {		
-		bitmap = drawable_from_url_Authorization(this.url);
+		file = file_from_url_Authorization(this.url);
 		return null;		
 	}
 
 	@Override
 	protected void onPostExecute(Void response) {
 		Log.d("onPostExecute", "" + response);
-		this.listener.execute(bitmap);
+		this.listener.execute();
 	}
 	
-	public Bitmap drawable_from_url_Authorization(String url) {
-		Bitmap x = null;
+	public File file_from_url_Authorization(String url) {
+		File x = null;
 		HttpResponse response;
 		HttpGet httpget = new HttpGet(url);
     	StringBuilder authentication = new StringBuilder().append(app.config.getUser().getAccessLogin()).append(":").append(app.config.getUser().getAccessPassword());
@@ -68,7 +68,31 @@ public class TaskDownloadImage extends AsyncTask<Void, Void, Void> {
 		try {
 			response = httpclient.execute(httpget);
 			InputStream inputStream = response.getEntity().getContent();
-			x = BitmapFactory.decodeStream(new FlushedInputStream(inputStream));
+			//long lenghtOfFile = response.getEntity().getContentLength();
+			OutputStream outputStream = new FileOutputStream(url_ouput);
+			
+			byte data[] = new byte[1024];
+			 
+            //long total = 0;
+ 
+            int count;
+            while ((count = inputStream.read(data)) != -1) {
+                //total += count;
+                // publishing the progress....
+                // After this onProgressUpdate will be called
+                //publishProgress(""+(int)((total*100)/lenghtOfFile));
+ 
+                // writing data to file
+                outputStream.write(data, 0, count);
+            }
+ 
+            // flushing output
+            outputStream.flush();
+ 
+            // closing streams
+            outputStream.close();
+            inputStream.close();
+			
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -76,32 +100,4 @@ public class TaskDownloadImage extends AsyncTask<Void, Void, Void> {
 		}
         return x;
     }
-	
-	/**
-	 * DDL image
-	 * @author Jonathan
-	 *
-	 */
-	public class FlushedInputStream extends FilterInputStream {
-	    public FlushedInputStream(InputStream inputStream) {
-	        super(inputStream);
-	    }
-
-	    @Override
-	    public long skip(long n) throws IOException {
-	        long totalBytesSkipped = 0L;
-	        while (totalBytesSkipped < n) {
-	            long bytesSkipped = in.skip(n - totalBytesSkipped);
-	            if (bytesSkipped == 0L) {
-	                  int bytet = read();
-	                  if (bytet < 0)
-	                      break;  // we reached EOF
-	                  else
-	                      bytesSkipped = 1; // we read one byte
-	            }
-	            totalBytesSkipped += bytesSkipped;
-	        }
-	        return totalBytesSkipped;
-	    }
-	}
 }

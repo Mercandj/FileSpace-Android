@@ -12,8 +12,8 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/more"
         android:layout_toRightOf="@+id/icon"
         android:ellipsize="marquee"
         android:focusable="false"
@@ -38,5 +38,14 @@
         android:layout_marginLeft="20dp"
         android:contentDescription="@string/image_description"
         android:src="@drawable/file" />
+
+    <ImageView
+        android:id="@+id/more"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/ic_menu_moreoverflow_normal_holo_light" />
 
 </RelativeLayout>

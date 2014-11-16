@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -11,17 +12,20 @@ import android.widget.TextView;
 
 import com.mercandalli.jarvis.Application;
 import com.mercandalli.jarvis.R;
+import com.mercandalli.jarvis.listener.IModelFileListener;
 import com.mercandalli.jarvis.model.ModelFile;
 
 public class AdapterModelFile extends ArrayAdapter<ModelFile> {
 
 	Application app;
 	List<ModelFile> files;
+	IModelFileListener moreListener;
 	
-	public AdapterModelFile(Application app, int resource, List<ModelFile> files) {
+	public AdapterModelFile(Application app, int resource, List<ModelFile> files, IModelFileListener moreListener) {
 		super(app, resource, files);
 		this.app = app;
 		this.files = files;
+		this.moreListener = moreListener;
 	}
 	
 	@Override
@@ -39,6 +43,14 @@ public class AdapterModelFile extends ArrayAdapter<ModelFile> {
 			
 			if(file.bitmap!=null)
 				((ImageView) convertView.findViewById(R.id.icon)).setImageBitmap(file.bitmap);
+			
+			((ImageView) convertView.findViewById(R.id.more)).setOnClickListener(new OnClickListener() {				
+				@Override
+				public void onClick(View v) {
+					if(moreListener!=null)
+						moreListener.execute(file);
+				}
+			});
 			
 		}
 		return convertView;

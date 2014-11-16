@@ -146,7 +146,7 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
 				JSONObject json = new JSONObject(response);				
 				this.listener.execute(json, response);				
 				if(json.has("toast"))										
-					Toast.makeText(app, json.getString("toast"), Toast.LENGTH_SHORT).show();				
+					Toast.makeText(app, json.getString("toast"), Toast.LENGTH_SHORT).show();
 			} catch (JSONException e) {
 				e.printStackTrace();
 				Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();

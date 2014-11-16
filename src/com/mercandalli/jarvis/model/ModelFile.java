@@ -6,6 +6,7 @@
 
 package com.mercandalli.jarvis.model;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,13 +21,16 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Environment;
 
 import com.mercandalli.jarvis.Application;
 import com.mercandalli.jarvis.dialog.DialogShowTxt;
 import com.mercandalli.jarvis.listener.IBitmapListener;
+import com.mercandalli.jarvis.listener.IListener;
 import com.mercandalli.jarvis.listener.IPostExecuteListener;
 import com.mercandalli.jarvis.net.Base64;
-import com.mercandalli.jarvis.net.TaskDownloadImage;
+import com.mercandalli.jarvis.net.TaskGetDownload;
+import com.mercandalli.jarvis.net.TaskGetDownloadImage;
 import com.mercandalli.jarvis.net.TaskGet;
 
 public class ModelFile {
@@ -69,7 +73,7 @@ public class ModelFile {
 		
 		switch(this.type) {
 		case "jpg":
-			new TaskDownloadImage(app, this.app.config.getUrlServer()+this.app.config.routeFile+"/"+this.id, new IBitmapListener() {
+			new TaskGetDownloadImage(app, this.app.config.getUrlServer()+this.app.config.routeFile+"/"+this.id, new IBitmapListener() {
 				@Override
 				public void execute(Bitmap bitmap) {
 					ModelFile.this.bitmap = bitmap;
@@ -112,5 +116,11 @@ public class ModelFile {
 			}
 			break;
 		}
-	}	
+	}
+	
+	public void download(IListener listener) {
+		String url = this.app.config.getUrlServer()+this.app.config.routeFile+"/"+id;
+		String url_ouput = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+app.config.localFolderName+File.separator+this.url;
+		new TaskGetDownload(this.app, url, url_ouput, listener).execute();
+	}
 }
