@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -45,6 +46,9 @@ public class FileManagerFragmentLocal extends Fragment {
         circulerProgressBar.setVisibility(View.INVISIBLE);
         message = (TextView) rootView.findViewById(R.id.message);
         listView = (ListView) rootView.findViewById(R.id.listView);
+        
+        ((ImageView) rootView.findViewById(R.id.circle)).setVisibility(View.GONE);
+        ((ImageView) rootView.findViewById(R.id.circle_ic)).setVisibility(View.GONE);        
         
 		jarvisDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+app.config.localFolderName);
 		if(!jarvisDirectory.exists())

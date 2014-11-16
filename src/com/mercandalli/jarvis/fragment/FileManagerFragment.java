@@ -121,6 +121,20 @@ public class FileManagerFragment extends Fragment {
 				}
 	}
 	
+	public void refreshAdapterListServer() {
+		if(this.listFragment[0]!=null)
+			if(this.listFragment[0] instanceof FileManagerFragmentOnline) {
+				FileManagerFragmentOnline fragmentFileManagerFragment = (FileManagerFragmentOnline) this.listFragment[0];
+				fragmentFileManagerFragment.refreshList();
+			}		
+		if(this.listFragment.length>1)
+			if(this.listFragment[1]!=null)
+				if(this.listFragment[1] instanceof FileManagerFragmentLocal) {
+					FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) this.listFragment[1];
+					fragmentFileManagerFragment.refreshList();
+				}
+	}
+	
 	public void add() {
 		app.dialog = new DialogUpload(app, new IPostExecuteListener() {
 			@Override

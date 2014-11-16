@@ -50,6 +50,7 @@ public abstract class Application extends Activity {
 		alert.show();
 	}
 	
+	public abstract void refreshAdapters();
 	public abstract void updateAdapters();
 }
 

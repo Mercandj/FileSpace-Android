@@ -30,4 +30,12 @@ public class ActivityMain extends ApplicationDrawer {
 			fragmentFileManager.updateAdapterListServer();					
 		}
 	}
+
+	@Override
+	public void refreshAdapters() {
+		if(fragment instanceof FileManagerFragment) {
+			FileManagerFragment fragmentFileManager = (FileManagerFragment) fragment;					
+			fragmentFileManager.refreshAdapterListServer();					
+		}
+	}
 }

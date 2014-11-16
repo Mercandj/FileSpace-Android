@@ -173,4 +173,9 @@ public class ActivityRegisterLogin extends Application {
 	public void updateAdapters() {
 		
 	}
+
+	@Override
+	public void refreshAdapters() {
+		
+	}
 }

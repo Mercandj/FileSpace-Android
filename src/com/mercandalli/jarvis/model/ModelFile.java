@@ -29,9 +29,10 @@ import com.mercandalli.jarvis.listener.IBitmapListener;
 import com.mercandalli.jarvis.listener.IListener;
 import com.mercandalli.jarvis.listener.IPostExecuteListener;
 import com.mercandalli.jarvis.net.Base64;
+import com.mercandalli.jarvis.net.TaskDelete;
+import com.mercandalli.jarvis.net.TaskGet;
 import com.mercandalli.jarvis.net.TaskGetDownload;
 import com.mercandalli.jarvis.net.TaskGetDownloadImage;
-import com.mercandalli.jarvis.net.TaskGet;
 
 public class ModelFile {
 	
@@ -122,5 +123,10 @@ public class ModelFile {
 		String url = this.app.config.getUrlServer()+this.app.config.routeFile+"/"+id;
 		String url_ouput = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+app.config.localFolderName+File.separator+this.url;
 		new TaskGetDownload(this.app, url, url_ouput, listener).execute();
+	}
+	
+	public void delete(IPostExecuteListener listener) {
+		String url = this.app.config.getUrlServer()+this.app.config.routeFile+"/"+id;
+		new TaskDelete(app, url, listener).execute();
 	}
 }

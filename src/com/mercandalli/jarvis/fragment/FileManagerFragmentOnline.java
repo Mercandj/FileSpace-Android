@@ -145,7 +145,7 @@ public class FileManagerFragmentOnline extends Fragment {
 				@Override
 				public void execute(final ModelFile modelFile) {
 					final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentOnline.this.app);
-					final String[] menuList = { "Download", "Nothing" };
+					final String[] menuList = { "Download", "Delete" };
 					menuAleart.setTitle("Action");
 					menuAleart.setItems(menuList,
 							new DialogInterface.OnClickListener() {
@@ -162,7 +162,17 @@ public class FileManagerFragmentOnline extends Fragment {
 										});
 										break;
 									case 1:
-										// function 2 code here
+										FileManagerFragmentOnline.this.app.alert("Download", "Delete file ?", "Yes", new IListener() {			
+											@Override
+											public void execute() {
+												modelFile.delete(new IPostExecuteListener() {
+													@Override
+													public void execute(JSONObject json, String body) {
+														FileManagerFragmentOnline.this.app.refreshAdapters();
+													}													
+												});
+											}
+										}, "No", null);
 										break;
 									}
 								}

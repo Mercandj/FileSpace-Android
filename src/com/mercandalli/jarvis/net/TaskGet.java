@@ -132,8 +132,9 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 			try {
 				JSONObject json = new JSONObject(response);				
 				this.listener.execute(json, response);				
-				if(json.has("toast"))										
-					Toast.makeText(app, json.getString("toast"), Toast.LENGTH_SHORT).show();				
+				if(json.has("toast"))
+					if(!json.getString("toast").equals(""))
+						Toast.makeText(app, json.getString("toast"), Toast.LENGTH_SHORT).show();				
 			} catch (JSONException e) {
 				e.printStackTrace();				
 				this.listener.execute(null, response);
