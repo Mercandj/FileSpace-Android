@@ -95,6 +95,14 @@ public class ActivityRegisterLogin extends Application {
 				if(!((EditText) ActivityRegisterLogin.this.findViewById(R.id.server)).getText().toString().equals(""))
 					ActivityRegisterLogin.this.config.setUrlServer(((EditText) ActivityRegisterLogin.this.findViewById(R.id.server)).getText().toString());				
 				
+				if(ActivityRegisterLogin.this.config.getUrlServer()==null) {
+					requestLaunch = false;
+					return;
+				}
+				if(ActivityRegisterLogin.this.config.getUrlServer().equals("")) {
+					requestLaunch = false;
+					return;
+				}
 				
 				// Register : POST /user
 				if(firstUse) {
