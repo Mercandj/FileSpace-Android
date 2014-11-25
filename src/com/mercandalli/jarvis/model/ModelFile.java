@@ -82,6 +82,15 @@ public class ModelFile {
 				}
 			}).execute();
 			break;
+		case "png":
+			new TaskGetDownloadImage(app, this.app.config.getUrlServer()+this.app.config.routeFile+"/"+this.id, new IBitmapListener() {
+				@Override
+				public void execute(Bitmap bitmap) {
+					ModelFile.this.bitmap = bitmap;
+					ModelFile.this.app.updateAdapters();
+				}
+			}).execute();
+			break;
 		}
 	}
 	
