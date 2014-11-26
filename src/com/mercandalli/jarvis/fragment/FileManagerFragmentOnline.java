@@ -141,7 +141,7 @@ public class FileManagerFragmentOnline extends Fragment {
 			else
 				message.setVisibility(View.GONE);
 			
-			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, listModelFile, new IModelFileListener() {
+			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, listModelFile, null, new IModelFileListener() {
 				@Override
 				public void execute(final ModelFile modelFile) {
 					final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentOnline.this.app);
@@ -185,7 +185,7 @@ public class FileManagerFragmentOnline extends Fragment {
 			listView.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					listModelFile.get(position).execute();
+					listModelFile.get(position).executeOnline();
 				}
 			});
 			

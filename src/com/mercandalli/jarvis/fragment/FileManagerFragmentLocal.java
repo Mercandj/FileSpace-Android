@@ -16,6 +16,9 @@ import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -25,6 +28,7 @@ import com.mercandalli.jarvis.Application;
 import com.mercandalli.jarvis.R;
 import com.mercandalli.jarvis.adapter.AdapterModelFile;
 import com.mercandalli.jarvis.model.ModelFile;
+import com.mercandalli.jarvis.model.ModelFileType;
 
 public class FileManagerFragmentLocal extends Fragment {
 	
@@ -69,8 +73,10 @@ public class FileManagerFragmentLocal extends Fragment {
 				ModelFile modelFile = new ModelFile(app);
 				modelFile.url = file.getAbsolutePath();
 				modelFile.name = file.getName();
+				modelFile.type = new ModelFileType(MimeTypeMap.getFileExtensionFromUrl(file.getAbsolutePath()));
 				modelFile.size = ""+file.getTotalSpace();
 				modelFile.isDirectory = file.isDirectory();
+				modelFile.file = file;
 				listModelFile.add(modelFile);
 			}
 		
@@ -87,7 +93,13 @@ public class FileManagerFragmentLocal extends Fragment {
 			else
 				message.setVisibility(View.GONE);
 			
-			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, listModelFile, null));
+			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, listModelFile, null, null));
+			listView.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					listModelFile.get(position).executeLocal();
+				}
+			});
 		}
 	}
 }

@@ -17,11 +17,14 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
+import android.widget.Toast;
 
 import com.mercandalli.jarvis.Application;
 import com.mercandalli.jarvis.dialog.DialogShowTxt;
@@ -42,9 +45,10 @@ public class ModelFile {
 	public String url;
 	public String name;
 	public String size;
-	public String type;
+	public ModelFileType type;
 	public boolean isDirectory;
 	public Bitmap bitmap;
+	public File file;
 	
 	public List<BasicNameValuePair> getForUpload() {
 		List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
@@ -66,14 +70,12 @@ public class ModelFile {
 			if(json.has("url"))
 				this.url = json.getString("url");
 			if(json.has("type"))
-				this.type = json.getString("type");
+				this.type = new ModelFileType(json.getString("type"));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		
-		
-		switch(this.type) {
-		case "jpg":
+		if(this.type.equals(ModelFileTypeENUM.PICTURE.type)) {
 			new TaskGetDownloadImage(app, this.app.config.getUrlServer()+this.app.config.routeFile+"/"+this.id, new IBitmapListener() {
 				@Override
 				public void execute(Bitmap bitmap) {
@@ -81,32 +83,20 @@ public class ModelFile {
 					ModelFile.this.app.updateAdapters();
 				}
 			}).execute();
-			break;
-		case "png":
-			new TaskGetDownloadImage(app, this.app.config.getUrlServer()+this.app.config.routeFile+"/"+this.id, new IBitmapListener() {
-				@Override
-				public void execute(Bitmap bitmap) {
-					ModelFile.this.bitmap = bitmap;
-					ModelFile.this.app.updateAdapters();
-				}
-			}).execute();
-			break;
 		}
 	}
 	
-	public void execute() {
-		switch(this.type) {
+	public void executeOnline() {
 		
-		case "txt":		
+		if(this.type.equals(ModelFileTypeENUM.TEXT.type)) {
 			new TaskGet(this.app, this.app.config.getUrlServer()+this.app.config.routeFile+"/"+id, new IPostExecuteListener() {
 				@Override
 				public void execute(JSONObject json, String body) {
 					new DialogShowTxt(app, body);
 				}				
-			}).execute();			
-			break;
-			
-		case "mp3":			
+			}).execute();		
+		}
+		else if(this.type.equals(ModelFileTypeENUM.AUDIO.type)) {
 			try {
 				Uri uri = Uri.parse(this.app.config.getUrlServer()+this.app.config.routeFile+"/"+id);
 				
@@ -124,7 +114,68 @@ public class ModelFile {
 			} catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
 				e.printStackTrace();
 			}
-			break;
+		}
+		
+		
+	}
+	
+	public void executeLocal() {
+		if (!file.exists())
+			return;
+		if (this.type.equals(ModelFileTypeENUM.APK.type)) {
+			Intent apkIntent = new Intent();
+			apkIntent.setAction(android.content.Intent.ACTION_VIEW);
+			apkIntent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+			app.startActivity(apkIntent);
+		}
+		else if(this.type.equals(ModelFileTypeENUM.TEXT.type)) {
+			Intent txtIntent = new Intent();
+			txtIntent.setAction(android.content.Intent.ACTION_VIEW);
+			txtIntent.setDataAndType(Uri.fromFile(file), "text/plain");
+			try {
+				app.startActivity(txtIntent);
+			} catch (ActivityNotFoundException e) {
+				txtIntent.setType("text/*");
+				app.startActivity(txtIntent);
+			}
+		}
+		else if(this.type.equals(ModelFileTypeENUM.HTML.type)) {
+			Intent htmlIntent = new Intent();
+			htmlIntent.setAction(android.content.Intent.ACTION_VIEW);
+			htmlIntent.setDataAndType(Uri.fromFile(file), "text/html");
+			try {
+				app.startActivity(htmlIntent);
+			} catch (ActivityNotFoundException e) {
+				Toast.makeText(app, "ERREUR", Toast.LENGTH_SHORT).show();
+			}
+		}
+		else if(this.type.equals(ModelFileTypeENUM.AUDIO.type)) {
+			Intent i = new Intent();
+			i.setAction(android.content.Intent.ACTION_VIEW);
+			i.setDataAndType(Uri.fromFile(file), "audio/*");
+			app.startActivity(i);
+		}
+		else if(this.type.equals(ModelFileTypeENUM.PICTURE.type)) {
+			Intent picIntent = new Intent();
+			picIntent.setAction(android.content.Intent.ACTION_VIEW);
+			picIntent.setDataAndType(Uri.fromFile(file), "image/*");
+			app.startActivity(picIntent);
+		}
+		else if(this.type.equals(ModelFileTypeENUM.VIDEO.type)) {
+			Intent movieIntent = new Intent();
+			movieIntent.setAction(android.content.Intent.ACTION_VIEW);
+			movieIntent.setDataAndType(Uri.fromFile(file), "video/*");
+			app.startActivity(movieIntent);
+		}
+		else if(this.type.equals(ModelFileTypeENUM.PDF.type)) {
+			Intent pdfIntent = new Intent();
+			pdfIntent.setAction(android.content.Intent.ACTION_VIEW);
+			pdfIntent.setDataAndType(Uri.fromFile(file), "application/pdf");
+			try {
+				app.startActivity(pdfIntent);
+			} catch (ActivityNotFoundException e) {
+				Toast.makeText(app, "ERREUR", Toast.LENGTH_SHORT).show();
+			}
 		}
 	}
 	

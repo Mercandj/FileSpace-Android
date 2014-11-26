@@ -49,7 +49,7 @@ public class DialogFileChooser extends Dialog {
 	
 	private void updateAdapter() {
 		getFiles();
-		files.setAdapter(new AdapterModelFile(app, R.layout.tab_file, listModelFile, null));
+		files.setAdapter(new AdapterModelFile(app, R.layout.tab_file, listModelFile, null, null));
 		files.setOnItemClickListener(new OnItemClickListener() {
 		    @Override 
 		    public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {

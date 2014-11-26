@@ -19,12 +19,13 @@ public class AdapterModelFile extends ArrayAdapter<ModelFile> {
 
 	Application app;
 	List<ModelFile> files;
-	IModelFileListener moreListener;
+	IModelFileListener clickListener, moreListener;
 	
-	public AdapterModelFile(Application app, int resource, List<ModelFile> files, IModelFileListener moreListener) {
+	public AdapterModelFile(Application app, int resource, List<ModelFile> files, IModelFileListener clickListener, IModelFileListener moreListener) {
 		super(app, resource, files);
 		this.app = app;
 		this.files = files;
+		this.clickListener = clickListener;
 		this.moreListener = moreListener;
 	}
 	
