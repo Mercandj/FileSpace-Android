@@ -105,6 +105,18 @@
                 android:textOff=" "
                 android:textOn=" " />
         </RelativeLayout>
+
+        <CheckBox
+            android:id="@+id/autoconnection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/toggle"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="15dp"
+            android:text="@string/autoconnection"
+            android:textColor="@color/hint_foreground_material_light"
+            android:textSize="20sp" />
+
     </RelativeLayout>
 
     <ImageView

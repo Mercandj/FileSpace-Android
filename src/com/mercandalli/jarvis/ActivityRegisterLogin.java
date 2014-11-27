@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
@@ -42,6 +43,16 @@ public class ActivityRegisterLogin extends Application {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayUseLogoEnabled(false);
+        
+        if(this.config.isAutoConncetion() && this.config.getUrlServer()!=null && this.config.getUserUsername()!=null && this.config.getUserPassword()!=null)
+        	connectionSucceed();
+        
+        ((CheckBox) this.findViewById(R.id.autoconnection)).setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				ActivityRegisterLogin.this.config.setAutoConnection(isChecked);				
+			}
+		});
         
         if(this.config.getUrlServer()!=null)
         	if(!this.config.getUrlServer().equals(""))

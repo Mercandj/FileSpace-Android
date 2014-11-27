@@ -32,7 +32,7 @@ public class Config {
 	private String file = "settings_json_1.txt";	
 	
 	private enum ENUM_Int {
-		LAST_TAB				(0, 								"int_last_tab"				),
+		LAST_TAB				(0, 			"int_last_tab"				),
 		;
 		
 		int value;
@@ -44,7 +44,7 @@ public class Config {
 	}
 	
 	private enum ENUM_Boolean {
-		DISPLAY_FPS				(true, 								"boolean_display_fps"			),
+		BOOLEAN_AUTO_CONNECTION	(false, 		"boolean_auto_connection"		),
 		;
 		
 		boolean value;
@@ -56,9 +56,9 @@ public class Config {
 	}
 	
 	private enum ENUM_String {		
-		STRING_URL_SERVER		("", 								"string_url_server_1"			),
-		STRING_USER_USERNAME	("", 								"string_user_username_1"		),
-		STRING_USER_PASSWORD	("", 								"string_user_password_1"		),
+		STRING_URL_SERVER		("", 			"string_url_server_1"			),
+		STRING_USER_USERNAME	("", 			"string_user_username_1"		),
+		STRING_USER_PASSWORD	("", 			"string_user_password_1"		),
 		;
 		
 		String value;
@@ -181,6 +181,17 @@ public class Config {
 	public void setUserPassword(String value) {
 		if(ENUM_String.STRING_USER_PASSWORD.value!=value) {
 			ENUM_String.STRING_USER_PASSWORD.value = value;
+			save(activity);
+		}
+	}
+	
+	public boolean isAutoConncetion() {
+		return ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value;
+	}
+	
+	public void setAutoConnection(boolean value) {
+		if(ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value!=value) {
+			ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value = value;
 			save(activity);
 		}
 	}
