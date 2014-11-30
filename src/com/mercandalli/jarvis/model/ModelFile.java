@@ -86,8 +86,7 @@ public class ModelFile {
 		}
 	}
 	
-	public void executeOnline() {
-		
+	public void executeOnline() {		
 		if(this.type.equals(ModelFileTypeENUM.TEXT.type)) {
 			new TaskGet(this.app, this.app.config.getUrlServer()+this.app.config.routeFile+"/"+id, new IPostExecuteListener() {
 				@Override
@@ -114,9 +113,7 @@ public class ModelFile {
 			} catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
 				e.printStackTrace();
 			}
-		}
-		
-		
+		}		
 	}
 	
 	public void executeLocal() {

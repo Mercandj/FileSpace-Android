@@ -18,7 +18,6 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
@@ -91,7 +90,7 @@ public class FileManagerFragmentLocal extends Fragment {
 				ModelFile modelFile = new ModelFile(app);
 				modelFile.url = file.getAbsolutePath();
 				modelFile.name = file.getName();
-				modelFile.type = new ModelFileType(MimeTypeMap.getFileExtensionFromUrl(file.getAbsolutePath()));
+				modelFile.type = new ModelFileType(file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".")+1));
 				modelFile.size = ""+file.getTotalSpace();
 				modelFile.isDirectory = file.isDirectory();
 				modelFile.file = file;
