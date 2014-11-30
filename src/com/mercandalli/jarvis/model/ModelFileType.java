@@ -1,5 +1,10 @@
-package com.mercandalli.jarvis.model;
+/**
+ * Personal Project : Control server
+ *
+ * MERCANDALLI Jonathan
+ */
 
+package com.mercandalli.jarvis.model;
 
 public class ModelFileType {	
 	

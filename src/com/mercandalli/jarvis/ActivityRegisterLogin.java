@@ -1,3 +1,9 @@
+/**
+ * Personal Project : Control server
+ *
+ * MERCANDALLI Jonathan
+ */
+
 package com.mercandalli.jarvis;
 
 import java.util.ArrayList;

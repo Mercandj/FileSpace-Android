@@ -13,6 +13,8 @@ import java.util.List;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +40,7 @@ public class FileManagerFragmentLocal extends Fragment {
 	ProgressBar circulerProgressBar;
 	File jarvisDirectory;
 	TextView message;
+	SwipeRefreshLayout swipeRefreshLayout;
 	
 	public FileManagerFragmentLocal(Application app) {
 		this.app = app;
@@ -57,7 +60,23 @@ public class FileManagerFragmentLocal extends Fragment {
 		jarvisDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+app.config.localFolderName);
 		if(!jarvisDirectory.exists())
 			jarvisDirectory.mkdir();
+		
     	refreshList();
+    	
+    	swipeRefreshLayout = (SwipeRefreshLayout) rootView
+				.findViewById(R.id.swipeRefreshLayout);
+		swipeRefreshLayout.setColorSchemeResources(
+				android.R.color.holo_blue_bright,
+				android.R.color.holo_green_light,
+				android.R.color.holo_orange_light,
+				android.R.color.holo_red_light);
+
+		swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				refreshList();
+			}
+		});
                 
         return rootView;
     }
@@ -100,6 +119,8 @@ public class FileManagerFragmentLocal extends Fragment {
 					listModelFile.get(position).executeLocal();
 				}
 			});
+			
+			swipeRefreshLayout.setRefreshing(false);
 		}
 	}
 }
