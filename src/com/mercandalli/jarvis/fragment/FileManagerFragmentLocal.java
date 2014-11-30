@@ -60,11 +60,8 @@ public class FileManagerFragmentLocal extends Fragment {
 		jarvisDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+app.config.localFolderName);
 		if(!jarvisDirectory.exists())
 			jarvisDirectory.mkdir();
-		
-    	refreshList();
     	
-    	swipeRefreshLayout = (SwipeRefreshLayout) rootView
-				.findViewById(R.id.swipeRefreshLayout);
+    	swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
 		swipeRefreshLayout.setColorSchemeResources(
 				android.R.color.holo_blue_bright,
 				android.R.color.holo_green_light,
@@ -77,6 +74,8 @@ public class FileManagerFragmentLocal extends Fragment {
 				refreshList();
 			}
 		});
+		
+		refreshList();
                 
         return rootView;
     }
