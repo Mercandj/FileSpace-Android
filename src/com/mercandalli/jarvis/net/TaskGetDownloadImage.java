@@ -19,7 +19,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.mercandalli.jarvis.Application;
 import com.mercandalli.jarvis.listener.IBitmapListener;
@@ -51,7 +50,6 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected void onPostExecute(Void response) {
-		Log.d("onPostExecute", "" + response);
 		this.listener.execute(bitmap);
 	}
 	

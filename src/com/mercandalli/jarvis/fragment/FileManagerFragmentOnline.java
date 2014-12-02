@@ -141,6 +141,7 @@ public class FileManagerFragmentOnline extends Fragment {
 			else
 				message.setVisibility(View.GONE);
 			
+			save_position();
 			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, listModelFile, null, new IModelFileListener() {
 				@Override
 				public void execute(final ModelFile modelFile) {
@@ -182,6 +183,8 @@ public class FileManagerFragmentOnline extends Fragment {
 					
 				}				
 			}));
+			retore_position();
+			
 			listView.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -191,5 +194,19 @@ public class FileManagerFragmentOnline extends Fragment {
 			
 			swipeRefreshLayout.setRefreshing(false);
 		}
+	}
+	
+	int savedPosition, savedListTop;
+	
+    public void save_position() {
+    	if(listView==null) return;
+		savedPosition = listView.getFirstVisiblePosition();
+	    View firstVisibleView = listView.getChildAt(0);
+	    savedListTop = (firstVisibleView == null) ? 0 : firstVisibleView.getTop();
+	}
+	
+	public void retore_position() {
+		if(listView==null)  		return;
+		if (savedPosition >= 0) 	listView.setSelectionFromTop(savedPosition, savedListTop);
 	}
 }
