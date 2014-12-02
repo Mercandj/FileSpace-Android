@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ListView;
 
 import com.mercandalli.jarvis.Application;
@@ -45,14 +47,19 @@ public class SettingsFragment extends Fragment {
 	
 	public void refreshList() {
 		listModelSetting = new ArrayList<ModelSetting>();
-		listModelSetting.add(new ModelSetting(app, "AutoConnection"));
+		listModelSetting.add(new ModelSetting(app, "AutoConnection", new OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				app.config.setAutoConnection(isChecked);
+			}
+		}, app.config.isAutoConncetion()));
 		
 		updateAdapter();		
 	}
 	
 	public void updateAdapter() {
 		if(listView!=null && listModelSetting!=null) {			
-			listView.setAdapter(new AdapterModelSetting(app, R.layout.tab_setting, listModelSetting, null, null));
+			listView.setAdapter(new AdapterModelSetting(app, R.layout.tab_setting, listModelSetting, null));
 		}
 	}
 }
