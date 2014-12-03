@@ -36,6 +36,7 @@ import com.mercandalli.jarvis.net.TaskDelete;
 import com.mercandalli.jarvis.net.TaskGet;
 import com.mercandalli.jarvis.net.TaskGetDownload;
 import com.mercandalli.jarvis.net.TaskGetDownloadImage;
+import com.mercandalli.jarvis.net.TaskPut;
 
 public class ModelFile {
 	
@@ -52,8 +53,8 @@ public class ModelFile {
 	
 	public List<BasicNameValuePair> getForUpload() {
 		List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
-		/*if(url!=null)
-			parameters.add(new BasicNameValuePair("name", name));*/
+		if(name!=null)
+			parameters.add(new BasicNameValuePair("url", this.name));
 		return parameters;
 	}
 	
@@ -185,5 +186,12 @@ public class ModelFile {
 	public void delete(IPostExecuteListener listener) {
 		String url = this.app.config.getUrlServer()+this.app.config.routeFile+"/"+id;
 		new TaskDelete(app, url, listener).execute();
+	}
+	
+	public void rename(String new_name, IPostExecuteListener listener) {
+		this.name = new_name;
+		this.url = new_name;
+		String url = this.app.config.getUrlServer()+this.app.config.routeFile+"/"+id;
+		new TaskPut(app, url, listener, getForUpload()).execute();
 	}
 }

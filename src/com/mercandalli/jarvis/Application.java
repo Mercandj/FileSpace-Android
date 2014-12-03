@@ -11,9 +11,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.widget.EditText;
 
 import com.mercandalli.jarvis.config.Config;
 import com.mercandalli.jarvis.listener.IListener;
+import com.mercandalli.jarvis.listener.IStringListener;
 
 public abstract class Application extends Activity {
 	
@@ -47,6 +49,36 @@ public abstract class Application extends Activity {
 		    }
 		});
 		AlertDialog alert = builder.create();
+		alert.show();
+	}
+	
+	public void prompt(String title, String message, String positive, final IStringListener positiveListener, String negative, final IListener negativeListener) {
+		
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+		alert.setTitle(title);
+		alert.setMessage(message);
+
+		// Set an EditText view to get user input
+		final EditText input = new EditText(this);
+		alert.setView(input);
+
+		alert.setPositiveButton(positive, 
+			new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					positiveListener.execute(input.getText().toString());
+				}
+			}
+		);
+
+		alert.setNegativeButton(negative,
+			new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int whichButton) {
+					// Canceled.
+				}
+			}
+		);
+
 		alert.show();
 	}
 	

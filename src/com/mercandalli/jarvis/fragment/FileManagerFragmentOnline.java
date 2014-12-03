@@ -38,6 +38,7 @@ import com.mercandalli.jarvis.dialog.DialogUpload;
 import com.mercandalli.jarvis.listener.IListener;
 import com.mercandalli.jarvis.listener.IModelFileListener;
 import com.mercandalli.jarvis.listener.IPostExecuteListener;
+import com.mercandalli.jarvis.listener.IStringListener;
 import com.mercandalli.jarvis.model.ModelFile;
 import com.mercandalli.jarvis.net.TaskGet;
 
@@ -55,12 +56,9 @@ public class FileManagerFragmentOnline extends Fragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_filemanager_online,
-				container, false);
-		circulerProgressBar = (ProgressBar) rootView
-				.findViewById(R.id.circulerProgressBar);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_filemanager_online, container, false);
+		circulerProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
 		message = (TextView) rootView.findViewById(R.id.message);
 		listView = (ListView) rootView.findViewById(R.id.listView);
 
@@ -86,14 +84,13 @@ public class FileManagerFragmentOnline extends Fragment {
 					@Override
 					public void onClick(View v) {
 						app.dialog = new DialogUpload(app,
-								new IPostExecuteListener() {
-									@Override
-									public void execute(JSONObject json,
-											String body) {
-										if (json != null)
-											refreshList();
-									}
-								});
+							new IPostExecuteListener() {
+								@Override
+								public void execute(JSONObject json, String body) {
+									if (json != null)
+										refreshList();
+								}
+							});
 					}
 				});
 
@@ -112,8 +109,7 @@ public class FileManagerFragmentOnline extends Fragment {
 						if (json.has("result")) {
 							JSONArray array = json.getJSONArray("result");
 							for (int i = 0; i < array.length(); i++) {
-								ModelFile modelFile = new ModelFile(app,
-										array.getJSONObject(i));
+								ModelFile modelFile = new ModelFile(app, array.getJSONObject(i));
 								listModelFile.add(modelFile);
 							}
 							circulerProgressBar.setVisibility(View.INVISIBLE);
@@ -146,7 +142,7 @@ public class FileManagerFragmentOnline extends Fragment {
 				@Override
 				public void execute(final ModelFile modelFile) {
 					final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentOnline.this.app);
-					final String[] menuList = { "Download", "Delete" };
+					final String[] menuList = { "Download", "Rename", "Delete" };
 					menuAleart.setTitle("Action");
 					menuAleart.setItems(menuList,
 							new DialogInterface.OnClickListener() {
@@ -159,10 +155,25 @@ public class FileManagerFragmentOnline extends Fragment {
 											public void execute() {
 												Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
 												FileManagerFragmentOnline.this.app.updateAdapters();
-											}											
+											}
 										});
 										break;
+										
 									case 1:
+										FileManagerFragmentOnline.this.app.prompt("Rename", "Rename file ?", "Ok", new IStringListener() {
+											@Override
+											public void execute(String text) {
+												modelFile.rename(text, new IPostExecuteListener() {
+													@Override
+													public void execute(JSONObject json, String body) {
+														FileManagerFragmentOnline.this.app.refreshAdapters();
+													}
+												});
+											}			
+										}, "Cancel", null);
+										break;
+										
+									case 2:
 										FileManagerFragmentOnline.this.app.alert("Download", "Delete file ?", "Yes", new IListener() {			
 											@Override
 											public void execute() {
@@ -170,7 +181,7 @@ public class FileManagerFragmentOnline extends Fragment {
 													@Override
 													public void execute(JSONObject json, String body) {
 														FileManagerFragmentOnline.this.app.refreshAdapters();
-													}													
+													}
 												});
 											}
 										}, "No", null);
