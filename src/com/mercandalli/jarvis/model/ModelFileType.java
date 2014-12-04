@@ -8,7 +8,7 @@ package com.mercandalli.jarvis.model;
 
 public class ModelFileType {	
 	
-	String[] extentions;
+	public String[] extentions;
 	
 	public ModelFileType(String value) {
 		extentions = new String[] {value};

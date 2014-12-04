@@ -14,6 +14,7 @@ import com.mercandalli.jarvis.Application;
 import com.mercandalli.jarvis.R;
 import com.mercandalli.jarvis.listener.IModelFileListener;
 import com.mercandalli.jarvis.model.ModelFile;
+import com.mercandalli.jarvis.model.ModelFileTypeENUM;
 
 public class AdapterModelFile extends ArrayAdapter<ModelFile> {
 
@@ -42,6 +43,13 @@ public class AdapterModelFile extends ArrayAdapter<ModelFile> {
 			else
 				((TextView) convertView.findViewById(R.id.title)).setText(file.url);
 			
+			if(file.type.equals(ModelFileTypeENUM.AUDIO.type))
+				((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_audio));
+			else if(file.type.equals(ModelFileTypeENUM.PDF.type))
+				((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_pdf));
+			else if(file.type.equals(ModelFileTypeENUM.APK.type))
+				((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_apk));
+						
 			if(file.bitmap!=null)
 				((ImageView) convertView.findViewById(R.id.icon)).setImageBitmap(file.bitmap);
 			

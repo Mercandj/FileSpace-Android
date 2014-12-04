@@ -37,7 +37,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
         android:contentDescription="@string/image_description"
-        android:src="@drawable/file" />
+        android:src="@drawable/file_default" />
 
     <ImageView
         android:id="@+id/more"
