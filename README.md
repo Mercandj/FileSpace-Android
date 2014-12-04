@@ -4,8 +4,8 @@ J.A.R.V.I.S - ANDROID
 **_Unfinished project, still in development_** [API Required](https://github.com/Mercandj/Jarvis-API)
 
 <p align="center">
-	<img src="https://raw.github.com/Mercandj/Jarvis-Android/master/screenshot/1.png" width="250" />
-	<img src="https://raw.github.com/Mercandj/Jarvis-Android/master/screenshot/2.png" width="250" />
+	<img src="https://raw.github.com/Mercandj/Jarvis-Android/master/screenshot/A.png" width="250" />
+	<img src="https://raw.github.com/Mercandj/Jarvis-Android/master/screenshot/B.png" width="250" />
 </p>
 
 ## PROJECT DESCRIPTION
