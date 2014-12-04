@@ -25,8 +25,8 @@ import com.mercandalli.jarvis.listener.IPostExecuteListener;
 
 public class RequestFragment extends Fragment {
 
-	Application app;
-	View rootView;
+	private Application app;
+	private View rootView;
 
 	public RequestFragment(Application app) {
 		this.app = app;

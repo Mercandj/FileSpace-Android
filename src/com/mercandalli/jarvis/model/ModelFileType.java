@@ -8,7 +8,7 @@ package com.mercandalli.jarvis.model;
 
 public class ModelFileType {	
 	
-	public String[] extentions;
+	private String[] extentions;
 	
 	public ModelFileType(String value) {
 		extentions = new String[] {value};
@@ -19,7 +19,8 @@ public class ModelFileType {
 	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(Object o) {		
+		if(this == o) return true;		
 		if(!(o  instanceof ModelFileType))
 			return false;
 		String[] objextentions = ((ModelFileType) o).extentions;

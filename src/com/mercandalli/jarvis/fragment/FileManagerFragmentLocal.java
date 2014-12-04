@@ -33,13 +33,13 @@ import com.mercandalli.jarvis.model.ModelFileType;
 
 public class FileManagerFragmentLocal extends Fragment {
 	
-	Application app;
-	ListView listView;
-	List<ModelFile> listModelFile;
-	ProgressBar circulerProgressBar;
-	File jarvisDirectory;
-	TextView message;
-	SwipeRefreshLayout swipeRefreshLayout;
+	private Application app;
+	private ListView listView;
+	private List<ModelFile> listModelFile;
+	private ProgressBar circulerProgressBar;
+	private File jarvisDirectory;
+	private TextView message;
+	private SwipeRefreshLayout swipeRefreshLayout;
 	
 	public FileManagerFragmentLocal(Application app) {
 		this.app = app;
@@ -110,7 +110,7 @@ public class FileManagerFragmentLocal extends Fragment {
 			else
 				message.setVisibility(View.GONE);
 			
-			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, listModelFile, null, null));
+			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, listModelFile, null));
 			listView.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

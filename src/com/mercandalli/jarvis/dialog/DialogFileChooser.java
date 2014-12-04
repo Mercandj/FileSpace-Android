@@ -22,14 +22,15 @@ import com.mercandalli.jarvis.R;
 import com.mercandalli.jarvis.adapter.AdapterModelFile;
 import com.mercandalli.jarvis.listener.IModelFileListener;
 import com.mercandalli.jarvis.model.ModelFile;
+import com.mercandalli.jarvis.model.ModelFileType;
 
 public class DialogFileChooser extends Dialog {
 	
-	Application app;
-	ListView files;
-	List<ModelFile> listModelFile;
-	String currentUrl = "/";
-	IModelFileListener listener;
+	private Application app;
+	private ListView files;
+	private List<ModelFile> listModelFile;
+	private String currentUrl = "/";
+	private IModelFileListener listener;
 	
 	public DialogFileChooser(final Application app, IModelFileListener listener) {
 		super(app);
@@ -49,7 +50,7 @@ public class DialogFileChooser extends Dialog {
 	
 	private void updateAdapter() {
 		getFiles();
-		files.setAdapter(new AdapterModelFile(app, R.layout.tab_file, listModelFile, null, null));
+		files.setAdapter(new AdapterModelFile(app, R.layout.tab_file, listModelFile, null));
 		files.setOnItemClickListener(new OnItemClickListener() {
 		    @Override 
 		    public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
@@ -78,6 +79,7 @@ public class DialogFileChooser extends Dialog {
 				ModelFile modelFile = new ModelFile(this.app);
 				modelFile.url = file.getAbsolutePath();
 				modelFile.name = file.getName();
+				modelFile.type = new ModelFileType(file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".")+1));
 				modelFile.size = ""+file.getTotalSpace();
 				modelFile.isDirectory = file.isDirectory();
 				listModelFile.add(modelFile);

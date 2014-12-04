@@ -42,7 +42,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public Object getItem(int position) {		
+	public Object getItem(int position) {
 		return navDrawerItems.get(position);
 	}
 
@@ -104,7 +104,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
 			else
 				Font.applyFont(context, ((TextView) convertView.findViewById(R.id.title)), "fonts/MYRIADAM.TTF");			
 			
-			break;		
+			break;
 		}
         
         return convertView;

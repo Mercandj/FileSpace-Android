@@ -15,7 +15,8 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
  * @author Jonathan
  *
  */
-public class NavDrawerItem {	
+public class NavDrawerItem {
+	
 	public String title;
 	public String subtitle;
 	public int icon;
@@ -79,6 +80,8 @@ public class NavDrawerItem {
 	
 	@Override
 	public boolean equals(Object o) {
+		if(this == o) return true;
+		if(!(o instanceof NavDrawerItem)) return false;
 		return this.title.equals(((NavDrawerItem)o).title) && this.icon==((NavDrawerItem)o).icon;
 	}
 }

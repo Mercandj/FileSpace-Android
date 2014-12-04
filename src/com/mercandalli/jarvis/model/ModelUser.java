@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ModelUser {
+	
 	public String username;
 	public String password;
 	public String currentToken;

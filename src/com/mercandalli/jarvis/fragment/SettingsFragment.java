@@ -26,10 +26,10 @@ import com.mercandalli.jarvis.model.ModelSetting;
 
 public class SettingsFragment extends Fragment {
 
-	Application app;
-	View rootView;
-	ListView listView;
-	List<ModelSetting> listModelSetting;
+	private Application app;
+	private View rootView;
+	private ListView listView;
+	private List<ModelSetting> listModelSetting;
 
 	public SettingsFragment(Application app) {
 		this.app = app;

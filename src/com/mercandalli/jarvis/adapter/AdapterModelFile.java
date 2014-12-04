@@ -18,15 +18,14 @@ import com.mercandalli.jarvis.model.ModelFileTypeENUM;
 
 public class AdapterModelFile extends ArrayAdapter<ModelFile> {
 
-	Application app;
-	List<ModelFile> files;
-	IModelFileListener clickListener, moreListener;
+	private Application app;
+	private List<ModelFile> files;
+	private IModelFileListener moreListener;
 	
-	public AdapterModelFile(Application app, int resource, List<ModelFile> files, IModelFileListener clickListener, IModelFileListener moreListener) {
+	public AdapterModelFile(Application app, int resource, List<ModelFile> files, IModelFileListener moreListener) {
 		super(app, resource, files);
 		this.app = app;
 		this.files = files;
-		this.clickListener = clickListener;
 		this.moreListener = moreListener;
 	}
 	
@@ -43,12 +42,13 @@ public class AdapterModelFile extends ArrayAdapter<ModelFile> {
 			else
 				((TextView) convertView.findViewById(R.id.title)).setText(file.url);
 			
-			if(file.type.equals(ModelFileTypeENUM.AUDIO.type))
-				((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_audio));
-			else if(file.type.equals(ModelFileTypeENUM.PDF.type))
-				((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_pdf));
-			else if(file.type.equals(ModelFileTypeENUM.APK.type))
-				((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_apk));
+			if(file.type!=null)
+				if(file.type.equals(ModelFileTypeENUM.AUDIO.type))
+					((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_audio));
+				else if(file.type.equals(ModelFileTypeENUM.PDF.type))
+					((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_pdf));
+				else if(file.type.equals(ModelFileTypeENUM.APK.type))
+					((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_apk));
 						
 			if(file.bitmap!=null)
 				((ImageView) convertView.findViewById(R.id.icon)).setImageBitmap(file.bitmap);

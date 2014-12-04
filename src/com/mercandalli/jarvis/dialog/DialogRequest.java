@@ -27,8 +27,8 @@ import com.mercandalli.jarvis.net.TaskPost;
 public class DialogRequest extends Dialog {
 	
 	DialogFileChooser dialogFileChooser;
-	Application app;
-	File file;
+	private Application app;
+	private File file;
 	ModelFile modelFile;	
 	
 	private final int GET			= 0;

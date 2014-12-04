@@ -12,8 +12,7 @@ import com.mercandalli.jarvis.Application;
 
 public class ModelSetting {
 	
-	@SuppressWarnings("unused")
-	private Application app;
+	Application app;
 
 	public OnCheckedChangeListener toggleButtonListener = null;
 	public boolean toggleButtonInitValue = false;

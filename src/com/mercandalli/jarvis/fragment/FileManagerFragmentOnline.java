@@ -44,12 +44,12 @@ import com.mercandalli.jarvis.net.TaskGet;
 
 public class FileManagerFragmentOnline extends Fragment {
 
-	Application app;
-	ListView listView;
-	List<ModelFile> listModelFile;
-	ProgressBar circulerProgressBar;
-	TextView message;
-	SwipeRefreshLayout swipeRefreshLayout;
+	private Application app;
+	private ListView listView;
+	private List<ModelFile> listModelFile;
+	private ProgressBar circulerProgressBar;
+	private TextView message;
+	private SwipeRefreshLayout swipeRefreshLayout;
 
 	public FileManagerFragmentOnline(Application app) {
 		this.app = app;
@@ -114,10 +114,9 @@ public class FileManagerFragmentOnline extends Fragment {
 							}
 							circulerProgressBar.setVisibility(View.INVISIBLE);
 						}
-					} else
-						Toast.makeText(app,
-								app.getString(R.string.action_failed),
-								Toast.LENGTH_SHORT).show();
+					}
+					else
+						Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -138,7 +137,7 @@ public class FileManagerFragmentOnline extends Fragment {
 				message.setVisibility(View.GONE);
 			
 			save_position();
-			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, listModelFile, null, new IModelFileListener() {
+			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, listModelFile, new IModelFileListener() {
 				@Override
 				public void execute(final ModelFile modelFile) {
 					final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentOnline.this.app);
