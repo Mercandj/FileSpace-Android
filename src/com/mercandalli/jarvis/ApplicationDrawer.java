@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.mercandalli.jarvis.fragment.FileManagerFragment;
 import com.mercandalli.jarvis.fragment.RequestFragment;
@@ -211,7 +212,46 @@ public abstract class ApplicationDrawer extends Application {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	MenuInflater inflater = getMenuInflater();
-    	inflater.inflate(R.menu.main, menu);        
+    	inflater.inflate(R.menu.main, menu);     
+    	
+    	MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView mSearchView = (SearchView) searchItem.getActionView();
+        
+        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+        	@Override
+            public boolean onQueryTextChange(String query) {
+        		if(query == null)
+            		return true;
+            	if(query.replaceAll(" ", "").equals("")) {
+            		if(fragment instanceof FileManagerFragment) {
+                		FileManagerFragment tmp_fragment = (FileManagerFragment) fragment;    		
+                		switch(tmp_fragment.getCurrentFragmentIndex()) {
+                		case 0: tmp_fragment.refreshListServer(); break;
+                		}
+                	}
+            	}
+            	return true;
+            }
+        	
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+            	if(query == null)
+            		return false;
+            	if(query.replaceAll(" ", "").equals(""))
+            		return false;
+            	if(fragment instanceof FileManagerFragment) {
+            		FileManagerFragment tmp_fragment = (FileManagerFragment) fragment;    		
+            		switch(tmp_fragment.getCurrentFragmentIndex()) {
+            		case 0: tmp_fragment.refreshListServer(query); break;
+            		}
+            	}
+				return false;
+            }            
+        };
+        
+        mSearchView.setOnQueryTextListener(queryTextListener);
+    	
+    	
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -219,6 +259,7 @@ public abstract class ApplicationDrawer extends Application {
     public boolean onPrepareOptionsMenu(Menu menu) {
     	boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
     	
+    	menu.findItem(R.id.action_search)	.setVisible(false);
     	menu.findItem(R.id.action_delete)	.setVisible(false);
 		menu.findItem(R.id.action_add)		.setVisible(false);
 		menu.findItem(R.id.action_download)	.setVisible(false);
@@ -231,7 +272,7 @@ public abstract class ApplicationDrawer extends Application {
     		FileManagerFragment tmp_fragment = (FileManagerFragment) fragment;    		
     		switch(tmp_fragment.getCurrentFragmentIndex()) {
     		case 0:
-    			menu.findItem(R.id.action_add)		.setVisible(!drawerOpen);
+    			menu.findItem(R.id.action_search)	.setVisible(!drawerOpen);
     			menu.findItem(R.id.action_download)	.setVisible(!drawerOpen);
     			break;
     		case 1:

@@ -9,6 +9,7 @@ package com.mercandalli.jarvis.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -96,11 +97,19 @@ public class FileManagerFragmentOnline extends Fragment {
 
 		return rootView;
 	}
-
+	
 	public void refreshList() {
+		refreshList(null);
+	}
 
-		new TaskGet(app, this.app.config.getUrlServer()
-				+ this.app.config.routeFile, new IPostExecuteListener() {
+	public void refreshList(String search) {		
+		List<BasicNameValuePair> parameters = null;
+		if(search!=null) {
+			parameters = new ArrayList<BasicNameValuePair>();
+			parameters.add(new BasicNameValuePair("search", ""+search));
+		}
+
+		new TaskGet(app, this.app.config.getUrlServer() + this.app.config.routeFile, new IPostExecuteListener() {
 			@Override
 			public void execute(JSONObject json, String body) {
 				listModelFile = new ArrayList<ModelFile>();
@@ -122,8 +131,7 @@ public class FileManagerFragmentOnline extends Fragment {
 				}
 				updateAdapter();
 			}
-		}, null).execute();
-
+		}, parameters).execute();
 	}
 
 	public void updateAdapter() {

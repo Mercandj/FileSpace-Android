@@ -99,13 +99,18 @@ public class FileManagerFragment extends Fragment {
         }
     }
 	
+
 	public void refreshListServer() {
+		refreshListServer(null);
+	}
+	
+	public void refreshListServer(String search) {
 		if(this.listFragment[0]!=null)
 			if(this.listFragment[0] instanceof FileManagerFragmentOnline) {
 				FileManagerFragmentOnline fragmentFileManagerFragment = (FileManagerFragmentOnline) this.listFragment[0];
-				fragmentFileManagerFragment.refreshList();
+				fragmentFileManagerFragment.refreshList(search);
 			}
-	}
+	}	
 	
 	public void updateAdapterListServer() {
 		if(this.listFragment[0]!=null)

@@ -11,6 +11,13 @@
         android:title="@string/menu_action_delete"/>
     
     <item
+        android:id="@+id/action_search"
+        android:actionViewClass="android.widget.SearchView"
+        android:icon="@android:drawable/ic_menu_search"
+        android:showAsAction="ifRoom|collapseActionView"
+        android:title="@string/menu_action_search"/>
+    
+    <item
         android:id="@+id/action_add"
         android:icon="@android:drawable/ic_menu_add"
         android:showAsAction="ifRoom"

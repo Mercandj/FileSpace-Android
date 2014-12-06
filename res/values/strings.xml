@@ -33,6 +33,7 @@
     <string name="method">Method</string>
     <string name="autoconnection">Next time : AutoConnection</string>
     
+     <string name="menu_action_search">Search</string>
     <string name="menu_action_delete">Delete</string>
     <string name="menu_action_add">Add</string>
     <string name="menu_action_upload">Upload</string>

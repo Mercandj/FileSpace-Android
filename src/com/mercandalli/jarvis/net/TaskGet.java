@@ -12,11 +12,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -63,17 +61,24 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 	@Override
 	protected String doInBackground(Void... urls) {
 		try {
-			
+			/*
 			List<NameValuePair> params = new LinkedList<NameValuePair>();
 			if(parameters!=null) {
 				for(BasicNameValuePair b : parameters)
 					params.add(b);	        
 		        String paramString = URLEncodedUtils.format(params, "utf-8");        
 		    	url += "?"+paramString;	
-			}
+		    	
+		    	
+			}*/
 			
-			HttpGet httpget = new HttpGet(url);						
-
+			if(parameters!=null) 
+				url += url.endsWith("?") ? URLEncodedUtils.format(parameters, "utf-8") : "?" + URLEncodedUtils.format(parameters, "utf-8");
+			
+			Log.d("COUCOU", "url = "+url);
+			
+			HttpGet httpget = new HttpGet(url);
+			
 	    	StringBuilder authentication = new StringBuilder().append(app.config.getUser().getAccessLogin()).append(":").append(app.config.getUser().getAccessPassword());
 	        String result = Base64.encodeBytes(authentication.toString().getBytes());
 	        httpget.setHeader("Authorization", "Basic " + result);
