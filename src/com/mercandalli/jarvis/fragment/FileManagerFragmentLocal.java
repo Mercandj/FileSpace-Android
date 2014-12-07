@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Environment;
@@ -41,7 +42,19 @@ public class FileManagerFragmentLocal extends Fragment {
 	private TextView message;
 	private SwipeRefreshLayout swipeRefreshLayout;
 	
+	
+	@Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.app = (Application) activity;
+    }	
+	
+	public FileManagerFragmentLocal() {
+		super();
+	}
+	
 	public FileManagerFragmentLocal(Application app) {
+		super();
 		this.app = app;
 	}	
 	
@@ -56,7 +69,7 @@ public class FileManagerFragmentLocal extends Fragment {
         ((ImageView) rootView.findViewById(R.id.circle)).setVisibility(View.GONE);
         ((ImageView) rootView.findViewById(R.id.circle_ic)).setVisibility(View.GONE);        
         
-		jarvisDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+app.config.localFolderName);
+		jarvisDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().localFolderName);
 		if(!jarvisDirectory.exists())
 			jarvisDirectory.mkdir();
     	

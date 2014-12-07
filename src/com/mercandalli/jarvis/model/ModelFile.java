@@ -77,7 +77,7 @@ public class ModelFile {
 		}
 		
 		if(this.type.equals(ModelFileTypeENUM.PICTURE.type)) {
-			new TaskGetDownloadImage(app, this.app.config.getUrlServer()+this.app.config.routeFile+"/"+this.id, new IBitmapListener() {
+			new TaskGetDownloadImage(app, this.app.getConfig().getUser(), this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+this.id, new IBitmapListener() {
 				@Override
 				public void execute(Bitmap bitmap) {
 					ModelFile.this.bitmap = bitmap;
@@ -85,11 +85,12 @@ public class ModelFile {
 				}
 			}).execute();
 		}
+		
 	}
 	
-	public void executeOnline() {		
+	public void executeOnline() {
 		if(this.type.equals(ModelFileTypeENUM.TEXT.type)) {
-			new TaskGet(this.app, this.app.config.getUrlServer()+this.app.config.routeFile+"/"+id, new IPostExecuteListener() {
+			new TaskGet(this.app, this.app.getConfig().getUser(), this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id, new IPostExecuteListener() {
 				@Override
 				public void execute(JSONObject json, String body) {
 					new DialogShowTxt(app, body);
@@ -98,10 +99,10 @@ public class ModelFile {
 		}
 		else if(this.type.equals(ModelFileTypeENUM.AUDIO.type)) {
 			try {
-				Uri uri = Uri.parse(this.app.config.getUrlServer()+this.app.config.routeFile+"/"+id);
+				Uri uri = Uri.parse(this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id);
 				
 				Map<String, String> headers = new HashMap<String, String>();
-				StringBuilder authentication = new StringBuilder().append(app.config.getUser().getAccessLogin()).append(":").append(app.config.getUser().getAccessPassword());
+				StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
 		        String result = Base64.encodeBytes(authentication.toString().getBytes());
 		        headers.put("Authorization", "Basic " + result);
 				
@@ -114,7 +115,7 @@ public class ModelFile {
 			} catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
 				e.printStackTrace();
 			}
-		}		
+		}
 	}
 	
 	public void executeLocal() {
@@ -178,20 +179,20 @@ public class ModelFile {
 	}
 	
 	public void download(IListener listener) {
-		String url = this.app.config.getUrlServer()+this.app.config.routeFile+"/"+id;
-		String url_ouput = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+app.config.localFolderName+File.separator+this.url;
+		String url = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
+		String url_ouput = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+app.getConfig().localFolderName+File.separator+this.url;
 		new TaskGetDownload(this.app, url, url_ouput, listener).execute();
 	}
 	
 	public void delete(IPostExecuteListener listener) {
-		String url = this.app.config.getUrlServer()+this.app.config.routeFile+"/"+id;
+		String url = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
 		new TaskDelete(app, url, listener).execute();
 	}
 	
 	public void rename(String new_name, IPostExecuteListener listener) {
 		this.name = new_name;
 		this.url = new_name;
-		String url = this.app.config.getUrlServer()+this.app.config.routeFile+"/"+id;
+		String url = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
 		new TaskPut(app, url, listener, getForUpload()).execute();
 	}
 }

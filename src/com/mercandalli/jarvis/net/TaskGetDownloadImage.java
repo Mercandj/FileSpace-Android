@@ -22,6 +22,7 @@ import android.os.AsyncTask;
 
 import com.mercandalli.jarvis.Application;
 import com.mercandalli.jarvis.listener.IBitmapListener;
+import com.mercandalli.jarvis.model.ModelUser;
 
 /**
  * Global behavior : DDL Image
@@ -35,9 +36,11 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
 	Bitmap bitmap;
 	IBitmapListener listener;
 	Application app;
+	ModelUser user;
 	
-	public TaskGetDownloadImage(Application app, String url, IBitmapListener listener) {
+	public TaskGetDownloadImage(Application app, ModelUser user, String url, IBitmapListener listener) {
 		this.app = app;
+		this.user = user;
 		this.url = url;
 		this.listener = listener;
 	}
@@ -57,7 +60,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
 		Bitmap x = null;
 		HttpResponse response;
 		HttpGet httpget = new HttpGet(url);
-    	StringBuilder authentication = new StringBuilder().append(app.config.getUser().getAccessLogin()).append(":").append(app.config.getUser().getAccessPassword());
+    	StringBuilder authentication = new StringBuilder().append(user.getAccessLogin()).append(":").append(user.getAccessPassword());
         String result = Base64.encodeBytes(authentication.toString().getBytes());
         httpget.setHeader("Authorization", "Basic " + result);
 		HttpClient httpclient = new DefaultHttpClient();

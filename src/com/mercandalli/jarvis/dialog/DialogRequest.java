@@ -54,7 +54,7 @@ public class DialogRequest extends Dialog {
 				
 				case POST:					
 					if(!((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString().equals(""))
-						(new TaskPost(app, app.config.getUrlServer()+((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString(), new IPostExecuteListener() {
+						(new TaskPost(app, app.getConfig().getUrlServer()+((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString(), new IPostExecuteListener() {
 							@Override
 							public void execute(JSONObject json, String body) {
 								if(listener!=null)
@@ -73,14 +73,13 @@ public class DialogRequest extends Dialog {
 					
 				default: //GET
 					if(!((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString().equals(""))
-						(new TaskGet(app, app.config.getUrlServer()+((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString(), new IPostExecuteListener() {
+						(new TaskGet(app, app.getConfig().getUser(), app.getConfig().getUrlServer()+((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString(), new IPostExecuteListener() {
 							@Override
 							public void execute(JSONObject json, String body) {
 								if(listener!=null)
 									listener.execute(json, body);
 							}
-						}, null)).execute();
-					
+						}, null)).execute();					
 				}
 				DialogRequest.this.dismiss();
 			}        	

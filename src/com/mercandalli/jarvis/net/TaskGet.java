@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.mercandalli.jarvis.Application;
 import com.mercandalli.jarvis.listener.IPostExecuteListener;
+import com.mercandalli.jarvis.model.ModelUser;
 
 /**
  * Global behavior : http Get
@@ -42,17 +43,20 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 	String url;
 	IPostExecuteListener listener;
 	File file;
-	Application app;
+	ModelUser user;
 	List<BasicNameValuePair> parameters;
+	Application app;
 
-	public TaskGet(Application app, String url, IPostExecuteListener listener) {
+	public TaskGet(Application app, ModelUser user, String url, IPostExecuteListener listener) {
 		this.app = app;
+		this.user = user;
 		this.url = url;
 		this.listener = listener;
 	}
 	
-	public TaskGet(Application app, String url, IPostExecuteListener listener, List<BasicNameValuePair> parameters) {
+	public TaskGet(Application app, ModelUser user, String url, IPostExecuteListener listener, List<BasicNameValuePair> parameters) {
 		this.app = app;
+		this.user = user;
 		this.url = url;
 		this.listener = listener;
 		this.parameters = parameters;
@@ -61,25 +65,14 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 	@Override
 	protected String doInBackground(Void... urls) {
 		try {
-			/*
-			List<NameValuePair> params = new LinkedList<NameValuePair>();
-			if(parameters!=null) {
-				for(BasicNameValuePair b : parameters)
-					params.add(b);	        
-		        String paramString = URLEncodedUtils.format(params, "utf-8");        
-		    	url += "?"+paramString;	
-		    	
-		    	
-			}*/
-			
 			if(parameters!=null) 
 				url += url.endsWith("?") ? URLEncodedUtils.format(parameters, "utf-8") : "?" + URLEncodedUtils.format(parameters, "utf-8");
 			
-			Log.d("COUCOU", "url = "+url);
+			Log.d("TaskGet", "url = "+url);
 			
 			HttpGet httpget = new HttpGet(url);
 			
-	    	StringBuilder authentication = new StringBuilder().append(app.config.getUser().getAccessLogin()).append(":").append(app.config.getUser().getAccessPassword());
+	    	StringBuilder authentication = new StringBuilder().append(user.getAccessLogin()).append(":").append(user.getAccessPassword());
 	        String result = Base64.encodeBytes(authentication.toString().getBytes());
 	        httpget.setHeader("Authorization", "Basic " + result);
 			

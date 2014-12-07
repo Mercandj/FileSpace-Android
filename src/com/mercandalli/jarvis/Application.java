@@ -19,15 +19,20 @@ import com.mercandalli.jarvis.listener.IStringListener;
 
 public abstract class Application extends Activity {
 	
-	public Config config;
+	private Config config;
 	public Dialog dialog;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {		
-		super.onCreate(savedInstanceState);
-		
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);		
 		config = new Config(this);
-	}	
+	}
+	
+	public Config getConfig() {
+		if(config == null)
+			config = new Config(this);
+		return config;
+	}
 	
 	public void alert(String title, String message, String positive, final IListener positiveListener, String negative, final IListener negativeListener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -85,4 +90,3 @@ public abstract class Application extends Activity {
 	public abstract void refreshAdapters();
 	public abstract void updateAdapters();
 }
-

@@ -26,20 +26,25 @@ import com.mercandalli.jarvis.listener.IPostExecuteListener;
 
 public class FileManagerFragment extends Fragment {
 	
-	private final int NB_FRAGMENT = 2;
-	public Fragment listFragment[] = new Fragment[NB_FRAGMENT];
+	private static final int NB_FRAGMENT = 2;
+	public static Fragment listFragment[] = new Fragment[NB_FRAGMENT];
 	private Application app;
 	private ViewPager mViewPager;
 	private FileManagerFragmentPagerAdapter mPagerAdapter;
 	
+	public FileManagerFragment() {
+		super();
+	}
+	
 	public FileManagerFragment(Application app) {
+		super();
 		this.app = app;
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {		
 		View rootView = inflater.inflate(R.layout.fragment_filemanager, container, false);
-		mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager());
+		mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
 		
 		mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
 		mViewPager.setAdapter(mPagerAdapter);
@@ -65,19 +70,21 @@ public class FileManagerFragment extends Fragment {
 		return mViewPager.getCurrentItem();
 	}
 	
-	public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
-
-		public FileManagerFragmentPagerAdapter(FragmentManager fm) {
+	public static class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
+		Application app;
+		
+		public FileManagerFragmentPagerAdapter(FragmentManager fm, Application app) {
 			super(fm);
+			this.app = app;
 		}
 		
 		@Override
         public Fragment getItem(int i) {
 			Fragment fragment = null;
 			switch(i) {
-			case 0:		fragment = new FileManagerFragmentOnline(FileManagerFragment.this.app); 	break;
-			case 1:		fragment = new FileManagerFragmentLocal(FileManagerFragment.this.app);		break;
-			default:	fragment = new FileManagerFragmentLocal(FileManagerFragment.this.app);		break;
+			case 0:		fragment = new FileManagerFragmentOnline(this.app); 	break;
+			case 1:		fragment = new FileManagerFragmentLocal(this.app);		break;
+			default:	fragment = new FileManagerFragmentLocal(this.app);		break;
 			}
 			listFragment[i] = fragment;
             return fragment;
@@ -105,37 +112,37 @@ public class FileManagerFragment extends Fragment {
 	}
 	
 	public void refreshListServer(String search) {
-		if(this.listFragment[0]!=null)
-			if(this.listFragment[0] instanceof FileManagerFragmentOnline) {
-				FileManagerFragmentOnline fragmentFileManagerFragment = (FileManagerFragmentOnline) this.listFragment[0];
+		if(listFragment[0]!=null)
+			if(listFragment[0] instanceof FileManagerFragmentOnline) {
+				FileManagerFragmentOnline fragmentFileManagerFragment = (FileManagerFragmentOnline) listFragment[0];
 				fragmentFileManagerFragment.refreshList(search);
 			}
 	}	
 	
 	public void updateAdapterListServer() {
-		if(this.listFragment[0]!=null)
-			if(this.listFragment[0] instanceof FileManagerFragmentOnline) {
-				FileManagerFragmentOnline fragmentFileManagerFragment = (FileManagerFragmentOnline) this.listFragment[0];
+		if(listFragment[0]!=null)
+			if(listFragment[0] instanceof FileManagerFragmentOnline) {
+				FileManagerFragmentOnline fragmentFileManagerFragment = (FileManagerFragmentOnline) listFragment[0];
 				fragmentFileManagerFragment.updateAdapter();
 			}		
-		if(this.listFragment.length>1)
-			if(this.listFragment[1]!=null)
-				if(this.listFragment[1] instanceof FileManagerFragmentLocal) {
-					FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) this.listFragment[1];
+		if(listFragment.length>1)
+			if(listFragment[1]!=null)
+				if(listFragment[1] instanceof FileManagerFragmentLocal) {
+					FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[1];
 					fragmentFileManagerFragment.refreshList();
 				}
 	}
 	
 	public void refreshAdapterListServer() {
-		if(this.listFragment[0]!=null)
-			if(this.listFragment[0] instanceof FileManagerFragmentOnline) {
-				FileManagerFragmentOnline fragmentFileManagerFragment = (FileManagerFragmentOnline) this.listFragment[0];
+		if(listFragment[0]!=null)
+			if(listFragment[0] instanceof FileManagerFragmentOnline) {
+				FileManagerFragmentOnline fragmentFileManagerFragment = (FileManagerFragmentOnline) listFragment[0];
 				fragmentFileManagerFragment.refreshList();
 			}		
-		if(this.listFragment.length>1)
-			if(this.listFragment[1]!=null)
-				if(this.listFragment[1] instanceof FileManagerFragmentLocal) {
-					FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) this.listFragment[1];
+		if(listFragment.length>1)
+			if(listFragment[1]!=null)
+				if(listFragment[1] instanceof FileManagerFragmentLocal) {
+					FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[1];
 					fragmentFileManagerFragment.refreshList();
 				}
 	}

@@ -74,7 +74,7 @@ public class TaskDelete extends AsyncTask<Void, Void, String> {
 			
 			HttpDelete httpdelete = new HttpDelete(url);						
 
-	    	StringBuilder authentication = new StringBuilder().append(app.config.getUser().getAccessLogin()).append(":").append(app.config.getUser().getAccessPassword());
+	    	StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
 	        String result = Base64.encodeBytes(authentication.toString().getBytes());
 	        httpdelete.setHeader("Authorization", "Basic " + result);
 			

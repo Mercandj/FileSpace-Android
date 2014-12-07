@@ -50,28 +50,28 @@ public class ActivityRegisterLogin extends Application {
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayUseLogoEnabled(false);
         
-        if(this.config.isAutoConncetion() && this.config.getUrlServer()!=null && this.config.getUserUsername()!=null && this.config.getUserPassword()!=null)
+        if(this.getConfig().isAutoConncetion() && this.getConfig().getUrlServer()!=null && this.getConfig().getUserUsername()!=null && this.getConfig().getUserPassword()!=null)
         	connectionSucceed();
         
         ((CheckBox) this.findViewById(R.id.autoconnection)).setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				ActivityRegisterLogin.this.config.setAutoConnection(isChecked);				
+				ActivityRegisterLogin.this.getConfig().setAutoConnection(isChecked);				
 			}
 		});
         
-        if(this.config.getUrlServer()!=null)
-        	if(!this.config.getUrlServer().equals(""))
-        		((EditText) this.findViewById(R.id.server)).setText(this.config.getUrlServer());
+        if(this.getConfig().getUrlServer()!=null)
+        	if(!this.getConfig().getUrlServer().equals(""))
+        		((EditText) this.findViewById(R.id.server)).setText(this.getConfig().getUrlServer());
         
-        if(this.config.getUserUsername()!=null)
-        	if(!this.config.getUserUsername().equals("")) {
-        		((EditText) this.findViewById(R.id.username)).setText(this.config.getUserUsername());
+        if(this.getConfig().getUserUsername()!=null)
+        	if(!this.getConfig().getUserUsername().equals("")) {
+        		((EditText) this.findViewById(R.id.username)).setText(this.getConfig().getUserUsername());
         		firstUse = false;
         	}
         
-        if(this.config.getUserPassword()!=null)
-        	if(!this.config.getUserPassword().equals("")) {
+        if(this.getConfig().getUserPassword()!=null)
+        	if(!this.getConfig().getUserPassword().equals("")) {
         		((EditText) this.findViewById(R.id.password)).setHint("Hash Saved");  
 		        firstUse = false;
 			}
@@ -97,26 +97,26 @@ public class ActivityRegisterLogin extends Application {
 				
 				if(!((EditText) ActivityRegisterLogin.this.findViewById(R.id.username)).getText().toString().equals("")) {
 					user.username = ((EditText) ActivityRegisterLogin.this.findViewById(R.id.username)).getText().toString();
-					ActivityRegisterLogin.this.config.setUserUsername(user.username);
+					ActivityRegisterLogin.this.getConfig().setUserUsername(user.username);
 				}
 				else
-					user.username = ActivityRegisterLogin.this.config.getUserUsername();
+					user.username = ActivityRegisterLogin.this.getConfig().getUserUsername();
 				
 				if(!((EditText) ActivityRegisterLogin.this.findViewById(R.id.password)).getText().toString().equals("")) {
 					user.password = SHA1.execute(((EditText) ActivityRegisterLogin.this.findViewById(R.id.password)).getText().toString());
-					ActivityRegisterLogin.this.config.setUserPassword(user.password);
+					ActivityRegisterLogin.this.getConfig().setUserPassword(user.password);
 				}
 				else
-					user.password = ActivityRegisterLogin.this.config.getUserPassword();
+					user.password = ActivityRegisterLogin.this.getConfig().getUserPassword();
 				
 				if(!((EditText) ActivityRegisterLogin.this.findViewById(R.id.server)).getText().toString().equals(""))
-					ActivityRegisterLogin.this.config.setUrlServer(((EditText) ActivityRegisterLogin.this.findViewById(R.id.server)).getText().toString());				
+					ActivityRegisterLogin.this.getConfig().setUrlServer(((EditText) ActivityRegisterLogin.this.findViewById(R.id.server)).getText().toString());				
 				
-				if(ActivityRegisterLogin.this.config.getUrlServer()==null) {
+				if(ActivityRegisterLogin.this.getConfig().getUrlServer()==null) {
 					requestLaunch = false;
 					return;
 				}
-				if(ActivityRegisterLogin.this.config.getUrlServer().equals("")) {
+				if(ActivityRegisterLogin.this.getConfig().getUrlServer().equals("")) {
 					requestLaunch = false;
 					return;
 				}
@@ -126,7 +126,7 @@ public class ActivityRegisterLogin extends Application {
 					List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
 					parameters.add(new BasicNameValuePair("username",""+user.username));
 					parameters.add(new BasicNameValuePair("password",""+user.password));
-					(new TaskPost(ActivityRegisterLogin.this, ActivityRegisterLogin.this.config.getUrlServer()+ActivityRegisterLogin.this.config.routeUserRegister, new IPostExecuteListener() {
+					(new TaskPost(ActivityRegisterLogin.this, ActivityRegisterLogin.this.getConfig().getUrlServer()+ActivityRegisterLogin.this.getConfig().routeUserRegister, new IPostExecuteListener() {
 						@Override
 						public void execute(JSONObject json, String body) {
 							try {
@@ -145,7 +145,7 @@ public class ActivityRegisterLogin extends Application {
 				}
 				// Login : GET /user
 				else
-					(new TaskGet(ActivityRegisterLogin.this, ActivityRegisterLogin.this.config.getUrlServer()+ActivityRegisterLogin.this.config.routeUserLogin, new IPostExecuteListener() {
+					(new TaskGet(ActivityRegisterLogin.this, ActivityRegisterLogin.this.getConfig().getUser(), ActivityRegisterLogin.this.getConfig().getUrlServer()+ActivityRegisterLogin.this.getConfig().routeUserLogin, new IPostExecuteListener() {
 						@Override
 						public void execute(JSONObject json, String body) {
 							try {

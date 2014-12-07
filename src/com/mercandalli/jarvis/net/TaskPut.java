@@ -63,7 +63,7 @@ public class TaskPut extends AsyncTask<Void, Void, String> {
 			HttpPut httpput = new HttpPut(url);			
 			httpput.setEntity(new UrlEncodedFormEntity(parameters));
 			
-			StringBuilder authentication = new StringBuilder().append(app.config.getUser().getAccessLogin()).append(":").append(app.config.getUser().getAccessPassword());
+			StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
 	        String result = Base64.encodeBytes(authentication.toString().getBytes());
 	        httpput.setHeader("Authorization", "Basic " + result);
 			

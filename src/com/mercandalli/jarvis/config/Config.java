@@ -29,7 +29,7 @@ public class Config {
 	public String currentToken					= null;
 	
 	private Activity activity;
-	private String file = "settings_json_1.txt";	
+	private final String file = "settings_json_1.txt";	
 	
 	private enum ENUM_Int {
 		LAST_TAB				(0, 			"int_last_tab"				),
@@ -67,7 +67,7 @@ public class Config {
 			this.value = init;
 			this.key = key;			
 		}
-	}	
+	}
 	
 	public Config(Activity my_activity) {
 		this.activity = my_activity;

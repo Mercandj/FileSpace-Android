@@ -61,7 +61,7 @@ public class TaskGetDownload extends AsyncTask<Void, Void, Void> {
 		File x = null;
 		HttpResponse response;
 		HttpGet httpget = new HttpGet(url);
-    	StringBuilder authentication = new StringBuilder().append(app.config.getUser().getAccessLogin()).append(":").append(app.config.getUser().getAccessPassword());
+    	StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
         String result = Base64.encodeBytes(authentication.toString().getBytes());
         httpget.setHeader("Authorization", "Basic " + result);
 		HttpClient httpclient = new DefaultHttpClient();

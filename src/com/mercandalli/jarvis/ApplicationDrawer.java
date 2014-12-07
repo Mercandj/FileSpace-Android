@@ -58,7 +58,7 @@ public abstract class ApplicationDrawer extends Application {
         
         // Tab 0
         navDrawerItems.add(
-        		new NavDrawerItem( config.getUserUsername(), config.getUrlServer(), R.drawable.ic_launcher, TYPE_PROFIL)
+        		new NavDrawerItem( this.getConfig().getUserUsername(), this.getConfig().getUrlServer(), R.drawable.ic_launcher, TYPE_PROFIL)
         		);
         
         // Tab 1
@@ -112,7 +112,7 @@ public abstract class ApplicationDrawer extends Application {
         		new NavDrawerItem( "About Dev", new IListener() {
 					@Override
 					public void execute() {
-						fragment = new WebFragment(ApplicationDrawer.this, ApplicationDrawer.this.config.aboutURL);
+						fragment = new WebFragment(ApplicationDrawer.this, ApplicationDrawer.this.getConfig().aboutURL);
 				        FragmentManager fragmentManager = getFragmentManager();
 				        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 					}

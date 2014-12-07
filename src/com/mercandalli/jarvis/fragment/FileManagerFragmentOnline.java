@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
@@ -51,8 +52,19 @@ public class FileManagerFragmentOnline extends Fragment {
 	private ProgressBar circulerProgressBar;
 	private TextView message;
 	private SwipeRefreshLayout swipeRefreshLayout;
+		
+	@Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        app = (Application) activity;
+    }
 
+	public FileManagerFragmentOnline() {
+		super();
+	}
+	
 	public FileManagerFragmentOnline(Application app) {
+		super();
 		this.app = app;
 	}
 
@@ -62,11 +74,10 @@ public class FileManagerFragmentOnline extends Fragment {
 		circulerProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
 		message = (TextView) rootView.findViewById(R.id.message);
 		listView = (ListView) rootView.findViewById(R.id.listView);
-
+		
 		refreshList();
 
-		swipeRefreshLayout = (SwipeRefreshLayout) rootView
-				.findViewById(R.id.swipeRefreshLayout);
+		swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
 		swipeRefreshLayout.setColorSchemeResources(
 				android.R.color.holo_blue_bright,
 				android.R.color.holo_green_light,
@@ -80,21 +91,20 @@ public class FileManagerFragmentOnline extends Fragment {
 			}
 		});
 
-		((ImageView) rootView.findViewById(R.id.circle))
-				.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						app.dialog = new DialogUpload(app,
-							new IPostExecuteListener() {
-								@Override
-								public void execute(JSONObject json, String body) {
-									if (json != null)
-										refreshList();
-								}
-							});
-					}
-				});
-
+		((ImageView) rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				app.dialog = new DialogUpload(app,
+					new IPostExecuteListener() {
+						@Override
+						public void execute(JSONObject json, String body) {
+							if (json != null)
+								refreshList();
+						}
+					});
+			}
+		});
+		
 		return rootView;
 	}
 	
@@ -109,29 +119,35 @@ public class FileManagerFragmentOnline extends Fragment {
 			parameters.add(new BasicNameValuePair("search", ""+search));
 		}
 
-		new TaskGet(app, this.app.config.getUrlServer() + this.app.config.routeFile, new IPostExecuteListener() {
-			@Override
-			public void execute(JSONObject json, String body) {
-				listModelFile = new ArrayList<ModelFile>();
-				try {
-					if (json != null) {
-						if (json.has("result")) {
-							JSONArray array = json.getJSONArray("result");
-							for (int i = 0; i < array.length(); i++) {
-								ModelFile modelFile = new ModelFile(app, array.getJSONObject(i));
-								listModelFile.add(modelFile);
+		new TaskGet(
+			app, 
+			this.app.getConfig().getUser(), 
+			this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile, 
+			new IPostExecuteListener() {
+				@Override
+				public void execute(JSONObject json, String body) {
+					listModelFile = new ArrayList<ModelFile>();
+					try {
+						if (json != null) {
+							if (json.has("result")) {
+								JSONArray array = json.getJSONArray("result");
+								for (int i = 0; i < array.length(); i++) {
+									ModelFile modelFile = new ModelFile(app, array.getJSONObject(i));
+									listModelFile.add(modelFile);
+								}
+								circulerProgressBar.setVisibility(View.INVISIBLE);
 							}
-							circulerProgressBar.setVisibility(View.INVISIBLE);
 						}
+						else
+							Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+					} catch (JSONException e) {
+						e.printStackTrace();
 					}
-					else
-						Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
-				} catch (JSONException e) {
-					e.printStackTrace();
+					updateAdapter();
 				}
-				updateAdapter();
-			}
-		}, parameters).execute();
+			},
+			parameters
+		).execute();
 	}
 
 	public void updateAdapter() {

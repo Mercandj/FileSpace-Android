@@ -50,9 +50,9 @@ public class SettingsFragment extends Fragment {
 		listModelSetting.add(new ModelSetting(app, "AutoConnection", new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				app.config.setAutoConnection(isChecked);
+				app.getConfig().setAutoConnection(isChecked);
 			}
-		}, app.config.isAutoConncetion()));
+		}, app.getConfig().isAutoConncetion()));
 		
 		updateAdapter();		
 	}
