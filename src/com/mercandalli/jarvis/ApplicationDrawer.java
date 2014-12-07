@@ -24,6 +24,7 @@ import android.widget.SearchView;
 import com.mercandalli.jarvis.fragment.FileManagerFragment;
 import com.mercandalli.jarvis.fragment.RequestFragment;
 import com.mercandalli.jarvis.fragment.SettingsFragment;
+import com.mercandalli.jarvis.fragment.UserManagerFragment;
 import com.mercandalli.jarvis.fragment.WebFragment;
 import com.mercandalli.jarvis.listener.IListener;
 import com.mercandalli.jarvis.navdrawer.NavDrawerItem;
@@ -80,6 +81,18 @@ public abstract class ApplicationDrawer extends Application {
         
         // Tab 3
         navDrawerItems.add(
+        		new NavDrawerItem( "User", new IListener() {
+						@Override
+						public void execute() {
+							fragment = new UserManagerFragment(ApplicationDrawer.this);
+					        FragmentManager fragmentManager = getFragmentManager();
+					        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+						}
+			        }, TYPE_NORMAL)
+        		);
+        
+        // Tab 4
+        navDrawerItems.add(
         		new NavDrawerItem( "Request", new IListener() {
 						@Override
 						public void execute() {
@@ -90,12 +103,12 @@ public abstract class ApplicationDrawer extends Application {
 			        }, TYPE_NORMAL)
         		);
         
-        // Tab 4
+        // Tab 5
         navDrawerItems.add(
         		new NavDrawerItem( "", R.drawable.ic_launcher, TYPE_SECTION)
         		);
         
-        // Tab 5
+        // Tab 6
         navDrawerItems.add(
         		new NavDrawerItem( "Settings", new IListener() {
 					@Override
@@ -107,7 +120,7 @@ public abstract class ApplicationDrawer extends Application {
 		        }, TYPE_SETTING)
         		);
         
-        // Tab 6
+        // Tab 7
         navDrawerItems.add(
         		new NavDrawerItem( "About Dev", new IListener() {
 					@Override
@@ -249,8 +262,7 @@ public abstract class ApplicationDrawer extends Application {
             }            
         };
         
-        mSearchView.setOnQueryTextListener(queryTextListener);
-    	
+        mSearchView.setOnQueryTextListener(queryTextListener);    	
     	
         return super.onCreateOptionsMenu(menu);
     }

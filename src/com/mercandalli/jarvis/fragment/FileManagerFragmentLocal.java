@@ -40,8 +40,7 @@ public class FileManagerFragmentLocal extends Fragment {
 	private ProgressBar circulerProgressBar;
 	private File jarvisDirectory;
 	private TextView message;
-	private SwipeRefreshLayout swipeRefreshLayout;
-	
+	private SwipeRefreshLayout swipeRefreshLayout;	
 	
 	@Override
     public void onAttach(Activity activity) {

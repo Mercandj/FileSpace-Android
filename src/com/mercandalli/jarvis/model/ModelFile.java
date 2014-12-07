@@ -84,8 +84,7 @@ public class ModelFile {
 					ModelFile.this.app.updateAdapters();
 				}
 			}).execute();
-		}
-		
+		}		
 	}
 	
 	public void executeOnline() {
@@ -94,7 +93,7 @@ public class ModelFile {
 				@Override
 				public void execute(JSONObject json, String body) {
 					new DialogShowTxt(app, body);
-				}				
+				}
 			}).execute();		
 		}
 		else if(this.type.equals(ModelFileTypeENUM.AUDIO.type)) {
@@ -110,7 +109,7 @@ public class ModelFile {
 				player.setDataSource(this.app, uri, headers);
 				player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 				player.prepare();
-				player.start();				
+				player.start();
 				
 			} catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
 				e.printStackTrace();

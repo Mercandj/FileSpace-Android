@@ -22,7 +22,7 @@
         android:maxLines="1"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp"
+        android:paddingRight="15dp"
         android:scrollHorizontally="true"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
