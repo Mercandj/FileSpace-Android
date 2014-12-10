@@ -5,7 +5,7 @@ android {
     buildToolsVersion "21.1.1"
 
     defaultConfig {
-        applicationId "mercandalli.com.jarvis_android"
+        applicationId "mercandalli.com.jarvis"
         minSdkVersion 21
         targetSdkVersion 21
         versionCode 1

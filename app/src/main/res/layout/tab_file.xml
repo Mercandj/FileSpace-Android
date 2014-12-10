@@ -29,7 +29,7 @@
         android:textColor="#000"
         android:textSize="20sp" />
 
-    <mercandalli.com.jarvis_android.view.CircularImageView
+    <mercandalli.com.jarvis.view.CircularImageView
         android:id="@+id/icon"
         android:layout_width="60dp"
         android:layout_height="60dp"
