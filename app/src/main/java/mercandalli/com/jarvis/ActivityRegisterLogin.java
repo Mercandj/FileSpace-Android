@@ -183,7 +183,7 @@ public class ActivityRegisterLogin extends Application {
 		this.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		this.finish();
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		 switch (item.getItemId()) {

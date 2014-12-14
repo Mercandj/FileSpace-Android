@@ -60,7 +60,6 @@ public class AdapterModelFile extends ArrayAdapter<ModelFile> {
 						moreListener.execute(file);
 				}
 			});
-			
 		}
 		return convertView;
 	}
