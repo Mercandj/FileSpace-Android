@@ -13,6 +13,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.message.BasicNameValuePair;
@@ -26,8 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mercandalli.com.jarvis.Application;
-import mercandalli.com.jarvis.dialog.DialogShowTxt;
+import mercandalli.com.jarvis.R;
+import mercandalli.com.jarvis.activity.ActivityEditTxt;
+import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.listener.IBitmapListener;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
@@ -75,7 +77,7 @@ public class ModelFile extends Model {
 		}
 		
 		if(this.type.equals(ModelFileTypeENUM.PICTURE.type)) {
-			new TaskGetDownloadImage(app, this.app.getConfig().getUser(), this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+this.id, new IBitmapListener() {
+			new TaskGetDownloadImage(app, this.app.getConfig().getUser(), this.getOnlineURL(), new IBitmapListener() {
 				@Override
 				public void execute(Bitmap bitmap) {
 					ModelFile.this.bitmap = bitmap;
@@ -87,16 +89,20 @@ public class ModelFile extends Model {
 	
 	public void executeOnline() {
 		if(this.type.equals(ModelFileTypeENUM.TEXT.type)) {
-			new TaskGet(this.app, this.app.getConfig().getUser(), this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id, new IPostExecuteListener() {
+			new TaskGet(this.app, this.app.getConfig().getUser(), this.getOnlineURL(), new IPostExecuteListener() {
 				@Override
 				public void execute(JSONObject json, String body) {
-					new DialogShowTxt(app, body);
+                    Intent intent = new Intent(app, ActivityEditTxt.class);
+                    intent.putExtra("TXT", ""+body);
+                    intent.putExtra("URL_FILE", ""+getOnlineURL());
+                    app.startActivity(intent);
+                    app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 				}
 			}).execute();		
 		}
 		else if(this.type.equals(ModelFileTypeENUM.AUDIO.type)) {
 			try {
-				Uri uri = Uri.parse(this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id);
+				Uri uri = Uri.parse(this.getOnlineURL());
 				
 				Map<String, String> headers = new HashMap<String, String>();
 				StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
@@ -202,4 +208,12 @@ public class ModelFile extends Model {
 		String url = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
 		new TaskPut(app, url, listener, getForUpload()).execute();
 	}
+
+    public String getOnlineURL() {
+        if(!this.isOnline()) {
+            Log.e("ModelFile", "getOnlineURL() return null");
+            return null;
+        }
+        return this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
+    }
 }

@@ -4,10 +4,11 @@
  * MERCANDALLI Jonathan
  */
 
-package mercandalli.com.jarvis;
+package mercandalli.com.jarvis.activity;
 
 import android.os.Bundle;
 
+import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.fragment.FileManagerFragment;
 
 public class ActivityMain extends ApplicationDrawer {

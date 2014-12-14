@@ -1,6 +1,6 @@
 package mercandalli.com.jarvis.model;
 
-import mercandalli.com.jarvis.Application;
+import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.config.Const;
 
 public class Model {

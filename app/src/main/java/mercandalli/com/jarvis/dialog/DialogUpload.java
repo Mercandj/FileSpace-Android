@@ -18,7 +18,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.List;
 
-import mercandalli.com.jarvis.Application;
+import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.listener.IModelFileListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;

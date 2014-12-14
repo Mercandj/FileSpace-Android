@@ -30,7 +30,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
 
-import mercandalli.com.jarvis.Application;
+import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 
 /**

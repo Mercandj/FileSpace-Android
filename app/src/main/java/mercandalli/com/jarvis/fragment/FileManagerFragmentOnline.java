@@ -17,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -34,10 +36,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import mercandalli.com.jarvis.Application;
 import mercandalli.com.jarvis.R;
+import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.adapter.AdapterModelFile;
-import mercandalli.com.jarvis.dialog.DialogUpload;
+import mercandalli.com.jarvis.dialog.DialogAddFileManager;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.listener.IModelFileListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
@@ -54,6 +56,7 @@ public class FileManagerFragmentOnline extends Fragment {
 	private ProgressBar circulerProgressBar;
 	private TextView message;
 	private SwipeRefreshLayout swipeRefreshLayout;
+    Animation animOpen; ImageButton circle;
 	
 	@Override
     public void onAttach(Activity activity) {
@@ -93,19 +96,22 @@ public class FileManagerFragmentOnline extends Fragment {
 			}
 		});
 
-		((ImageButton) rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				app.dialog = new DialogUpload(app,
-					new IPostExecuteListener() {
-						@Override
-						public void execute(JSONObject json, String body) {
-							if (json != null)
-								refreshList();
-						}
-					});
-			}
-		});
+        circle = ((ImageButton) rootView.findViewById(R.id.circle));
+        circle.setVisibility(View.GONE);
+        animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
+
+        circle.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                app.dialog = new DialogAddFileManager(app, new IPostExecuteListener() {
+                    @Override
+                    public void execute(JSONObject json, String body) {
+                        if (json != null)
+                            refreshList();
+                    }
+                });
+            }
+        });
 		
 		return rootView;
 	}
@@ -153,8 +159,14 @@ public class FileManagerFragmentOnline extends Fragment {
 
 	public void updateAdapter() {
 		if(listView!=null && list!=null && this.isAdded()) {
-			
+
+
 			circulerProgressBar.setVisibility(View.GONE);
+            if( circle.getVisibility()==View.GONE ) {
+                circle.setVisibility(View.VISIBLE);
+                circle.startAnimation(animOpen);
+            }
+
 			if(list.size()==0) {
 				message.setText(getString(R.string.no_file_server));
 				message.setVisibility(View.VISIBLE);

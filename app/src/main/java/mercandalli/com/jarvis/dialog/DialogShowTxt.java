@@ -7,12 +7,12 @@
 package mercandalli.com.jarvis.dialog;
 
 import android.app.Dialog;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import java.io.File;
 
-import mercandalli.com.jarvis.Application;
 import mercandalli.com.jarvis.R;
+import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.model.ModelFile;
 
 public class DialogShowTxt extends Dialog {
@@ -30,7 +30,7 @@ public class DialogShowTxt extends Dialog {
 		this.setTitle(R.string.app_name);
 		this.setCancelable(true);
 	    
-        ((TextView) this.findViewById(R.id.txt)).setText(""+txt);
+        ((EditText) this.findViewById(R.id.txt)).setText(""+txt);
         
         DialogShowTxt.this.show();
 	}

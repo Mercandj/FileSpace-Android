@@ -4,7 +4,7 @@
  * MERCANDALLI Jonathan
  */
 
-package mercandalli.com.jarvis;
+package mercandalli.com.jarvis.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;

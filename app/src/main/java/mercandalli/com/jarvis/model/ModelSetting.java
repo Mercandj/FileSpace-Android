@@ -8,7 +8,7 @@ package mercandalli.com.jarvis.model;
 
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import mercandalli.com.jarvis.Application;
+import mercandalli.com.jarvis.activity.Application;
 
 public class ModelSetting extends Model {
 

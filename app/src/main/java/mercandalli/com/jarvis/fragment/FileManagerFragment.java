@@ -18,10 +18,10 @@ import android.view.ViewGroup;
 
 import org.json.JSONObject;
 
-import mercandalli.com.jarvis.Application;
-import mercandalli.com.jarvis.ApplicationDrawer;
 import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.dialog.DialogUpload;
+import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.activity.ApplicationDrawer;
+import mercandalli.com.jarvis.dialog.DialogAddFileManager;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 
@@ -147,9 +147,9 @@ public class FileManagerFragment extends Fragment {
 					fragmentFileManagerFragment.refreshList();
 				}
 	}
-	
+
 	public void add() {
-		app.dialog = new DialogUpload(app, new IPostExecuteListener() {
+		app.dialog = new DialogAddFileManager(app, new IPostExecuteListener() {
 			@Override
 			public void execute(JSONObject json, String body) {
 				if(json!=null)
@@ -157,7 +157,7 @@ public class FileManagerFragment extends Fragment {
 			}
 		});
 	}
-	
+
 	public void download() {
 		this.app.alert("Download", "Download all files ?", "Yes", new IListener() {
 			@Override

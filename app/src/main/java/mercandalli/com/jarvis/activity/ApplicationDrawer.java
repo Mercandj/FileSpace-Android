@@ -4,7 +4,7 @@
  * MERCANDALLI Jonathan
  */
 
-package mercandalli.com.jarvis;
+package mercandalli.com.jarvis.activity;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.config.Const;
 import mercandalli.com.jarvis.fragment.FileManagerFragment;
 import mercandalli.com.jarvis.fragment.InformationManagerFragment;

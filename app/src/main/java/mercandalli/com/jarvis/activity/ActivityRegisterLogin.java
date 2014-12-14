@@ -4,7 +4,7 @@
  * MERCANDALLI Jonathan
  */
 
-package mercandalli.com.jarvis;
+package mercandalli.com.jarvis.activity;
 
 import android.app.ActionBar;
 import android.content.Context;
@@ -29,6 +29,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import mercandalli.com.jarvis.R;
+import mercandalli.com.jarvis.SHA1;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.model.ModelUser;
 import mercandalli.com.jarvis.net.TaskGet;
@@ -46,7 +48,7 @@ public class ActivityRegisterLogin extends Application {
 		
 		// Back button at the top left of the action bar
         final ActionBar actionBar = getActionBar();
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayUseLogoEnabled(false);
         

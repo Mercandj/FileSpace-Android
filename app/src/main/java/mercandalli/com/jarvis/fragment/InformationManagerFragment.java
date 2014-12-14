@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -30,8 +32,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import mercandalli.com.jarvis.Application;
 import mercandalli.com.jarvis.R;
+import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.adapter.AdapterModelInformation;
 import mercandalli.com.jarvis.config.Const;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
@@ -75,6 +77,8 @@ public class InformationManagerFragment extends Fragment {
 		recyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
+
+        ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.GONE);
         
         refreshList();
         
@@ -138,7 +142,14 @@ public class InformationManagerFragment extends Fragment {
 	        mAdapter = new AdapterModelInformation(app, list);
 	        recyclerView.setAdapter(mAdapter);
 	        recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
-	        
+
+            if( ((ImageButton) rootView.findViewById(R.id.circle)).getVisibility()==View.GONE ) {
+                ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
+                Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
+                ((ImageButton) rootView.findViewById(R.id.circle)).startAnimation(animOpen);
+            }
+
+
 	        ((ImageButton) rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {			
 				@Override
 				public void onClick(View v) {
