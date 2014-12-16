@@ -83,9 +83,9 @@ public class FileManagerFragment extends Fragment {
         public Fragment getItem(int i) {
 			Fragment fragment = null;
 			switch(i) {
-			case 0:		fragment = new FileManagerFragmentOnline(this.app); 	break;
-			case 1:		fragment = new FileManagerFragmentLocal(this.app);		break;
-			default:	fragment = new FileManagerFragmentLocal(this.app);		break;
+			case 0:		fragment = new FileManagerFragmentOnline(); 	break;
+			case 1:		fragment = new FileManagerFragmentLocal();		break;
+			default:	fragment = new FileManagerFragmentLocal();		break;
 			}
 			listFragment[i] = fragment;
             return fragment;

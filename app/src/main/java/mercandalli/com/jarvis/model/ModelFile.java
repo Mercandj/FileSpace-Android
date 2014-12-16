@@ -35,7 +35,6 @@ import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.net.Base64;
 import mercandalli.com.jarvis.net.TaskDelete;
-import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.net.TaskGetDownload;
 import mercandalli.com.jarvis.net.TaskGetDownloadImage;
 import mercandalli.com.jarvis.net.TaskPut;
@@ -52,7 +51,7 @@ public class ModelFile extends Model {
 	public File file;
 	
 	public List<BasicNameValuePair> getForUpload() {
-		List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
+		List<BasicNameValuePair> parameters = new ArrayList<>();
 		if(name!=null)
 			parameters.add(new BasicNameValuePair("url", this.name));
 		return parameters;
@@ -89,32 +88,26 @@ public class ModelFile extends Model {
 	
 	public void executeOnline() {
 		if(this.type.equals(ModelFileTypeENUM.TEXT.type)) {
-			new TaskGet(this.app, this.app.getConfig().getUser(), this.getOnlineURL(), new IPostExecuteListener() {
-				@Override
-				public void execute(JSONObject json, String body) {
-                    Intent intent = new Intent(app, ActivityEditTxt.class);
-                    intent.putExtra("TXT", ""+body);
-                    intent.putExtra("URL_FILE", ""+getOnlineURL());
-                    app.startActivity(intent);
-                    app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-				}
-			}).execute();		
+            Intent intent = new Intent(app, ActivityEditTxt.class);
+            intent.putExtra("URL_FILE", ""+getOnlineURL());
+            app.startActivity(intent);
+            app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		}
 		else if(this.type.equals(ModelFileTypeENUM.AUDIO.type)) {
 			try {
 				Uri uri = Uri.parse(this.getOnlineURL());
-				
+
 				Map<String, String> headers = new HashMap<String, String>();
 				StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
 		        String result = Base64.encodeBytes(authentication.toString().getBytes());
 		        headers.put("Authorization", "Basic " + result);
-				
+
 				MediaPlayer player = new MediaPlayer();
 				player.setDataSource(this.app, uri, headers);
 				player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 				player.prepare();
 				player.start();
-				
+
 			} catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
 				e.printStackTrace();
 			}

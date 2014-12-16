@@ -79,7 +79,7 @@ public abstract class Application extends Activity {
 		alert.setNegativeButton(negative,
 			new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
-					// Canceled.
+                    negativeListener.execute();
 				}
 			}
 		);

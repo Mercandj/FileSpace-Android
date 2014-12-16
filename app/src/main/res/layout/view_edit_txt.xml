@@ -25,4 +25,11 @@
         android:scrollbars = "vertical"
         android:gravity="top" />
 
+    <ProgressBar
+        android:id="@+id/circulerProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
 </RelativeLayout>

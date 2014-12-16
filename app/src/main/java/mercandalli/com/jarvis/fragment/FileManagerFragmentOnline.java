@@ -67,11 +67,6 @@ public class FileManagerFragmentOnline extends Fragment {
 	public FileManagerFragmentOnline() {
 		super();
 	}
-	
-	public FileManagerFragmentOnline(Application app) {
-		super();
-		this.app = app;
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
