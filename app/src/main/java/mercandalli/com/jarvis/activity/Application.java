@@ -71,7 +71,8 @@ public abstract class Application extends Activity {
 		alert.setPositiveButton(positive, 
 			new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
-					positiveListener.execute(input.getText().toString());
+                    if(positiveListener!=null)
+                        positiveListener.execute(input.getText().toString());
 				}
 			}
 		);
@@ -79,7 +80,8 @@ public abstract class Application extends Activity {
 		alert.setNegativeButton(negative,
 			new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
-                    negativeListener.execute();
+                    if(negativeListener!=null)
+                        negativeListener.execute();
 				}
 			}
 		);

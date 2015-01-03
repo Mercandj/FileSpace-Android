@@ -18,6 +18,7 @@ import java.io.File;
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
+import mercandalli.com.jarvis.listener.IStringListener;
 import mercandalli.com.jarvis.model.ModelFile;
 
 public class DialogAddFileManager extends Dialog {
@@ -48,6 +49,19 @@ public class DialogAddFileManager extends Dialog {
             @Override
             public void onClick(View v) {
                 app.dialog = new DialogUpload(app, listener);
+                DialogAddFileManager.this.dismiss();
+            }
+        });
+
+        ((ImageButton) this.findViewById(R.id.txtFile)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                app.prompt("Create Folder", "Name ?", "Create", new IStringListener() {
+                    @Override
+                    public void execute(String text) {
+
+                    }
+                }, "Cancel", null);
                 DialogAddFileManager.this.dismiss();
             }
         });

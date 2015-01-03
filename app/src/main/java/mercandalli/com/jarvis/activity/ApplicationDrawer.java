@@ -10,9 +10,9 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,6 +23,7 @@ import android.widget.SearchView;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.config.Const;
+import mercandalli.com.jarvis.fragment.DevFragment;
 import mercandalli.com.jarvis.fragment.FileManagerFragment;
 import mercandalli.com.jarvis.fragment.InformationManagerFragment;
 import mercandalli.com.jarvis.fragment.RequestFragment;
@@ -87,8 +88,20 @@ public abstract class ApplicationDrawer extends Application {
 						}
 			        }, Const.TAB_VIEW_TYPE_NORMAL)
         		);
-        
+
         // Tab 4
+        navDrawerItems.add(
+                new NavDrawerItem( "Dev", new IListener() {
+                    @Override
+                    public void execute() {
+                        fragment = new DevFragment(ApplicationDrawer.this);
+                        FragmentManager fragmentManager = getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                    }
+                }, Const.TAB_VIEW_TYPE_NORMAL)
+        );
+        
+        // Tab 5
         navDrawerItems.add(
         		new NavDrawerItem( "Request", new IListener() {
 						@Override
@@ -100,12 +113,12 @@ public abstract class ApplicationDrawer extends Application {
 			        }, Const.TAB_VIEW_TYPE_NORMAL)
         		);
         
-        // Tab 5
+        // Tab 6
         navDrawerItems.add(
         		new NavDrawerItem( "", R.drawable.ic_launcher, Const.TAB_VIEW_TYPE_SECTION)
         		);
         
-        // Tab 6
+        // Tab 7
         navDrawerItems.add(
         		new NavDrawerItem( 
     				"Settings",
@@ -121,7 +134,7 @@ public abstract class ApplicationDrawer extends Application {
 			        Const.TAB_VIEW_TYPE_SETTING)
         		);
         
-        // Tab 7
+        // Tab 8
         navDrawerItems.add(
         		new NavDrawerItem(
         			"About Dev",

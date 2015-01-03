@@ -79,10 +79,10 @@ public class FileManagerFragmentOnline extends Fragment {
 
 		swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
 		swipeRefreshLayout.setColorSchemeResources(
-				android.R.color.holo_blue_bright,
-				android.R.color.holo_green_light,
-				android.R.color.holo_orange_light,
-				android.R.color.holo_red_light);
+            android.R.color.holo_blue_bright,
+            android.R.color.holo_green_light,
+            android.R.color.holo_orange_light,
+            android.R.color.holo_red_light);
 
 		swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
 			@Override
@@ -98,13 +98,13 @@ public class FileManagerFragmentOnline extends Fragment {
         circle.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.dialog = new DialogAddFileManager(app, new IPostExecuteListener() {
-                    @Override
-                    public void execute(JSONObject json, String body) {
-                        if (json != null)
-                            refreshList();
-                    }
-                });
+            app.dialog = new DialogAddFileManager(app, new IPostExecuteListener() {
+                @Override
+                public void execute(JSONObject json, String body) {
+                if (json != null)
+                    refreshList();
+                }
+            });
             }
         });
 		
