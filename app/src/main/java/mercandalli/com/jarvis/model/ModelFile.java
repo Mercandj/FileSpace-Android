@@ -46,7 +46,7 @@ public class ModelFile extends Model {
 	public String name;
 	public String size;
 	public ModelFileType type;
-	public boolean isDirectory;
+	public boolean directory = false;
 	public Bitmap bitmap;
 	public File file;
 	
@@ -54,6 +54,8 @@ public class ModelFile extends Model {
 		List<BasicNameValuePair> parameters = new ArrayList<>();
 		if(name!=null)
 			parameters.add(new BasicNameValuePair("url", this.name));
+        if(directory)
+            parameters.add(new BasicNameValuePair("directory", this.directory?"true":"false"));
 		return parameters;
 	}
 	
@@ -71,6 +73,8 @@ public class ModelFile extends Model {
 				this.url = json.getString("url");
 			if(json.has("type"))
 				this.type = new ModelFileType(json.getString("type"));
+            if(json.has("directory") && !json.isNull("directory"))
+                this.directory = json.getInt("directory")==1;
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

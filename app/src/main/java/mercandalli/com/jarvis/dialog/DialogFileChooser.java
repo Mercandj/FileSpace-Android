@@ -56,7 +56,7 @@ public class DialogFileChooser extends Dialog {
 		    public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 		    	if(position<listModelFile.size()) {
 		    		ModelFile file = listModelFile.get(position);
-		    		if(file.isDirectory) {
+		    		if(file.directory) {
 		    			currentUrl += file.name+"/";
 		    			updateAdapter();
 		    		}
@@ -81,7 +81,7 @@ public class DialogFileChooser extends Dialog {
 				modelFile.name = file.getName();
 				modelFile.type = new ModelFileType(file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".")+1));
 				modelFile.size = ""+file.getTotalSpace();
-				modelFile.isDirectory = file.isDirectory();
+				modelFile.directory = file.isDirectory();
 				listModelFile.add(modelFile);
 			}
 	}

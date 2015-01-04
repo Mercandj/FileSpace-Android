@@ -110,7 +110,7 @@ public class FileManagerFragmentLocal extends Fragment {
 				modelFile.name = file.getName();
 				modelFile.type = new ModelFileType(file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".")+1));
 				modelFile.size = ""+file.getTotalSpace();
-				modelFile.isDirectory = file.isDirectory();
+				modelFile.directory = file.isDirectory();
 				modelFile.file = file;
 				listModelFile.add(modelFile);
 			}

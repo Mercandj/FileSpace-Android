@@ -41,8 +41,10 @@ public class AdapterModelFile extends ArrayAdapter<ModelFile> {
 				((TextView) convertView.findViewById(R.id.title)).setText(file.name);
 			else
 				((TextView) convertView.findViewById(R.id.title)).setText(file.url);
-			
-			if(file.type!=null)
+
+            if(file.directory)
+                ((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.directory));
+			else if(file.type!=null)
 				if(file.type.equals(ModelFileTypeENUM.AUDIO.type))
 					((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_audio));
 				else if(file.type.equals(ModelFileTypeENUM.PDF.type))

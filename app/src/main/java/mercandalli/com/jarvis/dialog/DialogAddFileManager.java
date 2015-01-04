@@ -13,13 +13,18 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.util.List;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.listener.IStringListener;
 import mercandalli.com.jarvis.model.ModelFile;
+import mercandalli.com.jarvis.net.TaskPost;
 
 public class DialogAddFileManager extends Dialog {
 
@@ -60,6 +65,17 @@ public class DialogAddFileManager extends Dialog {
                     @Override
                     public void execute(String text) {
 
+                        ModelFile folder = new ModelFile(DialogAddFileManager.this.app);
+                        folder.name = text;
+                        folder.directory = true;
+                        List<BasicNameValuePair> parameters = folder.getForUpload();
+                        (new TaskPost(app, app.getConfig().getUrlServer()+app.getConfig().routeFile, new IPostExecuteListener() {
+                            @Override
+                            public void execute(JSONObject json, String body) {
+                                if(listener!=null)
+                                    listener.execute(json, body);
+                            }
+                        }, parameters, file)).execute();
                     }
                 }, "Cancel", null);
                 DialogAddFileManager.this.dismiss();
