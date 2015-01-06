@@ -56,7 +56,9 @@ public class FileManagerFragmentOnline extends Fragment {
 	private ProgressBar circulerProgressBar;
 	private TextView message;
 	private SwipeRefreshLayout swipeRefreshLayout;
-    Animation animOpen; ImageButton circle;
+    Animation animOpen; ImageButton circle, circle2;
+
+    private String url = "";
 	
 	@Override
     public void onAttach(Activity activity) {
@@ -95,16 +97,27 @@ public class FileManagerFragmentOnline extends Fragment {
         circle.setVisibility(View.GONE);
         animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
 
+        circle2 = ((ImageButton) rootView.findViewById(R.id.circle2));
+        circle2.setVisibility(View.GONE);
+
         circle.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-            app.dialog = new DialogAddFileManager(app, new IPostExecuteListener() {
-                @Override
-                public void execute(JSONObject json, String body) {
-                if (json != null)
-                    refreshList();
-                }
-            });
+                app.dialog = new DialogAddFileManager(app, new IPostExecuteListener() {
+                    @Override
+                    public void execute(JSONObject json, String body) {
+                    if (json != null)
+                        refreshList();
+                    }
+                });
+            }
+        });
+
+        circle2.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FileManagerFragmentOnline.this.url = "";
+                FileManagerFragmentOnline.this.refreshList();
             }
         });
 		
@@ -116,11 +129,10 @@ public class FileManagerFragmentOnline extends Fragment {
 	}
 
 	public void refreshList(String search) {
-		List<BasicNameValuePair> parameters = null;
-		if(search!=null) {
-			parameters = new ArrayList<BasicNameValuePair>();
+		List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
+		if(search!=null)
 			parameters.add(new BasicNameValuePair("search", ""+search));
-		}
+        parameters.add(new BasicNameValuePair("url", ""+this.url));
 
 		new TaskGet(
 			app, 
@@ -154,7 +166,6 @@ public class FileManagerFragmentOnline extends Fragment {
 
 	public void updateAdapter() {
 		if(listView!=null && list!=null && this.isAdded()) {
-
 
 			circulerProgressBar.setVisibility(View.GONE);
             if( circle.getVisibility()==View.GONE ) {
@@ -229,7 +240,12 @@ public class FileManagerFragmentOnline extends Fragment {
 			listView.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					list.get(position).executeOnline();
+                    if(list.get(position).directory) {
+                        FileManagerFragmentOnline.this.url = list.get(position).url + "/";
+                        refreshList();
+                    }
+                    else
+				        list.get(position).executeOnline();
 				}
 			});
 			
@@ -240,6 +256,13 @@ public class FileManagerFragmentOnline extends Fragment {
 					return true;
 				}
 			});
+
+            if(this.url==null)
+                circle2.setVisibility(View.GONE);
+            else if(this.url.equals(""))
+                circle2.setVisibility(View.GONE);
+            else
+                circle2.setVisibility(View.VISIBLE);
 			
 			swipeRefreshLayout.setRefreshing(false);
 		}

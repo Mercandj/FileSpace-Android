@@ -58,13 +58,12 @@ public class DialogAddFileManager extends Dialog {
             }
         });
 
-        ((ImageButton) this.findViewById(R.id.txtFile)).setOnClickListener(new View.OnClickListener() {
+        ((ImageButton) this.findViewById(R.id.addDirectory)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 app.prompt("Create Folder", "Name ?", "Create", new IStringListener() {
                     @Override
                     public void execute(String text) {
-
                         ModelFile folder = new ModelFile(DialogAddFileManager.this.app);
                         folder.name = text;
                         folder.directory = true;
@@ -76,6 +75,19 @@ public class DialogAddFileManager extends Dialog {
                                     listener.execute(json, body);
                             }
                         }, parameters, file)).execute();
+                    }
+                }, "Cancel", null);
+                DialogAddFileManager.this.dismiss();
+            }
+        });
+
+        ((ImageButton) this.findViewById(R.id.txtFile)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                app.prompt("Create TXT File", "Name ?", "Create", new IStringListener() {
+                    @Override
+                    public void execute(String text) {
+                        //TODO
                     }
                 }, "Cancel", null);
                 DialogAddFileManager.this.dismiss();

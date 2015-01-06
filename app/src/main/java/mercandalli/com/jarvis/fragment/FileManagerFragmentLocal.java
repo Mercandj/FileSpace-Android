@@ -72,9 +72,10 @@ public class FileManagerFragmentLocal extends Fragment {
         message = (TextView) rootView.findViewById(R.id.message);
         listView = (ListView) rootView.findViewById(R.id.listView);
         
-        ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.GONE);        
-        
-		jarvisDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().localFolderName);
+        ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.GONE);
+        ((ImageButton) rootView.findViewById(R.id.circle2)).setVisibility(View.GONE);
+
+        jarvisDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().localFolderName);
 		if(!jarvisDirectory.exists())
 			jarvisDirectory.mkdir();
     	
