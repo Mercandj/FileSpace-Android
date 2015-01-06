@@ -17,7 +17,7 @@ import mercandalli.com.jarvis.net.TaskGet;
 /**
  * Created by Jonathan on 14/12/2014.
  */
-public class ActivityEditTxt extends Application {
+public class ActivityFileTxt extends Application {
 
     private String initate, url;
 
@@ -47,9 +47,9 @@ public class ActivityEditTxt extends Application {
                 @Override
                 public void execute(JSONObject json, String body) {
                     initate = body;
-                    ((EditText) ActivityEditTxt.this.findViewById(R.id.txt)).setText("" + initate);
-                    ((EditText) ActivityEditTxt.this.findViewById(R.id.txt)).setVisibility(View.VISIBLE);
-                    ((ProgressBar) ActivityEditTxt.this.findViewById(R.id.circulerProgressBar)).setVisibility(View.GONE);
+                    ((EditText) ActivityFileTxt.this.findViewById(R.id.txt)).setText("" + initate);
+                    ((EditText) ActivityFileTxt.this.findViewById(R.id.txt)).setVisibility(View.VISIBLE);
+                    ((ProgressBar) ActivityFileTxt.this.findViewById(R.id.circulerProgressBar)).setVisibility(View.GONE);
                 }
             }).execute();
         }

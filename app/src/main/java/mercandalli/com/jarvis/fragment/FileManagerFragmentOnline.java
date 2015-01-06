@@ -174,7 +174,12 @@ public class FileManagerFragmentOnline extends Fragment {
             }
 
 			if(list.size()==0) {
-				message.setText(getString(R.string.no_file_server));
+                if(this.url==null)
+				    message.setText(getString(R.string.no_file_server));
+                else if(this.url.equals(""))
+                    message.setText(getString(R.string.no_file_server));
+                else
+                    message.setText(getString(R.string.no_file_directory));
 				message.setVisibility(View.VISIBLE);
 			}
 			else

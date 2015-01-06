@@ -18,6 +18,7 @@
     <string name="action_failed">Action failed</string>
     <string name="no_file">No File</string>
     <string name="no_file_server">No File on server.</string>
+    <string name="no_file_directory">No File on this directory.</string>
     <string name="no_file_local">No File on local Jarvis folder.</string>
     <string name="file">File</string>
     <string name="request">Request</string>

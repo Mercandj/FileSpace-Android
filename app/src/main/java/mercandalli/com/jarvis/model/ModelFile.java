@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.activity.ActivityEditTxt;
+import mercandalli.com.jarvis.activity.ActivityFileTxt;
 import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.listener.IBitmapListener;
 import mercandalli.com.jarvis.listener.IListener;
@@ -92,7 +92,7 @@ public class ModelFile extends Model {
 	
 	public void executeOnline() {
 		if(this.type.equals(ModelFileTypeENUM.TEXT.type)) {
-            Intent intent = new Intent(app, ActivityEditTxt.class);
+            Intent intent = new Intent(app, ActivityFileTxt.class);
             intent.putExtra("URL_FILE", ""+getOnlineURL());
             app.startActivity(intent);
             app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
