@@ -58,37 +58,43 @@ public abstract class Application extends Activity {
 	}
 	
 	public void prompt(String title, String message, String positive, final IStringListener positiveListener, String negative, final IListener negativeListener) {
-		
-		AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-		alert.setTitle(title);
-		alert.setMessage(message);
-
-		// Set an EditText view to get user input
-		final EditText input = new EditText(this);
-		alert.setView(input);
-
-		alert.setPositiveButton(positive, 
-			new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
-                    if(positiveListener!=null)
-                        positiveListener.execute(input.getText().toString());
-				}
-			}
-		);
-
-		alert.setNegativeButton(negative,
-			new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int whichButton) {
-                    if(negativeListener!=null)
-                        negativeListener.execute();
-				}
-			}
-		);
-
-		alert.show();
+        prompt(title, message, positive, positiveListener, negative, negativeListener, null);
 	}
-	
+
+    public void prompt(String title, String message, String positive, final IStringListener positiveListener, String negative, final IListener negativeListener, String hint) {
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle(title);
+        alert.setMessage(message);
+
+        // Set an EditText view to get user input
+        final EditText input = new EditText(this);
+        alert.setView(input);
+        if(hint!=null)
+            input.setText(hint);
+
+        alert.setPositiveButton(positive,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        if(positiveListener!=null)
+                            positiveListener.execute(input.getText().toString());
+                    }
+                }
+        );
+
+        alert.setNegativeButton(negative,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        if(negativeListener!=null)
+                            negativeListener.execute();
+                    }
+                }
+        );
+
+        alert.show();
+    }
+
 	public abstract void refreshAdapters();
 	public abstract void updateAdapters();
 }

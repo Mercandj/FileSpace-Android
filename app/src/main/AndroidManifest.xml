@@ -37,7 +37,14 @@
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
-            android:name=".activity.ActivityFileTxt"
+            android:name=".activity.ActivityFileText"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
+        <activity
+            android:name=".activity.ActivityFileAudio"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"

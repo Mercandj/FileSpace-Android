@@ -17,13 +17,14 @@ import mercandalli.com.jarvis.net.TaskGet;
 /**
  * Created by Jonathan on 14/12/2014.
  */
-public class ActivityFileTxt extends Application {
+public class ActivityFileText extends Application {
 
-    private String initate, url;
+    private String initate, url, login, password;
+    private boolean online;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.view_edit_txt);
+        setContentView(R.layout.view_file_text);
         super.onCreate(savedInstanceState);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -41,15 +42,18 @@ public class ActivityFileTxt extends Application {
             return;
         }
         else {
-            url = extras.getString("URL_FILE");
+            this.url = extras.getString("URL_FILE");
+            this.login = extras.getString("LOGIN");
+            this.password = extras.getString("PASSWORD");
+            this.online = extras.getBoolean("ONLINE");
 
-            new TaskGet(this, this.getConfig().getUser(), url, new IPostExecuteListener() {
+            new TaskGet(this, this.getConfig().getUser(), this.url, new IPostExecuteListener() {
                 @Override
                 public void execute(JSONObject json, String body) {
                     initate = body;
-                    ((EditText) ActivityFileTxt.this.findViewById(R.id.txt)).setText("" + initate);
-                    ((EditText) ActivityFileTxt.this.findViewById(R.id.txt)).setVisibility(View.VISIBLE);
-                    ((ProgressBar) ActivityFileTxt.this.findViewById(R.id.circulerProgressBar)).setVisibility(View.GONE);
+                    ((EditText) ActivityFileText.this.findViewById(R.id.txt)).setText("" + initate);
+                    ((EditText) ActivityFileText.this.findViewById(R.id.txt)).setVisibility(View.VISIBLE);
+                    ((ProgressBar) ActivityFileText.this.findViewById(R.id.circulerProgressBar)).setVisibility(View.GONE);
                 }
             }).execute();
         }

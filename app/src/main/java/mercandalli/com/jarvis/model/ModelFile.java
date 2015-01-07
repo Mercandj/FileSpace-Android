@@ -9,8 +9,6 @@ package mercandalli.com.jarvis.model;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
@@ -21,19 +19,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.activity.ActivityFileTxt;
+import mercandalli.com.jarvis.activity.ActivityFileAudio;
+import mercandalli.com.jarvis.activity.ActivityFileText;
 import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.listener.IBitmapListener;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
-import mercandalli.com.jarvis.net.Base64;
 import mercandalli.com.jarvis.net.TaskDelete;
 import mercandalli.com.jarvis.net.TaskGetDownload;
 import mercandalli.com.jarvis.net.TaskGetDownloadImage;
@@ -69,8 +64,10 @@ public class ModelFile extends Model {
 		try {
 			if(json.has("id"))
 				this.id = json.getInt("id");
-			if(json.has("url"))
-				this.url = json.getString("url");
+			if(json.has("url")) {
+                this.url = json.getString("url");
+                this.name = url.substring( this.url.lastIndexOf('/')+1, this.url.length() );
+            }
 			if(json.has("type"))
 				this.type = new ModelFileType(json.getString("type"));
             if(json.has("directory") && !json.isNull("directory"))
@@ -92,29 +89,23 @@ public class ModelFile extends Model {
 	
 	public void executeOnline() {
 		if(this.type.equals(ModelFileTypeENUM.TEXT.type)) {
-            Intent intent = new Intent(app, ActivityFileTxt.class);
+            Intent intent = new Intent(this.app, ActivityFileText.class);
             intent.putExtra("URL_FILE", ""+getOnlineURL());
-            app.startActivity(intent);
-            app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+            intent.putExtra("LOGIN", ""+this.app.getConfig().getUser().getAccessLogin());
+            intent.putExtra("PASSWORD", ""+this.app.getConfig().getUser().getAccessPassword());
+            intent.putExtra("ONLINE", true);
+            this.app.startActivity(intent);
+            this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		}
 		else if(this.type.equals(ModelFileTypeENUM.AUDIO.type)) {
-			try {
-				Uri uri = Uri.parse(this.getOnlineURL());
-
-				Map<String, String> headers = new HashMap<String, String>();
-				StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
-		        String result = Base64.encodeBytes(authentication.toString().getBytes());
-		        headers.put("Authorization", "Basic " + result);
-
-				MediaPlayer player = new MediaPlayer();
-				player.setDataSource(this.app, uri, headers);
-				player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-				player.prepare();
-				player.start();
-
-			} catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
-				e.printStackTrace();
-			}
+            Intent intent = new Intent(app, ActivityFileAudio.class);
+            intent.putExtra("URL_FILE", ""+getOnlineURL());
+            intent.putExtra("LOGIN", ""+app.getConfig().getUser().getAccessLogin());
+            intent.putExtra("PASSWORD", ""+app.getConfig().getUser().getAccessPassword());
+            intent.putExtra("ONLINE", true);
+            intent.putExtra("NAME", this.name);
+            this.app.startActivity(intent);
+            this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		}
 	}
 	
@@ -125,17 +116,17 @@ public class ModelFile extends Model {
 			Intent apkIntent = new Intent();
 			apkIntent.setAction(Intent.ACTION_VIEW);
 			apkIntent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-			app.startActivity(apkIntent);
+            this.app.startActivity(apkIntent);
 		}
 		else if(this.type.equals(ModelFileTypeENUM.TEXT.type)) {
 			Intent txtIntent = new Intent();
 			txtIntent.setAction(Intent.ACTION_VIEW);
 			txtIntent.setDataAndType(Uri.fromFile(file), "text/plain");
 			try {
-				app.startActivity(txtIntent);
+				this.app.startActivity(txtIntent);
 			} catch (ActivityNotFoundException e) {
 				txtIntent.setType("text/*");
-				app.startActivity(txtIntent);
+                this.app.startActivity(txtIntent);
 			}
 		}
 		else if(this.type.equals(ModelFileTypeENUM.HTML.type)) {
@@ -143,22 +134,24 @@ public class ModelFile extends Model {
 			htmlIntent.setAction(Intent.ACTION_VIEW);
 			htmlIntent.setDataAndType(Uri.fromFile(file), "text/html");
 			try {
-				app.startActivity(htmlIntent);
+				this.app.startActivity(htmlIntent);
 			} catch (ActivityNotFoundException e) {
-				Toast.makeText(app, "ERREUR", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this.app, "ERREUR", Toast.LENGTH_SHORT).show();
 			}
 		}
 		else if(this.type.equals(ModelFileTypeENUM.AUDIO.type)) {
-			Intent i = new Intent();
-			i.setAction(Intent.ACTION_VIEW);
-			i.setDataAndType(Uri.fromFile(file), "audio/*");
-			app.startActivity(i);
+            Intent intent = new Intent(this.app, ActivityFileAudio.class);
+            intent.putExtra("URL_FILE", ""+this.url);
+            intent.putExtra("ONLINE", false);
+            intent.putExtra("NAME", this.name);
+            this.app.startActivity(intent);
+            this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		}
 		else if(this.type.equals(ModelFileTypeENUM.PICTURE.type)) {
 			Intent picIntent = new Intent();
 			picIntent.setAction(Intent.ACTION_VIEW);
 			picIntent.setDataAndType(Uri.fromFile(file), "image/*");
-			app.startActivity(picIntent);
+            this.app.startActivity(picIntent);
 		}
 		else if(this.type.equals(ModelFileTypeENUM.VIDEO.type)) {
 			Intent movieIntent = new Intent();

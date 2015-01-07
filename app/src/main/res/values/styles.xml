@@ -19,8 +19,8 @@
     </style>
 
     <style name="AppBaseTheme" parent="android:Theme.Material.Light">
-        <item name="android:statusBarColor">@color/notificationsbar</item>
-        <item name="android:colorPrimary">@color/notificationsbar</item>
+        <item name="android:statusBarColor">@color/notifications_bar</item>
+        <item name="android:colorPrimary">@color/notifications_bar</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:actionBarStyle">@style/MyActionBar</item>
     </style>

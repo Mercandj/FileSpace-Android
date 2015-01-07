@@ -6,6 +6,10 @@
 -->
 <resources>
     <color name="white">#fff</color>
+
     <color name="actionbar">#26AEEE</color>
-    <color name="notificationsbar">#01579b</color>
+    <color name="notifications_bar">#01579b</color>
+
+    <color name="actionbar_audio">#f57c00</color>
+    <color name="notifications_bar_audio">#e65100</color>
 </resources>

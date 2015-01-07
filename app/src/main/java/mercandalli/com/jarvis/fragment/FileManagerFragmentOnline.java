@@ -59,6 +59,7 @@ public class FileManagerFragmentOnline extends Fragment {
     Animation animOpen; ImageButton circle, circle2;
 
     private String url = "";
+    private List<ModelFile> filesToCut = new ArrayList<ModelFile>();
 	
 	@Override
     public void onAttach(Activity activity) {
@@ -190,50 +191,56 @@ public class FileManagerFragmentOnline extends Fragment {
 				@Override
 				public void execute(final ModelFile modelFile) {
 					final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentOnline.this.app);
-					final String[] menuList = { "Download", "Rename", "Delete" };
+					final String[] menuList = { "Download", "Rename", "Delete", "Cut" };
 					menuAleart.setTitle("Action");
 					menuAleart.setItems(menuList,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int item) {
 									switch (item) {
-									case 0:
-										modelFile.download(new IListener() {
-											@Override
-											public void execute() {
-												Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
-												FileManagerFragmentOnline.this.app.updateAdapters();
-											}
-										});
-										break;
-										
-									case 1:
-										FileManagerFragmentOnline.this.app.prompt("Rename", "Rename "+ (modelFile.directory?"directory":"file") +" "+ modelFile.url +" ?", "Ok", new IStringListener() {
-											@Override
-											public void execute(String text) {
-												modelFile.rename(text, new IPostExecuteListener() {
-													@Override
-													public void execute(JSONObject json, String body) {
-														FileManagerFragmentOnline.this.app.refreshAdapters();
-													}
-												});
-											}			
-										}, "Cancel", null);
-										break;
-										
-									case 2:
-										FileManagerFragmentOnline.this.app.alert("Delete", "Delete "+ (modelFile.directory?"directory":"file") +" "+ modelFile.url +" ?", "Yes", new IListener() {
-											@Override
-											public void execute() {
-												modelFile.delete(new IPostExecuteListener() {
-													@Override
-													public void execute(JSONObject json, String body) {
-														FileManagerFragmentOnline.this.app.refreshAdapters();
-													}
-												});
-											}
-										}, "No", null);
-										break;
-									}
+                                        case 0:
+                                            modelFile.download(new IListener() {
+                                                @Override
+                                                public void execute() {
+                                                    Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
+                                                    FileManagerFragmentOnline.this.app.updateAdapters();
+                                                }
+                                            });
+                                            break;
+
+                                        case 1:
+                                            FileManagerFragmentOnline.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.url + " ?", "Ok", new IStringListener() {
+                                                @Override
+                                                public void execute(String text) {
+                                                    modelFile.rename(text, new IPostExecuteListener() {
+                                                        @Override
+                                                        public void execute(JSONObject json, String body) {
+                                                            FileManagerFragmentOnline.this.app.refreshAdapters();
+                                                        }
+                                                    });
+                                                }
+                                            }, "Cancel", null, modelFile.name);
+                                            break;
+
+                                        case 2:
+                                            FileManagerFragmentOnline.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.url + " ?", "Yes", new IListener() {
+                                                @Override
+                                                public void execute() {
+                                                    modelFile.delete(new IPostExecuteListener() {
+                                                        @Override
+                                                        public void execute(JSONObject json, String body) {
+                                                            FileManagerFragmentOnline.this.app.refreshAdapters();
+                                                        }
+                                                    });
+                                                }
+                                            }, "No", null);
+                                            break;
+
+                                        case 3:
+                                            FileManagerFragmentOnline.this.filesToCut = new ArrayList<ModelFile>();
+                                            FileManagerFragmentOnline.this.filesToCut.add(modelFile);
+                                            Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
+                                            break;
+                                    }
 								}
 							});
 					AlertDialog menuDrop = menuAleart.create();
