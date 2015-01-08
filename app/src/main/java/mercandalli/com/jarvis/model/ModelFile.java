@@ -11,7 +11,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.widget.Toast;
 
 import org.apache.http.message.BasicNameValuePair;
@@ -34,7 +35,7 @@ import mercandalli.com.jarvis.net.TaskGetDownload;
 import mercandalli.com.jarvis.net.TaskGetDownloadImage;
 import mercandalli.com.jarvis.net.TaskPut;
 
-public class ModelFile extends Model {
+public class ModelFile extends Model implements Parcelable {
 	
 	public int id;
 	public String url;
@@ -44,6 +45,7 @@ public class ModelFile extends Model {
 	public boolean directory = false;
 	public Bitmap bitmap;
 	public File file;
+    public String onlineUrl;
 	
 	public List<BasicNameValuePair> getForUpload() {
 		List<BasicNameValuePair> parameters = new ArrayList<>();
@@ -62,8 +64,10 @@ public class ModelFile extends Model {
 		super(app);
 		
 		try {
-			if(json.has("id"))
-				this.id = json.getInt("id");
+			if(json.has("id")) {
+                this.id = json.getInt("id");
+                this.onlineUrl = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
+            }
 			if(json.has("url")) {
                 this.url = json.getString("url");
                 this.name = url.substring( this.url.lastIndexOf('/')+1, this.url.length() );
@@ -77,7 +81,7 @@ public class ModelFile extends Model {
 		}
 		
 		if(this.type.equals(ModelFileTypeENUM.PICTURE.type)) {
-			new TaskGetDownloadImage(app, this.app.getConfig().getUser(), this.getOnlineURL(), new IBitmapListener() {
+			new TaskGetDownloadImage(app, this.app.getConfig().getUser(), this.onlineUrl, new IBitmapListener() {
 				@Override
 				public void execute(Bitmap bitmap) {
 					ModelFile.this.bitmap = bitmap;
@@ -87,10 +91,10 @@ public class ModelFile extends Model {
 		}		
 	}
 	
-	public void executeOnline() {
+	public void executeOnline(ArrayList<ModelFile> files) {
 		if(this.type.equals(ModelFileTypeENUM.TEXT.type)) {
             Intent intent = new Intent(this.app, ActivityFileText.class);
-            intent.putExtra("URL_FILE", ""+getOnlineURL());
+            intent.putExtra("URL_FILE", ""+this.onlineUrl);
             intent.putExtra("LOGIN", ""+this.app.getConfig().getUser().getAccessLogin());
             intent.putExtra("PASSWORD", ""+this.app.getConfig().getUser().getAccessPassword());
             intent.putExtra("ONLINE", true);
@@ -99,17 +103,21 @@ public class ModelFile extends Model {
 		}
 		else if(this.type.equals(ModelFileTypeENUM.AUDIO.type)) {
             Intent intent = new Intent(app, ActivityFileAudio.class);
-            intent.putExtra("URL_FILE", ""+getOnlineURL());
             intent.putExtra("LOGIN", ""+app.getConfig().getUser().getAccessLogin());
             intent.putExtra("PASSWORD", ""+app.getConfig().getUser().getAccessPassword());
             intent.putExtra("ONLINE", true);
-            intent.putExtra("NAME", this.name);
+            intent.putExtra("FILE", this);
+            ArrayList<ModelFile> tmpFiles = new ArrayList<ModelFile>();
+            for(ModelFile f:files)
+                if(f.type.equals(ModelFileTypeENUM.AUDIO.type))
+                    tmpFiles.add(f);
+            intent.putParcelableArrayListExtra("FILES", tmpFiles);
             this.app.startActivity(intent);
             this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		}
 	}
 	
-	public void executeLocal() {
+	public void executeLocal(ArrayList<ModelFile> files) {
 		if (!file.exists())
 			return;
 		if (this.type.equals(ModelFileTypeENUM.APK.type)) {
@@ -141,9 +149,13 @@ public class ModelFile extends Model {
 		}
 		else if(this.type.equals(ModelFileTypeENUM.AUDIO.type)) {
             Intent intent = new Intent(this.app, ActivityFileAudio.class);
-            intent.putExtra("URL_FILE", ""+this.url);
             intent.putExtra("ONLINE", false);
-            intent.putExtra("NAME", this.name);
+            intent.putExtra("FILE", this);
+            ArrayList<ModelFile> tmpFiles = new ArrayList<ModelFile>();
+            for(ModelFile f:files)
+                if(f.type.equals(ModelFileTypeENUM.AUDIO.type))
+                    tmpFiles.add(f);
+            intent.putParcelableArrayListExtra("FILES", tmpFiles);
             this.app.startActivity(intent);
             this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		}
@@ -199,11 +211,44 @@ public class ModelFile extends Model {
 		new TaskPut(app, url, listener, getForUpload()).execute();
 	}
 
-    public String getOnlineURL() {
-        if(!this.isOnline()) {
-            Log.e("ModelFile", "getOnlineURL() return null");
-            return null;
+
+
+
+
+    public static final Parcelable.Creator<ModelFile> CREATOR = new Parcelable.Creator<ModelFile>() {
+        @Override
+        public ModelFile createFromParcel(Parcel source) {
+            return new ModelFile(source);
         }
-        return this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
+        @Override
+        public ModelFile[] newArray(int size) {
+            return new ModelFile[size];
+        }
+    };
+
+    public ModelFile(Parcel in) {
+        this.id = in.readInt();
+        this.url = in.readString();
+        this.onlineUrl = in.readString();
+        this.name = in.readString();
+        this.size = in.readString();
+        boolean[] b = new boolean[1];
+        in.readBooleanArray(b);
+        this.directory = b[0];
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeString(this.url);
+        dest.writeString(this.onlineUrl);
+        dest.writeString(this.name);
+        dest.writeString(this.size);
+        dest.writeBooleanArray(new boolean[]{this.directory});
     }
 }

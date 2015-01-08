@@ -15,10 +15,13 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import mercandalli.com.jarvis.R;
+import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.net.Base64;
 
 /**
@@ -26,9 +29,11 @@ import mercandalli.com.jarvis.net.Base64;
  */
 public class ActivityFileAudio extends Application {
 
-    private String url, login, password, name;
+    private String login, password;
     private boolean online;
 
+    private ModelFile file;
+    private List<ModelFile> files;
 
     private SeekBar seekBar;
     private MediaPlayer player;
@@ -74,6 +79,31 @@ public class ActivityFileAudio extends Application {
         }
     };
 
+    private MediaPlayer.OnCompletionListener onCompletion = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            if(files!=null) {
+                boolean idMark = false;
+                boolean findNext = false;
+                for (int i = 0; i < files.size(); i++) {
+                    if(idMark && !files.get(i).directory) {
+                        ActivityFileAudio.this.file = files.get(i);
+                        start();
+                        return;
+                    }
+                    if(files.get(i).id == file.id)
+                        idMark = true;
+                }
+                for(int i = 0; i < files.size(); i++)
+                    if(!files.get(i).directory) {
+                        ActivityFileAudio.this.file = files.get(i);
+                        start();
+                        return;
+                    }
+            }
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.view_file_audio);
@@ -81,12 +111,13 @@ public class ActivityFileAudio extends Application {
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setIcon(R.drawable.transparent);
-
         getActionBar().setBackgroundDrawable(new ColorDrawable(this.getResources().getColor(R.color.actionbar_audio)));
         Window window = this.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.setStatusBarColor(this.getResources().getColor(R.color.notifications_bar_audio));
+
+        this.seekBar = (SeekBar) this.findViewById(R.id.seekBar);
 
         Bundle extras = getIntent().getExtras();
         if(extras == null) {
@@ -96,43 +127,45 @@ public class ActivityFileAudio extends Application {
             return;
         }
         else {
-            this.url = extras.getString("URL_FILE");
             this.login = extras.getString("LOGIN");
             this.password = extras.getString("PASSWORD");
             this.online = extras.getBoolean("ONLINE");
-            this.name = extras.getString("NAME");
+            this.file = (ModelFile) extras.getParcelable("FILE");
+            this.files = (ArrayList) extras.getParcelableArrayList("FILES");
+            start();
+        }
+    }
 
-            ((TextView) this.findViewById(R.id.title)).setText(this.name);
-            this.seekBar = (SeekBar) this.findViewById(R.id.seekBar);
+    public void start() {
+        try {
+            Uri uri = Uri.parse((this.online) ? file.onlineUrl : file.url);
 
-            try {
-                Uri uri = Uri.parse(this.url);
+            this.player = new MediaPlayer();
+            this.player.setOnCompletionListener(this.onCompletion);
+            this.seekBar.setOnSeekBarChangeListener(this.seekBarChanged);
 
-                player = new MediaPlayer();
-                seekBar.setOnSeekBarChangeListener(seekBarChanged);
-
-                if(online) {
-                    Map<String, String> headers = new HashMap<String, String>();
-                    StringBuilder authentication = new StringBuilder().append(this.login).append(":").append(this.password);
-                    String result = Base64.encodeBytes(authentication.toString().getBytes());
-                    headers.put("Authorization", "Basic " + result);
-                    player.setDataSource(this, uri, headers);
-                }
-                else
-                    player.setDataSource(this, uri);
-
-                player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                player.prepare();
-                player.start();
-
-                seekBar.setProgress(0);
-                seekBar.setMax(player.getDuration());
-
-                updatePosition();
-
-            } catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
-                e.printStackTrace();
+            if(this.online) {
+                Map<String, String> headers = new HashMap<String, String>();
+                StringBuilder authentication = new StringBuilder().append(this.login).append(":").append(this.password);
+                String result = Base64.encodeBytes(authentication.toString().getBytes());
+                headers.put("Authorization", "Basic " + result);
+                this.player.setDataSource(this, uri, headers);
             }
+            else
+                this.player.setDataSource(this, uri);
+
+            this.player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            this.player.prepare();
+            this.player.start();
+
+            this.seekBar.setProgress(0);
+            this.seekBar.setMax(this.player.getDuration());
+            ((TextView) this.findViewById(R.id.title)).setText(this.file.name);
+
+            updatePosition();
+
+        } catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
+            e.printStackTrace();
         }
     }
 

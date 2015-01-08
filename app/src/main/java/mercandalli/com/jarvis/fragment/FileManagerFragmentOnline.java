@@ -52,7 +52,7 @@ public class FileManagerFragmentOnline extends Fragment {
 
 	private Application app;
 	private ListView listView;
-	private List<ModelFile> list;
+	private ArrayList<ModelFile> files;
 	private ProgressBar circulerProgressBar;
 	private TextView message;
 	private SwipeRefreshLayout swipeRefreshLayout;
@@ -142,14 +142,14 @@ public class FileManagerFragmentOnline extends Fragment {
 			new IPostExecuteListener() {
 				@Override
 				public void execute(JSONObject json, String body) {
-					list = new ArrayList<ModelFile>();
+                    files = new ArrayList<ModelFile>();
 					try {
 						if (json != null) {
 							if (json.has("result")) {
 								JSONArray array = json.getJSONArray("result");
 								for (int i = 0; i < array.length(); i++) {
 									ModelFile modelFile = new ModelFile(app, array.getJSONObject(i));
-									list.add(modelFile);
+                                    files.add(modelFile);
 								}								
 							}
 						}
@@ -166,7 +166,7 @@ public class FileManagerFragmentOnline extends Fragment {
 	}
 
 	public void updateAdapter() {
-		if(listView!=null && list!=null && this.isAdded()) {
+		if(listView!=null && files!=null && this.isAdded()) {
 
 			circulerProgressBar.setVisibility(View.GONE);
             if( circle.getVisibility()==View.GONE ) {
@@ -174,7 +174,7 @@ public class FileManagerFragmentOnline extends Fragment {
                 circle.startAnimation(animOpen);
             }
 
-			if(list.size()==0) {
+			if(files.size()==0) {
                 if(this.url==null)
 				    message.setText(getString(R.string.no_file_server));
                 else if(this.url.equals(""))
@@ -187,7 +187,7 @@ public class FileManagerFragmentOnline extends Fragment {
 				message.setVisibility(View.GONE);
 			
 			save_position();
-			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, list, new IModelFileListener() {
+			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, files, new IModelFileListener() {
 				@Override
 				public void execute(final ModelFile modelFile) {
 					final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentOnline.this.app);
@@ -252,12 +252,12 @@ public class FileManagerFragmentOnline extends Fragment {
 			listView.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if(list.get(position).directory) {
-                        FileManagerFragmentOnline.this.url = list.get(position).url + "/";
+                    if(files.get(position).directory) {
+                        FileManagerFragmentOnline.this.url = files.get(position).url + "/";
                         refreshList();
                     }
                     else
-				        list.get(position).executeOnline();
+                        files.get(position).executeOnline(files);
 				}
 			});
 			

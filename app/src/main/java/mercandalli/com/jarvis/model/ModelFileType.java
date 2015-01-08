@@ -6,7 +6,7 @@
 
 package mercandalli.com.jarvis.model;
 
-public class ModelFileType {	
+public class ModelFileType {
 	
 	private String[] extentions;
 	

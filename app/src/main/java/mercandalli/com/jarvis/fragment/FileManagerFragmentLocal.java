@@ -28,10 +28,9 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
-import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.R;
+import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.adapter.AdapterModelFile;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.listener.IModelFileListener;
@@ -43,7 +42,7 @@ public class FileManagerFragmentLocal extends Fragment {
 	
 	private Application app;
 	private ListView listView;
-	private List<ModelFile> listModelFile;
+	private ArrayList<ModelFile> listModelFile;
 	private ProgressBar circulerProgressBar;
 	private File jarvisDirectory;
 	private TextView message;
@@ -104,17 +103,21 @@ public class FileManagerFragmentLocal extends Fragment {
 			
 		File fs[] = jarvisDirectory.listFiles();
 		listModelFile = new ArrayList<ModelFile>();
-		if(fs!=null)
-			for(File file : fs) {
-				ModelFile modelFile = new ModelFile(app);
-				modelFile.url = file.getAbsolutePath();
-				modelFile.name = file.getName();
-				modelFile.type = new ModelFileType(file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".")+1));
-				modelFile.size = ""+file.getTotalSpace();
-				modelFile.directory = file.isDirectory();
-				modelFile.file = file;
-				listModelFile.add(modelFile);
-			}
+		if(fs!=null) {
+            int tmp_id = 0;
+            for (File file : fs) {
+                ModelFile modelFile = new ModelFile(app);
+                modelFile.id = file.hashCode()+tmp_id;
+                modelFile.url = file.getAbsolutePath();
+                modelFile.name = file.getName();
+                modelFile.type = new ModelFileType(file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1));
+                modelFile.size = "" + file.getTotalSpace();
+                modelFile.directory = file.isDirectory();
+                modelFile.file = file;
+                listModelFile.add(modelFile);
+                tmp_id++;
+            }
+        }
 		
 		updateAdapter();		
 	}
@@ -163,7 +166,7 @@ public class FileManagerFragmentLocal extends Fragment {
 			listView.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					listModelFile.get(position).executeLocal();
+					listModelFile.get(position).executeLocal(listModelFile);
 				}
 			});
 			

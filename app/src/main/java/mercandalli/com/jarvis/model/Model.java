@@ -11,5 +11,6 @@ public class Model {
 	public Model(Application app) {
 		this.app = app;
 	}
+    public Model() {  }
 
 }
