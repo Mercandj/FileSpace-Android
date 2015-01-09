@@ -53,13 +53,13 @@ public class FileManagerFragmentOnline extends Fragment {
 	private Application app;
 	private ListView listView;
 	private ArrayList<ModelFile> files;
-	private ProgressBar circulerProgressBar;
+	private ProgressBar circularProgressBar;
 	private TextView message;
 	private SwipeRefreshLayout swipeRefreshLayout;
     Animation animOpen; ImageButton circle, circle2;
 
     private String url = "";
-    private List<ModelFile> filesToCut = new ArrayList<ModelFile>();
+    private List<ModelFile> filesToCut = new ArrayList<>();
 	
 	@Override
     public void onAttach(Activity activity) {
@@ -74,12 +74,10 @@ public class FileManagerFragmentOnline extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_filemanager_online, container, false);
-		circulerProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
+		circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
 		message = (TextView) rootView.findViewById(R.id.message);
 		listView = (ListView) rootView.findViewById(R.id.listView);
 		
-		refreshList();
-
 		swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
 		swipeRefreshLayout.setColorSchemeResources(
             android.R.color.holo_blue_bright,
@@ -121,7 +119,9 @@ public class FileManagerFragmentOnline extends Fragment {
                 FileManagerFragmentOnline.this.refreshList();
             }
         });
-		
+
+        refreshList();
+
 		return rootView;
 	}
 	
@@ -130,64 +130,71 @@ public class FileManagerFragmentOnline extends Fragment {
 	}
 
 	public void refreshList(String search) {
-		List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
+		List<BasicNameValuePair> parameters = new ArrayList<>();
 		if(search!=null)
 			parameters.add(new BasicNameValuePair("search", ""+search));
         parameters.add(new BasicNameValuePair("url", ""+this.url));
 
-		new TaskGet(
-			app, 
-			this.app.getConfig().getUser(), 
-			this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile, 
-			new IPostExecuteListener() {
-				@Override
-				public void execute(JSONObject json, String body) {
-                    files = new ArrayList<ModelFile>();
-					try {
-						if (json != null) {
-							if (json.has("result")) {
-								JSONArray array = json.getJSONArray("result");
-								for (int i = 0; i < array.length(); i++) {
-									ModelFile modelFile = new ModelFile(app, array.getJSONObject(i));
-                                    files.add(modelFile);
-								}								
-							}
-						}
-						else
-							Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-					updateAdapter();
-				}
-			},
-			parameters
-		).execute();
+        if(this.app.isInternetConnection())
+            new TaskGet(
+                app,
+                this.app.getConfig().getUser(),
+                this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile,
+                new IPostExecuteListener() {
+                    @Override
+                    public void execute(JSONObject json, String body) {
+                        files = new ArrayList<>();
+                        try {
+                            if (json != null) {
+                                if (json.has("result")) {
+                                    JSONArray array = json.getJSONArray("result");
+                                    for (int i = 0; i < array.length(); i++) {
+                                        ModelFile modelFile = new ModelFile(app, array.getJSONObject(i));
+                                        files.add(modelFile);
+                                    }
+                                }
+                            }
+                            else
+                                Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        updateAdapter();
+                    }
+                },
+                parameters
+            ).execute();
+        else {
+            this.circularProgressBar.setVisibility(View.GONE);
+            this.message.setText(getString(R.string.no_internet_connection));
+            this.message.setVisibility(View.VISIBLE);
+            this.swipeRefreshLayout.setRefreshing(false);
+        }
 	}
 
 	public void updateAdapter() {
-		if(listView!=null && files!=null && this.isAdded()) {
+		if(this.listView!=null && this.files!=null && this.isAdded()) {
 
-			circulerProgressBar.setVisibility(View.GONE);
-            if( circle.getVisibility()==View.GONE ) {
-                circle.setVisibility(View.VISIBLE);
-                circle.startAnimation(animOpen);
+            this.circularProgressBar.setVisibility(View.GONE);
+            if( this.circle.getVisibility()==View.GONE ) {
+                this.circle.setVisibility(View.VISIBLE);
+                this.circle.startAnimation(animOpen);
             }
 
-			if(files.size()==0) {
+			if(this.files.size()==0) {
                 if(this.url==null)
-				    message.setText(getString(R.string.no_file_server));
+				    this.message.setText(getString(R.string.no_file_server));
                 else if(this.url.equals(""))
-                    message.setText(getString(R.string.no_file_server));
+                    this.message.setText(getString(R.string.no_file_server));
                 else
-                    message.setText(getString(R.string.no_file_directory));
-				message.setVisibility(View.VISIBLE);
+                    this.message.setText(getString(R.string.no_file_directory));
+				this.message.setVisibility(View.VISIBLE);
 			}
 			else
-				message.setVisibility(View.GONE);
+				this.message.setVisibility(View.GONE);
 			
 			save_position();
-			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, files, new IModelFileListener() {
+			this.listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, files, new IModelFileListener() {
 				@Override
 				public void execute(final ModelFile modelFile) {
 					final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentOnline.this.app);
@@ -236,7 +243,7 @@ public class FileManagerFragmentOnline extends Fragment {
                                             break;
 
                                         case 3:
-                                            FileManagerFragmentOnline.this.filesToCut = new ArrayList<ModelFile>();
+                                            FileManagerFragmentOnline.this.filesToCut = new ArrayList<>();
                                             FileManagerFragmentOnline.this.filesToCut.add(modelFile);
                                             Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                             break;
@@ -247,7 +254,7 @@ public class FileManagerFragmentOnline extends Fragment {
 					menuDrop.show();					
 				}				
 			}));
-			retore_position();
+			restore_position();
 			
 			listView.setOnItemClickListener(new OnItemClickListener() {
 				@Override
@@ -260,8 +267,8 @@ public class FileManagerFragmentOnline extends Fragment {
                         files.get(position).executeOnline(files);
 				}
 			});
-			
-			listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+            this.listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 				@Override
 				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 					
@@ -275,8 +282,8 @@ public class FileManagerFragmentOnline extends Fragment {
                 this.circle2.setVisibility(View.GONE);
             else
                 this.circle2.setVisibility(View.VISIBLE);
-			
-			swipeRefreshLayout.setRefreshing(false);
+
+            this.swipeRefreshLayout.setRefreshing(false);
 		}
 	}
 	
@@ -289,7 +296,7 @@ public class FileManagerFragmentOnline extends Fragment {
 	    savedListTop = (firstVisibleView == null) ? 0 : firstVisibleView.getTop();
 	}
 	
-	public void retore_position() {
+	public void restore_position() {
 		if(listView==null)  		return;
 		if (savedPosition >= 0) 	listView.setSelectionFromTop(savedPosition, savedListTop);
 	}

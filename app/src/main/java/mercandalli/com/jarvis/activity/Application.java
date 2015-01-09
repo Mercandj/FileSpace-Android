@@ -9,7 +9,10 @@ package mercandalli.com.jarvis.activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.widget.EditText;
 
@@ -93,6 +96,15 @@ public abstract class Application extends Activity {
         );
 
         alert.show();
+    }
+
+    public final boolean isInternetConnection() {
+        final ConnectivityManager conMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
+        if (activeNetwork != null)
+            if (activeNetwork.isConnected())
+                return true;
+        return false;
     }
 
 	public abstract void refreshAdapters();
