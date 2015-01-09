@@ -17,6 +17,8 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
@@ -42,12 +44,13 @@ public class FileManagerFragmentLocal extends Fragment {
 	
 	private Application app;
 	private ListView listView;
-	private ArrayList<ModelFile> listModelFile;
+	private ArrayList<ModelFile> files;
 	private ProgressBar circulerProgressBar;
 	private File jarvisDirectory;
 	private TextView message;
-	private SwipeRefreshLayout swipeRefreshLayout;	
-	
+	private SwipeRefreshLayout swipeRefreshLayout;
+    Animation animOpen; ImageButton circle, circle2;
+
 	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -70,9 +73,21 @@ public class FileManagerFragmentLocal extends Fragment {
         circulerProgressBar.setVisibility(View.INVISIBLE);
         message = (TextView) rootView.findViewById(R.id.message);
         listView = (ListView) rootView.findViewById(R.id.listView);
-        
-        ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.GONE);
-        ((ImageButton) rootView.findViewById(R.id.circle2)).setVisibility(View.GONE);
+
+        this.circle = (ImageButton) rootView.findViewById(R.id.circle);
+        this.circle.setVisibility(View.GONE);
+        animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
+        this.circle2 = (ImageButton) rootView.findViewById(R.id.circle2);
+        this.circle2.setVisibility(View.GONE);
+
+        circle2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FileManagerFragmentLocal.this.jarvisDirectory = new File(jarvisDirectory.getParentFile().getPath());
+                        //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
+                FileManagerFragmentLocal.this.refreshList();
+            }
+        });
 
         jarvisDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().localFolderName);
 		if(!jarvisDirectory.exists())
@@ -102,7 +117,7 @@ public class FileManagerFragmentLocal extends Fragment {
 			return;
 			
 		File fs[] = jarvisDirectory.listFiles();
-		listModelFile = new ArrayList<ModelFile>();
+        files = new ArrayList<ModelFile>();
 		if(fs!=null) {
             int tmp_id = 0;
             for (File file : fs) {
@@ -114,7 +129,7 @@ public class FileManagerFragmentLocal extends Fragment {
                 modelFile.size = "" + file.getTotalSpace();
                 modelFile.directory = file.isDirectory();
                 modelFile.file = file;
-                listModelFile.add(modelFile);
+                files.add(modelFile);
                 tmp_id++;
             }
         }
@@ -123,16 +138,21 @@ public class FileManagerFragmentLocal extends Fragment {
 	}
 	
 	public void updateAdapter() {
-		if(listView!=null && listModelFile!=null) {
-			
-			if(listModelFile.size()==0) {
+		if(listView!=null && files!=null) {
+
+            if( circle.getVisibility()==View.GONE ) {
+                circle.setVisibility(View.VISIBLE);
+                circle.startAnimation(animOpen);
+            }
+
+			if(files.size()==0) {
 				message.setText(getString(R.string.no_file_local));
 				message.setVisibility(View.VISIBLE);
 			}
 			else
 				message.setVisibility(View.GONE);
 			
-			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, listModelFile, new IModelFileListener() {
+			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, files, new IModelFileListener() {
 				@Override
 				public void execute(final ModelFile modelFile) {
 					final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
@@ -166,9 +186,21 @@ public class FileManagerFragmentLocal extends Fragment {
 			listView.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					listModelFile.get(position).executeLocal(listModelFile);
+                    if(files.get(position).directory) {
+                        jarvisDirectory = new File(files.get(position).url);
+                        refreshList();
+                    }
+                    else
+                        files.get(position).executeLocal(files);
 				}
 			});
+
+            if(this.jarvisDirectory==null)
+                this.circle2.setVisibility(View.GONE);
+            else if(this.jarvisDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + app.getConfig().localFolderName))
+                this.circle2.setVisibility(View.GONE);
+            else
+                this.circle2.setVisibility(View.VISIBLE);
 			
 			swipeRefreshLayout.setRefreshing(false);
 		}

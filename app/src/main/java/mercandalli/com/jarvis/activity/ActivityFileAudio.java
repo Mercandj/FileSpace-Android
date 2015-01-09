@@ -9,8 +9,10 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -36,6 +38,8 @@ public class ActivityFileAudio extends Application {
     private List<ModelFile> files;
 
     private SeekBar seekBar;
+    private ImageButton play;
+    private TextView title, size;
     private MediaPlayer player;
     private final Handler handler = new Handler();
     private final int UPDATE_FREQUENCY = 1000;
@@ -117,7 +121,25 @@ public class ActivityFileAudio extends Application {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.setStatusBarColor(this.getResources().getColor(R.color.notifications_bar_audio));
 
+        this.title = (TextView) this.findViewById(R.id.title);
+        this.size = (TextView) this.findViewById(R.id.size);
         this.seekBar = (SeekBar) this.findViewById(R.id.seekBar);
+        this.play = (ImageButton) this.findViewById(R.id.play);
+        this.play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(ActivityFileAudio.this.player!=null) {
+                    if(ActivityFileAudio.this.player.isPlaying()) {
+                        play.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_play));
+                        ActivityFileAudio.this.player.pause();
+                    }
+                    else {
+                        play.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_pause));
+                        ActivityFileAudio.this.player.start();
+                    }
+                }
+            }
+        });
 
         Bundle extras = getIntent().getExtras();
         if(extras == null) {
@@ -160,7 +182,8 @@ public class ActivityFileAudio extends Application {
 
             this.seekBar.setProgress(0);
             this.seekBar.setMax(this.player.getDuration());
-            ((TextView) this.findViewById(R.id.title)).setText(this.file.name);
+            this.title.setText(""+this.file.name);
+            this.size.setText(""+(this.player.getDuration()/60000)+":"+((this.player.getDuration()-((this.player.getDuration()/60000)*60000))/1000));
 
             updatePosition();
 

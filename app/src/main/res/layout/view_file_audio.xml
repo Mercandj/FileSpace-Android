@@ -13,12 +13,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
+        android:text="Title"
         android:id="@+id/title"
-        android:layout_marginBottom="43dp"
-        android:layout_above="@+id/seekBar"
+        android:layout_marginBottom="10dp"
+        android:layout_above="@+id/size"
         android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/seekBar" />
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Size"
+        android:id="@+id/size"
+        android:layout_above="@+id/play"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="5dp" />
 
     <SeekBar
         android:layout_width="wrap_content"
@@ -35,9 +46,16 @@
         android:src="@drawable/audio"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/title"
         android:scaleType="fitXY"
         android:adjustViewBounds="true"
         android:padding="100dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/play"
+        android:src="@android:drawable/ic_media_pause"
+        android:layout_above="@+id/seekBar"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

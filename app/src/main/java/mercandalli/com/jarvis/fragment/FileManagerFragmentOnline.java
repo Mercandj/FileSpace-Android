@@ -270,11 +270,11 @@ public class FileManagerFragmentOnline extends Fragment {
 			});
 
             if(this.url==null)
-                circle2.setVisibility(View.GONE);
+                this.circle2.setVisibility(View.GONE);
             else if(this.url.equals(""))
-                circle2.setVisibility(View.GONE);
+                this.circle2.setVisibility(View.GONE);
             else
-                circle2.setVisibility(View.VISIBLE);
+                this.circle2.setVisibility(View.VISIBLE);
 			
 			swipeRefreshLayout.setRefreshing(false);
 		}
