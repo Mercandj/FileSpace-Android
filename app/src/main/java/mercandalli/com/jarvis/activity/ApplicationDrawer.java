@@ -258,6 +258,7 @@ public abstract class ApplicationDrawer extends Application {
                 		FileManagerFragment tmp_fragment = (FileManagerFragment) fragment;    		
                 		switch(tmp_fragment.getCurrentFragmentIndex()) {
                 		case 0: tmp_fragment.refreshListServer(); break;
+                        case 1: tmp_fragment.refreshListServer(); break;
                 		}
                 	}
             	}
@@ -274,6 +275,7 @@ public abstract class ApplicationDrawer extends Application {
             		FileManagerFragment tmp_fragment = (FileManagerFragment) fragment;    		
             		switch(tmp_fragment.getCurrentFragmentIndex()) {
             		case 0: tmp_fragment.refreshListServer(query); break;
+                    case 1: tmp_fragment.refreshListServer(query); break;
             		}
             	}
 				return false;
@@ -299,10 +301,10 @@ public abstract class ApplicationDrawer extends Application {
     		menu.findItem(R.id.action_delete)	.setVisible(!drawerOpen);
     	}
     	else if(fragment instanceof FileManagerFragment) {
+            menu.findItem(R.id.action_search)	.setVisible(!drawerOpen);
     		FileManagerFragment tmp_fragment = (FileManagerFragment) fragment;    		
     		switch(tmp_fragment.getCurrentFragmentIndex()) {
     		case 0:
-    			menu.findItem(R.id.action_search)	.setVisible(!drawerOpen);
     			menu.findItem(R.id.action_download)	.setVisible(!drawerOpen);
     			break;
     		case 1:

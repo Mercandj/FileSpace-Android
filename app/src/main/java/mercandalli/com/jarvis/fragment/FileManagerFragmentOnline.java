@@ -77,7 +77,7 @@ public class FileManagerFragmentOnline extends Fragment {
 		circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
 		message = (TextView) rootView.findViewById(R.id.message);
 		listView = (ListView) rootView.findViewById(R.id.listView);
-		
+
 		swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
 		swipeRefreshLayout.setColorSchemeResources(
             android.R.color.holo_blue_bright,

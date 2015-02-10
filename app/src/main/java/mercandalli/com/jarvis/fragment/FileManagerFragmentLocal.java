@@ -29,6 +29,7 @@ import android.widget.TextView;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 
 import mercandalli.com.jarvis.R;
@@ -111,12 +112,24 @@ public class FileManagerFragmentLocal extends Fragment {
                 
         return rootView;
     }
+
+    public void refreshList() {
+        refreshList(null);
+    }
 	
-	public void refreshList() {
+	public void refreshList(final String search) {
 		if(jarvisDirectory==null)
 			return;
-			
-		File fs[] = jarvisDirectory.listFiles();
+
+        File fs[] = (search==null) ? jarvisDirectory.listFiles() : jarvisDirectory.listFiles(
+            new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.toLowerCase().contains(search.toLowerCase());
+                }
+            }
+        );
+
         files = new ArrayList<ModelFile>();
 		if(fs!=null) {
             int tmp_id = 0;

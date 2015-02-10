@@ -118,6 +118,11 @@ public class FileManagerFragment extends Fragment {
 				FileManagerFragmentOnline fragmentFileManagerFragment = (FileManagerFragmentOnline) listFragment[0];
 				fragmentFileManagerFragment.refreshList(search);
 			}
+        if(listFragment[1]!=null)
+            if(listFragment[1] instanceof FileManagerFragmentLocal) {
+                FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[1];
+                fragmentFileManagerFragment.refreshList(search);
+            }
 	}	
 	
 	public void updateAdapterListServer() {
