@@ -32,4 +32,9 @@ public class ModelFileType {
 					return true;
 		return false;
 	}
+
+    @Override
+    public String toString() {
+        return (extentions.length>0) ? extentions[0] : "";
+    }
 }

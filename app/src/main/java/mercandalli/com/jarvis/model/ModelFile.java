@@ -68,12 +68,14 @@ public class ModelFile extends Model implements Parcelable {
                 this.id = json.getInt("id");
                 this.onlineUrl = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
             }
-			if(json.has("url")) {
+			if(json.has("url"))
                 this.url = json.getString("url");
-                this.name = url.substring( this.url.lastIndexOf('/')+1, this.url.length() );
+            if(json.has("name"))
+                this.name = json.getString("name");
+			if(json.has("type")) {
+                this.type = new ModelFileType(json.getString("type"));
+                this.name += "." + this.type;
             }
-			if(json.has("type"))
-				this.type = new ModelFileType(json.getString("type"));
             if(json.has("directory") && !json.isNull("directory"))
                 this.directory = json.getInt("directory")==1;
 		} catch (JSONException e) {
