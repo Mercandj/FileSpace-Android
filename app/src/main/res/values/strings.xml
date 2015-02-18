@@ -32,6 +32,12 @@
     <string name="method">Method</string>
     <string name="autoconnection">Next time : AutoConnection</string>
 
+    <string name="action">Action</string>
+    <string name="download">Download</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="cut">Cut</string>
+
     <string name="menu_action_search">Search</string>
     <string name="menu_action_delete">Delete</string>
     <string name="menu_action_add">Add</string>

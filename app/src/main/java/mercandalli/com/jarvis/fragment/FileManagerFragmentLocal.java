@@ -61,12 +61,7 @@ public class FileManagerFragmentLocal extends Fragment {
 	public FileManagerFragmentLocal() {
 		super();
 	}
-	
-	public FileManagerFragmentLocal(Application app) {
-		super();
-		this.app = app;
-	}	
-	
+
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_filemanager_online, container, false);

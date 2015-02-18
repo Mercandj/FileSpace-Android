@@ -8,7 +8,7 @@ package mercandalli.com.jarvis.model;
 
 public enum ModelFileTypeENUM {
 	APK(new ModelFileType("apk")),
-	TEXT(new ModelFileType(new String[] {"txt", "doc", "csv", "rtf", "text"})),
+	TEXT(new ModelFileType(new String[] {"txt", "doc", "csv", "rtf", "text", "json"})),
 	HTML(new ModelFileType(new String[] {"html", "htm", "php", "xml"})),
 	PICTURE(new ModelFileType(new String[] {"jpeg",	"jpg", "png", "gif", "raw",	"psd", "bmp", "tiff", "tif"})),
 	AUDIO(new ModelFileType(new String[] {"mp3", "wav", "m4a", "aiff", "wma", "caf", "flac", "m4p", "amr"})),

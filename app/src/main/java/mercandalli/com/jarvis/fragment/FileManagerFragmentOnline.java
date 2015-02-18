@@ -198,8 +198,8 @@ public class FileManagerFragmentOnline extends Fragment {
 				@Override
 				public void execute(final ModelFile modelFile) {
 					final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentOnline.this.app);
-					final String[] menuList = { "Download", "Rename", "Delete", "Cut" };
-					menuAleart.setTitle("Action");
+					final String[] menuList = { getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut) };
+					menuAleart.setTitle(getString(R.string.action));
 					menuAleart.setItems(menuList,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int item) {
