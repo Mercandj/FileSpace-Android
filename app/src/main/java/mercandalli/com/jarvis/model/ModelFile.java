@@ -187,7 +187,7 @@ public class ModelFile extends Model implements Parcelable {
 	
 	public void download(IListener listener) {
 		String url = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
-		String url_ouput = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+app.getConfig().localFolderName+File.separator+this.url;
+		String url_ouput = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+app.getConfig().localFolderName+File.separator+this.name+"."+this.type;
 		new TaskGetDownload(this.app, url, url_ouput, listener).execute();
 	}
 	
