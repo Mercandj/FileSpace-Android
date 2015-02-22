@@ -64,18 +64,25 @@ public abstract class Application extends Activity {
         prompt(title, message, positive, positiveListener, negative, negativeListener, null);
 	}
 
-    public void prompt(String title, String message, String positive, final IStringListener positiveListener, String negative, final IListener negativeListener, String hint) {
+    public void prompt(String title, String message, String positive, final IStringListener positiveListener, String negative, final IListener negativeListener, String preTex) {
+        prompt(title, message, positive, positiveListener, negative, negativeListener, preTex, null);
+    }
+
+    public void prompt(String title, String message, String positive, final IStringListener positiveListener, String negative, final IListener negativeListener, String preText, String hint) {
 
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
         alert.setTitle(title);
+        if(message!=null)
         alert.setMessage(message);
 
         // Set an EditText view to get user input
         final EditText input = new EditText(this);
         alert.setView(input);
+        if(preText!=null)
+            input.setText(preText);
         if(hint!=null)
-            input.setText(hint);
+            input.setHint(hint);
 
         alert.setPositiveButton(positive,
                 new DialogInterface.OnClickListener() {

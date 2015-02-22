@@ -30,6 +30,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import mercandalli.com.jarvis.R;
@@ -38,6 +39,7 @@ import mercandalli.com.jarvis.adapter.AdapterModelFile;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.listener.IModelFileListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
+import mercandalli.com.jarvis.listener.IStringListener;
 import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.model.ModelFileType;
 
@@ -72,15 +74,50 @@ public class FileManagerFragmentLocal extends Fragment {
 
         this.circle = (ImageButton) rootView.findViewById(R.id.circle);
         this.circle.setVisibility(View.GONE);
+        circle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
+                final String[] menuList = { "New Folder", "New File" };
+                menuAlert.setTitle("Action");
+                menuAlert.setItems(menuList,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int item) {
+                                switch (item) {
+                                    case 0:
+                                        FileManagerFragmentLocal.this.app.prompt("New Folder", "Choose a name.", getString(R.string.ok), new IStringListener() {
+                                            @Override
+                                            public void execute(String text) {
+                                                createFile(jarvisDirectory.getPath()+File.separator, text, true);
+                                                refreshList();
+                                            }
+                                        }, getString(R.string.cancel), null, null, "Folder Name");
+                                        break;
+                                    case 1:
+                                        FileManagerFragmentLocal.this.app.prompt("New File", "Choose a name.", getString(R.string.ok), new IStringListener() {
+                                            @Override
+                                            public void execute(String text) {
+                                                createFile(jarvisDirectory.getPath()+File.separator, text, false);
+                                                refreshList();
+                                            }
+                                        }, getString(R.string.cancel), null, null, "File Name");
+                                        break;
+                                }
+                            }
+                        });
+                AlertDialog menuDrop = menuAlert.create();
+                menuDrop.show();
+            }
+        });
+
         animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
         this.circle2 = (ImageButton) rootView.findViewById(R.id.circle2);
         this.circle2.setVisibility(View.GONE);
-
         circle2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FileManagerFragmentLocal.this.jarvisDirectory = new File(jarvisDirectory.getParentFile().getPath());
-                        //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
+                //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
                 FileManagerFragmentLocal.this.refreshList();
             }
         });
@@ -163,10 +200,10 @@ public class FileManagerFragmentLocal extends Fragment {
 			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, files, new IModelFileListener() {
 				@Override
 				public void execute(final ModelFile modelFile) {
-					final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
+					final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
 					final String[] menuList = { "Delete" };
-					menuAleart.setTitle("Action");
-					menuAleart.setItems(menuList,
+                    menuAlert.setTitle("Action");
+                    menuAlert.setItems(menuList,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int item) {
 									switch (item) {
@@ -186,7 +223,7 @@ public class FileManagerFragmentLocal extends Fragment {
 									}
 								}
 							});
-					AlertDialog menuDrop = menuAleart.create();
+					AlertDialog menuDrop = menuAlert.create();
 					menuDrop.show();					
 				}				
 			}));
@@ -213,4 +250,26 @@ public class FileManagerFragmentLocal extends Fragment {
 			swipeRefreshLayout.setRefreshing(false);
 		}
 	}
+
+    public boolean createFile(String path, String name, boolean directory) {
+        int len = path.length();
+        if (len < 1 || name.length() < 1)
+            return false;
+        if (path.charAt(len - 1) != '/')
+            path += "/";
+        if(directory) {
+            if (new File(path + name).mkdir())
+                return true;
+        }
+        else {
+            try {
+                if (new File(path + name).createNewFile())
+                    return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return false;
+    }
 }
