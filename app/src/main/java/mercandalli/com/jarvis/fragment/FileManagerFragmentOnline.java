@@ -215,7 +215,7 @@ public class FileManagerFragmentOnline extends Fragment {
                                             break;
 
                                         case 1:
-                                            FileManagerFragmentOnline.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.url + " ?", "Ok", new IStringListener() {
+                                            FileManagerFragmentOnline.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
                                                     modelFile.rename(text, new IPostExecuteListener() {
@@ -229,7 +229,7 @@ public class FileManagerFragmentOnline extends Fragment {
                                             break;
 
                                         case 2:
-                                            FileManagerFragmentOnline.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.url + " ?", "Yes", new IListener() {
+                                            FileManagerFragmentOnline.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                                 @Override
                                                 public void execute() {
                                                     modelFile.delete(new IPostExecuteListener() {

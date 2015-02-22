@@ -46,7 +46,7 @@ public class ModelFile extends Model implements Parcelable {
 	public Bitmap bitmap;
 	public File file;
     public String onlineUrl;
-	
+
 	public List<BasicNameValuePair> getForUpload() {
 		List<BasicNameValuePair> parameters = new ArrayList<>();
 		if(name!=null)
@@ -212,10 +212,6 @@ public class ModelFile extends Model implements Parcelable {
 		String url = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
 		new TaskPut(app, url, listener, getForUpload()).execute();
 	}
-
-
-
-
 
     public static final Parcelable.Creator<ModelFile> CREATOR = new Parcelable.Creator<ModelFile>() {
         @Override
