@@ -47,6 +47,10 @@ public class ModelFile extends Model implements Parcelable {
 	public File file;
     public String onlineUrl;
 
+    public String getNameExt() {
+        return this.name + ((this.directory) ? "" : ("." + this.type));
+    }
+
 	public List<BasicNameValuePair> getForUpload() {
 		List<BasicNameValuePair> parameters = new ArrayList<>();
 		if(name!=null)
@@ -72,10 +76,8 @@ public class ModelFile extends Model implements Parcelable {
                 this.url = json.getString("url");
             if(json.has("name"))
                 this.name = json.getString("name");
-			if(json.has("type")) {
+			if(json.has("type"))
                 this.type = new ModelFileType(json.getString("type"));
-                this.name += "." + this.type;
-            }
             if(json.has("directory") && !json.isNull("directory"))
                 this.directory = json.getInt("directory")==1;
 		} catch (JSONException e) {
@@ -155,8 +157,9 @@ public class ModelFile extends Model implements Parcelable {
             intent.putExtra("FILE", this);
             ArrayList<ModelFile> tmpFiles = new ArrayList<ModelFile>();
             for(ModelFile f:files)
-                if(f.type.equals(ModelFileTypeENUM.AUDIO.type))
-                    tmpFiles.add(f);
+                if(f.type!=null)
+                    if(f.type.equals(ModelFileTypeENUM.AUDIO.type))
+                        tmpFiles.add(f);
             intent.putParcelableArrayListExtra("FILES", tmpFiles);
             this.app.startActivity(intent);
             this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
@@ -187,7 +190,7 @@ public class ModelFile extends Model implements Parcelable {
 	
 	public void download(IListener listener) {
 		String url = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
-		String url_ouput = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+app.getConfig().localFolderName+File.separator+this.name+"."+this.type;
+		String url_ouput = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+app.getConfig().localFolderName+File.separator+this.getNameExt();
 		new TaskGetDownload(this.app, url, url_ouput, listener).execute();
 	}
 	

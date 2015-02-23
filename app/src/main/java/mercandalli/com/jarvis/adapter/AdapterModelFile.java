@@ -38,7 +38,7 @@ public class AdapterModelFile extends ArrayAdapter<ModelFile> {
 			convertView = inflater.inflate(R.layout.tab_file, parent, false);
 			
 			if(file.name!=null)
-				((TextView) convertView.findViewById(R.id.title)).setText(file.name);
+				((TextView) convertView.findViewById(R.id.title)).setText(file.getNameExt());
 			else
 				((TextView) convertView.findViewById(R.id.title)).setText(file.url);
 

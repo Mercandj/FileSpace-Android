@@ -169,7 +169,8 @@ public class FileManagerFragmentLocal extends Fragment {
                 ModelFile modelFile = new ModelFile(app);
                 modelFile.id = file.hashCode()+tmp_id;
                 modelFile.url = file.getAbsolutePath();
-                modelFile.name = file.getName();
+                int id= file.getName().lastIndexOf(".");
+                modelFile.name = (id==-1) ? file.getName() : file.getName().substring(0, id);
                 modelFile.type = new ModelFileType(file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1));
                 modelFile.size = "" + file.getTotalSpace();
                 modelFile.directory = file.isDirectory();
