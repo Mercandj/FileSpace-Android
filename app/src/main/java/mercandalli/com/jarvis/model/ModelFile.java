@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.message.BasicNameValuePair;
@@ -20,6 +21,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -204,8 +210,9 @@ public class ModelFile extends Model implements Parcelable {
 			new TaskDelete(app, url, listener).execute();
 		}
 		else {
-			file.delete();			
-			listener.execute(null, null);
+			file.delete();
+            if(listener!=null)
+			    listener.execute(null, null);
 		}
 	}
 	
@@ -215,6 +222,55 @@ public class ModelFile extends Model implements Parcelable {
 		String url = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
 		new TaskPut(app, url, listener, getForUpload()).execute();
 	}
+
+    private void copyFile(String outputPath, IPostExecuteListener listener) {
+        if(this.isOnline()) {
+            //TODO
+        }
+        else {
+            InputStream in = null;
+            OutputStream out = null;
+            try {
+                File dir = new File (outputPath);
+                if (!dir.exists())
+                    dir.mkdirs();
+
+                in = new FileInputStream(this.file.getAbsoluteFile());
+                out = new FileOutputStream(outputPath + this.getNameExt());
+
+                byte[] buffer = new byte[1024];
+                int read;
+                while ((read = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, read);
+                }
+                in.close();
+                in = null;
+                out.flush();
+                out.close();
+                out = null;
+            }
+            catch (FileNotFoundException e) {
+                Log.e("tag", e.getMessage());
+            }
+            catch (Exception e) {
+                Log.e("tag", e.getMessage());
+            }
+        }
+        if(listener!=null)
+            listener.execute(null, null);
+    }
+
+    private void moveFile(String outputPath, IPostExecuteListener listener) {
+        if(this.isOnline()) {
+            //TODO
+        }
+        else {
+            copyFile(outputPath, null);
+            this.delete(null);
+        }
+        if(listener!=null)
+            listener.execute(null, null);
+    }
 
     public static final Parcelable.Creator<ModelFile> CREATOR = new Parcelable.Creator<ModelFile>() {
         @Override
