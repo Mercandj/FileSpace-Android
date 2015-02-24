@@ -1,11 +1,11 @@
 package mercandalli.com.jarvis.activity;
 
-import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -113,9 +113,13 @@ public class ActivityFileAudio extends Application {
         setContentView(R.layout.view_file_audio);
         super.onCreate(savedInstanceState);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setIcon(R.drawable.transparent);
-        getActionBar().setBackgroundDrawable(new ColorDrawable(this.getResources().getColor(R.color.actionbar_audio)));
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        if(toolbar!=null) {
+            setSupportActionBar(toolbar);
+            toolbar.setBackgroundColor(this.getResources().getColor(R.color.actionbar_audio));
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         Window window = this.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

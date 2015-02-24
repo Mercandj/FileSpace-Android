@@ -13,13 +13,14 @@ import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SearchView;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.config.Const;
@@ -41,13 +42,17 @@ public abstract class ApplicationDrawer extends Application {
     Fragment fragment;
     
 	protected DrawerLayout mDrawerLayout;
-	protected ListView 					mDrawerList;
+	protected ListView mDrawerList;
 	protected NavDrawerItemListe navDrawerItems;
 	protected ActionBarDrawerToggle mDrawerToggle;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+        toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        if(toolbar!=null)
+            setSupportActionBar(toolbar);
         
         mDrawerLayout 	= (DrawerLayout) 	findViewById(R.id.drawer_layout);
         mDrawerList 	= (ListView) 		findViewById(R.id.left_drawer);
@@ -152,10 +157,11 @@ public abstract class ApplicationDrawer extends Application {
         
         // Initial Fragment
         selectItem(2);
-        
+        /*
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setIcon(R.drawable.transparent);
-        
+        */
+
         mDrawerList.setAdapter(new NavDrawerListAdapter(this, navDrawerItems.getListe()));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
         
@@ -281,8 +287,9 @@ public abstract class ApplicationDrawer extends Application {
 				return false;
             }            
         };
-        
-        mSearchView.setOnQueryTextListener(queryTextListener);    	
+
+        if(mSearchView!=null)
+            mSearchView.setOnQueryTextListener(queryTextListener);
     	
         return super.onCreateOptionsMenu(menu);
     }

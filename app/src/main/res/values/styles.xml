@@ -4,7 +4,9 @@
 -->
 <resources>
 
+    <!--
     <style name="AppTheme" parent="AppBaseTheme"></style>
+    -->
     
     <style name="whiteedittext" parent="@android:style/Widget.Button">
         <item name="android:textSize">15sp</item>
@@ -23,6 +25,20 @@
         <item name="android:colorPrimary">@color/notifications_bar</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:actionBarStyle">@style/MyActionBar</item>
+    </style>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Replace ActionBar by Toolbar -->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:statusBarColor">@color/notifications_bar</item>
+        <item name="colorPrimary">@color/actionbar</item>
+        <item name="colorAccent">@color/actionbar</item>
+    </style>
+
+    <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">17sp</item>
     </style>
 
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">

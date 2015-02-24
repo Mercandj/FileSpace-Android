@@ -58,6 +58,8 @@ public class FileManagerFragmentOnline extends Fragment {
 	private SwipeRefreshLayout swipeRefreshLayout;
     Animation animOpen; ImageButton circle, circle2;
 
+    private int previousDistanceFromFirstCellToTop;
+
     private String url = "";
     private List<ModelFile> filesToCut = new ArrayList<>();
 	
@@ -102,7 +104,7 @@ public class FileManagerFragmentOnline extends Fragment {
         circle.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.dialog = new DialogAddFileManager(app, new IPostExecuteListener() {
+                FileManagerFragmentOnline.this.app.dialog = new DialogAddFileManager(app, new IPostExecuteListener() {
                     @Override
                     public void execute(JSONObject json, String body) {
                     if (json != null)

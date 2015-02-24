@@ -6,11 +6,9 @@
 
 package mercandalli.com.jarvis.activity;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
@@ -45,13 +43,7 @@ public class ActivityRegisterLogin extends Application {
 	public void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.view_register_login);
 		super.onCreate(savedInstanceState);
-		
-		// Back button at the top left of the action bar
-        final ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayUseLogoEnabled(false);
-        
+
         if(this.getConfig().isAutoConncetion() && this.getConfig().getUrlServer()!=null && this.getConfig().getUserUsername()!=null && this.getConfig().getUserPassword()!=null)
         	connectionSucceed();
         
@@ -184,16 +176,6 @@ public class ActivityRegisterLogin extends Application {
 		this.startActivity(intent);
 		this.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		this.finish();
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		 switch (item.getItemId()) {
-		 case android.R.id.home:
-			 this.finish();
-	         return true;
-		 }
-		 return super.onOptionsItemSelected(item);
 	}
 
 	@Override

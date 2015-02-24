@@ -1,6 +1,7 @@
 package mercandalli.com.jarvis.activity;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -27,8 +28,11 @@ public class ActivityFileText extends Application {
         setContentView(R.layout.view_file_text);
         super.onCreate(savedInstanceState);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setIcon(R.drawable.transparent);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        if(toolbar!=null) {
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         // Visibility
         ((EditText) this.findViewById(R.id.txt)).setVisibility(View.GONE);

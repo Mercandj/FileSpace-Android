@@ -6,7 +6,6 @@
 
 package mercandalli.com.jarvis.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -14,23 +13,26 @@ import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.EditText;
 
 import mercandalli.com.jarvis.config.Config;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.listener.IStringListener;
 
-public abstract class Application extends Activity {
+public abstract class Application extends ActionBarActivity {
 	
 	private Config config;
 	public Dialog dialog;
+    public Toolbar toolbar;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
 		config = new Config(this);
 	}
-	
+
 	public Config getConfig() {
 		if(config == null)
 			config = new Config(this);
