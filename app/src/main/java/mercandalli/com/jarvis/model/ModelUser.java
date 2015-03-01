@@ -14,16 +14,18 @@ public class ModelUser {
 	public String username;
 	public String password;
 	public String currentToken;
+    public String regId;
 	
 	public ModelUser() {
 		
 	}
 	
-	public ModelUser(String username, String password, String currentToken) {
+	public ModelUser(String username, String password, String currentToken, String regId) {
 		super();
 		this.username = username;
 		this.password = password;
 		this.currentToken = currentToken;
+        this.regId = regId;
 	}
 
 	public JSONObject getJsonRegister() {

@@ -7,9 +7,12 @@
 package mercandalli.com.jarvis.activity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.fragment.FileManagerFragment;
+import mercandalli.com.jarvis.notification.Notif;
 
 public class ActivityMain extends ApplicationDrawer {
 
@@ -22,7 +25,16 @@ public class ActivityMain extends ApplicationDrawer {
 			FileManagerFragment fragmentFileManager = (FileManagerFragment) fragment;					
 			fragmentFileManager.refreshListServer();					
 		}
-	}
+
+        // Notif
+        if (TextUtils.isEmpty(Notif.regId)) {
+            Notif.regId = Notif.registerGCM(this);
+            Log.d("ActivityMain", "GCM RegId: " + Notif.regId);
+        } else {
+            Log.d("ActivityMain", "Already Registered with GCM Server!");
+            Notif.mainActNotif(this);
+        }
+    }
 	
 	@Override
 	public void updateAdapters() {

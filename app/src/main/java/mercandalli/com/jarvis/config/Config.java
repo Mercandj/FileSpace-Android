@@ -57,6 +57,7 @@ public class Config {
         STRING_URL_SERVER		("", 			"string_url_server_1"			),
         STRING_USER_USERNAME	("", 			"string_user_username_1"		),
         STRING_USER_PASSWORD	("", 			"string_user_password_1"		),
+        STRING_USER_REGID	    ("", 			"string_user_regid_1"   		),
         ;
 
         String value;
@@ -183,6 +184,17 @@ public class Config {
         }
     }
 
+    public String getUserRegId() {
+        return ENUM_String.STRING_USER_REGID.value;
+    }
+
+    public void setUserRegId(String value) {
+        if(ENUM_String.STRING_USER_REGID.value!=value) {
+            ENUM_String.STRING_USER_REGID.value = value;
+            save(activity);
+        }
+    }
+
     public boolean isAutoConncetion() {
         return ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value;
     }
@@ -195,6 +207,6 @@ public class Config {
     }
 
     public ModelUser getUser() {
-        return new ModelUser(getUserUsername(), getUserPassword(), currentToken);
+        return new ModelUser(getUserUsername(), getUserPassword(), currentToken, getUserRegId());
     }
 }

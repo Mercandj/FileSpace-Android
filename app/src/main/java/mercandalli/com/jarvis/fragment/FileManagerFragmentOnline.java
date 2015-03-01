@@ -58,8 +58,6 @@ public class FileManagerFragmentOnline extends Fragment {
 	private SwipeRefreshLayout swipeRefreshLayout;
     Animation animOpen; ImageButton circle, circle2;
 
-    private int previousDistanceFromFirstCellToTop;
-
     private String url = "";
     private List<ModelFile> filesToCut = new ArrayList<>();
 	

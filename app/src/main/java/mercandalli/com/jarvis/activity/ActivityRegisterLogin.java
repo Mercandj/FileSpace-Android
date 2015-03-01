@@ -125,10 +125,10 @@ public class ActivityRegisterLogin extends Application {
 						public void execute(JSONObject json, String body) {
 							try {
 								if(json!=null) {
-									if(json.has("succeed"))
-										if(json.getBoolean("succeed")) {
+									if(json.has("succeed")) {
+										if(json.getBoolean("succeed"))
 											connectionSucceed();
-										}
+                                    }
 								}
 								else
 									Toast.makeText(ActivityRegisterLogin.this, ActivityRegisterLogin.this.getString(R.string.server_error), Toast.LENGTH_SHORT).show();

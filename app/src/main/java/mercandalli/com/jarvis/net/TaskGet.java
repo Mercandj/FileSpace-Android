@@ -65,9 +65,12 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 	@Override
 	protected String doInBackground(Void... urls) {
 		try {
-			if(parameters!=null) 
-				url += url.endsWith("?") ? URLEncodedUtils.format(parameters, "utf-8") : "?" + URLEncodedUtils.format(parameters, "utf-8");
-			
+
+			if(parameters!=null) {
+                parameters.add(new BasicNameValuePair("android_id", ""+this.app.getConfig().getUserRegId()));
+                url += url.endsWith("?") ? URLEncodedUtils.format(parameters, "utf-8") : "?" + URLEncodedUtils.format(parameters, "utf-8");
+            }
+
 			Log.d("TaskGet", "url = "+url);
 			
 			HttpGet httpget = new HttpGet(url);
