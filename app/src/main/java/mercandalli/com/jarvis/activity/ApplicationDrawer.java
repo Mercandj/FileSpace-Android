@@ -24,7 +24,7 @@ import android.widget.ListView;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.config.Const;
-import mercandalli.com.jarvis.fragment.DevFragment;
+import mercandalli.com.jarvis.fragment.HomeFragment;
 import mercandalli.com.jarvis.fragment.FileManagerFragment;
 import mercandalli.com.jarvis.fragment.InformationManagerFragment;
 import mercandalli.com.jarvis.fragment.RequestFragment;
@@ -96,10 +96,10 @@ public abstract class ApplicationDrawer extends Application {
 
         // Tab 4
         navDrawerItems.add(
-                new NavDrawerItem( "Dev", new IListener() {
+                new NavDrawerItem( "Home", new IListener() {
                     @Override
                     public void execute() {
-                        fragment = new DevFragment(ApplicationDrawer.this);
+                        fragment = new HomeFragment(ApplicationDrawer.this);
                         FragmentManager fragmentManager = getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                     }

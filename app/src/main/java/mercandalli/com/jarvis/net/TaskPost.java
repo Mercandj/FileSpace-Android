@@ -139,19 +139,23 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
 	@Override
 	protected void onPostExecute(String response) {
 		Log.d("onPostExecute", "" + response);
-		if (response == null)
-			this.listener.execute(null, null);
+		if (response == null) {
+            if (this.listener != null)
+                this.listener.execute(null, null);
+        }
 		else {
 			try {
-				JSONObject json = new JSONObject(response);				
-				this.listener.execute(json, response);				
+				JSONObject json = new JSONObject(response);
+                if (this.listener != null)
+				    this.listener.execute(json, response);
 				if(json.has("toast"))
 					if(!json.getString("toast").equals(""))
 						Toast.makeText(app, json.getString("toast"), Toast.LENGTH_SHORT).show();
 			} catch (JSONException e) {
 				e.printStackTrace();
 				Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
-				this.listener.execute(null, response);
+                if (this.listener != null)
+				    this.listener.execute(null, response);
 			}
 		}
 	}
