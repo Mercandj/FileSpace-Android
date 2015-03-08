@@ -32,6 +32,8 @@
     <string name="method">Method</string>
     <string name="autoconnection">Next time : AutoConnection</string>
     <string name="ok">Ok</string>
+    <string name="ON">ON</string>
+    <string name="OFF">OFF</string>
 
     <string name="action">Action</string>
     <string name="download">Download</string>

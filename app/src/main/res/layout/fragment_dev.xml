@@ -16,5 +16,15 @@
         android:id="@+id/toggleButtonLED"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:checked="false" />
+        android:checked="false"
+        android:textOff="@string/OFF"
+        android:textOn="@string/ON" />
+
+    <ProgressBar
+        android:id="@+id/circularProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" />
+
 </RelativeLayout>
