@@ -5,8 +5,7 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:background="#fff" >
+    android:layout_height="70dp" >
 
     <TextView
         android:id="@+id/title"
@@ -31,8 +30,8 @@
 
     <mercandalli.com.jarvis.view.CircularImageView
         android:id="@+id/icon"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"

@@ -10,12 +10,17 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.nfc.NdefMessage;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import mercandalli.com.jarvis.config.Config;
 import mercandalli.com.jarvis.listener.IListener;
@@ -31,6 +36,28 @@ public abstract class Application extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);		
 		config = new Config(this);
+
+        //region Handle NFC
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        NdefMessage[] msgs = null;
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
+            String type = intent.getType();
+            Toast.makeText(this, ""+type, Toast.LENGTH_SHORT).show();
+
+            // Check the MIME
+            if (type.equals("text/plain")) {
+                Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
+                if (rawMsgs != null) {
+                    msgs = new NdefMessage[rawMsgs.length];
+                    for (int i = 0; i < rawMsgs.length; i++) {
+                        msgs[i] = (NdefMessage) rawMsgs[i];
+                    }
+                }
+                Toast.makeText(this, ""+buildTagViews(msgs), Toast.LENGTH_SHORT).show();
+            }
+        }
+        //endregion
 	}
 
 	public Config getConfig() {
@@ -118,4 +145,13 @@ public abstract class Application extends ActionBarActivity {
 
 	public abstract void refreshAdapters();
 	public abstract void updateAdapters();
+
+
+    private String buildTagViews(NdefMessage[] msgs){
+        if (msgs == null || msgs.length == 0) {
+            return null;
+        } else{
+            return new String(msgs[0].getRecords()[0].getPayload());
+        }
+    }
 }

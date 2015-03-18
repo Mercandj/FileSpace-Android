@@ -19,6 +19,8 @@ import java.util.List;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.button.FloatingActionButton;
+import mercandalli.com.jarvis.button.FloatingActionsMenu;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.net.TaskPost;
@@ -39,7 +41,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.rootView = inflater.inflate(R.layout.fragment_dev, container, false);
+        this.rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
         this.circularProgressBar = (ProgressBar) this.rootView.findViewById(R.id.circularProgressBar);
         this.circularProgressBar.setVisibility(View.VISIBLE);
@@ -60,35 +62,49 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        new TaskGet(
-                this.app,
-                this.app.getConfig().getUser(),
-                this.app.getConfig().getUrlServer() + HomeFragment.this.app.getConfig().routeHome + "/18",
-                new IPostExecuteListener() {
-                    @Override
-                    public void execute(JSONObject json, String body) {
-                        try {
-                            if (json.has("result")) {
-                                JSONArray result = json.getJSONArray("result");
-                                if (result.getJSONObject(0).has("value")) {
-                                    JSONObject value = new JSONObject(result.getJSONObject(0).getString("value"));
-                                    if (value.has("value")) {
-                                        HomeFragment.this.buttonLED.setChecked(value.getInt("value") == 1);
+        if(this.app.isInternetConnection())
+            new TaskGet(
+                    this.app,
+                    this.app.getConfig().getUser(),
+                    this.app.getConfig().getUrlServer() + HomeFragment.this.app.getConfig().routeHome + "/18",
+                    new IPostExecuteListener() {
+                        @Override
+                        public void execute(JSONObject json, String body) {
+                            try {
+                                if (json.has("result")) {
+                                    JSONArray result = json.getJSONArray("result");
+                                    if (result.getJSONObject(0).has("value")) {
+                                        JSONObject value = new JSONObject(result.getJSONObject(0).getString("value"));
+                                        if (value.has("value")) {
+                                            HomeFragment.this.buttonLED.setChecked(value.getInt("value") == 1);
 
-                                        HomeFragment.this.buttonLED.setVisibility(View.VISIBLE);
-                                        HomeFragment.this.circularProgressBar.setVisibility(View.INVISIBLE);
+                                            HomeFragment.this.buttonLED.setVisibility(View.VISIBLE);
+                                            HomeFragment.this.circularProgressBar.setVisibility(View.INVISIBLE);
+                                        }
                                     }
                                 }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+
+
                         }
+                    },
+                    null
+            ).execute();
 
 
-                    }
-                },
-                null
-        ).execute();
+        final View actionB = rootView.findViewById(R.id.action_b);
+        FloatingActionButton actionC = new FloatingActionButton(getActivity().getBaseContext());
+        actionC.setTitle("Hide/Show Action above");
+        actionC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionB.setVisibility(actionB.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+            }
+        });
+        ((FloatingActionsMenu) rootView.findViewById(R.id.multiple_actions)).addButton(actionC);
+
 
         return rootView;
     }
