@@ -53,6 +53,9 @@ public abstract class ApplicationDrawer extends Application {
         toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         if(toolbar!=null)
             setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
         
         mDrawerLayout 	= (DrawerLayout) 	findViewById(R.id.drawer_layout);
         mDrawerList 	= (ListView) 		findViewById(R.id.left_drawer);

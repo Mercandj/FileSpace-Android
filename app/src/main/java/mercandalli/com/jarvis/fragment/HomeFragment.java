@@ -19,8 +19,6 @@ import java.util.List;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.activity.Application;
-import mercandalli.com.jarvis.button.FloatingActionButton;
-import mercandalli.com.jarvis.button.FloatingActionsMenu;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.net.TaskPost;
@@ -87,24 +85,10 @@ public class HomeFragment extends Fragment {
                                 e.printStackTrace();
                             }
 
-
                         }
                     },
                     null
             ).execute();
-
-
-        final View actionB = rootView.findViewById(R.id.action_b);
-        FloatingActionButton actionC = new FloatingActionButton(getActivity().getBaseContext());
-        actionC.setTitle("Hide/Show Action above");
-        actionC.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actionB.setVisibility(actionB.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-            }
-        });
-        ((FloatingActionsMenu) rootView.findViewById(R.id.multiple_actions)).addButton(actionC);
-
 
         return rootView;
     }
