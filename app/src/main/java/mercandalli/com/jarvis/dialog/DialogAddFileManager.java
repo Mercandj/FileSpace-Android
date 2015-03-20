@@ -50,7 +50,7 @@ public class DialogAddFileManager extends Dialog {
             }
         });
 
-        ((ImageButton) this.findViewById(R.id.uploadFile)).setOnClickListener(new View.OnClickListener() {
+        ((RelativeLayout) this.findViewById(R.id.uploadFile)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 app.dialog = new DialogUpload(app, listener);
@@ -58,7 +58,7 @@ public class DialogAddFileManager extends Dialog {
             }
         });
 
-        ((ImageButton) this.findViewById(R.id.addDirectory)).setOnClickListener(new View.OnClickListener() {
+        ((RelativeLayout) this.findViewById(R.id.addDirectory)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 app.prompt("Create Folder", "Name ?", "Create", new IStringListener() {

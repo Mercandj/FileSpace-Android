@@ -48,7 +48,7 @@
         android:layout_margin="25dp"
         android:background="@drawable/circle_button_ripple"
         android:elevation="@dimen/circle_button_elevation_low"
-        android:padding="12dp"
+        android:padding="15dp"
         android:scaleType="fitXY"
         android:src="@android:drawable/ic_input_add"
         android:stateListAnimator="@anim/circle_button_elevation"
