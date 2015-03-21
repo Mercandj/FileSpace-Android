@@ -13,16 +13,14 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -42,11 +40,13 @@ import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.listener.IStringListener;
 import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.model.ModelFileType;
+import mercandalli.com.jarvis.view.DividerItemDecoration;
 
 public class FileManagerFragmentLocal extends Fragment {
 	
 	private Application app;
-	private ListView listView;
+	private RecyclerView listView;
+    private RecyclerView.LayoutManager mLayoutManager;
 	private ArrayList<ModelFile> files;
 	private ProgressBar circulerProgressBar;
 	private File jarvisDirectory;
@@ -67,14 +67,20 @@ public class FileManagerFragmentLocal extends Fragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_filemanager_online, container, false);
-        circulerProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
-        circulerProgressBar.setVisibility(View.INVISIBLE);
-        message = (TextView) rootView.findViewById(R.id.message);
-        listView = (ListView) rootView.findViewById(R.id.listView);
+        this.circulerProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
+        this.circulerProgressBar.setVisibility(View.INVISIBLE);
+        this.message = (TextView) rootView.findViewById(R.id.message);
+
+        this.listView = (RecyclerView) rootView.findViewById(R.id.listView);
+        this.listView.setHasFixedSize(true);
+        this.mLayoutManager = new LinearLayoutManager(getActivity());
+        this.listView.setLayoutManager(mLayoutManager);
+        this.listView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+
 
         this.circle = (ImageButton) rootView.findViewById(R.id.circle);
         this.circle.setVisibility(View.GONE);
-        circle.setOnClickListener(new View.OnClickListener() {
+        this.circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
@@ -110,10 +116,10 @@ public class FileManagerFragmentLocal extends Fragment {
             }
         });
 
-        animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
+        this.animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
         this.circle2 = (ImageButton) rootView.findViewById(R.id.circle2);
         this.circle2.setVisibility(View.GONE);
-        circle2.setOnClickListener(new View.OnClickListener() {
+        this.circle2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FileManagerFragmentLocal.this.jarvisDirectory = new File(jarvisDirectory.getParentFile().getPath());
@@ -122,18 +128,18 @@ public class FileManagerFragmentLocal extends Fragment {
             }
         });
 
-        jarvisDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().localFolderName);
+        this.jarvisDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().localFolderName);
 		if(!jarvisDirectory.exists())
 			jarvisDirectory.mkdir();
-    	
-    	swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
-		swipeRefreshLayout.setColorSchemeResources(
+
+        this.swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        this.swipeRefreshLayout.setColorSchemeResources(
 				android.R.color.holo_blue_bright,
 				android.R.color.holo_green_light,
 				android.R.color.holo_orange_light,
 				android.R.color.holo_red_light);
 
-		swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+        this.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
 				refreshList();
@@ -141,7 +147,7 @@ public class FileManagerFragmentLocal extends Fragment {
 		});
 		
 		refreshList();
-                
+
         return rootView;
     }
 
@@ -197,8 +203,8 @@ public class FileManagerFragmentLocal extends Fragment {
 			}
 			else
 				message.setVisibility(View.GONE);
-			
-			listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, files, new IModelFileListener() {
+
+            AdapterModelFile adapter = new AdapterModelFile(app, files, new IModelFileListener() {
 				@Override
 				public void execute(final ModelFile modelFile) {
 					final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
@@ -227,11 +233,13 @@ public class FileManagerFragmentLocal extends Fragment {
 					AlertDialog menuDrop = menuAlert.create();
 					menuDrop.show();					
 				}				
-			}));
-			
-			listView.setOnItemClickListener(new OnItemClickListener() {
+			});
+
+            listView.setAdapter(adapter);
+
+            adapter.setOnItemClickListener(new AdapterModelFile.OnItemClickListener() {
 				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				public void onItemClick(View view, int position) {
                     if(files.get(position).directory) {
                         jarvisDirectory = new File(files.get(position).url);
                         refreshList();

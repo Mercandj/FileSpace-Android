@@ -136,19 +136,18 @@ public class InformationManagerFragment extends Fragment {
 	int i;
 	
 	public void updateAdapter() {
-		if(recyclerView!=null && list!=null && this.isAdded()) {			
-			circulerProgressBar.setVisibility(View.GONE);
-			
-	        mAdapter = new AdapterModelInformation(app, list);
-	        recyclerView.setAdapter(mAdapter);
-	        recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
+		if(this.recyclerView!=null && this.list!=null && this.isAdded()) {
+            this.circulerProgressBar.setVisibility(View.GONE);
+
+            this.mAdapter = new AdapterModelInformation(app, list);
+            this.recyclerView.setAdapter(mAdapter);
+            this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
 
             if( ((ImageButton) rootView.findViewById(R.id.circle)).getVisibility()==View.GONE ) {
                 ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
                 Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
                 ((ImageButton) rootView.findViewById(R.id.circle)).startAnimation(animOpen);
             }
-
 
 	        ((ImageButton) rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {			
 				@Override
@@ -158,15 +157,15 @@ public class InformationManagerFragment extends Fragment {
 					i++;
 				}
 			});
-	        
-	        mAdapter.setOnItemClickListener(new AdapterModelInformation.OnItemClickListener() {
+
+            this.mAdapter.setOnItemClickListener(new AdapterModelInformation.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
 
                 }
             });
-	        
-	        swipeRefreshLayout.setRefreshing(false);
+
+            this.swipeRefreshLayout.setRefreshing(false);
 	        i=0;
 		}
 	}

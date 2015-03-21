@@ -12,18 +12,15 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,13 +43,16 @@ import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.listener.IStringListener;
 import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.net.TaskGet;
+import mercandalli.com.jarvis.view.DividerItemDecoration;
 
 
 public class FileManagerFragmentOnline extends Fragment {
 
 	private Application app;
-	private ListView listView;
-	private ArrayList<ModelFile> files;
+	private RecyclerView listView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private AdapterModelFile adapter;
+    private ArrayList<ModelFile> files = new ArrayList<>();
 	private ProgressBar circularProgressBar;
 	private TextView message;
 	private SwipeRefreshLayout swipeRefreshLayout;
@@ -74,32 +74,36 @@ public class FileManagerFragmentOnline extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_filemanager_online, container, false);
-		circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
-		message = (TextView) rootView.findViewById(R.id.message);
-		listView = (ListView) rootView.findViewById(R.id.listView);
+        this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
+        this.message = (TextView) rootView.findViewById(R.id.message);
 
-		swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
-		swipeRefreshLayout.setColorSchemeResources(
+        this.listView = (RecyclerView) rootView.findViewById(R.id.listView);
+        this.listView.setHasFixedSize(true);
+        this.mLayoutManager = new LinearLayoutManager(getActivity());
+        this.listView.setLayoutManager(mLayoutManager);
+
+        this.swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        this.swipeRefreshLayout.setColorSchemeResources(
             android.R.color.holo_blue_bright,
             android.R.color.holo_green_light,
             android.R.color.holo_orange_light,
             android.R.color.holo_red_light);
 
-		swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+        this.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
 				refreshList();
 			}
 		});
 
-        circle = ((ImageButton) rootView.findViewById(R.id.circle));
-        circle.setVisibility(View.GONE);
-        animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
+        this.circle = ((ImageButton) rootView.findViewById(R.id.circle));
+        this.circle.setVisibility(View.GONE);
+        this.animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
 
-        circle2 = ((ImageButton) rootView.findViewById(R.id.circle2));
-        circle2.setVisibility(View.GONE);
+        this.circle2 = ((ImageButton) rootView.findViewById(R.id.circle2));
+        this.circle2.setVisibility(View.GONE);
 
-        circle.setOnClickListener(new OnClickListener() {
+        this.circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FileManagerFragmentOnline.this.app.dialog = new DialogAddFileManager(app, new IPostExecuteListener() {
@@ -112,11 +116,96 @@ public class FileManagerFragmentOnline extends Fragment {
             }
         });
 
-        circle2.setOnClickListener(new OnClickListener() {
+        this.circle2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FileManagerFragmentOnline.this.url = "";
                 FileManagerFragmentOnline.this.refreshList();
+            }
+        });
+
+
+        this.adapter = new AdapterModelFile(app, files, new IModelFileListener() {
+            @Override
+            public void execute(final ModelFile modelFile) {
+                final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentOnline.this.app);
+                final String[] menuList = { getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut) };
+                menuAleart.setTitle(getString(R.string.action));
+                menuAleart.setItems(menuList,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int item) {
+                                switch (item) {
+                                    case 0:
+                                        modelFile.download(new IListener() {
+                                            @Override
+                                            public void execute() {
+                                                Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
+                                                FileManagerFragmentOnline.this.app.updateAdapters();
+                                            }
+                                        });
+                                        break;
+
+                                    case 1:
+                                        FileManagerFragmentOnline.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                            @Override
+                                            public void execute(String text) {
+                                                modelFile.rename(text, new IPostExecuteListener() {
+                                                    @Override
+                                                    public void execute(JSONObject json, String body) {
+                                                        FileManagerFragmentOnline.this.app.refreshAdapters();
+                                                    }
+                                                });
+                                            }
+                                        }, "Cancel", null, modelFile.name);
+                                        break;
+
+                                    case 2:
+                                        FileManagerFragmentOnline.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                            @Override
+                                            public void execute() {
+                                                modelFile.delete(new IPostExecuteListener() {
+                                                    @Override
+                                                    public void execute(JSONObject json, String body) {
+                                                        FileManagerFragmentOnline.this.app.refreshAdapters();
+                                                    }
+                                                });
+                                            }
+                                        }, "No", null);
+                                        break;
+
+                                    case 3:
+                                        FileManagerFragmentOnline.this.filesToCut = new ArrayList<>();
+                                        FileManagerFragmentOnline.this.filesToCut.add(modelFile);
+                                        Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
+                                        break;
+                                }
+                            }
+                        });
+                AlertDialog menuDrop = menuAleart.create();
+                menuDrop.show();
+            }
+        });
+        this.listView.setAdapter(adapter);
+        this.listView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
+        this.listView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+
+        this.adapter.setOnItemClickListener(new AdapterModelFile.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                if(files.get(position).directory) {
+                    FileManagerFragmentOnline.this.url = files.get(position).url + "/";
+                    refreshList();
+                }
+                else
+                    files.get(position).executeOnline(files);
+            }
+        });
+
+        this.adapter.setOnItemLongClickListener(new AdapterModelFile.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(View view, int position) {
+
+                return true;
             }
         });
 
@@ -192,89 +281,8 @@ public class FileManagerFragmentOnline extends Fragment {
 			}
 			else
 				this.message.setVisibility(View.GONE);
-			
-			save_position();
-			this.listView.setAdapter(new AdapterModelFile(app, R.layout.tab_file, files, new IModelFileListener() {
-				@Override
-				public void execute(final ModelFile modelFile) {
-					final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentOnline.this.app);
-					final String[] menuList = { getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut) };
-					menuAleart.setTitle(getString(R.string.action));
-					menuAleart.setItems(menuList,
-							new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int item) {
-									switch (item) {
-                                        case 0:
-                                            modelFile.download(new IListener() {
-                                                @Override
-                                                public void execute() {
-                                                    Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
-                                                    FileManagerFragmentOnline.this.app.updateAdapters();
-                                                }
-                                            });
-                                            break;
 
-                                        case 1:
-                                            FileManagerFragmentOnline.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
-                                                @Override
-                                                public void execute(String text) {
-                                                    modelFile.rename(text, new IPostExecuteListener() {
-                                                        @Override
-                                                        public void execute(JSONObject json, String body) {
-                                                            FileManagerFragmentOnline.this.app.refreshAdapters();
-                                                        }
-                                                    });
-                                                }
-                                            }, "Cancel", null, modelFile.name);
-                                            break;
-
-                                        case 2:
-                                            FileManagerFragmentOnline.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
-                                                @Override
-                                                public void execute() {
-                                                    modelFile.delete(new IPostExecuteListener() {
-                                                        @Override
-                                                        public void execute(JSONObject json, String body) {
-                                                            FileManagerFragmentOnline.this.app.refreshAdapters();
-                                                        }
-                                                    });
-                                                }
-                                            }, "No", null);
-                                            break;
-
-                                        case 3:
-                                            FileManagerFragmentOnline.this.filesToCut = new ArrayList<>();
-                                            FileManagerFragmentOnline.this.filesToCut.add(modelFile);
-                                            Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
-                                            break;
-                                    }
-								}
-							});
-					AlertDialog menuDrop = menuAleart.create();
-					menuDrop.show();					
-				}				
-			}));
-			restore_position();
-			
-			listView.setOnItemClickListener(new OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if(files.get(position).directory) {
-                        FileManagerFragmentOnline.this.url = files.get(position).url + "/";
-                        refreshList();
-                    }
-                    else
-                        files.get(position).executeOnline(files);
-				}
-			});
-
-            this.listView.setOnItemLongClickListener(new OnItemLongClickListener() {
-				@Override
-				public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-					
-					return true;
-				}
-			});
+            this.adapter.remplaceList(this.files);
 
             if(this.url==null)
                 this.circle2.setVisibility(View.GONE);
@@ -286,18 +294,5 @@ public class FileManagerFragmentOnline extends Fragment {
             this.swipeRefreshLayout.setRefreshing(false);
 		}
 	}
-	
-	int savedPosition, savedListTop;
-	
-    public void save_position() {
-    	if(listView==null) return;
-		savedPosition = listView.getFirstVisiblePosition();
-	    View firstVisibleView = listView.getChildAt(0);
-	    savedListTop = (firstVisibleView == null) ? 0 : firstVisibleView.getTop();
-	}
-	
-	public void restore_position() {
-		if(listView==null)  		return;
-		if (savedPosition >= 0) 	listView.setSelectionFromTop(savedPosition, savedListTop);
-	}
+
 }
