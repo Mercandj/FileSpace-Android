@@ -15,6 +15,7 @@ public enum ModelFileTypeENUM {
 	VIDEO(new ModelFileType(new String[] {"m4v", "3gp", "wmv", "mp4", "mpeg", "mpg", "rm", "mov", "avi", "mkv", "flv", "ogg", "wav"})),
 	ZIP(new ModelFileType("zip")),
 	GZIP(new ModelFileType(new String[] {"gzip", "rar", "tar", "tar.gz", "gz"})),
+    JARVIS(new ModelFileType(new String[] {"jarvis"})),
 	PDF(new ModelFileType("pdf"));
 	
 	public ModelFileType type;

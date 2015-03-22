@@ -10,6 +10,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -52,6 +53,19 @@ public class ModelFile extends Model implements Parcelable {
 	public Bitmap bitmap;
 	public File file;
     public String onlineUrl;
+    public ModelFileContent content;
+
+    public CountDownTimer cdt;
+
+
+    public String getAdapterTitle() {
+        if(this.type.toString().equals("jarvis") && this.content != null)
+            return this.content.toString();
+        else if(this.name!=null)
+            return this.getNameExt();
+        else
+            return this.url;
+    }
 
     public String getNameExt() {
         return this.name + ((this.directory) ? "" : ("." + this.type));
@@ -86,6 +100,9 @@ public class ModelFile extends Model implements Parcelable {
                 this.type = new ModelFileType(json.getString("type"));
             if(json.has("directory") && !json.isNull("directory"))
                 this.directory = json.getInt("directory")==1;
+            if(json.has("content") && !json.isNull("content"))
+                this.content = new ModelFileContent(json.getString("content"));
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

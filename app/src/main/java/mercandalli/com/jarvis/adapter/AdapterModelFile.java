@@ -38,14 +38,11 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         if(position<files.size()) {
             final ModelFile file = files.get(position);
 
-            if(file.name!=null)
-                viewHolder.title.setText(file.getNameExt());
-            else
-                viewHolder.title.setText(file.url);
+            viewHolder.title.setText(file.getAdapterTitle());
 
             if(file.directory)
                 viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.directory));
@@ -56,6 +53,8 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
                     viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_pdf));
                 else if (file.type.equals(ModelFileTypeENUM.APK.type))
                     viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_apk));
+                else if (file.type.equals(ModelFileTypeENUM.JARVIS.type))
+                    viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_jarvis));
                 else
                     viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_default));
             }
@@ -72,10 +71,25 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
                         moreListener.execute(file);
                 }
             });
+
+
+            if (file.type.equals(ModelFileTypeENUM.JARVIS.type)) {
+                /*
+                final Handler timerHandler = new Handler();
+
+                Runnable timerRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        if(v)
+                        viewHolder.title.notify();
+                        timerHandler.postDelayed(this, 1000); // run every s
+                    }
+                };
+                timerRunnable.run();
+                */
+            }
         }
     }
-
-
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         public TextView title;
@@ -162,51 +176,4 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
     public void setOnItemLongClickListener(final OnItemLongClickListener mItemLongClickListener) {
         this.mItemLongClickListener = mItemLongClickListener;
     }
-
-	/*
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {		
-		LayoutInflater inflater = app.getLayoutInflater();
-		
-		if(position<files.size()) {		
-			final ModelFile file = files.get(position);			
-			convertView = inflater.inflate(R.layout.tab_file, parent, false);
-			
-			if(file.name!=null)
-				((TextView) convertView.findViewById(R.id.title)).setText(file.getNameExt());
-			else
-				((TextView) convertView.findViewById(R.id.title)).setText(file.url);
-
-            if(file.directory)
-                ((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.directory));
-			else if(file.type!=null)
-				if(file.type.equals(ModelFileTypeENUM.AUDIO.type))
-					((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_audio));
-				else if(file.type.equals(ModelFileTypeENUM.PDF.type))
-					((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_pdf));
-				else if(file.type.equals(ModelFileTypeENUM.APK.type))
-					((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_apk));
-						
-			if(file.bitmap!=null)
-				((ImageView) convertView.findViewById(R.id.icon)).setImageBitmap(file.bitmap);
-			
-			((ImageView) convertView.findViewById(R.id.more)).setOnClickListener(new OnClickListener() {				
-				@Override
-				public void onClick(View v) {
-					if(moreListener!=null)
-						moreListener.execute(file);
-				}
-			});
-		}
-		return convertView;
-	}
-	
-	@Override
-	public int getCount() {
-		return files.size();
-	}
-    */
-
-
-
 }
