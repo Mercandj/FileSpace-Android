@@ -7,15 +7,26 @@
 package mercandalli.com.jarvis.model;
 
 public class ModelFileType {
-	
-	private String[] extentions;
-	
-	public ModelFileType(String value) {
-		extentions = new String[] {value};
+
+    private String title;
+	private String[] extensions;
+
+    public ModelFileType(String value) {
+        this.extensions = new String[] {value};
+        for(ModelFileTypeENUM t : ModelFileTypeENUM.values())
+            for(String ext : t.type.getExtensions())
+                if(value.equals(ext))
+                    this.title = t.type.title;
+    }
+
+	public ModelFileType(String title, String value) {
+        this.title = title;
+        this.extensions = new String[] {value};
 	}
 	
-	public ModelFileType(String[] extentions) {
-		this.extentions = extentions;
+	public ModelFileType(String title, String[] extensions) {
+        this.title = title;
+        this.extensions = extensions;
 	}
 
 	@Override
@@ -23,11 +34,11 @@ public class ModelFileType {
 		if(this == o) return true;		
 		if(!(o  instanceof ModelFileType))
 			return false;
-		String[] objextentions = ((ModelFileType) o).extentions;
-		if(this.extentions == null || objextentions == null)
+		String[] objextensions = ((ModelFileType) o).extensions;
+		if(this.extensions == null || objextensions == null)
 			return false;
-		for(String myext : this.extentions)
-			for(String objext : objextentions)
+		for(String myext : this.extensions)
+			for(String objext : objextensions)
 				if(myext.equals(objext))
 					return true;
 		return false;
@@ -35,6 +46,18 @@ public class ModelFileType {
 
     @Override
     public String toString() {
-        return (extentions.length>0) ? extentions[0] : "";
+        return getFirstExtension();
+    }
+
+    public String[] getExtensions() {
+        return extensions;
+    }
+
+    public String getFirstExtension() {
+        return (extensions.length>0) ? extensions[0] : "";
+    }
+
+    public String getTitle() {
+        return this.title != null ? this.title : "";
     }
 }

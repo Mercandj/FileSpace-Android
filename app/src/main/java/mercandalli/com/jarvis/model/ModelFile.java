@@ -67,6 +67,14 @@ public class ModelFile extends Model implements Parcelable {
             return this.url;
     }
 
+    public String getAdapterSubtitle() {
+        if(this.directory)
+            return "Directory";
+        if(this.type.toString().equals("jarvis") && this.content != null)
+            return type.getTitle() + " " + this.content.type;
+        return type.getTitle();
+    }
+
     public String getNameExt() {
         return this.name + ((this.directory) ? "" : ("." + this.type));
     }

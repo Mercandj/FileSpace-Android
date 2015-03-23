@@ -43,6 +43,7 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
             final ModelFile file = files.get(position);
 
             viewHolder.title.setText(file.getAdapterTitle());
+            viewHolder.subtitle.setText(file.getAdapterSubtitle());
 
             if(file.directory)
                 viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.directory));
@@ -92,7 +93,7 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-        public TextView title;
+        public TextView title, subtitle;
         public ImageView icon, more;
         public RelativeLayout item;
 
@@ -100,6 +101,7 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
             super(itemLayoutView);
             item = (RelativeLayout) itemLayoutView.findViewById(R.id.item);
             title = (TextView) itemLayoutView.findViewById(R.id.title);
+            subtitle = (TextView) itemLayoutView.findViewById(R.id.subtitle);
             icon = (ImageView) itemLayoutView.findViewById(R.id.icon);
             more = (ImageView) itemLayoutView.findViewById(R.id.more);
             itemLayoutView.setOnClickListener(this);
