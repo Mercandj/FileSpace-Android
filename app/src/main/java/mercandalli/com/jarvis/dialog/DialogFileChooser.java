@@ -85,7 +85,7 @@ public class DialogFileChooser extends Dialog {
 				modelFile.url = file.getAbsolutePath();
 				modelFile.name = file.getName();
 				modelFile.type = new ModelFileType(file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".")+1));
-				modelFile.size = ""+file.getTotalSpace();
+				modelFile.size = file.getTotalSpace();
 				modelFile.directory = file.isDirectory();
 				listModelFile.add(modelFile);
 			}

@@ -47,7 +47,7 @@ public class ModelFile extends Model implements Parcelable {
 	public int id;
 	public String url;
 	public String name;
-	public String size;
+	public long size;
 	public ModelFileType type;
 	public boolean directory = false;
 	public Bitmap bitmap;
@@ -106,6 +106,8 @@ public class ModelFile extends Model implements Parcelable {
                 this.name = json.getString("name");
 			if(json.has("type"))
                 this.type = new ModelFileType(json.getString("type"));
+            if(json.has("size"))
+                this.size = json.getInt("size");
             if(json.has("directory") && !json.isNull("directory"))
                 this.directory = json.getInt("directory")==1;
             if(json.has("content") && !json.isNull("content"))
@@ -115,7 +117,7 @@ public class ModelFile extends Model implements Parcelable {
 			e.printStackTrace();
 		}
 		
-		if(this.type.equals(ModelFileTypeENUM.PICTURE.type)) {
+		if(this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0 && this.size < 500000) {
 			new TaskGetDownloadImage(app, this.app.getConfig().getUser(), this.onlineUrl, new IBitmapListener() {
 				@Override
 				public void execute(Bitmap bitmap) {
@@ -313,7 +315,7 @@ public class ModelFile extends Model implements Parcelable {
         this.url = in.readString();
         this.onlineUrl = in.readString();
         this.name = in.readString();
-        this.size = in.readString();
+        this.size = in.readLong();
         boolean[] b = new boolean[1];
         in.readBooleanArray(b);
         this.directory = b[0];
@@ -330,7 +332,7 @@ public class ModelFile extends Model implements Parcelable {
         dest.writeString(this.url);
         dest.writeString(this.onlineUrl);
         dest.writeString(this.name);
-        dest.writeString(this.size);
+        dest.writeLong(this.size);
         dest.writeBooleanArray(new boolean[]{this.directory});
     }
 }
