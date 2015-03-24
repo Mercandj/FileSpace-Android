@@ -24,9 +24,10 @@ import android.widget.ListView;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.config.Const;
-import mercandalli.com.jarvis.fragment.HomeFragment;
 import mercandalli.com.jarvis.fragment.FileManagerFragment;
+import mercandalli.com.jarvis.fragment.HomeFragment;
 import mercandalli.com.jarvis.fragment.InformationManagerFragment;
+import mercandalli.com.jarvis.fragment.NotificationFragment;
 import mercandalli.com.jarvis.fragment.RequestFragment;
 import mercandalli.com.jarvis.fragment.SettingsFragment;
 import mercandalli.com.jarvis.fragment.WebFragment;
@@ -108,8 +109,20 @@ public abstract class ApplicationDrawer extends Application {
                     }
                 }, Const.TAB_VIEW_TYPE_NORMAL)
         );
-        
+
         // Tab 5
+        navDrawerItems.add(
+                new NavDrawerItem( "Notification", new IListener() {
+                    @Override
+                    public void execute() {
+                        fragment = new NotificationFragment(ApplicationDrawer.this);
+                        FragmentManager fragmentManager = getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                    }
+                }, Const.TAB_VIEW_TYPE_NORMAL)
+        );
+        
+        // Tab 6
         navDrawerItems.add(
         		new NavDrawerItem( "Request", new IListener() {
 						@Override
@@ -118,15 +131,15 @@ public abstract class ApplicationDrawer extends Application {
 					        FragmentManager fragmentManager = getFragmentManager();
 					        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 						}
-			        }, Const.TAB_VIEW_TYPE_NORMAL)
-        		);
-        
-        // Tab 6
-        navDrawerItems.add(
-        		new NavDrawerItem( "", R.drawable.ic_launcher, Const.TAB_VIEW_TYPE_SECTION)
-        		);
+			            }, Const.TAB_VIEW_TYPE_NORMAL)
+        );
         
         // Tab 7
+        navDrawerItems.add(
+        		new NavDrawerItem( "", R.drawable.ic_launcher, Const.TAB_VIEW_TYPE_SECTION)
+        );
+        
+        // Tab 8
         navDrawerItems.add(
         		new NavDrawerItem( 
     				"Settings",
@@ -137,12 +150,12 @@ public abstract class ApplicationDrawer extends Application {
 					        FragmentManager fragmentManager = getFragmentManager();
 					        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 						}
-			        },
+			                },
 			        R.drawable.ic_settings_grey,
 			        Const.TAB_VIEW_TYPE_SETTING)
-        		);
+        );
         
-        // Tab 8
+        // Tab 9
         navDrawerItems.add(
         		new NavDrawerItem(
         			"About Dev",
@@ -153,7 +166,7 @@ public abstract class ApplicationDrawer extends Application {
 					        FragmentManager fragmentManager = getFragmentManager();
 					        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 						}
-        			},
+                            },
         			R.drawable.ic_help_grey,
         			Const.TAB_VIEW_TYPE_SETTING)
         		);
