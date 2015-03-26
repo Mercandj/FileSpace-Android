@@ -27,7 +27,8 @@ import mercandalli.com.jarvis.listener.IPostExecuteListener;
 
 public class FileManagerFragment extends Fragment {
 	
-	private static final int NB_FRAGMENT = 2;
+	private static final int NB_FRAGMENT = 3;
+    private static final int INIT_FRAGMENT = 1;
 	public static Fragment listFragment[] = new Fragment[NB_FRAGMENT];
 	private Application app;
 	private ViewPager mViewPager;
@@ -46,7 +47,7 @@ public class FileManagerFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_filemanager, container, false);
 		mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
-		
+
 		mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
 		mViewPager.setAdapter(mPagerAdapter);
 		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {			
@@ -63,6 +64,8 @@ public class FileManagerFragment extends Fragment {
 				
 			}
 		});
+        mViewPager.setOffscreenPageLimit(this.NB_FRAGMENT - 1);
+        mViewPager.setCurrentItem(this.INIT_FRAGMENT);
 		
         return rootView;
 	}
@@ -83,8 +86,9 @@ public class FileManagerFragment extends Fragment {
         public Fragment getItem(int i) {
 			Fragment fragment = null;
 			switch(i) {
-			case 0:		fragment = new FileManagerFragmentOnline(); 	break;
-			case 1:		fragment = new FileManagerFragmentLocal();		break;
+			case 0:		fragment = new FileManagerFragmentCloud();  	break;
+            case 1:		fragment = new FileManagerFragmentMyCloud(); 	break;
+			case 2:		fragment = new FileManagerFragmentLocal();		break;
 			default:	fragment = new FileManagerFragmentLocal();		break;
 			}
 			listFragment[i] = fragment;
@@ -100,8 +104,9 @@ public class FileManagerFragment extends Fragment {
         public CharSequence getPageTitle(int i) {
         	String title = "null";
 			switch(i) {
-			case 0:		title = "SERVER";		break;
-			case 1:		title = "LOCAL";		break;
+			case 0:		title = "CLOUD";		break;
+            case 1:		title = "MY CLOUD";		break;
+			case 2:		title = "LOCAL";		break;
 			}
 			return title;
         }
@@ -114,43 +119,60 @@ public class FileManagerFragment extends Fragment {
 	
 	public void refreshListServer(String search) {
 		if(listFragment[0]!=null)
-			if(listFragment[0] instanceof FileManagerFragmentOnline) {
-				FileManagerFragmentOnline fragmentFileManagerFragment = (FileManagerFragmentOnline) listFragment[0];
+			if(listFragment[0] instanceof FileManagerFragmentCloud) {
+                FileManagerFragmentCloud fragmentFileManagerFragment = (FileManagerFragmentCloud) listFragment[0];
 				fragmentFileManagerFragment.refreshList(search);
 			}
         if(listFragment[1]!=null)
-            if(listFragment[1] instanceof FileManagerFragmentLocal) {
-                FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[1];
+            if(listFragment[1] instanceof FileManagerFragmentMyCloud) {
+                FileManagerFragmentMyCloud fragmentFileManagerFragment = (FileManagerFragmentMyCloud) listFragment[1];
                 fragmentFileManagerFragment.refreshList(search);
             }
-	}	
+        if(listFragment[2]!=null)
+            if(listFragment[2] instanceof FileManagerFragmentLocal) {
+                FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[2];
+                fragmentFileManagerFragment.refreshList(search);
+            }
+	}
 	
 	public void updateAdapterListServer() {
 		if(listFragment[0]!=null)
-			if(listFragment[0] instanceof FileManagerFragmentOnline) {
-				FileManagerFragmentOnline fragmentFileManagerFragment = (FileManagerFragmentOnline) listFragment[0];
+			if(listFragment[0] instanceof FileManagerFragmentCloud) {
+				FileManagerFragmentCloud fragmentFileManagerFragment = (FileManagerFragmentCloud) listFragment[0];
 				fragmentFileManagerFragment.updateAdapter();
-			}		
-		if(listFragment.length>1)
-			if(listFragment[1]!=null)
-				if(listFragment[1] instanceof FileManagerFragmentLocal) {
-					FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[1];
-					fragmentFileManagerFragment.refreshList();
+			}
+        if(listFragment.length>1)
+            if(listFragment[1]!=null)
+                if(listFragment[1] instanceof FileManagerFragmentMyCloud) {
+                    FileManagerFragmentMyCloud fragmentFileManagerFragment = (FileManagerFragmentMyCloud) listFragment[1];
+                    fragmentFileManagerFragment.updateAdapter();
+                }
+		if(listFragment.length>2)
+			if(listFragment[2]!=null)
+				if(listFragment[2] instanceof FileManagerFragmentLocal) {
+					FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[2];
+					fragmentFileManagerFragment.updateAdapter();
 				}
 	}
 	
 	public void refreshAdapterListServer() {
 		if(listFragment[0]!=null)
-			if(listFragment[0] instanceof FileManagerFragmentOnline) {
-				FileManagerFragmentOnline fragmentFileManagerFragment = (FileManagerFragmentOnline) listFragment[0];
+			if(listFragment[0] instanceof FileManagerFragmentCloud) {
+                FileManagerFragmentCloud fragmentFileManagerFragment = (FileManagerFragmentCloud) listFragment[0];
 				fragmentFileManagerFragment.refreshList();
 			}		
 		if(listFragment.length>1)
 			if(listFragment[1]!=null)
-				if(listFragment[1] instanceof FileManagerFragmentLocal) {
-					FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[1];
+				if(listFragment[1] instanceof FileManagerFragmentMyCloud) {
+                    FileManagerFragmentMyCloud fragmentFileManagerFragment = (FileManagerFragmentMyCloud) listFragment[1];
 					fragmentFileManagerFragment.refreshList();
 				}
+        if(listFragment.length>2)
+            if(listFragment[2]!=null)
+                if(listFragment[2] instanceof FileManagerFragmentLocal) {
+                    FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[2];
+                    fragmentFileManagerFragment.refreshList();
+                }
 	}
 
 	public void add() {

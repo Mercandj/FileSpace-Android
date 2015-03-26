@@ -66,7 +66,7 @@ public class FileManagerFragmentLocal extends Fragment {
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_filemanager_online, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_filemanager_files, container, false);
         this.circulerProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
         this.circulerProgressBar.setVisibility(View.INVISIBLE);
         this.message = (TextView) rootView.findViewById(R.id.message);

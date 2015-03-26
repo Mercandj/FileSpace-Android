@@ -40,13 +40,12 @@ import mercandalli.com.jarvis.dialog.DialogAddFileManager;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.listener.IModelFileListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
-import mercandalli.com.jarvis.listener.IStringListener;
 import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.view.DividerItemDecoration;
 
 
-public class FileManagerFragmentOnline extends Fragment {
+public class FileManagerFragmentCloud extends Fragment {
 
 	private Application app;
 	private RecyclerView listView;
@@ -60,20 +59,20 @@ public class FileManagerFragmentOnline extends Fragment {
 
     private String url = "";
     private List<ModelFile> filesToCut = new ArrayList<>();
-	
+
 	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (Application) activity;
     }
 
-	public FileManagerFragmentOnline() {
+	public FileManagerFragmentCloud() {
 		super();
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_filemanager_online, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_filemanager_files, container, false);
         this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
         this.message = (TextView) rootView.findViewById(R.id.message);
 
@@ -106,7 +105,7 @@ public class FileManagerFragmentOnline extends Fragment {
         this.circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileManagerFragmentOnline.this.app.dialog = new DialogAddFileManager(app, new IPostExecuteListener() {
+                FileManagerFragmentCloud.this.app.dialog = new DialogAddFileManager(app, new IPostExecuteListener() {
                     @Override
                     public void execute(JSONObject json, String body) {
                     if (json != null)
@@ -119,8 +118,8 @@ public class FileManagerFragmentOnline extends Fragment {
         this.circle2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileManagerFragmentOnline.this.url = "";
-                FileManagerFragmentOnline.this.refreshList();
+                FileManagerFragmentCloud.this.url = "";
+                FileManagerFragmentCloud.this.refreshList();
             }
         });
 
@@ -128,8 +127,8 @@ public class FileManagerFragmentOnline extends Fragment {
         this.adapter = new AdapterModelFile(app, files, new IModelFileListener() {
             @Override
             public void execute(final ModelFile modelFile) {
-                final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentOnline.this.app);
-                final String[] menuList = { getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut) };
+                final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentCloud.this.app);
+                final String[] menuList = { getString(R.string.download) };
                 menuAleart.setTitle(getString(R.string.action));
                 menuAleart.setItems(menuList,
                         new DialogInterface.OnClickListener() {
@@ -140,43 +139,9 @@ public class FileManagerFragmentOnline extends Fragment {
                                             @Override
                                             public void execute() {
                                                 Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
-                                                FileManagerFragmentOnline.this.app.updateAdapters();
+                                                FileManagerFragmentCloud.this.app.updateAdapters();
                                             }
                                         });
-                                        break;
-
-                                    case 1:
-                                        FileManagerFragmentOnline.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
-                                            @Override
-                                            public void execute(String text) {
-                                                modelFile.rename(text, new IPostExecuteListener() {
-                                                    @Override
-                                                    public void execute(JSONObject json, String body) {
-                                                        FileManagerFragmentOnline.this.app.refreshAdapters();
-                                                    }
-                                                });
-                                            }
-                                        }, "Cancel", null, modelFile.name);
-                                        break;
-
-                                    case 2:
-                                        FileManagerFragmentOnline.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
-                                            @Override
-                                            public void execute() {
-                                                modelFile.delete(new IPostExecuteListener() {
-                                                    @Override
-                                                    public void execute(JSONObject json, String body) {
-                                                        FileManagerFragmentOnline.this.app.refreshAdapters();
-                                                    }
-                                                });
-                                            }
-                                        }, "No", null);
-                                        break;
-
-                                    case 3:
-                                        FileManagerFragmentOnline.this.filesToCut = new ArrayList<>();
-                                        FileManagerFragmentOnline.this.filesToCut.add(modelFile);
-                                        Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                         break;
                                 }
                             }
@@ -193,7 +158,7 @@ public class FileManagerFragmentOnline extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 if(files.get(position).directory) {
-                    FileManagerFragmentOnline.this.url = files.get(position).url + "/";
+                    FileManagerFragmentCloud.this.url = files.get(position).url + "/";
                     refreshList();
                 }
                 else
@@ -223,6 +188,7 @@ public class FileManagerFragmentOnline extends Fragment {
 		if(search!=null)
 			parameters.add(new BasicNameValuePair("search", ""+search));
         parameters.add(new BasicNameValuePair("url", ""+this.url));
+        parameters.add(new BasicNameValuePair("all-public", ""+true));
 
         if(this.app.isInternetConnection())
             new TaskGet(

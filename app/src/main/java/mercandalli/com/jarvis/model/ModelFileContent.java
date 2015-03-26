@@ -33,9 +33,8 @@ public class ModelFileContent {
                 e.printStackTrace();
             }
 
-            Log.d("Content type",""+type);
-
         } catch (JSONException e) {
+            Log.e("model ModelFileContent", "JSONException");
             e.printStackTrace();
         }
     }

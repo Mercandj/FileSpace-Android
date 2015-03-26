@@ -40,7 +40,7 @@ import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.net.TaskDelete;
 import mercandalli.com.jarvis.net.TaskGetDownload;
 import mercandalli.com.jarvis.net.TaskGetDownloadImage;
-import mercandalli.com.jarvis.net.TaskPut;
+import mercandalli.com.jarvis.net.TaskPost;
 
 public class ModelFile extends Model implements Parcelable {
 	
@@ -50,6 +50,7 @@ public class ModelFile extends Model implements Parcelable {
 	public long size;
 	public ModelFileType type;
 	public boolean directory = false;
+    public boolean public_ = false;
 	public Bitmap bitmap;
 	public File file;
     public String onlineUrl;
@@ -96,7 +97,7 @@ public class ModelFile extends Model implements Parcelable {
 		super(app);
 		
 		try {
-			if(json.has("id")) {
+			if(json.has("id") && !json.isNull("id")) {
                 this.id = json.getInt("id");
                 this.onlineUrl = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
             }
@@ -106,18 +107,21 @@ public class ModelFile extends Model implements Parcelable {
                 this.name = json.getString("name");
 			if(json.has("type"))
                 this.type = new ModelFileType(json.getString("type"));
-            if(json.has("size"))
-                this.size = json.getInt("size");
+            if(json.has("size") && !json.isNull("size"))
+                this.size = json.getLong("size");
             if(json.has("directory") && !json.isNull("directory"))
                 this.directory = json.getInt("directory")==1;
             if(json.has("content") && !json.isNull("content"))
                 this.content = new ModelFileContent(json.getString("content"));
+            if(json.has("public") && !json.isNull("public"))
+                this.public_ = json.getInt("public")==1;
 
 		} catch (JSONException e) {
+            Log.e("model ModelFile", "JSONException");
 			e.printStackTrace();
 		}
 		
-		if(this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0 && this.size < 500000) {
+		if(this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0 && this.size < 100000) {
 			new TaskGetDownloadImage(app, this.app.getConfig().getUser(), this.onlineUrl, new IBitmapListener() {
 				@Override
 				public void execute(Bitmap bitmap) {
@@ -247,7 +251,7 @@ public class ModelFile extends Model implements Parcelable {
 		this.name = new_name;
 		this.url = new_name;
 		String url = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
-		new TaskPut(app, url, listener, getForUpload()).execute();
+		new TaskPost(app, url, listener, getForUpload()).execute();
 	}
 
     private void copyFile(String outputPath, IPostExecuteListener listener) {
