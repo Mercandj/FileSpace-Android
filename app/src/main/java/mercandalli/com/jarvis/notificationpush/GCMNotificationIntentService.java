@@ -1,4 +1,4 @@
-package mercandalli.com.jarvis.notification;
+package mercandalli.com.jarvis.notificationpush;
 
 import android.app.IntentService;
 import android.app.NotificationManager;

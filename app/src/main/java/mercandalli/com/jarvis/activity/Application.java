@@ -23,18 +23,21 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import mercandalli.com.jarvis.config.Config;
+import mercandalli.com.jarvis.library.Library;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.listener.IStringListener;
 
 public abstract class Application extends ActionBarActivity {
-	
+
+    private Library lib;
 	private Config config;
 	public Dialog dialog;
     public Toolbar toolbar;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);		
+		super.onCreate(savedInstanceState);
+        lib = new Library(this);
 		config = new Config(this);
 
         //region Handle NFC
@@ -65,6 +68,12 @@ public abstract class Application extends ActionBarActivity {
 			config = new Config(this);
 		return config;
 	}
+
+    public Library getLibrary() {
+        if(lib == null)
+            lib = new Library(this);
+        return lib;
+    }
 	
 	public void alert(String title, String message, String positive, final IListener positiveListener, String negative, final IListener negativeListener) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);

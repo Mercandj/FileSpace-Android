@@ -143,7 +143,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
                                             @Override
                                             public void execute() {
                                                 Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
-                                                FileManagerFragmentMyCloud.this.app.updateAdapters();
+                                                FileManagerFragmentMyCloud.this.app.refreshAdapters();
                                             }
                                         });
                                         break;

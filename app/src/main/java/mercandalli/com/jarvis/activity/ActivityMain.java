@@ -12,7 +12,7 @@ import android.util.Log;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.fragment.FileManagerFragment;
-import mercandalli.com.jarvis.notification.Notif;
+import mercandalli.com.jarvis.notificationpush.NotificationPush;
 
 public class ActivityMain extends ApplicationDrawer {
 
@@ -27,12 +27,12 @@ public class ActivityMain extends ApplicationDrawer {
 		}
 
         // Notif
-        if (TextUtils.isEmpty(Notif.regId)) {
-            Notif.regId = Notif.registerGCM(this);
-            Log.d("ActivityMain", "GCM RegId: " + Notif.regId);
+        if (TextUtils.isEmpty(NotificationPush.regId)) {
+            NotificationPush.regId = NotificationPush.registerGCM(this);
+            Log.d("ActivityMain", "GCM RegId: " + NotificationPush.regId);
         } else {
             Log.d("ActivityMain", "Already Registered with GCM Server!");
-            Notif.mainActNotif(this);
+            NotificationPush.mainActNotif(this);
         }
     }
 	

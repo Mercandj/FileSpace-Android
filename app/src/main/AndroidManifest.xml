@@ -68,7 +68,7 @@
         </activity>
 
         <receiver
-            android:name="mercandalli.com.jarvis.notification.GcmBroadcastReceiver"
+            android:name="mercandalli.com.jarvis.notificationpush.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -77,7 +77,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="mercandalli.com.jarvis.notification.GCMNotificationIntentService" />
+        <service android:name="mercandalli.com.jarvis.notificationpush.GCMNotificationIntentService" />
 
     </application>
 

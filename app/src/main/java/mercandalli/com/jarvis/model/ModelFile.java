@@ -58,7 +58,6 @@ public class ModelFile extends Model implements Parcelable {
 
     public CountDownTimer cdt;
 
-
     public String getAdapterTitle() {
         if(this.type.toString().equals("jarvis") && this.content != null)
             return this.content.toString();
@@ -228,7 +227,7 @@ public class ModelFile extends Model implements Parcelable {
 	public void download(IListener listener) {
 		String url = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
 		String url_ouput = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+app.getConfig().localFolderName+File.separator+this.getNameExt();
-		new TaskGetDownload(this.app, url, url_ouput, listener).execute();
+		new TaskGetDownload(this.app, url, url_ouput, this, listener).execute();
 	}
 	
 	public boolean isOnline() {

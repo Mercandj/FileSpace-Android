@@ -1,4 +1,4 @@
-package mercandalli.com.jarvis.notification;
+package mercandalli.com.jarvis.notificationpush;
 
 public interface Config {
 	// GCM server using java

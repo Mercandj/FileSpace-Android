@@ -1,4 +1,4 @@
-package mercandalli.com.jarvis.notification;
+package mercandalli.com.jarvis.notificationpush;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 import mercandalli.com.jarvis.activity.Application;
 
-public class Notif {
+public class NotificationPush {
 	public static GoogleCloudMessaging gcm;
 	public static String regId;
 
