@@ -121,7 +121,7 @@ public class ModelFile extends Model implements Parcelable {
 		}
 		
 		if(this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0 && this.size < 100000) {
-			new TaskGetDownloadImage(app, this.app.getConfig().getUser(), this.onlineUrl, new IBitmapListener() {
+			new TaskGetDownloadImage(app, this.app.getConfig().getUser(), this, new IBitmapListener() {
 				@Override
 				public void execute(Bitmap bitmap) {
 					ModelFile.this.bitmap = bitmap;

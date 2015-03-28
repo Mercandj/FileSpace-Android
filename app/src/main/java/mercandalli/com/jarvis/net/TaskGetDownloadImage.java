@@ -9,6 +9,7 @@ package mercandalli.com.jarvis.net;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -16,12 +17,17 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.listener.IBitmapListener;
+import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.model.ModelUser;
 
 /**
@@ -37,17 +43,19 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
 	IBitmapListener listener;
 	Application app;
 	ModelUser user;
-	
-	public TaskGetDownloadImage(Application app, ModelUser user, String url, IBitmapListener listener) {
+    ModelFile fileModel;
+
+	public TaskGetDownloadImage(Application app, ModelUser user, ModelFile file, IBitmapListener listener) {
 		this.app = app;
 		this.user = user;
-		this.url = url;
+		this.url = file.onlineUrl;
+        this.fileModel = file;
 		this.listener = listener;
 	}
 
 	@Override
 	protected Void doInBackground(Void... urls) {		
-		bitmap = drawable_from_url_Authorization(this.url);
+		bitmap = drawable_from_url_Authorization();
 		return null;		
 	}
 
@@ -56,7 +64,9 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
 		this.listener.execute(bitmap);
 	}
 	
-	public Bitmap drawable_from_url_Authorization(String url) {
+	public Bitmap drawable_from_url_Authorization() {
+        if(is_image())
+            return load_image();
 		Bitmap x = null;
 		HttpResponse response;
 		HttpGet httpget = new HttpGet(url);
@@ -68,6 +78,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
 			response = httpclient.execute(httpget);
 			InputStream inputStream = response.getEntity().getContent();
 			x = BitmapFactory.decodeStream(new FlushedInputStream(inputStream));
+            save_image(x);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -103,4 +114,50 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
 	        return totalBytesSkipped;
 	    }
 	}
+
+
+
+
+
+
+
+
+
+
+
+    private static Map<Integer, Bitmap> images = new WeakHashMap<Integer, Bitmap>();
+
+    public void save_image(Bitmap bm) {
+        images.put(this.fileModel.id,bm);
+
+        File file = new File(this.app.getFilesDir()+"/file_"+this.fileModel.id);
+        if(file.exists()) return;
+
+        FileOutputStream fOut;
+        try {
+            fOut = new FileOutputStream(this.app.getFilesDir()+"/file_"+this.fileModel.id);
+            bm.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+            fOut.flush();
+            fOut.close();
+        } catch (Exception e) {
+        }
+    }
+
+    public Bitmap load_image() {
+        if(images.containsKey(this.fileModel.id))
+            return images.get(this.fileModel.id);
+
+        File file = new File(this.app.getFilesDir()+"/file_"+this.fileModel.id);
+        if(file.exists())
+            return BitmapFactory.decodeFile(file.getPath());
+        Log.e("TaskGetDownloadImage", "load_photo(String url) return null");
+        return null;
+    }
+
+    public boolean is_image() {
+        if(images.containsKey(this.fileModel.id))
+            return true;
+        File file = new File(this.app.getFilesDir()+"/file_"+this.fileModel.id);
+        return file.exists();
+    }
 }
