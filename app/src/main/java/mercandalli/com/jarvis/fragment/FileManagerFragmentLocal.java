@@ -232,7 +232,7 @@ public class FileManagerFragmentLocal extends Fragment {
 								public void onClick(DialogInterface dialog, int item) {
 									switch (item) {
 									case 0:
-										FileManagerFragmentLocal.this.app.alert("Delete", "Delete file ?", "Yes", new IListener() {
+										FileManagerFragmentLocal.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
 											@Override
 											public void execute() {
 												modelFile.delete(new IPostExecuteListener() {

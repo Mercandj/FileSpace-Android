@@ -192,24 +192,6 @@ public class FileManagerFragmentCloud extends Fragment {
                                 }
                             }
                         });
-                /*
-                menuAleart.setItems(menuList,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int item) {
-                                switch (item) {
-                                    case 0:
-                                        modelFile.download(new IListener() {
-                                            @Override
-                                            public void execute() {
-                                                Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
-                                                FileManagerFragmentCloud.this.app.updateAdapters();
-                                            }
-                                        });
-                                        break;
-                                }
-                            }
-                        });
-                        */
                 AlertDialog menuDrop = menuAleart.create();
                 menuDrop.show();
             }
