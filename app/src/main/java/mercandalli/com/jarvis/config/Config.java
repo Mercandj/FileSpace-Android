@@ -33,6 +33,7 @@ public class Config {
 
     private enum ENUM_Int {
         LAST_TAB				(0, 			"int_last_tab"				),
+        INTEGER_USER_ID     	(-1, 			"int_user_id_1"     		),
         ;
 
         int value;
@@ -153,6 +154,17 @@ public class Config {
         }
     }
 
+    public int getUserId() {
+        return ENUM_Int.INTEGER_USER_ID.value;
+    }
+
+    public void setUserId(int value) {
+        if(ENUM_Int.INTEGER_USER_ID.value!=value) {
+            ENUM_Int.INTEGER_USER_ID.value = value;
+            save(activity);
+        }
+    }
+
     public String getUrlServer() {
         return ENUM_String.STRING_URL_SERVER.value;
     }
@@ -209,6 +221,6 @@ public class Config {
     }
 
     public ModelUser getUser() {
-        return new ModelUser(getUserUsername(), getUserPassword(), currentToken, getUserRegId());
+        return new ModelUser(getUserId(), getUserUsername(), getUserPassword(), currentToken, getUserRegId());
     }
 }

@@ -10,7 +10,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ModelUser {
-	
+
+    public int id;
 	public String username;
 	public String password;
 	public String currentToken;
@@ -20,8 +21,9 @@ public class ModelUser {
 		
 	}
 	
-	public ModelUser(String username, String password, String currentToken, String regId) {
+	public ModelUser(int id, String username, String password, String currentToken, String regId) {
 		super();
+        this.id = id;
 		this.username = username;
 		this.password = password;
 		this.currentToken = currentToken;

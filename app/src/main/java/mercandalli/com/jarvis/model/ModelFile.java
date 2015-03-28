@@ -44,7 +44,7 @@ import mercandalli.com.jarvis.net.TaskPost;
 
 public class ModelFile extends Model implements Parcelable {
 	
-	public int id;
+	public int id, id_user;
 	public String url;
 	public String name;
 	public long size;
@@ -99,6 +99,9 @@ public class ModelFile extends Model implements Parcelable {
 			if(json.has("id") && !json.isNull("id")) {
                 this.id = json.getInt("id");
                 this.onlineUrl = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
+            }
+            if(json.has("id_user") && !json.isNull("id_user")) {
+                this.id_user = json.getInt("id_user");
             }
 			if(json.has("url"))
                 this.url = json.getString("url");
@@ -245,6 +248,15 @@ public class ModelFile extends Model implements Parcelable {
 			    listener.execute(null, null);
 		}
 	}
+
+    public void setPublic(boolean public_, IPostExecuteListener listener) {
+        this.public_ = public_;
+
+        List<BasicNameValuePair> parameters = new ArrayList<>();
+        parameters.add(new BasicNameValuePair("public", "" + this.public_));
+        String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + this.id + "?test=coucou";
+        (new TaskPost(this.app, url, listener, parameters)).execute();
+    }
 	
 	public void rename(String new_name, IPostExecuteListener listener) {
 		this.name = new_name;
@@ -300,6 +312,10 @@ public class ModelFile extends Model implements Parcelable {
         }
         if(listener!=null)
             listener.execute(null, null);
+    }
+
+    public boolean isMine() {
+        return this.id_user == this.app.getConfig().getUser().id;
     }
 
     public static final Parcelable.Creator<ModelFile> CREATOR = new Parcelable.Creator<ModelFile>() {

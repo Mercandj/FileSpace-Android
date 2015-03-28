@@ -43,7 +43,6 @@ import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.listener.IStringListener;
 import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.net.TaskGet;
-import mercandalli.com.jarvis.net.TaskPost;
 import mercandalli.com.jarvis.view.DividerItemDecoration;
 
 
@@ -183,17 +182,12 @@ public class FileManagerFragmentMyCloud extends Fragment {
                                         break;
 
                                     case 4:
-                                        List<BasicNameValuePair> parameters = new ArrayList<>();
-                                        parameters.add(new BasicNameValuePair("public", "" + !modelFile.public_));
-
-                                        String url = FileManagerFragmentMyCloud.this.app.getConfig().getUrlServer() + FileManagerFragmentMyCloud.this.app.getConfig().routeFile + "/" + modelFile.id + "?test=coucou";
-                                        (new TaskPost(FileManagerFragmentMyCloud.this.app, url, new IPostExecuteListener() {
+                                        modelFile.setPublic(!modelFile.public_, new IPostExecuteListener() {
                                             @Override
                                             public void execute(JSONObject json, String body) {
                                                 FileManagerFragmentMyCloud.this.app.refreshAdapters();
                                             }
-                                        }, parameters)).execute();
-
+                                        });
                                         break;
                                 }
                             }

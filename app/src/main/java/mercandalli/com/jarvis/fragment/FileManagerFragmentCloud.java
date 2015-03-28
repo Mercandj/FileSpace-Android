@@ -40,6 +40,7 @@ import mercandalli.com.jarvis.dialog.DialogAddFileManager;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.listener.IModelFileListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
+import mercandalli.com.jarvis.listener.IStringListener;
 import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.view.DividerItemDecoration;
@@ -128,8 +129,70 @@ public class FileManagerFragmentCloud extends Fragment {
             @Override
             public void execute(final ModelFile modelFile) {
                 final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentCloud.this.app);
-                final String[] menuList = { getString(R.string.download) };
+                String[] menuList = { getString(R.string.download) };
+                if(!modelFile.directory && modelFile.isMine())
+                    menuList = new String[] { getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), (modelFile.public_) ? "Become private" : "Become public" };
                 menuAleart.setTitle(getString(R.string.action));
+                menuAleart.setItems(menuList,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int item) {
+                                switch (item) {
+                                    case 0:
+                                        modelFile.download(new IListener() {
+                                            @Override
+                                            public void execute() {
+                                                Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
+                                                FileManagerFragmentCloud.this.app.refreshAdapters();
+                                            }
+                                        });
+                                        break;
+
+                                    case 1:
+                                        FileManagerFragmentCloud.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                            @Override
+                                            public void execute(String text) {
+                                                modelFile.rename(text, new IPostExecuteListener() {
+                                                    @Override
+                                                    public void execute(JSONObject json, String body) {
+                                                        FileManagerFragmentCloud.this.app.refreshAdapters();
+                                                    }
+                                                });
+                                            }
+                                        }, "Cancel", null, modelFile.name);
+                                        break;
+
+                                    case 2:
+                                        FileManagerFragmentCloud.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                            @Override
+                                            public void execute() {
+                                                modelFile.delete(new IPostExecuteListener() {
+                                                    @Override
+                                                    public void execute(JSONObject json, String body) {
+                                                        FileManagerFragmentCloud.this.app.refreshAdapters();
+                                                    }
+                                                });
+                                            }
+                                        }, "No", null);
+                                        break;
+
+                                    case 3:
+                                        FileManagerFragmentCloud.this.filesToCut = new ArrayList<>();
+                                        FileManagerFragmentCloud.this.filesToCut.add(modelFile);
+                                        Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
+                                        break;
+
+                                    case 4:
+                                        modelFile.setPublic(!modelFile.public_, new IPostExecuteListener() {
+                                            @Override
+                                            public void execute(JSONObject json, String body) {
+                                                FileManagerFragmentCloud.this.app.refreshAdapters();
+                                            }
+                                        });
+                                        break;
+                                }
+                            }
+                        });
+                /*
                 menuAleart.setItems(menuList,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int item) {
@@ -146,6 +209,7 @@ public class FileManagerFragmentCloud extends Fragment {
                                 }
                             }
                         });
+                        */
                 AlertDialog menuDrop = menuAleart.create();
                 menuDrop.show();
             }

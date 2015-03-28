@@ -129,6 +129,11 @@ public class ActivityRegisterLogin extends Application {
 										if(json.getBoolean("succeed"))
 											connectionSucceed();
                                     }
+                                    if(json.has("user")) {
+                                        JSONObject user = json.getJSONObject("user");
+                                        if(user.has("id"))
+                                            ActivityRegisterLogin.this.getConfig().setUserId(user.getInt("id"));
+                                    }
 								}
 								else
 									Toast.makeText(ActivityRegisterLogin.this, ActivityRegisterLogin.this.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
@@ -148,6 +153,11 @@ public class ActivityRegisterLogin extends Application {
 										if(json.getBoolean("succeed")) {
 											connectionSucceed();
 										}
+                                    if(json.has("user")) {
+                                        JSONObject user = json.getJSONObject("user");
+                                        if(user.has("id"))
+                                            ActivityRegisterLogin.this.getConfig().setUserId(user.getInt("id"));
+                                    }
 								}
 								else
 									Toast.makeText(ActivityRegisterLogin.this, ActivityRegisterLogin.this.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
