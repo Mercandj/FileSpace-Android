@@ -30,6 +30,12 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.activity.Application;
@@ -159,14 +165,25 @@ public class FileManagerFragmentLocal extends Fragment {
 		if(jarvisDirectory==null)
 			return;
 
-        File fs[] = (search==null) ? jarvisDirectory.listFiles() : jarvisDirectory.listFiles(
+        List<File> fs = Arrays.asList((search==null) ? jarvisDirectory.listFiles() : jarvisDirectory.listFiles(
             new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String name) {
                     return name.toLowerCase().contains(search.toLowerCase());
                 }
             }
-        );
+        ));
+
+        final Map<File, Long> staticLastModifiedTimes = new HashMap<File,Long>();
+        for(final File f : fs) {
+            staticLastModifiedTimes.put(f, f.lastModified());
+        }
+        Collections.sort(fs, new Comparator<File>() {
+            @Override
+            public int compare(final File f1, final File f2) {
+                return staticLastModifiedTimes.get(f2).compareTo(staticLastModifiedTimes.get(f1));
+            }
+        });
 
         files = new ArrayList<ModelFile>();
 		if(fs!=null) {
