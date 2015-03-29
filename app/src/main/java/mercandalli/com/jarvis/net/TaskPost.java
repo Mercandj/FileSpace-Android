@@ -30,8 +30,8 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.R;
+import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 
 /**
@@ -83,9 +83,15 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
 						
 			MultipartEntity mpEntity = new MultipartEntity();
 			if(this.file != null) mpEntity.addPart("file", new FileBody(file, "*/*"));
+
+            String log_parameters = "";
 			if(this.parameters != null)
-				for(BasicNameValuePair b : parameters)
-					mpEntity.addPart(b.getName(), new StringBody(b.getValue()));
+				for(BasicNameValuePair b : parameters) {
+                    mpEntity.addPart(b.getName(), new StringBody(b.getValue()));
+                    log_parameters += b.getName()+":"+b.getValue()+" ";
+                }
+            Log.d("TaskPost", "url = "+url+" "+log_parameters);
+
 			httppost.setEntity(mpEntity);
 			
 			StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
