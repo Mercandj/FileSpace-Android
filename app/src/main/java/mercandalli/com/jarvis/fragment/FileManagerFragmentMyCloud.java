@@ -32,6 +32,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.activity.Application;
@@ -58,13 +59,14 @@ public class FileManagerFragmentMyCloud extends Fragment {
 	private SwipeRefreshLayout swipeRefreshLayout;
     Animation animOpen; ImageButton circle, circle2;
 
-    private String url = "";
+    private Stack<Integer> id_file_path = new Stack<>();
     private List<ModelFile> filesToCut = new ArrayList<>();
 	
 	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (Application) activity;
+        resetPath();
     }
 
 	public FileManagerFragmentMyCloud() {
@@ -81,6 +83,8 @@ public class FileManagerFragmentMyCloud extends Fragment {
         this.listView.setHasFixedSize(true);
         this.mLayoutManager = new LinearLayoutManager(getActivity());
         this.listView.setLayoutManager(mLayoutManager);
+
+        resetPath();
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         this.swipeRefreshLayout.setColorSchemeResources(
@@ -106,24 +110,39 @@ public class FileManagerFragmentMyCloud extends Fragment {
         this.circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileManagerFragmentMyCloud.this.app.dialog = new DialogAddFileManager(app, new IPostExecuteListener() {
-                    @Override
-                    public void execute(JSONObject json, String body) {
-                    if (json != null)
-                        refreshList();
-                    }
-                });
+                if(filesToCut != null && filesToCut.size() != 0) {
+                    for(ModelFile file : filesToCut)
+                        file.setId_file_parent(FileManagerFragmentMyCloud.this.id_file_path.peek(), new IPostExecuteListener() {
+                            @Override
+                            public void execute(JSONObject json, String body) {
+                                FileManagerFragmentMyCloud.this.app.refreshAdapters();
+                            }
+                        });
+                    filesToCut.clear();
+                }
+                else {
+                    FileManagerFragmentMyCloud.this.app.dialog = new DialogAddFileManager(app, FileManagerFragmentMyCloud.this.id_file_path.peek(), new IPostExecuteListener() {
+                        @Override
+                        public void execute(JSONObject json, String body) {
+                            if (json != null)
+                                refreshList();
+                        }
+                    });
+                }
+
+                FileManagerFragmentMyCloud.this.updateCircle();
             }
         });
 
         this.circle2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileManagerFragmentMyCloud.this.url = "";
-                FileManagerFragmentMyCloud.this.refreshList();
+                if(id_file_path.peek()!=-1) {
+                    FileManagerFragmentMyCloud.this.id_file_path.pop();
+                    FileManagerFragmentMyCloud.this.refreshList();
+                }
             }
         });
-
 
         this.adapter = new AdapterModelFile(app, files, new IModelFileListener() {
             @Override
@@ -176,9 +195,9 @@ public class FileManagerFragmentMyCloud extends Fragment {
                                         break;
 
                                     case 3:
-                                        FileManagerFragmentMyCloud.this.filesToCut = new ArrayList<>();
                                         FileManagerFragmentMyCloud.this.filesToCut.add(modelFile);
                                         Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
+                                        updateCircle();
                                         break;
 
                                     case 4:
@@ -204,7 +223,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 if(files.get(position).directory) {
-                    FileManagerFragmentMyCloud.this.url = files.get(position).url + "/";
+                    FileManagerFragmentMyCloud.this.id_file_path.add(files.get(position).id);
                     refreshList();
                 }
                 else
@@ -225,6 +244,18 @@ public class FileManagerFragmentMyCloud extends Fragment {
 		return rootView;
 	}
 
+    public void resetPath() {
+        this.id_file_path = new Stack<>();
+        this.id_file_path.add(-1);
+    }
+
+    public void updateCircle() {
+        if(filesToCut != null && filesToCut.size() != 0)
+            this.circle.setImageDrawable(app.getDrawable(R.drawable.ic_menu_paste_holo_dark));
+        else
+            this.circle.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
+    }
+
 	public void refreshList() {
 		refreshList(null);
 	}
@@ -233,7 +264,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
 		List<BasicNameValuePair> parameters = new ArrayList<>();
 		if(search!=null)
 			parameters.add(new BasicNameValuePair("search", ""+search));
-        parameters.add(new BasicNameValuePair("url", ""+this.url));
+        parameters.add(new BasicNameValuePair("id_file_parent", ""+this.id_file_path.peek()));
         parameters.add(new BasicNameValuePair("mine", ""+true));
 
         if(this.app.isInternetConnection())
@@ -283,10 +314,8 @@ public class FileManagerFragmentMyCloud extends Fragment {
             }
 
 			if(this.files.size()==0) {
-                if(this.url==null)
+                if(this.id_file_path.peek()==-1)
 				    this.message.setText(getString(R.string.no_file_server));
-                else if(this.url.equals(""))
-                    this.message.setText(getString(R.string.no_file_server));
                 else
                     this.message.setText(getString(R.string.no_file_directory));
 				this.message.setVisibility(View.VISIBLE);
@@ -296,9 +325,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
 
             this.adapter.remplaceList(this.files);
 
-            if(this.url==null)
-                this.circle2.setVisibility(View.GONE);
-            else if(this.url.equals(""))
+            if(this.id_file_path.peek()==-1)
                 this.circle2.setVisibility(View.GONE);
             else
                 this.circle2.setVisibility(View.VISIBLE);

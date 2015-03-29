@@ -106,7 +106,7 @@ public class FileManagerFragmentCloud extends Fragment {
         this.circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileManagerFragmentCloud.this.app.dialog = new DialogAddFileManager(app, new IPostExecuteListener() {
+                FileManagerFragmentCloud.this.app.dialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
                     @Override
                     public void execute(JSONObject json, String body) {
                     if (json != null)

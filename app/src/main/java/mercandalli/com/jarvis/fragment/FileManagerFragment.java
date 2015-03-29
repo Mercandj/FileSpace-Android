@@ -176,7 +176,7 @@ public class FileManagerFragment extends Fragment {
 	}
 
 	public void add() {
-		app.dialog = new DialogAddFileManager(app, new IPostExecuteListener() {
+		app.dialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
 			@Override
 			public void execute(JSONObject json, String body) {
 				if(json!=null)

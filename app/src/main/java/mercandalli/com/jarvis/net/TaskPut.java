@@ -113,7 +113,7 @@ public class TaskPut extends AsyncTask<Void, Void, String> {
 
 	@Override
 	protected void onPostExecute(String response) {
-		Log.d("onPostExecute", "" + response);
+		Log.d("onPostExecute PUT", "" + response);
 		if (response == null)
 			this.listener.execute(null, null);
 		else {

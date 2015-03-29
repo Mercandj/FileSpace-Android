@@ -43,7 +43,7 @@ public class DialogAddFileManager extends Dialog {
 	File file;
 	ModelFile modelFile;
 
-	public DialogAddFileManager(final Application app, final IPostExecuteListener listener) {
+	public DialogAddFileManager(final Application app, final int id_file_parent, final IPostExecuteListener listener) {
 		super(app, android.R.style.Theme_Translucent_NoTitleBar);
 		this.app = app;
 		
@@ -63,7 +63,7 @@ public class DialogAddFileManager extends Dialog {
         ((RelativeLayout) this.findViewById(R.id.uploadFile)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.dialog = new DialogUpload(app, listener);
+                app.dialog = new DialogUpload(app, id_file_parent, listener);
                 DialogAddFileManager.this.dismiss();
             }
         });
@@ -77,6 +77,7 @@ public class DialogAddFileManager extends Dialog {
                         ModelFile folder = new ModelFile(DialogAddFileManager.this.app);
                         folder.name = text;
                         folder.directory = true;
+                        folder.id_file_parent = id_file_parent;
                         List<BasicNameValuePair> parameters = folder.getForUpload();
                         (new TaskPost(app, app.getConfig().getUrlServer()+app.getConfig().routeFile, new IPostExecuteListener() {
                             @Override
@@ -141,6 +142,7 @@ public class DialogAddFileManager extends Dialog {
                                     List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
                                     parameters.add(new BasicNameValuePair("content",json.toString()));
                                     parameters.add(new BasicNameValuePair("name","TIMER_"+nowAsISO));
+                                    parameters.add(new BasicNameValuePair("id_file_parent",""+id_file_parent));
                                     new TaskPost(DialogAddFileManager.this.app,
                                             app.getConfig().getUrlServer()+app.getConfig().routeFile,
                                             new IPostExecuteListener() {

@@ -45,6 +45,7 @@ import mercandalli.com.jarvis.net.TaskPost;
 public class ModelFile extends Model implements Parcelable {
 	
 	public int id, id_user;
+    public int id_file_parent = -1;
 	public String url;
 	public String name;
 	public long size;
@@ -85,8 +86,19 @@ public class ModelFile extends Model implements Parcelable {
 			parameters.add(new BasicNameValuePair("url", this.name));
         if(directory)
             parameters.add(new BasicNameValuePair("directory", this.directory?"true":"false"));
+        if(id_file_parent!=-1)
+            parameters.add(new BasicNameValuePair("id_file_parent", ""+this.id_file_parent));
 		return parameters;
 	}
+
+    public List<BasicNameValuePair> getForRename() {
+        List<BasicNameValuePair> parameters = new ArrayList<>();
+        if(name!=null)
+            parameters.add(new BasicNameValuePair("url", this.name));
+        if(directory)
+            parameters.add(new BasicNameValuePair("directory", this.directory?"true":"false"));
+        return parameters;
+    }
 	
 	public ModelFile(Application app) {
 		super(app);
@@ -102,6 +114,9 @@ public class ModelFile extends Model implements Parcelable {
             }
             if(json.has("id_user") && !json.isNull("id_user")) {
                 this.id_user = json.getInt("id_user");
+            }
+            if(json.has("id_file_parent") && !json.isNull("id_file_parent")) {
+                this.id_file_parent = json.getInt("id_file_parent");
             }
 			if(json.has("url"))
                 this.url = json.getString("url");
@@ -258,7 +273,16 @@ public class ModelFile extends Model implements Parcelable {
 
         List<BasicNameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair("public", "" + this.public_));
-        String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + this.id + "?test=coucou";
+        String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + this.id;
+        (new TaskPost(this.app, url, listener, parameters)).execute();
+    }
+
+    public void setId_file_parent(int id_file_parent, IPostExecuteListener listener) {
+        this.id_file_parent = id_file_parent;
+
+        List<BasicNameValuePair> parameters = new ArrayList<>();
+        parameters.add(new BasicNameValuePair("id_file_parent", ""+this.id_file_parent));
+        String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + this.id;
         (new TaskPost(this.app, url, listener, parameters)).execute();
     }
 	
@@ -266,7 +290,7 @@ public class ModelFile extends Model implements Parcelable {
 		this.name = new_name;
 		this.url = new_name;
 		String url = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
-		new TaskPost(app, url, listener, getForUpload()).execute();
+		new TaskPost(app, url, listener, getForRename()).execute();
 	}
 
     private void copyFile(String outputPath, IPostExecuteListener listener) {

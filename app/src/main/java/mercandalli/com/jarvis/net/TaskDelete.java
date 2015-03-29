@@ -65,12 +65,14 @@ public class TaskDelete extends AsyncTask<Void, Void, String> {
 		try {
 			
 			List<NameValuePair> params = new LinkedList<NameValuePair>();
+            String paramString = "";
 			if(parameters!=null) {
 				for(BasicNameValuePair b : parameters)
 					params.add(b);	        
-		        String paramString = URLEncodedUtils.format(params, "utf-8");        
+		        paramString = URLEncodedUtils.format(params, "utf-8");
 		    	url += "?"+paramString;	
 			}
+            Log.d("TaskDelete", "url = "+url+" "+paramString);
 			
 			HttpDelete httpdelete = new HttpDelete(url);						
 
@@ -125,7 +127,7 @@ public class TaskDelete extends AsyncTask<Void, Void, String> {
 
 	@Override
 	protected void onPostExecute(String response) {
-		Log.d("onPostExecute", "" + response);
+        Log.d("onPostExecute DELETE", "" + response);
 		if (response == null)
 			this.listener.execute(null, null);
 		else {

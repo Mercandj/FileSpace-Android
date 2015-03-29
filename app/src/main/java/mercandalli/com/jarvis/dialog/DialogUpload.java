@@ -31,10 +31,12 @@ public class DialogUpload extends Dialog {
 	Application app;
 	File file;
 	ModelFile modelFile;
+    int id_file_parent;
 	
-	public DialogUpload(final Application app, final IPostExecuteListener listener) {
+	public DialogUpload(final Application app, final int id_file_parent, final IPostExecuteListener listener) {
 		super(app);
 		this.app = app;
+        this.id_file_parent = id_file_parent;
 		
 		this.setContentView(R.layout.view_upload);
 		this.setTitle(R.string.app_name);
@@ -68,6 +70,7 @@ public class DialogUpload extends Dialog {
 				dialogFileChooser = new DialogFileChooser(DialogUpload.this.app, new IModelFileListener() {
 					@Override
 					public void execute(ModelFile modelFile) {
+                        modelFile.id_file_parent = DialogUpload.this.id_file_parent;
 						((TextView) DialogUpload.this.findViewById(R.id.label)).setText(""+modelFile.url);
 						DialogUpload.this.file = new File(modelFile.url);
 						DialogUpload.this.modelFile = modelFile;

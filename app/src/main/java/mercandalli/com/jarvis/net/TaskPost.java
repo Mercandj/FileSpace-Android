@@ -144,7 +144,7 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
 
 	@Override
 	protected void onPostExecute(String response) {
-		Log.d("onPostExecute", "" + response);
+		Log.d("onPostExecute POST", "" + response);
 		if (response == null) {
             if (this.listener != null)
                 this.listener.execute(null, null);
