@@ -9,18 +9,26 @@ package mercandalli.com.jarvis.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ModelUser {
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import mercandalli.com.jarvis.activity.Application;
+
+public class ModelUser extends Model {
 
     public int id;
 	public String username;
 	public String password;
 	public String currentToken;
     public String regId;
+    public Date date_creation, date_last_connection;
 	
 	public ModelUser() {
 		
 	}
-	
+
 	public ModelUser(int id, String username, String password, String currentToken, String regId) {
 		super();
         this.id = id;
@@ -29,6 +37,42 @@ public class ModelUser {
 		this.currentToken = currentToken;
         this.regId = regId;
 	}
+
+    public ModelUser(Application app, JSONObject json) {
+        super();
+        this.app = app;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        try {
+            if(json.has("id"))
+                this.id = json.getInt("id");
+            if(json.has("username"))
+                this.username = json.getString("username");
+            if(json.has("password"))
+                this.password = json.getString("password");
+            if(json.has("currentToken"))
+                this.currentToken = json.getString("currentToken");
+            if(json.has("regId"))
+                this.regId = json.getString("regId");
+            if(json.has("date_creation") && !json.isNull("date_creation"))
+                this.date_creation = dateFormat.parse(json.getString("date_creation"));
+            if(json.has("date_last_connection") && !json.isNull("date_last_connection"))
+                this.date_last_connection = dateFormat.parse(json.getString("date_last_connection"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getAdapterTitle() {
+        return this.username;
+    }
+
+    public String getAdapterSubtitle() {
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss   dd/MM/yyyy");
+        String date = dateFormat.format(date_last_connection.getTime());
+        return "#" + this.id + "   " + date;
+    }
 
 	public JSONObject getJsonRegister() {
 		if(username!=null && password!=null) {

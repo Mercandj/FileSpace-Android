@@ -120,7 +120,7 @@ public class ActivityRegisterLogin extends Application {
 					List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
 					parameters.add(new BasicNameValuePair("username",""+user.username));
 					parameters.add(new BasicNameValuePair("password",""+user.password));
-					(new TaskPost(ActivityRegisterLogin.this, ActivityRegisterLogin.this.getConfig().getUrlServer()+ActivityRegisterLogin.this.getConfig().routeUserRegister, new IPostExecuteListener() {
+					(new TaskPost(ActivityRegisterLogin.this, ActivityRegisterLogin.this.getConfig().getUrlServer()+ActivityRegisterLogin.this.getConfig().routeUser, new IPostExecuteListener() {
 						@Override
 						public void execute(JSONObject json, String body) {
 							try {
@@ -143,28 +143,32 @@ public class ActivityRegisterLogin extends Application {
 					}, parameters)).execute();
 				}
 				// Login : GET /user
-				else
-					(new TaskGet(ActivityRegisterLogin.this, ActivityRegisterLogin.this.getConfig().getUser(), ActivityRegisterLogin.this.getConfig().getUrlServer()+ActivityRegisterLogin.this.getConfig().routeUserLogin, new IPostExecuteListener() {
-						@Override
-						public void execute(JSONObject json, String body) {
-							try {
-								if(json!=null) {
-									if(json.has("succeed"))
-										if(json.getBoolean("succeed")) {
-											connectionSucceed();
-										}
-                                    if(json.has("user")) {
+				else {
+                    List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
+                    parameters.add(new BasicNameValuePair("login","true"));
+                    (new TaskGet(ActivityRegisterLogin.this, ActivityRegisterLogin.this.getConfig().getUser(), ActivityRegisterLogin.this.getConfig().getUrlServer() + ActivityRegisterLogin.this.getConfig().routeUser, new IPostExecuteListener() {
+                        @Override
+                        public void execute(JSONObject json, String body) {
+                            try {
+                                if (json != null) {
+                                    if (json.has("succeed"))
+                                        if (json.getBoolean("succeed")) {
+                                            connectionSucceed();
+                                        }
+                                    if (json.has("user")) {
                                         JSONObject user = json.getJSONObject("user");
-                                        if(user.has("id"))
+                                        if (user.has("id"))
                                             ActivityRegisterLogin.this.getConfig().setUserId(user.getInt("id"));
                                     }
-								}
-								else
-									Toast.makeText(ActivityRegisterLogin.this, ActivityRegisterLogin.this.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
-							} catch (JSONException e) {e.printStackTrace();}
-							requestLaunch = false;
-						}
-					})).execute();
+                                } else
+                                    Toast.makeText(ActivityRegisterLogin.this, ActivityRegisterLogin.this.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            requestLaunch = false;
+                        }
+                    })).execute();
+                }
 				
 			}        	
         });

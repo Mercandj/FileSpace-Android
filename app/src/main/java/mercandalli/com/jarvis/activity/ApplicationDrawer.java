@@ -30,6 +30,7 @@ import mercandalli.com.jarvis.fragment.InformationManagerFragment;
 import mercandalli.com.jarvis.fragment.NotificationFragment;
 import mercandalli.com.jarvis.fragment.RequestFragment;
 import mercandalli.com.jarvis.fragment.SettingsFragment;
+import mercandalli.com.jarvis.fragment.UserFragment;
 import mercandalli.com.jarvis.fragment.WebFragment;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.navdrawer.NavDrawerItem;
@@ -121,8 +122,20 @@ public abstract class ApplicationDrawer extends Application {
                     }
                 }, Const.TAB_VIEW_TYPE_NORMAL)
         );
-        
+
         // Tab 6
+        navDrawerItems.add(
+                new NavDrawerItem( "Users", new IListener() {
+                    @Override
+                    public void execute() {
+                        fragment = new UserFragment(ApplicationDrawer.this);
+                        FragmentManager fragmentManager = getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                    }
+                }, Const.TAB_VIEW_TYPE_NORMAL)
+        );
+        
+        // Tab 7
         navDrawerItems.add(
         		new NavDrawerItem( "Request", new IListener() {
 						@Override
@@ -134,12 +147,12 @@ public abstract class ApplicationDrawer extends Application {
 			            }, Const.TAB_VIEW_TYPE_NORMAL)
         );
         
-        // Tab 7
+        // Tab 8
         navDrawerItems.add(
         		new NavDrawerItem( "", R.drawable.ic_launcher, Const.TAB_VIEW_TYPE_SECTION)
         );
         
-        // Tab 8
+        // Tab 9
         navDrawerItems.add(
         		new NavDrawerItem( 
     				"Settings",
@@ -155,7 +168,7 @@ public abstract class ApplicationDrawer extends Application {
 			        Const.TAB_VIEW_TYPE_SETTING)
         );
         
-        // Tab 9
+        // Tab 10
         navDrawerItems.add(
         		new NavDrawerItem(
         			"About Dev",

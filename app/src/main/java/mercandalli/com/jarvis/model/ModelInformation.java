@@ -12,10 +12,8 @@ import org.json.JSONObject;
 import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.config.Const;
 
-public class ModelInformation {
-	
-	Application app;
-	
+public class ModelInformation extends Model {
+
 	public String title;
 	public String value;
 	public int viewType = Const.TAB_VIEW_TYPE_NORMAL;
