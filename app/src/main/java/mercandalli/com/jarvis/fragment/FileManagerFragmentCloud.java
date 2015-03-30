@@ -124,7 +124,6 @@ public class FileManagerFragmentCloud extends Fragment {
             }
         });
 
-
         this.adapter = new AdapterModelFile(app, files, new IModelFileListener() {
             @Override
             public void execute(final ModelFile modelFile) {

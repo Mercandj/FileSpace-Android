@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.model.ModelUser;
 
 /**
@@ -27,7 +28,7 @@ public class Config {
     public final String routeNotification       = "notification";
     public String currentToken					= null;
 
-    private Activity activity;
+    private Application app;
     private final String file = "settings_json_1.txt";
 
     private enum ENUM_Int {
@@ -70,9 +71,9 @@ public class Config {
         }
     }
 
-    public Config(Activity my_activity) {
-        this.activity = my_activity;
-        load(my_activity);
+    public Config(Application app) {
+        this.app = app;
+        load(app);
     }
 
     private static void write_txt(Activity activity, String file, String txt) {
@@ -122,9 +123,9 @@ public class Config {
         }
     }
 
-    private void load(Activity activity) {
+    private void load(Application app) {
         try {
-            JSONObject tmp_json = new JSONObject(read_txt(activity, file));
+            JSONObject tmp_json = new JSONObject(read_txt(app, file));
             if(tmp_json.has("settings_1")) {
                 JSONObject tmp_settings_1 = tmp_json.getJSONObject("settings_1");
                 for(ENUM_Int enum_int : ENUM_Int.values())
@@ -149,7 +150,7 @@ public class Config {
     public void setDisplayPosition(int value) {
         if(ENUM_Int.LAST_TAB.value!=value) {
             ENUM_Int.LAST_TAB.value = value;
-            save(activity);
+            save(app);
         }
     }
 
@@ -160,7 +161,7 @@ public class Config {
     public void setUserId(int value) {
         if(ENUM_Int.INTEGER_USER_ID.value!=value) {
             ENUM_Int.INTEGER_USER_ID.value = value;
-            save(activity);
+            save(app);
         }
     }
 
@@ -171,7 +172,7 @@ public class Config {
     public void setUrlServer(String value) {
         if(ENUM_String.STRING_URL_SERVER.value!=value) {
             ENUM_String.STRING_URL_SERVER.value = value;
-            save(activity);
+            save(app);
         }
     }
 
@@ -182,7 +183,7 @@ public class Config {
     public void setUserUsername(String value) {
         if(ENUM_String.STRING_USER_USERNAME.value!=value) {
             ENUM_String.STRING_USER_USERNAME.value = value;
-            save(activity);
+            save(app);
         }
     }
 
@@ -193,7 +194,7 @@ public class Config {
     public void setUserPassword(String value) {
         if(ENUM_String.STRING_USER_PASSWORD.value!=value) {
             ENUM_String.STRING_USER_PASSWORD.value = value;
-            save(activity);
+            save(app);
         }
     }
 
@@ -204,7 +205,7 @@ public class Config {
     public void setUserRegId(String value) {
         if(ENUM_String.STRING_USER_REGID.value!=value) {
             ENUM_String.STRING_USER_REGID.value = value;
-            save(activity);
+            save(app);
         }
     }
 
@@ -215,11 +216,11 @@ public class Config {
     public void setAutoConnection(boolean value) {
         if(ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value!=value) {
             ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value = value;
-            save(activity);
+            save(app);
         }
     }
 
     public ModelUser getUser() {
-        return new ModelUser(getUserId(), getUserUsername(), getUserPassword(), currentToken, getUserRegId());
+        return new ModelUser(app, getUserId(), getUserUsername(), getUserPassword(), currentToken, getUserRegId());
     }
 }

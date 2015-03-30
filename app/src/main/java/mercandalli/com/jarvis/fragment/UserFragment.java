@@ -29,6 +29,7 @@ import mercandalli.com.jarvis.adapter.AdapterModelUser;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.model.ModelUser;
 import mercandalli.com.jarvis.net.TaskGet;
+import mercandalli.com.jarvis.view.DividerItemDecoration;
 
 /**
  * Created by Jonathan on 30/03/2015.
@@ -121,6 +122,7 @@ public class UserFragment extends Fragment {
             this.mAdapter = new AdapterModelUser(app, list, null);
             this.recyclerView.setAdapter(mAdapter);
             this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
+            this.recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
             if( ((ImageButton) rootView.findViewById(R.id.circle)).getVisibility()==View.GONE ) {
                 ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);

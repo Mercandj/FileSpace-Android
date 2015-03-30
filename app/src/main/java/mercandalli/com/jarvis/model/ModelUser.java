@@ -24,12 +24,13 @@ public class ModelUser extends Model {
 	public String currentToken;
     public String regId;
     public Date date_creation, date_last_connection;
+    public long size_files;
 	
 	public ModelUser() {
 		
 	}
 
-	public ModelUser(int id, String username, String password, String currentToken, String regId) {
+	public ModelUser(Application app, int id, String username, String password, String currentToken, String regId) {
 		super();
         this.id = id;
 		this.username = username;
@@ -57,6 +58,8 @@ public class ModelUser extends Model {
                 this.date_creation = dateFormat.parse(json.getString("date_creation"));
             if(json.has("date_last_connection") && !json.isNull("date_last_connection"))
                 this.date_last_connection = dateFormat.parse(json.getString("date_last_connection"));
+            if(json.has("size_files") && !json.isNull("size_files"))
+                this.size_files = json.getLong("size_files");
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -69,9 +72,9 @@ public class ModelUser extends Model {
     }
 
     public String getAdapterSubtitle() {
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss   dd/MM/yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
         String date = dateFormat.format(date_last_connection.getTime());
-        return "#" + this.id + "   " + date;
+        return "#" + this.id + "   " + date + "   " + this.app.getLibrary().humanReadableByteCount(size_files);
     }
 
 	public JSONObject getJsonRegister() {
