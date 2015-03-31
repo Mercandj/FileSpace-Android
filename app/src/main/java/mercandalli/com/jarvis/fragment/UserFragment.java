@@ -26,9 +26,12 @@ import java.util.List;
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.adapter.AdapterModelUser;
+import mercandalli.com.jarvis.listener.IModelUserListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
+import mercandalli.com.jarvis.listener.IStringListener;
 import mercandalli.com.jarvis.model.ModelUser;
 import mercandalli.com.jarvis.net.TaskGet;
+import mercandalli.com.jarvis.net.TaskPost;
 import mercandalli.com.jarvis.view.DividerItemDecoration;
 
 /**
@@ -119,7 +122,26 @@ public class UserFragment extends Fragment {
         if(this.recyclerView!=null && this.list!=null && this.isAdded()) {
             this.circulerProgressBar.setVisibility(View.GONE);
 
-            this.mAdapter = new AdapterModelUser(app, list, null);
+            this.mAdapter = new AdapterModelUser(app, list, new IModelUserListener() {
+                @Override
+                public void execute(final ModelUser modelUser) {
+                    app.prompt("Send Message", "Write your message", "Send", new IStringListener(){
+                        @Override
+                        public void execute(String text) {
+                            String url = app.getConfig().getUrlServer() + app.getConfig().routeUserMessage + "/" + modelUser.id;
+                            List < BasicNameValuePair > parameters = new ArrayList<>();
+                            parameters.add(new BasicNameValuePair("message", "" + text));
+
+                            new TaskPost(app, url, new IPostExecuteListener() {
+                                @Override
+                                public void execute(JSONObject json, String body) {
+
+                                }
+                            }, parameters).execute();
+                        }
+                    }, "Cancel", null);
+                }
+            });
             this.recyclerView.setAdapter(mAdapter);
             this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
             this.recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));

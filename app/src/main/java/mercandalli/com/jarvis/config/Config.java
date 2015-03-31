@@ -25,7 +25,7 @@ public class Config {
     public final String routeInformation		= "information";
     public final String routeHome       		= "home";
     public final String routeUser 		        = "user";
-    public final String routeNotification       = "notification";
+    public final String routeUserMessage        = "user_message";
     public String currentToken					= null;
 
     private Application app;
