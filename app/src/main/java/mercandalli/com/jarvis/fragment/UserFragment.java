@@ -58,10 +58,12 @@ public class UserFragment extends Fragment {
         this.rootView = inflater.inflate(R.layout.fragment_user, container, false);
         circulerProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(mLayoutManager);
+        this.recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
+        this.recyclerView.setHasFixedSize(true);
+        this.mLayoutManager = new LinearLayoutManager(getActivity());
+        this.recyclerView.setLayoutManager(mLayoutManager);
+        this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
+        this.recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
         ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.GONE);
 
@@ -143,8 +145,6 @@ public class UserFragment extends Fragment {
                 }
             });
             this.recyclerView.setAdapter(mAdapter);
-            this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
-            this.recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
             if( ((ImageButton) rootView.findViewById(R.id.circle)).getVisibility()==View.GONE ) {
                 ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
