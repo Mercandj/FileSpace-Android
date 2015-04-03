@@ -11,31 +11,48 @@
     <RelativeLayout
         android:id="@+id/rl_top"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="120dp"
         android:background="@color/actionbar"
         android:orientation="vertical" >
 
-        <EditText
-            android:id="@+id/server"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:text="@string/app_name"
+                android:id="@+id/title"
+                android:singleLine="true"
+                android:textColor="#fff"
+                android:textSize="42sp"
+                android:gravity="center_vertical"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="20dp"
+                android:layout_alignParentBottom="true" />
+
+        <ImageView
+            android:id="@+id/signin"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_margin="20dp"
-            android:layout_marginTop="0dp"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="@string/dialog_server_url"
-            android:lines="1"
-            android:maxLines="1"
-            android:padding="10dp"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textColor="#fff"
-            android:textColorHint="#fff"
-            android:textSize="22sp" >
-        </EditText>
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="25dp"
+            android:contentDescription="@string/image_description"
+            android:src="@drawable/ic_circle_button" />
+
+        <ImageView
+            android:id="@+id/circle_ic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/signin"
+            android:layout_alignLeft="@+id/signin"
+            android:layout_alignRight="@+id/signin"
+            android:layout_alignTop="@+id/signin"
+            android:contentDescription="@string/image_description"
+            android:paddingLeft="19dp"
+            android:paddingRight="16dp"
+            android:src="@drawable/ic_menu_send" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -44,103 +61,30 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/rl_top"
-        android:orientation="vertical"
-        android:padding="20dp" >
+        android:orientation="vertical" >
 
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/username"
-            android:layout_marginTop="10dp"
-            android:ems="10"
-            android:hint="@string/dialog_password"
-            android:inputType="textPassword"
-            android:padding="10dp"
-            android:textSize="22sp" >
-        </EditText>
+        <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
-        <EditText
-            android:id="@+id/username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="15dp"
-            android:ems="10"
-            android:hint="@string/dialog_username"
-            android:padding="10dp"
-            android:textSize="22sp" >
-        </EditText>
-
-        <RelativeLayout
-            android:id="@+id/toggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" >
-
-            <TextView
-                android:id="@+id/label"
-                android:layout_width="wrap_content"
+            <android.support.v4.view.PagerTitleStrip
+                android:id="@+id/pager_title_strip"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:ems="10"
-                android:padding="10dp"
-                android:text="@string/dialog_login"
-                android:textColor="#000"
-                android:textSize="22sp" />
+                android:layout_gravity="top"
+                android:background="@color/actionbar"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingBottom="6dp"
+                android:paddingTop="6dp"
+                android:textColor="#fff"
+                android:textSize="16sp"/>
 
-            <ToggleButton
-                android:id="@+id/toggleButton"
-                android:layout_width="53dp"
-                android:layout_height="34dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/toggle_me"
-                android:textOff=" "
-                android:textOn=" " />
-        </RelativeLayout>
-
-        <CheckBox
-            android:id="@+id/autoconnection"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/toggle"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="15dp"
-            android:text="@string/autoconnection"
-            android:textColor="@color/hint_foreground_material_light"
-            android:textSize="20sp" />
+        </android.support.v4.view.ViewPager>
 
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/signin"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="90dp"
-        android:contentDescription="@string/image_description"
-        android:src="@drawable/ic_circle_button" />
 
-    <ImageView
-        android:id="@+id/circle_ic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/signin"
-        android:layout_alignLeft="@+id/signin"
-        android:layout_alignRight="@+id/signin"
-        android:layout_alignTop="@+id/signin"
-        android:contentDescription="@string/image_description"
-        android:paddingLeft="22dp"
-        android:paddingRight="20dp"
-        android:src="@drawable/ic_menu_send" />
 
 </RelativeLayout>

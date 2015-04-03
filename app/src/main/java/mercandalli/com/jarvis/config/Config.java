@@ -45,7 +45,7 @@ public class Config {
     }
 
     private enum ENUM_Boolean {
-        BOOLEAN_AUTO_CONNECTION	(false, 		"boolean_auto_connection"		),
+        BOOLEAN_AUTO_CONNECTION	(true, 		"boolean_auto_connection"		),
         ;
 
         boolean value;
@@ -57,10 +57,10 @@ public class Config {
     }
 
     private enum ENUM_String {
-        STRING_URL_SERVER		("", 			"string_url_server_1"			),
-        STRING_USER_USERNAME	("", 			"string_user_username_1"		),
-        STRING_USER_PASSWORD	("", 			"string_user_password_1"		),
-        STRING_USER_REGID	    ("", 			"string_user_regid_1"   		),
+        STRING_URL_SERVER		("http://mercandalli.com/Jarvis-API/", 	"string_url_server_1"			),
+        STRING_USER_USERNAME	("",                                    "string_user_username_1"		),
+        STRING_USER_PASSWORD	("", 			                        "string_user_password_1"		),
+        STRING_USER_REGID	    ("", 			                        "string_user_regid_1"   		),
         ;
 
         String value;

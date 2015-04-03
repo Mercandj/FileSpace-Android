@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name" translate="false">Jarvis</string>
+    <string name="app_name_uppercase" translate="false">JARVIS</string>
     <string name="app_name_full" translate="false">Just A Remote Very Intelligent System</string>
     <string name="author_full_name" translate="false">Jonathan Mercandalli</string>
 
