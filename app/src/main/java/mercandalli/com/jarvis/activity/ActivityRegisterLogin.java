@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.fragment.InscriptionFragment;
 import mercandalli.com.jarvis.fragment.LoginFragment;
+import mercandalli.com.jarvis.view.PagerSlidingTabStrip;
 
 public class ActivityRegisterLogin extends Application {
 
@@ -26,6 +27,7 @@ public class ActivityRegisterLogin extends Application {
     public static Fragment listFragment[] = new Fragment[NB_FRAGMENT];
     private ViewPager mViewPager;
     private RegisterLoginPagerAdapter mPagerAdapter;
+    private PagerSlidingTabStrip tabs;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class ActivityRegisterLogin extends Application {
 
         mPagerAdapter = new RegisterLoginPagerAdapter(this.getFragmentManager(), this);
 
+        tabs = (PagerSlidingTabStrip) this.findViewById(R.id.tabs);
         mViewPager = (ViewPager) this.findViewById(R.id.pager);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -63,6 +66,9 @@ public class ActivityRegisterLogin extends Application {
             }
 
         mViewPager.setCurrentItem(this.INIT_FRAGMENT);
+
+        tabs.setViewPager(mViewPager);
+        tabs.setIndicatorColor(getResources().getColor(R.color.white));
 
         if(this.getConfig().isAutoConncetion() && this.getConfig().getUrlServer()!=null && this.getConfig().getUserUsername()!=null && this.getConfig().getUserPassword()!=null)
         	connectionSucceed();

@@ -18,43 +18,19 @@
     </declare-styleable>
 
 
-    <declare-styleable name="FloatingActionButton">
-        <attr name="fab_colorPressed" format="color"/>
-        <attr name="fab_colorDisabled" format="color"/>
-        <attr name="fab_colorNormal" format="color"/>
-        <attr name="fab_ripple" format="reference"/>
-        <attr name="fab_icon" format="reference"/>
-        <attr name="fab_size" format="enum">
-            <enum name="normal" value="0"/>
-            <enum name="mini" value="1"/>
-        </attr>
-        <attr name="fab_title" format="string"/>
-        <attr name="fab_stroke_visible" format="boolean"/>
-    </declare-styleable>
-    <declare-styleable name="AddFloatingActionButton">
-        <attr name="fab_plusIconColor" format="color"/>
-    </declare-styleable>
-    <declare-styleable name="FloatingActionsMenu">
-        <attr name="fab_addButtonColorPressed" format="color"/>
-        <attr name="fab_addButtonColorNormal" format="color"/>
-        <attr name="fab_addButtonSize" format="enum">
-            <enum name="normal" value="0"/>
-            <enum name="mini" value="1"/>
-        </attr>
-        <attr name="fab_addButtonRipple" format="reference"/>
-        <attr name="fab_addButtonPlusIconColor" format="color"/>
-        <attr name="fab_addButtonStrokeVisible" format="boolean"/>
-        <attr name="fab_labelStyle" format="reference"/>
-        <attr name="fab_labelsPosition" format="enum">
-            <enum name="left" value="0"/>
-            <enum name="right" value="1"/>
-        </attr>
-        <attr name="fab_expandDirection" format="enum">
-            <enum name="up" value="0"/>
-            <enum name="down" value="1"/>
-            <enum name="left" value="2"/>
-            <enum name="right" value="3"/>
-        </attr>
+
+    <declare-styleable name="PagerSlidingTabStrip">
+        <attr name="pstsIndicatorColor" format="color" />
+        <attr name="pstsUnderlineColor" format="color" />
+        <attr name="pstsDividerColor" format="color" />
+        <attr name="pstsIndicatorHeight" format="dimension" />
+        <attr name="pstsUnderlineHeight" format="dimension" />
+        <attr name="pstsDividerPadding" format="dimension" />
+        <attr name="pstsTabPaddingLeftRight" format="dimension" />
+        <attr name="pstsScrollOffset" format="dimension" />
+        <attr name="pstsTabBackground" format="reference" />
+        <attr name="pstsShouldExpand" format="boolean" />
+        <attr name="pstsTextAllCaps" format="boolean" />
     </declare-styleable>
 
 </resources>

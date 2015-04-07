@@ -24,6 +24,7 @@ import mercandalli.com.jarvis.activity.ApplicationDrawer;
 import mercandalli.com.jarvis.dialog.DialogAddFileManager;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
+import mercandalli.com.jarvis.view.PagerSlidingTabStrip;
 
 public class FileManagerFragment extends Fragment {
 	
@@ -33,6 +34,7 @@ public class FileManagerFragment extends Fragment {
 	private Application app;
 	private ViewPager mViewPager;
 	private FileManagerFragmentPagerAdapter mPagerAdapter;
+    private PagerSlidingTabStrip tabs;
 	
 	public FileManagerFragment() {
 		super();
@@ -48,6 +50,7 @@ public class FileManagerFragment extends Fragment {
 		View rootView = inflater.inflate(R.layout.fragment_filemanager, container, false);
 		mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
 
+        tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
 		mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
 		mViewPager.setAdapter(mPagerAdapter);
 		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {			
@@ -66,6 +69,9 @@ public class FileManagerFragment extends Fragment {
 		});
         mViewPager.setOffscreenPageLimit(this.NB_FRAGMENT - 1);
         mViewPager.setCurrentItem(this.INIT_FRAGMENT);
+
+        tabs.setViewPager(mViewPager);
+        tabs.setIndicatorColor(getResources().getColor(R.color.white));
 		
         return rootView;
 	}
@@ -104,7 +110,7 @@ public class FileManagerFragment extends Fragment {
         public CharSequence getPageTitle(int i) {
         	String title = "null";
 			switch(i) {
-			case 0:		title = "CLOUD";		break;
+			case 0:		title = "PUBLIC CLOUD";		break;
             case 1:		title = "MY CLOUD";		break;
 			case 2:		title = "LOCAL";		break;
 			}

@@ -15,12 +15,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import java.util.Stack;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.config.Const;
@@ -41,6 +44,8 @@ public abstract class ApplicationDrawer extends Application {
 	public static final int[] noSelectable 	= new int[] {Const.TAB_VIEW_TYPE_PROFIL, Const.TAB_VIEW_TYPE_SECTION};
     
     Fragment fragment;
+    private final int INIT_ID_FRAGMENT = 2;
+    private Stack<Integer> ID_FRAGMENT_VISITED = new Stack<>();
     
 	protected DrawerLayout mDrawerLayout;
 	protected ListView mDrawerList;
@@ -172,7 +177,7 @@ public abstract class ApplicationDrawer extends Application {
         		);
         
         // Initial Fragment
-        selectItem(2);
+        selectItem(INIT_ID_FRAGMENT);
         /*
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setIcon(R.drawable.transparent);
@@ -202,6 +207,9 @@ public abstract class ApplicationDrawer extends Application {
 				for(int i : noSelectable)
 					if(nav.viewType == i)
 						return;
+        if(position == INIT_ID_FRAGMENT)
+            ID_FRAGMENT_VISITED = new Stack<>();
+        ID_FRAGMENT_VISITED.push(position);
     	for(NavDrawerItem nav : navDrawerItems.getListe()) {
     		nav.isSelected = false;
     		if(navDrawerItems.get(position).equals(nav)) {
@@ -344,4 +352,19 @@ public abstract class ApplicationDrawer extends Application {
     }
     
     public abstract void updateAdapters();
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
+            if(backPressed())
+                return true;
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public boolean backPressed() {
+        if(this.ID_FRAGMENT_VISITED.pop() == INIT_ID_FRAGMENT)
+            return false;
+        this.selectItem(this.ID_FRAGMENT_VISITED.pop());
+        return true;
+    }
 }

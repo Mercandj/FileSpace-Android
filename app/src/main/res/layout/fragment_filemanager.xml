@@ -3,21 +3,26 @@
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
-<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/pager"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
-    <android.support.v4.view.PagerTitleStrip
-        android:id="@+id/pager_title_strip"
+    <mercandalli.com.jarvis.view.PagerSlidingTabStrip
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="42dip"
+        android:background="@color/actionbar"
+        custom:pstsUnderlineHeight="0dp"
+        custom:pstsIndicatorHeight="2dp"
+        android:elevation="4dp"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:background="@color/actionbar"
-        android:clickable="true"
-        android:focusable="true"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
-        android:textColor="#fff" />
+        android:layout_below="@+id/tabs" >
 
-</android.support.v4.view.ViewPager>
+    </android.support.v4.view.ViewPager>
+
+</RelativeLayout>

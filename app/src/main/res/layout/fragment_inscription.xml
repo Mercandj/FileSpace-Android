@@ -8,6 +8,23 @@
     android:padding="20dp" >
 
     <EditText
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+        android:ems="10"
+        android:hint="@string/dialog_username"
+        android:padding="10dp"
+        android:textSize="22sp"
+        android:lines="1"
+        android:maxLines="1"
+        android:singleLine="true">
+    </EditText>
+
+    <EditText
         android:id="@+id/password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,18 +39,16 @@
         android:textSize="22sp" >
     </EditText>
 
-    <EditText
-        android:id="@+id/username"
+    <CheckBox
+        android:id="@+id/autoconnection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="15dp"
-        android:ems="10"
-        android:hint="@string/dialog_username"
-        android:padding="10dp"
-        android:textSize="22sp" >
-    </EditText>
+        android:layout_below="@+id/password"
+        android:layout_marginTop="14dp"
+        android:text="@string/autoconnection"
+        android:textColor="@color/hint_foreground_material_light"
+        android:textSize="20sp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
