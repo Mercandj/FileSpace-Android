@@ -159,8 +159,28 @@ public abstract class ApplicationDrawer extends Application {
 			        R.drawable.ic_settings_grey,
 			        Const.TAB_VIEW_TYPE_SETTING)
         );
-        
+
         // Tab 9
+        navDrawerItems.add(
+                new NavDrawerItem(
+                        "Log out",
+                        new IListener() {
+                            @Override
+                            public void execute() {
+                                ApplicationDrawer.this.alert("Log out", "Do you want to log out?", "Yes", new IListener() {
+                                    @Override
+                                    public void execute() {
+                                        ApplicationDrawer.this.getConfig().reset();
+                                        ApplicationDrawer.this.finish();
+                                    }
+                                }, "Cancel", null);
+                            }
+                        },
+                        R.drawable.ic_log_out,
+                        Const.TAB_VIEW_TYPE_SETTING)
+        );
+        
+        // Tab 10
         navDrawerItems.add(
         		new NavDrawerItem(
         			"About Dev",
@@ -209,7 +229,10 @@ public abstract class ApplicationDrawer extends Application {
 						return;
         if(position == INIT_ID_FRAGMENT)
             ID_FRAGMENT_VISITED = new Stack<>();
-        ID_FRAGMENT_VISITED.push(position);
+        if(ID_FRAGMENT_VISITED.empty())
+            ID_FRAGMENT_VISITED.push(position);
+        else if (ID_FRAGMENT_VISITED.pop() != position)
+            ID_FRAGMENT_VISITED.push(position);
     	for(NavDrawerItem nav : navDrawerItems.getListe()) {
     		nav.isSelected = false;
     		if(navDrawerItems.get(position).equals(nav)) {

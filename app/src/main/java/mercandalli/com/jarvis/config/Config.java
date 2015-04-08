@@ -45,7 +45,7 @@ public class Config {
     }
 
     private enum ENUM_Boolean {
-        BOOLEAN_AUTO_CONNECTION	(true, 		"boolean_auto_connection"		),
+        BOOLEAN_AUTO_CONNECTION	(false, 		"boolean_auto_connection"		),
         ;
 
         boolean value;
@@ -222,5 +222,13 @@ public class Config {
 
     public ModelUser getUser() {
         return new ModelUser(app, getUserId(), getUserUsername(), getUserPassword(), currentToken, getUserRegId());
+    }
+
+    public void reset() {
+        setUserRegId("");
+        setUserUsername("");
+        setUserPassword("");
+        setAutoConnection(false);
+        setUserId(-1);
     }
 }
