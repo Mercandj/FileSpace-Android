@@ -71,6 +71,7 @@ public class ActivityRegisterLogin extends Application {
         tabs.setIndicatorColor(getResources().getColor(R.color.white));
 
         if(this.getConfig().isAutoConncetion() && this.getConfig().getUrlServer()!=null && this.getConfig().getUserUsername()!=null && this.getConfig().getUserPassword()!=null)
+            if(!this.getConfig().getUserUsername().equals("") && !this.getConfig().getUserPassword().equals("") && this.getConfig().getUserId() != -1)
         	connectionSucceed();
 
         ((ImageView) this.findViewById(R.id.signin)).setOnClickListener(new View.OnClickListener() {

@@ -45,7 +45,7 @@ public class Config {
     }
 
     private enum ENUM_Boolean {
-        BOOLEAN_AUTO_CONNECTION	(false, 		"boolean_auto_connection"		),
+        BOOLEAN_AUTO_CONNECTION	(true, 		"boolean_auto_connection"		),
         ;
 
         boolean value;

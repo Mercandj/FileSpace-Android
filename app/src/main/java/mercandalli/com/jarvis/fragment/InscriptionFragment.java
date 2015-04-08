@@ -60,6 +60,7 @@ public class InscriptionFragment extends Fragment {
         this.username = (EditText) rootView.findViewById(R.id.username);
         this.password = (EditText) rootView.findViewById(R.id.password);
 
+        ((CheckBox) rootView.findViewById(R.id.autoconnection)).setChecked(app.getConfig().isAutoConncetion());
         ((CheckBox) rootView.findViewById(R.id.autoconnection)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

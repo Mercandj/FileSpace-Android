@@ -224,11 +224,12 @@ public abstract class ApplicationDrawer extends Application {
 	private void selectItem(int position) {
 		for(NavDrawerItem nav : navDrawerItems.getListe())
 			if(navDrawerItems.get(position).equals(nav)) {
-                if (nav.listenerClick != null)
-                    nav.listenerClick.execute();
                 for (int i : noSelectable)
-                    if (nav.viewType == i)
+                    if (nav.viewType == i) {
+                        if (nav.listenerClick != null)
+                            nav.listenerClick.execute();
                         return;
+                    }
             }
         if(position == INIT_ID_FRAGMENT)
             ID_FRAGMENT_VISITED = new Stack<>();
