@@ -96,6 +96,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
 			break;
 			
 		case Const.TAB_VIEW_TYPE_SETTING:
+        case Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE:
 			convertView = inflater.inflate(R.layout.tab_navdrawer_setting, parent, false);
 			
 			((TextView) convertView.findViewById(R.id.title)).setText(item.title);

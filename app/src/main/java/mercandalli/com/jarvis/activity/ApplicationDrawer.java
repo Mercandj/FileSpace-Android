@@ -41,7 +41,7 @@ import mercandalli.com.jarvis.navdrawer.NavDrawerListAdapter;
 
 public abstract class ApplicationDrawer extends Application {
 	
-	public static final int[] noSelectable 	= new int[] {Const.TAB_VIEW_TYPE_PROFIL, Const.TAB_VIEW_TYPE_SECTION};
+	public static final int[] noSelectable 	= new int[] {Const.TAB_VIEW_TYPE_PROFIL, Const.TAB_VIEW_TYPE_SECTION, Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE};
     
     Fragment fragment;
     private final int INIT_ID_FRAGMENT = 2;
@@ -177,7 +177,7 @@ public abstract class ApplicationDrawer extends Application {
                             }
                         },
                         R.drawable.ic_log_out,
-                        Const.TAB_VIEW_TYPE_SETTING)
+                        Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE)
         );
         
         // Tab 10
@@ -223,10 +223,13 @@ public abstract class ApplicationDrawer extends Application {
 	
 	private void selectItem(int position) {
 		for(NavDrawerItem nav : navDrawerItems.getListe())
-			if(navDrawerItems.get(position).equals(nav))
-				for(int i : noSelectable)
-					if(nav.viewType == i)
-						return;
+			if(navDrawerItems.get(position).equals(nav)) {
+                if (nav.listenerClick != null)
+                    nav.listenerClick.execute();
+                for (int i : noSelectable)
+                    if (nav.viewType == i)
+                        return;
+            }
         if(position == INIT_ID_FRAGMENT)
             ID_FRAGMENT_VISITED = new Stack<>();
         if(ID_FRAGMENT_VISITED.empty())
