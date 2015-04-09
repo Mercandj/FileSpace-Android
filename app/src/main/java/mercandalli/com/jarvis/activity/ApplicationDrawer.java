@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -231,12 +232,10 @@ public abstract class ApplicationDrawer extends Application {
                         return;
                     }
             }
-        if(position == INIT_ID_FRAGMENT)
+        if(position == INIT_ID_FRAGMENT) {
             ID_FRAGMENT_VISITED = new Stack<>();
-        if(ID_FRAGMENT_VISITED.empty())
-            ID_FRAGMENT_VISITED.push(position);
-        else if (ID_FRAGMENT_VISITED.pop() != position)
-            ID_FRAGMENT_VISITED.push(position);
+        }
+        ID_FRAGMENT_VISITED.push(position);
     	for(NavDrawerItem nav : navDrawerItems.getListe()) {
     		nav.isSelected = false;
     		if(navDrawerItems.get(position).equals(nav)) {
@@ -389,6 +388,18 @@ public abstract class ApplicationDrawer extends Application {
     }
 
     public boolean backPressed() {
+        if(mDrawerLayout.isDrawerOpen(mDrawerList)) {
+            mDrawerLayout.closeDrawer(mDrawerList);
+            return true;
+        }
+        if(this.ID_FRAGMENT_VISITED==null) {
+            Log.e("ApplicationDrawer", "backPressed() this.ID_FRAGMENT_VISITED==null");
+            return false;
+        }
+        if(this.ID_FRAGMENT_VISITED.empty()) {
+            Log.e("ApplicationDrawer", "backPressed() this.ID_FRAGMENT_VISITED.empty()");
+            return false;
+        }
         if(this.ID_FRAGMENT_VISITED.pop() == INIT_ID_FRAGMENT)
             return false;
         this.selectItem(this.ID_FRAGMENT_VISITED.pop());

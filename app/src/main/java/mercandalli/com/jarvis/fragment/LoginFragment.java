@@ -160,8 +160,6 @@ public class LoginFragment extends Fragment {
                 }
                 requestLaunch = false;
             }
-        })).execute();
-
-
+        }, parameters)).execute();
     }
 }

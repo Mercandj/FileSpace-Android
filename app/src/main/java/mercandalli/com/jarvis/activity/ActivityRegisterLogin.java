@@ -22,9 +22,9 @@ import mercandalli.com.jarvis.view.PagerSlidingTabStrip;
 
 public class ActivityRegisterLogin extends Application {
 
-    private static final int NB_FRAGMENT = 2;
-    private static int INIT_FRAGMENT = 1;
-    public static Fragment listFragment[] = new Fragment[NB_FRAGMENT];
+    private final int NB_FRAGMENT = 2;
+    private int INIT_FRAGMENT = 1;
+    public Fragment listFragment[] = new Fragment[NB_FRAGMENT];
     private ViewPager mViewPager;
     private RegisterLoginPagerAdapter mPagerAdapter;
     private PagerSlidingTabStrip tabs;
@@ -55,15 +55,10 @@ public class ActivityRegisterLogin extends Application {
         });
         mViewPager.setOffscreenPageLimit(this.NB_FRAGMENT - 1);
 
-        if(this.getConfig().getUserUsername()!=null)
-            if(this.getConfig().getUserUsername().equals("")) {
-                this.INIT_FRAGMENT = 0;
-            }
-
-        if(this.getConfig().getUserPassword()!=null)
-            if(this.getConfig().getUserPassword().equals("")) {
-                this.INIT_FRAGMENT = 0;
-            }
+        if(this.getConfig().getUserUsername()==null || this.getConfig().getUserPassword()==null)
+            this.INIT_FRAGMENT = 0;
+        else if(this.getConfig().getUserUsername().equals("") || this.getConfig().getUserPassword().equals(""))
+            this.INIT_FRAGMENT = 0;
 
         mViewPager.setCurrentItem(this.INIT_FRAGMENT);
 
@@ -72,7 +67,7 @@ public class ActivityRegisterLogin extends Application {
 
         if(this.getConfig().isAutoConncetion() && this.getConfig().getUrlServer()!=null && this.getConfig().getUserUsername()!=null && this.getConfig().getUserPassword()!=null)
             if(!this.getConfig().getUserUsername().equals("") && !this.getConfig().getUserPassword().equals("") && this.getConfig().getUserId() != -1)
-        	connectionSucceed();
+        	    connectionSucceed();
 
         ((ImageView) this.findViewById(R.id.signin)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +105,7 @@ public class ActivityRegisterLogin extends Application {
         return mViewPager.getCurrentItem();
     }
 
-    public static class RegisterLoginPagerAdapter extends FragmentPagerAdapter {
+    public class RegisterLoginPagerAdapter extends FragmentPagerAdapter {
         Application app;
 
         public RegisterLoginPagerAdapter(FragmentManager fm, Application app) {
