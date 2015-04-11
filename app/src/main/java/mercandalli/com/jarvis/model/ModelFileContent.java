@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Created by Jonathan on 22/03/2015.
@@ -23,7 +24,7 @@ public class ModelFileContent {
             if(json.has("type") && !json.isNull("type"))
                 this.type = json.getString("type");
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {
                 if(json.has("date_creation") && !json.isNull("date_creation"))
                     this.date_creation = dateFormat.parse(json.getString("date_creation"));
@@ -41,8 +42,16 @@ public class ModelFileContent {
 
     @Override
     public String toString() {
-        if(timer_date != null)
-            return printDifference(timer_date, new Date());
+        if(timer_date != null) {
+            SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+            SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try {
+                return printDifference(timer_date, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
         if(date_creation != null)
             return date_creation.toString();
         return "null";

@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -122,22 +123,21 @@ public class DialogAddFileManager extends Dialog {
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 Log.d("TIme Picker", hourOfDay + ":" + minute);
 
-                                TimeZone tz = TimeZone.getTimeZone("UTC");
-                                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                df.setTimeZone(tz);
-                                String nowAsISO = df.format(new Date());
+                                SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+                                String nowAsISO = dateFormatGmt.format(new Date());
 
                                 JSONObject json = new JSONObject();
                                 try {
                                     json.put("type", "timer");
                                     json.put("date_creation", nowAsISO);
+                                    json.put("timer_date", "" + dateFormatGmt.format(dateFormatLocal.parse(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth + " " + hourOfDay + ":" + minute + ":00")));
 
-                                    json.put("timer_date", year+"-"+(monthOfYear+1)+"-"+dayOfMonth+" "+ hourOfDay + ":" + minute + ":00");
-
-                                    tz = TimeZone.getTimeZone("UTC");
-                                    df = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm'Z'");
-                                    df.setTimeZone(tz);
-                                    nowAsISO = df.format(new Date());
+                                    SimpleDateFormat dateFormatGmtTZ = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm'Z'");
+                                    dateFormatGmtTZ.setTimeZone(TimeZone.getTimeZone("UTC"));
+                                    nowAsISO = dateFormatGmtTZ.format(new Date());
 
                                     List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
                                     parameters.add(new BasicNameValuePair("content",json.toString()));
@@ -155,8 +155,9 @@ public class DialogAddFileManager extends Dialog {
                                             ,parameters).execute();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
                                 }
-
 
                             }
                         }, currentTime.get(Calendar.HOUR_OF_DAY), currentTime.get(Calendar.MINUTE), true);

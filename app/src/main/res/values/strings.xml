@@ -49,5 +49,6 @@
     <string name="menu_action_add">Add</string>
     <string name="menu_action_upload">Upload</string>
     <string name="menu_action_download">Download</string>
+    <string name="menu_action_sort">Sort</string>
 
 </resources>

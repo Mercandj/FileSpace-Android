@@ -355,12 +355,14 @@ public abstract class ApplicationDrawer extends Application {
 		menu.findItem(R.id.action_add)		.setVisible(false);
 		menu.findItem(R.id.action_download)	.setVisible(false);
 		menu.findItem(R.id.action_upload)	.setVisible(false);
+        menu.findItem(R.id.action_sort)	    .setVisible(false);
 		
     	if(fragment instanceof RequestFragment) {
     		menu.findItem(R.id.action_delete)	.setVisible(!drawerOpen);
     	}
     	else if(fragment instanceof FileManagerFragment) {
             menu.findItem(R.id.action_search)	.setVisible(!drawerOpen);
+            menu.findItem(R.id.action_sort)	    .setVisible(!drawerOpen);
     		FileManagerFragment tmp_fragment = (FileManagerFragment) fragment;    		
     		switch(tmp_fragment.getCurrentFragmentIndex()) {
     		case 0:
