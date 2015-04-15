@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="circle_button_elevation_low">4dp</dimen>
-    <dimen name="circle_button_elevation_high">8dp</dimen>
+    <dimen name="circle_button_elevation_low">1dp</dimen>
+    <dimen name="circle_button_elevation_high">4dp</dimen>
 </resources>

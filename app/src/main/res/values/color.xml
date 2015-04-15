@@ -13,5 +13,6 @@
     <color name="actionbar_audio">#f57c00</color>
     <color name="notifications_bar_audio">#e65100</color>
 
-    <color name="background_tab_pressed">#6633B5E5</color>
+    <color name="background_tab_pressed">#23a2de</color>
+    <color name="fab_pressed">#1d86b8</color>
 </resources>

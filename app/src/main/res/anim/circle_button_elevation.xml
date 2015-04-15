@@ -5,16 +5,16 @@
         <objectAnimator 
             android:duration="@android:integer/config_shortAnimTime"
             android:propertyName="translationZ"
-            android:valueFrom="@dimen/circle_button_elevation_low"
-            android:valueTo="@dimen/circle_button_elevation_high"
+            android:valueFrom="@dimen/circle_button_elevation_high"
+            android:valueTo="@dimen/circle_button_elevation_low"
             android:valueType="floatType" />
     </item>
     <item>
         <objectAnimator        
         	android:duration="@android:integer/config_shortAnimTime"
         	android:propertyName="translationZ"
-        	android:valueFrom="@dimen/circle_button_elevation_high"
-        	android:valueTo="@dimen/circle_button_elevation_low"
+        	android:valueFrom="@dimen/circle_button_elevation_low"
+        	android:valueTo="@dimen/circle_button_elevation_high"
         	android:valueType="floatType" />
     </item>
 
