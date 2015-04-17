@@ -1,6 +1,5 @@
 package mercandalli.com.jarvis.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -169,5 +168,10 @@ public class UserFragment extends Fragment {
             this.swipeRefreshLayout.setRefreshing(false);
             i=0;
         }
+    }
+
+    @Override
+    public boolean back() {
+        return false;
     }
 }

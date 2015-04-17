@@ -8,7 +8,6 @@ package mercandalli.com.jarvis.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -275,6 +274,8 @@ public class FileManagerFragmentMyCloud extends Fragment {
                 new IPostExecuteListener() {
                     @Override
                     public void execute(JSONObject json, String body) {
+                        if(!isAdded())
+                            return;
                         files = new ArrayList<>();
                         try {
                             if (json != null) {
@@ -334,4 +335,14 @@ public class FileManagerFragmentMyCloud extends Fragment {
 		}
 	}
 
+    @Override
+    public boolean back() {
+        if(this.id_file_path.peek()!=-1) {
+            FileManagerFragmentMyCloud.this.id_file_path.pop();
+            FileManagerFragmentMyCloud.this.refreshList();
+            return true;
+        }
+        else
+            return false;
+    }
 }

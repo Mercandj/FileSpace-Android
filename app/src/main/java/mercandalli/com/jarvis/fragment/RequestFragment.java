@@ -6,7 +6,6 @@
 
 package mercandalli.com.jarvis.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,4 +61,9 @@ public class RequestFragment extends Fragment {
 	public void deleteConsole() {
 		((EditText) rootView.findViewById(R.id.console)).setText("");
 	}
+
+    @Override
+    public boolean back() {
+        return false;
+    }
 }

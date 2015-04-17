@@ -7,7 +7,6 @@
 package mercandalli.com.jarvis.fragment;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -169,4 +168,9 @@ public class InformationManagerFragment extends Fragment {
 	        i=0;
 		}
 	}
+
+    @Override
+    public boolean back() {
+        return false;
+    }
 }

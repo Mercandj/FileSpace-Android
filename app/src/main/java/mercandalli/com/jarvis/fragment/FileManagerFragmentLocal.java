@@ -8,7 +8,6 @@ package mercandalli.com.jarvis.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
@@ -296,6 +295,11 @@ public class FileManagerFragmentLocal extends Fragment {
                 return false;
             }
         }
+        return false;
+    }
+
+    @Override
+    public boolean back() {
         return false;
     }
 }

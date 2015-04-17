@@ -6,7 +6,6 @@
 
 package mercandalli.com.jarvis.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -89,4 +88,9 @@ public class WebFragment extends Fragment {
 			
 		}
 	}
+
+    @Override
+    public boolean back() {
+        return false;
+    }
 }

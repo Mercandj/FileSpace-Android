@@ -6,7 +6,6 @@
 
 package mercandalli.com.jarvis.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -70,4 +69,9 @@ public class SettingsFragment extends Fragment {
 			recyclerView.setAdapter(new AdapterModelSetting(app, list));
 		}
 	}
+
+    @Override
+    public boolean back() {
+        return false;
+    }
 }

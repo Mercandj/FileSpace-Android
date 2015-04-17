@@ -6,7 +6,6 @@
 
 package mercandalli.com.jarvis.activity;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -29,6 +28,7 @@ import java.util.Stack;
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.config.Const;
 import mercandalli.com.jarvis.fragment.FileManagerFragment;
+import mercandalli.com.jarvis.fragment.Fragment;
 import mercandalli.com.jarvis.fragment.HomeFragment;
 import mercandalli.com.jarvis.fragment.InformationManagerFragment;
 import mercandalli.com.jarvis.fragment.RequestFragment;
@@ -393,6 +393,10 @@ public abstract class ApplicationDrawer extends Application {
         if(mDrawerLayout.isDrawerOpen(mDrawerList)) {
             mDrawerLayout.closeDrawer(mDrawerList);
             return true;
+        }
+        if(this.fragment!=null) {
+            if(this.fragment.back())
+                return true;
         }
         if(this.ID_FRAGMENT_VISITED==null) {
             Log.e("ApplicationDrawer", "backPressed() this.ID_FRAGMENT_VISITED==null");

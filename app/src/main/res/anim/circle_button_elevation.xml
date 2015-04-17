@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_pressed="true">
-        <objectAnimator 
+        <objectAnimator
             android:duration="@android:integer/config_shortAnimTime"
             android:propertyName="translationZ"
             android:valueFrom="@dimen/circle_button_elevation_high"
@@ -10,7 +10,7 @@
             android:valueType="floatType" />
     </item>
     <item>
-        <objectAnimator        
+        <objectAnimator
         	android:duration="@android:integer/config_shortAnimTime"
         	android:propertyName="translationZ"
         	android:valueFrom="@dimen/circle_button_elevation_low"

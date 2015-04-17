@@ -6,7 +6,6 @@
 
 package mercandalli.com.jarvis.fragment;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -77,10 +76,24 @@ public class FileManagerFragment extends Fragment {
 	}
 	
 	public int getCurrentFragmentIndex() {
-		return mViewPager.getCurrentItem();
+        int result = mViewPager.getCurrentItem();
+		if(result>=listFragment.length)
+            return -1;
+        return mViewPager.getCurrentItem();
 	}
-	
-	public static class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
+
+    @Override
+    public boolean back() {
+        int currentFragmentId = getCurrentFragmentIndex();
+        if(listFragment == null || currentFragmentId== -1)
+            return false;
+        Fragment fragment = listFragment[currentFragmentId];
+        if(fragment==null)
+            return false;
+        return fragment.back();
+    }
+
+    public static class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
 		Application app;
 		
 		public FileManagerFragmentPagerAdapter(FragmentManager fm, Application app) {
