@@ -176,7 +176,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
                                                     }
                                                 });
                                             }
-                                        }, "Cancel", null, modelFile.name);
+                                        }, "Cancel", null, modelFile.getNameExt());
                                         break;
 
                                     case 2:
