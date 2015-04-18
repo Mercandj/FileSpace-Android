@@ -30,8 +30,9 @@ import mercandalli.com.jarvis.config.Const;
 import mercandalli.com.jarvis.fragment.FileManagerFragment;
 import mercandalli.com.jarvis.fragment.Fragment;
 import mercandalli.com.jarvis.fragment.HomeFragment;
-import mercandalli.com.jarvis.fragment.InformationManagerFragment;
+import mercandalli.com.jarvis.fragment.InformationFragment;
 import mercandalli.com.jarvis.fragment.RequestFragment;
+import mercandalli.com.jarvis.fragment.RoboticsFragment;
 import mercandalli.com.jarvis.fragment.SettingsFragment;
 import mercandalli.com.jarvis.fragment.UserFragment;
 import mercandalli.com.jarvis.fragment.WebFragment;
@@ -73,38 +74,14 @@ public abstract class ApplicationDrawer extends Application {
         // Tab 0
         navDrawerItems.add(
         		new NavDrawerItem( this.getConfig().getUserUsername(), this.getConfig().getUrlServer(), R.drawable.ic_launcher, Const.TAB_VIEW_TYPE_PROFIL)
-        		);
+        );
         
         // Tab 1
         navDrawerItems.add(
         		new NavDrawerItem( "", R.drawable.ic_launcher, Const.TAB_VIEW_TYPE_SECTION)
-        		);
-     
-        // Tab 2
-        navDrawerItems.add(
-        		new NavDrawerItem( "Explore", new IListener() {
-						@Override
-						public void execute() {
-							fragment = new FileManagerFragment(ApplicationDrawer.this);
-					        FragmentManager fragmentManager = getFragmentManager();
-					        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-						}
-			        }, Const.TAB_VIEW_TYPE_NORMAL)
-        		);
-        
-        // Tab 3
-        navDrawerItems.add(
-        		new NavDrawerItem( "Informations", new IListener() {
-						@Override
-						public void execute() {
-							fragment = new InformationManagerFragment(ApplicationDrawer.this);
-					        FragmentManager fragmentManager = getFragmentManager();
-					        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-						}
-			        }, Const.TAB_VIEW_TYPE_NORMAL)
-        		);
+        );
 
-        // Tab 4
+        // Tab 2
         navDrawerItems.add(
                 new NavDrawerItem( "Home", new IListener() {
                     @Override
@@ -115,8 +92,44 @@ public abstract class ApplicationDrawer extends Application {
                     }
                 }, Const.TAB_VIEW_TYPE_NORMAL)
         );
+     
+        // Tab 3
+        navDrawerItems.add(
+        		new NavDrawerItem( "Explore", new IListener() {
+						@Override
+						public void execute() {
+							fragment = new FileManagerFragment(ApplicationDrawer.this);
+					        FragmentManager fragmentManager = getFragmentManager();
+					        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+						}
+			        }, Const.TAB_VIEW_TYPE_NORMAL)
+        );
+        
+        // Tab 4
+        navDrawerItems.add(
+        		new NavDrawerItem( "Informations", new IListener() {
+						@Override
+						public void execute() {
+							fragment = new InformationFragment(ApplicationDrawer.this);
+					        FragmentManager fragmentManager = getFragmentManager();
+					        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+						}
+			        }, Const.TAB_VIEW_TYPE_NORMAL)
+        );
 
         // Tab 5
+        navDrawerItems.add(
+                new NavDrawerItem( "Robotics", new IListener() {
+                    @Override
+                    public void execute() {
+                        fragment = new RoboticsFragment(ApplicationDrawer.this);
+                        FragmentManager fragmentManager = getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                    }
+                }, Const.TAB_VIEW_TYPE_NORMAL)
+        );
+
+        // Tab 6
         navDrawerItems.add(
                 new NavDrawerItem( "Users", new IListener() {
                     @Override
@@ -128,7 +141,7 @@ public abstract class ApplicationDrawer extends Application {
                 }, Const.TAB_VIEW_TYPE_NORMAL)
         );
         
-        // Tab 6
+        // Tab 7
         navDrawerItems.add(
         		new NavDrawerItem( "Request", new IListener() {
 						@Override
@@ -140,12 +153,12 @@ public abstract class ApplicationDrawer extends Application {
 			            }, Const.TAB_VIEW_TYPE_NORMAL)
         );
         
-        // Tab 7
+        // Tab 8
         navDrawerItems.add(
         		new NavDrawerItem( "", R.drawable.ic_launcher, Const.TAB_VIEW_TYPE_SECTION)
         );
         
-        // Tab 8
+        // Tab 9
         navDrawerItems.add(
         		new NavDrawerItem( 
     				"Settings",
@@ -156,12 +169,12 @@ public abstract class ApplicationDrawer extends Application {
 					        FragmentManager fragmentManager = getFragmentManager();
 					        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 						}
-			                },
-			        R.drawable.ic_settings_grey,
-			        Const.TAB_VIEW_TYPE_SETTING)
+                },
+                R.drawable.ic_settings_grey,
+                Const.TAB_VIEW_TYPE_SETTING)
         );
 
-        // Tab 9
+        // Tab 10
         navDrawerItems.add(
                 new NavDrawerItem(
                         "Log out",
@@ -181,7 +194,7 @@ public abstract class ApplicationDrawer extends Application {
                         Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE)
         );
         
-        // Tab 10
+        // Tab 11
         navDrawerItems.add(
         		new NavDrawerItem(
         			"About Dev",

@@ -40,7 +40,7 @@ import mercandalli.com.jarvis.model.ModelInformation;
 import mercandalli.com.jarvis.net.TaskGet;
 
 
-public class InformationManagerFragment extends Fragment {
+public class InformationFragment extends Fragment {
 
 	Application app;
 	private View rootView;
@@ -58,11 +58,11 @@ public class InformationManagerFragment extends Fragment {
         app = (Application) activity;
     }
     
-    public InformationManagerFragment() {
+    public InformationFragment() {
     	super();
 	}
 
-	public InformationManagerFragment(Application app) {
+	public InformationFragment(Application app) {
 		super();
 		this.app = app;
 	}
@@ -78,9 +78,7 @@ public class InformationManagerFragment extends Fragment {
         recyclerView.setLayoutManager(mLayoutManager);
 
         ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.GONE);
-        
-        refreshList();
-        
+
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
 		swipeRefreshLayout.setColorSchemeResources(
 				android.R.color.holo_blue_bright,
@@ -94,6 +92,8 @@ public class InformationManagerFragment extends Fragment {
 				refreshList();
 			}
 		});
+
+        refreshList();
         
         return rootView;
 	}

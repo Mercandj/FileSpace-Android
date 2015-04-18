@@ -1,36 +1,49 @@
 package mercandalli.com.jarvis.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.ToggleButton;
-
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.activity.Application;
-import mercandalli.com.jarvis.listener.IPostExecuteListener;
-import mercandalli.com.jarvis.net.TaskGet;
-import mercandalli.com.jarvis.net.TaskPost;
+import mercandalli.com.jarvis.adapter.AdapterModelHome;
+import mercandalli.com.jarvis.config.Const;
+import mercandalli.com.jarvis.model.ModelHome;
 
 /**
  * Created by Jonathan on 03/01/2015.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements TextToSpeech.OnInitListener {
 
     private Application app;
     private View rootView;
-    private ToggleButton buttonLED;
-    private ProgressBar circularProgressBar;
+
+    private RecyclerView recyclerView;
+    private AdapterModelHome mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    List<ModelHome> list;
+    private ProgressBar circulerProgressBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+    private Intent intentVoiceRecogService;
 
     public HomeFragment(Application app) {
         this.app = app;
@@ -39,61 +52,133 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        circulerProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
 
-        this.circularProgressBar = (ProgressBar) this.rootView.findViewById(R.id.circularProgressBar);
-        this.circularProgressBar.setVisibility(View.VISIBLE);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(mLayoutManager);
 
-        this.buttonLED = (ToggleButton) this.rootView.findViewById(R.id.toggleButtonLED);
-        this.buttonLED.setVisibility(View.INVISIBLE);
-        this.buttonLED.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.GONE);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                List < BasicNameValuePair > parameters = new ArrayList< BasicNameValuePair >();
-                parameters.add(new BasicNameValuePair("value", (isChecked) ? "1" : "0"));
-                new TaskPost(
-                        HomeFragment.this.app,
-                        HomeFragment.this.app.getConfig().getUrlServer() + HomeFragment.this.app.getConfig().routeHome + "/18",
-                        null,
-                        parameters
-                ).execute();
+            public void onRefresh() {
+                refreshList();
             }
         });
 
-        if(this.app.isInternetConnection())
-            new TaskGet(
-                    this.app,
-                    this.app.getConfig().getUser(),
-                    this.app.getConfig().getUrlServer() + HomeFragment.this.app.getConfig().routeHome + "/18",
-                    new IPostExecuteListener() {
-                        @Override
-                        public void execute(JSONObject json, String body) {
-                            try {
-                                if (json.has("result")) {
-                                    JSONArray result = json.getJSONArray("result");
-                                    if (result.getJSONObject(0).has("value")) {
-                                        JSONObject value = new JSONObject(result.getJSONObject(0).getString("value"));
-                                        if (value.has("value")) {
-                                            HomeFragment.this.buttonLED.setChecked(value.getInt("value") == 1);
-
-                                            HomeFragment.this.buttonLED.setVisibility(View.VISIBLE);
-                                            HomeFragment.this.circularProgressBar.setVisibility(View.INVISIBLE);
-                                        }
-                                    }
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    },
-                    null
-            ).execute();
+        refreshList();
 
         return rootView;
+    }
+
+    public void refreshList() {
+        list = new ArrayList<ModelHome>();
+        list.add(new ModelHome("Home", Const.TAB_VIEW_TYPE_SECTION));
+        updateAdapter();
+    }
+
+    public void updateAdapter() {
+        if (this.recyclerView != null && this.list != null && this.isAdded()) {
+            this.circulerProgressBar.setVisibility(View.GONE);
+
+            this.mAdapter = new AdapterModelHome(app, list);
+            this.recyclerView.setAdapter(mAdapter);
+            this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
+
+            if (((ImageButton) rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
+                ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
+                Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
+                ((ImageButton) rootView.findViewById(R.id.circle)).startAnimation(animOpen);
+            }
+
+            ((ImageButton) rootView.findViewById(R.id.circle)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    // Specify the calling package to identify your application
+                    intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getClass()
+                            .getPackage().getName());
+
+                    // Display an hint to the user about what he should say.
+                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Jarvis");
+
+                    // Given an hint to the recognizer about what the user is going to say
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
+
+                    int noOfMatches = 1;
+                    // Specify how many results you want to receive. The results will be
+                    // sorted where the first result is the one with higher confidence.
+
+                    intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, noOfMatches);
+
+                    HomeFragment.this.startActivityForResult(intent, 1001);
+                }
+
+            });
+
+            this.mAdapter.setOnItemClickListener(new AdapterModelHome.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+
+                }
+            });
+
+            this.swipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Override
     public boolean back() {
         return false;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1001 && data!=null) {
+            ArrayList<String> textMatchList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+            if (textMatchList != null)
+                if (!textMatchList.isEmpty())
+                    speakWords(textMatchList.get(0));
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    public TextToSpeech myTTS;
+
+    // speak the user text
+    public void speakWords(String speech) {
+        if(speech==null) return;
+        else if(speech.equals("")||speech.equals(" ")) return;
+
+        if(myTTS==null)
+            myTTS = new TextToSpeech(this.getActivity(), (TextToSpeech.OnInitListener) this );
+
+        HashMap<String,String> ttsParams = new HashMap<String, String>();
+        ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, this.getActivity().getPackageName());
+        myTTS.speak(speech, TextToSpeech.QUEUE_FLUSH, ttsParams);
+    }
+
+    @Override
+    public void onInit(int initStatus) {
+        // check for successful instantiation
+        if (initStatus == TextToSpeech.SUCCESS) {
+            if (myTTS.isLanguageAvailable(Locale.US) == TextToSpeech.LANG_AVAILABLE)
+                myTTS.setLanguage(Locale.US);
+        } else if (initStatus == TextToSpeech.ERROR) {
+            Toast.makeText(getActivity(), "Désolé! Erreur dans Text-To-Speech...", Toast.LENGTH_LONG).show();
+        }
     }
 }

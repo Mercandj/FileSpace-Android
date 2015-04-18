@@ -12,8 +12,11 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
+import mercandalli.com.jarvis.SHA1;
 import mercandalli.com.jarvis.activity.Application;
 
 public class ModelUser extends Model {
@@ -76,35 +79,21 @@ public class ModelUser extends Model {
         String date = dateFormat.format(date_last_connection.getTime());
         return "#" + this.id + "   " + date + "   " + this.app.getLibrary().humanReadableByteCount(size_files);
     }
-
-	public JSONObject getJsonRegister() {
-		if(username!=null && password!=null) {
-			JSONObject json = new JSONObject();			
-			try {
-				json.put("username", username);
-				json.put("password", password);
-			} catch (JSONException e) {
-				e.printStackTrace();
-				return null;
-			}
-			return json;
-		}
-		return null;
-	}
-	
-	public JSONObject getJsonLogin() {
-		return getJsonRegister();
-	}
 	
 	public String getAccessLogin() {
-		if(currentToken==null)
-			return username;
-		return currentToken;
+		if(this.currentToken==null)
+			return this.username;
+		return this.currentToken;
 	}
 	
 	public String getAccessPassword() {
-		if(currentToken==null)
-			return password;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String currentDate = dateFormatGmt.format(calendar.getTime());
+        if(currentToken==null)
+            return SHA1.execute(SHA1.execute(this.password) + currentDate);
 		return "empty";
 	}
 }

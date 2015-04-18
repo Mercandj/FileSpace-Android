@@ -4,29 +4,45 @@
 		MERCANDALLI Jonathan
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="top"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
-    <ToggleButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New ToggleButton"
-        android:id="@+id/toggleButtonLED"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:checked="false"
-        android:textOff="@string/OFF"
-        android:textOn="@string/ON" />
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true" >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/my_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:scrollbars="vertical" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <ProgressBar
-        android:id="@+id/circularProgressBar"
+        android:id="@+id/circulerProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
 
+    <ImageButton
+        android:id="@+id/circle"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="25dp"
+        android:background="@drawable/circle_button_ripple"
+        android:elevation="@dimen/circle_button_elevation_high"
+        android:padding="15dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/perm_group_microphone_white"
+        android:stateListAnimator="@anim/circle_button_elevation"
+        android:tint="@android:color/white" />
 
 </RelativeLayout>

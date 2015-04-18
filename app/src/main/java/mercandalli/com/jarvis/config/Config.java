@@ -23,7 +23,7 @@ public class Config {
     public final String aboutURL 				= "http://mercandalli.com/";
     public final String routeFile	 			= "file";
     public final String routeInformation		= "information";
-    public final String routeHome       		= "home";
+    public final String routeRobotics       	= "robotics";
     public final String routeUser 		        = "user";
     public final String routeUserMessage        = "user_message";
     public String currentToken					= null;
