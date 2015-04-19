@@ -15,7 +15,7 @@ public class InterpreterActionEquals extends Interpreter {
     public String interpret(String input) {
         String output = null;
 
-        if(input.equals("recherche google") || input.equals("google") || input.equals("ouvre google"))
+        if(input.equals("recherche") || input.equals("recherche google") || input.equals("google") || input.equals("ouvre google"))
             output = ENUM_Action.WEB_SEARCH.action.action(this.app, "http://www.google.com/");
 
         return output;

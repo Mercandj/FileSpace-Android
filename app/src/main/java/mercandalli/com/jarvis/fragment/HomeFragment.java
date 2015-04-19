@@ -148,6 +148,8 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                     {
                         Toast.makeText(getActivity(), "Google voice recognition not found.", Toast.LENGTH_LONG).show();
                     }
+                    if(myTTS==null)
+                        myTTS = new TextToSpeech(HomeFragment.this.getActivity(), HomeFragment.this);
                 }
 
             });
@@ -172,6 +174,10 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == 1001 && data!=null) {
+
+            if(myTTS==null)
+                myTTS = new TextToSpeech(this.getActivity(), this);
+
             ArrayList<String> textMatchList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
             if (textMatchList != null)
@@ -191,7 +197,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
         else if(speech.equals("")||speech.equals(" ")) return;
 
         if(myTTS==null)
-            myTTS = new TextToSpeech(this.getActivity(), this );
+            myTTS = new TextToSpeech(this.getActivity(), this);
 
         HashMap<String,String> ttsParams = new HashMap<>();
         ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, this.getActivity().getPackageName());

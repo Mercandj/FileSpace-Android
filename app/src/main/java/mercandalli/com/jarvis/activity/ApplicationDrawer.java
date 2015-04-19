@@ -44,8 +44,8 @@ import mercandalli.com.jarvis.navdrawer.NavDrawerListAdapter;
 public abstract class ApplicationDrawer extends Application {
 	
 	public static final int[] noSelectable 	= new int[] {Const.TAB_VIEW_TYPE_PROFIL, Const.TAB_VIEW_TYPE_SECTION, Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE};
-    
-    Fragment fragment;
+
+    public Fragment fragment;
     private final int INIT_ID_FRAGMENT = 2;
     private Stack<Integer> ID_FRAGMENT_VISITED = new Stack<>();
     

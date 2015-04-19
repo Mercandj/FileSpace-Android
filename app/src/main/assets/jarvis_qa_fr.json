@@ -1,0 +1,29 @@
+{
+    "author" : "Jonathan Mercandalli",
+    "date_creation" : "2015-04-19 19:19:00",
+    "app_name" : "Jarvis",
+    "description" : "Direct Q/A",
+    "qa" :
+    [
+        {
+            "q" :
+            [
+                "merci", "merci beaucoup", "merci mon brave"
+            ],
+            "a" :
+            [
+                "De rien.", "Mais de rien."
+            ]
+        },
+        {
+            "q" :
+            [
+                "jarvis", "jarvi", "qui est jarvis", "qui est jarvi", "mais qui est jarvi"
+            ],
+            "a" :
+            [
+                "C'est moi.", "Jarvis c'est moi."
+            ]
+        }
+    ]
+}

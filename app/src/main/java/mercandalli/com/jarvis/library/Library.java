@@ -1,5 +1,7 @@
 package mercandalli.com.jarvis.library;
 
+import java.util.Random;
+
 import mercandalli.com.jarvis.activity.Application;
 
 /**
@@ -23,5 +25,10 @@ public class Library {
         int exp = (int) (Math.log(bytes) / Math.log(unit));
         String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+    }
+
+    public int random(int min, int max) {
+        Random r = new Random();
+        return r.nextInt(max - min + 1) + min;
     }
 }
