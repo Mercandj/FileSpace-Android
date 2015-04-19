@@ -6,4 +6,5 @@ public class Const {
 	public static final int TAB_VIEW_TYPE_SETTING		        = 2;
     public static final int TAB_VIEW_TYPE_SETTING_NO_SELECTABLE	= 3;
 	public static final int TAB_VIEW_TYPE_PROFIL	 	        = 4;
+    public static final int TAB_VIEW_TYPE_TWO_BUTTONS           = 5;
 }

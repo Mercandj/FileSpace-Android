@@ -6,6 +6,8 @@
 
 package mercandalli.com.jarvis.model;
 
+import android.view.View;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,23 +16,27 @@ import mercandalli.com.jarvis.config.Const;
 
 public class ModelHome extends Model {
 
-	public String title;
-	public String value;
+	public String title1, title2;
 	public int viewType = Const.TAB_VIEW_TYPE_NORMAL;
+
+    public View.OnClickListener listener1, listener2;
 
 	public ModelHome() {
 		super();
 	}
 
-	public ModelHome(String title, String value) {
+	public ModelHome(String title1, View.OnClickListener listener1, String title2, View.OnClickListener listener2, int viewType) {
 		super();
-		this.title = title;
-		this.value = value;
+		this.title1 = title1;
+        this.listener1 = listener1;
+        this.title2 = title2;
+        this.listener2 = listener2;
+        this.viewType = viewType;
 	}
 
-	public ModelHome(String title, int viewType) {
+	public ModelHome(String title1, int viewType) {
 		super();
-		this.title = title;
+		this.title1 = title1;
 		this.viewType = viewType;
 	}
 
@@ -38,10 +44,10 @@ public class ModelHome extends Model {
 		super();
 		this.app = app;
 		try {
-			if(json.has("title"))
-				this.title = json.getString("title");
-			if(json.has("value"))
-				this.value = json.getString("value");
+			if(json.has("title1"))
+				this.title1 = json.getString("title1");
+			if(json.has("title2"))
+				this.title2 = json.getString("title2");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

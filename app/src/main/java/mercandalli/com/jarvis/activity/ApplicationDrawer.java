@@ -95,7 +95,7 @@ public abstract class ApplicationDrawer extends Application {
      
         // Tab 3
         navDrawerItems.add(
-        		new NavDrawerItem( "Explore", new IListener() {
+        		new NavDrawerItem( "Files", new IListener() {
 						@Override
 						public void execute() {
 							fragment = new FileManagerFragment(ApplicationDrawer.this);
@@ -104,17 +104,17 @@ public abstract class ApplicationDrawer extends Application {
 						}
 			        }, Const.TAB_VIEW_TYPE_NORMAL)
         );
-        
+
         // Tab 4
         navDrawerItems.add(
-        		new NavDrawerItem( "Informations", new IListener() {
-						@Override
-						public void execute() {
-							fragment = new InformationFragment(ApplicationDrawer.this);
-					        FragmentManager fragmentManager = getFragmentManager();
-					        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-						}
-			        }, Const.TAB_VIEW_TYPE_NORMAL)
+                new NavDrawerItem( "Talks", new IListener() {
+                    @Override
+                    public void execute() {
+                        fragment = new UserFragment(ApplicationDrawer.this);
+                        FragmentManager fragmentManager = getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                    }
+                }, Const.TAB_VIEW_TYPE_NORMAL)
         );
 
         // Tab 5
@@ -128,17 +128,17 @@ public abstract class ApplicationDrawer extends Application {
                     }
                 }, Const.TAB_VIEW_TYPE_NORMAL)
         );
-
+        
         // Tab 6
         navDrawerItems.add(
-                new NavDrawerItem( "Users", new IListener() {
-                    @Override
-                    public void execute() {
-                        fragment = new UserFragment(ApplicationDrawer.this);
-                        FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-                    }
-                }, Const.TAB_VIEW_TYPE_NORMAL)
+        		new NavDrawerItem( "Informations", new IListener() {
+						@Override
+						public void execute() {
+							fragment = new InformationFragment(ApplicationDrawer.this);
+					        FragmentManager fragmentManager = getFragmentManager();
+					        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+						}
+			        }, Const.TAB_VIEW_TYPE_NORMAL)
         );
         
         // Tab 7
@@ -235,7 +235,9 @@ public abstract class ApplicationDrawer extends Application {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 	}
 	
-	private void selectItem(int position) {
+	public void selectItem(int position) {
+        if(position >= navDrawerItems.size())
+            return;
 		for(NavDrawerItem nav : navDrawerItems.getListe())
 			if(navDrawerItems.get(position).equals(nav)) {
                 for (int i : noSelectable)

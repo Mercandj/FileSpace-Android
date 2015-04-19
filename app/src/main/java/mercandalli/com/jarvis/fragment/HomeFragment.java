@@ -23,7 +23,10 @@ import java.util.List;
 import java.util.Locale;
 
 import mercandalli.com.jarvis.R;
+import mercandalli.com.jarvis.action.Interpreter;
+import mercandalli.com.jarvis.action.InterpreterMain;
 import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.activity.ApplicationDrawer;
 import mercandalli.com.jarvis.adapter.AdapterModelHome;
 import mercandalli.com.jarvis.config.Const;
 import mercandalli.com.jarvis.model.ModelHome;
@@ -43,7 +46,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
     private ProgressBar circulerProgressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private Intent intentVoiceRecogService;
+    public TextToSpeech myTTS;
 
     public HomeFragment(Application app) {
         this.app = app;
@@ -83,6 +86,24 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
     public void refreshList() {
         list = new ArrayList<ModelHome>();
         list.add(new ModelHome("Home", Const.TAB_VIEW_TYPE_SECTION));
+        list.add(new ModelHome(
+                "Files",
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(app instanceof ApplicationDrawer) {
+                            ((ApplicationDrawer)app).selectItem(3);
+                        }
+                    }
+                },
+                "Talks",
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((ApplicationDrawer)app).selectItem(4);
+                    }
+                },
+                Const.TAB_VIEW_TYPE_TWO_BUTTONS));
         updateAdapter();
     }
 
@@ -148,15 +169,15 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
             ArrayList<String> textMatchList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
             if (textMatchList != null)
-                if (!textMatchList.isEmpty())
-                    speakWords(textMatchList.get(0));
+                if (!textMatchList.isEmpty()) {
+                    Interpreter interpreter = new InterpreterMain(this.app);
+                    String input = textMatchList.get(0);
+                    speakWords(interpreter.interpret(input));
+                }
         }
 
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-
-    public TextToSpeech myTTS;
 
     // speak the user text
     public void speakWords(String speech) {
@@ -178,7 +199,14 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
             if (myTTS.isLanguageAvailable(Locale.US) == TextToSpeech.LANG_AVAILABLE)
                 myTTS.setLanguage(Locale.US);
         } else if (initStatus == TextToSpeech.ERROR) {
-            Toast.makeText(getActivity(), "Désolé! Erreur dans Text-To-Speech...", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Text-To-Speech error...", Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if(myTTS != null)
+            myTTS.shutdown();
     }
 }

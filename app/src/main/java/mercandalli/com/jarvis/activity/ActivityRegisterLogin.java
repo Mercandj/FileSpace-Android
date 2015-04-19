@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.ImageView;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.fragment.InscriptionFragment;
@@ -26,17 +25,15 @@ public class ActivityRegisterLogin extends Application {
     private int INIT_FRAGMENT = 1;
     public Fragment listFragment[] = new Fragment[NB_FRAGMENT];
     private ViewPager mViewPager;
-    private RegisterLoginPagerAdapter mPagerAdapter;
-    private PagerSlidingTabStrip tabs;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.view_register_login);
 		super.onCreate(savedInstanceState);
 
-        mPagerAdapter = new RegisterLoginPagerAdapter(this.getFragmentManager(), this);
+        RegisterLoginPagerAdapter mPagerAdapter = new RegisterLoginPagerAdapter(this.getFragmentManager(), this);
 
-        tabs = (PagerSlidingTabStrip) this.findViewById(R.id.tabs);
+        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) this.findViewById(R.id.tabs);
         mViewPager = (ViewPager) this.findViewById(R.id.pager);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -69,7 +66,7 @@ public class ActivityRegisterLogin extends Application {
             if(!this.getConfig().getUserUsername().equals("") && !this.getConfig().getUserPassword().equals("") && this.getConfig().getUserId() != -1)
         	    connectionSucceed();
 
-        ((ImageView) this.findViewById(R.id.signin)).setOnClickListener(new View.OnClickListener() {
+        (this.findViewById(R.id.signin)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(listFragment[getCurrentFragmentIndex()] != null) {
@@ -115,10 +112,10 @@ public class ActivityRegisterLogin extends Application {
 
         @Override
         public Fragment getItem(int i) {
-            Fragment fragment = null;
+            Fragment fragment;
             switch(i) {
                 case 0:		fragment = new InscriptionFragment();  	break;
-                case 1:		fragment = new LoginFragment(); 	break;
+                case 1:		fragment = new LoginFragment(); 	    break;
                 default:	fragment = new InscriptionFragment();	break;
             }
             listFragment[i] = fragment;

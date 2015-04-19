@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -27,9 +28,11 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
 
     @Override
     public AdapterModelHome.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType== Const.TAB_VIEW_TYPE_SECTION)
+        if(viewType == Const.TAB_VIEW_TYPE_SECTION)
     		return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_information_section, parent, false), viewType);
-    	return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_information, parent, false), viewType);
+        if(viewType == Const.TAB_VIEW_TYPE_TWO_BUTTONS)
+            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_two_buttons, parent, false), viewType);
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_information, parent, false), viewType);
     }
     
     @Override
@@ -37,18 +40,29 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
         ModelHome model = itemsData.get(position);
         switch(model.viewType) {
     	case Const.TAB_VIEW_TYPE_NORMAL:
-    		viewHolder.title.setText(""+model.title);
-            viewHolder.value.setText(""+model.value);
+    		viewHolder.title1.setText(""+model.title1);
+            viewHolder.title2.setText(""+model.title2);
     		break;
     	case Const.TAB_VIEW_TYPE_SECTION:
-    		viewHolder.title.setText(""+model.title);
-    		Font.applyFont(app, viewHolder.title, "fonts/MYRIADAB.TTF");
+    		viewHolder.title1.setText(""+model.title1);
+    		Font.applyFont(app, viewHolder.title1, "fonts/MYRIADAB.TTF");
     		break;
+        case Const.TAB_VIEW_TYPE_TWO_BUTTONS:
+            viewHolder.button1.setText(""+model.title1);
+            viewHolder.button2.setText(""+model.title2);
+            if(model.listener1 != null)
+                viewHolder.button1.setOnClickListener(model.listener1);
+            if(model.listener2 != null)
+                viewHolder.button2.setOnClickListener(model.listener2);
+            Font.applyFont(app, viewHolder.button1, "fonts/MYRIADAB.TTF");
+            Font.applyFont(app, viewHolder.button2, "fonts/MYRIADAB.TTF");
+            break;
     	}
     }
     
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {        
-        public TextView title, value;
+        public TextView title1, title2;
+        public Button button1, button2;
         public RelativeLayout item;
          
         public ViewHolder(View itemLayoutView, int viewType) {
@@ -56,12 +70,16 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
             switch(viewType) {
         	case Const.TAB_VIEW_TYPE_NORMAL:
         		item = (RelativeLayout) itemLayoutView.findViewById(R.id.item);
-                title = (TextView) itemLayoutView.findViewById(R.id.title);
-                value = (TextView) itemLayoutView.findViewById(R.id.value);
+                title1 = (TextView) itemLayoutView.findViewById(R.id.title);
+                title2 = (TextView) itemLayoutView.findViewById(R.id.value);
         		break;
         	case Const.TAB_VIEW_TYPE_SECTION:
-        		title = (TextView) itemLayoutView.findViewById(R.id.title);
+                title1 = (TextView) itemLayoutView.findViewById(R.id.title);
         		break;
+            case Const.TAB_VIEW_TYPE_TWO_BUTTONS:
+                button1 = (Button) itemLayoutView.findViewById(R.id.button1);
+                button2 = (Button) itemLayoutView.findViewById(R.id.button2);
+                break;
         	}
             itemLayoutView.setOnClickListener(this);
         }
