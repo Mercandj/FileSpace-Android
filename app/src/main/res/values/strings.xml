@@ -43,6 +43,7 @@
     <string name="rename">Rename</string>
     <string name="delete">Delete</string>
     <string name="cut">Cut</string>
+    <string name="properties">Properties</string>
 
     <string name="menu_action_search">Search</string>
     <string name="menu_action_delete">Delete</string>

@@ -19,7 +19,8 @@ public enum ModelFileTypeENUM {
     WORD(new ModelFileType("Word", new String[] {"doc", "docx"})),
     EXCEL(new ModelFileType("Excel", new String[] {"xlsx"})),
     VCF(new ModelFileType("Business card", new String[] {"vcf"})),
-    PDF(new ModelFileType("Pdf","pdf"));
+    PDF(new ModelFileType("Pdf","pdf")),
+    DIRECTORY(new ModelFileType("Directory","dir"));
 	
 	public ModelFileType type;
 	

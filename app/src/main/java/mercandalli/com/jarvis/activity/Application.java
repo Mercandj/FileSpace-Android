@@ -79,21 +79,23 @@ public abstract class Application extends ActionBarActivity {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(title);
 		builder.setMessage(message);
-		builder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
-		    public void onClick(DialogInterface dialog, int which) {
-		    	if(positiveListener!=null)
-		    		positiveListener.execute();
-		        dialog.dismiss();
-		    }
-		});
-		builder.setNegativeButton(negative, new DialogInterface.OnClickListener() {
-		    @Override
-		    public void onClick(DialogInterface dialog, int which) {
-		    	if(negativeListener!=null)
-		    		negativeListener.execute();
-		        dialog.dismiss();
-		    }
-		});
+        if(positive != null)
+            builder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    if(positiveListener!=null)
+                        positiveListener.execute();
+                    dialog.dismiss();
+                }
+            });
+        if(negative != null)
+            builder.setNegativeButton(negative, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if(negativeListener!=null)
+                        negativeListener.execute();
+                    dialog.dismiss();
+                }
+            });
 		AlertDialog alert = builder.create();
 		alert.show();
 	}

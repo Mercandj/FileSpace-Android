@@ -147,9 +147,9 @@ public class FileManagerFragmentMyCloud extends Fragment {
             @Override
             public void execute(final ModelFile modelFile) {
                 final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentMyCloud.this.app);
-                String[] menuList = { getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut) };
+                String[] menuList = { getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
                 if(!modelFile.directory)
-                    menuList = new String[] { getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), (modelFile.public_) ? "Become private" : "Become public" };
+                    menuList = new String[] { getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile.public_) ? "Become private" : "Become public" };
                 menuAleart.setTitle(getString(R.string.action));
                 menuAleart.setItems(menuList,
                         new DialogInterface.OnClickListener() {
@@ -200,6 +200,16 @@ public class FileManagerFragmentMyCloud extends Fragment {
                                         break;
 
                                     case 4:
+                                        FileManagerFragmentMyCloud.this.app.alert(
+                                                getString(R.string.properties) + " : " + modelFile.name,
+                                                "Name : " + modelFile.name+"\nExtension : " + modelFile.type+"\nType : " + modelFile.type.getTitle()+"\nSize : " + app.getLibrary().humanReadableByteCount(modelFile.size),
+                                                "OK",
+                                                null,
+                                                null,
+                                                null);
+                                        break;
+
+                                    case 5:
                                         modelFile.setPublic(!modelFile.public_, new IPostExecuteListener() {
                                             @Override
                                             public void execute(JSONObject json, String body) {
