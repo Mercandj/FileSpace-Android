@@ -1,5 +1,6 @@
 package mercandalli.com.jarvis.fragment;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -13,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -62,7 +62,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
 
-        ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.GONE);
+        (rootView.findViewById(R.id.circle)).setVisibility(View.GONE);
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(
@@ -84,7 +84,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
     }
 
     public void refreshList() {
-        list = new ArrayList<ModelHome>();
+        list = new ArrayList<>();
         list.add(new ModelHome("Home", Const.TAB_VIEW_TYPE_SECTION));
         list.add(new ModelHome(
                 "Files",
@@ -115,33 +115,39 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
             this.recyclerView.setAdapter(mAdapter);
             this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
 
-            if (((ImageButton) rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
-                ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
+            if ((rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
+                (rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
                 Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
-                ((ImageButton) rootView.findViewById(R.id.circle)).startAnimation(animOpen);
+                (rootView.findViewById(R.id.circle)).startAnimation(animOpen);
             }
 
-            ((ImageButton) rootView.findViewById(R.id.circle)).setOnClickListener(new View.OnClickListener() {
+            (rootView.findViewById(R.id.circle)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                    // Specify the calling package to identify your application
-                    intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getClass()
-                            .getPackage().getName());
+                    try {
+                        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                        // Specify the calling package to identify your application
+                        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getClass()
+                                .getPackage().getName());
 
-                    // Display an hint to the user about what he should say.
-                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Jarvis");
+                        // Display an hint to the user about what he should say.
+                        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Jarvis");
 
-                    // Given an hint to the recognizer about what the user is going to say
-                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
+                        // Given an hint to the recognizer about what the user is going to say
+                        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
 
-                    int noOfMatches = 1;
-                    // Specify how many results you want to receive. The results will be
-                    // sorted where the first result is the one with higher confidence.
+                        int noOfMatches = 1;
+                        // Specify how many results you want to receive. The results will be
+                        // sorted where the first result is the one with higher confidence.
 
-                    intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, noOfMatches);
+                        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, noOfMatches);
 
-                    HomeFragment.this.startActivityForResult(intent, 1001);
+                        HomeFragment.this.startActivityForResult(intent, 1001);
+                    }
+                    catch(ActivityNotFoundException e)
+                    {
+                        Toast.makeText(getActivity(), "Google voice recognition not found.", Toast.LENGTH_LONG).show();
+                    }
                 }
 
             });
@@ -185,9 +191,9 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
         else if(speech.equals("")||speech.equals(" ")) return;
 
         if(myTTS==null)
-            myTTS = new TextToSpeech(this.getActivity(), (TextToSpeech.OnInitListener) this );
+            myTTS = new TextToSpeech(this.getActivity(), this );
 
-        HashMap<String,String> ttsParams = new HashMap<String, String>();
+        HashMap<String,String> ttsParams = new HashMap<>();
         ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, this.getActivity().getPackageName());
         myTTS.speak(speech, TextToSpeech.QUEUE_FLUSH, ttsParams);
     }

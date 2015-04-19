@@ -76,8 +76,10 @@ public class FileManagerFragment extends Fragment {
 	}
 	
 	public int getCurrentFragmentIndex() {
+        if(mViewPager == null)
+            return -1;
         int result = mViewPager.getCurrentItem();
-		if(result>=listFragment.length)
+		if(result >= listFragment.length)
             return -1;
         return mViewPager.getCurrentItem();
 	}

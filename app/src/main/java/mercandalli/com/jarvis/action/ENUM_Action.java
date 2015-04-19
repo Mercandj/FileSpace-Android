@@ -6,6 +6,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.provider.Settings;
@@ -16,7 +17,7 @@ public enum ENUM_Action {
 	
 	BATTERIE(new Action() {
 			@Override
-			public String action(Application app) {
+			public String action(Application app, String input) {
 				IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 				Intent batteryStatus = app.registerReceiver(null, ifilter);
 				int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
@@ -31,7 +32,7 @@ public enum ENUM_Action {
 	),
 	WIFI(new Action() {
 			@Override
-			public String action(Application app) {
+			public String action(Application app, String input) {
 				WifiManager wifiManager = (WifiManager) app.getSystemService(Context.WIFI_SERVICE);
 				if(wifiManager.getWifiState()==WifiManager.WIFI_STATE_ENABLED)
 					return "Le wifi est activ�.";
@@ -42,7 +43,7 @@ public enum ENUM_Action {
 	),
 	WIFI_ON(new Action() {
 			@Override
-			public String action(Application app) {
+			public String action(Application app, String input) {
 				WifiManager wifiManager = (WifiManager) app.getSystemService(Context.WIFI_SERVICE);
 				wifiManager.setWifiEnabled(true);
 				return "Le wifi est activ�.";
@@ -51,7 +52,7 @@ public enum ENUM_Action {
 	),
 	WIFI_OFF(new Action() {
 			@Override
-			public String action(Application app) {
+			public String action(Application app, String input) {
 				WifiManager wifiManager = (WifiManager) app.getSystemService(Context.WIFI_SERVICE);
 				wifiManager.setWifiEnabled(false);
 				return "Le wifi est �teint.";
@@ -60,7 +61,7 @@ public enum ENUM_Action {
 	),
 	MODE_AVION(new Action() {
 			@Override
-			public String action(Application app) {
+			public String action(Application app, String input) {
 				if(Settings.System.getInt(app.getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1)
 					return "Tu es en mode avion.";
 				else
@@ -70,7 +71,7 @@ public enum ENUM_Action {
 	),
 	LOCALISATION(new Action() {
 			@Override
-			public String action(Application app) {
+			public String action(Application app, String input) {
 				LocationManager myLocationManager;
 				String PROVIDER = LocationManager.NETWORK_PROVIDER;				
 				myLocationManager = (LocationManager) app.getSystemService(Context.LOCATION_SERVICE);
@@ -87,7 +88,7 @@ public enum ENUM_Action {
 	),	
 	VERSION_DROID(new Action() {
 			@Override
-			public String action(Application app) {
+			public String action(Application app, String input) {
                 try {
                     return app.getPackageManager().getPackageInfo(app.getPackageName(), 0).versionName;
                 } catch (PackageManager.NameNotFoundException e) {
@@ -99,12 +100,21 @@ public enum ENUM_Action {
 	),
     QUIT(new Action() {
         @Override
-        public String action(Application app) {
+        public String action(Application app, String input) {
             app.finish();
-            return "";
+            return input;
         }
-    }
-    ),
+    }),
+    WEB_SEARCH(new Action() {
+        @Override
+        public String action(Application app, String input) {
+            if(input == null)
+                return null;
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW,   Uri.parse(input));
+            app.startActivity(browserIntent);
+            return null;
+        }
+    })
 	;
 	
 	public Action action;

@@ -5,9 +5,9 @@ import mercandalli.com.jarvis.activity.Application;
 /**
  * Created by Jonathan on 19/04/2015.
  */
-public class InterpreterAction extends Interpreter {
+public class InterpreterActionContains extends Interpreter {
 
-    public InterpreterAction(Application app) {
+    public InterpreterActionContains(Application app) {
         super(app);
     }
 
@@ -16,7 +16,7 @@ public class InterpreterAction extends Interpreter {
         String output = null;
 
         if(input.contains("quit"))
-            output = ENUM_Action.QUIT.action.action(this.app) + "Bye.";
+            output = ENUM_Action.QUIT.action.action(this.app, "Bye.");
 
         return output;
     }

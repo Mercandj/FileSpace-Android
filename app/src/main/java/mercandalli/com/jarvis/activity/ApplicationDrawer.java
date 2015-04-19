@@ -262,6 +262,8 @@ public abstract class ApplicationDrawer extends Application {
         mDrawerLayout.closeDrawer(mDrawerList);
         mDrawerList.setAdapter(new NavDrawerListAdapter(this, navDrawerItems.getListe()));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        invalidateOptionsMenu();
     }
     
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {

@@ -7,20 +7,26 @@ import mercandalli.com.jarvis.activity.Application;
  */
 public class InterpreterMain extends Interpreter {
 
-    private InterpreterAction interpreterAction;
+    private Interpreter interpreterActionEquals,
+            interpreterActionContains;
 
     public InterpreterMain(Application app) {
         super(app);
-        interpreterAction = new InterpreterAction(app);
+        interpreterActionEquals = new InterpreterActionEquals(app);
+        interpreterActionContains = new InterpreterActionContains(app);
     }
 
     @Override
     public String interpret(String input) {
         String output = "";
 
-        String outputAction = interpreterAction.interpret(input);
-        if(outputAction != null)
-            return outputAction;
+        String outputActionEquals = interpreterActionEquals.interpret(input);
+        if(outputActionEquals != null)
+            return outputActionEquals;
+
+        String outputActionContains = interpreterActionContains.interpret(input);
+        if(outputActionContains != null)
+            return outputActionContains;
 
         output = input;
 
