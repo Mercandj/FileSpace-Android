@@ -24,6 +24,36 @@
             [
                 "C'est moi.", "Jarvis c'est moi."
             ]
+        },
+        {
+            "q" :
+            [
+                "parle", "mais parle"
+            ],
+            "a" :
+            [
+                "Oui je veux bien, mais de quoi ?", "D'accord. Bla bla bla, bla bla bla."
+            ]
+        },
+        {
+            "q" :
+            [
+                "eh manu tu descends", "et manu tu descends", "manu tu descends"
+            ],
+            "a" :
+            [
+                "Euh, pour quoi faire... ?"
+            ]
+        },
+        {
+            "q" :
+            [
+                "qui es-tu", "qui es tu", "a quoi sers tu", "à quoi sert tu", "quel est ton role", "pourquoi existes tu", "est-ce que tu existes"
+            ],
+            "a" :
+            [
+                "Je suis Jarvis, un assistant personnel virtuel. Je suis ici pour vous assister du mieux que je peux, 7 jours sur 7, 24 heures sur 24. Chargement des préférences personnelles. Le système est maintenant complétement opérationnel."
+            ]
         }
     ]
 }

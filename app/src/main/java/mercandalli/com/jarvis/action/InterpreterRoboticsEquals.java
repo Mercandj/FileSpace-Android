@@ -23,7 +23,15 @@ public class InterpreterRoboticsEquals extends Interpreter {
     public String interpret(String input) {
         String output = null;
 
-        if(input.equals("la valeur de la pine 18") ||input.equals("quelle est la valeur de la pine 18") || input.equals("quelle est la valeur de pi 18") || input.equals("pi 18") || input.equals("quelle est la valeur de pin 18") || input.equals("pin 18") || input.equals("quelle est la valeur de teen18") || input.equals("teen18") || input.equals("teen 18"))
+        if(input.equals("raspberry") ||
+                input.equals("la valeur de la pine 18") ||
+                input.equals("quelle est la valeur de la pine 18") ||
+                input.equals("quelle est la valeur de pi 18") ||
+                input.equals("pi 18") ||
+                input.equals("quelle est la valeur de pin 18") ||
+                input.equals("pin 18") ||
+                input.equals("quelle est la valeur de teen18") ||
+                input.equals("teen18") || input.equals("teen 18"))
             if(this.app.isInternetConnection()) {
                 new TaskGet(
                         this.app,
