@@ -4,6 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.activity.ApplicationDrawer;
 import mercandalli.com.jarvis.fragment.HomeFragment;
@@ -15,8 +17,8 @@ import mercandalli.com.jarvis.net.TaskGet;
  */
 public class InterpreterRoboticsEquals extends Interpreter {
 
-    public InterpreterRoboticsEquals(Application app) {
-        super(app);
+    public InterpreterRoboticsEquals(Application app, List<QA> qas) {
+        super(app, qas);
     }
 
     @Override

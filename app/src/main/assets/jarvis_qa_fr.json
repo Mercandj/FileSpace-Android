@@ -3,6 +3,23 @@
     "date_creation" : "2015-04-19 19:19:00",
     "app_name" : "Jarvis",
     "description" : "Direct Q/A",
+    "words" :
+    [
+        {
+            "title" : "raspberry",
+            "w" :
+            [
+                "raspberry", "raspberry pi", "raspberry pie"
+            ]
+        },
+        {
+            "title" : "jarvis",
+            "w" :
+            [
+                "jarvis", "jarvi"
+            ]
+        }
+    ],
     "qa" :
     [
         {

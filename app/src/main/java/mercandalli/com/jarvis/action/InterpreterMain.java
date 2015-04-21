@@ -16,10 +16,10 @@ public class InterpreterMain extends Interpreter {
 
     public InterpreterMain(Application app) {
         super(app);
-        interpreterActionEquals = new InterpreterActionEquals(app);
-        interpreterActionContains = new InterpreterActionContains(app);
-        interpreterRoboticsEquals = new InterpreterRoboticsEquals(app);
-        interpreterDialogEquals = new InterpreterDialogEquals(app);
+        interpreterActionEquals = new InterpreterActionEquals(app, this.qas);
+        interpreterActionContains = new InterpreterActionContains(app, this.qas);
+        interpreterRoboticsEquals = new InterpreterRoboticsEquals(app, this.qas);
+        interpreterDialogEquals = new InterpreterDialogEquals(app, this.qas);
     }
 
     @Override

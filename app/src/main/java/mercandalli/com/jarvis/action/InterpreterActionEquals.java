@@ -1,5 +1,7 @@
 package mercandalli.com.jarvis.action;
 
+import java.util.List;
+
 import mercandalli.com.jarvis.activity.Application;
 
 /**
@@ -7,8 +9,8 @@ import mercandalli.com.jarvis.activity.Application;
  */
 public class InterpreterActionEquals extends Interpreter {
 
-    public InterpreterActionEquals(Application app) {
-        super(app);
+    public InterpreterActionEquals(Application app, List<QA> qas) {
+        super(app, qas);
     }
 
     @Override
