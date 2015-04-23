@@ -30,6 +30,8 @@ public class InterpreterRoboticsEquals extends Interpreter {
 
         if(input.equals("raspberry") ||
                 input.equals("etat du raspberry") ||
+                input.equals("etat de la led") ||
+                input.equals("quel est l'etat de la led") ||
                 input.equals("la valeur de la pine 18") ||
                 input.equals("quelle est la valeur de la pine 18") ||
                 input.equals("quelle est la valeur de pi 18") ||
@@ -113,6 +115,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
 
         if(input.equals("eteindre pin 18") ||
                 input.equals("eteindre la led") ||
+                input.equals("eteindre led") ||
                 input.equals("eteindre la lumiere") ||
                 input.equals("eteindre pin 18") ||
                 input.equals("desactive led") ||
@@ -121,6 +124,8 @@ public class InterpreterRoboticsEquals extends Interpreter {
                 input.equals("desactiver la led") ||
                 input.equals("off led") ||
                 input.equals("led off") ||
+                input.equals("eteins le led") ||
+                input.equals("eteins la led") ||
                 input.equals("desactiver la pin 18") ||
                 input.equals("desactive pin 18"))
             if(this.app.isInternetConnection()) {
