@@ -64,7 +64,7 @@ public abstract class ApplicationDrawer extends Application {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        
+
         mDrawerLayout 	= (DrawerLayout) 	findViewById(R.id.drawer_layout);
         mDrawerList 	= (ListView) 		findViewById(R.id.left_drawer);
         

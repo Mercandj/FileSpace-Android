@@ -18,8 +18,8 @@ public class ActivityMain extends ApplicationDrawer {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		setContentView(R.layout.activity_main);
-		super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        super.onCreate(savedInstanceState);
 		
 		if(fragment instanceof FileManagerFragment) {
 			FileManagerFragment fragmentFileManager = (FileManagerFragment) fragment;					
