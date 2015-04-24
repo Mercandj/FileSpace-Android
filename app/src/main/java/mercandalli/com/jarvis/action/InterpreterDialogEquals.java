@@ -1,7 +1,5 @@
 package mercandalli.com.jarvis.action;
 
-import java.util.List;
-
 import mercandalli.com.jarvis.activity.Application;
 
 /**
@@ -10,14 +8,14 @@ import mercandalli.com.jarvis.activity.Application;
  */
 public class InterpreterDialogEquals extends Interpreter {
 
-    public InterpreterDialogEquals(Application app, List<QA> qas) {
-        super(app, qas);
+    public InterpreterDialogEquals(Application app, Resource res) {
+        super(app, res);
     }
 
     @Override
     public String interpret(String input) {
         String output = null;
-        for(QA qa:this.qas) {
+        for(QA qa:this.res.getQas()) {
             String answer = qa.getAnswer(input);
             if(answer != null)
                 return answer;

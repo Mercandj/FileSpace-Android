@@ -52,7 +52,7 @@
             "man" : true
         }
     ],
-    "verb" :
+    "verbs" :
     [
         {
             "id" : 0,
@@ -64,6 +64,30 @@
             "verb-present" :
             [
                 "suis", "es", "est", "sommes", "êtes", "sont"
+            ]
+        }
+    ],
+    "sentences" :
+    [
+        {
+            "id" : 0,
+            "title" : "raspberry êtat",
+            "sentence" :
+            [
+                "raspberry", "etat du raspberry", "etat de la led", "quel est l'etat de la led",
+                "la valeur de la pine 18", "quelle est la valeur de la pine 18", "quelle est la valeur de pi 18",
+                "pi 18", "quelle est la valeur de pin 18", "pin 18", "quelle est la valeur de teen18", "teen18",
+                "teen 18"
+            ]
+        },
+        {
+            "id" : 1,
+            "title" : "raspberry led on",
+            "sentence" :
+            [
+                "allume pin 18", "allumer la led", "allume la lumiere", "allume la led", "allumer pin 18",
+                "active led", "active la led", "activer led", "activer la led", "open led", "activer la pin 18",
+                "active pin 18"
             ]
         }
     ],

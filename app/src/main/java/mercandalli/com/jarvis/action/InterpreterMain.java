@@ -16,10 +16,10 @@ public class InterpreterMain extends Interpreter {
 
     public InterpreterMain(Application app) {
         super(app);
-        interpreterActionEquals = new InterpreterActionEquals(app, this.qas);
-        interpreterActionContains = new InterpreterActionContains(app, this.qas);
-        interpreterRoboticsEquals = new InterpreterRoboticsEquals(app, this.qas);
-        interpreterDialogEquals = new InterpreterDialogEquals(app, this.qas);
+        interpreterActionEquals = new InterpreterActionEquals(app, this.res);
+        interpreterActionContains = new InterpreterActionContains(app, this.res);
+        interpreterRoboticsEquals = new InterpreterRoboticsEquals(app, this.res);
+        interpreterDialogEquals = new InterpreterDialogEquals(app, this.res);
     }
 
     @Override
@@ -32,9 +32,11 @@ public class InterpreterMain extends Interpreter {
         if(outputActionEquals != null)
             return outputActionEquals;
 
-        String outputRoboticsEquals = interpreterRoboticsEquals.interpret(input);
-        if(outputRoboticsEquals != null)
-            return outputRoboticsEquals;
+        if(this.app.getConfig().getUser().isAdmin()) {
+            String outputRoboticsEquals = interpreterRoboticsEquals.interpret(input);
+            if (outputRoboticsEquals != null)
+                return outputRoboticsEquals;
+        }
 
         String outputDialogEquals = interpreterDialogEquals.interpret(input);
         if(outputDialogEquals != null)

@@ -28,18 +28,20 @@ public class ModelUser extends Model {
     public String regId;
     public Date date_creation, date_last_connection;
     public long size_files;
+    private boolean admin = false;
 	
 	public ModelUser() {
 		
 	}
 
-	public ModelUser(Application app, int id, String username, String password, String currentToken, String regId) {
+	public ModelUser(Application app, int id, String username, String password, String currentToken, String regId, boolean admin) {
 		super();
         this.id = id;
 		this.username = username;
 		this.password = password;
 		this.currentToken = currentToken;
         this.regId = regId;
+        this.admin = admin;
 	}
 
     public ModelUser(Application app, JSONObject json) {
@@ -96,4 +98,8 @@ public class ModelUser extends Model {
             return SHA1.execute(SHA1.execute(this.password) + currentDate);
 		return "empty";
 	}
+
+    public boolean isAdmin() {
+        return admin;
+    }
 }

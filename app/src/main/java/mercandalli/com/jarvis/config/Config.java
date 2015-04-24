@@ -46,6 +46,7 @@ public class Config {
 
     private enum ENUM_Boolean {
         BOOLEAN_AUTO_CONNECTION	(true, 		"boolean_auto_connection"		),
+        BOOLEAN_USER_ADMIN  	(false,		"boolean_user_admin_1"  		),
         ;
 
         boolean value;
@@ -209,6 +210,17 @@ public class Config {
         }
     }
 
+    public boolean isUserAdmin() {
+        return ENUM_Boolean.BOOLEAN_USER_ADMIN.value;
+    }
+
+    public void setUserAdmin(boolean value) {
+        if(ENUM_Boolean.BOOLEAN_USER_ADMIN.value!=value) {
+            ENUM_Boolean.BOOLEAN_USER_ADMIN.value = value;
+            save(app);
+        }
+    }
+
     public boolean isAutoConncetion() {
         return ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value;
     }
@@ -221,7 +233,7 @@ public class Config {
     }
 
     public ModelUser getUser() {
-        return new ModelUser(app, getUserId(), getUserUsername(), getUserPassword(), currentToken, getUserRegId());
+        return new ModelUser(app, getUserId(), getUserUsername(), getUserPassword(), currentToken, getUserRegId(), isUserAdmin());
     }
 
     public void reset() {
@@ -230,5 +242,6 @@ public class Config {
         setUserPassword("");
         setAutoConnection(false);
         setUserId(-1);
+        setUserAdmin(false);
     }
 }

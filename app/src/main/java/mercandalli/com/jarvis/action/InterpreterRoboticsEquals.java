@@ -20,14 +20,14 @@ import mercandalli.com.jarvis.net.TaskPost;
  */
 public class InterpreterRoboticsEquals extends Interpreter {
 
-    public InterpreterRoboticsEquals(Application app, List<QA> qas) {
-        super(app, qas);
+    public InterpreterRoboticsEquals(Application app, Resource res) {
+        super(app, res);
     }
 
     @Override
     public String interpret(String input) {
         String output = null;
-
+        /*
         if(input.equals("raspberry") ||
                 input.equals("etat du raspberry") ||
                 input.equals("etat de la led") ||
@@ -40,6 +40,9 @@ public class InterpreterRoboticsEquals extends Interpreter {
                 input.equals("pin 18") ||
                 input.equals("quelle est la valeur de teen18") ||
                 input.equals("teen18") || input.equals("teen 18"))
+
+            */
+        if(this.res.equalsSentenece("raspberry êtat",input))
             if(this.app.isInternetConnection()) {
                 new TaskGet(
                         this.app,

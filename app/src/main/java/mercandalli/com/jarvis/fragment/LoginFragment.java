@@ -152,6 +152,8 @@ public class LoginFragment extends Fragment {
                             JSONObject user = json.getJSONObject("user");
                             if (user.has("id"))
                                 app.getConfig().setUserId(user.getInt("id"));
+                            if (user.has("admin"))
+                                app.getConfig().setUserAdmin(user.getBoolean("admin"));
                         }
                     } else
                         Toast.makeText(app, app.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
