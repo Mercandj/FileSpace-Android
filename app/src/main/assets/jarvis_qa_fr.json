@@ -6,20 +6,73 @@
     "words" :
     [
         {
+            "id" : 0,
             "title" : "raspberry",
-            "w" :
+            "word" :
             [
                 "raspberry", "raspberry pi", "raspberry pie"
             ]
         },
         {
+            "id" : 1,
             "title" : "jarvis",
-            "w" :
+            "word" :
             [
                 "jarvis", "jarvi"
             ]
+        },
+        {
+            "id" : 2,
+            "title" : "quel quels quelle quelles",
+            "word" :
+            [
+                "quel", "quels", "quelle", "quelles"
+            ]
+        },
+        {
+            "id" : 3,
+            "title" : "valeur",
+            "word" :
+            [
+                "valeur"
+            ],
+            "word-p" :
+            [
+                "valeurs"
+            ],
+            "word-w" :
+            [
+                "valeure"
+            ],
+            "word-w-p" :
+            [
+                "valeures"
+            ]
+        },
+        {
+            "id" : 4,
+            "title" : "led",
+            "word" :
+            [
+                "led", "LED", "L.E.D"
+            ]
         }
     ],
+    "verb" :
+    [
+        {
+            "id" : 0,
+            "title" : "être",
+            "verb" :
+            [
+                "être"
+            ]
+            "verb-present" :
+            [
+                "suis", "es", "est", "sommes", "êtes", "sont"
+            ]
+        }
+    ]
     "qa" :
     [
         {
