@@ -66,13 +66,13 @@
             "verb" :
             [
                 "être"
-            ]
+            ],
             "verb-present" :
             [
                 "suis", "es", "est", "sommes", "êtes", "sont"
             ]
         }
-    ]
+    ],
     "qa" :
     [
         {
