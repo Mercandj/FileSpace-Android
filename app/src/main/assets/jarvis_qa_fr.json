@@ -40,14 +40,7 @@
             [
                 "valeurs"
             ],
-            "word-w" :
-            [
-                "valeure"
-            ],
-            "word-w-p" :
-            [
-                "valeures"
-            ]
+            "man" : false
         },
         {
             "id" : 4,
@@ -55,7 +48,8 @@
             "word" :
             [
                 "led", "LED", "L.E.D"
-            ]
+            ],
+            "man" : true
         }
     ],
     "verb" :
