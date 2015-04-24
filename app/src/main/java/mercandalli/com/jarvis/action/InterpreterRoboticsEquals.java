@@ -27,22 +27,8 @@ public class InterpreterRoboticsEquals extends Interpreter {
     @Override
     public String interpret(String input) {
         String output = null;
-        /*
-        if(input.equals("raspberry") ||
-                input.equals("etat du raspberry") ||
-                input.equals("etat de la led") ||
-                input.equals("quel est l'etat de la led") ||
-                input.equals("la valeur de la pine 18") ||
-                input.equals("quelle est la valeur de la pine 18") ||
-                input.equals("quelle est la valeur de pi 18") ||
-                input.equals("pi 18") ||
-                input.equals("quelle est la valeur de pin 18") ||
-                input.equals("pin 18") ||
-                input.equals("quelle est la valeur de teen18") ||
-                input.equals("teen18") || input.equals("teen 18"))
 
-            */
-        if(this.res.equalsSentenece("raspberry êtat",input))
+        if(this.res.equalsSentenece("raspberry êtat", input))
             if(this.app.isInternetConnection()) {
                 new TaskGet(
                         this.app,
@@ -57,22 +43,13 @@ public class InterpreterRoboticsEquals extends Interpreter {
                                         if (result != null)
                                             if (result.getJSONObject(0).has("value")) {
                                                 JSONObject value = new JSONObject(result.getJSONObject(0).getString("value"));
-                                                if (value.has("value")) {
-                                                    if(app instanceof ApplicationDrawer) {
-                                                        ApplicationDrawer tmpApp = (ApplicationDrawer) app;
-                                                        if(tmpApp.fragment != null)
-                                                            if(tmpApp.fragment instanceof HomeFragment)
-                                                            {
-                                                                ((HomeFragment)tmpApp.fragment).speakWords((value.getInt("value") == 1)?"La Pin 18 du raspberry est activée.":"La Pin 18 du raspberry est éteinte.");
-                                                            }
-                                                    }
-                                                }
+                                                if (value.has("value"))
+                                                    speak((value.getInt("value") == 1)?"La Pin 18 du raspberry est activée.":"La Pin 18 du raspberry est éteinte.");
                                             }
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-
                             }
                         },
                         null
@@ -80,18 +57,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
                 return "";
             }
 
-        if(input.equals("allume pin 18") ||
-                input.equals("allumer la led") ||
-                input.equals("allume la lumiere") ||
-                input.equals("allume la led") ||
-                input.equals("allumer pin 18") ||
-                input.equals("active led") ||
-                input.equals("active la led") ||
-                input.equals("activer led") ||
-                input.equals("activer la led") ||
-                input.equals("open led") ||
-                input.equals("activer la pin 18") ||
-                input.equals("active pin 18"))
+        if(this.res.equalsSentenece("raspberry led on", input))
             if(this.app.isInternetConnection()) {
                 List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
                 parameters.add(new BasicNameValuePair("value", "1"));
@@ -101,14 +67,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
                         new IPostExecuteListener() {
                             @Override
                             public void execute(JSONObject json, String body) {
-                                if(app instanceof ApplicationDrawer) {
-                                    ApplicationDrawer tmpApp = (ApplicationDrawer) app;
-                                    if(tmpApp.fragment != null)
-                                        if(tmpApp.fragment instanceof HomeFragment)
-                                        {
-                                            ((HomeFragment)tmpApp.fragment).speakWords("Je viens d'allumer la LED. Je reste à votre disposition.");
-                                        }
-                                }
+                                speak("Je viens d'allumer la LED. Je reste à votre disposition.");
                             }
                         },
                         parameters
@@ -116,21 +75,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
                 return "";
             }
 
-        if(input.equals("eteindre pin 18") ||
-                input.equals("eteindre la led") ||
-                input.equals("eteindre led") ||
-                input.equals("eteindre la lumiere") ||
-                input.equals("eteindre pin 18") ||
-                input.equals("desactive led") ||
-                input.equals("desactive la led") ||
-                input.equals("desactiver led") ||
-                input.equals("desactiver la led") ||
-                input.equals("off led") ||
-                input.equals("led off") ||
-                input.equals("eteins le led") ||
-                input.equals("eteins la led") ||
-                input.equals("desactiver la pin 18") ||
-                input.equals("desactive pin 18"))
+        if(this.res.equalsSentenece("raspberry led off", input))
             if(this.app.isInternetConnection()) {
                 List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
                 parameters.add(new BasicNameValuePair("value", "0"));
@@ -140,14 +85,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
                         new IPostExecuteListener() {
                             @Override
                             public void execute(JSONObject json, String body) {
-                                if(app instanceof ApplicationDrawer) {
-                                    ApplicationDrawer tmpApp = (ApplicationDrawer) app;
-                                    if(tmpApp.fragment != null)
-                                        if(tmpApp.fragment instanceof HomeFragment)
-                                        {
-                                            ((HomeFragment)tmpApp.fragment).speakWords("Je viens d'éteindre la LED. Je reste à votre disposition.");
-                                        }
-                                }
+                                speak("Je viens d'éteindre la LED. Je reste à votre disposition.");
                             }
                         },
                         parameters
@@ -158,4 +96,18 @@ public class InterpreterRoboticsEquals extends Interpreter {
         return output;
     }
 
+    /**
+     * Use the HomeFragment to speak
+     * @param input
+     */
+    public void speak(String input) {
+        if(app instanceof ApplicationDrawer) {
+            ApplicationDrawer tmpApp = (ApplicationDrawer) app;
+            if(tmpApp.fragment != null)
+                if(tmpApp.fragment instanceof HomeFragment)
+                {
+                    ((HomeFragment)tmpApp.fragment).speakWords(input);
+                }
+        }
+    }
 }

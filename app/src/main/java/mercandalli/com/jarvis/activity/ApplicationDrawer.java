@@ -117,6 +117,7 @@ public abstract class ApplicationDrawer extends Application {
                 }, Const.TAB_VIEW_TYPE_NORMAL)
         );
 
+        // Admin Tabs
         if(this.getConfig().getUser().isAdmin()) {
             // Tab 5
             navDrawerItems.add(

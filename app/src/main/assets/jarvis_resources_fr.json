@@ -89,6 +89,16 @@
                 "active led", "active la led", "activer led", "activer la led", "open led", "activer la pin 18",
                 "active pin 18"
             ]
+        },
+        {
+            "id" : 2,
+            "title" : "raspberry led off",
+            "sentence" :
+            [
+                "eteindre pin 18", "eteindre la led", "eteindre led", "eteindre la lumiere", "eteindre pin 18", "desactive led",
+                "desactive la led", "desactiver led", "desactiver la led", "off led", "led off", "eteins le led", "eteins la led",
+                "desactiver la pin 18", "desactive pin 18"
+            ]
         }
     ],
     "qa" :

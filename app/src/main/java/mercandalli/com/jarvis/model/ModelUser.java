@@ -65,6 +65,8 @@ public class ModelUser extends Model {
                 this.date_last_connection = dateFormat.parse(json.getString("date_last_connection"));
             if(json.has("size_files") && !json.isNull("size_files"))
                 this.size_files = json.getLong("size_files");
+            if(json.has("admin"))
+                this.admin = json.getBoolean("admin");
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (ParseException e) {
