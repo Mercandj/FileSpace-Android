@@ -39,7 +39,7 @@ public class ActivityConversation extends Application {
     private int id_conversation;
 
     private RecyclerView listView;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
     private AdapterModelConnversationMessage adapter;
     private ArrayList<ModelConversationMessage> list = new ArrayList<>();
     private ProgressBar circularProgressBar;
@@ -79,6 +79,7 @@ public class ActivityConversation extends Application {
         this.listView = (RecyclerView) findViewById(R.id.listView);
         this.listView.setHasFixedSize(true);
         this.mLayoutManager = new LinearLayoutManager(this);
+        this.mLayoutManager.setStackFromEnd(true);
         this.listView.setLayoutManager(mLayoutManager);
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
