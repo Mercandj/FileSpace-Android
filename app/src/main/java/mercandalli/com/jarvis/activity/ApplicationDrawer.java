@@ -260,6 +260,7 @@ public abstract class ApplicationDrawer extends Application {
     			nav.isSelected = true;
     			if(nav.listenerClick!=null)
     				nav.listenerClick.execute();
+                getSupportActionBar().setTitle(nav.title);
     		}
     	}
         mDrawerLayout.closeDrawer(mDrawerList);
