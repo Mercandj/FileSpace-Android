@@ -25,10 +25,11 @@ import java.util.List;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.activity.Application;
-import mercandalli.com.jarvis.adapter.AdapterModelUser;
+import mercandalli.com.jarvis.adapter.AdapterModelConnversationUser;
 import mercandalli.com.jarvis.listener.IModelUserListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.listener.IStringListener;
+import mercandalli.com.jarvis.model.ModelConversationUser;
 import mercandalli.com.jarvis.model.ModelUser;
 import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.net.TaskPost;
@@ -37,15 +38,15 @@ import mercandalli.com.jarvis.view.DividerItemDecoration;
 /**
  * Created by Jonathan on 30/03/2015.
  */
-public class UserFragment extends Fragment {
+public class TalkFragment extends Fragment {
 
     Application app;
     private View rootView;
 
     private RecyclerView recyclerView;
-    private AdapterModelUser mAdapter;
+    private AdapterModelConnversationUser mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    List<ModelUser> list;
+    List<ModelConversationUser> list;
     private ProgressBar circulerProgressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -55,7 +56,7 @@ public class UserFragment extends Fragment {
         app = (Application) activity;
     }
 
-    public UserFragment() {
+    public TalkFragment() {
         super();
     }
 
@@ -101,17 +102,17 @@ public class UserFragment extends Fragment {
         new TaskGet(
                 app,
                 this.app.getConfig().getUser(),
-                this.app.getConfig().getUrlServer() + this.app.getConfig().routeUser,
+                this.app.getConfig().getUrlServer() + this.app.getConfig().routeUserConversation,
                 new IPostExecuteListener() {
                     @Override
                     public void execute(JSONObject json, String body) {
-                        list = new ArrayList<ModelUser>();
+                        list = new ArrayList<>();
                         try {
                             if (json != null) {
                                 if (json.has("result")) {
                                     JSONArray array = json.getJSONArray("result");
                                     for (int i = 0; i < array.length(); i++) {
-                                        ModelUser modelUser = new ModelUser(app, array.getJSONObject(i));
+                                        ModelConversationUser modelUser = new ModelConversationUser(app, array.getJSONObject(i));
                                         list.add(modelUser);
                                     }
                                 }
@@ -134,7 +135,7 @@ public class UserFragment extends Fragment {
         if(this.recyclerView!=null && this.list!=null && this.isAdded()) {
             this.circulerProgressBar.setVisibility(View.GONE);
 
-            this.mAdapter = new AdapterModelUser(app, list, new IModelUserListener() {
+            this.mAdapter = new AdapterModelConnversationUser(app, list, new IModelUserListener() {
                 @Override
                 public void execute(final ModelUser modelUser) {
                     app.prompt("Send Message", "Write your message", "Send", new IStringListener(){
@@ -169,7 +170,7 @@ public class UserFragment extends Fragment {
                 }
             });
 
-            this.mAdapter.setOnItemClickListener(new AdapterModelUser.OnItemClickListener() {
+            this.mAdapter.setOnItemClickListener(new AdapterModelConnversationUser.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
 

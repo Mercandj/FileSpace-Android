@@ -26,6 +26,7 @@ public class Config {
     public final String routeRobotics       	= "robotics";
     public final String routeUser 		        = "user";
     public final String routeUserMessage        = "user_message";
+    public final String routeUserConversation   = "user_conversation";
     public String currentToken					= null;
 
     private Application app;

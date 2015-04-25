@@ -34,7 +34,7 @@ import mercandalli.com.jarvis.fragment.InformationFragment;
 import mercandalli.com.jarvis.fragment.RequestFragment;
 import mercandalli.com.jarvis.fragment.RoboticsFragment;
 import mercandalli.com.jarvis.fragment.SettingsFragment;
-import mercandalli.com.jarvis.fragment.UserFragment;
+import mercandalli.com.jarvis.fragment.TalkManagerFragment;
 import mercandalli.com.jarvis.fragment.WebFragment;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.navdrawer.NavDrawerItem;
@@ -110,7 +110,7 @@ public abstract class ApplicationDrawer extends Application {
                 new NavDrawerItem( "Talks", new IListener() {
                     @Override
                     public void execute() {
-                        fragment = new UserFragment(ApplicationDrawer.this);
+                        fragment = new TalkManagerFragment(ApplicationDrawer.this);
                         FragmentManager fragmentManager = getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                     }
