@@ -6,6 +6,8 @@
 
 package mercandalli.com.jarvis.model;
 
+import android.content.Intent;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import mercandalli.com.jarvis.R;
+import mercandalli.com.jarvis.activity.ActivityConversation;
 import mercandalli.com.jarvis.activity.Application;
 
 public class ModelConversationUser extends Model {
@@ -81,5 +85,14 @@ public class ModelConversationUser extends Model {
 
     public String getAdapterSubtitle() {
         return "conv:"+this.id + "  conv_us:"+this.id_conversation;
+    }
+
+    public void open() {
+        Intent intent = new Intent(this.app, ActivityConversation.class);
+        intent.putExtra("LOGIN", ""+this.app.getConfig().getUser().getAccessLogin());
+        intent.putExtra("PASSWORD", ""+this.app.getConfig().getUser().getAccessPassword());
+        intent.putExtra("ID_CONVERSATION", this.id_conversation);
+        this.app.startActivity(intent);
+        this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 }

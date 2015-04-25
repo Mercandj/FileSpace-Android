@@ -173,7 +173,7 @@ public class TalkFragment extends Fragment {
             this.mAdapter.setOnItemClickListener(new AdapterModelConnversationUser.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-
+                    list.get(position).open();
                 }
             });
 
