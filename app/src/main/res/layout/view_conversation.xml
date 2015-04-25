@@ -8,14 +8,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar" android:id="@+id/my_toolbar" />
+    <include layout="@layout/toolbar"
+        android:id="@+id/my_toolbar"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="top"
         android:orientation="vertical"
-        android:background="#fff"
         android:layout_below="@+id/my_toolbar">
 
         <android.support.v4.widget.SwipeRefreshLayout
@@ -36,7 +36,7 @@
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <ProgressBar
-            android:id="@+id/circulerProgressBar"
+            android:id="@+id/circularProgressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -46,9 +46,33 @@
             android:id="@+id/message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:visibility="gone" />
+            android:layout_centerVertical="true" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="55dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/white"
+            android:gravity="center_vertical">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/input"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
+                android:hint="Message"
+                android:lines="1"
+                android:maxLines="1"
+                android:singleLine="true"/>
+        </RelativeLayout>
 
     </RelativeLayout>
 

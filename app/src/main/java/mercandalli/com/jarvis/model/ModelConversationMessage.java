@@ -19,6 +19,7 @@ public class ModelConversationMessage extends Model {
 
     public int id, id_conversation, id_user;
     public Date date_creation;
+    public String content;
 
 	public ModelConversationMessage() {
 
@@ -35,6 +36,8 @@ public class ModelConversationMessage extends Model {
                 this.id_conversation = json.getInt("id_conversation");
             if(json.has("id_user"))
                 this.id_user = json.getInt("id_user");
+            if(json.has("content"))
+                this.content = json.getString("content");
             if(json.has("date_creation") && !json.isNull("date_creation"))
                 this.date_creation = dateFormat.parse(json.getString("date_creation"));
         } catch (JSONException e) {
@@ -45,8 +48,7 @@ public class ModelConversationMessage extends Model {
     }
 
     public String getAdapterTitle() {
-        String res = "";
-        return res;
+        return this.content;
     }
 
     public String getAdapterSubtitle() {

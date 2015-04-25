@@ -153,6 +153,5 @@ public class InscriptionFragment extends Fragment {
             }
         }, parameters)).execute();
 
-
     }
 }

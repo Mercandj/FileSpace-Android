@@ -2,6 +2,7 @@ package mercandalli.com.jarvis.activity;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -9,17 +10,25 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.adapter.AdapterModelConnversationMessage;
+import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.model.ModelConversationMessage;
+import mercandalli.com.jarvis.net.TaskGet;
+import mercandalli.com.jarvis.view.DividerItemDecoration;
 
 /**
  * Created by Jonathan on 14/12/2014.
@@ -36,6 +45,7 @@ public class ActivityConversation extends Application {
     private ProgressBar circularProgressBar;
     private TextView message;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private EditText input;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,12 +66,14 @@ public class ActivityConversation extends Application {
             return;
         }
 
+        this.input = (EditText) findViewById(R.id.input);
+
         this.login = extras.getString("LOGIN");
         this.password = extras.getString("PASSWORD");
         this.id_conversation = extras.getInt("ID_CONVERSATION");
-        this.url = this.getConfig().getUrlServer() + this.getConfig().routeUserConversation + "/" + this.id_conversation;
+        this.url = this.getConfig().getUrlServer() + this.getConfig().routeUserMessage + "/" + this.id_conversation;
 
-        this.circularProgressBar = (ProgressBar) findViewById(R.id.circulerProgressBar);
+        this.circularProgressBar = (ProgressBar) findViewById(R.id.circularProgressBar);
         this.message = (TextView) findViewById(R.id.message);
 
         this.listView = (RecyclerView) findViewById(R.id.listView);
@@ -83,6 +95,27 @@ public class ActivityConversation extends Application {
             }
         });
 
+        this.adapter = new AdapterModelConnversationMessage(this, list, null);
+        this.listView.setAdapter(adapter);
+        this.listView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
+        this.listView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+
+        this.adapter.setOnItemClickListener(new AdapterModelConnversationMessage.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+            }
+        });
+
+        this.adapter.setOnItemLongClickListener(new AdapterModelConnversationMessage.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(View view, int position) {
+
+                return true;
+            }
+        });
+
+        refreshList();
     }
 
     @Override
@@ -107,6 +140,7 @@ public class ActivityConversation extends Application {
 
             this.adapter.remplaceList(this.list);
 
+            this.circularProgressBar.setVisibility(View.GONE);
             this.swipeRefreshLayout.setRefreshing(false);
         }
     }
@@ -116,14 +150,37 @@ public class ActivityConversation extends Application {
     }
 
     public void refreshList(String search) {
-        List<BasicNameValuePair> parameters = new ArrayList<>();
-        if(search!=null)
-            parameters.add(new BasicNameValuePair("search", ""+search));
-        parameters.add(new BasicNameValuePair("url", ""+this.url));
-        parameters.add(new BasicNameValuePair("all-public", ""+true));
+        List<BasicNameValuePair> parameters = null;
 
         if(this.isInternetConnection()) {
-
+            new TaskGet(
+                    this,
+                    this.getConfig().getUser(),
+                    this.url,
+                    new IPostExecuteListener() {
+                        @Override
+                        public void execute(JSONObject json, String body) {
+                            list = new ArrayList<>();
+                            try {
+                                if (json != null) {
+                                    if (json.has("result")) {
+                                        JSONArray array = json.getJSONArray("result");
+                                        for (int i = 0; i < array.length(); i++) {
+                                            ModelConversationMessage modelFile = new ModelConversationMessage(ActivityConversation.this, array.getJSONObject(i));
+                                            list.add(modelFile);
+                                        }
+                                    }
+                                }
+                                else
+                                    Toast.makeText(ActivityConversation.this, ActivityConversation.this.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            updateAdapters();
+                        }
+                    },
+                    parameters
+            ).execute();
         }
         else {
             this.circularProgressBar.setVisibility(View.GONE);

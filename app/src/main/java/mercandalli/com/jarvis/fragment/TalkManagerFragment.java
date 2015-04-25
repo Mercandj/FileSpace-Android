@@ -27,7 +27,7 @@ import mercandalli.com.jarvis.view.PagerSlidingTabStrip;
 public class TalkManagerFragment extends Fragment {
 
     private static final int NB_FRAGMENT = 2;
-    private static final int INIT_FRAGMENT = 0;
+    private static final int INIT_FRAGMENT = 1;
     public static Fragment listFragment[] = new Fragment[NB_FRAGMENT];
     private Application app;
     private ViewPager mViewPager;
