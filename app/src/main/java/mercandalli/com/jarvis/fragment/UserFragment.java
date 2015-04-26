@@ -140,7 +140,7 @@ public class UserFragment extends Fragment {
                     app.prompt("Send Message", "Write your message", "Send", new IStringListener(){
                         @Override
                         public void execute(String text) {
-                            String url = app.getConfig().getUrlServer() + app.getConfig().routeUserMessage + "/" + modelUser.id;
+                            String url = app.getConfig().getUrlServer() + app.getConfig().routeUserConversation + "/" + modelUser.id;
                             List < BasicNameValuePair > parameters = new ArrayList<>();
                             parameters.add(new BasicNameValuePair("message", "" + text));
 

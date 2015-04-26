@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ import mercandalli.com.jarvis.adapter.AdapterModelConnversationMessage;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.model.ModelConversationMessage;
 import mercandalli.com.jarvis.net.TaskGet;
+import mercandalli.com.jarvis.net.TaskPost;
 import mercandalli.com.jarvis.view.DividerItemDecoration;
 
 /**
@@ -116,6 +118,27 @@ public class ActivityConversation extends Application {
             }
         });
 
+        this.input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    String url = getConfig().getUrlServer() + getConfig().routeUserMessage + "/" + id_conversation;
+                    List < BasicNameValuePair > parameters = new ArrayList<>();
+                    parameters.add(new BasicNameValuePair("message", "" + input.getText().toString()));
+                    input.setText("");
+
+                    new TaskPost(ActivityConversation.this, url, new IPostExecuteListener() {
+                        @Override
+                        public void execute(JSONObject json, String body) {
+                            refreshList();
+                        }
+                    }, parameters).execute();
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
         refreshList();
     }
 
@@ -140,6 +163,7 @@ public class ActivityConversation extends Application {
                 this.message.setVisibility(View.GONE);
 
             this.adapter.remplaceList(this.list);
+            listView.scrollToPosition(list.size()-1);
 
             this.circularProgressBar.setVisibility(View.GONE);
             this.swipeRefreshLayout.setRefreshing(false);
