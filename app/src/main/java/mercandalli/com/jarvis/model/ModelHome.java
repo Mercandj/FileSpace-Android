@@ -32,13 +32,20 @@ public class ModelHome extends Model {
         this.title2 = title2;
         this.listener2 = listener2;
         this.viewType = viewType;
-	}
+    }
 
-	public ModelHome(String title1, int viewType) {
-		super();
+    public ModelHome(String title1, int viewType) {
+        super();
 		this.title1 = title1;
 		this.viewType = viewType;
 	}
+
+    public ModelHome(String title1, String title2, int viewType) {
+        super();
+        this.title1 = title1;
+        this.title2 = title2;
+        this.viewType = viewType;
+    }
 
 	public ModelHome(Application app, JSONObject json) {
 		super();

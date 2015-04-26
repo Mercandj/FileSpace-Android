@@ -2,7 +2,7 @@
     "author" : "Jonathan Mercandalli",
     "date_creation" : "2015-04-19 19:19:00",
     "app_name" : "Jarvis",
-    "description" : "Direct Q/A",
+    "description" : "Resources: Words, Verbs, Direct Q/A",
     "words" :
     [
         {
@@ -151,6 +151,36 @@
             "a" :
             [
                 "Je suis Jarvis, un assistant personnel virtuel. Je suis ici pour vous assister du mieux que je peux, 7 jours sur 7, 24 heures sur 24. Chargement des préférences personnelles. Le système est maintenant complétement opérationnel."
+            ]
+        },
+        {
+            "q" :
+            [
+                "ca va", "comment ca va", "et comment ca va","comment allez vous"
+            ],
+            "a" :
+            [
+                "Ça va bien merci et vous, comment allez vous aujourd'hui ?"
+            ]
+        },
+        {
+            "q" :
+            [
+                "ok","ok ok","ok ok ok","ok dac","c'est ok","okay"
+            ],
+            "a" :
+            [
+                "Bien reçu.","Bien.","Compris !","Bien reçu."
+            ]
+        },
+        {
+            "q" :
+            [
+                "a pardon","ah pardon","oh pardon","je suis confus pardonne-moi","pardonne-moi","pardon","ok je te pardonne","je te pardonne","vraiment pardon" ,"escuse moi","escuse-moi","excusez-moi"
+            ],
+            "a" :
+            [
+                "Je vous pardonne.","Vous êtes pardonné.","S'il vous plaît, ne vous excusez pas."
             ]
         }
     ]

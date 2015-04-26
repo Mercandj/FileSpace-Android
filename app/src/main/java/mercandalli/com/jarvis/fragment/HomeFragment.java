@@ -184,6 +184,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                 if (!textMatchList.isEmpty()) {
                     Interpreter interpreter = new InterpreterMain(this.app);
                     String input = textMatchList.get(0);
+                    addItemList(input, "You");
                     speakWords(interpreter.interpret(input));
                 }
         }
@@ -195,6 +196,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
     public void speakWords(String speech) {
         if(speech==null) return;
         else if(speech.equals("")||speech.equals(" ")) return;
+        addItemList(speech, "Jarvis");
 
         if(myTTS==null)
             myTTS = new TextToSpeech(this.getActivity(), this);
@@ -220,5 +222,10 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
         super.onDestroy();
         if(myTTS != null)
             myTTS.shutdown();
+    }
+
+    public void addItemList(String txt, String subtxt) {
+        if(txt!=null)
+            mAdapter.addItem(new ModelHome(txt.substring(0,1).toUpperCase() + txt.substring(1).toLowerCase(), subtxt, Const.TAB_VIEW_TYPE_NORMAL), 2);
     }
 }

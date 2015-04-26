@@ -173,8 +173,13 @@ public class ActivityConversation extends Application {
     }
 
     public void refreshList(String search) {
-        List<BasicNameValuePair> parameters = null;
+        if(url == null) {
+            this.finish();
+            this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            return;
+        }
 
+        List<BasicNameValuePair> parameters = null;
         if(this.isInternetConnection()) {
             new TaskGet(
                     this,

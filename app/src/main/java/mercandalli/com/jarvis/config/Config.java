@@ -21,6 +21,7 @@ public class Config {
 
     public final String localFolderName			= "Jarvis";
     public final String aboutURL 				= "http://mercandalli.com/";
+    public final String webApplication			= "http://mercandalli.com/jarvis";
     public final String routeFile	 			= "file";
     public final String routeInformation		= "information";
     public final String routeRobotics       	= "robotics";
