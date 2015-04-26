@@ -24,7 +24,7 @@ import mercandalli.com.jarvis.activity.Application;
 
 public class ModelConversationUser extends Model {
 
-    public int id, id_conversation, id_user;
+    public int id, id_conversation, id_user, num_messages;
     public Date date_creation;
     public List<ModelUser> users;
     public boolean to_all = false, to_yourself = false;
@@ -45,6 +45,8 @@ public class ModelConversationUser extends Model {
                 this.id_conversation = json.getInt("id_conversation");
             if(json.has("id_user"))
                 this.id_user = json.getInt("id_user");
+            if(json.has("num_messages"))
+                this.num_messages = json.getInt("num_messages");
             if(json.has("users")) {
                 JSONArray users_json = json.getJSONArray("users");
                 for(int i=0; i<users_json.length(); i++) {
@@ -65,18 +67,14 @@ public class ModelConversationUser extends Model {
     }
 
     public String getAdapterTitle() {
-        String res = "";
+        String res = "With ";
         if(this.to_all) {
-            res = "To all";
+            res += "all";
         }
         else if(this.to_yourself) {
-            res = "To yourself";
+            res += "yourself";
         }
         else {
-            if(users.size()==1)
-                res = "To ";
-            else
-                res = "With ";
             for (ModelUser user : users)
                 res += user.username + " ";
         }
@@ -84,14 +82,14 @@ public class ModelConversationUser extends Model {
     }
 
     public String getAdapterSubtitle() {
-        return "conv:"+this.id + "  conv_us:"+this.id_conversation;
+        return ""+this.num_messages + "  message"+((this.num_messages!=0)?"s":"");
     }
 
     public void open() {
         Intent intent = new Intent(this.app, ActivityConversation.class);
         intent.putExtra("LOGIN", ""+this.app.getConfig().getUser().getAccessLogin());
         intent.putExtra("PASSWORD", ""+this.app.getConfig().getUser().getAccessPassword());
-        intent.putExtra("ID_CONVERSATION", this.id_conversation);
+        intent.putExtra("ID_CONVERSATION", ""+this.id_conversation);
         this.app.startActivity(intent);
         this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }

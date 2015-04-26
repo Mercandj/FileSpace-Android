@@ -38,7 +38,7 @@ import mercandalli.com.jarvis.view.DividerItemDecoration;
 public class ActivityConversation extends Application {
 
     private String login, password, url;
-    private int id_conversation;
+    private String id_conversation;
 
     private RecyclerView listView;
     private LinearLayoutManager mLayoutManager;
@@ -70,9 +70,7 @@ public class ActivityConversation extends Application {
 
         this.input = (EditText) findViewById(R.id.input);
 
-        this.login = extras.getString("LOGIN");
-        this.password = extras.getString("PASSWORD");
-        this.id_conversation = extras.getInt("ID_CONVERSATION");
+        this.id_conversation = extras.getString("ID_CONVERSATION");
         this.url = this.getConfig().getUrlServer() + this.getConfig().routeUserMessage + "/" + this.id_conversation;
 
         this.circularProgressBar = (ProgressBar) findViewById(R.id.circularProgressBar);

@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import mercandalli.com.jarvis.R;
+import mercandalli.com.jarvis.activity.ActivityConversation;
 
 public class GCMNotificationIntentService extends IntentService {
 	private static final String TAG = "GCMNotificationIntentS";
@@ -45,7 +46,11 @@ public class GCMNotificationIntentService extends IntentService {
 					} catch (InterruptedException e) {
 					}
 				}
-				sendNotification("" + extras.get(Config.MESSAGE_KEY));
+                if(extras.get("id_conversation") != null) {
+                    sendNotification("" + extras.get(Config.MESSAGE_KEY), "" + extras.get("id_conversation"));
+                }
+                else
+				    sendNotification("" + extras.get(Config.MESSAGE_KEY));
 			}
 		}
 		GcmBroadcastReceiver.completeWakefulIntent(intent);
@@ -71,4 +76,23 @@ public class GCMNotificationIntentService extends IntentService {
 		mBuilder.setContentIntent(contentIntent);
 		mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
 	}
+
+    private void sendNotification(String msg, String id_conversation) {
+        Intent i = new Intent(this, ActivityConversation.class);
+        i.putExtra("ID_CONVERSATION", id_conversation);
+
+        mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, i, 0);
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+                this).setSmallIcon(R.drawable.ic_notification)
+                .setContentTitle("JARVIS")
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
+                .setLights(getResources().getColor(R.color.actionbar), 500, 2200)
+                .setContentText(msg)
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+
+        mBuilder.setContentIntent(contentIntent);
+        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    }
 }

@@ -99,34 +99,35 @@ public class TalkFragment extends Fragment {
 
     public void refreshList(String search) {
         List<BasicNameValuePair> parameters = null;
-        new TaskGet(
-                app,
-                this.app.getConfig().getUser(),
-                this.app.getConfig().getUrlServer() + this.app.getConfig().routeUserConversation,
-                new IPostExecuteListener() {
-                    @Override
-                    public void execute(JSONObject json, String body) {
-                        list = new ArrayList<>();
-                        try {
-                            if (json != null) {
-                                if (json.has("result")) {
-                                    JSONArray array = json.getJSONArray("result");
-                                    for (int i = 0; i < array.length(); i++) {
-                                        ModelConversationUser modelUser = new ModelConversationUser(app, array.getJSONObject(i));
-                                        list.add(modelUser);
+        if(this.app.isInternetConnection())
+            new TaskGet(
+                    app,
+                    this.app.getConfig().getUser(),
+                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeUserConversation,
+                    new IPostExecuteListener() {
+                        @Override
+                        public void execute(JSONObject json, String body) {
+                            list = new ArrayList<>();
+                            try {
+                                if (json != null) {
+                                    if (json.has("result")) {
+                                        JSONArray array = json.getJSONArray("result");
+                                        for (int i = 0; i < array.length(); i++) {
+                                            ModelConversationUser modelUser = new ModelConversationUser(app, array.getJSONObject(i));
+                                            list.add(modelUser);
+                                        }
                                     }
                                 }
+                                else
+                                    Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                            else
-                                Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            updateAdapter();
                         }
-                        updateAdapter();
-                    }
-                },
-                parameters
-        ).execute();
+                    },
+                    parameters
+            ).execute();
     }
 
     int i;

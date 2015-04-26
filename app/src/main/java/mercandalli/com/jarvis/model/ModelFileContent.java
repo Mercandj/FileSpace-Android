@@ -10,6 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import mercandalli.com.jarvis.activity.Application;
+
 /**
  * Created by Jonathan on 22/03/2015.
  */
@@ -17,8 +19,10 @@ public class ModelFileContent {
 
     public String type;
     public Date date_creation, timer_date;
+    private Application app;
 
-    public ModelFileContent(String content) {
+    public ModelFileContent(Application app, String content) {
+        this.app = app;
         try {
             JSONObject json = new JSONObject(content);
             if(json.has("type") && !json.isNull("type"))
@@ -47,7 +51,7 @@ public class ModelFileContent {
             dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
             SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {
-                return printDifference(timer_date, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
+                return this.app.getLibrary().printDifferenceFuture(timer_date, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -55,35 +59,5 @@ public class ModelFileContent {
         if(date_creation != null)
             return date_creation.toString();
         return "null";
-    }
-
-    public String printDifference(Date endDate, Date startDate){
-        //milliseconds
-        long different = endDate.getTime() - startDate.getTime();
-
-        if(different<0)
-            return "Finished";
-
-        long secondsInMilli = 1000;
-        long minutesInMilli = secondsInMilli * 60;
-        long hoursInMilli = minutesInMilli * 60;
-        long daysInMilli = hoursInMilli * 24;
-
-        long elapsedDays = different / daysInMilli;
-        different = different % daysInMilli;
-
-        long elapsedHours = different / hoursInMilli;
-        different = different % hoursInMilli;
-
-        long elapsedMinutes = different / minutesInMilli;
-        different = different % minutesInMilli;
-
-        long elapsedSeconds = different / secondsInMilli;
-
-        return
-                (elapsedDays!=0 ? (elapsedDays + "d ") : "") +
-                (elapsedHours!=0 ? (elapsedHours + "h ") : "") +
-                (elapsedMinutes!=0 ? (elapsedMinutes + "m ") : "") +
-                (elapsedSeconds!=0 ? (elapsedSeconds + "s") : "") ;
     }
 }
