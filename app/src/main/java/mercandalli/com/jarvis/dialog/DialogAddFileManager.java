@@ -72,7 +72,7 @@ public class DialogAddFileManager extends Dialog {
         ((RelativeLayout) this.findViewById(R.id.addDirectory)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.prompt("Create Folder", "Name ?", "Create", new IStringListener() {
+                app.prompt(app.getString(R.string.dialog_file_create_folder), app.getString(R.string.dialog_file_name_interrogation), app.getString(R.string.dialog_file_create), new IStringListener() {
                     @Override
                     public void execute(String text) {
                         ModelFile folder = new ModelFile(DialogAddFileManager.this.app);
@@ -88,7 +88,7 @@ public class DialogAddFileManager extends Dialog {
                             }
                         }, parameters, file)).execute();
                     }
-                }, "Cancel", null);
+                }, app.getString(R.string.cancel), null);
                 DialogAddFileManager.this.dismiss();
             }
         });
@@ -96,12 +96,12 @@ public class DialogAddFileManager extends Dialog {
         ((RelativeLayout) this.findViewById(R.id.txtFile)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.prompt("Create TXT File", "Name ?", "Create", new IStringListener() {
+                app.prompt(app.getString(R.string.dialog_file_create_txt), app.getString(R.string.dialog_file_name_interrogation), app.getString(R.string.dialog_file_create), new IStringListener() {
                     @Override
                     public void execute(String text) {
                         //TODO
                     }
-                }, "Cancel", null);
+                }, app.getString(R.string.cancel), null);
                 DialogAddFileManager.this.dismiss();
             }
         });

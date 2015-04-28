@@ -10,14 +10,6 @@
 
     <string name="image_description">Description Image</string>
 
-    <string name="dialog_server_route">Server Route</string>
-    <string name="dialog_server_url">Server URL</string>
-    <string name="dialog_username">Username</string>
-    <string name="dialog_password">Password</string>
-    <string name="dialog_register">Register</string>
-    <string name="dialog_login">Log in</string>
-    <string name="dialog_json">Json</string>
-
     <string name="action_failed">Action failed</string>
     <string name="no_file">No File</string>
     <string name="no_file_server">No File on server.</string>
@@ -44,6 +36,19 @@
     <string name="delete">Delete</string>
     <string name="cut">Cut</string>
     <string name="properties">Properties</string>
+
+    <string name="dialog_server_route">Server Route</string>
+    <string name="dialog_server_url">Server URL</string>
+    <string name="dialog_username">Username</string>
+    <string name="dialog_password">Password</string>
+    <string name="dialog_register">Register</string>
+    <string name="dialog_login">Log in</string>
+    <string name="dialog_json">Json</string>
+
+    <string name="dialog_file_create">Create</string>
+    <string name="dialog_file_create_folder">Create Folder</string>
+    <string name="dialog_file_create_txt">Create TXT File</string>
+    <string name="dialog_file_name_interrogation">Name ?</string>
 
     <string name="tab_home">Home</string>
     <string name="tab_files">Files</string>
