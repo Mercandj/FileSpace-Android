@@ -83,7 +83,7 @@ public abstract class ApplicationDrawer extends Application {
 
         // Tab 2
         navDrawerItems.add(
-                new NavDrawerItem( "Home", new IListener() {
+                new NavDrawerItem(getString(R.string.tab_home), new IListener() {
                     @Override
                     public void execute() {
                         fragment = new HomeFragment(ApplicationDrawer.this);
@@ -95,7 +95,7 @@ public abstract class ApplicationDrawer extends Application {
      
         // Tab 3
         navDrawerItems.add(
-        		new NavDrawerItem( "Files", new IListener() {
+        		new NavDrawerItem(getString(R.string.tab_files), new IListener() {
 						@Override
 						public void execute() {
 							fragment = new FileManagerFragment(ApplicationDrawer.this);
@@ -107,7 +107,7 @@ public abstract class ApplicationDrawer extends Application {
 
         // Tab 4
         navDrawerItems.add(
-                new NavDrawerItem( "Talks", new IListener() {
+                new NavDrawerItem(getString(R.string.tab_talks), new IListener() {
                     @Override
                     public void execute() {
                         fragment = new TalkManagerFragment(ApplicationDrawer.this);
@@ -121,7 +121,7 @@ public abstract class ApplicationDrawer extends Application {
         if(this.getConfig().getUser().isAdmin()) {
             // Tab 5
             navDrawerItems.add(
-                    new NavDrawerItem("Robotics", new IListener() {
+                    new NavDrawerItem(getString(R.string.tab_robotics), new IListener() {
                         @Override
                         public void execute() {
                             fragment = new RoboticsFragment(ApplicationDrawer.this);
@@ -133,7 +133,7 @@ public abstract class ApplicationDrawer extends Application {
 
             // Tab 6
             navDrawerItems.add(
-                    new NavDrawerItem("Informations", new IListener() {
+                    new NavDrawerItem(getString(R.string.tab_data), new IListener() {
                         @Override
                         public void execute() {
                             fragment = new InformationFragment(ApplicationDrawer.this);
@@ -145,7 +145,7 @@ public abstract class ApplicationDrawer extends Application {
 
             // Tab 7
             navDrawerItems.add(
-                    new NavDrawerItem("Request", new IListener() {
+                    new NavDrawerItem(getString(R.string.tab_request), new IListener() {
                         @Override
                         public void execute() {
                             fragment = new RequestFragment(ApplicationDrawer.this);
@@ -164,7 +164,7 @@ public abstract class ApplicationDrawer extends Application {
         // Tab 9
         navDrawerItems.add(
         		new NavDrawerItem( 
-    				"Settings",
+    				getString(R.string.tab_settings),
     				new IListener() {
 						@Override
 						public void execute() {
@@ -180,7 +180,7 @@ public abstract class ApplicationDrawer extends Application {
         // Tab 10
         navDrawerItems.add(
                 new NavDrawerItem(
-                        "Log out",
+                        getString(R.string.tab_log_out),
                         new IListener() {
                             @Override
                             public void execute() {
@@ -190,7 +190,7 @@ public abstract class ApplicationDrawer extends Application {
                                         ApplicationDrawer.this.getConfig().reset();
                                         ApplicationDrawer.this.finish();
                                     }
-                                }, "Cancel", null);
+                                }, getString(R.string.cancel), null);
                             }
                         },
                         R.drawable.ic_log_out,
@@ -200,7 +200,7 @@ public abstract class ApplicationDrawer extends Application {
         // Tab 11
         navDrawerItems.add(
         		new NavDrawerItem(
-        			"About Dev",
+        			getString(R.string.tab_about),
         			new IListener() {
 						@Override
 						public void execute() {
