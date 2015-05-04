@@ -66,8 +66,14 @@ public class FileManagerFragment extends Fragment {
 				
 			}
 		});
-        mViewPager.setOffscreenPageLimit(this.NB_FRAGMENT - 1);
-        mViewPager.setCurrentItem(this.INIT_FRAGMENT);
+		if(this.app.isInternetConnection()) {
+			mViewPager.setOffscreenPageLimit(this.NB_FRAGMENT - 1);
+			mViewPager.setCurrentItem(this.INIT_FRAGMENT);
+		}
+		else {
+			mViewPager.setOffscreenPageLimit(this.NB_FRAGMENT);
+			mViewPager.setCurrentItem(this.INIT_FRAGMENT + 1);
+		}
 
         tabs.setViewPager(mViewPager);
         tabs.setIndicatorColor(getResources().getColor(R.color.white));
@@ -95,7 +101,7 @@ public class FileManagerFragment extends Fragment {
         return fragment.back();
     }
 
-    public static class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
+    public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
 		Application app;
 		
 		public FileManagerFragmentPagerAdapter(FragmentManager fm, Application app) {
