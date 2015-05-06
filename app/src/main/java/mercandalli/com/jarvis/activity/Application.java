@@ -16,16 +16,30 @@ import android.net.NetworkInfo;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcelable;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.config.Config;
 import mercandalli.com.jarvis.library.Library;
 import mercandalli.com.jarvis.listener.IListener;
+import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.listener.IStringListener;
+import mercandalli.com.jarvis.model.ModelFile;
+import mercandalli.com.jarvis.net.TaskPost;
 
 public abstract class Application extends ActionBarActivity {
 
@@ -33,6 +47,9 @@ public abstract class Application extends ActionBarActivity {
 	private Config config;
 	public Dialog dialog;
     public Toolbar toolbar;
+
+    /* OnResult code */
+    public final int REQUEST_TAKE_PHOTO = 1;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -165,4 +182,45 @@ public abstract class Application extends ActionBarActivity {
             return new String(msgs[0].getRecords()[0].getPayload());
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            if(photoFile!=null) {
+                if (photoFile.file != null) {
+                    List<BasicNameValuePair> parameters = null;
+                    if (photoFile != null)
+                        parameters = photoFile.getForUpload();
+                    (new TaskPost(this, getConfig().getUrlServer() + getConfig().routeFile, new IPostExecuteListener() {
+                        @Override
+                        public void execute(JSONObject json, String body) {
+                            if (photoFileListener != null)
+                                photoFileListener.execute(json, body);
+                        }
+                    }, parameters, photoFile.file)).execute();
+                }
+            }
+            else
+                Toast.makeText(this, this.getString(R.string.no_file), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public ModelFile photoFile = null;
+    public IPostExecuteListener photoFileListener = null;
+
+    public ModelFile createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_Jarvis_";
+        File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.getConfig().localFolderName);
+        ModelFile result = new ModelFile(this);
+        result.name = imageFileName + ".jpg";
+        result.file = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        return result;
+    }
+
 }

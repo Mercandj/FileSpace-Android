@@ -9,6 +9,9 @@ package mercandalli.com.jarvis.dialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -22,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -102,6 +106,31 @@ public class DialogAddFileManager extends Dialog {
                         //TODO
                     }
                 }, app.getString(R.string.cancel), null);
+                DialogAddFileManager.this.dismiss();
+            }
+        });
+
+        ((RelativeLayout) this.findViewById(R.id.scan)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                // Ensure that there's a camera activity to handle the intent
+                if (takePictureIntent.resolveActivity(app.getPackageManager()) != null) {
+                    // Create the File where the photo should go
+                    app.photoFile = new ModelFile(app);
+                    try {
+                        app.photoFile = app.createImageFile();
+                    } catch (IOException ex) {
+                        // Error occurred while creating the File
+                    }
+                    // Continue only if the File was successfully created
+                    if (app.photoFile != null) {
+                        if(listener!=null)
+                            app.photoFileListener = listener;
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(app.photoFile.file));
+                        app.startActivityForResult(takePictureIntent, app.REQUEST_TAKE_PHOTO);
+                    }
+                }
                 DialogAddFileManager.this.dismiss();
             }
         });
