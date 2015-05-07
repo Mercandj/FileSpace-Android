@@ -61,11 +61,11 @@ public class NavDrawerListAdapter extends BaseAdapter {
 			convertView = inflater.inflate(R.layout.tab_navdrawer_profil, parent, false);
 			
 			((TextView) convertView.findViewById(R.id.title)).setText(item.title);
-			Font.applyFont(context, ((TextView) convertView.findViewById(R.id.title)), "fonts/MYRIADAB.TTF");
+			Font.applyFont(context, ((TextView) convertView.findViewById(R.id.title)), "fonts/Roboto-Medium.ttf");
 			
 			((TextView) convertView.findViewById(R.id.subtitle)).setText(item.subtitle);
-			Font.applyFont(context, ((TextView) convertView.findViewById(R.id.subtitle)), "fonts/MYRIADAM.TTF");
-			
+			Font.applyFont(context, ((TextView) convertView.findViewById(R.id.subtitle)), "fonts/Roboto-Light.ttf");
+
 			if(navDrawerItems.get(position).containsImage)
 				((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(context.getResources().getDrawable(item.icon));
 			else
@@ -78,9 +78,9 @@ public class NavDrawerListAdapter extends BaseAdapter {
 			
 			((TextView) convertView.findViewById(R.id.title)).setText(item.title);
 			if(item.isSelected)
-				Font.applyFont(context, ((TextView) convertView.findViewById(R.id.title)), "fonts/MYRIADAB.TTF");
+				Font.applyFont(context, ((TextView) convertView.findViewById(R.id.title)), "fonts/Roboto-Medium.ttf");
 			else
-				Font.applyFont(context, ((TextView) convertView.findViewById(R.id.title)), "fonts/MYRIADAM.TTF");
+				Font.applyFont(context, ((TextView) convertView.findViewById(R.id.title)), "fonts/Roboto-Light.ttf");
 
 			if(navDrawerItems.get(position).containsImage) {
 				if(item.isSelected && item.icon_pressed != -1)

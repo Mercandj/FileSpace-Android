@@ -4,8 +4,11 @@
 		MERCANDALLI Jonathan
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
     android:layout_width="wrap_content"
-    android:layout_height="80dp" >
+    android:layout_height="80dp"
+    android:background="@color/notifications_bar"
+    android:elevation="8dp">
 
     <mercandalli.com.jarvis.view.CircularImageView
         android:id="@+id/icon"
@@ -28,7 +31,7 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:textColor="#000"
+        android:textColor="#fff"
         android:textSize="20sp"
         
         android:maxLines="1"
@@ -37,8 +40,7 @@
 		android:marqueeRepeatLimit="marquee_forever"
 		android:focusable="false"
 		android:scrollHorizontally="true"
-        android:text="@string/app_name"
-        android:layout_marginTop="4dp" />
+        android:text="@string/app_name" />
 
     <TextView
         android:id="@+id/subtitle"
@@ -48,7 +50,7 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:textColor="#000"
+        android:textColor="#fff"
         android:textSize="15sp"
         
         android:maxLines="1"
