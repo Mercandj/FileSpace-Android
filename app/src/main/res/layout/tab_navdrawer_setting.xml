@@ -5,7 +5,7 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="55dp" >
+    android:layout_height="48dp" >
 
     <TextView
         android:id="@+id/title"
@@ -15,7 +15,7 @@
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/icon"
         android:gravity="center_vertical"
-        android:paddingLeft="16dp"
+        android:paddingLeft="38dp"
         android:paddingRight="40dp"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="#444"
@@ -23,11 +23,11 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="28dp"
         android:contentDescription="@string/image_description"
         android:src="@drawable/ic_settings_grey" />
 

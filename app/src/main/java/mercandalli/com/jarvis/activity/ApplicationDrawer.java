@@ -31,6 +31,7 @@ import mercandalli.com.jarvis.fragment.FileManagerFragment;
 import mercandalli.com.jarvis.fragment.Fragment;
 import mercandalli.com.jarvis.fragment.HomeFragment;
 import mercandalli.com.jarvis.fragment.InformationFragment;
+import mercandalli.com.jarvis.fragment.ProfileFragment;
 import mercandalli.com.jarvis.fragment.RequestFragment;
 import mercandalli.com.jarvis.fragment.RoboticsFragment;
 import mercandalli.com.jarvis.fragment.SettingsFragment;
@@ -43,7 +44,7 @@ import mercandalli.com.jarvis.navdrawer.NavDrawerListAdapter;
 
 public abstract class ApplicationDrawer extends Application {
 	
-	public static final int[] noSelectable 	= new int[] {Const.TAB_VIEW_TYPE_PROFIL, Const.TAB_VIEW_TYPE_SECTION, Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE};
+	public static final int[] noSelectable 	= new int[] {Const.TAB_VIEW_TYPE_SECTION, Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE};
 
     public Fragment fragment;
     private final int INIT_ID_FRAGMENT = 2;
@@ -73,7 +74,14 @@ public abstract class ApplicationDrawer extends Application {
         
         // Tab 0
         navDrawerItems.add(
-        		new NavDrawerItem( this.getConfig().getUserUsername(), this.getConfig().getUrlServer(), R.drawable.ic_launcher, Const.TAB_VIEW_TYPE_PROFIL)
+        		new NavDrawerItem( this.getConfig().getUserUsername(), "Edit your profile", new IListener() {
+                    @Override
+                    public void execute() {
+                        fragment = new ProfileFragment(ApplicationDrawer.this);
+                        FragmentManager fragmentManager = getFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                    }
+                }, R.drawable.ic_user, Const.TAB_VIEW_TYPE_PROFIL)
         );
         
         // Tab 1
@@ -90,7 +98,7 @@ public abstract class ApplicationDrawer extends Application {
                         FragmentManager fragmentManager = getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                     }
-                }, Const.TAB_VIEW_TYPE_NORMAL)
+                }, R.drawable.q_ic_drawer_home, R.drawable.q_ic_drawer_home_pressed, Const.TAB_VIEW_TYPE_NORMAL)
         );
      
         // Tab 3
@@ -102,7 +110,7 @@ public abstract class ApplicationDrawer extends Application {
 					        FragmentManager fragmentManager = getFragmentManager();
 					        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 						}
-			        }, Const.TAB_VIEW_TYPE_NORMAL)
+			    }, R.drawable.q_ic_drawer_files, R.drawable.q_ic_drawer_files_pressed, Const.TAB_VIEW_TYPE_NORMAL)
         );
 
         // Tab 4
@@ -114,7 +122,7 @@ public abstract class ApplicationDrawer extends Application {
                         FragmentManager fragmentManager = getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                     }
-                }, Const.TAB_VIEW_TYPE_NORMAL)
+                }, R.drawable.q_ic_drawer_talks, R.drawable.q_ic_drawer_talks_pressed, Const.TAB_VIEW_TYPE_NORMAL)
         );
 
         // Admin Tabs
@@ -128,7 +136,7 @@ public abstract class ApplicationDrawer extends Application {
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                         }
-                    }, Const.TAB_VIEW_TYPE_NORMAL)
+                    }, R.drawable.q_ic_drawer_robotics, R.drawable.q_ic_drawer_robotics_pressed, Const.TAB_VIEW_TYPE_NORMAL)
             );
 
             // Tab 6
@@ -140,7 +148,7 @@ public abstract class ApplicationDrawer extends Application {
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                         }
-                    }, Const.TAB_VIEW_TYPE_NORMAL)
+                    }, R.drawable.q_ic_drawer_data, R.drawable.q_ic_drawer_data_pressed, Const.TAB_VIEW_TYPE_NORMAL)
             );
 
             // Tab 7
@@ -152,7 +160,7 @@ public abstract class ApplicationDrawer extends Application {
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                         }
-                    }, Const.TAB_VIEW_TYPE_NORMAL)
+                    }, R.drawable.q_ic_drawer_request, R.drawable.q_ic_drawer_request_pressed, Const.TAB_VIEW_TYPE_NORMAL)
             );
         }
         

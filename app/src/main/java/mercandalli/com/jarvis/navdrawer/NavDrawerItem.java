@@ -6,8 +6,6 @@
 
 package mercandalli.com.jarvis.navdrawer;
 
-import android.widget.CompoundButton.OnCheckedChangeListener;
-
 import mercandalli.com.jarvis.listener.IListener;
 
 /**
@@ -19,14 +17,14 @@ public class NavDrawerItem {
 	
 	public String title;
 	public String subtitle;
-	public int icon;
+	public int icon, icon_pressed = -1;
 	public int viewType;
 	public boolean containsImage;
 	public boolean isSelected = false;
 	public IListener listenerClick = null;
 	
 	public boolean initChecked = false;
-	public OnCheckedChangeListener onCheckedChangeListener = null;
+	//public OnCheckedChangeListener onCheckedChangeListener = null;
 	
 	public NavDrawerItem(String title, int icon, int viewType) {
 		super();
@@ -44,6 +42,16 @@ public class NavDrawerItem {
 		this.viewType = viewType;
 		this.containsImage = true;
 	}
+
+	public NavDrawerItem(String title, String subtitle, IListener listenerClick, int icon, int viewType) {
+		super();
+		this.title = title;
+		this.subtitle = subtitle;
+		this.icon = icon;
+		this.viewType = viewType;
+		this.containsImage = true;
+		this.listenerClick = listenerClick;
+	}
 	
 	public NavDrawerItem(String title, IListener listenerClick, int icon, int viewType) {
 		super();
@@ -53,16 +61,17 @@ public class NavDrawerItem {
 		this.containsImage = true;
 		this.listenerClick = listenerClick;
 	}
-	
-	public NavDrawerItem(String title, boolean initChecked, OnCheckedChangeListener onCheckedChangeListener, int viewType) {
+
+	public NavDrawerItem(String title, IListener listenerClick, int icon, int icon_pressed, int viewType) {
 		super();
 		this.title = title;
+		this.icon = icon;
+		this.icon_pressed = icon_pressed;
 		this.viewType = viewType;
-		this.initChecked = initChecked;
-		this.onCheckedChangeListener = onCheckedChangeListener;		
-		this.containsImage = false;
+		this.containsImage = true;
+		this.listenerClick = listenerClick;
 	}
-	
+
 	public NavDrawerItem(String title, int viewType) {
 		super();
 		this.title = title;

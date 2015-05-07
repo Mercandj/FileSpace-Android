@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
@@ -82,12 +81,15 @@ public class NavDrawerListAdapter extends BaseAdapter {
 				Font.applyFont(context, ((TextView) convertView.findViewById(R.id.title)), "fonts/MYRIADAB.TTF");
 			else
 				Font.applyFont(context, ((TextView) convertView.findViewById(R.id.title)), "fonts/MYRIADAM.TTF");
-			
-			if(navDrawerItems.get(position).onCheckedChangeListener!=null) {
-				((ToggleButton) convertView.findViewById(R.id.toggle)).setVisibility(View.VISIBLE);
-				((ToggleButton) convertView.findViewById(R.id.toggle)).setChecked(item.initChecked);
-				((ToggleButton) convertView.findViewById(R.id.toggle)).setOnCheckedChangeListener(item.onCheckedChangeListener);
+
+			if(navDrawerItems.get(position).containsImage) {
+				if(item.isSelected && item.icon_pressed != -1)
+					((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(context.getResources().getDrawable(item.icon_pressed));
+				else
+					((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(context.getResources().getDrawable(item.icon));
 			}
+			else
+				((ImageView) convertView.findViewById(R.id.icon)).setVisibility(View.GONE);
 			
 			break;
 			

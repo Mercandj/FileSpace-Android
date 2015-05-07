@@ -7,32 +7,31 @@
     android:layout_width="match_parent"
     android:layout_height="65dp" >
 
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="28dp"
+        android:contentDescription="@string/image_description"
+        android:src="@drawable/q_ic_drawer_home" />
+
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:gravity="center_vertical"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
-        android:paddingLeft="25dp"
         android:paddingRight="47dp"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="#000"
-        android:textSize="24sp" />
-
-    <ToggleButton
-        android:id="@+id/toggle"
-        android:layout_width="45dp"
-        android:layout_height="30dp"
-        android:layout_alignBottom="@+id/title"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="9dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="9dp"
-        android:background="@drawable/toggle_me"
-        android:textOff=" "
-        android:textOn=" "
-        android:visibility="gone" />
+        android:textSize="24sp"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/icon"
+        android:layout_marginLeft="36dp"
+        android:text="@string/app_name"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true" />
 
 </RelativeLayout>
