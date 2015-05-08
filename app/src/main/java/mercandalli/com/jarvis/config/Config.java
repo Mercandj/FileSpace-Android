@@ -2,17 +2,23 @@ package mercandalli.com.jarvis.config;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.listener.IBitmapListener;
+import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.model.ModelUser;
+import mercandalli.com.jarvis.net.TaskGetDownloadImage;
 
 /**
  * Created by Jonathan on 10/12/2014.
@@ -26,6 +32,7 @@ public class Config {
     public final String routeInformation		= "information";
     public final String routeRobotics       	= "robotics";
     public final String routeUser 		        = "user";
+    public final String routeUserPut	        = "user_put";
     public final String routeUserMessage        = "user_message";
     public final String routeUserConversation   = "user_conversation";
     public String currentToken					= null;
@@ -34,8 +41,9 @@ public class Config {
     private final String file = "settings_json_1.txt";
 
     private enum ENUM_Int {
-        LAST_TAB				(0, 			"int_last_tab"				),
-        INTEGER_USER_ID     	(-1, 			"int_user_id_1"     		),
+        LAST_TAB				                (0, 	"int_last_tab"				            ),
+        INTEGER_USER_ID     	                (-1, 	"int_user_id_1"     		            ),
+        INTEGER_USER_ID_FILE_PROFILE_PICTURE    (-1, 	"int_user_id_file_profile_picture_1"   	),
         ;
 
         int value;
@@ -212,6 +220,35 @@ public class Config {
         }
     }
 
+    public Bitmap getUserProfiePicture() {
+        File file = new File(this.app.getFilesDir()+"/file_"+this.getUserIdFileProfilePicture());
+        if(file.exists())
+            return BitmapFactory.decodeFile(file.getPath());
+        else if(this.app.isInternetConnection()) {
+            ModelFile modelFile = new ModelFile(app);
+            modelFile.id = this.getUserIdFileProfilePicture();
+            modelFile.onlineUrl = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+this.getUserIdFileProfilePicture();
+            new TaskGetDownloadImage(app, this.app.getConfig().getUser(), modelFile, new IBitmapListener() {
+                @Override
+                public void execute(Bitmap bitmap) {
+                    //TODO
+                }
+            }).execute();
+        }
+        return null;
+    }
+
+    public int getUserIdFileProfilePicture() {
+        return ENUM_Int.INTEGER_USER_ID_FILE_PROFILE_PICTURE.value;
+    }
+
+    public void setUserIdFileProfilePicture(int value) {
+        if(ENUM_Int.INTEGER_USER_ID_FILE_PROFILE_PICTURE.value!=value) {
+            ENUM_Int.INTEGER_USER_ID_FILE_PROFILE_PICTURE.value = value;
+            save(app);
+        }
+    }
+
     public boolean isUserAdmin() {
         return ENUM_Boolean.BOOLEAN_USER_ADMIN.value;
     }
@@ -245,5 +282,6 @@ public class Config {
         setAutoConnection(false);
         setUserId(-1);
         setUserAdmin(false);
+        setUserIdFileProfilePicture(-1);
     }
 }

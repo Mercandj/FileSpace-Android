@@ -154,6 +154,8 @@ public class LoginFragment extends Fragment {
                                 app.getConfig().setUserId(user.getInt("id"));
                             if (user.has("admin"))
                                 app.getConfig().setUserAdmin(user.getBoolean("admin"));
+                            if (user.has("id_file_profile_picture"))
+                                app.getConfig().setUserIdFileProfilePicture(user.getInt("id_file_profile_picture"));
                         }
                     } else
                         Toast.makeText(app, app.getString(R.string.server_error), Toast.LENGTH_SHORT).show();

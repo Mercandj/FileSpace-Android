@@ -1,9 +1,11 @@
 package mercandalli.com.jarvis.fragment;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import mercandalli.com.jarvis.R;
@@ -32,6 +34,10 @@ public class ProfileFragment extends Fragment {
         if(this.app.isInternetConnection()) {
 
         }
+
+        Bitmap icon_profile_online = app.getConfig().getUserProfiePicture();
+        if(icon_profile_online!=null)
+            ((ImageView) rootView.findViewById(R.id.icon)).setImageBitmap(icon_profile_online);
 
         return rootView;
     }

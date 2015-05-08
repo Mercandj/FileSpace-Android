@@ -41,7 +41,9 @@ import mercandalli.com.jarvis.listener.IModelFileListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.listener.IStringListener;
 import mercandalli.com.jarvis.model.ModelFile;
+import mercandalli.com.jarvis.model.ModelFileTypeENUM;
 import mercandalli.com.jarvis.net.TaskGet;
+import mercandalli.com.jarvis.net.TaskPost;
 import mercandalli.com.jarvis.view.DividerItemDecoration;
 
 
@@ -128,8 +130,13 @@ public class FileManagerFragmentCloud extends Fragment {
             public void execute(final ModelFile modelFile) {
                 final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentCloud.this.app);
                 String[] menuList = { getString(R.string.download) };
-                if(!modelFile.directory && modelFile.isMine())
-                    menuList = new String[] { getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile.public_) ? "Become private" : "Become public" };
+                if(!modelFile.directory && modelFile.isMine()) {
+                    if(modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
+                        menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile.public_) ? "Become private" : "Become public", "Set as profile"};
+                    }
+                    else
+                        menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile.public_) ? "Become private" : "Become public"};
+                }
                 menuAleart.setTitle(getString(R.string.action));
                 menuAleart.setItems(menuList,
                         new DialogInterface.OnClickListener() {
@@ -196,6 +203,26 @@ public class FileManagerFragmentCloud extends Fragment {
                                                 FileManagerFragmentCloud.this.app.refreshAdapters();
                                             }
                                         });
+                                        break;
+
+                                    // Picture set as profile
+                                    case 6:
+                                        List<BasicNameValuePair> parameters = new ArrayList<>();
+                                        parameters.add(new BasicNameValuePair("id_file_profile_picture", "" + modelFile.id));
+                                        (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                            @Override
+                                            public void execute(JSONObject json, String body) {
+                                                try {
+                                                    if (json != null)
+                                                        if (json.has("succeed"))
+                                                            if (json.getBoolean("succeed"))
+                                                                app.getConfig().setUserIdFileProfilePicture(modelFile.id);
+                                                }
+                                                catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }, parameters)).execute();
                                         break;
                                 }
                             }

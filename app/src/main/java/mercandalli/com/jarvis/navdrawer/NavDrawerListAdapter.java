@@ -6,7 +6,7 @@
 
 package mercandalli.com.jarvis.navdrawer;
 
-import android.app.Activity;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import mercandalli.com.jarvis.Font;
 import mercandalli.com.jarvis.R;
+import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.config.Const;
 
 /**
@@ -27,11 +28,11 @@ import mercandalli.com.jarvis.config.Const;
  */
 public class NavDrawerListAdapter extends BaseAdapter {
 	
-	private Activity context;
+	private Application app;
 	private ArrayList<NavDrawerItem> navDrawerItems;
 	
-	public NavDrawerListAdapter(Activity context, ArrayList<NavDrawerItem> navDrawerItems){
-		this.context = context;
+	public NavDrawerListAdapter(Application app, ArrayList<NavDrawerItem> navDrawerItems){
+		this.app = app;
 		this.navDrawerItems = navDrawerItems;
 	}
 
@@ -52,7 +53,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = context.getLayoutInflater();
+		LayoutInflater inflater = app.getLayoutInflater();
 		
 		NavDrawerItem item = navDrawerItems.get(position);
 		
@@ -61,13 +62,16 @@ public class NavDrawerListAdapter extends BaseAdapter {
 			convertView = inflater.inflate(R.layout.tab_navdrawer_profil, parent, false);
 			
 			((TextView) convertView.findViewById(R.id.title)).setText(item.title);
-			Font.applyFont(context, ((TextView) convertView.findViewById(R.id.title)), "fonts/Roboto-Medium.ttf");
+			Font.applyFont(app, ((TextView) convertView.findViewById(R.id.title)), "fonts/Roboto-Medium.ttf");
 			
 			((TextView) convertView.findViewById(R.id.subtitle)).setText(item.subtitle);
-			Font.applyFont(context, ((TextView) convertView.findViewById(R.id.subtitle)), "fonts/Roboto-Light.ttf");
+			Font.applyFont(app, ((TextView) convertView.findViewById(R.id.subtitle)), "fonts/Roboto-Light.ttf");
 
-			if(navDrawerItems.get(position).containsImage)
-				((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(context.getResources().getDrawable(item.icon));
+			Bitmap icon_profile_online = app.getConfig().getUserProfiePicture();
+			if(icon_profile_online!=null)
+				((ImageView) convertView.findViewById(R.id.icon)).setImageBitmap(icon_profile_online);
+			else if(navDrawerItems.get(position).containsImage)
+				((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getResources().getDrawable(item.icon));
 			else
 				((ImageView) convertView.findViewById(R.id.icon)).setVisibility(View.GONE);
 			
@@ -78,15 +82,15 @@ public class NavDrawerListAdapter extends BaseAdapter {
 			
 			((TextView) convertView.findViewById(R.id.title)).setText(item.title);
 			if(item.isSelected)
-				Font.applyFont(context, ((TextView) convertView.findViewById(R.id.title)), "fonts/Roboto-Medium.ttf");
+				Font.applyFont(app, ((TextView) convertView.findViewById(R.id.title)), "fonts/Roboto-Medium.ttf");
 			else
-				Font.applyFont(context, ((TextView) convertView.findViewById(R.id.title)), "fonts/Roboto-Light.ttf");
+				Font.applyFont(app, ((TextView) convertView.findViewById(R.id.title)), "fonts/Roboto-Light.ttf");
 
 			if(navDrawerItems.get(position).containsImage) {
 				if(item.isSelected && item.icon_pressed != -1)
-					((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(context.getResources().getDrawable(item.icon_pressed));
+					((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getResources().getDrawable(item.icon_pressed));
 				else
-					((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(context.getResources().getDrawable(item.icon));
+					((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getResources().getDrawable(item.icon));
 			}
 			else
 				((ImageView) convertView.findViewById(R.id.icon)).setVisibility(View.GONE);
@@ -103,12 +107,12 @@ public class NavDrawerListAdapter extends BaseAdapter {
 			
 			((TextView) convertView.findViewById(R.id.title)).setText(item.title);
 			if(item.isSelected)
-				Font.applyFont(context, ((TextView) convertView.findViewById(R.id.title)), "fonts/MYRIADAB.TTF");
+				Font.applyFont(app, ((TextView) convertView.findViewById(R.id.title)), "fonts/MYRIADAB.TTF");
 			else
-				Font.applyFont(context, ((TextView) convertView.findViewById(R.id.title)), "fonts/MYRIADAM.TTF");
+				Font.applyFont(app, ((TextView) convertView.findViewById(R.id.title)), "fonts/MYRIADAM.TTF");
 			
 			if(navDrawerItems.get(position).containsImage)
-				((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(context.getResources().getDrawable(item.icon));
+				((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getResources().getDrawable(item.icon));
 			else
 				((ImageView) convertView.findViewById(R.id.icon)).setVisibility(View.GONE);
 			

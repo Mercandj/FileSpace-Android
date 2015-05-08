@@ -42,7 +42,9 @@ import mercandalli.com.jarvis.listener.IModelFileListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.listener.IStringListener;
 import mercandalli.com.jarvis.model.ModelFile;
+import mercandalli.com.jarvis.model.ModelFileTypeENUM;
 import mercandalli.com.jarvis.net.TaskGet;
+import mercandalli.com.jarvis.net.TaskPost;
 import mercandalli.com.jarvis.view.DividerItemDecoration;
 
 
@@ -148,8 +150,13 @@ public class FileManagerFragmentMyCloud extends Fragment {
             public void execute(final ModelFile modelFile) {
                 final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentMyCloud.this.app);
                 String[] menuList = { getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
-                if(!modelFile.directory)
-                    menuList = new String[] { getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile.public_) ? "Become private" : "Become public" };
+                if(!modelFile.directory) {
+                    if(modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
+                        menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile.public_) ? "Become private" : "Become public", "Set as profile"};
+                    }
+                    else
+                        menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile.public_) ? "Become private" : "Become public"};
+                }
                 menuAleart.setTitle(getString(R.string.action));
                 menuAleart.setItems(menuList,
                         new DialogInterface.OnClickListener() {
@@ -202,7 +209,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
                                     case 4:
                                         FileManagerFragmentMyCloud.this.app.alert(
                                                 getString(R.string.properties) + " : " + modelFile.name,
-                                                "Name : " + modelFile.name+"\nExtension : " + modelFile.type+"\nType : " + modelFile.type.getTitle()+"\nSize : " + app.getLibrary().humanReadableByteCount(modelFile.size),
+                                                "Name : " + modelFile.name + "\nExtension : " + modelFile.type + "\nType : " + modelFile.type.getTitle() + "\nSize : " + app.getLibrary().humanReadableByteCount(modelFile.size),
                                                 "OK",
                                                 null,
                                                 null,
@@ -216,6 +223,26 @@ public class FileManagerFragmentMyCloud extends Fragment {
                                                 FileManagerFragmentMyCloud.this.app.refreshAdapters();
                                             }
                                         });
+                                        break;
+
+                                    // Picture set as profile
+                                    case 6:
+                                        List<BasicNameValuePair> parameters = new ArrayList<>();
+                                        parameters.add(new BasicNameValuePair("id_file_profile_picture", "" + modelFile.id));
+                                        (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                            @Override
+                                            public void execute(JSONObject json, String body) {
+                                                try {
+                                                    if (json != null)
+                                                        if (json.has("succeed"))
+                                                            if (json.getBoolean("succeed"))
+                                                                app.getConfig().setUserIdFileProfilePicture(modelFile.id);
+                                                }
+                                                catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        }, parameters)).execute();
                                         break;
                                 }
                             }
