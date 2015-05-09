@@ -25,7 +25,7 @@
     <string name="console">Console</string>
     <string name="server_error">No server response.</string>
     <string name="method">Method</string>
-    <string name="autoconnection">log me on automatically</string>
+    <string name="auto_connection">log me on automatically</string>
     <string name="ok">Ok</string>
     <string name="ON">ON</string>
     <string name="OFF">OFF</string>

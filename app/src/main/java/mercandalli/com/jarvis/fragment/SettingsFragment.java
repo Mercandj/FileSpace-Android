@@ -6,7 +6,10 @@
 
 package mercandalli.com.jarvis.fragment;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,13 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.action.ENUM_Action;
 import mercandalli.com.jarvis.activity.Application;
-import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.adapter.AdapterModelSetting;
 import mercandalli.com.jarvis.config.Const;
 import mercandalli.com.jarvis.model.ModelSetting;
@@ -33,6 +37,7 @@ public class SettingsFragment extends Fragment {
 	private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     List<ModelSetting> list;
+	int click_version;
 
 	public SettingsFragment(Application app) {
 		this.app = app;
@@ -46,6 +51,7 @@ public class SettingsFragment extends Fragment {
 		recyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
+		click_version = 0;
         
         refreshList();
 		
@@ -62,7 +68,14 @@ public class SettingsFragment extends Fragment {
 			}
 		}, app.getConfig().isAutoConncetion()));
         list.add(new ModelSetting(app, "Web application"));
-		
+
+		try {
+			PackageInfo pInfo = app.getPackageManager().getPackageInfo(app.getPackageName(), 0);
+			list.add(new ModelSetting(app, "Version "+pInfo.versionName));
+		} catch (PackageManager.NameNotFoundException e) {
+			e.printStackTrace();
+		}
+
 		updateAdapter();		
 	}
 	
@@ -76,6 +89,25 @@ public class SettingsFragment extends Fragment {
                         if(position==2) {
                             ENUM_Action.WEB_SEARCH.action.action(app, app.getConfig().webApplication);
                         }
+						if(position==3) {
+							if(click_version==11) {
+								Toast.makeText(app, "Development settings activated.", Toast.LENGTH_SHORT).show();
+							}
+							else if(click_version<11) {
+								if(click_version>=1) {
+									final Toast t = Toast.makeText(app, "" + (11 - click_version), Toast.LENGTH_SHORT);
+									t.show();
+									Handler handler = new Handler();
+									handler.postDelayed(new Runnable() {
+										@Override
+										public void run() {
+											t.cancel();
+										}
+									}, 700);
+								}
+								click_version++;
+							}
+						}
                     }
                 }
             });

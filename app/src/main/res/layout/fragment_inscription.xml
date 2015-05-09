@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/password"
         android:layout_marginTop="14dp"
-        android:text="@string/autoconnection"
+        android:text="@string/auto_connection"
         android:textColor="@color/hint_foreground_material_light"
         android:textSize="20sp"
         android:layout_alignParentEnd="true"
