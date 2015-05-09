@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.library.PointLong;
 
 /**
  * Created by Jonathan on 22/03/2015.
@@ -20,6 +21,11 @@ public class ModelFileContent {
     public String type;
     public Date date_creation, timer_date;
     private Application app;
+
+    public ModelFileContent(Application app, Date timer_date) {
+        this.app = app;
+        this.timer_date = timer_date;
+    }
 
     public ModelFileContent(Application app, String content) {
         this.app = app;
@@ -59,5 +65,18 @@ public class ModelFileContent {
         if(date_creation != null)
             return date_creation.toString();
         return "null";
+    }
+
+    public PointLong diffSecond() {
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+        long diff = 0;
+        try {
+            diff = timer_date.getTime() - dateFormatLocal.parse(dateFormatGmt.format(new Date())).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new PointLong(diff / 1000, (diff / 10) % 100);
     }
 }

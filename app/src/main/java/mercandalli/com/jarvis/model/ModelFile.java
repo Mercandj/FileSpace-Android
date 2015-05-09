@@ -27,12 +27,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.activity.ActivityFileAudio;
 import mercandalli.com.jarvis.activity.ActivityFileText;
+import mercandalli.com.jarvis.activity.ActivityFileTimer;
 import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.listener.IBitmapListener;
 import mercandalli.com.jarvis.listener.IListener;
@@ -173,6 +175,20 @@ public class ModelFile extends Model implements Parcelable {
             this.app.startActivity(intent);
             this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		}
+        else if(this.type.equals(ModelFileTypeENUM.JARVIS.type)) {
+            if(content != null) {
+                if(content.timer_date != null) {
+                    Intent intent = new Intent(app, ActivityFileTimer.class);
+                    intent.putExtra("URL_FILE", ""+this.onlineUrl);
+                    intent.putExtra("LOGIN", ""+this.app.getConfig().getUser().getAccessLogin());
+                    intent.putExtra("ONLINE", true);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    intent.putExtra("TIMER_DATE", "" + dateFormat.format(content.timer_date));
+                    this.app.startActivity(intent);
+                    this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                }
+            }
+        }
 	}
 	
 	public void executeLocal(ArrayList<ModelFile> files) {

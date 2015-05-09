@@ -58,9 +58,9 @@ public class Library {
 
         return
                 (elapsedDays!=0 ? (elapsedDays + "d ") : "") +
-                        (elapsedHours!=0 ? (elapsedHours + "h ") : "") +
-                        (elapsedMinutes!=0 ? (elapsedMinutes + "m ") : "") +
-                        (elapsedSeconds!=0 ? (elapsedSeconds + "s") : "") ;
+                        (elapsedHours!=0   ? ((elapsedHours<10 && elapsedDays!=0)?"0"+elapsedHours+"h ":elapsedHours+"h ") : "") +
+                        (elapsedMinutes!=0 ? ((elapsedMinutes<10 && (elapsedDays!=0 || elapsedHours!=0))?"0"+elapsedMinutes+"m ":elapsedMinutes+"m ") : "") +
+                        (elapsedSeconds!=0 ? ((elapsedSeconds<10 && (elapsedDays!=0 || elapsedHours!=0 || elapsedMinutes!=0))?"0"+elapsedSeconds+"s ":elapsedSeconds+"s ") : "") ;
     }
 
     public String printDifferencePast(Date endDate, Date startDate){
@@ -88,8 +88,8 @@ public class Library {
 
         return
                 (elapsedDays!=0 ? (elapsedDays + "d ") : "") +
-                        (elapsedHours!=0 ? (elapsedHours + "h ") : "") +
-                        (elapsedMinutes!=0 ? (elapsedMinutes + "m ") : "") +
-                        (elapsedSeconds!=0 ? (elapsedSeconds + "s") : "") ;
+                        (elapsedHours!=0   ? ((elapsedHours<10 && elapsedDays!=0)?"0"+elapsedHours+"h ":elapsedHours+"h ") : "") +
+                        (elapsedMinutes!=0 ? ((elapsedMinutes<10 && (elapsedDays!=0 || elapsedHours!=0))?"0"+elapsedMinutes+"m ":elapsedMinutes+"m ") : "") +
+                        (elapsedSeconds!=0 ? ((elapsedSeconds<10 && (elapsedDays!=0 || elapsedHours!=0 || elapsedMinutes!=0))?"0"+elapsedSeconds+"s ":elapsedSeconds+"s ") : "") ;
     }
 }
