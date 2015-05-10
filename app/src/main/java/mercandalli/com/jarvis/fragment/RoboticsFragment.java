@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.ToggleButton;
 
 import org.apache.http.message.BasicNameValuePair;
@@ -31,6 +34,8 @@ public class RoboticsFragment extends Fragment {
     private View rootView;
     private ToggleButton buttonLED;
     private ProgressBar circularProgressBar;
+    private EditText output, id, value;
+    Switch order;
 
     public RoboticsFragment(Application app) {
         this.app = app;
@@ -48,7 +53,7 @@ public class RoboticsFragment extends Fragment {
         this.buttonLED.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                List < BasicNameValuePair > parameters = new ArrayList< BasicNameValuePair >();
+                List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
                 parameters.add(new BasicNameValuePair("value", (isChecked) ? "1" : "0"));
                 new TaskPost(
                         RoboticsFragment.this.app,
@@ -56,6 +61,19 @@ public class RoboticsFragment extends Fragment {
                         null,
                         parameters
                 ).execute();
+            }
+        });
+
+        this.output = (EditText) this.rootView.findViewById(R.id.output);
+        this.id = (EditText) this.rootView.findViewById(R.id.id);
+        this.value = (EditText) this.rootView.findViewById(R.id.value);
+        this.order = (Switch) this.rootView.findViewById(R.id.order);
+
+        this.order.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(!isChecked)
+                    value.setText("");
             }
         });
 
@@ -89,6 +107,36 @@ public class RoboticsFragment extends Fragment {
                     },
                     null
             ).execute();
+
+        ((Button) this.rootView.findViewById(R.id.launch)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(app.isInternetConnection()) {
+                    List<BasicNameValuePair> parameters = new ArrayList<>();
+                    String id_ = id.getText().toString();
+                    String value_ = value.getText().toString();
+                    String order_ = order.isChecked() ? "ordre_id" : "mesure_id";
+                    if(id_!=null)
+                        if(!id_.equals(""))
+                            parameters.add(new BasicNameValuePair(order_, ""+id_));
+                    if(value_!=null)
+                        if(!value_.equals(""))
+                            parameters.add(new BasicNameValuePair("value", ""+value_));
+                    new TaskGet(
+                            app,
+                            app.getConfig().getUser(),
+                            app.getConfig().getUrlServer() + RoboticsFragment.this.app.getConfig().routeRobotics,
+                            new IPostExecuteListener() {
+                                @Override
+                                public void execute(JSONObject json, String body) {
+                                    output.setText(""+body);
+                                }
+                            },
+                            parameters
+                    ).execute();
+                }
+            }
+        });
 
         return rootView;
     }

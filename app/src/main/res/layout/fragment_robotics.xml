@@ -15,18 +15,77 @@
         android:layout_height="wrap_content"
         android:text="New ToggleButton"
         android:id="@+id/toggleButtonLED"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:checked="false"
         android:textOff="@string/OFF"
-        android:textOn="@string/ON" />
+        android:textOn="@string/ON"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
 
     <ProgressBar
         android:id="@+id/circularProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:layout_alignTop="@+id/toggleButtonLED"
+        android:layout_centerHorizontal="true" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="10dp">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberSigned"
+            android:ems="10"
+            android:id="@+id/id"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:hint="id"
+            android:layout_toStartOf="@+id/switch1"
+            android:layout_alignEnd="@+id/value" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/value"
+            android:layout_below="@+id/id"
+            android:layout_alignParentStart="true"
+            android:hint="value"
+            android:layout_toStartOf="@+id/button" />
+
+        <Switch
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:text="Order"
+            android:id="@+id/order"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/output"
+            android:layout_below="@+id/value"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:gravity="left|top"
+            android:textSize="10sp" />
+
+        <Button
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:text="Launch"
+            android:id="@+id/launch"
+            android:layout_alignTop="@+id/value"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
 
 
 </RelativeLayout>
