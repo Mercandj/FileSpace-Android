@@ -72,8 +72,7 @@ public class RoboticsFragment extends Fragment {
         this.order.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(!isChecked)
-                    value.setText("");
+                value.setVisibility(isChecked ? View.VISIBLE : View.INVISIBLE);
             }
         });
 
@@ -102,7 +101,6 @@ public class RoboticsFragment extends Fragment {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-
                         }
                     },
                     null
@@ -119,8 +117,8 @@ public class RoboticsFragment extends Fragment {
                     if(id_!=null)
                         if(!id_.equals(""))
                             parameters.add(new BasicNameValuePair(order_, ""+id_));
-                    if(value_!=null)
-                        if(!value_.equals(""))
+                    if(value_!=null && order_!=null)
+                        if(!value_.equals("") && order_.equals("ordre_id"))
                             parameters.add(new BasicNameValuePair("value", ""+value_));
                     new TaskGet(
                             app,
