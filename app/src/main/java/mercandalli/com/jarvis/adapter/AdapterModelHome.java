@@ -32,12 +32,16 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
     		return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_information_section, parent, false), viewType);
         if(viewType == Const.TAB_VIEW_TYPE_TWO_BUTTONS)
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_two_buttons, parent, false), viewType);
+        if(viewType == Const.TAB_VIEW_TYPE_HOME_INFORMATION)
+            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_home_information, parent, false), viewType);
+        if(viewType == Const.TAB_VIEW_TYPE_HOME_INFORMATION_SHORT)
+            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_home_information_short, parent, false), viewType);
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_information, parent, false), viewType);
     }
     
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        ModelHome model = itemsData.get(position);
+        final ModelHome model = itemsData.get(position);
         switch(model.viewType) {
     	case Const.TAB_VIEW_TYPE_NORMAL:
     		viewHolder.title1.setText(""+model.title1);
@@ -45,7 +49,7 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
     		break;
     	case Const.TAB_VIEW_TYPE_SECTION:
     		viewHolder.title1.setText(""+model.title1);
-    		Font.applyFont(app, viewHolder.title1, "fonts/MYRIADAB.TTF");
+    		Font.applyFont(app, viewHolder.title1, "fonts/Roboto-Medium.ttf");
     		break;
         case Const.TAB_VIEW_TYPE_TWO_BUTTONS:
             viewHolder.button1.setText(""+model.title1);
@@ -54,8 +58,23 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
                 viewHolder.button1.setOnClickListener(model.listener1);
             if(model.listener2 != null)
                 viewHolder.button2.setOnClickListener(model.listener2);
-            Font.applyFont(app, viewHolder.button1, "fonts/MYRIADAB.TTF");
-            Font.applyFont(app, viewHolder.button2, "fonts/MYRIADAB.TTF");
+            Font.applyFont(app, viewHolder.button1, "fonts/Roboto-Medium.ttf");
+            Font.applyFont(app, viewHolder.button2, "fonts/Roboto-Medium.ttf");
+            break;
+        case Const.TAB_VIEW_TYPE_HOME_INFORMATION:
+        case Const.TAB_VIEW_TYPE_HOME_INFORMATION_SHORT:
+            viewHolder.title1.setText("" + model.title1);
+            viewHolder.title2.setText(model.title2);
+            Font.applyFont(app, viewHolder.title1, "fonts/Roboto-Medium.ttf");
+            Font.applyFont(app, viewHolder.title2, "fonts/Roboto-Regular.ttf");
+            Font.applyFont(app, viewHolder.button1, "fonts/Roboto-Medium.ttf");
+            if(model.listenerHome1 != null)
+                viewHolder.button1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        model.listenerHome1.execute(model);
+                    }
+                });
             break;
     	}
     }
@@ -79,6 +98,12 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
             case Const.TAB_VIEW_TYPE_TWO_BUTTONS:
                 button1 = (Button) itemLayoutView.findViewById(R.id.button1);
                 button2 = (Button) itemLayoutView.findViewById(R.id.button2);
+                break;
+            case Const.TAB_VIEW_TYPE_HOME_INFORMATION:
+            case Const.TAB_VIEW_TYPE_HOME_INFORMATION_SHORT:
+                title1 = (TextView) itemLayoutView.findViewById(R.id.title);
+                title2 = (TextView) itemLayoutView.findViewById(R.id.content);
+                button1 = (Button) itemLayoutView.findViewById(R.id.button);
                 break;
         	}
             itemLayoutView.setOnClickListener(this);

@@ -9,6 +9,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.activity.ApplicationDrawer;
 import mercandalli.com.jarvis.adapter.AdapterModelHome;
 import mercandalli.com.jarvis.config.Const;
+import mercandalli.com.jarvis.listener.IModelHomeListener;
 import mercandalli.com.jarvis.model.ModelHome;
 
 /**
@@ -85,8 +87,16 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
 
     public void refreshList() {
         list = new ArrayList<>();
-        list.add(new ModelHome("Home", Const.TAB_VIEW_TYPE_SECTION));
-        list.add(new ModelHome(
+
+        list.add(new ModelHome(list.size(), "Welcome", new IModelHomeListener() {
+            @Override
+            public void execute(ModelHome modelHome) {
+                removeItemList(modelHome);
+            }
+        }, Html.fromHtml("<p align=\"justify\">This app give you the Cloud control from your Android device and your PC thanks to the <font color=\"#26AEEE\">web application</font>. You can share files and talk with your friends.</p>"), Const.TAB_VIEW_TYPE_HOME_INFORMATION));
+
+        list.add(new ModelHome(list.size(), "Tabs", Const.TAB_VIEW_TYPE_SECTION));
+        list.add(new ModelHome(list.size(),
                 "Files",
                 new View.OnClickListener() {
                     @Override
@@ -184,7 +194,6 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                 if (!textMatchList.isEmpty()) {
                     Interpreter interpreter = new InterpreterMain(this.app);
                     String input = textMatchList.get(0);
-                    addItemList(input, "You");
                     speakWords(interpreter.interpret(input));
                 }
         }
@@ -225,7 +234,26 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
     }
 
     public void addItemList(String txt, String subtxt) {
-        if(txt!=null)
-            mAdapter.addItem(new ModelHome(txt.substring(0,1).toUpperCase() + txt.substring(1).toLowerCase(), subtxt, Const.TAB_VIEW_TYPE_NORMAL), 2);
+        if(txt!=null && subtxt!=null) {
+            recyclerView.scrollToPosition(0);
+            mAdapter.addItem(
+                    new ModelHome(list.size(), subtxt, new IModelHomeListener() {
+                        @Override
+                        public void execute(ModelHome modelHome) {
+                            removeItemList(modelHome);
+                        }
+                    },
+                    txt,
+                    Const.TAB_VIEW_TYPE_HOME_INFORMATION_SHORT),
+                0
+            );
+        }
+    }
+
+    public void removeItemList(ModelHome modelHome) {
+        for(int i=0; i<list.size(); i++) {
+            if(list.get(i).equals(modelHome))
+                mAdapter.removeItem(i);
+        }
     }
 }

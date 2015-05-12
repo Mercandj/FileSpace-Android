@@ -69,10 +69,13 @@ public class RoboticsFragment extends Fragment {
         this.value = (EditText) this.rootView.findViewById(R.id.value);
         this.order = (Switch) this.rootView.findViewById(R.id.order);
 
+        this.value.setVisibility(View.INVISIBLE);
+        this.order.setText("Measure");
         this.order.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 value.setVisibility(isChecked ? View.VISIBLE : View.INVISIBLE);
+                order.setText(isChecked ? "Order" : "Measure");
             }
         });
 

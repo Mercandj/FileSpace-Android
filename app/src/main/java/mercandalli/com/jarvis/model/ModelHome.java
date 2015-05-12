@@ -13,20 +13,23 @@ import org.json.JSONObject;
 
 import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.config.Const;
+import mercandalli.com.jarvis.listener.IModelHomeListener;
 
 public class ModelHome extends Model {
 
-	public String title1, title2;
-	public int viewType = Const.TAB_VIEW_TYPE_NORMAL;
+	public CharSequence title1, title2;
+	public int id, viewType = Const.TAB_VIEW_TYPE_NORMAL;
 
     public View.OnClickListener listener1, listener2;
+    public IModelHomeListener listenerHome1;
 
 	public ModelHome() {
 		super();
 	}
 
-	public ModelHome(String title1, View.OnClickListener listener1, String title2, View.OnClickListener listener2, int viewType) {
+	public ModelHome(int id, String title1, View.OnClickListener listener1, String title2, View.OnClickListener listener2, int viewType) {
 		super();
+		this.id = id;
 		this.title1 = title1;
         this.listener1 = listener1;
         this.title2 = title2;
@@ -34,14 +37,25 @@ public class ModelHome extends Model {
         this.viewType = viewType;
     }
 
-    public ModelHome(String title1, int viewType) {
+    public ModelHome(int id, String title1, int viewType) {
         super();
+		this.id = id;
 		this.title1 = title1;
 		this.viewType = viewType;
 	}
 
-    public ModelHome(String title1, String title2, int viewType) {
+    public ModelHome(int id, String title1, String title2, int viewType) {
         super();
+		this.id = id;
+        this.title1 = title1;
+        this.title2 = title2;
+        this.viewType = viewType;
+    }
+
+    public ModelHome(int id, String title1, IModelHomeListener listenerHome1, CharSequence title2, int viewType) {
+        super();
+        this.id = id;
+        this.listenerHome1 = listenerHome1;
         this.title1 = title1;
         this.title2 = title2;
         this.viewType = viewType;
@@ -59,4 +73,16 @@ public class ModelHome extends Model {
 			e.printStackTrace();
 		}
 	}
+
+    @Override
+    public boolean equals(Object o) {
+        if(o==null)
+            return false;
+        if(!(o instanceof ModelHome))
+            return false;
+        ModelHome obj = (ModelHome)o;
+        if(this.title1 != null)
+            return this.id == obj.id && this.title1.equals(obj.title1);
+        return this.id == obj.id;
+    }
 }
