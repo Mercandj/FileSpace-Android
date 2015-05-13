@@ -398,4 +398,9 @@ public class ModelFile extends Model implements Parcelable {
         dest.writeLong(this.size);
         dest.writeBooleanArray(new boolean[]{this.directory});
     }
+
+    @Override
+    public JSONObject toJSONObject() {
+        return null;
+    }
 }

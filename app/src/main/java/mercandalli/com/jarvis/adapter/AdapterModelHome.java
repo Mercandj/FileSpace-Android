@@ -44,16 +44,16 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
         final ModelHome model = itemsData.get(position);
         switch(model.viewType) {
     	case Const.TAB_VIEW_TYPE_NORMAL:
-    		viewHolder.title1.setText(""+model.title1);
-            viewHolder.title2.setText(""+model.title2);
+    		viewHolder.title1.setText(""+model.getTitle1());
+            viewHolder.title2.setText(""+model.getTitle2());
     		break;
     	case Const.TAB_VIEW_TYPE_SECTION:
-    		viewHolder.title1.setText(""+model.title1);
+    		viewHolder.title1.setText(""+model.getTitle1());
     		Font.applyFont(app, viewHolder.title1, "fonts/Roboto-Medium.ttf");
     		break;
         case Const.TAB_VIEW_TYPE_TWO_BUTTONS:
-            viewHolder.button1.setText(""+model.title1);
-            viewHolder.button2.setText(""+model.title2);
+            viewHolder.button1.setText(""+model.getTitle1());
+            viewHolder.button2.setText(""+model.getTitle2());
             if(model.listener1 != null)
                 viewHolder.button1.setOnClickListener(model.listener1);
             if(model.listener2 != null)
@@ -63,8 +63,8 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
             break;
         case Const.TAB_VIEW_TYPE_HOME_INFORMATION:
         case Const.TAB_VIEW_TYPE_HOME_INFORMATION_SHORT:
-            viewHolder.title1.setText("" + model.title1);
-            viewHolder.title2.setText(model.title2);
+            viewHolder.title1.setText("" + model.getTitle1());
+            viewHolder.title2.setText(model.getTitle2());
             Font.applyFont(app, viewHolder.title1, "fonts/Roboto-Medium.ttf");
             Font.applyFont(app, viewHolder.title2, "fonts/Roboto-Regular.ttf");
             Font.applyFont(app, viewHolder.button1, "fonts/Roboto-Medium.ttf");

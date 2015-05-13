@@ -17,8 +17,9 @@ import mercandalli.com.jarvis.listener.IModelHomeListener;
 
 public class ModelHome extends Model {
 
-	public CharSequence title1, title2;
+	private CharSequence title1, title2;
 	public int id, viewType = Const.TAB_VIEW_TYPE_NORMAL;
+    public ModelServerMessage serverMessage;
 
     public View.OnClickListener listener1, listener2;
     public IModelHomeListener listenerHome1;
@@ -61,6 +62,15 @@ public class ModelHome extends Model {
         this.viewType = viewType;
     }
 
+    public ModelHome(int id, String title1, IModelHomeListener listenerHome1, ModelServerMessage serverMessage, int viewType) {
+        super();
+        this.id = id;
+        this.listenerHome1 = listenerHome1;
+        this.title1 = title1;
+        this.serverMessage = serverMessage;
+        this.viewType = viewType;
+    }
+
 	public ModelHome(Application app, JSONObject json) {
 		super();
 		this.app = app;
@@ -84,5 +94,20 @@ public class ModelHome extends Model {
         if(this.title1 != null)
             return this.id == obj.id && this.title1.equals(obj.title1);
         return this.id == obj.id;
+    }
+
+    @Override
+    public JSONObject toJSONObject() {
+        return null;
+    }
+
+    public CharSequence getTitle1() {
+        return title1;
+    }
+
+    public CharSequence getTitle2() {
+        if(serverMessage!=null)
+            return serverMessage.getContent();
+        return title2;
     }
 }

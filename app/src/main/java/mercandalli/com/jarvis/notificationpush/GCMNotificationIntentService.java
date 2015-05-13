@@ -12,6 +12,10 @@ import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.activity.ActivityConversation;
 import mercandalli.com.jarvis.model.ModelServerMessage;
@@ -45,6 +49,7 @@ public class GCMNotificationIntentService extends IntentService {
                         "" + extras.get(Config.KEY_MESSAGE),
                         "" + extras.get(Config.KEY_ID_CONVERSATION)
                 );
+                saveServerMessage(serverMessage);
 
                 sendNotification(serverMessage);
 			}
@@ -78,5 +83,36 @@ public class GCMNotificationIntentService extends IntentService {
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    }
+
+    private void saveServerMessage(ModelServerMessage serverMessage) {
+        if (serverMessage==null)
+            return;
+        try {
+            JSONObject tmp_json = new JSONObject(mercandalli.com.jarvis.config.Config.read_txt(this.getApplicationContext(), mercandalli.com.jarvis.config.Config.getFileName()));
+            if(tmp_json.has("settings_1")) {
+                JSONObject tmp_settings_1 = tmp_json.getJSONObject("settings_1");
+
+                if(tmp_settings_1.has("listServerMessage_1")) {
+                    JSONArray array_listServerMessage_1 = tmp_settings_1.getJSONArray("listServerMessage_1");
+                    for(int i=0; i<array_listServerMessage_1.length(); i++)
+                        if((new ModelServerMessage(array_listServerMessage_1.getJSONObject(i))).equals(serverMessage))
+                            return;
+                    array_listServerMessage_1.put(serverMessage.toJSONObject());
+                    tmp_settings_1.remove("listServerMessage_1");
+                    tmp_settings_1.put("listServerMessage_1", array_listServerMessage_1);
+                }
+                else {
+                    JSONArray array_listServerMessage_1 = new JSONArray();
+                    array_listServerMessage_1.put(serverMessage);
+                    tmp_settings_1.put("listServerMessage_1", array_listServerMessage_1);
+                }
+                tmp_json.remove("settings_1");
+                tmp_json.put("settings_1", tmp_settings_1);
+                mercandalli.com.jarvis.config.Config.write_txt(this.getApplicationContext(), mercandalli.com.jarvis.config.Config.getFileName(), tmp_json.toString());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

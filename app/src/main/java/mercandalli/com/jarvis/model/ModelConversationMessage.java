@@ -73,4 +73,9 @@ public class ModelConversationMessage extends Model {
         }
         return getUsername()+"  "+date + " ago";
     }
+
+    @Override
+    public JSONObject toJSONObject() {
+        return null;
+    }
 }

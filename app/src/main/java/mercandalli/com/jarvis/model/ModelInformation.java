@@ -46,4 +46,9 @@ public class ModelInformation extends Model {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public JSONObject toJSONObject() {
+		return null;
+	}
 }

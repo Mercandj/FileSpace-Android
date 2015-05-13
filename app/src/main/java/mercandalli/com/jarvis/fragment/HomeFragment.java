@@ -32,6 +32,7 @@ import mercandalli.com.jarvis.adapter.AdapterModelHome;
 import mercandalli.com.jarvis.config.Const;
 import mercandalli.com.jarvis.listener.IModelHomeListener;
 import mercandalli.com.jarvis.model.ModelHome;
+import mercandalli.com.jarvis.model.ModelServerMessage;
 
 /**
  * Created by Jonathan on 03/01/2015.
@@ -87,6 +88,18 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
 
     public void refreshList() {
         list = new ArrayList<>();
+
+        List<ModelServerMessage> serverMessageList = app.getConfig().getListServerMessage_1();
+        for(int i = serverMessageList.size()-1; i>=0; i--) {
+            list.add(new ModelHome(list.size(), "Notification", new IModelHomeListener() {
+                @Override
+                public void execute(ModelHome modelHome) {
+                    removeItemList(modelHome);
+                    if(modelHome.serverMessage != null)
+                        app.getConfig().removeServerMessage(modelHome.serverMessage);
+                }
+            }, serverMessageList.get(i), Const.TAB_VIEW_TYPE_HOME_INFORMATION));
+        }
 
         list.add(new ModelHome(list.size(), "Welcome", new IModelHomeListener() {
             @Override

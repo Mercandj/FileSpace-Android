@@ -104,4 +104,9 @@ public class ModelUser extends Model {
     public boolean isAdmin() {
         return admin;
     }
+
+    @Override
+    public JSONObject toJSONObject() {
+        return null;
+    }
 }

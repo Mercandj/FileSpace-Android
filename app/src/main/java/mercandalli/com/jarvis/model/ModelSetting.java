@@ -8,6 +8,8 @@ package mercandalli.com.jarvis.model;
 
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
+import org.json.JSONObject;
+
 import mercandalli.com.jarvis.activity.Application;
 
 public class ModelSetting extends Model {
@@ -32,5 +34,10 @@ public class ModelSetting extends Model {
 		this.title = title;
 		this.toggleButtonListener = toggleButtonListener;
 		this.toggleButtonInitValue = toggleButtonInitValue;
-	}	
+	}
+
+	@Override
+	public JSONObject toJSONObject() {
+		return null;
+	}
 }

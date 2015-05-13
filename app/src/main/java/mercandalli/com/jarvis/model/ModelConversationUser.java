@@ -93,4 +93,9 @@ public class ModelConversationUser extends Model {
         this.app.startActivity(intent);
         this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
+
+    @Override
+    public JSONObject toJSONObject() {
+        return null;
+    }
 }
