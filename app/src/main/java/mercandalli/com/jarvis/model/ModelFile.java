@@ -361,6 +361,10 @@ public class ModelFile extends Model implements Parcelable {
     public boolean isMine() {
         return this.id_user == this.app.getConfig().getUser().id;
     }
+    
+    public boolean isAudio() {
+        return this.type.equals(ModelFileTypeENUM.AUDIO.type);
+    }
 
     public static final Parcelable.Creator<ModelFile> CREATOR = new Parcelable.Creator<ModelFile>() {
         @Override
