@@ -1,4 +1,4 @@
-package mercandalli.com.jarvis.action.language;
+package mercandalli.com.jarvis.ia.language;
 
 import org.json.JSONArray;
 import org.json.JSONException;

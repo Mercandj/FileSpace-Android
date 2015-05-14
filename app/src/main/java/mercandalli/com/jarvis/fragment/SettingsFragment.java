@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.action.ENUM_Action;
+import mercandalli.com.jarvis.ia.action.ENUM_Action;
 import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.adapter.AdapterModelSetting;
 import mercandalli.com.jarvis.config.Const;

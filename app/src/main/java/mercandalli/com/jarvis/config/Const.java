@@ -8,5 +8,5 @@ public class Const {
 	public static final int TAB_VIEW_TYPE_PROFIL	 	            = 4;
     public static final int TAB_VIEW_TYPE_TWO_BUTTONS               = 5;
 	public static final int TAB_VIEW_TYPE_HOME_INFORMATION 	        = 6;
-    public static final int TAB_VIEW_TYPE_HOME_INFORMATION_SHORT    = 7;
+	public static final int TAB_VIEW_TYPE_HOME_INFORMATION_FORM     = 7;
 }

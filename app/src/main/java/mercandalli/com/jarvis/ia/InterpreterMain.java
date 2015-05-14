@@ -1,4 +1,4 @@
-package mercandalli.com.jarvis.action;
+package mercandalli.com.jarvis.ia;
 
 import android.util.Log;
 
@@ -23,30 +23,34 @@ public class InterpreterMain extends Interpreter {
     }
 
     @Override
-    public String interpret(String input) {
+    public InterpreterResult interpret(String input) {
         Log.d("InterpreterMain", "input : "+input);
 
         input = normalisationText(input);
 
-        String outputActionEquals = interpreterActionEquals.interpret(input);
+        InterpreterResult outputActionEquals = interpreterActionEquals.interpret(input);
         if(outputActionEquals != null)
-            return outputActionEquals;
+            if(!outputActionEquals.isEmpty())
+                return outputActionEquals;
 
         if(this.app.getConfig().getUser().isAdmin()) {
-            String outputRoboticsEquals = interpreterRoboticsEquals.interpret(input);
+            InterpreterResult outputRoboticsEquals = interpreterRoboticsEquals.interpret(input);
             if (outputRoboticsEquals != null)
-                return outputRoboticsEquals;
+                if(!outputRoboticsEquals.isEmpty())
+                    return outputRoboticsEquals;
         }
 
-        String outputDialogEquals = interpreterDialogEquals.interpret(input);
+        InterpreterResult outputDialogEquals = interpreterDialogEquals.interpret(input);
         if(outputDialogEquals != null)
-            return outputDialogEquals;
+            if(!outputDialogEquals.isEmpty())
+                return outputDialogEquals;
 
-        String outputActionContains = interpreterActionContains.interpret(input);
+        InterpreterResult outputActionContains = interpreterActionContains.interpret(input);
         if(outputActionContains != null)
-            return outputActionContains;
+            if(!outputActionContains.isEmpty())
+                return outputActionContains;
 
-        return input;
+        return new InterpreterResult(input);
     }
 
     public String normalisationText(String messageOrig) {

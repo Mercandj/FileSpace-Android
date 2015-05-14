@@ -1,4 +1,4 @@
-package mercandalli.com.jarvis.action;
+package mercandalli.com.jarvis.ia;
 
 import mercandalli.com.jarvis.activity.Application;
 
@@ -13,14 +13,14 @@ public class InterpreterDialogEquals extends Interpreter {
     }
 
     @Override
-    public String interpret(String input) {
+    public InterpreterResult interpret(String input) {
         String output = null;
         for(QA qa:this.res.getQas()) {
             String answer = qa.getAnswer(input);
             if(answer != null)
-                return answer;
+                return new InterpreterResult(answer);
         }
-        return output;
+        return new InterpreterResult(output);
     }
 
 }

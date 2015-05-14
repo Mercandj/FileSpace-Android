@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -34,13 +35,13 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_two_buttons, parent, false), viewType);
         if(viewType == Const.TAB_VIEW_TYPE_HOME_INFORMATION)
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_home_information, parent, false), viewType);
-        if(viewType == Const.TAB_VIEW_TYPE_HOME_INFORMATION_SHORT)
-            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_home_information_short, parent, false), viewType);
+        if(viewType == Const.TAB_VIEW_TYPE_HOME_INFORMATION_FORM)
+            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_home_information_form, parent, false), viewType);
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_information, parent, false), viewType);
     }
     
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         final ModelHome model = itemsData.get(position);
         switch(model.viewType) {
     	case Const.TAB_VIEW_TYPE_NORMAL:
@@ -62,7 +63,6 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
             Font.applyFont(app, viewHolder.button2, "fonts/Roboto-Medium.ttf");
             break;
         case Const.TAB_VIEW_TYPE_HOME_INFORMATION:
-        case Const.TAB_VIEW_TYPE_HOME_INFORMATION_SHORT:
             viewHolder.title1.setText("" + model.getTitle1());
             viewHolder.title2.setText(model.getTitle2());
             Font.applyFont(app, viewHolder.title1, "fonts/Roboto-Medium.ttf");
@@ -76,13 +76,49 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
                     }
                 });
             break;
+        case Const.TAB_VIEW_TYPE_HOME_INFORMATION_FORM:
+            viewHolder.title1.setText("" + model.getTitle1());
+            Font.applyFont(app, viewHolder.title1, "fonts/Roboto-Medium.ttf");
+            Font.applyFont(app, viewHolder.button1, "fonts/Roboto-Medium.ttf");
+            Font.applyFont(app, viewHolder.button2, "fonts/Roboto-Medium.ttf");
+            if(model.listenerHome1 != null)
+                viewHolder.button1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        model.listenerHome1.execute(model);
+                    }
+                });
+
+            if(model.modelEmail.input1Text == null) viewHolder.input1.setVisibility(View.GONE);
+            else viewHolder.input1Text.setText(model.modelEmail.input1Text);
+
+            if(model.modelEmail.input2Text == null) viewHolder.input2.setVisibility(View.GONE);
+            else viewHolder.input2Text.setText(model.modelEmail.input2Text);
+
+            if(model.modelEmail.input3Text == null) viewHolder.input3.setVisibility(View.GONE);
+            else viewHolder.input3Text.setText(model.modelEmail.input3Text);
+
+            if(model.modelEmail != null)
+                viewHolder.button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        model.modelEmail.input1EditText = viewHolder.input1EditText.getText().toString();
+                        model.modelEmail.input2EditText = viewHolder.input2EditText.getText().toString();
+                        model.modelEmail.input3EditText = viewHolder.input3EditText.getText().toString();
+                        model.modelEmail.send();
+                        if(model.listenerHome1 != null)
+                            model.listenerHome1.execute(model);
+                    }
+                });
+            break;
     	}
     }
     
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {        
-        public TextView title1, title2;
+        public TextView title1, title2, input1Text, input2Text, input3Text;
+        public EditText input1EditText, input2EditText, input3EditText;
         public Button button1, button2;
-        public RelativeLayout item;
+        public RelativeLayout item, input1, input2, input3;
          
         public ViewHolder(View itemLayoutView, int viewType) {
             super(itemLayoutView);            
@@ -100,10 +136,23 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
                 button2 = (Button) itemLayoutView.findViewById(R.id.button2);
                 break;
             case Const.TAB_VIEW_TYPE_HOME_INFORMATION:
-            case Const.TAB_VIEW_TYPE_HOME_INFORMATION_SHORT:
                 title1 = (TextView) itemLayoutView.findViewById(R.id.title);
                 title2 = (TextView) itemLayoutView.findViewById(R.id.content);
                 button1 = (Button) itemLayoutView.findViewById(R.id.button);
+                break;
+            case Const.TAB_VIEW_TYPE_HOME_INFORMATION_FORM:
+                title1 = (TextView) itemLayoutView.findViewById(R.id.title);
+                button1 = (Button) itemLayoutView.findViewById(R.id.button);
+                button2 = (Button) itemLayoutView.findViewById(R.id.buttonSend);
+                input1 = (RelativeLayout) itemLayoutView.findViewById(R.id.input1);
+                input2 = (RelativeLayout) itemLayoutView.findViewById(R.id.input2);
+                input3 = (RelativeLayout) itemLayoutView.findViewById(R.id.input3);
+                input1Text = (TextView) itemLayoutView.findViewById(R.id.input1Text);
+                input2Text = (TextView) itemLayoutView.findViewById(R.id.input2Text);
+                input3Text = (TextView) itemLayoutView.findViewById(R.id.input3Text);
+                input1EditText = (EditText) itemLayoutView.findViewById(R.id.input1EditText);
+                input2EditText = (EditText) itemLayoutView.findViewById(R.id.input2EditText);
+                input3EditText = (EditText) itemLayoutView.findViewById(R.id.input3EditText);
                 break;
         	}
             itemLayoutView.setOnClickListener(this);

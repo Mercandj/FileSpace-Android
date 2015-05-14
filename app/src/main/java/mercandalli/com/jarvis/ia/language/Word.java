@@ -1,4 +1,4 @@
-package mercandalli.com.jarvis.action.language;
+package mercandalli.com.jarvis.ia.language;
 
 /**
  * Created by Jonathan on 24/04/2015.

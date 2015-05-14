@@ -24,12 +24,13 @@ import java.util.List;
 import java.util.Locale;
 
 import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.action.Interpreter;
-import mercandalli.com.jarvis.action.InterpreterMain;
 import mercandalli.com.jarvis.activity.Application;
 import mercandalli.com.jarvis.activity.ApplicationDrawer;
 import mercandalli.com.jarvis.adapter.AdapterModelHome;
 import mercandalli.com.jarvis.config.Const;
+import mercandalli.com.jarvis.ia.Interpreter;
+import mercandalli.com.jarvis.ia.InterpreterMain;
+import mercandalli.com.jarvis.ia.InterpreterResult;
 import mercandalli.com.jarvis.listener.IModelHomeListener;
 import mercandalli.com.jarvis.model.ModelHome;
 import mercandalli.com.jarvis.model.ModelServerMessage;
@@ -106,7 +107,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
             public void execute(ModelHome modelHome) {
                 removeItemList(modelHome);
             }
-        }, Html.fromHtml("<p align=\"justify\">This app give you the Cloud control from your Android device and your PC thanks to the <font color=\"#26AEEE\">web application</font>. You can share files and talk with your friends.</p>"), Const.TAB_VIEW_TYPE_HOME_INFORMATION));
+        }, Html.fromHtml("<a>This app give you the Cloud control from your Android device and your PC thanks to the <font color=\"#26AEEE\">web application</font>. You can share files and talk with your friends.</a>"), Const.TAB_VIEW_TYPE_HOME_INFORMATION));
 
         list.add(new ModelHome(list.size(), "Tabs", Const.TAB_VIEW_TYPE_SECTION));
         list.add(new ModelHome(list.size(),
@@ -114,8 +115,8 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(app instanceof ApplicationDrawer) {
-                            ((ApplicationDrawer)app).selectItem(3);
+                        if (app instanceof ApplicationDrawer) {
+                            ((ApplicationDrawer) app).selectItem(3);
                         }
                     }
                 },
@@ -123,7 +124,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((ApplicationDrawer)app).selectItem(4);
+                        ((ApplicationDrawer) app).selectItem(4);
                     }
                 },
                 Const.TAB_VIEW_TYPE_TWO_BUTTONS));
@@ -207,7 +208,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                 if (!textMatchList.isEmpty()) {
                     Interpreter interpreter = new InterpreterMain(this.app);
                     String input = textMatchList.get(0);
-                    speakWords(interpreter.interpret(input));
+                    addItemList("Jarvis", interpreter.interpret(input));
                 }
         }
 
@@ -218,7 +219,6 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
     public void speakWords(String speech) {
         if(speech==null) return;
         else if(speech.equals("")||speech.equals(" ")) return;
-        addItemList(speech, "Jarvis");
 
         if(myTTS==null)
             myTTS = new TextToSpeech(this.getActivity(), this);
@@ -246,20 +246,36 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
             myTTS.shutdown();
     }
 
-    public void addItemList(String txt, String subtxt) {
-        if(txt!=null && subtxt!=null) {
+    public void addItemList(String title, InterpreterResult interpreterResult) {
+        if(title!=null && interpreterResult!=null) {
+            if(interpreterResult.content != null)
+                speakWords(interpreterResult.content);
+
             recyclerView.scrollToPosition(0);
-            mAdapter.addItem(
-                    new ModelHome(list.size(), subtxt, new IModelHomeListener() {
-                        @Override
-                        public void execute(ModelHome modelHome) {
-                            removeItemList(modelHome);
-                        }
-                    },
-                    txt,
-                    Const.TAB_VIEW_TYPE_HOME_INFORMATION_SHORT),
-                0
-            );
+            if(interpreterResult.modelForm!=null)
+                mAdapter.addItem(
+                        new ModelHome(list.size(), title, new IModelHomeListener() {
+                            @Override
+                            public void execute(ModelHome modelHome) {
+                                removeItemList(modelHome);
+                            }
+                        },
+                                interpreterResult.modelForm,
+                                Const.TAB_VIEW_TYPE_HOME_INFORMATION_FORM),
+                        0
+                );
+            else
+                mAdapter.addItem(
+                        new ModelHome(list.size(), title, new IModelHomeListener() {
+                            @Override
+                            public void execute(ModelHome modelHome) {
+                                removeItemList(modelHome);
+                            }
+                        },
+                                interpreterResult.content,
+                                Const.TAB_VIEW_TYPE_HOME_INFORMATION),
+                        0
+                );
         }
     }
 

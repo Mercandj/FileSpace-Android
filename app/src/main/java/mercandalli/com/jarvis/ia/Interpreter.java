@@ -1,4 +1,4 @@
-package mercandalli.com.jarvis.action;
+package mercandalli.com.jarvis.ia;
 
 import mercandalli.com.jarvis.activity.Application;
 
@@ -20,6 +20,6 @@ public abstract class Interpreter {
         this.res = res;
     }
 
-    public abstract String interpret(String input);
+    public abstract InterpreterResult interpret(String input);
 
 }

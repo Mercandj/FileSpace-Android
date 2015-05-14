@@ -1,4 +1,4 @@
-package mercandalli.com.jarvis.action;
+package mercandalli.com.jarvis.ia;
 
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -25,7 +25,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
     }
 
     @Override
-    public String interpret(String input) {
+    public InterpreterResult interpret(String input) {
         String output = null;
 
         if(this.res.equalsSentenece("raspberry êtat", input))
@@ -54,7 +54,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
                         },
                         null
                 ).execute();
-                return "";
+                return new InterpreterResult("");
             }
 
         if(this.res.equalsSentenece("raspberry led on", input))
@@ -72,7 +72,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
                         },
                         parameters
                 ).execute();
-                return "";
+                return new InterpreterResult("");
             }
 
         if(this.res.equalsSentenece("raspberry led off", input))
@@ -90,10 +90,10 @@ public class InterpreterRoboticsEquals extends Interpreter {
                         },
                         parameters
                 ).execute();
-                return "";
+                return new InterpreterResult("");
             }
 
-        return output;
+        return new InterpreterResult(output);
     }
 
     /**
@@ -106,7 +106,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
             if(tmpApp.fragment != null)
                 if(tmpApp.fragment instanceof HomeFragment)
                 {
-                    ((HomeFragment)tmpApp.fragment).speakWords(input);
+                    ((HomeFragment)tmpApp.fragment).addItemList("Jarvis", new InterpreterResult(input));
                 }
         }
     }

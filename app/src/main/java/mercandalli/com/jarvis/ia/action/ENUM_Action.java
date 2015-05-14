@@ -1,4 +1,4 @@
-package mercandalli.com.jarvis.action;
+package mercandalli.com.jarvis.ia.action;
 
 import android.content.Context;
 import android.content.Intent;

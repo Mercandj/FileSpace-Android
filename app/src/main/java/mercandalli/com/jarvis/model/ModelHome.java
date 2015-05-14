@@ -20,6 +20,7 @@ public class ModelHome extends Model {
 	private CharSequence title1, title2;
 	public int id, viewType = Const.TAB_VIEW_TYPE_NORMAL;
     public ModelServerMessage serverMessage;
+    public ModelForm modelEmail;
 
     public View.OnClickListener listener1, listener2;
     public IModelHomeListener listenerHome1;
@@ -59,6 +60,15 @@ public class ModelHome extends Model {
         this.listenerHome1 = listenerHome1;
         this.title1 = title1;
         this.title2 = title2;
+        this.viewType = viewType;
+    }
+
+    public ModelHome(int id, String title1, IModelHomeListener listenerHome1, ModelForm modelEmail, int viewType) {
+        super();
+        this.id = id;
+        this.listenerHome1 = listenerHome1;
+        this.title1 = title1;
+        this.modelEmail = modelEmail;
         this.viewType = viewType;
     }
 
