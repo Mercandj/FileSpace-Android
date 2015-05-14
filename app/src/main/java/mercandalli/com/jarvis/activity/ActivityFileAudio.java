@@ -86,24 +86,25 @@ public class ActivityFileAudio extends Application {
     private MediaPlayer.OnCompletionListener onCompletion = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
+            // Play the next song
             if(files!=null) {
                 boolean idMark = false;
-                boolean findNext = false;
-                for (int i = 0; i < files.size(); i++) {
-                    if(idMark && !files.get(i).directory) {
-                        ActivityFileAudio.this.file = files.get(i);
+                for (ModelFile f:files) {
+                    if(idMark && f.isAudio()) {
+                        ActivityFileAudio.this.file = f;
                         start();
                         return;
                     }
-                    if(files.get(i).id == file.id)
+                    if(f.equals(file))
                         idMark = true;
                 }
-                for(int i = 0; i < files.size(); i++)
-                    if(!files.get(i).directory) {
-                        ActivityFileAudio.this.file = files.get(i);
+                for (ModelFile f:files) {
+                    if(f.isAudio()) {
+                        ActivityFileAudio.this.file = f;
                         start();
                         return;
                     }
+                }
             }
         }
     };
