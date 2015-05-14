@@ -68,6 +68,7 @@ public class SettingsFragment extends Fragment {
 			}
 		}, app.getConfig().isAutoConncetion()));
         list.add(new ModelSetting(app, "Web application"));
+        list.add(new ModelSetting(app, "Welcome on home screen"));
 
 		try {
 			PackageInfo pInfo = app.getPackageManager().getPackageInfo(app.getPackageName(), 0);
@@ -85,35 +86,41 @@ public class SettingsFragment extends Fragment {
             adapter.setOnItemClickListener(new AdapterModelSetting.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    if(position < list.size()) {
-                        if(position==2) {
-                            ENUM_Action.WEB_SEARCH.action.action(app, app.getConfig().webApplication);
+                    if (position < list.size()) {
+                        switch (position) {
+                            case 2:
+                                ENUM_Action.WEB_SEARCH.action.action(app, app.getConfig().webApplication);
+                                break;
+                            case 3:
+                                Toast.makeText(app, "Welcome message enabled.", Toast.LENGTH_SHORT).show();
+                                app.getConfig().setHomeWelcomeMessage(true);
+                                break;
+                            case 4:
+                                if (click_version == 11) {
+                                    Toast.makeText(app, "Development settings activated.", Toast.LENGTH_SHORT).show();
+                                } else if (click_version < 11) {
+                                    if (click_version >= 1) {
+                                        final Toast t = Toast.makeText(app, "" + (11 - click_version), Toast.LENGTH_SHORT);
+                                        t.show();
+                                        Handler handler = new Handler();
+                                        handler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                t.cancel();
+                                            }
+                                        }, 700);
+                                    }
+                                    click_version++;
+                                }
+                                break;
                         }
-						if(position==3) {
-							if(click_version==11) {
-								Toast.makeText(app, "Development settings activated.", Toast.LENGTH_SHORT).show();
-							}
-							else if(click_version<11) {
-								if(click_version>=1) {
-									final Toast t = Toast.makeText(app, "" + (11 - click_version), Toast.LENGTH_SHORT);
-									t.show();
-									Handler handler = new Handler();
-									handler.postDelayed(new Runnable() {
-										@Override
-										public void run() {
-											t.cancel();
-										}
-									}, 700);
-								}
-								click_version++;
-							}
-						}
+
                     }
                 }
             });
-			recyclerView.setAdapter(adapter);
-		}
-	}
+            recyclerView.setAdapter(adapter);
+        }
+    }
 
     @Override
     public boolean back() {

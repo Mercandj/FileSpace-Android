@@ -102,12 +102,14 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
             }, serverMessageList.get(i), Const.TAB_VIEW_TYPE_HOME_INFORMATION));
         }
 
-        list.add(new ModelHome(list.size(), "Welcome", new IModelHomeListener() {
-            @Override
-            public void execute(ModelHome modelHome) {
-                removeItemList(modelHome);
-            }
-        }, Html.fromHtml("<a>This app give you the Cloud control from your Android device and your PC thanks to the <font color=\"#26AEEE\">web application</font>. You can share files and talk with your friends.</a>"), Const.TAB_VIEW_TYPE_HOME_INFORMATION));
+        if(this.app.getConfig().isHomeWelcomeMessage())
+            list.add(new ModelHome(list.size(), "Welcome", new IModelHomeListener() {
+                @Override
+                public void execute(ModelHome modelHome) {
+                    removeItemList(modelHome);
+                    app.getConfig().setHomeWelcomeMessage(false);
+                }
+            }, Html.fromHtml("<a>This app give you the Cloud control from your Android device and your PC thanks to the <font color=\"#26AEEE\">web application</font>. You can share files and talk with your friends.</a>"), Const.TAB_VIEW_TYPE_HOME_INFORMATION));
 
         list.add(new ModelHome(list.size(), "Tabs", Const.TAB_VIEW_TYPE_SECTION));
         list.add(new ModelHome(list.size(),
