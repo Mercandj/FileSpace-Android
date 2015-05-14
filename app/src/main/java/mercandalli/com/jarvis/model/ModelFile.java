@@ -363,6 +363,8 @@ public class ModelFile extends Model implements Parcelable {
     }
     
     public boolean isAudio() {
+    	if (this.directory || this.type == null)
+    	    return false;
         return this.type.equals(ModelFileTypeENUM.AUDIO.type);
     }
 
