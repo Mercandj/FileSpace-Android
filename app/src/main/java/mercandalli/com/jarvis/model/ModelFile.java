@@ -403,4 +403,14 @@ public class ModelFile extends Model implements Parcelable {
     public JSONObject toJSONObject() {
         return null;
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if(o==null)
+            return false;
+        if(!(o instanceof ModelFile))
+            return false;
+        ModelFile obj = (ModelFile)o;
+        return obj.id == this.id;
+    }
 }
