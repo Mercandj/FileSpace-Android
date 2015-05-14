@@ -52,15 +52,20 @@ public class InterpreterActionContains extends Interpreter {
             InterpreterResult interpreterResult = new InterpreterResult();
             interpreterResult.content = "Je vous laisse valider votre note.";
             interpreterResult.modelForm = new ModelForm();
-            interpreterResult.modelForm.input1Text = "Note title";
-            interpreterResult.modelForm.input2Text = "Your note";
+            interpreterResult.modelForm.input1Text = "Your note";
+            if(input.startsWith("note "))
+                interpreterResult.modelForm.input1EditText = input.replaceFirst("note ", "");
+            if(input.startsWith("note le message "))
+                interpreterResult.modelForm.input1EditText = input.replaceFirst("note le message ", "");
+            if(input.startsWith("note le message suivant "))
+                interpreterResult.modelForm.input1EditText = input.replaceFirst("note le message suivant ", "");
             interpreterResult.modelForm.sendListener = new IModelFormListener() {
                 @Override
                 public void execute(ModelForm modelFile) {
                     if(app.isInternetConnection()) {
                         String url = app.getConfig().getUrlServer() + app.getConfig().routeUserConversation + "/" + app.getConfig().getUserId();
                         List< BasicNameValuePair > parameters = new ArrayList<>();
-                        parameters.add(new BasicNameValuePair("message", modelFile.input1EditText + " : " + modelFile.input2EditText));
+                        parameters.add(new BasicNameValuePair("message", "" + modelFile.input1EditText));
 
                         new TaskPost(app, url, new IPostExecuteListener() {
                             @Override
