@@ -1,3 +1,22 @@
+/**
+ * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
+ *
+ * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
+ *
+ * LICENSE:
+ *
+ * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the 
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * @author Jonathan Mercandalli
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
+ */
 package mercandalli.com.jarvis.config;
 
 import android.content.Context;
@@ -29,7 +48,15 @@ import mercandalli.com.jarvis.net.TaskGetDownloadImage;
  */
 public class Config {
 
+    private Application app;
+    private List<ModelServerMessage> listServerMessage_1;
+    public String currentToken					= null;
+
+    // Local routes
     public final String localFolderName			= "Jarvis";
+    private static final String fileName        = "settings_json_1.txt";
+
+    // Server routes
     public final String aboutURL 				= "http://mercandalli.com/";
     public final String webApplication			= "http://mercandalli.com/jarvis";
     public final String routeFile	 			= "file";
@@ -39,14 +66,12 @@ public class Config {
     public final String routeUserPut	        = "user_put";
     public final String routeUserMessage        = "user_message";
     public final String routeUserConversation   = "user_conversation";
-    public String currentToken					= null;
 
-    private Application app;
-    private List<ModelServerMessage> listServerMessage_1;
-    private static final String fileName = "settings_json_1.txt";
-
+    /**
+     * Static int to save/load
+     */
     private enum ENUM_Int {
-        LAST_TAB				                (0, 	"int_last_tab"				            ),
+        INTEGER_LAST_TAB				        (0, 	"int_last_tab_1"			            ),
         INTEGER_USER_ID     	                (-1, 	"int_user_id_1"     		            ),
         INTEGER_USER_ID_FILE_PROFILE_PICTURE    (-1, 	"int_user_id_file_profile_picture_1"   	),
         ;
@@ -59,9 +84,13 @@ public class Config {
         }
     }
 
+    /**
+     * Static boolean to save/load
+     */
     private enum ENUM_Boolean {
-        BOOLEAN_AUTO_CONNECTION	(true, 		"boolean_auto_connection"		),
-        BOOLEAN_USER_ADMIN  	(false,		"boolean_user_admin_1"  		),
+        BOOLEAN_AUTO_CONNECTION	        (true, 		"boolean_auto_connection_1"		),
+        BOOLEAN_USER_ADMIN  	        (false,		"boolean_user_admin_1"  		),
+        BOOLEAN_HOME_WELCOME_MESSAGE  	(true,		"boolean_home_welcome_message_1"),
         ;
 
         boolean value;
@@ -72,6 +101,9 @@ public class Config {
         }
     }
 
+    /**
+     * Static Sctring to save/load
+     */
     private enum ENUM_String {
         STRING_URL_SERVER		("http://mercandalli.com/Jarvis-API/", 	"string_url_server_1"			),
         STRING_USER_USERNAME	("",                                    "string_user_username_1"		),
@@ -176,12 +208,12 @@ public class Config {
     }
 
     public int getLastTab() {
-        return ENUM_Int.LAST_TAB.value;
+        return ENUM_Int.INTEGER_LAST_TAB.value;
     }
 
     public void setDisplayPosition(int value) {
-        if(ENUM_Int.LAST_TAB.value!=value) {
-            ENUM_Int.LAST_TAB.value = value;
+        if(ENUM_Int.INTEGER_LAST_TAB.value!=value) {
+            ENUM_Int.INTEGER_LAST_TAB.value = value;
             save();
         }
     }
@@ -280,6 +312,17 @@ public class Config {
             save();
         }
     }
+    
+    public boolean isHomeWelcomeMessage() {
+        return ENUM_Boolean.BOOLEAN_HOME_WELCOME_MESSAGE.value;
+    }
+
+    public void setHomeWelcomeMessage(boolean value) {
+        if(ENUM_Boolean.BOOLEAN_HOME_WELCOME_MESSAGE.value!=value) {
+            ENUM_Boolean.BOOLEAN_HOME_WELCOME_MESSAGE.value = value;
+            save();
+        }
+    }
 
     public boolean isAutoConncetion() {
         return ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value;
@@ -294,16 +337,6 @@ public class Config {
 
     public ModelUser getUser() {
         return new ModelUser(app, getUserId(), getUserUsername(), getUserPassword(), currentToken, getUserRegId(), isUserAdmin());
-    }
-
-    public void reset() {
-        setUserRegId("");
-        setUserUsername("");
-        setUserPassword("");
-        setAutoConnection(false);
-        setUserId(-1);
-        setUserAdmin(false);
-        setUserIdFileProfilePicture(-1);
     }
 
     public void addServerMessage(ModelServerMessage serverMessage) {
@@ -344,5 +377,20 @@ public class Config {
     public List<ModelServerMessage> getListServerMessage_1() {
         this.load();
         return listServerMessage_1;
+    }
+    
+    /**
+     * Reset the saved values
+     * (When the user log out)
+     */
+    public void reset() {
+        setUserRegId("");
+        setUserUsername("");
+        setUserPassword("");
+        setAutoConnection(false);
+        setUserId(-1);
+        setUserAdmin(false);
+        setUserIdFileProfilePicture(-1);
+        setHomeWelcomeMessage(true);
     }
 }
