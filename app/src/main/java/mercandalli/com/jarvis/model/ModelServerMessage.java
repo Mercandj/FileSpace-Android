@@ -11,7 +11,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.ui.activity.Application;
 
 public class ModelServerMessage extends Model {
 

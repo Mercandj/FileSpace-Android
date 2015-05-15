@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.ui.activity.Application;
 
 /**
  * Created by Jonathan on 24/04/2015.

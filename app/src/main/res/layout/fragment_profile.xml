@@ -10,7 +10,7 @@
     android:layout_gravity="top"
     android:orientation="vertical" >
 
-    <mercandalli.com.jarvis.view.CircularImageView
+    <mercandalli.com.jarvis.ui.view.CircularImageView
         android:id="@+id/icon"
         android:layout_width="100dp"
         android:layout_height="100dp"

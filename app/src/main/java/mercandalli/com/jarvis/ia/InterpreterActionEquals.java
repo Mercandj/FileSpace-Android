@@ -1,6 +1,6 @@
 package mercandalli.com.jarvis.ia;
 
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.ia.action.ENUM_Action;
 
 /**

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.jarvis.ia.language.Sentence;
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.ui.activity.Application;
 
 /**
  * Created by Jonathan on 24/04/2015.

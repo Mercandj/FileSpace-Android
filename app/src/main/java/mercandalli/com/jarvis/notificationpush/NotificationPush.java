@@ -12,7 +12,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
 
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.ui.activity.Application;
 
 public class NotificationPush {
 	public static GoogleCloudMessaging gcm;

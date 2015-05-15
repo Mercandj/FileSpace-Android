@@ -10,8 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import mercandalli.com.jarvis.activity.Application;
-import mercandalli.com.jarvis.library.PointLong;
+import mercandalli.com.jarvis.ui.activity.Application;
+import mercandalli.com.jarvis.util.PointLong;
+import mercandalli.com.jarvis.util.TimeUtils;
 
 /**
  * Created by Jonathan on 22/03/2015.
@@ -57,7 +58,7 @@ public class ModelFileContent {
             dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
             SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {
-                return this.app.getLibrary().printDifferenceFuture(timer_date, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
+                return TimeUtils.printDifferenceFuture(timer_date, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
             } catch (ParseException e) {
                 e.printStackTrace();
             }

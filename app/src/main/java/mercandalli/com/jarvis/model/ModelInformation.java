@@ -9,7 +9,7 @@ package mercandalli.com.jarvis.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.config.Const;
 
 public class ModelInformation extends Model {

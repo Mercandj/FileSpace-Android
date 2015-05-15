@@ -25,7 +25,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.listener.IBitmapListener;
 import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.model.ModelUser;

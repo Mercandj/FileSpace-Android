@@ -17,7 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.activity.ActivityConversation;
+import mercandalli.com.jarvis.ui.activity.ActivityConversation;
 import mercandalli.com.jarvis.model.ModelServerMessage;
 
 public class GCMNotificationIntentService extends IntentService {

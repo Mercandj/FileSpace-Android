@@ -11,7 +11,7 @@ import android.view.View;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.config.Const;
 import mercandalli.com.jarvis.listener.IModelHomeListener;
 

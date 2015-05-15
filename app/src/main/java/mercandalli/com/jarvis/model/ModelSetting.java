@@ -10,7 +10,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import org.json.JSONObject;
 
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.ui.activity.Application;
 
 public class ModelSetting extends Model {
 

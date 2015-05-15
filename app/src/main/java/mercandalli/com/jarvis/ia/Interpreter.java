@@ -1,6 +1,6 @@
 package mercandalli.com.jarvis.ia;
 
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.ui.activity.Application;
 
 /**
  * Created by Jonathan on 19/04/2015.

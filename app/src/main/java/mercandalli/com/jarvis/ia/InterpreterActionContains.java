@@ -25,7 +25,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.ia.action.ENUM_Action;
 import mercandalli.com.jarvis.listener.IModelFormListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;

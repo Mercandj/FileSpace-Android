@@ -11,7 +11,7 @@ import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.provider.Settings;
 
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.ui.activity.Application;
 
 public enum ENUM_Action {	
 	

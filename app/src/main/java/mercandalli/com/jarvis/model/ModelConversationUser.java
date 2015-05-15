@@ -19,8 +19,8 @@ import java.util.Date;
 import java.util.List;
 
 import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.activity.ActivityConversation;
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.ui.activity.ActivityConversation;
+import mercandalli.com.jarvis.ui.activity.Application;
 
 public class ModelConversationUser extends Model {
 

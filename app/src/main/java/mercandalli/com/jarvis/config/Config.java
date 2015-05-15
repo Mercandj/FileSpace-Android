@@ -35,7 +35,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.listener.IBitmapListener;
 import mercandalli.com.jarvis.model.Model;
 import mercandalli.com.jarvis.model.ModelFile;

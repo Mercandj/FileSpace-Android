@@ -16,8 +16,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import mercandalli.com.jarvis.SHA1;
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.util.FileUtils;
+import mercandalli.com.jarvis.util.HashUtils;
+import mercandalli.com.jarvis.ui.activity.Application;
 
 public class ModelUser extends Model {
 
@@ -81,7 +82,7 @@ public class ModelUser extends Model {
     public String getAdapterSubtitle() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
         String date = dateFormat.format(date_last_connection.getTime());
-        return "#" + this.id + "   " + date + "   " + this.app.getLibrary().humanReadableByteCount(size_files);
+        return "#" + this.id + "   " + date + "   " + FileUtils.humanReadableByteCount(size_files);
     }
 	
 	public String getAccessLogin() {
@@ -97,7 +98,7 @@ public class ModelUser extends Model {
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
         String currentDate = dateFormatGmt.format(calendar.getTime());
         if(currentToken==null)
-            return SHA1.execute(SHA1.execute(this.password) + currentDate);
+            return HashUtils.sha1(HashUtils.sha1(this.password) + currentDate);
 		return "empty";
 	}
 

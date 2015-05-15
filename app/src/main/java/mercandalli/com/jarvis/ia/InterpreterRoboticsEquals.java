@@ -8,9 +8,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import mercandalli.com.jarvis.activity.Application;
-import mercandalli.com.jarvis.activity.ApplicationDrawer;
-import mercandalli.com.jarvis.fragment.HomeFragment;
+import mercandalli.com.jarvis.ui.activity.Application;
+import mercandalli.com.jarvis.ui.activity.ApplicationDrawer;
+import mercandalli.com.jarvis.ui.fragment.HomeFragment;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.net.TaskPost;

@@ -160,7 +160,17 @@
             ],
             "a" :
             [
-                "Je suis Jarvis, un assistant personnel virtuel. Je suis ici pour vous assister du mieux que je peux, 7 jours sur 7, 24 heures sur 24. Chargement des préférences personnelles. Le système est maintenant complétement opérationnel."
+                "Je suis Jarvis, un assistant personnel virtuel. Mon rôle est de vous assister du mieux que je peux, 7 jours sur 7, 24 heures sur 24. Chargement des préférences personnelles. Le système est maintenant complétement opérationnel."
+            ]
+        },
+        {
+            "q" :
+            [
+                "quel est ton role", "ton role"
+            ],
+            "a" :
+            [
+                "Mon rôle est de vous assister du mieux que je peux, 7 jours sur 7, 24 heures sur 24."
             ]
         },
         {

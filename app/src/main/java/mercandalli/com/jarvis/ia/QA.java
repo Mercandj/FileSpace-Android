@@ -9,7 +9,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.ui.activity.Application;
+import mercandalli.com.jarvis.util.MathUtils;
 
 /**
  * Created by Jonathan on 21/04/2015.
@@ -59,7 +60,7 @@ public class QA {
     public String getAnswer(String input) {
         for(String q_str : q)
             if(q_str.equals(input))
-                return a.get(this.app.getLibrary().random(0, a.size() - 1));
+                return a.get(MathUtils.random(0, a.size() - 1));
         return null;
     }
 

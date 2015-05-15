@@ -14,7 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.ui.activity.Application;
+import mercandalli.com.jarvis.util.TimeUtils;
 
 public class ModelConversationMessage extends Model {
 
@@ -67,7 +68,7 @@ public class ModelConversationMessage extends Model {
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
         SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
-            date = this.app.getLibrary().printDifferencePast(date_creation, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
+            date = TimeUtils.printDifferencePast(date_creation, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
         } catch (ParseException e) {
             e.printStackTrace();
         }

@@ -25,9 +25,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.model.ModelFile;
+import mercandalli.com.jarvis.util.FileUtils;
 
 /**
  * Global behavior : DDL file
@@ -62,7 +63,7 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
         mNotifyManager = (NotificationManager) this.app.getSystemService(Context.NOTIFICATION_SERVICE);
         mBuilder = new NotificationCompat.Builder(this.app);
         mBuilder.setContentTitle(this.modelFile.type.getTitle()+" Download")
-                .setContentText("Download in progress : 0 / " + this.app.getLibrary().humanReadableByteCount(this.modelFile.size) + " : 0%")
+                .setContentText("Download in progress : 0 / " + FileUtils.humanReadableByteCount(this.modelFile.size) + " : 0%")
                 .setSmallIcon(R.drawable.ic_notification);
     }
 
@@ -148,7 +149,7 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
         mBuilder.setProgress(100, (int) incr, false);
         mBuilder.setContentText("Download in progress " + incr + "%");
         if(values.length>1)
-            mBuilder.setContentText("Download in progress : " + this.app.getLibrary().humanReadableByteCount(values[1]) + " / " + this.app.getLibrary().humanReadableByteCount(this.modelFile.size) + " : " + incr + "%");
+            mBuilder.setContentText("Download in progress : " + FileUtils.humanReadableByteCount(values[1]) + " / " + FileUtils.humanReadableByteCount(this.modelFile.size) + " : " + incr + "%");
 
         mNotifyManager.notify(id, mBuilder.build());
     }

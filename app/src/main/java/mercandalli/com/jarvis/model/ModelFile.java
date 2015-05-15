@@ -32,10 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.activity.ActivityFileAudio;
-import mercandalli.com.jarvis.activity.ActivityFileText;
-import mercandalli.com.jarvis.activity.ActivityFileTimer;
-import mercandalli.com.jarvis.activity.Application;
+import mercandalli.com.jarvis.ui.activity.ActivityFileAudio;
+import mercandalli.com.jarvis.ui.activity.ActivityFileText;
+import mercandalli.com.jarvis.ui.activity.ActivityFileTimer;
+import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.listener.IBitmapListener;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
