@@ -1,6 +1,7 @@
 package mercandalli.com.jarvis.ui.fragment;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -92,7 +94,11 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
             public boolean onLongClick(View v) {
                 if (input.getVisibility() == View.GONE) {
                     input.setVisibility(View.VISIBLE);
+                    InputMethodManager inputMethodManager = (InputMethodManager) app.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT);
                 } else {
+                    InputMethodManager mgr = (InputMethodManager) app.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    mgr.hideSoftInputFromWindow(input.getWindowToken(), 0);
                     input.setVisibility(View.GONE);
                 }
                 return true;
@@ -297,18 +303,19 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                                 Const.TAB_VIEW_TYPE_HOME_INFORMATION_FORM),
                         0
                 );
-            else
-                mAdapter.addItem(
-                        new ModelHome(list.size(), title, new IModelHomeListener() {
-                            @Override
-                            public void execute(ModelHome modelHome) {
-                                removeItemList(modelHome);
-                            }
-                        },
-                                interpreterResult.content,
-                                Const.TAB_VIEW_TYPE_HOME_INFORMATION),
-                        0
-                );
+            else if(interpreterResult.content != null)
+                if(!interpreterResult.content.equals(""))
+                    mAdapter.addItem(
+                            new ModelHome(list.size(), title, new IModelHomeListener() {
+                                @Override
+                                public void execute(ModelHome modelHome) {
+                                    removeItemList(modelHome);
+                                }
+                            },
+                                    interpreterResult.content,
+                                    Const.TAB_VIEW_TYPE_HOME_INFORMATION),
+                            0
+                    );
         }
     }
 
