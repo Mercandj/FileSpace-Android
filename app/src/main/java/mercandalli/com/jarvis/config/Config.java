@@ -19,7 +19,6 @@
  */
 package mercandalli.com.jarvis.config;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -28,20 +27,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.listener.IBitmapListener;
 import mercandalli.com.jarvis.model.Model;
 import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.model.ModelServerMessage;
 import mercandalli.com.jarvis.model.ModelUser;
 import mercandalli.com.jarvis.net.TaskGetDownloadImage;
+import mercandalli.com.jarvis.ui.activity.Application;
+
+import static mercandalli.com.jarvis.util.FileUtils.readStringFile;
+import static mercandalli.com.jarvis.util.FileUtils.writeStringFile;
 
 /**
  * Created by Jonathan on 10/12/2014.
@@ -124,36 +122,6 @@ public class Config {
         load();
     }
 
-    public static void write_txt(Context context, String file, String txt) {
-        try {
-            FileOutputStream output = context.openFileOutput(file, Context.MODE_PRIVATE);
-            output.write((txt).getBytes());
-            if(output != null) output.close();
-        }
-        catch (FileNotFoundException e) {e.printStackTrace();}
-        catch (IOException e) {e.printStackTrace();}
-    }
-
-    public static String read_txt(Context context, String file) {
-        String res="";
-        try {
-            FileInputStream input = context.openFileInput(file);
-            int value;
-            StringBuffer lu = new StringBuffer();
-            while((value = input.read()) != -1)
-                lu.append((char)value);
-            if(input != null) {
-                input.close();
-                if(lu.toString()!=null)
-                    res=lu.toString();
-            }
-        }
-        catch (FileNotFoundException e) {e.printStackTrace();}
-        catch (IOException e) {e.printStackTrace();}
-        if(res==null) return "";
-        return res;
-    }
-
     private void save() {
         try {
             JSONObject tmp_json = new JSONObject();
@@ -173,7 +141,7 @@ public class Config {
             }
 
             tmp_json.put("settings_1", tmp_settings_1);
-            write_txt(app, fileName, tmp_json.toString());
+            writeStringFile(app, fileName, tmp_json.toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -183,7 +151,7 @@ public class Config {
     private void load() {
         this.listServerMessage_1 = new ArrayList<>();
         try {
-            JSONObject tmp_json = new JSONObject(read_txt(app, fileName));
+            JSONObject tmp_json = new JSONObject(readStringFile(app, fileName));
             if(tmp_json.has("settings_1")) {
                 JSONObject tmp_settings_1 = tmp_json.getJSONObject("settings_1");
                 for(ENUM_Int enum_int : ENUM_Int.values())

@@ -4,18 +4,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.jarvis.ia.language.Sentence;
 import mercandalli.com.jarvis.ui.activity.Application;
+
+import static mercandalli.com.jarvis.util.FileUtils.readStringAssets;
 
 /**
  * Created by Jonathan on 24/04/2015.
@@ -31,23 +26,7 @@ public class Resource {
         this.qas = new ArrayList<>();
         this.sentences = new ArrayList<>();
 
-        Writer writer = new StringWriter();
-        try {
-            InputStream is = app.getResources().getAssets().open(file_name);
-            char[] buffer = new char[2048];
-            try {
-                Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                int n;
-                while ((n = reader.read(buffer)) != -1) {
-                    writer.write(buffer, 0, n);
-                }
-            } finally {
-                is.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String text = writer.toString();
+        String text = readStringAssets(app, file_name);
 
         try {
             JSONObject json = new JSONObject(text);

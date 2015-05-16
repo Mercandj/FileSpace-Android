@@ -20,6 +20,9 @@ import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.ui.activity.ActivityConversation;
 import mercandalli.com.jarvis.model.ModelServerMessage;
 
+import static mercandalli.com.jarvis.util.FileUtils.readStringFile;
+import static mercandalli.com.jarvis.util.FileUtils.writeStringFile;
+
 public class GCMNotificationIntentService extends IntentService {
 	private static final String TAG = "GCMNotificationIntentS";
 
@@ -89,7 +92,7 @@ public class GCMNotificationIntentService extends IntentService {
         if (serverMessage==null)
             return;
         try {
-            JSONObject tmp_json = new JSONObject(mercandalli.com.jarvis.config.Config.read_txt(this.getApplicationContext(), mercandalli.com.jarvis.config.Config.getFileName()));
+            JSONObject tmp_json = new JSONObject(readStringFile(this.getApplicationContext(), mercandalli.com.jarvis.config.Config.getFileName()));
             if(tmp_json.has("settings_1")) {
                 JSONObject tmp_settings_1 = tmp_json.getJSONObject("settings_1");
 
@@ -109,7 +112,7 @@ public class GCMNotificationIntentService extends IntentService {
                 }
                 tmp_json.remove("settings_1");
                 tmp_json.put("settings_1", tmp_settings_1);
-                mercandalli.com.jarvis.config.Config.write_txt(this.getApplicationContext(), mercandalli.com.jarvis.config.Config.getFileName(), tmp_json.toString());
+                writeStringFile(this.getApplicationContext(), mercandalli.com.jarvis.config.Config.getFileName(), tmp_json.toString());
             }
         } catch (JSONException e) {
             e.printStackTrace();

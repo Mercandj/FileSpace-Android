@@ -9,10 +9,14 @@ import java.util.List;
 
 import mercandalli.com.jarvis.ui.activity.Application;
 
+import static mercandalli.com.jarvis.util.LogUtils.LOGE;
+import static mercandalli.com.jarvis.util.LogUtils.makeLogTag;
+
 /**
  * Created by Jonathan on 24/04/2015.
  */
 public class Sentence {
+    private static final String TAG = makeLogTag(Sentence.class);
 
     private Application app;
     private List<String> sentence;
@@ -38,6 +42,7 @@ public class Sentence {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            LOGE(TAG, "Constructor: Parsing JSON");
         }
     }
 

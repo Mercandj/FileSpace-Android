@@ -1,3 +1,23 @@
+/**
+ * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
+ *
+ * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
+ *
+ * LICENSE:
+ *
+ * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * @author Jonathan Mercandalli
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
+ */
+
 package mercandalli.com.jarvis.ui.activity;
 
 import android.os.Bundle;
@@ -41,7 +61,6 @@ public class ActivityConversation extends Application {
     private String id_conversation;
 
     private RecyclerView listView;
-    private LinearLayoutManager mLayoutManager;
     private AdapterModelConnversationMessage adapter;
     private ArrayList<ModelConversationMessage> list = new ArrayList<>();
     private ProgressBar circularProgressBar;
@@ -78,8 +97,8 @@ public class ActivityConversation extends Application {
 
         this.listView = (RecyclerView) findViewById(R.id.listView);
         this.listView.setHasFixedSize(true);
-        this.mLayoutManager = new LinearLayoutManager(this);
-        this.mLayoutManager.setStackFromEnd(true);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setStackFromEnd(true);
         this.listView.setLayoutManager(mLayoutManager);
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
@@ -120,7 +139,7 @@ public class ActivityConversation extends Application {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
                     String url = getConfig().getUrlServer() + getConfig().routeUserMessage + "/" + id_conversation;
-                    List < BasicNameValuePair > parameters = new ArrayList<>();
+                    List <BasicNameValuePair> parameters = new ArrayList<>();
                     parameters.add(new BasicNameValuePair("message", "" + input.getText().toString()));
                     input.setText("");
 
