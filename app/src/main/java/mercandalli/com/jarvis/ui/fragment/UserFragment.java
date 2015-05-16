@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.apache.http.message.BasicNameValuePair;
@@ -46,7 +47,8 @@ public class UserFragment extends Fragment {
     private AdapterModelUser mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     List<ModelUser> list;
-    private ProgressBar circulerProgressBar;
+    private ProgressBar circularProgressBar;
+    private TextView message;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -62,7 +64,8 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_user, container, false);
-        circulerProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
+        this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
+        this.message = (TextView) rootView.findViewById(R.id.message);
 
         this.recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
         this.recyclerView.setHasFixedSize(true);
@@ -72,8 +75,6 @@ public class UserFragment extends Fragment {
         this.recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
         ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.GONE);
-
-        refreshList();
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(
@@ -88,6 +89,8 @@ public class UserFragment extends Fragment {
                 refreshList();
             }
         });
+
+        refreshList();
 
         return rootView;
     }
@@ -127,13 +130,26 @@ public class UserFragment extends Fragment {
                     },
                     parameters
             ).execute();
+        else {
+            this.circularProgressBar.setVisibility(View.GONE);
+            this.message.setText(getString(R.string.no_internet_connection));
+            this.message.setVisibility(View.VISIBLE);
+            this.swipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     int i;
 
     public void updateAdapter() {
         if(this.recyclerView!=null && this.list!=null && this.isAdded()) {
-            this.circulerProgressBar.setVisibility(View.GONE);
+            this.circularProgressBar.setVisibility(View.GONE);
+
+            if(this.list.size()==0) {
+                this.message.setText(getString(R.string.no_user));
+                this.message.setVisibility(View.VISIBLE);
+            }
+            else
+                this.message.setVisibility(View.GONE);
 
             this.mAdapter = new AdapterModelUser(app, list, new IModelUserListener() {
                 @Override

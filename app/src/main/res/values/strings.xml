@@ -11,6 +11,8 @@
     <string name="image_description">Description Image</string>
 
     <string name="action_failed">Action failed</string>
+    <string name="no_user">No User.</string>
+    <string name="no_talk">No Talk.</string>
     <string name="no_file">No File</string>
     <string name="no_file_server">No File on server.</string>
     <string name="no_file_directory">No File on this directory.</string>
