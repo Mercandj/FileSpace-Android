@@ -92,14 +92,17 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
             if(model.modelEmail.input1Text == null) viewHolder.input1.setVisibility(View.GONE);
             else viewHolder.input1Text.setText(model.modelEmail.input1Text);
             if(model.modelEmail.input1EditText != null) viewHolder.input1EditText.setText(model.modelEmail.input1EditText);
+            else viewHolder.input1EditText.setText("");
 
             if(model.modelEmail.input2Text == null) viewHolder.input2.setVisibility(View.GONE);
             else viewHolder.input2Text.setText(model.modelEmail.input2Text);
             if(model.modelEmail.input2EditText != null) viewHolder.input1EditText.setText(model.modelEmail.input2EditText);
+            else viewHolder.input2EditText.setText("");
 
             if(model.modelEmail.input3Text == null) viewHolder.input3.setVisibility(View.GONE);
             else viewHolder.input3Text.setText(model.modelEmail.input3Text);
             if(model.modelEmail.input3EditText != null) viewHolder.input1EditText.setText(model.modelEmail.input3EditText);
+            else viewHolder.input3EditText.setText("");
 
             if(model.modelEmail != null)
                 viewHolder.button2.setOnClickListener(new View.OnClickListener() {
