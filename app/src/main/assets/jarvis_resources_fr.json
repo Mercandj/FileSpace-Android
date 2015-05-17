@@ -75,6 +75,32 @@
         "eteins le led", "eteins la led",
         "desactiver la pin 18", "desactive pin 18", "desactive la led du raspberry"
       ]
+    },
+    {
+      "id": 3,
+      "title": "action_note_start_with",
+      "sentence": [
+        "note ", "noter ", "note le message ", "note le message suivant ",
+        "note la phrase suivante ", "prend la note suivante ", "prends la note suivante ",
+        "prendre la note suivante ", "noter le message ", "noter le message suivant ",
+        "noter la phrase ", "noter la phrase suivante ", "sauvegarder le message suivant ",
+        "sauvegarde ce message ", "sauvegarde le message ", "note ce message", "noter ce message ",
+        "prendre cette note ", "prendre une note "
+      ]
+    },
+    {
+      "id": 4,
+      "title": "action_note_remplir",
+      "sentence": [
+        "Je vous laisse remplir votre note."
+      ]
+    },
+    {
+      "id": 5,
+      "title": "action_note_valider",
+      "sentence": [
+        "Je vous laisse valider votre note."
+      ]
     }
   ],
   "qa": [

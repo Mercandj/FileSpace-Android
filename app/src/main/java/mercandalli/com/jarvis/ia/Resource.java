@@ -9,6 +9,7 @@ import java.util.List;
 
 import mercandalli.com.jarvis.ia.language.Sentence;
 import mercandalli.com.jarvis.ui.activity.Application;
+import mercandalli.com.jarvis.util.MathUtils;
 
 import static mercandalli.com.jarvis.util.FileUtils.readStringAssets;
 
@@ -61,6 +62,16 @@ public class Resource {
         return qas;
     }
 
+    public String getSentence(String title) {
+        String result = null;
+        if(title == null)
+            return result;
+        for(Sentence sent : this.sentences)
+            if(sent.getTitle().equals(title))
+                return sent.getSentence().get(MathUtils.random(0, sent.getSentence().size() - 1));
+        return null;
+    }
+
     public boolean equalsSentenece(String title, String sentence) {
         if(title == null || sentence == null)
             return false;
@@ -70,5 +81,33 @@ public class Resource {
                     if(str.equals(sentence))
                         return true;
         return false;
+    }
+
+    public String startsWithSentenece(String title, String sentence) {
+        String result = null;
+        if(title == null || sentence == null)
+            return result;
+        for(Sentence sent : this.sentences)
+            if(sent.getTitle().equals(title))
+                for(String str : sent.getSentence())
+                    if(sentence.startsWith(str)) {
+                        if(result == null)
+                            result = str;
+                        else if(str.length() > result.length())
+                            result = str;
+                    }
+
+        return result;
+    }
+
+    public String containsSentenece(String title, String sentence) {
+        if(title == null || sentence == null)
+            return null;
+        for(Sentence sent : this.sentences)
+            if(sent.getTitle().equals(title))
+                for(String str : sent.getSentence())
+                    if(str.contains(sentence))
+                        return str;
+        return null;
     }
 }

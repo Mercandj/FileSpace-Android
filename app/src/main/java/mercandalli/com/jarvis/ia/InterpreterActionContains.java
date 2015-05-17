@@ -50,15 +50,16 @@ public class InterpreterActionContains extends Interpreter {
 
         else if(input.contains("note")) {
             InterpreterResult interpreterResult = new InterpreterResult();
-            interpreterResult.content = "Je vous laisse valider votre note.";
+            interpreterResult.content = this.res.getSentence("action_note_remplir");
             interpreterResult.modelForm = new ModelForm();
             interpreterResult.modelForm.input1Text = "Your note";
-            if(input.startsWith("note "))
-                interpreterResult.modelForm.input1EditText = input.replaceFirst("note ", "");
-            if(input.startsWith("note le message "))
-                interpreterResult.modelForm.input1EditText = input.replaceFirst("note le message ", "");
-            if(input.startsWith("note le message suivant "))
-                interpreterResult.modelForm.input1EditText = input.replaceFirst("note le message suivant ", "");
+
+            String startsWith = this.res.startsWithSentenece("action_note_start_with", input);
+            if(startsWith != null) {
+                interpreterResult.modelForm.input1EditText = input.replaceFirst(startsWith, "");
+                interpreterResult.content = this.res.getSentence("action_note_valider");
+            }
+
             interpreterResult.modelForm.sendListener = new IModelFormListener() {
                 @Override
                 public void execute(ModelForm modelFile) {
