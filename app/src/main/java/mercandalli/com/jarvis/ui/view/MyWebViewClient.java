@@ -18,7 +18,7 @@
  * @copyright 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
  */
 
-package mercandalli.com.jarvis.net;
+package mercandalli.com.jarvis.ui.view;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

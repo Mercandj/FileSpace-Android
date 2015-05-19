@@ -32,6 +32,8 @@ import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.model.ModelForm;
 import mercandalli.com.jarvis.net.TaskPost;
 
+import static mercandalli.com.jarvis.util.AlarmUtils.setAlarmFromString;
+
 /**
  * Created by Jonathan on 19/04/2015.
  */
@@ -47,6 +49,11 @@ public class InterpreterActionContains extends Interpreter {
 
         if(input.contains("quit") || input.contains("kit l'app"))
             output = ENUM_Action.QUIT.action.action(this.app, "Bye.");
+
+        else if(input.contains("alarme") || input.contains("reveil")) {
+            setAlarmFromString(app, input);
+            output = "Je lance l'application permettant de définir les alarmes.";
+        }
 
         else if(input.contains("note")) {
             InterpreterResult interpreterResult = new InterpreterResult();
