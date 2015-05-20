@@ -11,6 +11,8 @@ import android.widget.ProgressBar;
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.ui.activity.Application;
 
+import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
+
 /**
  * Created by Jonathan on 03/01/2015.
  */
@@ -31,7 +33,7 @@ public class ProfileFragment extends Fragment {
         this.circularProgressBar = (ProgressBar) this.rootView.findViewById(R.id.circularProgressBar);
         this.circularProgressBar.setVisibility(View.VISIBLE);
 
-        if(this.app.isInternetConnection()) {
+        if(isInternetConnection(app)) {
 
         }
 

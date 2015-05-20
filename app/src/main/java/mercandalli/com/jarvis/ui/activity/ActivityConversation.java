@@ -52,6 +52,8 @@ import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.net.TaskPost;
 import mercandalli.com.jarvis.ui.view.DividerItemDecoration;
 
+import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
+
 /**
  * Created by Jonathan on 14/12/2014.
  */
@@ -199,7 +201,7 @@ public class ActivityConversation extends Application {
         }
 
         List<BasicNameValuePair> parameters = null;
-        if(this.isInternetConnection()) {
+        if(isInternetConnection(this)) {
             new TaskGet(
                     this,
                     this.getConfig().getUser(),

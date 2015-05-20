@@ -22,11 +22,8 @@ package mercandalli.com.jarvis.ui.activity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
@@ -165,15 +162,6 @@ public abstract class Application extends ActionBarActivity {
         );
 
         alert.show();
-    }
-
-    public final boolean isInternetConnection() {
-        final ConnectivityManager conMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
-        if (activeNetwork != null)
-            if (activeNetwork.isConnected())
-                return true;
-        return false;
     }
 
 	public abstract void refreshAdapters();

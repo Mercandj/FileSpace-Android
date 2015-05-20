@@ -48,6 +48,8 @@ import mercandalli.com.jarvis.net.TaskPost;
 import mercandalli.com.jarvis.ui.view.DividerItemDecoration;
 import mercandalli.com.jarvis.util.FileUtils;
 
+import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
+
 
 public class FileManagerFragmentMyCloud extends Fragment {
 
@@ -304,7 +306,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
         parameters.add(new BasicNameValuePair("id_file_parent", ""+this.id_file_path.peek()));
         parameters.add(new BasicNameValuePair("mine", ""+true));
 
-        if(this.app.isInternetConnection())
+        if(isInternetConnection(app))
             new TaskGet(
                 app,
                 this.app.getConfig().getUser(),

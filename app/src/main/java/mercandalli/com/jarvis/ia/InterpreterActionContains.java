@@ -33,6 +33,7 @@ import mercandalli.com.jarvis.model.ModelForm;
 import mercandalli.com.jarvis.net.TaskPost;
 
 import static mercandalli.com.jarvis.util.AlarmUtils.setAlarmFromString;
+import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
 
 /**
  * Created by Jonathan on 19/04/2015.
@@ -70,7 +71,7 @@ public class InterpreterActionContains extends Interpreter {
             interpreterResult.modelForm.sendListener = new IModelFormListener() {
                 @Override
                 public void execute(ModelForm modelFile) {
-                    if(app.isInternetConnection()) {
+                    if(isInternetConnection(app)) {
                         String url = app.getConfig().getUrlServer() + app.getConfig().routeUserConversation + "/" + app.getConfig().getUserId();
                         List< BasicNameValuePair > parameters = new ArrayList<>();
                         parameters.add(new BasicNameValuePair("message", "" + modelFile.input1EditText));

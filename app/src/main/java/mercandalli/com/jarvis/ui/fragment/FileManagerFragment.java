@@ -25,6 +25,8 @@ import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.ui.view.PagerSlidingTabStrip;
 
+import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
+
 public class FileManagerFragment extends Fragment {
 	
 	private static final int NB_FRAGMENT = 3;
@@ -66,7 +68,7 @@ public class FileManagerFragment extends Fragment {
 				
 			}
 		});
-		if(this.app.isInternetConnection()) {
+		if(isInternetConnection(app)) {
 			mViewPager.setOffscreenPageLimit(this.NB_FRAGMENT - 1);
 			mViewPager.setCurrentItem(this.INIT_FRAGMENT);
 		}

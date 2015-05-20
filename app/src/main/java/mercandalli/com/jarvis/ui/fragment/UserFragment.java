@@ -35,6 +35,8 @@ import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.net.TaskPost;
 import mercandalli.com.jarvis.ui.view.DividerItemDecoration;
 
+import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
+
 /**
  * Created by Jonathan on 30/03/2015.
  */
@@ -101,7 +103,7 @@ public class UserFragment extends Fragment {
 
     public void refreshList(String search) {
         List<BasicNameValuePair> parameters = null;
-        if(this.app.isInternetConnection())
+        if(isInternetConnection(app))
             new TaskGet(
                     app,
                     this.app.getConfig().getUser(),

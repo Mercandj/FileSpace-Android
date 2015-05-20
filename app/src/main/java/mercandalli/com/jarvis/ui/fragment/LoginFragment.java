@@ -36,6 +36,8 @@ import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.model.ModelUser;
 import mercandalli.com.jarvis.net.TaskGet;
 
+import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
+
 public class LoginFragment extends Fragment {
 
 	private Application app;
@@ -139,31 +141,32 @@ public class LoginFragment extends Fragment {
         // Login : POST /user
         List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
         parameters.add(new BasicNameValuePair("login", "true"));
-        (new TaskGet(app, app.getConfig().getUser(), app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
-            @Override
-            public void execute(JSONObject json, String body) {
-                try {
-                    if (json != null) {
-                        if (json.has("succeed"))
-                            if (json.getBoolean("succeed")) {
-                                connectionSucceed();
+        if(isInternetConnection(app))
+            (new TaskGet(app, app.getConfig().getUser(), app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
+                @Override
+                public void execute(JSONObject json, String body) {
+                    try {
+                        if (json != null) {
+                            if (json.has("succeed"))
+                                if (json.getBoolean("succeed")) {
+                                    connectionSucceed();
+                                }
+                            if (json.has("user")) {
+                                JSONObject user = json.getJSONObject("user");
+                                if (user.has("id"))
+                                    app.getConfig().setUserId(user.getInt("id"));
+                                if (user.has("admin"))
+                                    app.getConfig().setUserAdmin(user.getBoolean("admin"));
+                                if (user.has("id_file_profile_picture"))
+                                    app.getConfig().setUserIdFileProfilePicture(user.getInt("id_file_profile_picture"));
                             }
-                        if (json.has("user")) {
-                            JSONObject user = json.getJSONObject("user");
-                            if (user.has("id"))
-                                app.getConfig().setUserId(user.getInt("id"));
-                            if (user.has("admin"))
-                                app.getConfig().setUserAdmin(user.getBoolean("admin"));
-                            if (user.has("id_file_profile_picture"))
-                                app.getConfig().setUserIdFileProfilePicture(user.getInt("id_file_profile_picture"));
-                        }
-                    } else
-                        Toast.makeText(app, app.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                        } else
+                            Toast.makeText(app, app.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    requestLaunch = false;
                 }
-                requestLaunch = false;
-            }
-        }, parameters)).execute();
+            }, parameters)).execute();
     }
 }

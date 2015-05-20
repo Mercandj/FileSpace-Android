@@ -15,6 +15,8 @@ import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.net.TaskPost;
 
+import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
+
 /**
  * Created by Jonathan on 19/04/2015.
  */
@@ -29,7 +31,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
         String output = null;
 
         if(this.res.equalsSentenece("raspberry êtat", input))
-            if(this.app.isInternetConnection()) {
+            if(isInternetConnection(app)) {
                 new TaskGet(
                         this.app,
                         this.app.getConfig().getUser(),
@@ -58,7 +60,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
             }
 
         if(this.res.equalsSentenece("raspberry led on", input))
-            if(this.app.isInternetConnection()) {
+            if(isInternetConnection(app)) {
                 List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
                 parameters.add(new BasicNameValuePair("value", "1"));
                 new TaskPost(
@@ -76,7 +78,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
             }
 
         if(this.res.equalsSentenece("raspberry led off", input))
-            if(this.app.isInternetConnection()) {
+            if(isInternetConnection(app)) {
                 List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
                 parameters.add(new BasicNameValuePair("value", "0"));
                 new TaskPost(

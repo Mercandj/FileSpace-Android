@@ -40,6 +40,7 @@ import mercandalli.com.jarvis.ui.activity.Application;
 
 import static mercandalli.com.jarvis.util.FileUtils.readStringFile;
 import static mercandalli.com.jarvis.util.FileUtils.writeStringFile;
+import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
 
 /**
  * Created by Jonathan on 10/12/2014.
@@ -245,7 +246,7 @@ public class Config {
         File file = new File(this.app.getFilesDir()+"/file_"+this.getUserIdFileProfilePicture());
         if(file.exists())
             return BitmapFactory.decodeFile(file.getPath());
-        else if(this.app.isInternetConnection()) {
+        else if(isInternetConnection(app)) {
             ModelFile modelFile = new ModelFile(app);
             modelFile.id = this.getUserIdFileProfilePicture();
             modelFile.onlineUrl = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+this.getUserIdFileProfilePicture();

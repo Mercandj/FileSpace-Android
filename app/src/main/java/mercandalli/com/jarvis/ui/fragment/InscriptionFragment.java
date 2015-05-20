@@ -36,6 +36,8 @@ import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.model.ModelUser;
 import mercandalli.com.jarvis.net.TaskPost;
 
+import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
+
 public class InscriptionFragment extends Fragment {
 
 	private Application app;
@@ -130,28 +132,29 @@ public class InscriptionFragment extends Fragment {
         List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
         parameters.add(new BasicNameValuePair("username", "" + user.username));
         parameters.add(new BasicNameValuePair("password", "" + user.password));
-        (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
-            @Override
-            public void execute(JSONObject json, String body) {
-                try {
-                    if (json != null) {
-                        if (json.has("succeed")) {
-                            if (json.getBoolean("succeed"))
-                                connectionSucceed();
-                        }
-                        if (json.has("user")) {
-                            JSONObject user = json.getJSONObject("user");
-                            if (user.has("id"))
-                                app.getConfig().setUserId(user.getInt("id"));
-                        }
-                    } else
-                        Toast.makeText(app, app.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        if(isInternetConnection(app))
+            (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
+                @Override
+                public void execute(JSONObject json, String body) {
+                    try {
+                        if (json != null) {
+                            if (json.has("succeed")) {
+                                if (json.getBoolean("succeed"))
+                                    connectionSucceed();
+                            }
+                            if (json.has("user")) {
+                                JSONObject user = json.getJSONObject("user");
+                                if (user.has("id"))
+                                    app.getConfig().setUserId(user.getInt("id"));
+                            }
+                        } else
+                            Toast.makeText(app, app.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    requestLaunch = false;
                 }
-                requestLaunch = false;
-            }
-        }, parameters)).execute();
+            }, parameters)).execute();
 
     }
 }

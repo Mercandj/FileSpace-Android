@@ -25,6 +25,8 @@ import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.net.TaskPost;
 
+import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
+
 /**
  * Created by Jonathan on 03/01/2015.
  */
@@ -79,7 +81,7 @@ public class RoboticsFragment extends Fragment {
             }
         });
 
-        if(this.app.isInternetConnection())
+        if(isInternetConnection(app))
             new TaskGet(
                     this.app,
                     this.app.getConfig().getUser(),
@@ -108,11 +110,13 @@ public class RoboticsFragment extends Fragment {
                     },
                     null
             ).execute();
+        else
+            RoboticsFragment.this.circularProgressBar.setVisibility(View.INVISIBLE);
 
         ((Button) this.rootView.findViewById(R.id.launch)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(app.isInternetConnection()) {
+                if(isInternetConnection(app)) {
                     List<BasicNameValuePair> parameters = new ArrayList<>();
                     String id_ = id.getText().toString();
                     String value_ = value.getText().toString();

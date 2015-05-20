@@ -47,6 +47,8 @@ import mercandalli.com.jarvis.net.TaskPost;
 import mercandalli.com.jarvis.ui.view.DividerItemDecoration;
 import mercandalli.com.jarvis.util.FileUtils;
 
+import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
+
 
 public class FileManagerFragmentCloud extends Fragment {
 
@@ -272,7 +274,7 @@ public class FileManagerFragmentCloud extends Fragment {
         parameters.add(new BasicNameValuePair("url", ""+this.url));
         parameters.add(new BasicNameValuePair("all-public", ""+true));
 
-        if(this.app.isInternetConnection())
+        if(isInternetConnection(app))
             new TaskGet(
                 app,
                 this.app.getConfig().getUser(),

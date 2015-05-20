@@ -39,6 +39,8 @@ import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.model.ModelInformation;
 import mercandalli.com.jarvis.net.TaskGet;
 
+import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
+
 
 public class InformationFragment extends Fragment {
 
@@ -101,35 +103,36 @@ public class InformationFragment extends Fragment {
 
 	public void refreshList() {
 		List<BasicNameValuePair> parameters = null;
-		new TaskGet(
-				app, 
-				this.app.getConfig().getUser(), 
-				this.app.getConfig().getUrlServer() + this.app.getConfig().routeInformation, 
-				new IPostExecuteListener() {
-					@Override
-					public void execute(JSONObject json, String body) {
-						list = new ArrayList<ModelInformation>();
-						list.add(new ModelInformation("Informations", Const.TAB_VIEW_TYPE_SECTION));
-						try {
-							if (json != null) {
-								if (json.has("result")) {
-									JSONArray array = json.getJSONArray("result");
-									for (int i = 0; i < array.length(); i++) {
-										ModelInformation modelFile = new ModelInformation(app, array.getJSONObject(i));
-										list.add(modelFile);
-									}								
-								}
-							}
-							else
-								Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-						updateAdapter();
-					}
-				},
-				parameters
-			).execute();		
+		if(isInternetConnection(app))
+            new TaskGet(
+                    app,
+                    this.app.getConfig().getUser(),
+                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeInformation,
+                    new IPostExecuteListener() {
+                        @Override
+                        public void execute(JSONObject json, String body) {
+                            list = new ArrayList<ModelInformation>();
+                            list.add(new ModelInformation("Informations", Const.TAB_VIEW_TYPE_SECTION));
+                            try {
+                                if (json != null) {
+                                    if (json.has("result")) {
+                                        JSONArray array = json.getJSONArray("result");
+                                        for (int i = 0; i < array.length(); i++) {
+                                            ModelInformation modelFile = new ModelInformation(app, array.getJSONObject(i));
+                                            list.add(modelFile);
+                                        }
+                                    }
+                                }
+                                else
+                                    Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            updateAdapter();
+                        }
+                    },
+                    parameters
+                ).execute();
 	}
 	
 	int i;
