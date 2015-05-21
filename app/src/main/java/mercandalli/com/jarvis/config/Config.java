@@ -329,14 +329,13 @@ public class Config {
         }
         if(serverMessage == null)
             return;
-        List<Integer> l = new ArrayList<>();
         for(int i=0; i<listServerMessage_1.size();i++) {
-            if(listServerMessage_1.get(i).equals(serverMessage))
-                l.add(i);
+            if(listServerMessage_1.get(i).equals(serverMessage)) {
+                listServerMessage_1.remove(i);
+                save();
+                return;
+            }
         }
-        for (int i = l.size()-1; i>=0 ; i--)
-            listServerMessage_1.remove(i);
-        save();
     }
 
     public static String getFileName() {

@@ -20,7 +20,7 @@ public class ModelHome extends Model {
 	private CharSequence title1, title2;
 	public int id, viewType = Const.TAB_VIEW_TYPE_NORMAL;
     public ModelServerMessage serverMessage;
-    public ModelForm modelEmail;
+    public ModelForm modelForm;
 
     public View.OnClickListener listener1, listener2;
     public IModelHomeListener listenerHome1;
@@ -63,12 +63,12 @@ public class ModelHome extends Model {
         this.viewType = viewType;
     }
 
-    public ModelHome(int id, String title1, IModelHomeListener listenerHome1, ModelForm modelEmail, int viewType) {
+    public ModelHome(int id, String title1, IModelHomeListener listenerHome1, ModelForm modelForm, int viewType) {
         super();
         this.id = id;
         this.listenerHome1 = listenerHome1;
         this.title1 = title1;
-        this.modelEmail = modelEmail;
+        this.modelForm = modelForm;
         this.viewType = viewType;
     }
 
@@ -101,8 +101,26 @@ public class ModelHome extends Model {
         if(!(o instanceof ModelHome))
             return false;
         ModelHome obj = (ModelHome)o;
+        if((this.serverMessage != null && obj.serverMessage == null) || (this.serverMessage == null && obj.serverMessage != null))
+            return false;
+        if((this.modelForm != null && obj.modelForm == null) || (this.modelForm == null && obj.modelForm != null))
+            return false;
+        if((this.title1 != null && obj.title1 == null) || (this.title1 == null && obj.title1 != null))
+            return false;
+        if((this.title2 != null && obj.title2 == null) || (this.title2 == null && obj.title2 != null))
+            return false;
+        if(this.modelForm != null && this.title1 != null && this.title2 != null)
+            return this.id == obj.id && this.modelForm.equals(obj.modelForm) && this.title1.equals(obj.title1) && this.title2.equals(obj.title2);
+        if(this.title1 != null && this.serverMessage != null)
+            return this.id == obj.id && this.title1.equals(obj.title1) && this.serverMessage.equals(obj.serverMessage);
+        if(this.title1 != null && this.modelForm != null)
+            return this.id == obj.id && this.title1.equals(obj.title1) && this.modelForm.equals(obj.modelForm);
+        if(this.title1 != null && this.title2 != null)
+            return this.id == obj.id && this.title1.equals(obj.title1) && this.title2.equals(obj.title2);
         if(this.title1 != null)
             return this.id == obj.id && this.title1.equals(obj.title1);
+        if(this.title2 != null)
+            return this.id == obj.id && this.title2.equals(obj.title2);
         return this.id == obj.id;
     }
 

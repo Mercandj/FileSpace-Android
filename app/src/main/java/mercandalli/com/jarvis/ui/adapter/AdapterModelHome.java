@@ -11,11 +11,11 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import mercandalli.com.jarvis.util.FontUtils;
 import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.config.Const;
 import mercandalli.com.jarvis.model.ModelHome;
+import mercandalli.com.jarvis.ui.activity.Application;
+import mercandalli.com.jarvis.util.FontUtils;
 
 public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.ViewHolder> {
 	private List<ModelHome> itemsData;
@@ -89,29 +89,29 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
                     }
                 });
 
-            if(model.modelEmail.input1Text == null) viewHolder.input1.setVisibility(View.GONE);
-            else viewHolder.input1Text.setText(model.modelEmail.input1Text);
-            if(model.modelEmail.input1EditText != null) viewHolder.input1EditText.setText(model.modelEmail.input1EditText);
+            if(model.modelForm.input1Text == null) viewHolder.input1.setVisibility(View.GONE);
+            else viewHolder.input1Text.setText(model.modelForm.input1Text);
+            if(model.modelForm.input1EditText != null) viewHolder.input1EditText.setText(model.modelForm.input1EditText);
             else viewHolder.input1EditText.setText("");
 
-            if(model.modelEmail.input2Text == null) viewHolder.input2.setVisibility(View.GONE);
-            else viewHolder.input2Text.setText(model.modelEmail.input2Text);
-            if(model.modelEmail.input2EditText != null) viewHolder.input1EditText.setText(model.modelEmail.input2EditText);
+            if(model.modelForm.input2Text == null) viewHolder.input2.setVisibility(View.GONE);
+            else viewHolder.input2Text.setText(model.modelForm.input2Text);
+            if(model.modelForm.input2EditText != null) viewHolder.input1EditText.setText(model.modelForm.input2EditText);
             else viewHolder.input2EditText.setText("");
 
-            if(model.modelEmail.input3Text == null) viewHolder.input3.setVisibility(View.GONE);
-            else viewHolder.input3Text.setText(model.modelEmail.input3Text);
-            if(model.modelEmail.input3EditText != null) viewHolder.input1EditText.setText(model.modelEmail.input3EditText);
+            if(model.modelForm.input3Text == null) viewHolder.input3.setVisibility(View.GONE);
+            else viewHolder.input3Text.setText(model.modelForm.input3Text);
+            if(model.modelForm.input3EditText != null) viewHolder.input1EditText.setText(model.modelForm.input3EditText);
             else viewHolder.input3EditText.setText("");
 
-            if(model.modelEmail != null)
+            if(model.modelForm != null)
                 viewHolder.button2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        model.modelEmail.input1EditText = viewHolder.input1EditText.getText().toString();
-                        model.modelEmail.input2EditText = viewHolder.input2EditText.getText().toString();
-                        model.modelEmail.input3EditText = viewHolder.input3EditText.getText().toString();
-                        model.modelEmail.send();
+                        model.modelForm.input1EditText = viewHolder.input1EditText.getText().toString();
+                        model.modelForm.input2EditText = viewHolder.input2EditText.getText().toString();
+                        model.modelForm.input3EditText = viewHolder.input3EditText.getText().toString();
+                        model.modelForm.send();
                         if(model.listenerHome1 != null)
                             model.listenerHome1.execute(model);
                     }
@@ -180,12 +180,22 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
     	itemsData.add(position, name);
         notifyItemInserted(position);
     }
-     
+
     public void removeItem(int position) {
     	if(itemsData.size()<=0)
     		return;
     	itemsData.remove(position);
         notifyItemRemoved(position);
+    }
+
+    public void removeItem(ModelHome model) {
+        if(model==null)
+            return;
+        for(int i=0; i<itemsData.size();i++)
+            if (itemsData.get(i).equals(model)) {
+                itemsData.remove(i);
+                notifyItemRemoved(i);
+            }
     }
     
     public interface OnItemClickListener {
@@ -201,5 +211,15 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
     	if(position<itemsData.size())
     		return itemsData.get(position).viewType;
     	return 0;
+    }
+
+    public int size() {
+        return itemsData.size();
+    }
+
+    public ModelHome get(int i) {
+        if(i<this.size())
+            return itemsData.get(i);
+        return null;
     }
 }

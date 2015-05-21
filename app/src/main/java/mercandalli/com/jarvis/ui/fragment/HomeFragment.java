@@ -320,9 +320,6 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
     }
 
     public void removeItemList(ModelHome modelHome) {
-        for(int i=0; i<list.size(); i++) {
-            if(list.get(i).equals(modelHome))
-                mAdapter.removeItem(i);
-        }
+        mAdapter.removeItem(modelHome);
     }
 }

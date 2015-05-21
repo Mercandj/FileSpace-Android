@@ -28,4 +28,58 @@ public class ModelForm extends Model {
     public JSONObject toJSONObject() {
         return null;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o==null)
+            return false;
+        if(!(o instanceof ModelForm))
+            return false;
+        ModelForm obj = (ModelForm)o;
+
+        if((this.input1EditText != null && obj.input1EditText == null) || (this.input1EditText == null && obj.input1EditText != null))
+            return false;
+        if((this.input2EditText != null && obj.input2EditText == null) || (this.input2EditText == null && obj.input2EditText != null))
+            return false;
+        if((this.input3EditText != null && obj.input3EditText == null) || (this.input3EditText == null && obj.input3EditText != null))
+            return false;
+        if((this.input1Text != null && obj.input1Text == null) || (this.input1Text == null && obj.input1Text != null))
+            return false;
+        if((this.input2Text != null && obj.input2Text == null) || (this.input2Text == null && obj.input2Text != null))
+            return false;
+        if((this.input3Text != null && obj.input3Text == null) || (this.input3Text == null && obj.input3Text != null))
+            return false;
+
+        if(this.input1EditText != null &&
+                this.input2EditText != null &&
+                this.input3EditText != null &&
+                this.input1Text != null &&
+                this.input2Text != null &&
+                this.input3Text != null)
+            return this.input1EditText.equals(obj.input1EditText) &&
+                    this.input2EditText.equals(obj.input2EditText) &&
+                    this.input3EditText.equals(obj.input3EditText) &&
+                    this.input1Text.equals(obj.input1Text) &&
+                    this.input2Text.equals(obj.input2Text) &&
+                    this.input3Text.equals(obj.input3Text);
+
+        if(this.input1EditText != null &&
+                this.input2EditText != null &&
+                this.input1Text != null &&
+                this.input2Text != null)
+            return this.input1EditText.equals(obj.input1EditText) &&
+                    this.input2EditText.equals(obj.input2EditText) &&
+                    this.input1Text.equals(obj.input1Text) &&
+                    this.input2Text.equals(obj.input2Text);
+
+        if(this.input1EditText != null &&
+                this.input1Text != null)
+            return this.input1EditText.equals(obj.input1EditText) &&
+                    this.input1Text.equals(obj.input1Text);
+
+        if(this.input1Text != null)
+            return this.input1Text.equals(obj.input1Text);
+
+        return false;
+    }
 }
