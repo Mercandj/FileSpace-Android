@@ -24,16 +24,14 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.ui.fragment.FileManagerFragment;
 import mercandalli.com.jarvis.notificationpush.NotificationPush;
+import mercandalli.com.jarvis.ui.fragment.FileManagerFragment;
 
 public class ActivityMain extends ApplicationDrawer {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_main);
-        super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);
 		
 		if(fragment instanceof FileManagerFragment) {
 			FileManagerFragment fragmentFileManager = (FileManagerFragment) fragment;					

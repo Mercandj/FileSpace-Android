@@ -33,6 +33,9 @@
         <item name="android:statusBarColor">@color/notifications_bar</item>
         <item name="colorPrimary">@color/actionbar</item>
         <item name="colorAccent">@color/actionbar</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">

@@ -25,6 +25,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -41,6 +42,7 @@ import java.util.Stack;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.config.Const;
+import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.ui.fragment.FileManagerFragment;
 import mercandalli.com.jarvis.ui.fragment.Fragment;
 import mercandalli.com.jarvis.ui.fragment.HomeFragment;
@@ -51,7 +53,6 @@ import mercandalli.com.jarvis.ui.fragment.RoboticsFragment;
 import mercandalli.com.jarvis.ui.fragment.SettingsFragment;
 import mercandalli.com.jarvis.ui.fragment.TalkManagerFragment;
 import mercandalli.com.jarvis.ui.fragment.WebFragment;
-import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.ui.navdrawer.NavDrawerItem;
 import mercandalli.com.jarvis.ui.navdrawer.NavDrawerItemListe;
 import mercandalli.com.jarvis.ui.navdrawer.NavDrawerListAdapter;
@@ -72,13 +73,17 @@ public abstract class ApplicationDrawer extends Application {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         if(toolbar!=null)
             setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar!=null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+        }
 
         mDrawerLayout 	= (DrawerLayout) 	findViewById(R.id.drawer_layout);
         mDrawerList 	= (ListView) 		findViewById(R.id.left_drawer);

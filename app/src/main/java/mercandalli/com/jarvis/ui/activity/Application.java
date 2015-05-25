@@ -29,8 +29,7 @@ import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -51,11 +50,10 @@ import mercandalli.com.jarvis.listener.IStringListener;
 import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.net.TaskPost;
 
-public abstract class Application extends ActionBarActivity {
+public abstract class Application extends AppCompatActivity {
 
 	private Config config;
 	public Dialog dialog;
-    public Toolbar toolbar;
 
     /* OnResult code */
     public final int REQUEST_TAKE_PHOTO = 1;
