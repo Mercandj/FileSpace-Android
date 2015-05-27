@@ -27,9 +27,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.ui.activity.ActivityFileAudio;
@@ -53,7 +56,9 @@ public class ModelFile extends Model implements Parcelable {
 	public long size;
 	public ModelFileType type;
 	public boolean directory = false;
-    public boolean public_ = false;
+    public boolean _public = false;
+    public boolean is_apk_update = false;
+    public Date date_creation;
 	public Bitmap bitmap;
 	public File file;
     public String onlineUrl;
@@ -133,14 +138,23 @@ public class ModelFile extends Model implements Parcelable {
             if(json.has("content") && !json.isNull("content"))
                 this.content = new ModelFileContent(app, json.getString("content"));
             if(json.has("public") && !json.isNull("public"))
-                this.public_ = json.getInt("public")==1;
+                this._public = json.getInt("public")==1;
+            if(json.has("is_apk_update") && !json.isNull("is_apk_update"))
+                this.is_apk_update = json.getInt("is_apk_update")==1;
+            if(json.has("date_creation") && !json.isNull("date_creation")) {
+                SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+                this.date_creation = dateFormatGmt.parse(json.getString("date_creation"));
+            }
 
 		} catch (JSONException e) {
             Log.e("model ModelFile", "JSONException");
 			e.printStackTrace();
-		}
-		
-		if(this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0 && this.size < 100000) {
+		} catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if(this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0 && this.size < 100000) {
 			new TaskGetDownloadImage(app, this.app.getConfig().getUser(), this, new IBitmapListener() {
 				@Override
 				public void execute(Bitmap bitmap) {
@@ -285,10 +299,10 @@ public class ModelFile extends Model implements Parcelable {
 	}
 
     public void setPublic(boolean public_, IPostExecuteListener listener) {
-        this.public_ = public_;
+        this._public = public_;
 
         List<BasicNameValuePair> parameters = new ArrayList<>();
-        parameters.add(new BasicNameValuePair("public", "" + this.public_));
+        parameters.add(new BasicNameValuePair("public", "" + this._public));
         String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + this.id;
         (new TaskPost(this.app, url, listener, parameters)).execute();
     }

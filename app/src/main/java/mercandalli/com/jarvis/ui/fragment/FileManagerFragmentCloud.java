@@ -135,10 +135,10 @@ public class FileManagerFragmentCloud extends Fragment {
                 String[] menuList = { getString(R.string.download) };
                 if(!modelFile.directory && modelFile.isMine()) {
                     if(modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
-                        menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile.public_) ? "Become private" : "Become public", "Set as profile"};
+                        menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public", "Set as profile"};
                     }
                     else
-                        menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile.public_) ? "Become private" : "Become public"};
+                        menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public"};
                 }
                 menuAleart.setTitle(getString(R.string.action));
                 menuAleart.setItems(menuList,
@@ -200,7 +200,7 @@ public class FileManagerFragmentCloud extends Fragment {
                                         break;
 
                                     case 5:
-                                        modelFile.setPublic(!modelFile.public_, new IPostExecuteListener() {
+                                        modelFile.setPublic(!modelFile._public, new IPostExecuteListener() {
                                             @Override
                                             public void execute(JSONObject json, String body) {
                                                 FileManagerFragmentCloud.this.app.refreshAdapters();

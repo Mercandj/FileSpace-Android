@@ -6,6 +6,8 @@
 
 package mercandalli.com.jarvis.net;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -17,6 +19,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,9 +31,10 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
+import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.model.ModelUser;
+import mercandalli.com.jarvis.ui.activity.Application;
 
 /**
  * Global behavior : http Get
@@ -139,11 +143,25 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 				if(json.has("toast"))
 					if(!json.getString("toast").equals(""))
 						Toast.makeText(app, json.getString("toast"), Toast.LENGTH_SHORT).show();
+				if(json.has("apk_update")) {
+					JSONArray array = json.getJSONArray("apk_update");
+                    PackageManager packageManager=app.getPackageManager();
+                    PackageInfo packageInfo=packageManager.getPackageInfo(app.getPackageName(), 0);
+                    label:for(int i=0; i<array.length(); i++) {
+                        ModelFile file = new ModelFile(app, array.getJSONObject(i));
+                        if(packageInfo.lastUpdateTime < file.date_creation.getTime()) {
+                            Toast.makeText(app, "You have an update.", Toast.LENGTH_SHORT).show();
+                            break label;
+                        }
+                    }
+				}
 			} catch (JSONException e) {
 				e.printStackTrace();
                 if (this.listener != null)
 				    this.listener.execute(null, response);
-			}
-		}
+			} catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
 	}
 }

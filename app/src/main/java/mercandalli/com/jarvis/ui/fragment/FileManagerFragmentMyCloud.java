@@ -155,10 +155,13 @@ public class FileManagerFragmentMyCloud extends Fragment {
                 String[] menuList = { getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
                 if(!modelFile.directory) {
                     if(modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
-                        menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile.public_) ? "Become private" : "Become public", "Set as profile"};
+                        menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public", "Set as profile"};
+                    }
+                    else if(modelFile.type.equals(ModelFileTypeENUM.APK.type) && app.getConfig().isUserAdmin()) {
+                        menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public", (modelFile.is_apk_update) ? "Remove the update" : "Set as update"};
                     }
                     else
-                        menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile.public_) ? "Become private" : "Become public"};
+                        menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public"};
                 }
                 menuAleart.setTitle(getString(R.string.action));
                 menuAleart.setItems(menuList,
@@ -220,7 +223,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
                                         break;
 
                                     case 5:
-                                        modelFile.setPublic(!modelFile.public_, new IPostExecuteListener() {
+                                        modelFile.setPublic(!modelFile._public, new IPostExecuteListener() {
                                             @Override
                                             public void execute(JSONObject json, String body) {
                                                 FileManagerFragmentMyCloud.this.app.refreshAdapters();
@@ -228,24 +231,42 @@ public class FileManagerFragmentMyCloud extends Fragment {
                                         });
                                         break;
 
-                                    // Picture set as profile
                                     case 6:
-                                        List<BasicNameValuePair> parameters = new ArrayList<>();
-                                        parameters.add(new BasicNameValuePair("id_file_profile_picture", "" + modelFile.id));
-                                        (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
-                                            @Override
-                                            public void execute(JSONObject json, String body) {
-                                                try {
-                                                    if (json != null)
-                                                        if (json.has("succeed"))
-                                                            if (json.getBoolean("succeed"))
-                                                                app.getConfig().setUserIdFileProfilePicture(modelFile.id);
+                                        // Picture set as profile
+                                        if(modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
+                                            List<BasicNameValuePair> parameters = new ArrayList<>();
+                                            parameters.add(new BasicNameValuePair("id_file_profile_picture", "" + modelFile.id));
+                                            (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                @Override
+                                                public void execute(JSONObject json, String body) {
+                                                    try {
+                                                        if (json != null)
+                                                            if (json.has("succeed"))
+                                                                if (json.getBoolean("succeed"))
+                                                                    app.getConfig().setUserIdFileProfilePicture(modelFile.id);
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
                                                 }
-                                                catch (JSONException e) {
-                                                    e.printStackTrace();
+                                            }, parameters)).execute();
+                                        }
+                                        else if(modelFile.type.equals(ModelFileTypeENUM.APK.type) && app.getConfig().isUserAdmin()) {
+                                            List<BasicNameValuePair> parameters = new ArrayList<>();
+                                            parameters.add(new BasicNameValuePair("is_apk_update", "" + !modelFile.is_apk_update));
+                                            (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeFile + "/"+modelFile.id, new IPostExecuteListener() {
+                                                @Override
+                                                public void execute(JSONObject json, String body) {
+                                                    try {
+                                                        if (json != null)
+                                                            if (json.has("succeed"))
+                                                                if (json.getBoolean("succeed"))
+                                                                    FileManagerFragmentMyCloud.this.app.refreshAdapters();
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
                                                 }
-                                            }
-                                        }, parameters)).execute();
+                                            }, parameters)).execute();
+                                        }
                                         break;
                                 }
                             }
