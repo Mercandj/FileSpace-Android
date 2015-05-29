@@ -42,7 +42,7 @@ public class ActivityRegisterLogin extends Application {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_register_login);
+        setContentView(R.layout.activity_register_login);
 
         RegisterLoginPagerAdapter mPagerAdapter = new RegisterLoginPagerAdapter(this.getFragmentManager(), this);
 

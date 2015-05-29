@@ -39,7 +39,7 @@ public class DialogShowTxt extends Dialog {
 		super(app);
 		this.app = app;
 		
-		this.setContentView(R.layout.view_file_text);
+		this.setContentView(R.layout.activity_file_text);
 		this.setTitle(R.string.app_name);
 		this.setCancelable(true);
 	    

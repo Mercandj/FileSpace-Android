@@ -45,7 +45,7 @@ public class ActivityFileText extends Application {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_file_text);
+        setContentView(R.layout.activity_file_text);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         if(toolbar!=null) {

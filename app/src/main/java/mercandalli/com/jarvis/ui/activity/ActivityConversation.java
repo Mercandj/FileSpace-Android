@@ -72,7 +72,7 @@ public class ActivityConversation extends Application {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_conversation);
+        setContentView(R.layout.activity_conversation);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         if(toolbar!=null) {

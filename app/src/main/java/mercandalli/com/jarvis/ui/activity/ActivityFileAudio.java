@@ -131,7 +131,7 @@ public class ActivityFileAudio extends Application {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_file_audio);
+        setContentView(R.layout.activity_file_audio);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         if(toolbar!=null) {

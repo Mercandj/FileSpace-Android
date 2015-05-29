@@ -55,7 +55,7 @@ public class DialogRequest extends Dialog {
 		super(app);
 		this.app = app;
 		
-		this.setContentView(R.layout.view_request);
+		this.setContentView(R.layout.dialog_request);
 		this.setTitle(R.string.app_name);
 		this.setCancelable(true);
 	    

@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import mercandalli.com.jarvis.R;
+import mercandalli.com.jarvis.config.Const;
 import mercandalli.com.jarvis.listener.IBitmapListener;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
@@ -172,7 +173,7 @@ public class ModelFile extends Model implements Parcelable {
         }
 
         if(this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0) {
-			new TaskGetDownloadImage(app, this.app.getConfig().getUser(), this, 100000, new IBitmapListener() {
+			new TaskGetDownloadImage(app, this.app.getConfig().getUser(), this, Const.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
 				@Override
 				public void execute(Bitmap bitmap) {
                     if(bitmap != null) {

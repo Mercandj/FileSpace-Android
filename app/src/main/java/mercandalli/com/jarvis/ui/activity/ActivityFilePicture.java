@@ -19,6 +19,7 @@
  */
 package mercandalli.com.jarvis.ui.activity;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -30,6 +31,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import mercandalli.com.jarvis.R;
+import mercandalli.com.jarvis.config.Const;
+import mercandalli.com.jarvis.listener.IBitmapListener;
+import mercandalli.com.jarvis.net.TaskGetDownloadImage;
 
 import static mercandalli.com.jarvis.util.ImageUtils.is_image;
 import static mercandalli.com.jarvis.util.ImageUtils.load_image;
@@ -41,11 +45,12 @@ public class ActivityFilePicture extends Application {
     private String initate, url, login, password, title;
     private int id;
     private boolean online;
+    private long sizeFile;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_file_picture);
+        setContentView(R.layout.activity_file_picture);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         if(toolbar!=null) {
@@ -71,12 +76,22 @@ public class ActivityFilePicture extends Application {
             this.login = extras.getString("LOGIN");
             this.password = extras.getString("PASSWORD");
             this.online = extras.getBoolean("ONLINE");
+            this.sizeFile = extras.getLong("SIZE_FILE");
 
             if(this.title != null)
                 ((TextView) this.findViewById(R.id.title)).setText(this.title);
 
             if(is_image(this, this.id))
                 ((ImageView) this.findViewById(R.id.icon)).setImageBitmap(load_image(this, this.id));
+            else if(this.id != 0)
+                (new TaskGetDownloadImage(this, login, password, url, id, sizeFile, Const.SIZE_MAX_ONLINE_PICTURE,  new IBitmapListener() {
+
+                    @Override
+                    public void execute(Bitmap bitmap) {
+                        ((ImageView) findViewById(R.id.icon)).setImageBitmap(bitmap);
+                    }
+                })).execute();
+
 
             Log.e("test", this.id+" "+is_image(this, this.id));
         }

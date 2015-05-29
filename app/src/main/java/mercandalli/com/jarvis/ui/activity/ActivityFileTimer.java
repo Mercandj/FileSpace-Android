@@ -53,7 +53,7 @@ public class ActivityFileTimer extends Application {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_file_timer);
+        setContentView(R.layout.activity_file_timer);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         if(toolbar!=null) {

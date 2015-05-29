@@ -51,7 +51,7 @@ public class DialogUpload extends Dialog {
 		this.app = app;
         this.id_file_parent = id_file_parent;
 		
-		this.setContentView(R.layout.view_upload);
+		this.setContentView(R.layout.dialog_upload);
 		this.setTitle(R.string.app_name);
 		this.setCancelable(true);
 	    

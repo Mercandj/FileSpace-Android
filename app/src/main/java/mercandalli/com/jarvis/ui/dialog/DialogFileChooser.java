@@ -51,7 +51,7 @@ public class DialogFileChooser extends Dialog {
 		this.app = app;
 		this.listener = listener;
 		
-		this.setContentView(R.layout.view_filechooser);
+		this.setContentView(R.layout.dialog_filechooser);
 		this.setTitle(R.string.app_name);
 		this.setCancelable(true);
 		

@@ -65,7 +65,7 @@ public class DialogAddFileManager extends Dialog {
 		super(app, android.R.style.Theme_Translucent_NoTitleBar);
 		this.app = app;
 		
-		this.setContentView(R.layout.view_add_file);
+		this.setContentView(R.layout.dialog_add_file);
 		this.setCancelable(true);
 
         Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.dialog_add_file_open);

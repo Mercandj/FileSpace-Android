@@ -54,18 +54,31 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
 	Bitmap bitmap;
 	IBitmapListener listener;
 	Application app;
-	ModelUser user;
-    ModelFile fileModel;
-	int sizeLimit;
+	private String login, password;
+	int idFile;
+    long sizeLimit, sizeFile;
 
-	public TaskGetDownloadImage(Application app, ModelUser user, ModelFile fileModel, int sizeLimit, IBitmapListener listener) {
+	public TaskGetDownloadImage(Application app, ModelUser user, ModelFile fileModel, long sizeLimit, IBitmapListener listener) {
 		this.app = app;
-		this.user = user;
+		this.login = user.getAccessLogin();
+		this.password = user.getAccessPassword();
 		this.url = fileModel.onlineUrl;
-        this.fileModel = fileModel;
+        this.idFile = fileModel.id;
+        this.sizeFile = fileModel.size;
 		this.listener = listener;
 		this.sizeLimit = sizeLimit;
 	}
+
+    public TaskGetDownloadImage(Application app, String login, String password, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener) {
+        this.app = app;
+        this.login = login;
+        this.password = password;
+        this.url = onlineUrl;
+        this.idFile = idFile;
+        this.sizeFile = sizeFile;
+        this.listener = listener;
+        this.sizeLimit = sizeLimit;
+    }
 
 	@Override
 	protected Void doInBackground(Void... urls) {		
@@ -79,14 +92,14 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
 	}
 	
 	public Bitmap drawable_from_url_Authorization() {
-        if(is_image(this.app, this.fileModel.id))
-            return load_image(this.app, this.fileModel.id);
-		if(sizeLimit < fileModel.size)
+        if(is_image(this.app, this.idFile))
+            return load_image(this.app, this.idFile);
+		if(this.sizeLimit < this.sizeFile)
 			return null;
 		Bitmap x = null;
 		HttpResponse response;
 		HttpGet httpget = new HttpGet(url);
-    	StringBuilder authentication = new StringBuilder().append(user.getAccessLogin()).append(":").append(user.getAccessPassword());
+    	StringBuilder authentication = new StringBuilder().append(this.login).append(":").append(this.password);
         String result = Base64.encodeBytes(authentication.toString().getBytes());
         httpget.setHeader("Authorization", "Basic " + result);
 		HttpClient httpclient = new DefaultHttpClient();
@@ -94,7 +107,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
 			response = httpclient.execute(httpget);
 			InputStream inputStream = response.getEntity().getContent();
 			x = BitmapFactory.decodeStream(new FlushedInputStream(inputStream));
-            save_image(this.app, this.fileModel.id, x);
+            save_image(this.app, this.idFile, x);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
