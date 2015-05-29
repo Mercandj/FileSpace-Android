@@ -1,15 +1,27 @@
 /**
- * Personal Project : Control server
+ * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
  *
- * MERCANDALLI Jonathan
+ * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
+ *
+ * LICENSE:
+ *
+ * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * @author Jonathan Mercandalli
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
  */
-
 package mercandalli.com.jarvis.net;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -17,18 +29,18 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
-import java.util.WeakHashMap;
 
-import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.listener.IBitmapListener;
 import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.model.ModelUser;
+import mercandalli.com.jarvis.ui.activity.Application;
+
+import static mercandalli.com.jarvis.util.ImageUtils.is_image;
+import static mercandalli.com.jarvis.util.ImageUtils.load_image;
+import static mercandalli.com.jarvis.util.ImageUtils.save_image;
 
 /**
  * Global behavior : DDL Image
@@ -44,13 +56,15 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
 	Application app;
 	ModelUser user;
     ModelFile fileModel;
+	int sizeLimit;
 
-	public TaskGetDownloadImage(Application app, ModelUser user, ModelFile file, IBitmapListener listener) {
+	public TaskGetDownloadImage(Application app, ModelUser user, ModelFile fileModel, int sizeLimit, IBitmapListener listener) {
 		this.app = app;
 		this.user = user;
-		this.url = file.onlineUrl;
-        this.fileModel = file;
+		this.url = fileModel.onlineUrl;
+        this.fileModel = fileModel;
 		this.listener = listener;
+		this.sizeLimit = sizeLimit;
 	}
 
 	@Override
@@ -65,8 +79,10 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
 	}
 	
 	public Bitmap drawable_from_url_Authorization() {
-        if(is_image())
-            return load_image();
+        if(is_image(this.app, this.fileModel.id))
+            return load_image(this.app, this.fileModel.id);
+		if(sizeLimit < fileModel.size)
+			return null;
 		Bitmap x = null;
 		HttpResponse response;
 		HttpGet httpget = new HttpGet(url);
@@ -78,7 +94,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
 			response = httpclient.execute(httpget);
 			InputStream inputStream = response.getEntity().getContent();
 			x = BitmapFactory.decodeStream(new FlushedInputStream(inputStream));
-            save_image(x);
+            save_image(this.app, this.fileModel.id, x);
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -86,7 +102,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
 		}
         return x;
     }
-	
+
 	/**
 	 * DDL image
 	 * @author Jonathan
@@ -121,43 +137,4 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
 
 
 
-
-
-
-
-    private static Map<Integer, Bitmap> images = new WeakHashMap<Integer, Bitmap>();
-
-    public void save_image(Bitmap bm) {
-        images.put(this.fileModel.id,bm);
-
-        File file = new File(this.app.getFilesDir()+"/file_"+this.fileModel.id);
-        if(file.exists()) return;
-
-        FileOutputStream fOut;
-        try {
-            fOut = new FileOutputStream(this.app.getFilesDir()+"/file_"+this.fileModel.id);
-            bm.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-            fOut.flush();
-            fOut.close();
-        } catch (Exception e) {
-        }
-    }
-
-    public Bitmap load_image() {
-        if(images.containsKey(this.fileModel.id))
-            return images.get(this.fileModel.id);
-
-        File file = new File(this.app.getFilesDir()+"/file_"+this.fileModel.id);
-        if(file.exists())
-            return BitmapFactory.decodeFile(file.getPath());
-        Log.e("TaskGetDownloadImage", "load_photo(String url) return null");
-        return null;
-    }
-
-    public boolean is_image() {
-        if(images.containsKey(this.fileModel.id))
-            return true;
-        File file = new File(this.app.getFilesDir()+"/file_"+this.fileModel.id);
-        return file.exists();
-    }
 }

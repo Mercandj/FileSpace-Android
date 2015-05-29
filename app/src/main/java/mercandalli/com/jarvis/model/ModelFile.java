@@ -1,9 +1,22 @@
 /**
- * Personal Project : Control server
+ * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
  *
- * MERCANDALLI Jonathan
+ * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
+ *
+ * LICENSE:
+ *
+ * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * @author Jonathan Mercandalli
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
  */
-
 package mercandalli.com.jarvis.model;
 
 import android.content.ActivityNotFoundException;
@@ -14,7 +27,10 @@ import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import org.apache.http.message.BasicNameValuePair;
@@ -35,10 +51,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.ui.activity.ActivityFileAudio;
-import mercandalli.com.jarvis.ui.activity.ActivityFileText;
-import mercandalli.com.jarvis.ui.activity.ActivityFileTimer;
-import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.listener.IBitmapListener;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
@@ -46,6 +58,11 @@ import mercandalli.com.jarvis.net.TaskDelete;
 import mercandalli.com.jarvis.net.TaskGetDownload;
 import mercandalli.com.jarvis.net.TaskGetDownloadImage;
 import mercandalli.com.jarvis.net.TaskPost;
+import mercandalli.com.jarvis.ui.activity.ActivityFileAudio;
+import mercandalli.com.jarvis.ui.activity.ActivityFilePicture;
+import mercandalli.com.jarvis.ui.activity.ActivityFileText;
+import mercandalli.com.jarvis.ui.activity.ActivityFileTimer;
+import mercandalli.com.jarvis.ui.activity.Application;
 
 public class ModelFile extends Model implements Parcelable {
 	
@@ -154,18 +171,24 @@ public class ModelFile extends Model implements Parcelable {
             e.printStackTrace();
         }
 
-        if(this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0 && this.size < 100000) {
-			new TaskGetDownloadImage(app, this.app.getConfig().getUser(), this, new IBitmapListener() {
+        if(this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0) {
+			new TaskGetDownloadImage(app, this.app.getConfig().getUser(), this, 100000, new IBitmapListener() {
 				@Override
 				public void execute(Bitmap bitmap) {
-					ModelFile.this.bitmap = bitmap;
-					ModelFile.this.app.updateAdapters();
+                    if(bitmap != null) {
+                        ModelFile.this.bitmap = bitmap;
+                        ModelFile.this.app.updateAdapters();
+                    }
 				}
 			}).execute();
 		}		
 	}
+
+    public void executeOnline(ArrayList<ModelFile> files) {
+        executeOnline(files, null);
+    }
 	
-	public void executeOnline(ArrayList<ModelFile> files) {
+	public void executeOnline(ArrayList<ModelFile> files, View view) {
 		if(this.type.equals(ModelFileTypeENUM.TEXT.type)) {
             Intent intent = new Intent(this.app, ActivityFileText.class);
             intent.putExtra("URL_FILE", ""+this.onlineUrl);
@@ -175,6 +198,34 @@ public class ModelFile extends Model implements Parcelable {
             this.app.startActivity(intent);
             this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		}
+        else if(this.type.equals(ModelFileTypeENUM.PICTURE.type)) {
+            if(view == null) {
+                Intent intent = new Intent(this.app, ActivityFilePicture.class);
+                intent.putExtra("ID", "" + this.id);
+                intent.putExtra("URL_FILE", "" + this.onlineUrl);
+                intent.putExtra("LOGIN", "" + this.app.getConfig().getUser().getAccessLogin());
+                intent.putExtra("PASSWORD", "" + this.app.getConfig().getUser().getAccessPassword());
+                intent.putExtra("ONLINE", true);
+                this.app.startActivity(intent);
+                this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+            }
+            else {
+
+                Intent intent = new Intent(this.app, ActivityFilePicture.class);
+                intent.putExtra("ID", this.id);
+                intent.putExtra("TITLE", "" + this.getNameExt());
+                intent.putExtra("URL_FILE", "" + this.onlineUrl);
+                intent.putExtra("LOGIN", "" + this.app.getConfig().getUser().getAccessLogin());
+                intent.putExtra("PASSWORD", "" + this.app.getConfig().getUser().getAccessPassword());
+                intent.putExtra("ONLINE", true);
+                Pair<View, String> p1 = Pair.create(view, "transitionRoot");
+                Pair<View, String> p2 = Pair.create(view.findViewById(R.id.icon), "transitionIcon");
+                Pair<View, String> p3 = Pair.create(view.findViewById(R.id.title), "transitionTitle");
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(this.app, p2, p3);
+                this.app.startActivity(intent, options.toBundle());
+            }
+        }
 		else if(this.type.equals(ModelFileTypeENUM.AUDIO.type)) {
             Intent intent = new Intent(app, ActivityFileAudio.class);
             intent.putExtra("LOGIN", ""+app.getConfig().getUser().getAccessLogin());

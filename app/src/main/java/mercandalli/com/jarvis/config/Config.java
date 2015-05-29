@@ -250,7 +250,7 @@ public class Config {
             ModelFile modelFile = new ModelFile(app);
             modelFile.id = this.getUserIdFileProfilePicture();
             modelFile.onlineUrl = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+this.getUserIdFileProfilePicture();
-            new TaskGetDownloadImage(app, this.app.getConfig().getUser(), modelFile, new IBitmapListener() {
+            new TaskGetDownloadImage(app, this.app.getConfig().getUser(), modelFile, 100000, new IBitmapListener() {
                 @Override
                 public void execute(Bitmap bitmap) {
                     //TODO
