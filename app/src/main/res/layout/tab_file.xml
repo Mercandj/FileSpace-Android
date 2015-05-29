@@ -6,12 +6,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="70dp"
+    android:transitionName="transitionRoot"
     android:background="?android:attr/selectableItemBackground">
 
     <TextView
         android:id="@+id/title"
+        android:transitionName="transitionTitle"
         android:layout_width="wrap_content"
-        android:layout_height="25dp"
+        android:layout_height="wrap_content"
         android:ellipsize="marquee"
         android:focusable="false"
         android:marqueeRepeatLimit="marquee_forever"
@@ -30,7 +32,7 @@
     <TextView
         android:id="@+id/subtitle"
         android:layout_width="wrap_content"
-        android:layout_height="20dp"
+        android:layout_height="wrap_content"
         android:ellipsize="marquee"
         android:focusable="false"
         android:marqueeRepeatLimit="marquee_forever"
@@ -55,6 +57,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
         android:contentDescription="@string/image_description"
+        android:transitionName="transitionIcon"
         android:src="@drawable/file_default" />
 
     <ImageView

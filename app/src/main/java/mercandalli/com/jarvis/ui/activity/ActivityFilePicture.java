@@ -25,27 +25,27 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
-
-import org.json.JSONObject;
+import android.widget.TextView;
 
 import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.listener.IPostExecuteListener;
-import mercandalli.com.jarvis.net.TaskGet;
+
+import static mercandalli.com.jarvis.util.ImageUtils.is_image;
+import static mercandalli.com.jarvis.util.ImageUtils.load_image;
 
 /**
- * Created by Jonathan on 14/12/2014.
+ * Created by Jonathan on 29/05/2015.
  */
-public class ActivityFileText extends Application {
-
-    private String initate, url, login, password;
+public class ActivityFilePicture extends Application {
+    private String initate, url, login, password, title;
+    private int id;
     private boolean online;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_file_text);
+        setContentView(R.layout.view_file_picture);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         if(toolbar!=null) {
@@ -54,31 +54,31 @@ public class ActivityFileText extends Application {
         }
 
         // Visibility
-        ((EditText) this.findViewById(R.id.txt)).setVisibility(View.GONE);
-        ((ProgressBar) this.findViewById(R.id.circulerProgressBar)).setVisibility(View.VISIBLE);
+        //((ImageView) this.findViewById(R.id.icon)).setVisibility(View.GONE);
+        ((ProgressBar) this.findViewById(R.id.circulerProgressBar)).setVisibility(View.GONE);
 
         Bundle extras = getIntent().getExtras();
         if(extras == null) {
             Log.e(""+getClass().getName(), "extras == null");
-            this.finish();
-            this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            /*this.finish();
+            this.overridePendingTransition(R.anim.right_in, R.anim.right_out);*/
             return;
         }
         else {
+            this.id = extras.getInt("ID");
+            this.title = extras.getString("TITLE");
             this.url = extras.getString("URL_FILE");
             this.login = extras.getString("LOGIN");
             this.password = extras.getString("PASSWORD");
             this.online = extras.getBoolean("ONLINE");
 
-            new TaskGet(this, this.getConfig().getUser(), this.url, new IPostExecuteListener() {
-                @Override
-                public void execute(JSONObject json, String body) {
-                    initate = body;
-                    ((EditText) ActivityFileText.this.findViewById(R.id.txt)).setText("" + initate);
-                    ((EditText) ActivityFileText.this.findViewById(R.id.txt)).setVisibility(View.VISIBLE);
-                    ((ProgressBar) ActivityFileText.this.findViewById(R.id.circulerProgressBar)).setVisibility(View.GONE);
-                }
-            }).execute();
+            if(this.title != null)
+                ((TextView) this.findViewById(R.id.title)).setText(this.title);
+
+            if(is_image(this, this.id))
+                ((ImageView) this.findViewById(R.id.icon)).setImageBitmap(load_image(this, this.id));
+
+            Log.e("test", this.id+" "+is_image(this, this.id));
         }
     }
 
@@ -96,8 +96,7 @@ public class ActivityFileText extends Application {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                this.finish();
-                this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                supportFinishAfterTransition();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -106,8 +105,7 @@ public class ActivityFileText extends Application {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            this.finish();
-            this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            supportFinishAfterTransition();
         }
         return super.onKeyDown(keyCode, event);
     }

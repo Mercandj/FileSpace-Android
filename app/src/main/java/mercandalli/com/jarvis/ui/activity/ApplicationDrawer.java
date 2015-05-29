@@ -17,7 +17,6 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
  */
-
 package mercandalli.com.jarvis.ui.activity;
 
 import android.app.FragmentManager;
