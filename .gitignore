@@ -98,8 +98,9 @@ Thumbs.db
 .classpath
 .project
 
-# Android Studio
+# Android Studio - IntelliJ IDEA
 .idea
 #.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
 .gradle
 build/
+*.iml
