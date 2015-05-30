@@ -31,7 +31,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -44,6 +43,7 @@ import java.util.Map;
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.net.Base64;
+import mercandalli.com.jarvis.ui.view.PlayPauseView;
 
 /**
  * Created by Jonathan on 14/12/2014.
@@ -57,7 +57,7 @@ public class ActivityFileAudio extends Application {
     private List<ModelFile> files;
 
     private SeekBar seekBar;
-    private ImageButton play;
+    private PlayPauseView play;
     private TextView title, size;
     private MediaPlayer player;
     private final Handler handler = new Handler();
@@ -148,20 +148,21 @@ public class ActivityFileAudio extends Application {
         this.title = (TextView) this.findViewById(R.id.title);
         this.size = (TextView) this.findViewById(R.id.size);
         this.seekBar = (SeekBar) this.findViewById(R.id.seekBar);
-        this.play = (ImageButton) this.findViewById(R.id.play);
-        this.play.setImageResource(android.R.drawable.ic_media_pause);
+        this.play = (PlayPauseView) this.findViewById(R.id.play);
+        //this.play.setImageResource(android.R.drawable.ic_media_pause);
         this.play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(ActivityFileAudio.this.player!=null) {
                     if(ActivityFileAudio.this.player.isPlaying()) {
-                        play.setImageResource(android.R.drawable.ic_media_play);
+                        //play.setImageResource(android.R.drawable.ic_media_play);
                         ActivityFileAudio.this.player.pause();
                     }
                     else {
-                        play.setImageResource(android.R.drawable.ic_media_pause);
+                        //play.setImageResource(android.R.drawable.ic_media_pause);
                         ActivityFileAudio.this.player.start();
                     }
+                    play.toggle();
                 }
             }
         });

@@ -59,6 +59,7 @@
             android:padding="100dp"
             android:layout_alignParentEnd="true"/>
 
+        <!--
         <ImageButton
             android:id="@+id/play"
             android:transitionName="transitionIcon"
@@ -72,6 +73,26 @@
             android:src="@android:drawable/ic_media_pause"
             android:stateListAnimator="@anim/circle_button_elevation"
             android:tint="@android:color/white" />
+            -->
+        <RelativeLayout
+            android:id="@+id/play_position"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_above="@+id/seekBar"
+            android:layout_centerHorizontal="true">
+        </RelativeLayout>
+        <mercandalli.com.jarvis.ui.view.PlayPauseView
+            android:id="@+id/play"
+            android:transitionName="transitionIcon"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_above="@+id/seekBar"
+            android:clickable="true"
+            android:foreground="?android:selectableItemBackground"
+            android:elevation="@dimen/circle_button_elevation_high"
+            android:stateListAnimator="@anim/circle_button_elevation"
+            android:layout_alignEnd="@+id/play_position"
+            android:layout_alignStart="@+id/play_position"/>
 
     </RelativeLayout>
 
