@@ -274,7 +274,7 @@ public class FileManagerFragmentLocal extends Fragment {
                         refreshList();
                     }
                     else
-                        files.get(position).executeLocal(files);
+                        files.get(position).executeLocal(files, view);
 				}
 			});
 
@@ -314,5 +314,9 @@ public class FileManagerFragmentLocal extends Fragment {
     @Override
     public boolean back() {
         return false;
+    }
+
+    public View getFab() {
+        return circle;
     }
 }

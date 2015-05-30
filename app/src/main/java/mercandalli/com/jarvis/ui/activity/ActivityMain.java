@@ -22,6 +22,7 @@ package mercandalli.com.jarvis.ui.activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import mercandalli.com.jarvis.notificationpush.NotificationPush;
 import mercandalli.com.jarvis.ui.fragment.FileManagerFragment;
@@ -53,6 +54,15 @@ public class ActivityMain extends ApplicationDrawer {
 			FileManagerFragment fragmentFileManager = (FileManagerFragment) fragment;					
 			fragmentFileManager.updateAdapterListServer();					
 		}
+	}
+
+	@Override
+	public View getFab() {
+		if(fragment instanceof FileManagerFragment) {
+			FileManagerFragment fragmentFileManager = (FileManagerFragment) fragment;
+			return fragmentFileManager.getFab();
+		}
+		return null;
 	}
 
 	@Override

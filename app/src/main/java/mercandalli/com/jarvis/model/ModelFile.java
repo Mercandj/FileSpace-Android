@@ -185,10 +185,6 @@ public class ModelFile extends Model implements Parcelable {
 		}		
 	}
 
-    public void executeOnline(ArrayList<ModelFile> files) {
-        executeOnline(files, null);
-    }
-	
 	public void executeOnline(ArrayList<ModelFile> files, View view) {
 		if(this.type.equals(ModelFileTypeENUM.TEXT.type)) {
             Intent intent = new Intent(this.app, ActivityFileText.class);
@@ -200,30 +196,22 @@ public class ModelFile extends Model implements Parcelable {
             this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		}
         else if(this.type.equals(ModelFileTypeENUM.PICTURE.type)) {
+            Intent intent = new Intent(this.app, ActivityFilePicture.class);
+            intent.putExtra("ID", this.id);
+            intent.putExtra("TITLE", "" + this.getNameExt());
+            intent.putExtra("URL_FILE", "" + this.onlineUrl);
+            intent.putExtra("LOGIN", "" + this.app.getConfig().getUser().getAccessLogin());
+            intent.putExtra("PASSWORD", "" + this.app.getConfig().getUser().getAccessPassword());
+            intent.putExtra("ONLINE", true);
             if(view == null) {
-                Intent intent = new Intent(this.app, ActivityFilePicture.class);
-                intent.putExtra("ID", "" + this.id);
-                intent.putExtra("URL_FILE", "" + this.onlineUrl);
-                intent.putExtra("LOGIN", "" + this.app.getConfig().getUser().getAccessLogin());
-                intent.putExtra("PASSWORD", "" + this.app.getConfig().getUser().getAccessPassword());
-                intent.putExtra("ONLINE", true);
                 this.app.startActivity(intent);
                 this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
             }
             else {
-
-                Intent intent = new Intent(this.app, ActivityFilePicture.class);
-                intent.putExtra("ID", this.id);
-                intent.putExtra("TITLE", "" + this.getNameExt());
-                intent.putExtra("URL_FILE", "" + this.onlineUrl);
-                intent.putExtra("LOGIN", "" + this.app.getConfig().getUser().getAccessLogin());
-                intent.putExtra("PASSWORD", "" + this.app.getConfig().getUser().getAccessPassword());
-                intent.putExtra("ONLINE", true);
-                Pair<View, String> p1 = Pair.create(view, "transitionRoot");
-                Pair<View, String> p2 = Pair.create(view.findViewById(R.id.icon), "transitionIcon");
-                Pair<View, String> p3 = Pair.create(view.findViewById(R.id.title), "transitionTitle");
+                Pair<View, String> p1 = Pair.create(view.findViewById(R.id.icon), "transitionIcon");
+                Pair<View, String> p2 = Pair.create(view.findViewById(R.id.title), "transitionTitle");
                 ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(this.app, p2, p3);
+                        makeSceneTransitionAnimation(this.app, p1, p2);
                 this.app.startActivity(intent, options.toBundle());
             }
         }
@@ -238,8 +226,16 @@ public class ModelFile extends Model implements Parcelable {
                 if(f.type.equals(ModelFileTypeENUM.AUDIO.type))
                     tmpFiles.add(f);
             intent.putParcelableArrayListExtra("FILES", tmpFiles);
-            this.app.startActivity(intent);
-            this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+            if(view == null) {
+                this.app.startActivity(intent);
+                this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+            }
+            else {
+                Pair<View, String> p1 = Pair.create(view.findViewById(R.id.icon), "transitionIcon");
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(this.app, p1);
+                this.app.startActivity(intent, options.toBundle());
+            }
 		}
         else if(this.type.equals(ModelFileTypeENUM.JARVIS.type)) {
             if(content != null) {
@@ -257,7 +253,7 @@ public class ModelFile extends Model implements Parcelable {
         }
 	}
 	
-	public void executeLocal(ArrayList<ModelFile> files) {
+	public void executeLocal(ArrayList<ModelFile> files, View view) {
 		if (!file.exists())
 			return;
 		if (this.type.equals(ModelFileTypeENUM.APK.type)) {
@@ -297,8 +293,16 @@ public class ModelFile extends Model implements Parcelable {
                     if(f.type.equals(ModelFileTypeENUM.AUDIO.type))
                         tmpFiles.add(f);
             intent.putParcelableArrayListExtra("FILES", tmpFiles);
-            this.app.startActivity(intent);
-            this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+            if(view == null) {
+                this.app.startActivity(intent);
+                this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+            }
+            else {
+                Pair<View, String> p1 = Pair.create(view.findViewById(R.id.icon), "transitionIcon");
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(this.app, p1);
+                this.app.startActivity(intent, options.toBundle());
+            }
 		}
 		else if(this.type.equals(ModelFileTypeENUM.PICTURE.type)) {
 			Intent picIntent = new Intent();

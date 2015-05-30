@@ -108,6 +108,11 @@ public class ActivityFilePicture extends Application {
     }
 
     @Override
+    public View getFab() {
+        return null;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:

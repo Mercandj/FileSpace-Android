@@ -244,4 +244,25 @@ public class FileManagerFragment extends Fragment {
 			}
 		}, "No", null);
 	}
+
+	public View getFab() {
+        if(listFragment[0]!=null)
+            if(listFragment[0] instanceof FileManagerFragmentCloud) {
+                FileManagerFragmentCloud fragmentFileManagerFragment = (FileManagerFragmentCloud) listFragment[0];
+                return fragmentFileManagerFragment.getFab();
+            }
+        if(listFragment.length>1)
+            if(listFragment[1]!=null)
+                if(listFragment[1] instanceof FileManagerFragmentMyCloud) {
+                    FileManagerFragmentMyCloud fragmentFileManagerFragment = (FileManagerFragmentMyCloud) listFragment[1];
+                    return fragmentFileManagerFragment.getFab();
+                }
+        if(listFragment.length>2)
+            if(listFragment[2]!=null)
+                if(listFragment[2] instanceof FileManagerFragmentLocal) {
+                    FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[2];
+                    return fragmentFileManagerFragment.getFab();
+                }
+		return null;
+	}
 }

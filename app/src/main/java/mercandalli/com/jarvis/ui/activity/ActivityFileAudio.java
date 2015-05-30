@@ -149,16 +149,17 @@ public class ActivityFileAudio extends Application {
         this.size = (TextView) this.findViewById(R.id.size);
         this.seekBar = (SeekBar) this.findViewById(R.id.seekBar);
         this.play = (ImageButton) this.findViewById(R.id.play);
+        this.play.setImageResource(android.R.drawable.ic_media_pause);
         this.play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(ActivityFileAudio.this.player!=null) {
                     if(ActivityFileAudio.this.player.isPlaying()) {
-                        play.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_play));
+                        play.setImageResource(android.R.drawable.ic_media_play);
                         ActivityFileAudio.this.player.pause();
                     }
                     else {
-                        play.setImageDrawable(getResources().getDrawable(android.R.drawable.ic_media_pause));
+                        play.setImageResource(android.R.drawable.ic_media_pause);
                         ActivityFileAudio.this.player.start();
                     }
                 }
@@ -227,10 +228,21 @@ public class ActivityFileAudio extends Application {
     }
 
     @Override
+    public View getFab() {
+        return null;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finishActivity();
+                if(updatePositionRunnable!=null)
+                    updatePositionRunnable.kill();
+                if(player!=null) {
+                    player.stop();
+                    player.reset();
+                }
+                supportFinishAfterTransition();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -250,7 +262,6 @@ public class ActivityFileAudio extends Application {
             player.stop();
             player.reset();
         }
-        this.finish();
-        this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+        supportFinishAfterTransition();
     }
 }

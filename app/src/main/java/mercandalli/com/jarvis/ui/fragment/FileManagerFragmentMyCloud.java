@@ -419,4 +419,8 @@ public class FileManagerFragmentMyCloud extends Fragment {
         else
             return false;
     }
+
+    public View getFab() {
+        return circle;
+    }
 }

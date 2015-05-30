@@ -364,4 +364,8 @@ public class FileManagerFragmentCloud extends Fragment {
     public boolean back() {
         return false;
     }
+
+    public View getFab() {
+        return circle;
+    }
 }

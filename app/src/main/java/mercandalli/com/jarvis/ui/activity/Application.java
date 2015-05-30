@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -164,6 +165,7 @@ public abstract class Application extends AppCompatActivity {
 	public abstract void refreshAdapters();
 	public abstract void updateAdapters();
 
+    public abstract View getFab();
 
     private String buildTagViews(NdefMessage[] msgs){
         if (msgs == null || msgs.length == 0) {
