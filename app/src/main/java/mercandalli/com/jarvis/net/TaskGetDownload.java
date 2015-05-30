@@ -45,17 +45,17 @@ import mercandalli.com.jarvis.util.FileUtils;
 
 /**
  * Global behavior : DDL file
- * 
+ *
  * @author Jonathan
- * 
+ *
  */
 public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
 
-	String url;
-	String url_ouput;
-	IListener listener;
-	File file;
-	Application app;
+    String url;
+    String url_ouput;
+    IListener listener;
+    File file;
+    Application app;
     ModelFile modelFile;
 
     int id = 1;
@@ -63,12 +63,12 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
     NotificationCompat.Builder mBuilder;
 
     public TaskGetDownload(Application app, String url, String url_ouput, ModelFile modelFile, IListener listener) {
-		this.app = app;
-		this.url = url;
-		this.url_ouput = url_ouput;
+        this.app = app;
+        this.url = url;
+        this.url_ouput = url_ouput;
         this.modelFile = modelFile;
-		this.listener = listener;
-	}
+        this.listener = listener;
+    }
 
     @Override
     protected void onPreExecute() {
@@ -81,14 +81,14 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
     }
 
     @Override
-	protected Void doInBackground(Void... urls) {		
-		file = file_from_url_Authorization(this.url);
-		return null;		
-	}
+    protected Void doInBackground(Void... urls) {
+        file = file_from_url_Authorization(this.url);
+        return null;
+    }
 
-	@Override
-	protected void onPostExecute(Void response) {
-		Log.d("onPostExecute", "" + response);
+    @Override
+    protected void onPostExecute(Void response) {
+        Log.d("onPostExecute", "" + response);
 
         // When the loop is finished, updates the notification
         mBuilder.setContentText("Download complete")
@@ -96,30 +96,30 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
                 .setProgress(0,0,false);
         mNotifyManager.notify(id, mBuilder.build());
 
-		this.listener.execute();
-	}
-	
-	public File file_from_url_Authorization(String url) {
-		File x = null;
-		HttpResponse response;
-		HttpGet httpget = new HttpGet(url);
-    	StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
+        this.listener.execute();
+    }
+
+    public File file_from_url_Authorization(String url) {
+        File x = null;
+        HttpResponse response;
+        HttpGet httpget = new HttpGet(url);
+        StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
         String result = Base64.encodeBytes(authentication.toString().getBytes());
         httpget.setHeader("Authorization", "Basic " + result);
-		HttpClient httpclient = new DefaultHttpClient();
-		try {
-			response = httpclient.execute(httpget);
-			InputStream inputStream = response.getEntity().getContent();
-			long lenghtOfFile = response.getEntity().getContentLength();
-			OutputStream outputStream = new FileOutputStream(url_ouput);
-			
-			byte data[] = new byte[1024];
-			 
+        HttpClient httpclient = new DefaultHttpClient();
+        try {
+            response = httpclient.execute(httpget);
+            InputStream inputStream = response.getEntity().getContent();
+            long lenghtOfFile = response.getEntity().getContentLength();
+            OutputStream outputStream = new FileOutputStream(url_ouput);
+
+            byte data[] = new byte[1024];
+
             long total = 0;
 
             int missed_value = 50;
             int missed_conter = 0;
- 
+
             int count;
             while ((count = inputStream.read(data)) != -1) {
                 total += count;
@@ -132,23 +132,23 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
 
                     missed_conter = 0;
                 }
- 
+
                 // writing data to file
                 outputStream.write(data, 0, count);
             }
- 
+
             // flushing output
             outputStream.flush();
- 
+
             // closing streams
             outputStream.close();
             inputStream.close();
-			
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return x;
     }
 
