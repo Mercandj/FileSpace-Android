@@ -109,6 +109,8 @@ public class NotificationPush {
 					storeRegistrationId(app, regId);
 				} catch (IOException ex) {
 					msg = "Error :" + ex.getMessage();
+				} catch (Exception ex) {
+					msg = "Error :" + ex.getMessage();
 				}
 				return msg;
 			}
