@@ -44,30 +44,30 @@ import static mercandalli.com.jarvis.util.ImageUtils.save_image;
 
 /**
  * Global behavior : DDL Image
- * 
+ *
  * @author Jonathan
- * 
+ *
  */
 public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
 
-	String url;
-	Bitmap bitmap;
-	IBitmapListener listener;
-	Application app;
-	private String login, password;
-	int idFile;
+    String url;
+    Bitmap bitmap;
+    IBitmapListener listener;
+    Application app;
+    private String login, password;
+    int idFile;
     long sizeLimit, sizeFile;
 
-	public TaskGetDownloadImage(Application app, ModelUser user, ModelFile fileModel, long sizeLimit, IBitmapListener listener) {
-		this.app = app;
-		this.login = user.getAccessLogin();
-		this.password = user.getAccessPassword();
-		this.url = fileModel.onlineUrl;
+    public TaskGetDownloadImage(Application app, ModelUser user, ModelFile fileModel, long sizeLimit, IBitmapListener listener) {
+        this.app = app;
+        this.login = user.getAccessLogin();
+        this.password = user.getAccessPassword();
+        this.url = fileModel.onlineUrl;
         this.idFile = fileModel.id;
         this.sizeFile = fileModel.size;
-		this.listener = listener;
-		this.sizeLimit = sizeLimit;
-	}
+        this.listener = listener;
+        this.sizeLimit = sizeLimit;
+    }
 
     public TaskGetDownloadImage(Application app, String login, String password, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener) {
         this.app = app;
@@ -80,69 +80,69 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
         this.sizeLimit = sizeLimit;
     }
 
-	@Override
-	protected Void doInBackground(Void... urls) {		
-		bitmap = drawable_from_url_Authorization();
-		return null;		
-	}
+    @Override
+    protected Void doInBackground(Void... urls) {
+        bitmap = drawable_from_url_Authorization();
+        return null;
+    }
 
-	@Override
-	protected void onPostExecute(Void response) {
-		this.listener.execute(bitmap);
-	}
-	
-	public Bitmap drawable_from_url_Authorization() {
+    @Override
+    protected void onPostExecute(Void response) {
+        this.listener.execute(bitmap);
+    }
+
+    public Bitmap drawable_from_url_Authorization() {
         if(is_image(this.app, this.idFile))
             return load_image(this.app, this.idFile);
-		if(this.sizeLimit < this.sizeFile)
-			return null;
-		Bitmap x = null;
-		HttpResponse response;
-		HttpGet httpget = new HttpGet(url);
-    	StringBuilder authentication = new StringBuilder().append(this.login).append(":").append(this.password);
+        if(this.sizeLimit < this.sizeFile)
+            return null;
+        Bitmap x = null;
+        HttpResponse response;
+        HttpGet httpget = new HttpGet(url);
+        StringBuilder authentication = new StringBuilder().append(this.login).append(":").append(this.password);
         String result = Base64.encodeBytes(authentication.toString().getBytes());
         httpget.setHeader("Authorization", "Basic " + result);
-		HttpClient httpclient = new DefaultHttpClient();
-		try {
-			response = httpclient.execute(httpget);
-			InputStream inputStream = response.getEntity().getContent();
-			x = BitmapFactory.decodeStream(new FlushedInputStream(inputStream));
+        HttpClient httpclient = new DefaultHttpClient();
+        try {
+            response = httpclient.execute(httpget);
+            InputStream inputStream = response.getEntity().getContent();
+            x = BitmapFactory.decodeStream(new FlushedInputStream(inputStream));
             save_image(this.app, this.idFile, x);
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return x;
     }
 
-	/**
-	 * DDL image
-	 * @author Jonathan
-	 *
-	 */
-	public class FlushedInputStream extends FilterInputStream {
-	    public FlushedInputStream(InputStream inputStream) {
-	        super(inputStream);
-	    }
+    /**
+     * DDL image
+     * @author Jonathan
+     *
+     */
+    public class FlushedInputStream extends FilterInputStream {
+        public FlushedInputStream(InputStream inputStream) {
+            super(inputStream);
+        }
 
-	    @Override
-	    public long skip(long n) throws IOException {
-	        long totalBytesSkipped = 0L;
-	        while (totalBytesSkipped < n) {
-	            long bytesSkipped = in.skip(n - totalBytesSkipped);
-	            if (bytesSkipped == 0L) {
-	                  int bytet = read();
-	                  if (bytet < 0)
-	                      break;  // we reached EOF
-	                  else
-	                      bytesSkipped = 1; // we read one byte
-	            }
-	            totalBytesSkipped += bytesSkipped;
-	        }
-	        return totalBytesSkipped;
-	    }
-	}
+        @Override
+        public long skip(long n) throws IOException {
+            long totalBytesSkipped = 0L;
+            while (totalBytesSkipped < n) {
+                long bytesSkipped = in.skip(n - totalBytesSkipped);
+                if (bytesSkipped == 0L) {
+                    int bytet = read();
+                    if (bytet < 0)
+                        break;  // we reached EOF
+                    else
+                        bytesSkipped = 1; // we read one byte
+                }
+                totalBytesSkipped += bytesSkipped;
+            }
+            return totalBytesSkipped;
+        }
+    }
 
 
 
