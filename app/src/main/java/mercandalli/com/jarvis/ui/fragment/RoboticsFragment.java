@@ -45,7 +45,6 @@ import mercandalli.com.jarvis.net.TaskPost;
 import mercandalli.com.jarvis.ui.activity.Application;
 
 import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
-import static mercandalli.com.jarvis.util.RoboticsUtils.createProtocolLed;
 
 /**
  * Created by Jonathan on 03/01/2015.
@@ -151,8 +150,14 @@ public class RoboticsFragment extends Fragment {
                             parameters.add(new BasicNameValuePair("value", ""+value_));
                     */
 
-                    JSONObject json = createProtocolLed(""+value_);
-
+                    //JSONObject json = createProtocolLed(value_);
+                    JSONObject json = new JSONObject();
+                    try {
+                        json.put("id", 1);
+                        json.put("value", "" + value_);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
                     parameters.add(new BasicNameValuePair("json", ""+json.toString()));
 
