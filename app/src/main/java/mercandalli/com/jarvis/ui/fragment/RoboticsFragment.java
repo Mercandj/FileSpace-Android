@@ -39,12 +39,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.net.TaskPost;
+import mercandalli.com.jarvis.ui.activity.Application;
 
 import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
+import static mercandalli.com.jarvis.util.RoboticsUtils.createProtocolLed;
 
 /**
  * Created by Jonathan on 03/01/2015.
@@ -140,15 +141,23 @@ public class RoboticsFragment extends Fragment {
                     String id_ = id.getText().toString();
                     String value_ = value.getText().toString();
                     String order_ = order.isChecked() ? "ordre_id" : "mesure_id";
+
+                    /*
                     if(id_!=null)
                         if(!id_.equals(""))
                             parameters.add(new BasicNameValuePair(order_, ""+id_));
                     if(value_!=null && order_!=null)
                         if(!value_.equals("") && order_.equals("ordre_id"))
                             parameters.add(new BasicNameValuePair("value", ""+value_));
-                    new TaskGet(
+                    */
+
+                    JSONObject json = createProtocolLed(""+value_);
+
+
+                    parameters.add(new BasicNameValuePair("json", ""+json.toString()));
+
+                    new TaskPost(
                             app,
-                            app.getConfig().getUser(),
                             app.getConfig().getUrlServer() + RoboticsFragment.this.app.getConfig().routeRobotics,
                             new IPostExecuteListener() {
                                 @Override

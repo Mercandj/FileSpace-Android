@@ -19,7 +19,9 @@
  */
 package mercandalli.com.jarvis.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Created by Jonathan on 15/05/2015.
@@ -78,6 +80,12 @@ public class TimeUtils {
                         (elapsedHours!=0   ? ((elapsedHours<10 && elapsedDays!=0)?"0"+elapsedHours+"h ":elapsedHours+"h ") : "") +
                         (elapsedMinutes!=0 ? ((elapsedMinutes<10 && (elapsedDays!=0 || elapsedHours!=0))?"0"+elapsedMinutes+"m ":elapsedMinutes+"m ") : "") +
                         (elapsedSeconds!=0 ? ((elapsedSeconds<10 && (elapsedDays!=0 || elapsedHours!=0 || elapsedMinutes!=0))?"0"+elapsedSeconds+"s ":elapsedSeconds+"s ") : "") ;
+    }
+
+    public static String getCurrentDate() {
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return  dateFormatGmt.format(new Date()).toString();
     }
 
 }
