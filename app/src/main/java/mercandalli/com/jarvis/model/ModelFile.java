@@ -212,6 +212,7 @@ public class ModelFile extends Model implements Parcelable {
             intent.putExtra("LOGIN", "" + this.app.getConfig().getUser().getAccessLogin());
             intent.putExtra("PASSWORD", "" + this.app.getConfig().getUser().getAccessPassword());
             intent.putExtra("ONLINE", true);
+            intent.putExtra("SIZE_FILE", size);
             if(view == null) {
                 this.app.startActivity(intent);
                 this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);

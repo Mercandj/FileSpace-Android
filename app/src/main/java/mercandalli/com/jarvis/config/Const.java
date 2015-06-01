@@ -32,6 +32,5 @@ public class Const {
 	public static final int TAB_VIEW_TYPE_HOME_INFORMATION_FORM     = 7;
 
 	public static final long SIZE_MAX_ONLINE_PICTURE_ICON           = 100000;
-    public static final long SIZE_MAX_ONLINE_PICTURE                = 800000;
     public static final int WIDTH_MAX_ONLINE_PICTURE_BITMAP         = 400;
 }

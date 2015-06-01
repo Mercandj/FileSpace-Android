@@ -31,7 +31,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.config.Const;
 import mercandalli.com.jarvis.listener.IBitmapListener;
 import mercandalli.com.jarvis.net.TaskGetDownloadImage;
 
@@ -84,7 +83,7 @@ public class ActivityFilePicture extends Application {
             if(is_image(this, this.id))
                 ((ImageView) this.findViewById(R.id.icon)).setImageBitmap(load_image(this, this.id));
             else if(this.id != 0)
-                (new TaskGetDownloadImage(this, login, password, url, id, sizeFile, Const.SIZE_MAX_ONLINE_PICTURE,  new IBitmapListener() {
+                (new TaskGetDownloadImage(this, login, password, url, id, sizeFile, -1,  new IBitmapListener() {
 
                     @Override
                     public void execute(Bitmap bitmap) {

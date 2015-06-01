@@ -96,8 +96,9 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
         Log.d("TaskGetDownloadImage", "id:" + idFile + "  url:"+url);
         if(is_image(this.app, this.idFile))
             return load_image(this.app, this.idFile);
-        if(this.sizeLimit < this.sizeFile)
-            return null;
+        if(this.sizeLimit > 0)
+            if(this.sizeLimit < this.sizeFile)
+                return null;
         Bitmap x = null;
         HttpResponse response;
         HttpGet httpget = new HttpGet(url);
@@ -108,7 +109,23 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
         try {
             response = httpclient.execute(httpget);
             InputStream inputStream = response.getEntity().getContent();
-            x = BitmapFactory.decodeStream(new FlushedInputStream(inputStream));
+
+            // Get the source image's dimensions
+            BitmapFactory.Options options = new BitmapFactory.Options();
+
+            options.inJustDecodeBounds = false;
+            options.inDither = false;
+            options.inScaled = false;
+            if(this.sizeFile>3000000)
+                options.inSampleSize = 16;
+            else if(this.sizeFile>2000000)
+                options.inSampleSize = 8;
+            else if(this.sizeFile>500000)
+                options.inSampleSize = 4;
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+
+            x = BitmapFactory.decodeStream(new FlushedInputStream(inputStream), null, options);
+
             save_image(this.app, this.idFile, x);
         } catch (ClientProtocolException e) {
             e.printStackTrace();
