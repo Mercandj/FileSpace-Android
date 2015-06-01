@@ -22,6 +22,7 @@ package mercandalli.com.jarvis.net;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -92,6 +93,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
     }
 
     public Bitmap drawable_from_url_Authorization() {
+        Log.d("TaskGetDownloadImage", "id:" + idFile + "  url:"+url);
         if(is_image(this.app, this.idFile))
             return load_image(this.app, this.idFile);
         if(this.sizeLimit < this.sizeFile)

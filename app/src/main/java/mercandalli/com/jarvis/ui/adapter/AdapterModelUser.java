@@ -63,6 +63,9 @@ public class AdapterModelUser extends RecyclerView.Adapter<AdapterModelUser.View
             viewHolder.title.setText(user.getAdapterTitle());
             viewHolder.subtitle.setText(user.getAdapterSubtitle());
 
+            if(user.bitmap != null)
+                viewHolder.icon.setImageBitmap(user.bitmap);
+
             viewHolder.more.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

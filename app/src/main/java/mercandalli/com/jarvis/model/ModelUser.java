@@ -38,13 +38,16 @@ import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.util.FileUtils;
 import mercandalli.com.jarvis.util.HashUtils;
 
+import static mercandalli.com.jarvis.util.ImageUtils.is_image;
+import static mercandalli.com.jarvis.util.ImageUtils.load_image;
+
 public class ModelUser extends Model {
 
     public int id, id_file_profile_picture = -1;
 	public String username;
 	public String password;
 	public String currentToken;
-    public String regId, file_profile_picture_url;
+    public String regId;
     public Date date_creation, date_last_connection;
     public long size_files, file_profile_picture_size = -1;
     private boolean admin = false;
@@ -91,8 +94,6 @@ public class ModelUser extends Model {
                 this.id_file_profile_picture = json.getInt("id_file_profile_picture");
             if(json.has("file_profile_picture_size"))
                 this.file_profile_picture_size = json.getLong("file_profile_picture_size");
-            if(json.has("file_profile_picture_url"))
-                this.file_profile_picture_url = json.getString("file_profile_picture_url");
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -100,25 +101,31 @@ public class ModelUser extends Model {
         }
 
         if(hasPicture()) {
-            ModelFile picture = new ModelFile(app);
-            picture.id = this.id_file_profile_picture;
-            picture.size = this.file_profile_picture_size;
-            picture.onlineUrl = this.file_profile_picture_url;
+            if(is_image(this.app, this.id_file_profile_picture)) {
+                ModelUser.this.bitmap = load_image(this.app, this.id_file_profile_picture);
+                ModelUser.this.app.updateAdapters();
+            }
+            else {
+                ModelFile picture = new ModelFile(app);
+                picture.id = this.id_file_profile_picture;
+                picture.size = this.file_profile_picture_size;
+                picture.onlineUrl = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id_file_profile_picture;
 
-            new TaskGetDownloadImage(app, this.app.getConfig().getUser(), picture, Const.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
-                @Override
-                public void execute(Bitmap bitmap) {
-                    if(bitmap != null) {
-                        ModelUser.this.bitmap = bitmap;
-                        ModelUser.this.app.updateAdapters();
+                new TaskGetDownloadImage(app, this.app.getConfig().getUser(), picture, Const.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
+                    @Override
+                    public void execute(Bitmap bitmap) {
+                        if(bitmap != null) {
+                            ModelUser.this.bitmap = bitmap;
+                            ModelUser.this.app.updateAdapters();
+                        }
                     }
-                }
-            }).execute();
+                }).execute();
+            }
         }
     }
 
     public boolean hasPicture() {
-        return id_file_profile_picture != -1 && file_profile_picture_size != -1 && file_profile_picture_url != null;
+        return id_file_profile_picture != -1 && file_profile_picture_size != -1;
     }
 
     public String getAdapterTitle() {

@@ -58,10 +58,12 @@ public class AdapterModelConnversationMessage extends RecyclerView.Adapter<Adapt
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         if(position<users.size()) {
-            final ModelConversationMessage user = users.get(position);
-
-            viewHolder.title.setText(user.getAdapterTitle());
-            viewHolder.subtitle.setText(user.getAdapterSubtitle());
+            final ModelConversationMessage modelConversationMessage = users.get(position);
+            if(modelConversationMessage.user!=null)
+                if(modelConversationMessage.user.bitmap != null)
+                    viewHolder.icon.setImageBitmap(modelConversationMessage.user.bitmap);
+            viewHolder.title.setText(modelConversationMessage.getAdapterTitle());
+            viewHolder.subtitle.setText(modelConversationMessage.getAdapterSubtitle());
         }
     }
 

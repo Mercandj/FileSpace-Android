@@ -35,7 +35,7 @@ public class ModelConversationMessage extends Model {
     public int id, id_conversation, id_user;
     public Date date_creation;
     public String content;
-    private ModelUser user;
+    public ModelUser user;
 
 	public ModelConversationMessage() {
 

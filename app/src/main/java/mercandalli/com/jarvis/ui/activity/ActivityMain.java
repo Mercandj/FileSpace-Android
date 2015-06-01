@@ -26,6 +26,7 @@ import android.view.View;
 
 import mercandalli.com.jarvis.notificationpush.NotificationPush;
 import mercandalli.com.jarvis.ui.fragment.FileManagerFragment;
+import mercandalli.com.jarvis.ui.fragment.TalkManagerFragment;
 
 public class ActivityMain extends ApplicationDrawer {
 
@@ -53,6 +54,10 @@ public class ActivityMain extends ApplicationDrawer {
 		if(fragment instanceof FileManagerFragment) {
 			FileManagerFragment fragmentFileManager = (FileManagerFragment) fragment;					
 			fragmentFileManager.updateAdapterListServer();					
+		}
+		else if(fragment instanceof TalkManagerFragment) {
+            TalkManagerFragment fragmentTalkManager = (TalkManagerFragment) fragment;
+            fragmentTalkManager.updateAdapterListServer();
 		}
 	}
 

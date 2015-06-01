@@ -65,6 +65,9 @@ import mercandalli.com.jarvis.ui.activity.ActivityFileText;
 import mercandalli.com.jarvis.ui.activity.ActivityFileTimer;
 import mercandalli.com.jarvis.ui.activity.Application;
 
+import static mercandalli.com.jarvis.util.ImageUtils.is_image;
+import static mercandalli.com.jarvis.util.ImageUtils.load_image;
+
 public class ModelFile extends Model implements Parcelable {
 	
 	public int id, id_user;
@@ -173,15 +176,21 @@ public class ModelFile extends Model implements Parcelable {
         }
 
         if(this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0) {
-			new TaskGetDownloadImage(app, this.app.getConfig().getUser(), this, Const.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
-				@Override
-				public void execute(Bitmap bitmap) {
-                    if(bitmap != null) {
-                        ModelFile.this.bitmap = bitmap;
-                        ModelFile.this.app.updateAdapters();
+
+            if(is_image(this.app, this.id)) {
+                ModelFile.this.bitmap = load_image(this.app, this.id);
+                ModelFile.this.app.updateAdapters();
+            }
+            else
+                new TaskGetDownloadImage(app, this.app.getConfig().getUser(), this, Const.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
+                    @Override
+                    public void execute(Bitmap bitmap) {
+                        if(bitmap != null) {
+                            ModelFile.this.bitmap = bitmap;
+                            ModelFile.this.app.updateAdapters();
+                        }
                     }
-				}
-			}).execute();
+                }).execute();
 		}		
 	}
 
