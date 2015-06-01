@@ -19,6 +19,8 @@
  */
 package mercandalli.com.jarvis.model;
 
+import android.graphics.Bitmap;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,13 +31,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import mercandalli.com.jarvis.config.Const;
+import mercandalli.com.jarvis.listener.IBitmapListener;
+import mercandalli.com.jarvis.net.TaskGetDownloadImage;
 import mercandalli.com.jarvis.util.FileUtils;
 import mercandalli.com.jarvis.util.HashUtils;
 import mercandalli.com.jarvis.ui.activity.Application;
 
 public class ModelUser extends Model {
 
-    public int id;
+    public int id, id_file_profile_picture;
 	public String username;
 	public String password;
 	public String currentToken;
@@ -81,6 +86,22 @@ public class ModelUser extends Model {
                 this.size_files = json.getLong("size_files");
             if(json.has("admin"))
                 this.admin = json.getBoolean("admin");
+            if(json.has("id_file_profile_picture")) {
+                this.id_file_profile_picture = json.getInt("id_file_profile_picture");
+
+                ModelFile picture = new ModelFile(app);
+                picture.id = this.id_file_profile_picture;
+
+                new TaskGetDownloadImage(app, this.app.getConfig().getUser(), picture, Const.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
+                    @Override
+                    public void execute(Bitmap bitmap) {
+                        if(bitmap != null) {
+                            ModelFile.this.bitmap = bitmap;
+                            ModelFile.this.app.updateAdapters();
+                        }
+                    }
+                }).execute();
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (ParseException e) {
