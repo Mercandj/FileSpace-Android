@@ -25,7 +25,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -127,8 +126,6 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
             x = BitmapFactory.decodeStream(new FlushedInputStream(inputStream), null, options);
 
             save_image(this.app, this.idFile, x);
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

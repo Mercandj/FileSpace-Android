@@ -25,23 +25,20 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
@@ -89,38 +86,33 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
             }
 
 			Log.d("TaskGet", "url = "+url);
-			
-			HttpGet httpget = new HttpGet(url);
-			
-	    	StringBuilder authentication = new StringBuilder().append(user.getAccessLogin()).append(":").append(user.getAccessPassword());
-	        String result = Base64.encodeBytes(authentication.toString().getBytes());
-	        httpget.setHeader("Authorization", "Basic " + result);
-			
-			HttpClient httpclient = new DefaultHttpClient();
-			HttpResponse response = httpclient.execute(httpget);
 
-			// receive response as inputStream
-			InputStream inputStream = response.getEntity().getContent();
+			URL tmp_url = new URL(url);
+			HttpURLConnection conn = (HttpURLConnection) tmp_url.openConnection();
+            conn.setReadTimeout(10000);
+            conn.setConnectTimeout(15000);
+            conn.setRequestMethod("GET");
+            String authentication = user.getAccessLogin()+":"+user.getAccessPassword();
+            String result = Base64.encodeBytes(authentication.getBytes());
+            conn.setRequestProperty ("Authorization", "Basic " + result);
+            conn.setUseCaches(false);
+            conn.setDoInput(true);
 
-			
-			String resultString = null;
-			
+            conn.connect(); // Starts the query
+            int responseCode = conn.getResponseCode();
+            InputStream inputStream = new BufferedInputStream(conn.getInputStream());
+
 			// convert inputstream to string
-			if (inputStream != null)
-				resultString = convertInputStreamToString(inputStream);			
+            String resultString = convertInputStreamToString(inputStream);
 			
-			int responseCode = response.getStatusLine().getStatusCode();
+			//int responseCode = response.getStatusLine().getStatusCode();
 			if(responseCode>=300)
 				resultString = "Status Code "+responseCode+". "+resultString;
 			return resultString;
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+            e.printStackTrace();
+        }
+        return null;
 	}
 
 	/**
