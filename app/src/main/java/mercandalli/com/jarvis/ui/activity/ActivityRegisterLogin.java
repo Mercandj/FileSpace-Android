@@ -155,4 +155,17 @@ public class ActivityRegisterLogin extends Application {
             return title;
         }
     }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int responseCode, Intent intent) {
+        Fragment fr = listFragment[getCurrentFragmentIndex()];
+        if(fr instanceof LoginFragment)
+        {
+            LoginFragment fr_ = (LoginFragment) fr;
+            fr_.onActivityResult(requestCode, responseCode, intent);
+        }
+    }
+
 }

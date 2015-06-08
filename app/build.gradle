@@ -25,7 +25,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:support-v4:22.2.0'
-    compile 'com.android.support:support-v13:22.0.0'
+    compile 'com.android.support:support-v13:22.2.0'
     compile('com.android.support:recyclerview-v7:22.0.0') {
         exclude module: 'support-v4'
     }
