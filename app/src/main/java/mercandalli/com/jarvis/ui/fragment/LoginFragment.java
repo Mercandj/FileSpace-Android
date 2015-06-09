@@ -8,7 +8,6 @@ package mercandalli.com.jarvis.ui.fragment;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
@@ -164,10 +163,6 @@ public class LoginFragment extends Fragment {
 
         return rootView;
     }
-
-    private static final int REQUEST_CODE_RESOLVE_ERR = 9000;
-
-    private ProgressDialog mConnectionProgressDialog;
 
     public void connectionSucceed() {
         Intent intent = new Intent(getActivity(), ActivityMain.class);
