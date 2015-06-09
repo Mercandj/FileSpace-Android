@@ -46,7 +46,6 @@ public class ModelUser extends Model {
     public int id, id_file_profile_picture = -1;
 	public String username;
 	public String password;
-	public String currentToken;
     public String regId;
     public Date date_creation, date_last_connection;
     public long size_files, file_profile_picture_size = -1;
@@ -57,19 +56,17 @@ public class ModelUser extends Model {
 		
 	}
 
-	public ModelUser(Application app, int id, String username, String password, String currentToken, String regId, boolean admin) {
-		super();
+	public ModelUser(Application app, int id, String username, String password, String regId, boolean admin) {
+		super(app);
         this.id = id;
 		this.username = username;
 		this.password = password;
-		this.currentToken = currentToken;
         this.regId = regId;
         this.admin = admin;
 	}
 
     public ModelUser(Application app, JSONObject json) {
-        super();
-        this.app = app;
+        super(app);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
             if(json.has("id"))
@@ -78,8 +75,6 @@ public class ModelUser extends Model {
                 this.username = json.getString("username");
             if(json.has("password"))
                 this.password = json.getString("password");
-            if(json.has("currentToken"))
-                this.currentToken = json.getString("currentToken");
             if(json.has("regId"))
                 this.regId = json.getString("regId");
             if(json.has("date_creation") && !json.isNull("date_creation"))
@@ -139,9 +134,7 @@ public class ModelUser extends Model {
     }
 	
 	public String getAccessLogin() {
-		if(this.currentToken==null)
-			return this.username;
-		return this.currentToken;
+        return this.username;
 	}
 	
 	public String getAccessPassword() {
@@ -150,9 +143,7 @@ public class ModelUser extends Model {
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
         String currentDate = dateFormatGmt.format(calendar.getTime());
-        if(currentToken==null)
-            return HashUtils.sha1(HashUtils.sha1(this.password) + currentDate);
-		return "empty";
+        return HashUtils.sha1(HashUtils.sha1(this.password) + currentDate);
 	}
 
     public boolean isAdmin() {

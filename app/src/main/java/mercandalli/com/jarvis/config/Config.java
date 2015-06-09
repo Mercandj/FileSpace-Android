@@ -187,6 +187,7 @@ public class Config {
         }
     }
 
+    public boolean isLogged() { return  getUserId()>-1; }
     public int getUserId() {
         return ENUM_Int.INTEGER_USER_ID.value;
     }
@@ -305,7 +306,7 @@ public class Config {
     }
 
     public ModelUser getUser() {
-        return new ModelUser(app, getUserId(), getUserUsername(), getUserPassword(), currentToken, getUserRegId(), isUserAdmin());
+        return new ModelUser(app, getUserId(), getUserUsername(), getUserPassword(), getUserRegId(), isUserAdmin());
     }
 
     public void addServerMessage(ModelServerMessage serverMessage) {
