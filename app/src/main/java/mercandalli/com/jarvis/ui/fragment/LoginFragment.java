@@ -35,6 +35,7 @@ import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.ui.activity.ActivityMain;
 import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.util.HashUtils;
+import mercandalli.com.jarvis.util.StringUtils;
 
 import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
 
@@ -93,7 +94,7 @@ public class LoginFragment extends Fragment {
         this.password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    clickSignIn();
+                    login();
                     return true;
                 }
                 return false;
@@ -110,30 +111,34 @@ public class LoginFragment extends Fragment {
         getActivity().finish();
     }
 
-    public void clickSignIn() {
+    public void login() {
+        ModelUser user = new ModelUser();
+
+        if (!StringUtils.isNullOrEmpty(username.getText().toString()))
+            user.username = username.getText().toString();
+
+        if (!StringUtils.isNullOrEmpty(password.getText().toString()))
+            user.password = HashUtils.sha1(password.getText().toString());
+
+        login(user);
+    }
+
+    public void login(ModelUser user) {
         if (requestLaunch)
             return;
         requestLaunch = true;
 
-        ModelUser user = new ModelUser();
-
-        if (!username.getText().toString().equals("")) {
-            user.username = username.getText().toString();
+        if (!StringUtils.isNullOrEmpty(user.username))
             app.getConfig().setUserUsername(user.username);
-        } else
+        else
             user.username = app.getConfig().getUserUsername();
 
-        if (!password.getText().toString().equals("")) {
-            user.password = HashUtils.sha1(password.getText().toString());
+        if (!StringUtils.isNullOrEmpty(user.password))
             app.getConfig().setUserPassword(user.password);
-        } else
+        else
             user.password = app.getConfig().getUserPassword();
 
-        if (app.getConfig().getUrlServer() == null) {
-            requestLaunch = false;
-            return;
-        }
-        if (app.getConfig().getUrlServer().equals("")) {
+        if (StringUtils.isNullOrEmpty(app.getConfig().getUrlServer())) {
             requestLaunch = false;
             return;
         }

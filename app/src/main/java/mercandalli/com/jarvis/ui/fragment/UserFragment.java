@@ -20,6 +20,8 @@
 package mercandalli.com.jarvis.ui.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -44,6 +46,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.jarvis.R;
+import mercandalli.com.jarvis.listener.IListener;
+import mercandalli.com.jarvis.model.ModelFileTypeENUM;
 import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.ui.adapter.AdapterModelUser;
 import mercandalli.com.jarvis.listener.IModelUserListener;
@@ -53,6 +57,7 @@ import mercandalli.com.jarvis.model.ModelUser;
 import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.net.TaskPost;
 import mercandalli.com.jarvis.ui.view.DividerItemDecoration;
+import mercandalli.com.jarvis.util.FileUtils;
 
 import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
 
@@ -175,21 +180,45 @@ public class UserFragment extends Fragment {
             this.mAdapter = new AdapterModelUser(app, list, new IModelUserListener() {
                 @Override
                 public void execute(final ModelUser modelUser) {
-                    app.prompt("Send Message", "Write your message", "Send", new IStringListener(){
-                        @Override
-                        public void execute(String text) {
-                            String url = app.getConfig().getUrlServer() + app.getConfig().routeUserConversation + "/" + modelUser.id;
-                            List < BasicNameValuePair > parameters = new ArrayList<>();
-                            parameters.add(new BasicNameValuePair("message", "" + text));
+                    final AlertDialog.Builder menuAleart = new AlertDialog.Builder(app);
+                    String[] menuList = { getString(R.string.talk) };
+                    if(app.getConfig().isUserAdmin())
+                        menuList = new String[]{ getString(R.string.talk), getString(R.string.delete) };
+                    menuAleart.setTitle(getString(R.string.action));
+                    menuAleart.setItems(menuList,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int item) {
+                                    switch (item) {
+                                        case 0:
+                                            app.prompt("Send Message", "Write your message", "Send", new IStringListener() {
+                                                @Override
+                                                public void execute(String text) {
+                                                    String url = app.getConfig().getUrlServer() + app.getConfig().routeUserConversation + "/" + modelUser.id;
+                                                    List<BasicNameValuePair> parameters = new ArrayList<>();
+                                                    parameters.add(new BasicNameValuePair("message", "" + text));
 
-                            new TaskPost(app, url, new IPostExecuteListener() {
-                                @Override
-                                public void execute(JSONObject json, String body) {
+                                                    new TaskPost(app, url, new IPostExecuteListener() {
+                                                        @Override
+                                                        public void execute(JSONObject json, String body) {
 
+                                                        }
+                                                    }, parameters).execute();
+                                                }
+                                            }, getString(R.string.cancel), null);
+                                            break;
+                                        case 1:
+                                            app.alert("Delete " + modelUser.username + "?", "This process cannot be undone.", getString(R.string.delete), new IListener() {
+                                                @Override
+                                                public void execute() {
+                                                    //TODO delete user. Update the Api. (attention: delete user means delete files, messages, conversations...)
+                                                }
+                                            }, getString(R.string.cancel), null);
+                                            break;
+                                    }
                                 }
-                            }, parameters).execute();
-                        }
-                    }, "Cancel", null);
+                            });
+                    AlertDialog menuDrop = menuAleart.create();
+                    menuDrop.show();
                 }
             });
             this.recyclerView.setAdapter(mAdapter);

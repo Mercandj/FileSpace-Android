@@ -48,6 +48,7 @@ import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.model.ModelUser;
 import mercandalli.com.jarvis.net.TaskPost;
+import mercandalli.com.jarvis.util.StringUtils;
 
 import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
 
@@ -96,7 +97,7 @@ public class InscriptionFragment extends Fragment {
         this.password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    clickSignIn();
+                    inscription();
                     return true;
                 }
                 return false;
@@ -113,30 +114,34 @@ public class InscriptionFragment extends Fragment {
         getActivity().finish();
     }
 
-    public void clickSignIn() {
+    public void inscription() {
+        ModelUser user = new ModelUser();
+
+        if (!StringUtils.isNullOrEmpty(username.getText().toString()))
+            user.username = username.getText().toString();
+
+        if (!StringUtils.isNullOrEmpty(password.getText().toString()))
+            user.password = HashUtils.sha1(password.getText().toString());
+
+        inscription(user);
+    }
+
+    public void inscription(ModelUser user) {
         if (requestLaunch)
             return;
         requestLaunch = true;
 
-        ModelUser user = new ModelUser();
-
-        if (!username.getText().toString().equals("")) {
-            user.username = username.getText().toString();
+        if (!StringUtils.isNullOrEmpty(user.username))
             app.getConfig().setUserUsername(user.username);
-        } else
+        else
             user.username = app.getConfig().getUserUsername();
 
-        if (!password.getText().toString().equals("")) {
-            user.password = HashUtils.sha1(password.getText().toString());
+        if (!StringUtils.isNullOrEmpty(user.password))
             app.getConfig().setUserPassword(user.password);
-        } else
+        else
             user.password = app.getConfig().getUserPassword();
 
-        if (app.getConfig().getUrlServer() == null) {
-            requestLaunch = false;
-            return;
-        }
-        if (app.getConfig().getUrlServer().equals("")) {
+        if (StringUtils.isNullOrEmpty(app.getConfig().getUrlServer())) {
             requestLaunch = false;
             return;
         }
@@ -168,6 +173,5 @@ public class InscriptionFragment extends Fragment {
                     requestLaunch = false;
                 }
             }, parameters)).execute();
-
     }
 }

@@ -96,10 +96,10 @@ public class ActivityRegisterLogin extends Application {
             public void onClick(View v) {
                 if(listFragment[getCurrentFragmentIndex()] != null) {
                     if(listFragment[getCurrentFragmentIndex()] instanceof InscriptionFragment) {
-                        ((InscriptionFragment)listFragment[getCurrentFragmentIndex()]).clickSignIn();
+                        ((InscriptionFragment)listFragment[getCurrentFragmentIndex()]).inscription();
                     }
                     else if(listFragment[getCurrentFragmentIndex()] instanceof LoginFragment) {
-                        ((LoginFragment)listFragment[getCurrentFragmentIndex()]).clickSignIn();
+                        ((LoginFragment)listFragment[getCurrentFragmentIndex()]).login();
                     }
                 }
             }
@@ -295,8 +295,7 @@ public class ActivityRegisterLogin extends Application {
 
 
     /**
-     *  * Fetching user's information name, email, profile pic
-     *  *
+     * Fetching user's information name, email, profile pic
      */
     private void getProfileInformation() {
 
@@ -308,7 +307,6 @@ public class ActivityRegisterLogin extends Application {
         });
 
         Plus.PeopleApi.loadConnected(mGoogleApiClient);
-
 
         if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
             Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
@@ -326,13 +324,11 @@ public class ActivityRegisterLogin extends Application {
             // by default the profile url gives 50x50 px image only
             // we can replace the value with whatever dimension we want by
             // replacing sz=X
-            personPhotoUrl = personPhotoUrl.substring(0,
-                    personPhotoUrl.length() - 2)
-                    + PROFILE_PIC_SIZE;
+            personPhotoUrl = personPhotoUrl.substring(0, personPhotoUrl.length() - 2) + PROFILE_PIC_SIZE;
 
         }
         else {
-            Toast.makeText(this, "Person information is null", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.failed_google_plus), Toast.LENGTH_LONG).show();
         }
     }
 

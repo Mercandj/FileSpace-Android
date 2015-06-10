@@ -38,6 +38,7 @@
     <string name="delete">Delete</string>
     <string name="cut">Cut</string>
     <string name="properties">Properties</string>
+    <string name="talk">Talk</string>
 
     <string name="dialog_server_route">Server Route</string>
     <string name="dialog_server_url">Server URL</string>
@@ -68,5 +69,7 @@
     <string name="menu_action_upload">Upload</string>
     <string name="menu_action_download">Download</string>
     <string name="menu_action_sort">Sort</string>
+
+    <string name="failed_google_plus">Google+ connection failed.</string>
 
 </resources>

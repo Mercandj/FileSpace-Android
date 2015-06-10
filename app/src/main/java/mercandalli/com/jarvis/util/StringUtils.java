@@ -55,4 +55,9 @@ public class StringUtils {
         return message;
     }
 
+    public static boolean isNullOrEmpty(String str) {
+        if(str == null)
+            return true;
+        return str.replaceAll(" ","").equals("");
+    }
 }
