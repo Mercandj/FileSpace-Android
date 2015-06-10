@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,7 +71,7 @@ public class LoginFragment extends Fragment {
 
         if(this.app.getConfig().getUserPassword()!=null)
             if(!this.app.getConfig().getUserPassword().equals("")) {
-                this.password.setHint("•••••••••");
+                this.password.setHint(Html.fromHtml("&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"));
             }
 
         ((CheckBox) rootView.findViewById(R.id.autoconnection)).setChecked(app.getConfig().isAutoConncetion());
