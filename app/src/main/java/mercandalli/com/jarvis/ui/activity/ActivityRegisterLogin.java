@@ -263,6 +263,8 @@ public class ActivityRegisterLogin extends Application {
         // Login : POST /user
         List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
         parameters.add(new BasicNameValuePair("google_plus", "true"));
+        parameters.add(new BasicNameValuePair("username", "" + user.username));
+        parameters.add(new BasicNameValuePair("password", "" + user.password));
         if(isInternetConnection(this))
             (new TaskPost(this, this.getConfig().getUrlServer() + this.getConfig().routeUser, new IPostExecuteListener() {
                 @Override
