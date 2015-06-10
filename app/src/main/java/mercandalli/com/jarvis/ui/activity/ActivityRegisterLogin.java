@@ -26,7 +26,6 @@ import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -377,12 +376,6 @@ public class ActivityRegisterLogin extends Application {
             String personPhotoUrl = currentPerson.getImage().getUrl();
             String personGooglePlusProfile = currentPerson.getUrl();
             String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
-
-            Log.e("LoginFragment", "Name: " + personName + ", plusProfile: "
-                    + personGooglePlusProfile + ", email: " + email
-                    + ", Image: " + personPhotoUrl);
-
-            Toast.makeText(this, personName + " " + Plus.AccountApi.getAccountName(mGoogleApiClient) + " " + currentPerson.getId(), Toast.LENGTH_LONG).show();
 
             // by default the profile url gives 50x50 px image only
             // we can replace the value with whatever dimension we want by
