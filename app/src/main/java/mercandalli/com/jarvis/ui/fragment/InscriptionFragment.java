@@ -56,7 +56,7 @@ public class InscriptionFragment extends Fragment {
 
 	private Application app;
 
-    private boolean requestLaunch = false; // Block the second task if one launch
+    private boolean requestLaunched = false; // Block the second task if one launch
 
     EditText username, password;
 
@@ -127,9 +127,9 @@ public class InscriptionFragment extends Fragment {
     }
 
     public void inscription(ModelUser user) {
-        if (requestLaunch)
+        if (requestLaunched)
             return;
-        requestLaunch = true;
+        requestLaunched = true;
 
         if (!StringUtils.isNullOrEmpty(user.username))
             app.getConfig().setUserUsername(user.username);
@@ -142,7 +142,7 @@ public class InscriptionFragment extends Fragment {
             user.password = app.getConfig().getUserPassword();
 
         if (StringUtils.isNullOrEmpty(app.getConfig().getUrlServer())) {
-            requestLaunch = false;
+            requestLaunched = false;
             return;
         }
 
@@ -170,8 +170,10 @@ public class InscriptionFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    requestLaunch = false;
+                    requestLaunched = false;
                 }
             }, parameters)).execute();
+        else
+            requestLaunched = false;
     }
 }

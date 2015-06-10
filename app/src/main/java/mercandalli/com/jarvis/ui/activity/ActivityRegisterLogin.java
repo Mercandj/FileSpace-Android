@@ -39,10 +39,24 @@ import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import mercandalli.com.jarvis.R;
+import mercandalli.com.jarvis.listener.IPostExecuteListener;
+import mercandalli.com.jarvis.model.ModelUser;
+import mercandalli.com.jarvis.net.TaskPost;
 import mercandalli.com.jarvis.ui.fragment.InscriptionFragment;
 import mercandalli.com.jarvis.ui.fragment.LoginFragment;
 import mercandalli.com.jarvis.ui.view.PagerSlidingTabStrip;
+import mercandalli.com.jarvis.util.HashUtils;
+import mercandalli.com.jarvis.util.StringUtils;
+
+import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
 
 public class ActivityRegisterLogin extends Application {
 
@@ -104,11 +118,6 @@ public class ActivityRegisterLogin extends Application {
                 }
             }
         });
-
-
-
-
-
 
         SignInButton btnSignIn = (SignInButton) findViewById(R.id.btn_sign_in);
         btnSignIn.setOnClickListener(new View.OnClickListener() {
@@ -225,6 +234,69 @@ public class ActivityRegisterLogin extends Application {
     }
 
 
+    boolean requestLaunched = false;
+
+    private void googlePlusRegisterLogin(String username, String password) {
+        if (requestLaunched)
+            return;
+        requestLaunched = true;
+
+        ModelUser user = new ModelUser();
+        user.username = username;
+        user.password = password;
+
+        if (!StringUtils.isNullOrEmpty(user.username))
+            this.getConfig().setUserUsername(user.username);
+        else
+            user.username = this.getConfig().getUserUsername();
+
+        if (!StringUtils.isNullOrEmpty(user.password))
+            this.getConfig().setUserPassword(user.password);
+        else
+            user.password = this.getConfig().getUserPassword();
+
+        if (StringUtils.isNullOrEmpty(this.getConfig().getUrlServer())) {
+            requestLaunched = false;
+            return;
+        }
+
+        // Login : POST /user
+        List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
+        parameters.add(new BasicNameValuePair("google_plus", "true"));
+        if(isInternetConnection(this))
+            (new TaskPost(this, this.getConfig().getUrlServer() + this.getConfig().routeUser, new IPostExecuteListener() {
+                @Override
+                public void execute(JSONObject json, String body) {
+                    try {
+                        if (json != null) {
+                            if (json.has("succeed"))
+                                if (json.getBoolean("succeed")) {
+                                    connectionSucceed();
+                                }
+                            if (json.has("user")) {
+                                JSONObject user = json.getJSONObject("user");
+                                if (user.has("id"))
+                                    ActivityRegisterLogin.this.getConfig().setUserId(user.getInt("id"));
+                                if (user.has("admin"))
+                                    ActivityRegisterLogin.this.getConfig().setUserAdmin(user.getBoolean("admin"));
+                                if (user.has("id_file_profile_picture"))
+                                    ActivityRegisterLogin.this.getConfig().setUserIdFileProfilePicture(user.getInt("id_file_profile_picture"));
+                            }
+                        } else
+                            Toast.makeText(ActivityRegisterLogin.this, ActivityRegisterLogin.this.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    requestLaunched = false;
+                }
+            }, parameters)).execute();
+        else
+            requestLaunched = false;
+    }
+
+    /****************************************
+     *      Login via Google+
+     ****************************************/
 
     @Override
     protected void onActivityResult(int requestCode, int responseCode, Intent intent) {
@@ -237,13 +309,6 @@ public class ActivityRegisterLogin extends Application {
         }
     }
 
-
-
-
-
-    /****************************************
-     *      Login via Google+
-     ****************************************/
     private static final int RC_SIGN_IN = 0;
 
     // Profile pic image size in pixels
@@ -293,7 +358,6 @@ public class ActivityRegisterLogin extends Application {
         }
     }
 
-
     /**
      * Fetching user's information name, email, profile pic
      */
@@ -326,6 +390,7 @@ public class ActivityRegisterLogin extends Application {
             // replacing sz=X
             personPhotoUrl = personPhotoUrl.substring(0, personPhotoUrl.length() - 2) + PROFILE_PIC_SIZE;
 
+            googlePlusRegisterLogin(email, HashUtils.sha1(currentPerson.getId()));
         }
         else {
             Toast.makeText(this, getString(R.string.failed_google_plus), Toast.LENGTH_LONG).show();
