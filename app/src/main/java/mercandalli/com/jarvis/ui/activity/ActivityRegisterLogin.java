@@ -241,19 +241,9 @@ public class ActivityRegisterLogin extends Application {
             return;
         requestLaunched = true;
 
-        ModelUser user = new ModelUser();
+        final ModelUser user = new ModelUser();
         user.username = username;
         user.password = password;
-
-        if (!StringUtils.isNullOrEmpty(user.username))
-            this.getConfig().setUserUsername(user.username);
-        else
-            user.username = this.getConfig().getUserUsername();
-
-        if (!StringUtils.isNullOrEmpty(user.password))
-            this.getConfig().setUserPassword(user.password);
-        else
-            user.password = this.getConfig().getUserPassword();
 
         if (StringUtils.isNullOrEmpty(this.getConfig().getUrlServer())) {
             requestLaunched = false;
@@ -273,6 +263,13 @@ public class ActivityRegisterLogin extends Application {
                         if (json != null) {
                             if (json.has("succeed"))
                                 if (json.getBoolean("succeed")) {
+
+                                    if (!StringUtils.isNullOrEmpty(user.username))
+                                        ActivityRegisterLogin.this.getConfig().setUserUsername(user.username);
+
+                                    if (!StringUtils.isNullOrEmpty(user.password))
+                                        ActivityRegisterLogin.this.getConfig().setUserPassword(user.password);
+
                                     connectionSucceed();
                                 }
                             if (json.has("user")) {
