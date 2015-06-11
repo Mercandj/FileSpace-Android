@@ -61,7 +61,8 @@ public abstract class ApplicationDrawer extends Application {
 	public static final int[] noSelectable 	= new int[] {Const.TAB_VIEW_TYPE_SECTION, Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE};
 
     public Fragment fragment;
-    private final int INIT_ID_FRAGMENT = 2;
+    private final int INIT_FRAGMENT_ID = 2;
+    private final int INIT_FRAGMENT_LOGGED_ID = 3;
     private Stack<Integer> ID_FRAGMENT_VISITED = new Stack<>();
     
 	protected DrawerLayout mDrawerLayout;
@@ -240,7 +241,7 @@ public abstract class ApplicationDrawer extends Application {
         		);
         
         // Initial Fragment
-        selectItem(INIT_ID_FRAGMENT);
+        selectItem(getInitFragmentId());
         /*
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setIcon(R.drawable.transparent);
@@ -276,7 +277,7 @@ public abstract class ApplicationDrawer extends Application {
                         return;
                     }
             }
-        if(position == INIT_ID_FRAGMENT) {
+        if(position == getInitFragmentId()) {
             ID_FRAGMENT_VISITED = new Stack<>();
         }
         ID_FRAGMENT_VISITED.push(position);
@@ -453,9 +454,13 @@ public abstract class ApplicationDrawer extends Application {
             Log.e("ApplicationDrawer", "backPressed() this.ID_FRAGMENT_VISITED.empty()");
             return false;
         }
-        if(this.ID_FRAGMENT_VISITED.pop() == INIT_ID_FRAGMENT)
+        if(this.ID_FRAGMENT_VISITED.pop() == getInitFragmentId())
             return false;
         this.selectItem(this.ID_FRAGMENT_VISITED.pop());
         return true;
+    }
+
+    private int getInitFragmentId() {
+        return isLogged()?INIT_FRAGMENT_LOGGED_ID:INIT_FRAGMENT_ID;
     }
 }
