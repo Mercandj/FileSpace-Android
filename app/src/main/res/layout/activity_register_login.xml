@@ -83,7 +83,7 @@
         </android.support.v4.view.ViewPager>
 
         <com.google.android.gms.common.SignInButton
-            android:id="@+id/btn_sign_in"
+            android:id="@+id/signInButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/app_description"

@@ -19,8 +19,9 @@
  */
 package mercandalli.com.jarvis.util;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Typeface;
+import android.widget.Button;
 import android.widget.TextView;
 
 /**
@@ -29,10 +30,16 @@ import android.widget.TextView;
  *
  */
 public class FontUtils {
-	public static void applyFont(Activity activity, TextView tv, String police) {
-		if(activity==null)
+	public static void applyFont(Context context, TextView tv, String police) {
+		if(context==null || tv==null || police==null)
 			return;
-		Typeface font = Typeface.createFromAsset(activity.getAssets(), police);  
+		Typeface font = Typeface.createFromAsset(context.getAssets(), police);
 		tv.setTypeface(font);
+	}
+	public static void applyFont(Context context, Button bt, String police) {
+        if(context==null || bt==null || police==null)
+			return;
+		Typeface font = Typeface.createFromAsset(context.getAssets(), police);
+		bt.setTypeface(font);
 	}
 }

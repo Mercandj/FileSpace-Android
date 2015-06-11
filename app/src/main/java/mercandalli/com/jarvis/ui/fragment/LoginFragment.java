@@ -11,6 +11,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -125,6 +126,7 @@ public class LoginFragment extends Fragment {
     }
 
     public void login(ModelUser user) {
+        Log.d("LoginFragment", "login requestLaunched="+requestLaunched);
         if (requestLaunched)
             return;
         requestLaunched = true;
@@ -147,10 +149,12 @@ public class LoginFragment extends Fragment {
         // Login : POST /user
         List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
         parameters.add(new BasicNameValuePair("login", "true"));
+        Log.d("LoginFragment", "login "+app.getConfig().getUserPassword()+app.getConfig().getUserUsername()+" isInternetConnection="+isInternetConnection(app));
         if(isInternetConnection(app))
             (new TaskGet(app, app.getConfig().getUser(), app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
                 @Override
                 public void execute(JSONObject json, String body) {
+                    requestLaunched = false;
                     try {
                         if (json != null) {
                             if (json.has("succeed"))
@@ -171,7 +175,6 @@ public class LoginFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    requestLaunched = false;
                 }
             }, parameters)).execute();
         else

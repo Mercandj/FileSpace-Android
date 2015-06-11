@@ -215,4 +215,10 @@ public abstract class Application extends AppCompatActivity {
         return result;
     }
 
+    public boolean isLogged() {
+        if(config != null)
+            return config.isLogged();
+        return false;
+    }
+
 }

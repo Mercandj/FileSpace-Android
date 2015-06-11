@@ -287,7 +287,7 @@ public class FileManagerFragmentCloud extends Fragment {
         parameters.add(new BasicNameValuePair("url", ""+this.url));
         parameters.add(new BasicNameValuePair("all-public", ""+true));
 
-        if(isInternetConnection(app))
+        if(isInternetConnection(app) && app.isLogged())
             new TaskGet(
                 app,
                 this.app.getConfig().getUser(),
@@ -320,7 +320,7 @@ public class FileManagerFragmentCloud extends Fragment {
             ).execute();
         else {
             this.circularProgressBar.setVisibility(View.GONE);
-            this.message.setText(getString(R.string.no_internet_connection));
+            this.message.setText(app.isLogged()?getString(R.string.no_internet_connection):getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
         }

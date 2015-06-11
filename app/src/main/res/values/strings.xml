@@ -18,6 +18,7 @@
     <string name="no_file_directory">No File on this directory.</string>
     <string name="no_file_local">No File on local Jarvis folder.</string>
     <string name="no_internet_connection">No internet connection.</string>
+    <string name="no_logged">You are not logged.</string>
     <string name="file">File</string>
     <string name="request">Request</string>
     <string name="signin">Sign in</string>

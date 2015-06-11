@@ -47,17 +47,15 @@ import java.util.List;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.listener.IListener;
-import mercandalli.com.jarvis.model.ModelFileTypeENUM;
-import mercandalli.com.jarvis.ui.activity.Application;
-import mercandalli.com.jarvis.ui.adapter.AdapterModelUser;
 import mercandalli.com.jarvis.listener.IModelUserListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.listener.IStringListener;
 import mercandalli.com.jarvis.model.ModelUser;
 import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.net.TaskPost;
+import mercandalli.com.jarvis.ui.activity.Application;
+import mercandalli.com.jarvis.ui.adapter.AdapterModelUser;
 import mercandalli.com.jarvis.ui.view.DividerItemDecoration;
-import mercandalli.com.jarvis.util.FileUtils;
 
 import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
 
@@ -127,7 +125,7 @@ public class UserFragment extends Fragment {
 
     public void refreshList(String search) {
         List<BasicNameValuePair> parameters = null;
-        if(isInternetConnection(app))
+        if(isInternetConnection(app) && app.isLogged())
             new TaskGet(
                     app,
                     this.app.getConfig().getUser(),
@@ -158,7 +156,7 @@ public class UserFragment extends Fragment {
             ).execute();
         else {
             this.circularProgressBar.setVisibility(View.GONE);
-            this.message.setText(getString(R.string.no_internet_connection));
+            this.message.setText(app.isLogged()?getString(R.string.no_internet_connection):getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
         }

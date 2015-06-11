@@ -34,13 +34,14 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+
         <activity
-            android:name=".ui.activity.ActivityRegisterLogin"
+            android:name=".ui.activity.ActivityMain"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing" >
+            android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -52,11 +53,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.ActivityMain"
+            android:name=".ui.activity.ActivityRegisterLogin"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize" >
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing" >
         </activity>
         <activity
             android:name=".ui.activity.ActivityFileText"

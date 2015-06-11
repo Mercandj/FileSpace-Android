@@ -123,7 +123,7 @@ public class TalkFragment extends Fragment {
 
     public void refreshList(String search) {
         List<BasicNameValuePair> parameters = null;
-        if(isInternetConnection(app))
+        if(isInternetConnection(app) && app.isLogged())
             new TaskGet(
                     app,
                     this.app.getConfig().getUser(),
@@ -154,7 +154,7 @@ public class TalkFragment extends Fragment {
             ).execute();
         else {
             this.circularProgressBar.setVisibility(View.GONE);
-            this.message.setText(getString(R.string.no_internet_connection));
+            this.message.setText(app.isLogged()?getString(R.string.no_internet_connection):getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
         }

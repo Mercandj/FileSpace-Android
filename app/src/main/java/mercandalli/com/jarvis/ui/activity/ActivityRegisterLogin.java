@@ -118,8 +118,8 @@ public class ActivityRegisterLogin extends Application {
             }
         });
 
-        SignInButton btnSignIn = (SignInButton) findViewById(R.id.btn_sign_in);
-        btnSignIn.setOnClickListener(new View.OnClickListener() {
+        SignInButton signInButton = (SignInButton) findViewById(R.id.signInButton);
+        signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signInWithGplus();

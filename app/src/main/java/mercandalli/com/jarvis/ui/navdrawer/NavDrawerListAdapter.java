@@ -19,20 +19,25 @@
  */
 package mercandalli.com.jarvis.ui.navdrawer;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.common.SignInButton;
+
 import java.util.ArrayList;
 
-import mercandalli.com.jarvis.util.FontUtils;
 import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.config.Const;
+import mercandalli.com.jarvis.ui.activity.ActivityRegisterLogin;
+import mercandalli.com.jarvis.ui.activity.Application;
+import mercandalli.com.jarvis.util.FontUtils;
 
 /**
  * Sliding Menu stuff
@@ -87,6 +92,31 @@ public class NavDrawerListAdapter extends BaseAdapter {
 				((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getResources().getDrawable(item.icon));
 			else
 				((ImageView) convertView.findViewById(R.id.icon)).setVisibility(View.GONE);
+
+			SignInButton signInButton = ((SignInButton) convertView.findViewById(R.id.signInButton));
+            Button signIn = ((Button) convertView.findViewById(R.id.signIn));
+            if(app.isLogged()) {
+                signInButton.setVisibility(View.GONE);
+                signIn.setVisibility(View.GONE);
+            }
+            else {
+                ((TextView) convertView.findViewById(R.id.title)).setVisibility(View.GONE);
+                ((TextView) convertView.findViewById(R.id.subtitle)).setVisibility(View.GONE);
+                ((ImageView) convertView.findViewById(R.id.icon)).setVisibility(View.GONE);
+                signInButton.setVisibility(View.VISIBLE);
+                signIn.setVisibility(View.VISIBLE);
+                signIn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(app, ActivityRegisterLogin.class);
+                        app.startActivity(intent);
+                        app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                        app.finish();
+                    }
+                });
+                FontUtils.applyFont(app, signIn, "fonts/Roboto-Medium.ttf");
+
+            }
 			
 			break;		
 		
