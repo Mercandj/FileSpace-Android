@@ -329,6 +329,10 @@ public class FileManagerFragmentLocal extends Fragment {
 
     @Override
     public boolean back() {
+        if(hasItemSelected()) {
+            deselectAll();
+            return true;
+        }
         return false;
     }
 
@@ -339,5 +343,18 @@ public class FileManagerFragmentLocal extends Fragment {
     public void goHome() {
         this.jarvisDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + app.getConfig().localFolderName);
         this.refreshList();
+    }
+
+    public boolean hasItemSelected() {
+        for(ModelFile file:files)
+            if(file.selected)
+                return true;
+        return false;
+    }
+
+    public void deselectAll() {
+        for(ModelFile file:files)
+            file.selected = false;
+        updateAdapter();
     }
 }

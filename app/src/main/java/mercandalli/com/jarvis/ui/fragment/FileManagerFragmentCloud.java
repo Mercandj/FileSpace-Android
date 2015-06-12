@@ -363,10 +363,27 @@ public class FileManagerFragmentCloud extends Fragment {
 
     @Override
     public boolean back() {
+        if(hasItemSelected()) {
+            deselectAll();
+            return true;
+        }
         return false;
     }
 
     public View getFab() {
         return circle;
+    }
+
+    public boolean hasItemSelected() {
+        for(ModelFile file:files)
+            if(file.selected)
+                return true;
+        return false;
+    }
+
+    public void deselectAll() {
+        for(ModelFile file:files)
+            file.selected = false;
+        updateAdapter();
     }
 }

@@ -27,7 +27,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,9 +47,6 @@ import java.util.List;
 import java.util.Stack;
 
 import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.ui.activity.Application;
-import mercandalli.com.jarvis.ui.adapter.AdapterModelFile;
-import mercandalli.com.jarvis.ui.dialog.DialogAddFileManager;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.listener.IModelFileListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
@@ -59,6 +55,9 @@ import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.model.ModelFileTypeENUM;
 import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.net.TaskPost;
+import mercandalli.com.jarvis.ui.activity.Application;
+import mercandalli.com.jarvis.ui.adapter.AdapterModelFile;
+import mercandalli.com.jarvis.ui.dialog.DialogAddFileManager;
 import mercandalli.com.jarvis.ui.view.DividerItemDecoration;
 import mercandalli.com.jarvis.util.FileUtils;
 
@@ -413,6 +412,10 @@ public class FileManagerFragmentMyCloud extends Fragment {
 
     @Override
     public boolean back() {
+        if(hasItemSelected()) {
+            deselectAll();
+            return true;
+        }
         if(this.id_file_path.peek()!=-1) {
             FileManagerFragmentMyCloud.this.id_file_path.pop();
             FileManagerFragmentMyCloud.this.refreshList();
@@ -424,5 +427,18 @@ public class FileManagerFragmentMyCloud extends Fragment {
 
     public View getFab() {
         return circle;
+    }
+
+    public boolean hasItemSelected() {
+        for(ModelFile file:files)
+            if(file.selected)
+                return true;
+        return false;
+    }
+
+    public void deselectAll() {
+        for(ModelFile file:files)
+            file.selected = false;
+        updateAdapter();
     }
 }
