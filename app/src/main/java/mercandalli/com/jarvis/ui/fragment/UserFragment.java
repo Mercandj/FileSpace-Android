@@ -208,7 +208,8 @@ public class UserFragment extends Fragment {
                                             app.alert("Delete " + modelUser.username + "?", "This process cannot be undone.", getString(R.string.delete), new IListener() {
                                                 @Override
                                                 public void execute() {
-                                                    //TODO delete user. Update the Api. (attention: delete user means delete files, messages, conversations...)
+                                                    //TODO Delete user. Update the Api. (attention: delete user means delete files, messages, conversations...)
+                                                    Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT);
                                                 }
                                             }, getString(R.string.cancel), null);
                                             break;
@@ -230,7 +231,8 @@ public class UserFragment extends Fragment {
             ((ImageButton) rootView.findViewById(R.id.circle)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO
+                    // TODO Fab UserFragment
+                    Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT);
                 }
             });
 

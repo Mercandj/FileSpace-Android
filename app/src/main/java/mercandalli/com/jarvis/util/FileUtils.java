@@ -22,6 +22,7 @@ package mercandalli.com.jarvis.util;
 import android.content.Context;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -97,5 +98,26 @@ public class FileUtils {
             e.printStackTrace();
         }
         return writer.toString();
+    }
+
+    /**
+     * Deletes a directory recursively.
+     *
+     * @param directory  directory to delete
+     * @throws IOException in case deletion is unsuccessful
+     */
+    public static boolean deleteDirectory(File directory) {
+        if (directory.isDirectory()) {
+            String[] children = directory.list();
+            for (String str : children) {
+                boolean success = deleteDirectory(new File(directory, str));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+
+        // The directory is now empty so delete it
+        return directory.delete();
     }
 }

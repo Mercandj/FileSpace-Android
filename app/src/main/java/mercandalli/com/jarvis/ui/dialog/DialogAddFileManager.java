@@ -32,6 +32,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
@@ -116,7 +117,8 @@ public class DialogAddFileManager extends Dialog {
                 app.prompt(app.getString(R.string.dialog_file_create_txt), app.getString(R.string.dialog_file_name_interrogation), app.getString(R.string.dialog_file_create), new IStringListener() {
                     @Override
                     public void execute(String text) {
-                        //TODO
+                        //TODO create a online txt with content
+                        Toast.makeText(getContext(), getContext().getString(R.string.not_implemented), Toast.LENGTH_SHORT);
                     }
                 }, app.getString(R.string.cancel), null);
                 DialogAddFileManager.this.dismiss();

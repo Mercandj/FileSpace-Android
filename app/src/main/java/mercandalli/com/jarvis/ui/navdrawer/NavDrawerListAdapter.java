@@ -85,7 +85,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
 			((TextView) convertView.findViewById(R.id.subtitle)).setText(item.subtitle);
 			FontUtils.applyFont(app, ((TextView) convertView.findViewById(R.id.subtitle)), "fonts/Roboto-Light.ttf");
 
-			Bitmap icon_profile_online = app.getConfig().getUserProfiePicture();
+			Bitmap icon_profile_online = app.getConfig().getUserProfilePicture();
 			if(icon_profile_online!=null)
 				((ImageView) convertView.findViewById(R.id.icon)).setImageBitmap(icon_profile_online);
 			else if(navDrawerItems.get(position).containsImage)

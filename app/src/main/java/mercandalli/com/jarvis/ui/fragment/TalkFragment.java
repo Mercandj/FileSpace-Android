@@ -205,7 +205,8 @@ public class TalkFragment extends Fragment {
             ((ImageButton) rootView.findViewById(R.id.circle)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO
+                    // TODO Fab TalkFragment
+                    Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT);
                 }
             });
 

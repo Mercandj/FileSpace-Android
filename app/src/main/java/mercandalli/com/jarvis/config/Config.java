@@ -243,7 +243,7 @@ public class Config {
         }
     }
 
-    public Bitmap getUserProfiePicture() {
+    public Bitmap getUserProfilePicture() {
         File file = new File(this.app.getFilesDir()+"/file_"+this.getUserIdFileProfilePicture());
         if(file.exists())
             return BitmapFactory.decodeFile(file.getPath());
@@ -254,7 +254,7 @@ public class Config {
             new TaskGetDownloadImage(app, this.app.getConfig().getUser(), modelFile, 100000, new IBitmapListener() {
                 @Override
                 public void execute(Bitmap bitmap) {
-                    //TODO
+                    //TODO photo profile
                 }
             }).execute();
         }

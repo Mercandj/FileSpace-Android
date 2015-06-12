@@ -27,6 +27,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -307,7 +308,8 @@ public class FileManagerFragmentMyCloud extends Fragment {
         this.adapter.setOnItemLongClickListener(new AdapterModelFile.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(View view, int position) {
-
+                files.get(position).selected = !files.get(position).selected;
+                updateAdapter();
                 return true;
             }
         });

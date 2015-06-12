@@ -15,4 +15,7 @@
 
     <color name="background_tab_pressed">#23a2de</color>
     <color name="fab_pressed">#1d86b8</color>
+
+    <color name="tab_selected">#e0e0e0</color>
+
 </resources>

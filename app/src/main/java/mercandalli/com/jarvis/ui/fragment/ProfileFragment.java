@@ -56,7 +56,7 @@ public class ProfileFragment extends Fragment {
 
         }
 
-        Bitmap icon_profile_online = app.getConfig().getUserProfiePicture();
+        Bitmap icon_profile_online = app.getConfig().getUserProfilePicture();
         if(icon_profile_online!=null)
             ((ImageView) rootView.findViewById(R.id.icon)).setImageBitmap(icon_profile_online);
 

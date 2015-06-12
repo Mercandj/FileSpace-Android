@@ -19,6 +19,9 @@
  */
 package mercandalli.com.jarvis.ui.adapter;
 
+import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +43,7 @@ import mercandalli.com.jarvis.model.ModelFileTypeENUM;
 public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.ViewHolder> {
 
 	private Application app;
-	private List<ModelFile> files;
+	public List<ModelFile> files;
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
 	private IModelFileListener moreListener;
@@ -87,11 +90,20 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
             viewHolder.more.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(moreListener!=null)
+                    if (moreListener != null)
                         moreListener.execute(file);
                 }
             });
 
+            if(file.selected)
+                viewHolder.item.setBackgroundColor(app.getResources().getColor(R.color.tab_selected));
+            else {
+                int[] attrs = new int[] { android.R.attr.selectableItemBackground };
+                TypedArray ta = app.obtainStyledAttributes(attrs);
+                Drawable drawableFromTheme = ta.getDrawable(0);
+                ta.recycle();
+                viewHolder.item.setBackground(drawableFromTheme);
+            }
 
             if (file.type.equals(ModelFileTypeENUM.JARVIS.type)) {
                 /*
@@ -124,6 +136,7 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
             icon = (ImageView) itemLayoutView.findViewById(R.id.icon);
             more = (ImageView) itemLayoutView.findViewById(R.id.more);
             itemLayoutView.setOnClickListener(this);
+            itemLayoutView.setOnLongClickListener(this);
         }
 
         @Override

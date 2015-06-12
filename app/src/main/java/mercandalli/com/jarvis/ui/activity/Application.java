@@ -31,6 +31,7 @@ import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import org.apache.http.message.BasicNameValuePair;
@@ -49,6 +50,7 @@ import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.listener.IStringListener;
 import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.net.TaskPost;
+import mercandalli.com.jarvis.util.ViewUtils;
 
 public abstract class Application extends AppCompatActivity {
 
@@ -126,7 +128,6 @@ public abstract class Application extends AppCompatActivity {
     }
 
     public void prompt(String title, String message, String positive, final IStringListener positiveListener, String negative, final IListener negativeListener, String preText, String hint) {
-
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
         alert.setTitle(title);
@@ -135,7 +136,7 @@ public abstract class Application extends AppCompatActivity {
 
         // Set an EditText view to get user input
         final EditText input = new EditText(this);
-        alert.setView(input);
+
         if(preText!=null)
             input.setText(preText);
         if(hint!=null)
@@ -144,7 +145,7 @@ public abstract class Application extends AppCompatActivity {
         alert.setPositiveButton(positive,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        if(positiveListener!=null)
+                        if (positiveListener != null)
                             positiveListener.execute(input.getText().toString());
                     }
                 }
@@ -153,13 +154,16 @@ public abstract class Application extends AppCompatActivity {
         alert.setNegativeButton(negative,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        if(negativeListener!=null)
+                        if (negativeListener != null)
                             negativeListener.execute();
                     }
                 }
         );
 
-        alert.show();
+        //alert.show();
+        AlertDialog alertDialog = alert.create();
+        alertDialog.setView(input, 38, 20, 38, 0);
+        alertDialog.show();
     }
 
 	public abstract void refreshAdapters();

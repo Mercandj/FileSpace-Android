@@ -102,29 +102,20 @@ public class FileManagerFragmentLocal extends Fragment {
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
-                final String[] menuList = { "New Folder", "New File" };
+                final String[] menuList = { "New Folder or File" };
                 menuAlert.setTitle("Action");
                 menuAlert.setItems(menuList,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int item) {
                                 switch (item) {
                                     case 0:
-                                        FileManagerFragmentLocal.this.app.prompt("New Folder", "Choose a name.", getString(R.string.ok), new IStringListener() {
+                                        FileManagerFragmentLocal.this.app.prompt("New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
                                             @Override
                                             public void execute(String text) {
-                                                createFile(jarvisDirectory.getPath()+File.separator, text, true);
+                                                createFile(jarvisDirectory.getPath()+File.separator, text);
                                                 refreshList();
                                             }
-                                        }, getString(R.string.cancel), null, null, "Folder Name");
-                                        break;
-                                    case 1:
-                                        FileManagerFragmentLocal.this.app.prompt("New File", "Choose a name.", getString(R.string.ok), new IStringListener() {
-                                            @Override
-                                            public void execute(String text) {
-                                                createFile(jarvisDirectory.getPath()+File.separator, text, false);
-                                                refreshList();
-                                            }
-                                        }, getString(R.string.cancel), null, null, "File Name");
+                                        }, getString(R.string.cancel), null, null, "Name");
                                         break;
                                 }
                             }
@@ -140,9 +131,11 @@ public class FileManagerFragmentLocal extends Fragment {
         this.circle2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileManagerFragmentLocal.this.jarvisDirectory = new File(jarvisDirectory.getParentFile().getPath());
-                //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
-                FileManagerFragmentLocal.this.refreshList();
+                if(jarvisDirectory.getParent() != null) {
+                    FileManagerFragmentLocal.this.jarvisDirectory = new File(jarvisDirectory.getParentFile().getPath());
+                    //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
+                    FileManagerFragmentLocal.this.refreshList();
+                }
             }
         });
 
@@ -165,6 +158,8 @@ public class FileManagerFragmentLocal extends Fragment {
 		});
 		
 		refreshList();
+
+        this.app.invalidateOptionsMenu();
 
         return rootView;
     }
@@ -219,7 +214,7 @@ public class FileManagerFragmentLocal extends Fragment {
 	}
 	
 	public void updateAdapter() {
-		if(listView!=null && files!=null) {
+		if(listView!=null && files!=null && isAdded()) {
 
             if( circle.getVisibility()==View.GONE ) {
                 circle.setVisibility(View.VISIBLE);
@@ -233,29 +228,42 @@ public class FileManagerFragmentLocal extends Fragment {
 			else
 				message.setVisibility(View.GONE);
 
-            AdapterModelFile adapter = new AdapterModelFile(app, files, new IModelFileListener() {
+            final AdapterModelFile adapter = new AdapterModelFile(app, files, new IModelFileListener() {
 				@Override
 				public void execute(final ModelFile modelFile) {
 					final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
-					final String[] menuList = { "Delete" };
+					final String[] menuList = { getString(R.string.rename), getString(R.string.delete) };
                     menuAlert.setTitle("Action");
                     menuAlert.setItems(menuList,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int item) {
 									switch (item) {
-									case 0:
-										FileManagerFragmentLocal.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
-											@Override
-											public void execute() {
-												modelFile.delete(new IPostExecuteListener() {
-													@Override
-													public void execute(JSONObject json, String body) {
-														FileManagerFragmentLocal.this.app.refreshAdapters();
-													}
-												});
-											}
-										}, "No", null);
-										break;
+                                        case 0:
+                                            FileManagerFragmentLocal.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                                @Override
+                                                public void execute(String text) {
+                                                    modelFile.rename(text, new IPostExecuteListener() {
+                                                        @Override
+                                                        public void execute(JSONObject json, String body) {
+                                                            FileManagerFragmentLocal.this.app.refreshAdapters();
+                                                        }
+                                                    });
+                                                }
+                                            }, "Cancel", null, modelFile.getNameExt());
+                                            break;
+                                        case 1:
+                                            FileManagerFragmentLocal.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                                @Override
+                                                public void execute() {
+                                                    modelFile.delete(new IPostExecuteListener() {
+                                                        @Override
+                                                        public void execute(JSONObject json, String body) {
+                                                            FileManagerFragmentLocal.this.app.refreshAdapters();
+                                                        }
+                                                    });
+                                                }
+                                            }, "No", null);
+                                            break;
 									}
 								}
 							});
@@ -267,21 +275,29 @@ public class FileManagerFragmentLocal extends Fragment {
             listView.setAdapter(adapter);
 
             adapter.setOnItemClickListener(new AdapterModelFile.OnItemClickListener() {
-				@Override
-				public void onItemClick(View view, int position) {
-                    if(files.get(position).directory) {
+                @Override
+                public void onItemClick(View view, int position) {
+                    if (files.get(position).directory) {
                         jarvisDirectory = new File(files.get(position).url);
                         refreshList();
-                    }
-                    else
+                    } else
                         files.get(position).executeLocal(files, view);
-				}
-			});
+                }
+            });
+
+            adapter.setOnItemLongClickListener(new AdapterModelFile.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(View view, int position) {
+                    files.get(position).selected = !files.get(position).selected;
+                    updateAdapter();
+                    return true;
+                }
+            });
 
             if(this.jarvisDirectory==null)
                 this.circle2.setVisibility(View.GONE);
-            else if(this.jarvisDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + app.getConfig().localFolderName))
-                this.circle2.setVisibility(View.GONE);
+            /*else if(this.jarvisDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + app.getConfig().localFolderName))
+                this.circle2.setVisibility(View.GONE);*/
             else
                 this.circle2.setVisibility(View.VISIBLE);
 			
@@ -289,13 +305,13 @@ public class FileManagerFragmentLocal extends Fragment {
 		}
 	}
 
-    public boolean createFile(String path, String name, boolean directory) {
+    public boolean createFile(String path, String name) {
         int len = path.length();
         if (len < 1 || name.length() < 1)
             return false;
         if (path.charAt(len - 1) != '/')
             path += "/";
-        if(directory) {
+        if(!name.contains(".")) {
             if (new File(path + name).mkdir())
                 return true;
         }
@@ -318,5 +334,10 @@ public class FileManagerFragmentLocal extends Fragment {
 
     public View getFab() {
         return circle;
+    }
+
+    public void goHome() {
+        this.jarvisDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + app.getConfig().localFolderName);
+        this.refreshList();
     }
 }

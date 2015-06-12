@@ -24,9 +24,11 @@ import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -67,21 +69,13 @@ public class FileManagerFragment extends Fragment {
         tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
 		mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
 		mViewPager.setAdapter(mPagerAdapter);
-		mViewPager.setOnPageChangeListener(new OnPageChangeListener() {			
-			@Override
-			public void onPageSelected(int arg0) {
-				FileManagerFragment.this.app.invalidateOptionsMenu();
-			}			
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				
-			}			
-			@Override
-			public void onPageScrollStateChanged(int arg0) {
-				
-			}
-		});
-		if(isInternetConnection(app)) {
+        tabs.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                FileManagerFragment.this.app.invalidateOptionsMenu();
+            }
+        });
+		if(isInternetConnection(app) && app.isLogged()) {
 			mViewPager.setOffscreenPageLimit(this.NB_FRAGMENT - 1);
 			mViewPager.setCurrentItem(this.INIT_FRAGMENT);
 		}
@@ -231,7 +225,8 @@ public class FileManagerFragment extends Fragment {
 		this.app.alert("Download", "Download all files ?", "Yes", new IListener() {
 			@Override
 			public void execute() {
-				
+                // TODO download all
+                Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT);
 			}
 		}, "No", null);
 	}
@@ -240,7 +235,8 @@ public class FileManagerFragment extends Fragment {
 		this.app.alert("Upload", "Upload all files ?", "Yes", new IListener() {			
 			@Override
 			public void execute() {
-				
+                // TODO Upload all
+                Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT);
 			}
 		}, "No", null);
 	}
@@ -265,4 +261,13 @@ public class FileManagerFragment extends Fragment {
                 }
 		return null;
 	}
+
+    public void goHome() {
+        if(listFragment.length>2)
+            if(listFragment[2]!=null)
+                if(listFragment[2] instanceof FileManagerFragmentLocal) {
+                    FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[2];
+                    fragmentFileManagerFragment.goHome();
+                }
+    }
 }

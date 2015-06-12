@@ -15,17 +15,17 @@
         android:layout_height="match_parent"
         android:clickable="true"
         android:focusable="true"
-        android:layout_above="@+id/request"
+        android:layout_above="@+id/up"
         android:layout_alignParentTop="true"
         android:scrollbars="vertical" />
 
     <Button
-        android:id="@+id/request"
+        android:id="@+id/up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/files"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/files"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
         android:padding="10dp"
         android:text="@string/up" />
 

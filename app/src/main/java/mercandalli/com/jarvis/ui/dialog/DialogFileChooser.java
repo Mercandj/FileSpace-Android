@@ -24,6 +24,7 @@ import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class DialogFileChooser extends Dialog {
 	private RecyclerView files;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<ModelFile> listModelFile;
-	private String currentUrl = "/";
+	private File currentFolder;
 	private IModelFileListener listener;
 	
 	public DialogFileChooser(final Application app, IModelFileListener listener) {
@@ -60,6 +61,18 @@ public class DialogFileChooser extends Dialog {
         mLayoutManager = new LinearLayoutManager(getContext());
         files.setLayoutManager(mLayoutManager);
 
+		this.currentFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+
+        ((Button) this.findViewById(R.id.up)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File parent = currentFolder.getParentFile();
+                if(parent != null)
+                    currentFolder = parent;
+                updateAdapter();
+            }
+        });
+
 		updateAdapter();
         
         DialogFileChooser.this.show();
@@ -75,7 +88,7 @@ public class DialogFileChooser extends Dialog {
 		    	if(position<listModelFile.size()) {
 		    		ModelFile file = listModelFile.get(position);
 		    		if(file.directory) {
-		    			currentUrl += file.name+"/";
+		    			currentFolder = file.file;
 		    			updateAdapter();
 		    		}
 		    		else {
@@ -88,7 +101,7 @@ public class DialogFileChooser extends Dialog {
 	}
 	
 	private void getFiles() {
-		String path = Environment.getExternalStorageDirectory().getPath()+currentUrl;
+		String path = this.currentFolder.getAbsolutePath();
 		File f = new File(path);        
 		File fs[] = f.listFiles();
 		listModelFile = new ArrayList<ModelFile>();
@@ -100,6 +113,7 @@ public class DialogFileChooser extends Dialog {
 				modelFile.type = new ModelFileType(file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".")+1));
 				modelFile.size = file.getTotalSpace();
 				modelFile.directory = file.isDirectory();
+                modelFile.file = file;
 				listModelFile.add(modelFile);
 			}
 	}

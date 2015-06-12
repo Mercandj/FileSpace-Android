@@ -36,6 +36,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.Stack;
 
@@ -339,7 +340,14 @@ public abstract class ApplicationDrawer extends Application {
 	    case R.id.action_upload:
 	    	if(fragment instanceof FileManagerFragment)
 	    		((FileManagerFragment)fragment).upload();
+            return true;
+        case R.id.action_home:
+            if(fragment instanceof FileManagerFragment)
+                ((FileManagerFragment)fragment).goHome();
 	    	return true;
+        case R.id.action_sort:
+            Toast.makeText(this, getString(R.string.not_implemented), Toast.LENGTH_SHORT);
+            return true;
 	    }
         return super.onOptionsItemSelected(item);
     }
@@ -403,6 +411,7 @@ public abstract class ApplicationDrawer extends Application {
 		menu.findItem(R.id.action_add)		.setVisible(false);
 		menu.findItem(R.id.action_download)	.setVisible(false);
 		menu.findItem(R.id.action_upload)	.setVisible(false);
+        menu.findItem(R.id.action_home) 	.setVisible(false);
         menu.findItem(R.id.action_sort)	    .setVisible(false);
 		
     	if(fragment instanceof RequestFragment) {
@@ -420,7 +429,7 @@ public abstract class ApplicationDrawer extends Application {
                 menu.findItem(R.id.action_download)	.setVisible(!drawerOpen);
                 break;
     		case 2:
-    			menu.findItem(R.id.action_upload)	.setVisible(!drawerOpen);
+    			menu.findItem(R.id.action_home)	.setVisible(!drawerOpen);
     			break;
     		}
     	}

@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
@@ -77,11 +78,13 @@ public class DialogRequest extends Dialog {
 					break;
 					
 				case PUT:
-					//TODO
+					//TODO Dev: request PUT
+					Toast.makeText(getContext(), getContext().getString(R.string.not_implemented), Toast.LENGTH_SHORT);
 					break;
 					
 				case DELETE:
-					//TODO
+                    //TODO Dev: request DELETE
+					Toast.makeText(getContext(), getContext().getString(R.string.not_implemented), Toast.LENGTH_SHORT);
 					break;
 					
 				default: //GET

@@ -89,6 +89,7 @@ public class AdapterModelUser extends RecyclerView.Adapter<AdapterModelUser.View
             icon = (ImageView) itemLayoutView.findViewById(R.id.icon);
             more = (ImageView) itemLayoutView.findViewById(R.id.more);
             itemLayoutView.setOnClickListener(this);
+            itemLayoutView.setOnLongClickListener(this);
         }
 
         @Override

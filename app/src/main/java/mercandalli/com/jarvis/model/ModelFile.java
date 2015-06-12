@@ -64,6 +64,7 @@ import mercandalli.com.jarvis.ui.activity.ActivityFilePicture;
 import mercandalli.com.jarvis.ui.activity.ActivityFileText;
 import mercandalli.com.jarvis.ui.activity.ActivityFileTimer;
 import mercandalli.com.jarvis.ui.activity.Application;
+import mercandalli.com.jarvis.util.FileUtils;
 
 import static mercandalli.com.jarvis.util.ImageUtils.is_image;
 import static mercandalli.com.jarvis.util.ImageUtils.load_image;
@@ -84,6 +85,7 @@ public class ModelFile extends Model implements Parcelable {
 	public File file;
     public String onlineUrl;
     public ModelFileContent content;
+    public boolean selected = false;
 
     public CountDownTimer cdt;
 
@@ -358,7 +360,10 @@ public class ModelFile extends Model implements Parcelable {
 			new TaskDelete(app, url, listener).execute();
 		}
 		else {
-			file.delete();
+            if(file.isDirectory())
+                FileUtils.deleteDirectory(file);
+            else
+			    file.delete();
             if(listener!=null)
 			    listener.execute(null, null);
 		}
@@ -384,14 +389,24 @@ public class ModelFile extends Model implements Parcelable {
 	
 	public void rename(String new_name, IPostExecuteListener listener) {
 		this.name = new_name;
-		this.url = new_name;
-		String url = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
-		new TaskPost(app, url, listener, getForRename()).execute();
+        if(isOnline()) {
+            this.url = new_name;
+            String url = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
+            new TaskPost(app, url, listener, getForRename()).execute();
+        }
+		else {
+            File parent = file.getParentFile();
+            if(parent != null) {
+                file.renameTo(new File(parent.getAbsolutePath(),this.name));
+            }
+            listener.execute(null, null);
+        }
 	}
 
     private void copyFile(String outputPath, IPostExecuteListener listener) {
         if(this.isOnline()) {
-            //TODO
+            //TODO copy online
+            Toast.makeText(app, app.getString(R.string.not_implemented), Toast.LENGTH_SHORT);
         }
         else {
             InputStream in = null;
@@ -421,18 +436,6 @@ public class ModelFile extends Model implements Parcelable {
             catch (Exception e) {
                 Log.e("tag", e.getMessage());
             }
-        }
-        if(listener!=null)
-            listener.execute(null, null);
-    }
-
-    private void moveFile(String outputPath, IPostExecuteListener listener) {
-        if(this.isOnline()) {
-            //TODO
-        }
-        else {
-            copyFile(outputPath, null);
-            this.delete(null);
         }
         if(listener!=null)
             listener.execute(null, null);

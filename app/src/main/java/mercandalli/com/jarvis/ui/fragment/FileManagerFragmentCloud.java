@@ -266,7 +266,8 @@ public class FileManagerFragmentCloud extends Fragment {
         this.adapter.setOnItemLongClickListener(new AdapterModelFile.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(View view, int position) {
-
+                files.get(position).selected = !files.get(position).selected;
+                updateAdapter();
                 return true;
             }
         });
