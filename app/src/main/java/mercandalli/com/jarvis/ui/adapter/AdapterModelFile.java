@@ -19,9 +19,6 @@
  */
 package mercandalli.com.jarvis.ui.adapter;
 
-import android.content.res.TypedArray;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,10 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.listener.IModelFileListener;
 import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.model.ModelFileTypeENUM;
+import mercandalli.com.jarvis.ui.activity.Application;
 
 public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.ViewHolder> {
 
@@ -98,11 +95,7 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
             if(file.selected)
                 viewHolder.item.setBackgroundColor(app.getResources().getColor(R.color.tab_selected));
             else {
-                int[] attrs = new int[] { android.R.attr.selectableItemBackground };
-                TypedArray ta = app.obtainStyledAttributes(attrs);
-                Drawable drawableFromTheme = ta.getDrawable(0);
-                ta.recycle();
-                viewHolder.item.setBackground(drawableFromTheme);
+                viewHolder.item.setBackground(null);
             }
 
             if (file.type.equals(ModelFileTypeENUM.JARVIS.type)) {

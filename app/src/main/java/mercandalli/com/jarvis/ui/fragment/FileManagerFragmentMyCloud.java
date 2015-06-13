@@ -308,7 +308,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
             @Override
             public boolean onItemLongClick(View view, int position) {
                 files.get(position).selected = !files.get(position).selected;
-                updateAdapter();
+                adapter.notifyItemChanged(position);
                 return true;
             }
         });

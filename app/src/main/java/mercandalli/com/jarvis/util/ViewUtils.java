@@ -19,6 +19,9 @@
  */
 package mercandalli.com.jarvis.util;
 
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -47,5 +50,14 @@ public class ViewUtils {
             v.requestLayout();
         }
         return v;
+    }
+
+    // ex: int param android.R.attr.selectableItemBackground
+    public static void setBackgroundFromAttr(Context context, View view, int attr) {
+        int[] attrs = new int[] { attr };
+        TypedArray ta = context.obtainStyledAttributes(attrs);
+        Drawable drawableFromTheme = ta.getDrawable(0);
+        ta.recycle();
+        view.setBackground(drawableFromTheme);
     }
 }

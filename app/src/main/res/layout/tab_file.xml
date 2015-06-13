@@ -7,68 +7,77 @@
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:transitionName="transitionRoot"
-    android:background="?android:attr/selectableItemBackground"
     android:id="@+id/item">
 
-    <TextView
-        android:id="@+id/title"
-        android:transitionName="transitionTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ellipsize="marquee"
-        android:focusable="false"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:maxLines="1"
-        android:paddingLeft="20dp"
-        android:paddingRight="19dp"
-        android:scrollHorizontally="true"
-        android:singleLine="true"
-        android:textColor="#000"
-        android:textSize="16sp"
-        android:layout_toEndOf="@+id/icon"
-        android:layout_toStartOf="@+id/more"
-        android:layout_alignTop="@+id/icon"
-        android:gravity="top" />
-
-    <TextView
-        android:id="@+id/subtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ellipsize="marquee"
-        android:focusable="false"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:maxLines="1"
-        android:paddingLeft="20dp"
-        android:paddingRight="13dp"
-        android:scrollHorizontally="true"
-        android:singleLine="true"
-        android:textColor="#666"
-        android:textSize="15sp"
-        android:layout_alignEnd="@+id/title"
-        android:layout_toEndOf="@+id/icon"
-        android:layout_alignBottom="@+id/icon"
-        android:gravity="bottom"
-        android:layout_marginBottom="2dp" />
-
-    <mercandalli.com.jarvis.ui.view.CircularImageView
-        android:id="@+id/icon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp"
-        android:contentDescription="@string/image_description"
-        android:transitionName="transitionIcon"
-        android:src="@drawable/file_default" />
-
-    <ImageView
-        android:id="@+id/more"
-        android:layout_width="35dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true" />
+        android:background="?android:attr/selectableItemBackground">
+
+
+        <TextView
+            android:id="@+id/title"
+            android:transitionName="transitionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:focusable="false"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:maxLines="1"
+            android:paddingLeft="20dp"
+            android:paddingRight="19dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="#000"
+            android:textSize="16sp"
+            android:layout_toEndOf="@+id/icon"
+            android:layout_toStartOf="@+id/more"
+            android:layout_alignTop="@+id/icon"
+            android:gravity="top" />
+
+        <TextView
+            android:id="@+id/subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:focusable="false"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:maxLines="1"
+            android:paddingLeft="20dp"
+            android:paddingRight="13dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="#666"
+            android:textSize="15sp"
+            android:layout_alignEnd="@+id/title"
+            android:layout_toEndOf="@+id/icon"
+            android:layout_alignBottom="@+id/icon"
+            android:gravity="bottom"
+            android:layout_marginBottom="2dp" />
+
+        <mercandalli.com.jarvis.ui.view.CircularImageView
+            android:id="@+id/icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:contentDescription="@string/image_description"
+            android:transitionName="transitionIcon"
+            android:src="@drawable/file_default" />
+
+        <ImageView
+            android:id="@+id/more"
+            android:layout_width="35dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+
+
 
 </RelativeLayout>
