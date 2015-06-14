@@ -356,7 +356,7 @@ public class Config {
         setUserRegId("");
         setUserUsername("");
         setUserPassword("");
-        setAutoConnection(false);
+        setAutoConnection(true);
         setUserId(-1);
         setUserAdmin(false);
         setUserIdFileProfilePicture(-1);
