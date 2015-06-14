@@ -73,6 +73,8 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
                     viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_pdf));
                 else if (file.type.equals(ModelFileTypeENUM.APK.type))
                     viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_apk));
+                else if (file.type.equals(ModelFileTypeENUM.ARCHIVE.type))
+                    viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_archive));
                 else if (file.type.equals(ModelFileTypeENUM.JARVIS.type))
                     viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_jarvis));
                 else
