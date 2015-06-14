@@ -87,7 +87,7 @@ public class SettingsFragment extends Fragment {
 
 		try {
 			PackageInfo pInfo = app.getPackageManager().getPackageInfo(app.getPackageName(), 0);
-            list.add(new ModelSetting(app, "Compilation date GMT", TimeUtils.getGMTDate(pInfo.lastUpdateTime)));
+            list.add(new ModelSetting(app, "Last update date GMT", TimeUtils.getGMTDate(pInfo.lastUpdateTime)));
             list.add(new ModelSetting(app, "Version", pInfo.versionName));
 		} catch (PackageManager.NameNotFoundException e) {
 			e.printStackTrace();
