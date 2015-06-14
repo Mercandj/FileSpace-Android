@@ -36,11 +36,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.jarvis.R;
+import mercandalli.com.jarvis.config.Const;
 import mercandalli.com.jarvis.ia.action.ENUM_Action;
+import mercandalli.com.jarvis.model.ModelSetting;
 import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.ui.adapter.AdapterModelSetting;
-import mercandalli.com.jarvis.config.Const;
-import mercandalli.com.jarvis.model.ModelSetting;
+import mercandalli.com.jarvis.util.TimeUtils;
 
 public class SettingsFragment extends Fragment {
 
@@ -82,10 +83,12 @@ public class SettingsFragment extends Fragment {
 		}, app.getConfig().isAutoConncetion()));
         list.add(new ModelSetting(app, "Web application"));
         list.add(new ModelSetting(app, "Welcome on home screen"));
+        list.add(new ModelSetting(app, "Change password"));
 
 		try {
 			PackageInfo pInfo = app.getPackageManager().getPackageInfo(app.getPackageName(), 0);
-			list.add(new ModelSetting(app, "Version "+pInfo.versionName));
+            list.add(new ModelSetting(app, "Compilation date GMT", TimeUtils.getGMTDate(pInfo.lastUpdateTime)));
+            list.add(new ModelSetting(app, "Version", pInfo.versionName));
 		} catch (PackageManager.NameNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -109,6 +112,10 @@ public class SettingsFragment extends Fragment {
                                 app.getConfig().setHomeWelcomeMessage(true);
                                 break;
                             case 4:
+                                //TODO Change passord
+                                Toast.makeText(app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                break;
+                            case 6:
                                 if (click_version == 11) {
                                     Toast.makeText(app, "Development settings activated.", Toast.LENGTH_SHORT).show();
                                 } else if (click_version < 11) {

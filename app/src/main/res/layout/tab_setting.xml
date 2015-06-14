@@ -5,7 +5,7 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="wrap_content"
     android:layout_marginBottom="3dp"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
@@ -19,7 +19,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/toggleButton"
         android:ellipsize="marquee"
         android:focusable="false"
@@ -33,7 +32,10 @@
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="#000"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:text="Title"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"/>
 
     <ToggleButton
         android:id="@+id/toggleButton"
@@ -45,5 +47,28 @@
         android:background="@drawable/toggle_me"
         android:textOff=" "
         android:textOn=" " />
+
+    <TextView
+        android:id="@+id/subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="marquee"
+        android:focusable="false"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxLines="1"
+        android:paddingLeft="20dp"
+        android:paddingRight="13dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textColor="#666"
+        android:textSize="15sp"
+        android:gravity="bottom"
+        android:text="Subtitle"
+        android:layout_below="@+id/title"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="25dp"
+        android:visibility="visible"
+        android:layout_marginTop="-17dp"/>
 
 </RelativeLayout>

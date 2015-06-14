@@ -29,16 +29,30 @@ public class ModelSetting extends Model {
 
 	public OnCheckedChangeListener toggleButtonListener = null;
 	public boolean toggleButtonInitValue = false;	
-	public String title;	
+	public String title, subtitle;
 	
 	public ModelSetting(Application app, String title) {
 		super(app);
 		this.title = title;
 	}
+
+    public ModelSetting(Application app, String title, String subtitle) {
+        super(app);
+        this.title = title;
+        this.subtitle = subtitle;
+    }
 	
 	public ModelSetting(Application app, String title, int viewType) {
 		super(app);
 		this.title = title;
+        this.subtitle = subtitle;
+		this.viewType = viewType;
+	}
+
+	public ModelSetting(Application app, String title, String subtitle, int viewType) {
+		super(app);
+		this.title = title;
+        this.subtitle = subtitle;
 		this.viewType = viewType;
 	}
 	

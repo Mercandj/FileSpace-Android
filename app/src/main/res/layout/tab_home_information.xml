@@ -57,13 +57,25 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         android:text="OK"
-        android:id="@+id/button"
+        android:id="@+id/button1"
         android:layout_below="@+id/content"
         android:layout_alignParentEnd="true"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="15dp" />
+
+    <Button
+        android:layout_width="90dp"
+        android:layout_height="36dp"
+        android:background="@drawable/button_blue"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:text="LOGIN"
+        android:id="@+id/button2"
+        android:layout_alignTop="@+id/button1"
+        android:layout_toStartOf="@+id/button1"
+        android:visibility="gone"/>
 
     </RelativeLayout>
 </RelativeLayout>

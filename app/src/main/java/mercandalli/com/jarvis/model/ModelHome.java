@@ -36,7 +36,7 @@ public class ModelHome extends Model {
     public ModelForm modelForm;
 
     public View.OnClickListener listener1, listener2;
-    public IModelHomeListener listenerHome1;
+    public IModelHomeListener listenerHome1, listenerHome2;
 
 	public ModelHome() {
 		super();
@@ -71,6 +71,16 @@ public class ModelHome extends Model {
         super();
         this.id = id;
         this.listenerHome1 = listenerHome1;
+        this.title1 = title1;
+        this.title2 = title2;
+        this.viewType = viewType;
+    }
+
+    public ModelHome(int id, String title1, IModelHomeListener listenerHome1, IModelHomeListener listenerHome2, CharSequence title2, int viewType) {
+        super();
+        this.id = id;
+        this.listenerHome1 = listenerHome1;
+        this.listenerHome2 = listenerHome2;
         this.title1 = title1;
         this.title2 = title2;
         this.viewType = viewType;

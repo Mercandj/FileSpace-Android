@@ -88,4 +88,10 @@ public class TimeUtils {
         return  dateFormatGmt.format(new Date()).toString();
     }
 
+    public static String getGMTDate(long time) {
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return dateFormatGmt.format(new Date(time)).toString();
+    }
+
 }

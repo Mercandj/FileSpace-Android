@@ -56,6 +56,7 @@ import mercandalli.com.jarvis.ia.InterpreterResult;
 import mercandalli.com.jarvis.listener.IModelHomeListener;
 import mercandalli.com.jarvis.model.ModelHome;
 import mercandalli.com.jarvis.model.ModelServerMessage;
+import mercandalli.com.jarvis.ui.activity.ActivityRegisterLogin;
 import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.ui.activity.ApplicationDrawer;
 import mercandalli.com.jarvis.ui.adapter.AdapterModelHome;
@@ -158,14 +159,34 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
             }, serverMessageList.get(i), Const.TAB_VIEW_TYPE_HOME_INFORMATION));
         }
 
-        if(this.app.getConfig().isHomeWelcomeMessage())
-            list.add(new ModelHome(list.size(), "Welcome", new IModelHomeListener() {
-                @Override
-                public void execute(ModelHome modelHome) {
-                    removeItemList(modelHome);
-                    app.getConfig().setHomeWelcomeMessage(false);
-                }
-            }, Html.fromHtml("<a>This app give you the Cloud control from your Android device and your PC thanks to the <font color=\"#26AEEE\">web application</font>. You can share files and talk with your friends.</a>"), Const.TAB_VIEW_TYPE_HOME_INFORMATION));
+        if(this.app.getConfig().isHomeWelcomeMessage()) {
+            if(this.app.isLogged()) {
+                list.add(new ModelHome(list.size(), "Welcome", new IModelHomeListener() {
+                    @Override
+                    public void execute(ModelHome modelHome) {
+                        removeItemList(modelHome);
+                        app.getConfig().setHomeWelcomeMessage(false);
+                    }
+                }, Html.fromHtml("<a>This app give you the Cloud control from your Android device and your PC thanks to the <font color=\"#26AEEE\">web application</font>. You can share files and talk with your friends.</a>"), Const.TAB_VIEW_TYPE_HOME_INFORMATION));
+            }
+            else {
+                list.add(new ModelHome(list.size(), "Welcome", new IModelHomeListener() {
+                    @Override
+                    public void execute(ModelHome modelHome) {
+                        removeItemList(modelHome);
+                        app.getConfig().setHomeWelcomeMessage(false);
+                    }
+                }, new IModelHomeListener() {
+                    @Override
+                    public void execute(ModelHome modelHome) {
+                        Intent intent = new Intent(app, ActivityRegisterLogin.class);
+                        app.startActivity(intent);
+                        app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                        app.finish();
+                    }
+                }, Html.fromHtml("<a>This app give you the Cloud control from your Android device and your PC thanks to the <font color=\"#26AEEE\">web application</font>. You can share files and talk with your friends.</a>"), Const.TAB_VIEW_TYPE_HOME_INFORMATION));
+            }
+        }
 
         list.add(new ModelHome(list.size(), "Tabs", Const.TAB_VIEW_TYPE_SECTION));
         list.add(new ModelHome(list.size(),

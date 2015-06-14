@@ -47,7 +47,7 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
     
     @Override
     public AdapterModelSetting.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    	if(viewType== Const.TAB_VIEW_TYPE_SECTION)
+    	if(viewType == Const.TAB_VIEW_TYPE_SECTION)
     		return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_setting_section, parent, false), viewType);
     	return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_setting, parent, false), viewType);
     }
@@ -65,6 +65,12 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
 				viewHolder.toggleButton.setChecked(model.toggleButtonInitValue);
 				viewHolder.toggleButton.setOnCheckedChangeListener(model.toggleButtonListener);
 			}
+            if(model.subtitle != null) {
+                viewHolder.subtitle.setVisibility(View.VISIBLE);
+                viewHolder.subtitle.setText(model.subtitle);
+            }
+            else
+                viewHolder.subtitle.setVisibility(View.GONE);
     		break;
     	case Const.TAB_VIEW_TYPE_SECTION:
         	viewHolder.title.setText(""+model.title);
@@ -74,7 +80,7 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
     }
     
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {        
-        public TextView title, value;
+        public TextView title, subtitle, value;
         public RelativeLayout item;
         public ToggleButton toggleButton;
          
@@ -83,6 +89,7 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
             switch(viewType) {
         	case Const.TAB_VIEW_TYPE_NORMAL:
         		title = (TextView) itemLayoutView.findViewById(R.id.title);
+				subtitle = (TextView) itemLayoutView.findViewById(R.id.subtitle);
         		item = (RelativeLayout) itemLayoutView.findViewById(R.id.item);	            
 	            toggleButton = (ToggleButton) itemLayoutView.findViewById(R.id.toggleButton);
         		break;

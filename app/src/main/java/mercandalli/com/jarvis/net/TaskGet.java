@@ -150,8 +150,8 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 						Toast.makeText(app, json.getString("toast"), Toast.LENGTH_SHORT).show();
 				if(json.has("apk_update")) {
 					JSONArray array = json.getJSONArray("apk_update");
-                    PackageManager packageManager=app.getPackageManager();
-                    PackageInfo packageInfo=packageManager.getPackageInfo(app.getPackageName(), 0);
+                    PackageManager packageManager = app.getPackageManager();
+                    PackageInfo packageInfo = packageManager.getPackageInfo(app.getPackageName(), 0);
                     label:for(int i=0; i<array.length(); i++) {
                         ModelFile file = new ModelFile(app, array.getJSONObject(i));
                         if(packageInfo.lastUpdateTime < file.date_creation.getTime()) {

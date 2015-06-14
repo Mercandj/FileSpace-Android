@@ -87,11 +87,20 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
             FontUtils.applyFont(app, viewHolder.title1, "fonts/Roboto-Medium.ttf");
             FontUtils.applyFont(app, viewHolder.title2, "fonts/Roboto-Regular.ttf");
             FontUtils.applyFont(app, viewHolder.button1, "fonts/Roboto-Medium.ttf");
+            FontUtils.applyFont(app, viewHolder.button2, "fonts/Roboto-Medium.ttf");
             if(model.listenerHome1 != null)
                 viewHolder.button1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         model.listenerHome1.execute(model);
+                    }
+                });
+            if(model.listenerHome2 != null)
+                viewHolder.button2.setVisibility(View.VISIBLE);
+                viewHolder.button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        model.listenerHome2.execute(model);
                     }
                 });
             break;
@@ -163,7 +172,8 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
             case Const.TAB_VIEW_TYPE_HOME_INFORMATION:
                 title1 = (TextView) itemLayoutView.findViewById(R.id.title);
                 title2 = (TextView) itemLayoutView.findViewById(R.id.content);
-                button1 = (Button) itemLayoutView.findViewById(R.id.button);
+                button1 = (Button) itemLayoutView.findViewById(R.id.button1);
+                button2 = (Button) itemLayoutView.findViewById(R.id.button2);
                 break;
             case Const.TAB_VIEW_TYPE_HOME_INFORMATION_FORM:
                 title1 = (TextView) itemLayoutView.findViewById(R.id.title);
