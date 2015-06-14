@@ -277,7 +277,11 @@ public class FileManagerFragmentLocal extends Fragment {
             adapter.setOnItemClickListener(new AdapterModelFile.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    if (files.get(position).directory) {
+                    if(hasItemSelected()) {
+                        files.get(position).selected = !files.get(position).selected;
+                        adapter.notifyItemChanged(position);
+                    }
+                    else if (files.get(position).directory) {
                         jarvisDirectory = new File(files.get(position).url);
                         refreshList();
                     } else

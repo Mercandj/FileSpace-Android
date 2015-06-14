@@ -295,7 +295,11 @@ public class FileManagerFragmentMyCloud extends Fragment {
         this.adapter.setOnItemClickListener(new AdapterModelFile.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if(files.get(position).directory) {
+                if(hasItemSelected()) {
+                    files.get(position).selected = !files.get(position).selected;
+                    adapter.notifyItemChanged(position);
+                }
+                else if(files.get(position).directory) {
                     FileManagerFragmentMyCloud.this.id_file_path.add(files.get(position).id);
                     refreshList();
                 }
