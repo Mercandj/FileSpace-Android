@@ -290,7 +290,7 @@ public class FileManagerFragmentCloud extends Fragment {
 		if(search!=null)
 			parameters.add(new BasicNameValuePair("search", ""+search));
         parameters.add(new BasicNameValuePair("url", ""+this.url));
-        parameters.add(new BasicNameValuePair("all-public", ""+true));
+        parameters.add(new BasicNameValuePair("all-public", "" + true));
 
         if(isInternetConnection(app) && app.isLogged())
             new TaskGet(
@@ -325,7 +325,8 @@ public class FileManagerFragmentCloud extends Fragment {
             ).execute();
         else {
             this.circularProgressBar.setVisibility(View.GONE);
-            this.message.setText(app.isLogged()?getString(R.string.no_internet_connection):getString(R.string.no_logged));
+            if(isAdded())
+                this.message.setText(app.isLogged()?getString(R.string.no_internet_connection):getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
         }
@@ -371,6 +372,11 @@ public class FileManagerFragmentCloud extends Fragment {
             deselectAll();
             return true;
         }
+        else if(filesToCut != null && filesToCut.size() != 0) {
+            filesToCut.clear();
+            updateCircle();
+            return true;
+        }
         return false;
     }
 
@@ -389,5 +395,12 @@ public class FileManagerFragmentCloud extends Fragment {
         for(ModelFile file:files)
             file.selected = false;
         updateAdapter();
+    }
+
+    public void updateCircle() {
+        if(filesToCut != null && filesToCut.size() != 0)
+            this.circle.setImageDrawable(app.getDrawable(R.drawable.ic_menu_paste_holo_dark));
+        else
+            this.circle.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
     }
 }

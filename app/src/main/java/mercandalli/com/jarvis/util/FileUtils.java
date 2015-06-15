@@ -120,4 +120,10 @@ public class FileUtils {
         // The directory is now empty so delete it
         return directory.delete();
     }
+
+    public static String getExtensionFromPath(String path) {
+        if(!path.contains("."))
+            return "";
+        return path.substring(path.lastIndexOf(".") + 1);
+    }
 }

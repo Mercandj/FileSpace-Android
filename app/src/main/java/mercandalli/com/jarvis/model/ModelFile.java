@@ -403,6 +403,11 @@ public class ModelFile extends Model implements Parcelable {
         }
 	}
 
+    public void renameLocalByPath(String path) {
+        File tmp = new File(path);
+        file.renameTo(tmp);
+    }
+
     private void copyFile(String outputPath, IPostExecuteListener listener) {
         if(this.isOnline()) {
             //TODO copy online
@@ -471,6 +476,7 @@ public class ModelFile extends Model implements Parcelable {
         boolean[] b = new boolean[1];
         in.readBooleanArray(b);
         this.directory = b[0];
+        this.type = new ModelFileType(in.readString());
     }
 
     @Override
@@ -486,6 +492,7 @@ public class ModelFile extends Model implements Parcelable {
         dest.writeString(this.name);
         dest.writeLong(this.size);
         dest.writeBooleanArray(new boolean[]{this.directory});
+        dest.writeString(this.type.getFirstExtension());
     }
 
     @Override

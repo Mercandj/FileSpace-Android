@@ -420,9 +420,14 @@ public class FileManagerFragmentMyCloud extends Fragment {
             deselectAll();
             return true;
         }
-        if(this.id_file_path.peek()!=-1) {
+        else if(this.id_file_path.peek()!=-1) {
             FileManagerFragmentMyCloud.this.id_file_path.pop();
             FileManagerFragmentMyCloud.this.refreshList();
+            return true;
+        }
+        else if(filesToCut != null && filesToCut.size() != 0) {
+            filesToCut.clear();
+            updateCircle();
             return true;
         }
         else
