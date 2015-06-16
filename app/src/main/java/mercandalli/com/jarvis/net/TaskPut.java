@@ -28,8 +28,9 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,6 +44,7 @@ import java.util.List;
 import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
+import mercandalli.com.jarvis.util.StringPair;
 
 /**
  * Global behavior : http Post
@@ -53,7 +55,7 @@ import mercandalli.com.jarvis.listener.IPostExecuteListener;
 public class TaskPut extends AsyncTask<Void, Void, String> {
 
 	String url;
-	List<BasicNameValuePair> parameters;
+	List<StringPair> parameters;
 	IPostExecuteListener listener;
 	Application app;
 	
@@ -63,7 +65,7 @@ public class TaskPut extends AsyncTask<Void, Void, String> {
 		this.listener = listener;
 	}
 
-	public TaskPut(Application app, String url, IPostExecuteListener listener, List<BasicNameValuePair> parameters) {
+	public TaskPut(Application app, String url, IPostExecuteListener listener, List<StringPair> parameters) {
 		this.app = app;
 		this.url = url;
 		this.parameters = parameters;
@@ -74,7 +76,14 @@ public class TaskPut extends AsyncTask<Void, Void, String> {
 	protected String doInBackground(Void... urls) {
 		try {
 			HttpPut httpput = new HttpPut(url);			
-			httpput.setEntity(new UrlEncodedFormEntity(parameters));
+
+			if(this.parameters != null) {
+				MultipartEntity mpEntity = new MultipartEntity();
+				for (StringPair b : parameters) {
+					mpEntity.addPart(b.getName(), new StringBody(b.getValue()));
+				}
+                httpput.setEntity(mpEntity);
+			}
 			
 			StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
 	        String result = Base64.encodeBytes(authentication.toString().getBytes());

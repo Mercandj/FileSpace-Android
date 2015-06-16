@@ -25,7 +25,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -37,6 +36,7 @@ import mercandalli.com.jarvis.listener.IModelFileListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.net.TaskPost;
+import mercandalli.com.jarvis.util.StringPair;
 
 public class DialogUpload extends Dialog {
 	
@@ -59,7 +59,7 @@ public class DialogUpload extends Dialog {
 			@Override
 			public void onClick(View v) {				
 				if(file!=null) {
-					List<BasicNameValuePair> parameters = null;
+					List<StringPair> parameters = null;
 					if(DialogUpload.this.modelFile != null)
 						parameters = DialogUpload.this.modelFile.getForUpload();
 					(new TaskPost(app, app.getConfig().getUrlServer()+app.getConfig().routeFile, new IPostExecuteListener() {

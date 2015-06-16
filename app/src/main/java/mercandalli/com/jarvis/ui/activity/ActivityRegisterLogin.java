@@ -38,7 +38,6 @@ import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,6 +52,7 @@ import mercandalli.com.jarvis.ui.fragment.InscriptionFragment;
 import mercandalli.com.jarvis.ui.fragment.LoginFragment;
 import mercandalli.com.jarvis.ui.view.PagerSlidingTabStrip;
 import mercandalli.com.jarvis.util.HashUtils;
+import mercandalli.com.jarvis.util.StringPair;
 import mercandalli.com.jarvis.util.StringUtils;
 
 import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
@@ -250,10 +250,10 @@ public class ActivityRegisterLogin extends Application {
         }
 
         // Login : POST /user
-        List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
-        parameters.add(new BasicNameValuePair("google_plus", "true"));
-        parameters.add(new BasicNameValuePair("username", "" + user.username));
-        parameters.add(new BasicNameValuePair("password", "" + user.password));
+        List<StringPair> parameters = new ArrayList<>();
+        parameters.add(new StringPair("google_plus", "true"));
+        parameters.add(new StringPair("username", "" + user.username));
+        parameters.add(new StringPair("password", "" + user.password));
         if(isInternetConnection(this))
             (new TaskPost(this, this.getConfig().getUrlServer() + this.getConfig().routeUser, new IPostExecuteListener() {
                 @Override

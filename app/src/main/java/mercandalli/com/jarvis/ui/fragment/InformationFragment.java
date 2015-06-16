@@ -36,7 +36,6 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,6 +50,7 @@ import mercandalli.com.jarvis.config.Const;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.model.ModelInformation;
 import mercandalli.com.jarvis.net.TaskGet;
+import mercandalli.com.jarvis.util.StringPair;
 
 import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
 
@@ -115,7 +115,7 @@ public class InformationFragment extends Fragment {
 	
 
 	public void refreshList() {
-		List<BasicNameValuePair> parameters = null;
+		List<StringPair> parameters = null;
 		if(isInternetConnection(app))
             new TaskGet(
                     app,

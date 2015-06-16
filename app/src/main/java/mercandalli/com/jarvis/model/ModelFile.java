@@ -33,7 +33,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -65,6 +64,7 @@ import mercandalli.com.jarvis.ui.activity.ActivityFileText;
 import mercandalli.com.jarvis.ui.activity.ActivityFileTimer;
 import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.util.FileUtils;
+import mercandalli.com.jarvis.util.StringPair;
 
 import static mercandalli.com.jarvis.util.ImageUtils.is_image;
 import static mercandalli.com.jarvis.util.ImageUtils.load_image;
@@ -110,23 +110,23 @@ public class ModelFile extends Model implements Parcelable {
         return this.name + ((this.directory) ? "" : ("." + this.type));
     }
 
-	public List<BasicNameValuePair> getForUpload() {
-		List<BasicNameValuePair> parameters = new ArrayList<>();
+	public List<StringPair> getForUpload() {
+		List<StringPair> parameters = new ArrayList<>();
 		if(name!=null)
-			parameters.add(new BasicNameValuePair("url", this.name));
+			parameters.add(new StringPair("url", this.name));
         if(directory)
-            parameters.add(new BasicNameValuePair("directory", this.directory?"true":"false"));
+            parameters.add(new StringPair("directory", this.directory?"true":"false"));
         if(id_file_parent!=-1)
-            parameters.add(new BasicNameValuePair("id_file_parent", ""+this.id_file_parent));
+            parameters.add(new StringPair("id_file_parent", ""+this.id_file_parent));
 		return parameters;
 	}
 
-    public List<BasicNameValuePair> getForRename() {
-        List<BasicNameValuePair> parameters = new ArrayList<>();
+    public List<StringPair> getForRename() {
+        List<StringPair> parameters = new ArrayList<>();
         if(name!=null)
-            parameters.add(new BasicNameValuePair("url", this.name));
+            parameters.add(new StringPair("url", this.name));
         if(directory)
-            parameters.add(new BasicNameValuePair("directory", this.directory?"true":"false"));
+            parameters.add(new StringPair("directory", this.directory?"true":"false"));
         return parameters;
     }
 	
@@ -372,8 +372,8 @@ public class ModelFile extends Model implements Parcelable {
     public void setPublic(boolean public_, IPostExecuteListener listener) {
         this._public = public_;
 
-        List<BasicNameValuePair> parameters = new ArrayList<>();
-        parameters.add(new BasicNameValuePair("public", "" + this._public));
+        List<StringPair> parameters = new ArrayList<>();
+        parameters.add(new StringPair("public", "" + this._public));
         String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + this.id;
         (new TaskPost(this.app, url, listener, parameters)).execute();
     }
@@ -381,8 +381,8 @@ public class ModelFile extends Model implements Parcelable {
     public void setId_file_parent(int id_file_parent, IPostExecuteListener listener) {
         this.id_file_parent = id_file_parent;
 
-        List<BasicNameValuePair> parameters = new ArrayList<>();
-        parameters.add(new BasicNameValuePair("id_file_parent", ""+this.id_file_parent));
+        List<StringPair> parameters = new ArrayList<>();
+        parameters.add(new StringPair("id_file_parent", ""+this.id_file_parent));
         String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + this.id;
         (new TaskPost(this.app, url, listener, parameters)).execute();
     }

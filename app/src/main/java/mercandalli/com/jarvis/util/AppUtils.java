@@ -27,7 +27,7 @@ import android.content.pm.PackageManager;
 /**
  * Created by Jonathan on 17/05/2015.
  */
-public class AppIntentUtils {
+public class AppUtils {
 
     public static boolean launchPackage(Context context, String pckg) {
         Intent i = new Intent(Intent.ACTION_MAIN);

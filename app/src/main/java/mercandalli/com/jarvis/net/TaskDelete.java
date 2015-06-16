@@ -24,13 +24,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,6 +42,7 @@ import java.util.List;
 
 import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
+import mercandalli.com.jarvis.util.StringPair;
 
 /**
  * Global behavior : http Delete
@@ -58,7 +56,7 @@ public class TaskDelete extends AsyncTask<Void, Void, String> {
 	IPostExecuteListener listener;
 	File file;
 	Application app;
-	List<BasicNameValuePair> parameters;
+	List<StringPair> parameters;
 
 	public TaskDelete(Application app, String url, IPostExecuteListener listener) {
 		this.app = app;
@@ -66,7 +64,7 @@ public class TaskDelete extends AsyncTask<Void, Void, String> {
 		this.listener = listener;
 	}
 	
-	public TaskDelete(Application app, String url, IPostExecuteListener listener, List<BasicNameValuePair> parameters) {
+	public TaskDelete(Application app, String url, IPostExecuteListener listener, List<StringPair> parameters) {
 		this.app = app;
 		this.url = url;
 		this.listener = listener;
@@ -77,13 +75,12 @@ public class TaskDelete extends AsyncTask<Void, Void, String> {
 	protected String doInBackground(Void... urls) {
 		try {
 			
-			List<NameValuePair> params = new LinkedList<NameValuePair>();
+			List<StringPair> params = new LinkedList<>();
             String paramString = "";
 			if(parameters!=null) {
-				for(BasicNameValuePair b : parameters)
+				for(StringPair b : parameters)
 					params.add(b);	        
-		        paramString = URLEncodedUtils.format(params, "utf-8");
-		    	url += "?"+paramString;	
+		    	url += "?"+paramString;
 			}
             Log.d("TaskDelete", "url = "+url+" "+paramString);
 			

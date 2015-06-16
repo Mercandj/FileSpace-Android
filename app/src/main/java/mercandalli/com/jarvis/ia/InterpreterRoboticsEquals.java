@@ -19,7 +19,6 @@
  */
 package mercandalli.com.jarvis.ia;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +32,7 @@ import mercandalli.com.jarvis.ui.fragment.HomeFragment;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.net.TaskPost;
+import mercandalli.com.jarvis.util.StringPair;
 
 import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
 
@@ -80,8 +80,8 @@ public class InterpreterRoboticsEquals extends Interpreter {
 
         if(this.res.equalsSentenece("raspberry led on", input))
             if(isInternetConnection(app)) {
-                List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
-                parameters.add(new BasicNameValuePair("value", "1"));
+                List<StringPair> parameters = new ArrayList<>();
+                parameters.add(new StringPair("value", "1"));
                 new TaskPost(
                         this.app,
                         this.app.getConfig().getUrlServer() + this.app.getConfig().routeRobotics + "/18",
@@ -98,8 +98,8 @@ public class InterpreterRoboticsEquals extends Interpreter {
 
         if(this.res.equalsSentenece("raspberry led off", input))
             if(isInternetConnection(app)) {
-                List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
-                parameters.add(new BasicNameValuePair("value", "0"));
+                List<StringPair> parameters = new ArrayList<>();
+                parameters.add(new StringPair("value", "0"));
                 new TaskPost(
                         this.app,
                         this.app.getConfig().getUrlServer() + this.app.getConfig().routeRobotics + "/18",

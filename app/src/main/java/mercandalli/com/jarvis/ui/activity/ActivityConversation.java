@@ -35,7 +35,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,6 +49,7 @@ import mercandalli.com.jarvis.model.ModelConversationMessage;
 import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.net.TaskPost;
 import mercandalli.com.jarvis.ui.view.DividerItemDecoration;
+import mercandalli.com.jarvis.util.StringPair;
 
 import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
 
@@ -140,8 +140,8 @@ public class ActivityConversation extends Application {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
                     String url = getConfig().getUrlServer() + getConfig().routeUserMessage + "/" + id_conversation;
-                    List <BasicNameValuePair> parameters = new ArrayList<>();
-                    parameters.add(new BasicNameValuePair("message", "" + input.getText().toString()));
+                    List <StringPair> parameters = new ArrayList<>();
+                    parameters.add(new StringPair("message", "" + input.getText().toString()));
                     input.setText("");
 
                     new TaskPost(ActivityConversation.this, url, new IPostExecuteListener() {
@@ -204,7 +204,7 @@ public class ActivityConversation extends Application {
             return;
         }
 
-        List<BasicNameValuePair> parameters = null;
+        List<StringPair> parameters = null;
         if(isInternetConnection(this)) {
             new TaskGet(
                     this,

@@ -25,8 +25,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,6 +43,9 @@ import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.model.ModelUser;
 import mercandalli.com.jarvis.ui.activity.Application;
+import mercandalli.com.jarvis.util.NetUtils;
+import mercandalli.com.jarvis.util.StringPair;
+import mercandalli.com.jarvis.util.StringUtils;
 
 /**
  * Global behavior : http Get
@@ -58,7 +59,7 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 	IPostExecuteListener listener;
 	File file;
 	ModelUser user;
-	List<BasicNameValuePair> parameters;
+	List<StringPair> parameters;
 	Application app;
 
 	public TaskGet(Application app, ModelUser user, String url, IPostExecuteListener listener) {
@@ -68,7 +69,7 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 		this.listener = listener;
 	}
 	
-	public TaskGet(Application app, ModelUser user, String url, IPostExecuteListener listener, List<BasicNameValuePair> parameters) {
+	public TaskGet(Application app, ModelUser user, String url, IPostExecuteListener listener, List<StringPair> parameters) {
 		this.app = app;
 		this.user = user;
 		this.url = url;
@@ -79,10 +80,10 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 	@Override
 	protected String doInBackground(Void... urls) {
 		try {
-
-			if(parameters!=null) {
-                parameters.add(new BasicNameValuePair("android_id", ""+this.app.getConfig().getUserRegId()));
-                url += url.endsWith("?") ? URLEncodedUtils.format(parameters, "utf-8") : "?" + URLEncodedUtils.format(parameters, "utf-8");
+			if(this.parameters != null) {
+                if(!StringUtils.isNullOrEmpty(this.app.getConfig().getUserRegId()))
+                    parameters.add(new StringPair("android_id", ""+this.app.getConfig().getUserRegId()));
+                url = NetUtils.addUrlParameters(url, parameters);
             }
 
 			Log.d("TaskGet", "url = "+url);

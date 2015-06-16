@@ -64,8 +64,8 @@ public class ActivityFilePicture extends Application {
         Bundle extras = getIntent().getExtras();
         if(extras == null) {
             Log.e(""+getClass().getName(), "extras == null");
-            /*this.finish();
-            this.overridePendingTransition(R.anim.right_in, R.anim.right_out);*/
+            this.finish();
+            this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             return;
         }
         else {
@@ -90,9 +90,6 @@ public class ActivityFilePicture extends Application {
                         ((ImageView) findViewById(R.id.icon)).setImageBitmap(bitmap);
                     }
                 })).execute();
-
-
-            Log.e("test", this.id+" "+is_image(this, this.id));
         }
     }
 

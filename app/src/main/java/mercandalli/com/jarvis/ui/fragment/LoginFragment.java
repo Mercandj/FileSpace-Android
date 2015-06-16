@@ -23,7 +23,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,6 +36,7 @@ import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.ui.activity.ActivityMain;
 import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.util.HashUtils;
+import mercandalli.com.jarvis.util.StringPair;
 import mercandalli.com.jarvis.util.StringUtils;
 
 import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
@@ -147,8 +147,8 @@ public class LoginFragment extends Fragment {
         }
 
         // Login : POST /user
-        List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
-        parameters.add(new BasicNameValuePair("login", "true"));
+        List<StringPair> parameters = new ArrayList<>();
+        parameters.add(new StringPair("login", "true"));
         Log.d("LoginFragment", "login "+app.getConfig().getUserPassword()+app.getConfig().getUserUsername()+" isInternetConnection="+isInternetConnection(app));
         if(isInternetConnection(app))
             (new TaskGet(app, app.getConfig().getUser(), app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {

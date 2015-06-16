@@ -31,10 +31,8 @@ import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -50,7 +48,7 @@ import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.listener.IStringListener;
 import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.net.TaskPost;
-import mercandalli.com.jarvis.util.ViewUtils;
+import mercandalli.com.jarvis.util.StringPair;
 
 public abstract class Application extends AppCompatActivity {
 
@@ -184,7 +182,7 @@ public abstract class Application extends AppCompatActivity {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             if(photoFile!=null) {
                 if (photoFile.getFile() != null) {
-                    List<BasicNameValuePair> parameters = null;
+                    List<StringPair> parameters = null;
                     if (photoFile != null)
                         parameters = photoFile.getForUpload();
                     (new TaskPost(this, getConfig().getUrlServer() + getConfig().routeFile, new IPostExecuteListener() {

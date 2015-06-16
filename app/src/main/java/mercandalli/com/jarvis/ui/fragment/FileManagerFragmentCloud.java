@@ -37,7 +37,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,6 +58,7 @@ import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.net.TaskPost;
 import mercandalli.com.jarvis.ui.view.DividerItemDecoration;
 import mercandalli.com.jarvis.util.FileUtils;
+import mercandalli.com.jarvis.util.StringPair;
 
 import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
 
@@ -223,8 +223,8 @@ public class FileManagerFragmentCloud extends Fragment {
 
                                     // Picture set as profile
                                     case 6:
-                                        List<BasicNameValuePair> parameters = new ArrayList<>();
-                                        parameters.add(new BasicNameValuePair("id_file_profile_picture", "" + modelFile.id));
+                                        List<StringPair> parameters = new ArrayList<>();
+                                        parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
                                         (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
                                             @Override
                                             public void execute(JSONObject json, String body) {
@@ -286,11 +286,11 @@ public class FileManagerFragmentCloud extends Fragment {
 	}
 
 	public void refreshList(String search) {
-		List<BasicNameValuePair> parameters = new ArrayList<>();
+		List<StringPair> parameters = new ArrayList<>();
 		if(search!=null)
-			parameters.add(new BasicNameValuePair("search", ""+search));
-        parameters.add(new BasicNameValuePair("url", ""+this.url));
-        parameters.add(new BasicNameValuePair("all-public", "" + true));
+			parameters.add(new StringPair("search", ""+search));
+        parameters.add(new StringPair("url", ""+this.url));
+        parameters.add(new StringPair("all-public", "" + true));
 
         if(isInternetConnection(app) && app.isLogged())
             new TaskGet(

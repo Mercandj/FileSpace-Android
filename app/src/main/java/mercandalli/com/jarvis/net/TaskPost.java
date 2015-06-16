@@ -31,7 +31,6 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,6 +45,7 @@ import java.util.List;
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
+import mercandalli.com.jarvis.util.StringPair;
 
 /**
  * Global behavior : http Post
@@ -56,7 +56,7 @@ import mercandalli.com.jarvis.listener.IPostExecuteListener;
 public class TaskPost extends AsyncTask<Void, Void, String> {
 
 	String url;
-	List<BasicNameValuePair> parameters;
+	List<StringPair> parameters;
 	IPostExecuteListener listener;
 	File file;
 	Application app;
@@ -67,14 +67,14 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
 		this.listener = listener;
 	}
 
-	public TaskPost(Application app, String url, IPostExecuteListener listener, List<BasicNameValuePair> parameters) {
+	public TaskPost(Application app, String url, IPostExecuteListener listener, List<StringPair> parameters) {
 		this.app = app;
 		this.url = url;
 		this.parameters = parameters;
 		this.listener = listener;
 	}
 
-	public TaskPost(Application app, String url, IPostExecuteListener listener, List<BasicNameValuePair> parameters, File file) {
+	public TaskPost(Application app, String url, IPostExecuteListener listener, List<StringPair> parameters, File file) {
 		this.app = app;
 		this.url = url;
 		this.parameters = parameters;
@@ -99,7 +99,7 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
 
             String log_parameters = "";
 			if(this.parameters != null)
-				for(BasicNameValuePair b : parameters) {
+				for(StringPair b : parameters) {
                     mpEntity.addPart(b.getName(), new StringBody(b.getValue()));
                     log_parameters += b.getName()+":"+b.getValue()+" ";
                 }

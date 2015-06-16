@@ -34,7 +34,6 @@ import android.widget.RelativeLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -54,6 +53,7 @@ import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.listener.IStringListener;
 import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.net.TaskPost;
+import mercandalli.com.jarvis.util.StringPair;
 
 public class DialogAddFileManager extends Dialog {
 
@@ -97,7 +97,7 @@ public class DialogAddFileManager extends Dialog {
                         folder.name = text;
                         folder.directory = true;
                         folder.id_file_parent = id_file_parent;
-                        List<BasicNameValuePair> parameters = folder.getForUpload();
+                        List<StringPair> parameters = folder.getForUpload();
                         (new TaskPost(app, app.getConfig().getUrlServer()+app.getConfig().routeFile, new IPostExecuteListener() {
                             @Override
                             public void execute(JSONObject json, String body) {
@@ -183,10 +183,10 @@ public class DialogAddFileManager extends Dialog {
                                     dateFormatGmtTZ.setTimeZone(TimeZone.getTimeZone("UTC"));
                                     nowAsISO = dateFormatGmtTZ.format(new Date());
 
-                                    List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
-                                    parameters.add(new BasicNameValuePair("content",json.toString()));
-                                    parameters.add(new BasicNameValuePair("name","TIMER_"+nowAsISO));
-                                    parameters.add(new BasicNameValuePair("id_file_parent",""+id_file_parent));
+                                    List<StringPair> parameters = new ArrayList<>();
+                                    parameters.add(new StringPair("content",json.toString()));
+                                    parameters.add(new StringPair("name","TIMER_"+nowAsISO));
+                                    parameters.add(new StringPair("id_file_parent",""+id_file_parent));
                                     new TaskPost(DialogAddFileManager.this.app,
                                             app.getConfig().getUrlServer()+app.getConfig().routeFile,
                                             new IPostExecuteListener() {

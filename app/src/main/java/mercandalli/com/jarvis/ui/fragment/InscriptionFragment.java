@@ -34,7 +34,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,6 +47,7 @@ import mercandalli.com.jarvis.ui.activity.Application;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.model.ModelUser;
 import mercandalli.com.jarvis.net.TaskPost;
+import mercandalli.com.jarvis.util.StringPair;
 import mercandalli.com.jarvis.util.StringUtils;
 
 import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
@@ -147,9 +147,9 @@ public class InscriptionFragment extends Fragment {
         }
 
         // Register : POST /user
-        List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
-        parameters.add(new BasicNameValuePair("username", "" + user.username));
-        parameters.add(new BasicNameValuePair("password", "" + user.password));
+        List<StringPair> parameters = new ArrayList<>();
+        parameters.add(new StringPair("username", "" + user.username));
+        parameters.add(new StringPair("password", "" + user.password));
         if(isInternetConnection(app))
             (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
                 @Override

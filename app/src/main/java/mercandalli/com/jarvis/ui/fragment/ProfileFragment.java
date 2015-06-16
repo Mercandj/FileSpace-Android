@@ -21,7 +21,6 @@ package mercandalli.com.jarvis.ui.fragment;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,20 +28,17 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
-import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.model.ModelUser;
 import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.ui.activity.Application;
+import mercandalli.com.jarvis.util.StringPair;
 
 import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
 
@@ -83,7 +79,7 @@ public class ProfileFragment extends Fragment {
 
     public void refreshView() {
         if(isInternetConnection(app) && app.isLogged()) {
-            List<BasicNameValuePair> parameters = null;
+            List<StringPair> parameters = null;
             new TaskGet(
                     app,
                     this.app.getConfig().getUser(),

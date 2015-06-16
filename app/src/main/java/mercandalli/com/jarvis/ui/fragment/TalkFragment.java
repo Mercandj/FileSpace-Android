@@ -35,7 +35,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,6 +53,7 @@ import mercandalli.com.jarvis.model.ModelUser;
 import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.net.TaskPost;
 import mercandalli.com.jarvis.ui.view.DividerItemDecoration;
+import mercandalli.com.jarvis.util.StringPair;
 
 import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
 
@@ -122,7 +122,7 @@ public class TalkFragment extends Fragment {
     }
 
     public void refreshList(String search) {
-        List<BasicNameValuePair> parameters = null;
+        List<StringPair> parameters = null;
         if(isInternetConnection(app) && app.isLogged())
             new TaskGet(
                     app,
@@ -181,8 +181,8 @@ public class TalkFragment extends Fragment {
                         @Override
                         public void execute(String text) {
                             String url = app.getConfig().getUrlServer() + app.getConfig().routeUserMessage + "/" + modelUser.id;
-                            List < BasicNameValuePair > parameters = new ArrayList<>();
-                            parameters.add(new BasicNameValuePair("message", "" + text));
+                            List < StringPair > parameters = new ArrayList<>();
+                            parameters.add(new StringPair("message", "" + text));
 
                             new TaskPost(app, url, new IPostExecuteListener() {
                                 @Override

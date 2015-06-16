@@ -19,7 +19,6 @@
  */
 package mercandalli.com.jarvis.ia;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -31,6 +30,7 @@ import mercandalli.com.jarvis.listener.IModelFormListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.model.ModelForm;
 import mercandalli.com.jarvis.net.TaskPost;
+import mercandalli.com.jarvis.util.StringPair;
 
 import static mercandalli.com.jarvis.util.AlarmUtils.setAlarmFromString;
 import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
@@ -53,7 +53,7 @@ public class InterpreterActionContains extends Interpreter {
 
         else if(input.contains("alarme") || input.contains("reveil")) {
             setAlarmFromString(app, input);
-            output = "Je lance l'application permettant de définir les alarmes.";
+            output = "Je lance l'application permettant de dï¿½finir les alarmes.";
         }
 
         else if(input.contains("note")) {
@@ -73,8 +73,8 @@ public class InterpreterActionContains extends Interpreter {
                 public void execute(ModelForm modelFile) {
                     if(isInternetConnection(app)) {
                         String url = app.getConfig().getUrlServer() + app.getConfig().routeUserConversation + "/" + app.getConfig().getUserId();
-                        List< BasicNameValuePair > parameters = new ArrayList<>();
-                        parameters.add(new BasicNameValuePair("message", "" + modelFile.input1EditText));
+                        List< StringPair > parameters = new ArrayList<>();
+                        parameters.add(new StringPair("message", "" + modelFile.input1EditText));
 
                         new TaskPost(app, url, new IPostExecuteListener() {
                             @Override

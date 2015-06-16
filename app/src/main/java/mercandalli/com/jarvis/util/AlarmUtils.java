@@ -23,7 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.provider.AlarmClock;
 
-import static mercandalli.com.jarvis.util.AppIntentUtils.launchPackage;
+import static mercandalli.com.jarvis.util.AppUtils.launchPackage;
 import static mercandalli.com.jarvis.util.StringUtils.getWords;
 
 /**

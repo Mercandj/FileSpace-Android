@@ -30,7 +30,6 @@ import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.ToggleButton;
 
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,6 +42,7 @@ import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.net.TaskPost;
 import mercandalli.com.jarvis.ui.activity.Application;
+import mercandalli.com.jarvis.util.StringPair;
 
 import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
 
@@ -74,8 +74,8 @@ public class RoboticsFragment extends Fragment {
         this.buttonLED.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>();
-                parameters.add(new BasicNameValuePair("value", (isChecked) ? "1" : "0"));
+                List<StringPair> parameters = new ArrayList<>();
+                parameters.add(new StringPair("value", (isChecked) ? "1" : "0"));
                 new TaskPost(
                         RoboticsFragment.this.app,
                         RoboticsFragment.this.app.getConfig().getUrlServer() + RoboticsFragment.this.app.getConfig().routeRobotics + "/18",
@@ -136,7 +136,7 @@ public class RoboticsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(isInternetConnection(app)) {
-                    List<BasicNameValuePair> parameters = new ArrayList<>();
+                    List<StringPair> parameters = new ArrayList<>();
                     String id_ = id.getText().toString();
                     String value_ = value.getText().toString();
                     String order_ = order.isChecked() ? "ordre_id" : "mesure_id";
@@ -144,10 +144,10 @@ public class RoboticsFragment extends Fragment {
                     /*
                     if(id_!=null)
                         if(!id_.equals(""))
-                            parameters.add(new BasicNameValuePair(order_, ""+id_));
+                            parameters.add(new StringPair(order_, ""+id_));
                     if(value_!=null && order_!=null)
                         if(!value_.equals("") && order_.equals("ordre_id"))
-                            parameters.add(new BasicNameValuePair("value", ""+value_));
+                            parameters.add(new StringPair("value", ""+value_));
                     */
 
                     //JSONObject json = createProtocolLed(value_);
@@ -159,7 +159,7 @@ public class RoboticsFragment extends Fragment {
                         e.printStackTrace();
                     }
 
-                    parameters.add(new BasicNameValuePair("json", ""+json.toString()));
+                    parameters.add(new StringPair("json", ""+json.toString()));
 
                     new TaskPost(
                             app,

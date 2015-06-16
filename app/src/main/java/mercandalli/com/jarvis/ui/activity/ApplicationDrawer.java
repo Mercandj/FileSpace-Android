@@ -40,21 +40,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.config.Const;
 import mercandalli.com.jarvis.listener.IListener;
-import mercandalli.com.jarvis.listener.IPostExecuteListener;
-import mercandalli.com.jarvis.listener.IStringListener;
-import mercandalli.com.jarvis.model.ModelFileTypeENUM;
-import mercandalli.com.jarvis.net.TaskPost;
 import mercandalli.com.jarvis.ui.fragment.FileManagerFragment;
 import mercandalli.com.jarvis.ui.fragment.Fragment;
 import mercandalli.com.jarvis.ui.fragment.HomeFragment;
