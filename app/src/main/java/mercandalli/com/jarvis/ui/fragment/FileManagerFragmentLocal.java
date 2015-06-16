@@ -217,9 +217,7 @@ public class FileManagerFragmentLocal extends Fragment {
                 int id= file.getName().lastIndexOf(".");
                 modelFile.name = (id==-1) ? file.getName() : file.getName().substring(0, id);
                 modelFile.type = new ModelFileType(FileUtils.getExtensionFromPath(file.getAbsolutePath()));
-                modelFile.size = file.getTotalSpace();
-                modelFile.directory = file.isDirectory();
-                modelFile.file = file;
+                modelFile.setFile(file);
                 files.add(modelFile);
                 tmp_id++;
             }
@@ -247,7 +245,7 @@ public class FileManagerFragmentLocal extends Fragment {
 				@Override
 				public void execute(final ModelFile modelFile) {
 					final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
-					final String[] menuList = { getString(R.string.rename), getString(R.string.delete), getString(R.string.cut) };
+					final String[] menuList = { getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
                     menuAlert.setTitle("Action");
                     menuAlert.setItems(menuList,
 							new DialogInterface.OnClickListener() {
@@ -283,6 +281,15 @@ public class FileManagerFragmentLocal extends Fragment {
                                             FileManagerFragmentLocal.this.filesToCut.add(modelFile);
                                             Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                             updateCircle();
+                                            break;
+                                        case 3:
+                                            FileManagerFragmentLocal.this.app.alert(
+                                                    getString(R.string.properties) + " : " + modelFile.name,
+                                                    "Name : " + modelFile.name + "\nExtension : " + modelFile.type + "\nType : " + modelFile.type.getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
+                                                    "OK",
+                                                    null,
+                                                    null,
+                                                    null);
                                             break;
 									}
 								}

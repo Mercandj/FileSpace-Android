@@ -183,7 +183,7 @@ public abstract class Application extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             if(photoFile!=null) {
-                if (photoFile.file != null) {
+                if (photoFile.getFile() != null) {
                     List<BasicNameValuePair> parameters = null;
                     if (photoFile != null)
                         parameters = photoFile.getForUpload();
@@ -193,7 +193,7 @@ public abstract class Application extends AppCompatActivity {
                             if (photoFileListener != null)
                                 photoFileListener.execute(json, body);
                         }
-                    }, parameters, photoFile.file)).execute();
+                    }, parameters, photoFile.getFile())).execute();
                 }
             }
             else
@@ -211,11 +211,11 @@ public abstract class Application extends AppCompatActivity {
         File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.getConfig().localFolderName);
         ModelFile result = new ModelFile(this);
         result.name = imageFileName + ".jpg";
-        result.file = File.createTempFile(
+        result.setFile(File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
-        );
+        ));
         return result;
     }
 

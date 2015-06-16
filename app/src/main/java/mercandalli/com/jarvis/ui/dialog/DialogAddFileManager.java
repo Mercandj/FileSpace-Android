@@ -118,7 +118,7 @@ public class DialogAddFileManager extends Dialog {
                     @Override
                     public void execute(String text) {
                         //TODO create a online txt with content
-                        Toast.makeText(getContext(), getContext().getString(R.string.not_implemented), Toast.LENGTH_SHORT);
+                        Toast.makeText(getContext(), getContext().getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                     }
                 }, app.getString(R.string.cancel), null);
                 DialogAddFileManager.this.dismiss();
@@ -142,7 +142,7 @@ public class DialogAddFileManager extends Dialog {
                     if (app.photoFile != null) {
                         if(listener!=null)
                             app.photoFileListener = listener;
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(app.photoFile.file));
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(app.photoFile.getFile()));
                         app.startActivityForResult(takePictureIntent, app.REQUEST_TAKE_PHOTO);
                     }
                 }

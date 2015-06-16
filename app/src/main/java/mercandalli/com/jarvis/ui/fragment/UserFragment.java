@@ -209,7 +209,7 @@ public class UserFragment extends Fragment {
                                                 @Override
                                                 public void execute() {
                                                     //TODO Delete user. Update the Api. (attention: delete user means delete files, messages, conversations...)
-                                                    Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT);
+                                                    Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                                 }
                                             }, getString(R.string.cancel), null);
                                             break;
@@ -232,7 +232,7 @@ public class UserFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     // TODO Fab UserFragment
-                    Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT);
+                    Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                 }
             });
 

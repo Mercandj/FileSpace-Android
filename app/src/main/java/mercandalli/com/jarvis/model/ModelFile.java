@@ -82,7 +82,7 @@ public class ModelFile extends Model implements Parcelable {
     public boolean is_apk_update = false;
     public Date date_creation;
 	public Bitmap bitmap;
-	public File file;
+	private File file;
     public String onlineUrl;
     public ModelFileContent content;
     public boolean selected = false;
@@ -411,7 +411,7 @@ public class ModelFile extends Model implements Parcelable {
     private void copyFile(String outputPath, IPostExecuteListener listener) {
         if(this.isOnline()) {
             //TODO copy online
-            Toast.makeText(app, app.getString(R.string.not_implemented), Toast.LENGTH_SHORT);
+            Toast.makeText(app, app.getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
         }
         else {
             InputStream in = null;
@@ -508,5 +508,18 @@ public class ModelFile extends Model implements Parcelable {
             return false;
         ModelFile obj = (ModelFile)o;
         return obj.id == this.id;
+    }
+
+    public File getFile() {
+        return this.file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+        this.directory = file.isDirectory();
+        this.size = file.length();
+        this.url = file.getAbsolutePath();
+        int id= file.getName().lastIndexOf(".");
+        this.name = (id==-1) ? file.getName() : file.getName().substring(0, id);
     }
 }

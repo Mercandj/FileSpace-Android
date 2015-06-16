@@ -206,7 +206,7 @@ public class TalkFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     // TODO Fab TalkFragment
-                    Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT);
+                    Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                 }
             });
 

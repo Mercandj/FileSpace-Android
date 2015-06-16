@@ -79,12 +79,12 @@ public class DialogRequest extends Dialog {
 					
 				case PUT:
 					//TODO Dev: request PUT
-					Toast.makeText(getContext(), getContext().getString(R.string.not_implemented), Toast.LENGTH_SHORT);
+					Toast.makeText(getContext(), getContext().getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
 					break;
 					
 				case DELETE:
                     //TODO Dev: request DELETE
-					Toast.makeText(getContext(), getContext().getString(R.string.not_implemented), Toast.LENGTH_SHORT);
+					Toast.makeText(getContext(), getContext().getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
 					break;
 					
 				default: //GET

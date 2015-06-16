@@ -48,7 +48,7 @@ public class ModelUser extends Model {
 	public String password;
     public String regId;
     public Date date_creation, date_last_connection;
-    public long size_files, file_profile_picture_size = -1;
+    public long size_files, file_profile_picture_size = -1, num_files;
     private boolean admin = false;
     public Bitmap bitmap;
 	
@@ -89,6 +89,8 @@ public class ModelUser extends Model {
                 this.id_file_profile_picture = json.getInt("id_file_profile_picture");
             if(json.has("file_profile_picture_size"))
                 this.file_profile_picture_size = json.getLong("file_profile_picture_size");
+            if(json.has("num_files") && !json.isNull("num_files"))
+                this.num_files = json.getLong("num_files");
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (ParseException e) {

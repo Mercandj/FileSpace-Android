@@ -226,7 +226,7 @@ public class FileManagerFragment extends Fragment {
 			@Override
 			public void execute() {
                 // TODO download all
-                Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
 			}
 		}, "No", null);
 	}
@@ -236,7 +236,7 @@ public class FileManagerFragment extends Fragment {
 			@Override
 			public void execute() {
                 // TODO Upload all
-                Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT);
+                Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
 			}
 		}, "No", null);
 	}

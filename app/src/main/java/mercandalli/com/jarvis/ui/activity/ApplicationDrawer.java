@@ -19,7 +19,9 @@
  */
 package mercandalli.com.jarvis.ui.activity;
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -38,11 +40,21 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.config.Const;
 import mercandalli.com.jarvis.listener.IListener;
+import mercandalli.com.jarvis.listener.IPostExecuteListener;
+import mercandalli.com.jarvis.listener.IStringListener;
+import mercandalli.com.jarvis.model.ModelFileTypeENUM;
+import mercandalli.com.jarvis.net.TaskPost;
 import mercandalli.com.jarvis.ui.fragment.FileManagerFragment;
 import mercandalli.com.jarvis.ui.fragment.Fragment;
 import mercandalli.com.jarvis.ui.fragment.HomeFragment;
@@ -56,6 +68,7 @@ import mercandalli.com.jarvis.ui.fragment.WebFragment;
 import mercandalli.com.jarvis.ui.navdrawer.NavDrawerItem;
 import mercandalli.com.jarvis.ui.navdrawer.NavDrawerItemListe;
 import mercandalli.com.jarvis.ui.navdrawer.NavDrawerListAdapter;
+import mercandalli.com.jarvis.util.FileUtils;
 
 public abstract class ApplicationDrawer extends Application {
 	
@@ -346,7 +359,21 @@ public abstract class ApplicationDrawer extends Application {
                 ((FileManagerFragment)fragment).goHome();
 	    	return true;
         case R.id.action_sort:
-            Toast.makeText(this, getString(R.string.not_implemented), Toast.LENGTH_SHORT);
+            final AlertDialog.Builder menuAleart = new AlertDialog.Builder(this);
+            String[] menuList = { "By name (A-Z)", "By size", "By date" };
+            menuAleart.setTitle(getString(R.string.sort));
+            menuAleart.setItems(menuList,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int item) {
+                            switch (item) {
+                                default:
+                                    Toast.makeText(ApplicationDrawer.this, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        }
+                    });
+            AlertDialog menuDrop = menuAleart.create();
+            menuDrop.show();
             return true;
 	    }
         return super.onOptionsItemSelected(item);

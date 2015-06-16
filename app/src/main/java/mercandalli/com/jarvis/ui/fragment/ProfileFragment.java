@@ -21,13 +21,27 @@ package mercandalli.com.jarvis.ui.fragment;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import mercandalli.com.jarvis.R;
+import mercandalli.com.jarvis.listener.IPostExecuteListener;
+import mercandalli.com.jarvis.model.ModelFile;
+import mercandalli.com.jarvis.model.ModelUser;
+import mercandalli.com.jarvis.net.TaskGet;
 import mercandalli.com.jarvis.ui.activity.Application;
 
 import static mercandalli.com.jarvis.util.NetUtils.isInternetConnection;
@@ -40,6 +54,7 @@ public class ProfileFragment extends Fragment {
     private Application app;
     private View rootView;
     private ProgressBar circularProgressBar;
+    private ModelUser user;
 
     public ProfileFragment(Application app) {
         this.app = app;
@@ -52,13 +67,11 @@ public class ProfileFragment extends Fragment {
         this.circularProgressBar = (ProgressBar) this.rootView.findViewById(R.id.circularProgressBar);
         this.circularProgressBar.setVisibility(View.VISIBLE);
 
-        if(isInternetConnection(app)) {
-
-        }
-
         Bitmap icon_profile_online = app.getConfig().getUserProfilePicture();
         if(icon_profile_online!=null)
             ((ImageView) rootView.findViewById(R.id.icon)).setImageBitmap(icon_profile_online);
+
+        refreshView();
 
         return rootView;
     }
@@ -66,5 +79,40 @@ public class ProfileFragment extends Fragment {
     @Override
     public boolean back() {
         return false;
+    }
+
+    public void refreshView() {
+        if(isInternetConnection(app) && app.isLogged()) {
+            List<BasicNameValuePair> parameters = null;
+            new TaskGet(
+                    app,
+                    this.app.getConfig().getUser(),
+                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeUser + "/" + this.app.getConfig().getUserId(),
+                    new IPostExecuteListener() {
+                        @Override
+                        public void execute(JSONObject json, String body) {
+                            if(!isAdded())
+                                return;
+                            try {
+                                if (json != null) {
+                                    if (json.has("result")) {
+                                        user = new ModelUser(app, json.getJSONObject("result"));
+                                    }
+                                }
+                                else
+                                    Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            updateView();
+                        }
+                    },
+                    parameters
+            ).execute();
+        }
+    }
+
+    public void updateView() {
+        this.circularProgressBar.setVisibility(View.GONE);
     }
 }
