@@ -209,7 +209,9 @@ public class ActivityFileAudio extends Application {
             this.seekBar.setProgress(0);
             this.seekBar.setMax(this.player.getDuration());
             this.title.setText(""+this.file.name);
-            this.size.setText(""+(this.player.getDuration()/60000)+":"+((this.player.getDuration()-((this.player.getDuration()/60000)*60000))/1000));
+            long minutes = this.player.getDuration()/60000;
+            long seconds = (this.player.getDuration()-(minutes*60000))/1000;
+            this.size.setText(""+(this.player.getDuration()/60000)+":"+(seconds<10?"0":"")+seconds);
 
             updatePosition();
 
