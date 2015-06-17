@@ -363,17 +363,17 @@ public class FileManagerFragmentLocal extends Fragment {
             deselectAll();
             return true;
         }
-        else if(filesToCut != null && filesToCut.size() != 0) {
-            filesToCut.clear();
-            updateCircle();
-            return true;
-        }
         else if(!jarvisDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().localFolderName)) {
             if(jarvisDirectory.getParent() != null) {
                 FileManagerFragmentLocal.this.jarvisDirectory = new File(jarvisDirectory.getParentFile().getPath());
                 FileManagerFragmentLocal.this.refreshList();
                 return true;
             }
+        }
+        else if(filesToCut != null && filesToCut.size() != 0) {
+            filesToCut.clear();
+            updateCircle();
+            return true;
         }
         return false;
     }
