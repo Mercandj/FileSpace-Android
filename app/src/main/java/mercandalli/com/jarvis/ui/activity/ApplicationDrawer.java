@@ -58,11 +58,10 @@ import mercandalli.com.jarvis.ui.fragment.WebFragment;
 import mercandalli.com.jarvis.ui.navdrawer.NavDrawerItem;
 import mercandalli.com.jarvis.ui.navdrawer.NavDrawerItemListe;
 import mercandalli.com.jarvis.ui.navdrawer.NavDrawerListAdapter;
-import mercandalli.com.jarvis.util.FileUtils;
 
 public abstract class ApplicationDrawer extends Application {
 	
-	public static final int[] noSelectable 	= new int[] {Const.TAB_VIEW_TYPE_SECTION, Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE};
+	public static final int[] noSelectable 	= new int[] {Const.TAB_VIEW_TYPE_SECTION, Const.TAB_VIEW_TYPE_SECTION_TITLE, Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE};
 
     public Fragment fragment;
     private final int INIT_FRAGMENT_ID = 2;
@@ -190,6 +189,11 @@ public abstract class ApplicationDrawer extends Application {
         // Tab 8
         navDrawerItems.add(
         		new NavDrawerItem( "", R.drawable.ic_launcher, Const.TAB_VIEW_TYPE_SECTION)
+        );
+
+        // Tab 8
+        navDrawerItems.add(
+                new NavDrawerItem( "Other", R.drawable.ic_launcher, Const.TAB_VIEW_TYPE_SECTION_TITLE)
         );
         
         // Tab 9

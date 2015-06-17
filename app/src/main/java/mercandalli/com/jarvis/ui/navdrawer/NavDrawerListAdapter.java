@@ -143,6 +143,12 @@ public class NavDrawerListAdapter extends BaseAdapter {
 		case Const.TAB_VIEW_TYPE_SECTION:
 			convertView = inflater.inflate(R.layout.tab_navdrawer_section, parent, false);
 			break;
+
+        case Const.TAB_VIEW_TYPE_SECTION_TITLE:
+            convertView = inflater.inflate(R.layout.tab_navdrawer_section_title, parent, false);
+            ((TextView) convertView.findViewById(R.id.title)).setText(item.title);
+            FontUtils.applyFont(app, ((TextView) convertView.findViewById(R.id.title)), "fonts/Roboto-Regular.ttf");
+            break;
 			
 		case Const.TAB_VIEW_TYPE_SETTING:
         case Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE:
