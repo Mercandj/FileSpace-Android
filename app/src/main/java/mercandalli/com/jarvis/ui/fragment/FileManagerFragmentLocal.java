@@ -27,7 +27,6 @@ import android.os.Environment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,14 +51,14 @@ import java.util.List;
 import java.util.Map;
 
 import mercandalli.com.jarvis.R;
-import mercandalli.com.jarvis.ui.activity.Application;
-import mercandalli.com.jarvis.ui.adapter.AdapterModelFile;
 import mercandalli.com.jarvis.listener.IListener;
 import mercandalli.com.jarvis.listener.IModelFileListener;
 import mercandalli.com.jarvis.listener.IPostExecuteListener;
 import mercandalli.com.jarvis.listener.IStringListener;
 import mercandalli.com.jarvis.model.ModelFile;
 import mercandalli.com.jarvis.model.ModelFileType;
+import mercandalli.com.jarvis.ui.activity.Application;
+import mercandalli.com.jarvis.ui.adapter.AdapterModelFile;
 import mercandalli.com.jarvis.ui.view.DividerItemDecoration;
 import mercandalli.com.jarvis.util.FileUtils;
 
@@ -368,6 +367,13 @@ public class FileManagerFragmentLocal extends Fragment {
             filesToCut.clear();
             updateCircle();
             return true;
+        }
+        else if(!jarvisDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().localFolderName)) {
+            if(jarvisDirectory.getParent() != null) {
+                FileManagerFragmentLocal.this.jarvisDirectory = new File(jarvisDirectory.getParentFile().getPath());
+                FileManagerFragmentLocal.this.refreshList();
+                return true;
+            }
         }
         return false;
     }
