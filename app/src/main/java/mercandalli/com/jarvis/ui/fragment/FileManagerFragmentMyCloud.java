@@ -198,6 +198,10 @@ public class FileManagerFragmentMyCloud extends Fragment {
                                                 modelFile.rename(text, new IPostExecuteListener() {
                                                     @Override
                                                     public void execute(JSONObject json, String body) {
+                                                        if(filesToCut != null && filesToCut.size() != 0) {
+                                                            filesToCut.clear();
+                                                            FileManagerFragmentMyCloud.this.updateCircle();
+                                                        }
                                                         FileManagerFragmentMyCloud.this.app.refreshAdapters();
                                                     }
                                                 });
@@ -212,6 +216,10 @@ public class FileManagerFragmentMyCloud extends Fragment {
                                                 modelFile.delete(new IPostExecuteListener() {
                                                     @Override
                                                     public void execute(JSONObject json, String body) {
+                                                        if(filesToCut != null && filesToCut.size() != 0) {
+                                                            filesToCut.clear();
+                                                            FileManagerFragmentMyCloud.this.updateCircle();
+                                                        }
                                                         FileManagerFragmentMyCloud.this.app.refreshAdapters();
                                                     }
                                                 });

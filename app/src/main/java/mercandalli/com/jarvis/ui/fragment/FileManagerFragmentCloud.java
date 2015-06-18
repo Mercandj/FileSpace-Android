@@ -175,6 +175,10 @@ public class FileManagerFragmentCloud extends Fragment {
                                                 modelFile.rename(text, new IPostExecuteListener() {
                                                     @Override
                                                     public void execute(JSONObject json, String body) {
+                                                        if(filesToCut != null && filesToCut.size() != 0) {
+                                                            filesToCut.clear();
+                                                            FileManagerFragmentCloud.this.updateCircle();
+                                                        }
                                                         FileManagerFragmentCloud.this.app.refreshAdapters();
                                                     }
                                                 });
@@ -189,6 +193,10 @@ public class FileManagerFragmentCloud extends Fragment {
                                                 modelFile.delete(new IPostExecuteListener() {
                                                     @Override
                                                     public void execute(JSONObject json, String body) {
+                                                        if(filesToCut != null && filesToCut.size() != 0) {
+                                                            filesToCut.clear();
+                                                            FileManagerFragmentCloud.this.updateCircle();
+                                                        }
                                                         FileManagerFragmentCloud.this.app.refreshAdapters();
                                                     }
                                                 });
@@ -197,7 +205,6 @@ public class FileManagerFragmentCloud extends Fragment {
                                         break;
 
                                     case 3:
-                                        FileManagerFragmentCloud.this.filesToCut = new ArrayList<>();
                                         FileManagerFragmentCloud.this.filesToCut.add(modelFile);
                                         Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                         break;

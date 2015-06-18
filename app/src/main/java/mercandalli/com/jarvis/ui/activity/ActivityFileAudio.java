@@ -20,6 +20,7 @@
 package mercandalli.com.jarvis.ui.activity;
 
 import android.media.AudioManager;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -105,28 +107,65 @@ public class ActivityFileAudio extends Application {
     private MediaPlayer.OnCompletionListener onCompletion = new MediaPlayer.OnCompletionListener() {
         @Override
         public void onCompletion(MediaPlayer mp) {
-            // Play the next song
-            if(files!=null) {
-                boolean idMark = false;
-                for (ModelFile f:files) {
-                    if(idMark && f.isAudio()) {
-                        ActivityFileAudio.this.file = f;
-                        start();
-                        return;
-                    }
-                    if(f.equals(file))
-                        idMark = true;
+            next();
+        }
+    };
+
+    /**
+     * Play the next song
+     */
+    private void next() {
+        if(this.player.isPlaying()) {
+            this.player.stop();
+        }
+        if(files!=null) {
+            boolean idMark = false;
+            for (ModelFile f:files) {
+                if(idMark && f.isAudio()) {
+                    ActivityFileAudio.this.file = f;
+                    start();
+                    return;
                 }
-                for (ModelFile f:files) {
-                    if(f.isAudio()) {
-                        ActivityFileAudio.this.file = f;
-                        start();
-                        return;
-                    }
+                if(f.equals(file))
+                    idMark = true;
+            }
+            for (ModelFile f:files) {
+                if(f.isAudio()) {
+                    ActivityFileAudio.this.file = f;
+                    start();
+                    return;
                 }
             }
         }
-    };
+    }
+
+    /**
+     * Play the previous song
+     */
+    private void previous() {
+        if(this.player.isPlaying()) {
+            this.player.stop();
+        }
+        if(files!=null) {
+            boolean idMark = false;
+            for (int i = files.size() - 1; i>=0; i--) {
+                if(idMark && files.get(i).isAudio()) {
+                    ActivityFileAudio.this.file = files.get(i);
+                    start();
+                    return;
+                }
+                if(files.get(i).equals(file))
+                    idMark = true;
+            }
+            for (int i = files.size() - 1; i>=0; i--) {
+                if(files.get(i).isAudio()) {
+                    ActivityFileAudio.this.file = files.get(i);
+                    start();
+                    return;
+                }
+            }
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -164,6 +203,19 @@ public class ActivityFileAudio extends Application {
                     }
                     play.toggle();
                 }
+            }
+        });
+
+        this.findViewById(R.id.next).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                next();
+            }
+        });
+        this.findViewById(R.id.previous).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                previous();
             }
         });
 

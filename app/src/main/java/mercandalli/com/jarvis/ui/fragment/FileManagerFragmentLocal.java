@@ -257,6 +257,10 @@ public class FileManagerFragmentLocal extends Fragment {
                                                     modelFile.rename(text, new IPostExecuteListener() {
                                                         @Override
                                                         public void execute(JSONObject json, String body) {
+                                                            if(filesToCut != null && filesToCut.size() != 0) {
+                                                                filesToCut.clear();
+                                                                FileManagerFragmentLocal.this.updateCircle();
+                                                            }
                                                             FileManagerFragmentLocal.this.app.refreshAdapters();
                                                         }
                                                     });
@@ -270,6 +274,10 @@ public class FileManagerFragmentLocal extends Fragment {
                                                     modelFile.delete(new IPostExecuteListener() {
                                                         @Override
                                                         public void execute(JSONObject json, String body) {
+                                                            if(filesToCut != null && filesToCut.size() != 0) {
+                                                                filesToCut.clear();
+                                                                FileManagerFragmentLocal.this.updateCircle();
+                                                            }
                                                             FileManagerFragmentLocal.this.app.refreshAdapters();
                                                         }
                                                     });
