@@ -71,7 +71,8 @@
             android:name=".ui.activity.ActivityFilePicture"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppThemeImage"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity

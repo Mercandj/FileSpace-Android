@@ -40,6 +40,19 @@
         <item name="android:windowContentTransitions">true</item>
     </style>
 
+    <style name="AppThemeImage" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Replace ActionBar by Toolbar -->
+        <item name="android:typeface">sans</item>
+        <item name="android:statusBarColor">@color/notifications_bar_picture</item>
+        <item name="colorPrimary">@color/actionbar</item>
+        <item name="colorAccent">@color/actionbar</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
     <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">17sp</item>
     </style>

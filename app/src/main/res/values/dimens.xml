@@ -7,4 +7,6 @@
     <dimen name="pause_bar_width">6dp</dimen>
     <dimen name="pause_bar_distance">5dp</dimen>
     <dimen name="pause_bar_height">18dp</dimen>
+
+    <dimen name="notification_bar_height">25dp</dimen>
 </resources>

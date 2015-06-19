@@ -20,7 +20,9 @@
 package mercandalli.com.jarvis.ui.activity;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -33,6 +35,8 @@ import android.widget.TextView;
 import mercandalli.com.jarvis.R;
 import mercandalli.com.jarvis.listener.IBitmapListener;
 import mercandalli.com.jarvis.net.TaskGetDownloadImage;
+import mercandalli.com.jarvis.util.ColorUtils;
+import mercandalli.com.jarvis.util.FontUtils;
 
 import static mercandalli.com.jarvis.util.ImageUtils.is_image;
 import static mercandalli.com.jarvis.util.ImageUtils.load_image;
@@ -46,6 +50,9 @@ public class ActivityFilePicture extends Application {
     private boolean online;
     private long sizeFile;
 
+    Bitmap bitmap;
+    Palette palette;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +63,9 @@ public class ActivityFilePicture extends Application {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        // Translucent notification bar
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
         // Visibility
         //((ImageView) this.findViewById(R.id.icon)).setVisibility(View.GONE);
@@ -77,17 +87,26 @@ public class ActivityFilePicture extends Application {
             this.online = extras.getBoolean("ONLINE");
             this.sizeFile = extras.getLong("SIZE_FILE");
 
-            if(this.title != null)
-                ((TextView) this.findViewById(R.id.title)).setText(this.title);
+            TextView title = (TextView) this.findViewById(R.id.title);
 
-            if(is_image(this, this.id))
-                ((ImageView) this.findViewById(R.id.icon)).setImageBitmap(load_image(this, this.id));
+            if(this.title != null) {
+                title.setText(this.title);
+                FontUtils.applyFont(this, title, "fonts/Roboto-Regular.ttf");
+            }
+
+            if(is_image(this, this.id)) {
+                bitmap = load_image(this, this.id);
+                ((ImageView) this.findViewById(R.id.icon)).setImageBitmap(bitmap);
+                int bgColor = ColorUtils.getColor(bitmap);
+                title.setBackgroundColor(bgColor);
+                title.setTextColor(ColorUtils.colorText(bgColor));
+            }
             else if(this.id != 0)
                 (new TaskGetDownloadImage(this, login, password, url, id, sizeFile, -1,  new IBitmapListener() {
-
                     @Override
                     public void execute(Bitmap bitmap) {
                         ((ImageView) findViewById(R.id.icon)).setImageBitmap(bitmap);
+                        palette  = Palette.from(bitmap).generate();
                     }
                 })).execute();
         }

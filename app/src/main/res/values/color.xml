@@ -18,4 +18,6 @@
 
     <color name="tab_selected">#e0e0e0</color>
 
+    <color name="notifications_bar_picture">#65000000</color>
+
 </resources>
