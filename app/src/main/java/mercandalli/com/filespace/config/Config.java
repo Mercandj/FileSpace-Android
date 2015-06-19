@@ -57,7 +57,7 @@ public class Config {
 
     // Server routes
     public final String aboutURL 				= "http://mercandalli.com/";
-    public final String webApplication			= "http://mercandalli.com/jarvis";
+    public final String webApplication			= "http://mercandalli.com/FileSpace";
     public final String routeFile	 			= "file";
     public final String routeInformation		= "information";
     public final String routeRobotics       	= "robotics";
@@ -104,7 +104,7 @@ public class Config {
      * Static Sctring to save/load
      */
     private enum ENUM_String {
-        STRING_URL_SERVER		("http://mercandalli.com/Jarvis-API/", 	"string_url_server_1"			),
+        STRING_URL_SERVER		("http://mercandalli.com/FileSpace-API/", 	"string_url_server_1"			),
         STRING_USER_USERNAME	("",                                    "string_user_username_1"		),
         STRING_USER_PASSWORD	("", 			                        "string_user_password_1"		),
         STRING_USER_REGID	    ("", 			                        "string_user_regid_1"   		),
