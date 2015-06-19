@@ -1,4 +1,4 @@
-J.A.R.V.I.S - ANDROID
+FileSpace - ANDROID
 =====================
 
 **_Unfinished project, still in development_** [API Required](https://github.com/Mercandj/Jarvis-API)
@@ -10,7 +10,7 @@ J.A.R.V.I.S - ANDROID
 
 ## PROJECT DESCRIPTION
 
-* Name : Jarvis (Just A Remote Very Intelligent System)
+* Name : FileSpace
 * Description : Remote file manager
 * Location : Paris
 * Starting Date : October 2014
