@@ -47,7 +47,7 @@
         android:gravity="bottom"
         android:layout_marginBottom="2dp" />
 
-    <mercandalli.com.jarvis.ui.view.CircularImageView
+    <mercandalli.com.filespace.ui.view.CircularImageView
         android:id="@+id/icon"
         android:layout_width="50dp"
         android:layout_height="50dp"

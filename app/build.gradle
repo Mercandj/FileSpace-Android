@@ -6,7 +6,7 @@ android {
     compileOptions.encoding = 'ISO-8859-1'
 
     defaultConfig {
-        applicationId "mercandalli.com.jarvis"
+        applicationId "mercandalli.com.filespace"
         minSdkVersion 21
         targetSdkVersion 22
         versionCode 1

@@ -82,7 +82,7 @@
             android:layout_above="@+id/seekBar"
             android:layout_centerHorizontal="true">
         </RelativeLayout>
-        <mercandalli.com.jarvis.ui.view.PlayPauseView
+        <mercandalli.com.filespace.ui.view.PlayPauseView
             android:id="@+id/play"
             android:transitionName="transitionIcon"
             android:layout_width="match_parent"

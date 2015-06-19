@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="mercandalli.com.jarvis" >
+    package="mercandalli.com.filespace" >
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
     <permission
-        android:name="mercandalli.com.jarvis.permission.C2D_MESSAGE"
+        android:name="mercandalli.com.filespace.permission.C2D_MESSAGE"
         android:protectionLevel="signature"
         android:required="false" />
     <uses-permission
@@ -37,7 +37,7 @@
 
 
         <activity
-            android:name=".ui.activity.ActivityMain"
+            android:name="mercandalli.com.filespace.ui.activity.ActivityMain"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
@@ -53,7 +53,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.ActivityRegisterLogin"
+            android:name="mercandalli.com.filespace.ui.activity.ActivityRegisterLogin"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
@@ -61,14 +61,14 @@
             android:windowSoftInputMode="adjustNothing" >
         </activity>
         <activity
-            android:name=".ui.activity.ActivityFileText"
+            android:name="mercandalli.com.filespace.ui.activity.ActivityFileText"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
-            android:name=".ui.activity.ActivityFilePicture"
+            android:name="mercandalli.com.filespace.ui.activity.ActivityFilePicture"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppThemeImage"
@@ -76,21 +76,21 @@
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
-            android:name=".ui.activity.ActivityFileAudio"
+            android:name="mercandalli.com.filespace.ui.activity.ActivityFileAudio"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
-            android:name=".ui.activity.ActivityFileTimer"
+            android:name="mercandalli.com.filespace.ui.activity.ActivityFileTimer"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
-            android:name=".ui.activity.ActivityConversation"
+            android:name="mercandalli.com.filespace.ui.activity.ActivityConversation"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
@@ -99,16 +99,16 @@
         </activity>
 
         <receiver
-            android:name="mercandalli.com.jarvis.notificationpush.GcmBroadcastReceiver"
+            android:name="mercandalli.com.filespace.notificationpush.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-                <category android:name="mercandalli.com.jarvis" />
+                <category android:name="mercandalli.com.filespace" />
             </intent-filter>
         </receiver>
 
-        <service android:name="mercandalli.com.jarvis.notificationpush.GCMNotificationIntentService" />
+        <service android:name="mercandalli.com.filespace.notificationpush.GCMNotificationIntentService" />
 
     </application>
 

@@ -10,7 +10,7 @@
     android:background="@color/notifications_bar"
     android:elevation="8dp">
 
-    <mercandalli.com.jarvis.ui.view.CircularImageView
+    <mercandalli.com.filespace.ui.view.CircularImageView
         android:id="@+id/icon"
         android:layout_width="52dp"
         android:layout_height="52dp"

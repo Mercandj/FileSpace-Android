@@ -15,7 +15,7 @@
     android:stateListAnimator="@anim/tab_user_elevation"
     android:translationZ="2.0dp" >
     
-    <mercandalli.com.jarvis.ui.view.CircularImageView
+    <mercandalli.com.filespace.ui.view.CircularImageView
         android:id="@+id/icon"
         android:layout_width="60dp"
         android:layout_height="60dp"

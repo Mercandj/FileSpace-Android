@@ -64,7 +64,7 @@
         android:layout_below="@+id/rl_top"
         android:orientation="vertical" >
 
-        <mercandalli.com.jarvis.ui.view.PagerSlidingTabStrip
+        <mercandalli.com.filespace.ui.view.PagerSlidingTabStrip
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="42dip"
