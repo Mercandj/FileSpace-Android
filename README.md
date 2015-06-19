@@ -29,7 +29,7 @@ Remote and secure file manager.
 
 ## REQUIRED
 
-* [Jarvis Rest API PHP](https://github.com/Mercandj/FileSpace-API)
+* [FileSpace Rest API PHP](https://github.com/Mercandj/FileSpace-API)
 
 
 ## DEVELOPER
