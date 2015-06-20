@@ -90,7 +90,7 @@ public class ModelFile extends Model implements Parcelable {
     public CountDownTimer cdt;
 
     public String getAdapterTitle() {
-        if(this.type.toString().equals("jarvis") && this.content != null)
+        if(this.type.equals(ModelFileTypeENUM.FILESPACE.type) && this.content != null)
             return this.content.toString();
         else if(this.name!=null)
             return this.getNameExt();
@@ -101,7 +101,7 @@ public class ModelFile extends Model implements Parcelable {
     public String getAdapterSubtitle() {
         if(this.directory)
             return "Directory";
-        if(this.type.toString().equals("jarvis") && this.content != null)
+        if(this.type.equals(ModelFileTypeENUM.FILESPACE.type) && this.content != null)
             return type.getTitle() + " " + this.content.type;
         return type.getTitle();
     }
