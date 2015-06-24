@@ -20,6 +20,8 @@
 package mercandalli.com.filespace.ui.activity;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.RippleDrawable;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
@@ -27,15 +29,20 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.Date;
+
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IBitmapListener;
+import mercandalli.com.filespace.listener.ILongListener;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
 import mercandalli.com.filespace.util.ColorUtils;
 import mercandalli.com.filespace.util.FontUtils;
+import mercandalli.com.filespace.util.ImageUtils;
 
 import static mercandalli.com.filespace.util.ImageUtils.is_image;
 import static mercandalli.com.filespace.util.ImageUtils.load_image;
@@ -48,9 +55,12 @@ public class ActivityFilePicture extends Application {
     private int id;
     private boolean online;
     private long sizeFile;
+    private Date date_creation;
+    private ImageButton circle;
+    private TextView title_tv;
 
     Bitmap bitmap;
-    Palette palette;
+    ProgressBar progressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,7 +78,10 @@ public class ActivityFilePicture extends Application {
 
         // Visibility
         //((ImageView) this.findViewById(R.id.icon)).setVisibility(View.GONE);
-        ((ProgressBar) this.findViewById(R.id.circulerProgressBar)).setVisibility(View.GONE);
+        this.progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
+        this.progressBar.setVisibility(View.GONE);
+
+        this.circle = (ImageButton) this.findViewById(R.id.circle);
 
         Bundle extras = getIntent().getExtras();
         if(extras == null) {
@@ -85,29 +98,50 @@ public class ActivityFilePicture extends Application {
             this.password = extras.getString("PASSWORD");
             this.online = extras.getBoolean("ONLINE");
             this.sizeFile = extras.getLong("SIZE_FILE");
+            this.date_creation = (Date) extras.getSerializable("DATE_FILE");
 
-            TextView title = (TextView) this.findViewById(R.id.title);
+            this.title_tv = (TextView) this.findViewById(R.id.title);
 
             if(this.title != null) {
-                title.setText(this.title);
-                FontUtils.applyFont(this, title, "fonts/Roboto-Regular.ttf");
+                title_tv.setText(this.title);
+                FontUtils.applyFont(this, title_tv, "fonts/Roboto-Regular.ttf");
             }
 
             if(is_image(this, this.id)) {
                 bitmap = load_image(this, this.id);
                 ((ImageView) this.findViewById(R.id.icon)).setImageBitmap(bitmap);
-                int bgColor = ColorUtils.getColor(bitmap);
-                title.setBackgroundColor(bgColor);
-                title.setTextColor(ColorUtils.colorText(bgColor));
+                int bgColor = ColorUtils.getMutedColor(bitmap);
+                Log.d("ActivityFilePicture", "color=" + bgColor);
+                if(bgColor!=0) {
+                    title_tv.setBackgroundColor(bgColor);
+                    title_tv.setTextColor(ColorUtils.colorText(bgColor));
+                    RippleDrawable cir = ImageUtils.getPressedColorRippleDrawable(bgColor, ColorUtils.getDarkMutedColor(bitmap));
+                    this.circle.setBackground(cir);
+                }
             }
-            else if(this.id != 0)
-                (new TaskGetDownloadImage(this, login, password, url, id, sizeFile, -1,  new IBitmapListener() {
+            else if(this.id != 0) {
+                this.progressBar.setVisibility(View.VISIBLE);
+                (new TaskGetDownloadImage(this, login, password, url, id, sizeFile, -1, new IBitmapListener() {
                     @Override
                     public void execute(Bitmap bitmap) {
                         ((ImageView) findViewById(R.id.icon)).setImageBitmap(bitmap);
-                        palette  = Palette.from(bitmap).generate();
+                        int bgColor = ColorUtils.getMutedColor(bitmap);
+                        Log.d("ActivityFilePicture", "color=" + bgColor);
+                        if (bgColor != 0) {
+                            title_tv.setBackgroundColor(bgColor);
+                            title_tv.setTextColor(ColorUtils.colorText(bgColor));
+                            RippleDrawable cir = ImageUtils.getPressedColorRippleDrawable(bgColor, ColorUtils.getDarkMutedColor(bitmap));
+                            circle.setBackground(cir);
+                        }
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }, new ILongListener() {
+                    @Override
+                    public void execute(long text) {
+                        progressBar.setProgress((int)text);
                     }
                 })).execute();
+            }
         }
     }
 

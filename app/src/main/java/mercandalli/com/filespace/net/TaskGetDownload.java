@@ -116,7 +116,6 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
             byte data[] = new byte[1024];
 
             long total = 0;
-
             int missed_value = 50;
             int missed_conter = 0;
 

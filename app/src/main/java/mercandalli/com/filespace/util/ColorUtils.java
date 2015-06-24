@@ -28,12 +28,15 @@ import android.util.Log;
  */
 public class ColorUtils {
 
-    public static int getColor(Bitmap bitmap) {
+    public static int getMutedColor(Bitmap bitmap) {
         return Palette.from(bitmap).generate().getMutedColor(0x000000);
     }
 
-    public static int colorText(int backgroundColor) {
+    public static int getDarkMutedColor(Bitmap bitmap) {
+        return Palette.from(bitmap).generate().getDarkMutedColor(0x000000);
+    }
 
+    public static int colorText(int backgroundColor) {
         return isBrightColor(backgroundColor) ? Color.BLACK : Color.WHITE;
     }
 
@@ -47,7 +50,6 @@ public class ColorUtils {
                 * rgb[1] * 0.587 + rgb[2] * rgb[2] * 0.114);
 
         Log.d("ColorUtils", "brightness = "+brightness);
-
         return brightness==0 || brightness >= 200;
     }
 }

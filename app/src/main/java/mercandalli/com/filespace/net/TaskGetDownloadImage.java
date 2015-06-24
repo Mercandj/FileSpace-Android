@@ -34,9 +34,11 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import mercandalli.com.filespace.listener.IBitmapListener;
+import mercandalli.com.filespace.listener.ILongListener;
 import mercandalli.com.filespace.model.ModelFile;
 import mercandalli.com.filespace.model.ModelUser;
 import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.util.FileUtils;
 
 import static mercandalli.com.filespace.util.ImageUtils.is_image;
 import static mercandalli.com.filespace.util.ImageUtils.load_image;
@@ -48,7 +50,7 @@ import static mercandalli.com.filespace.util.ImageUtils.save_image;
  * @author Jonathan
  *
  */
-public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
+public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
 
     String url;
     Bitmap bitmap;
@@ -57,6 +59,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
     private String login, password;
     int idFile;
     long sizeLimit, sizeFile;
+    ILongListener progressListener;
 
     public TaskGetDownloadImage(Application app, ModelUser user, ModelFile fileModel, long sizeLimit, IBitmapListener listener) {
         this.app = app;
@@ -78,6 +81,18 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
         this.sizeFile = sizeFile;
         this.listener = listener;
         this.sizeLimit = sizeLimit;
+    }
+
+    public TaskGetDownloadImage(Application app, String login, String password, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener, ILongListener progressListener) {
+        this.app = app;
+        this.login = login;
+        this.password = password;
+        this.url = onlineUrl;
+        this.idFile = idFile;
+        this.sizeFile = sizeFile;
+        this.listener = listener;
+        this.sizeLimit = sizeLimit;
+        this.progressListener = progressListener;
     }
 
     @Override
@@ -108,6 +123,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
         try {
             response = httpclient.execute(httpget);
             InputStream inputStream = response.getEntity().getContent();
+            long lenghtOfFile = response.getEntity().getContentLength();
 
             // Get the source image's dimensions
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -123,7 +139,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
                 options.inSampleSize = 4;
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
-            x = BitmapFactory.decodeStream(new FlushedInputStream(inputStream), null, options);
+            x = BitmapFactory.decodeStream(new FlushedInputStream(inputStream, lenghtOfFile), null, options);
 
             save_image(this.app, this.idFile, x);
         } catch (IOException e) {
@@ -138,8 +154,12 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
      *
      */
     public class FlushedInputStream extends FilterInputStream {
-        public FlushedInputStream(InputStream inputStream) {
+
+        private long counter = 0, lenghtOfFile;
+
+        public FlushedInputStream(InputStream inputStream, long lenghtOfFile) {
             super(inputStream);
+            this.lenghtOfFile = lenghtOfFile;
         }
 
         @Override
@@ -158,12 +178,21 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Void, Void> {
             }
             return totalBytesSkipped;
         }
+
+        @Override
+        public int read(byte[] buffer, int offset, int count) throws IOException {
+            int result = super.read(buffer, offset, count);
+            counter += result;
+            if(progressListener != null)
+                publishProgress((long)(((counter * 1.0)/lenghtOfFile)*100));
+            return result;
+        }
     }
 
-
-
-
-
-
-
+    @Override
+    protected void onProgressUpdate(Long... values) {
+        super.onProgressUpdate(values);
+        if(progressListener != null && values.length>0)
+            progressListener.execute(values[0]);
+    }
 }
