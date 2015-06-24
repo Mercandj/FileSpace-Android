@@ -25,7 +25,7 @@ public enum ModelFileTypeENUM {
 	HTML(new ModelFileType("Html", new String[] {"html", "htm", "php", "xml"})),
 	PICTURE(new ModelFileType("Picture", new String[] {"jpeg",	"jpg", "png", "gif", "raw",	"psd", "bmp", "tiff", "tif"})),
 	AUDIO(new ModelFileType("Audio", new String[] {"mp3", "wav", "m4a", "aiff", "wma", "caf", "flac", "m4p", "amr"})),
-	VIDEO(new ModelFileType("Video", new String[] {"m4v", "3gp", "wmv", "mp4", "mpeg", "mpg", "rm", "mov", "avi", "mkv", "flv", "ogg", "wav"})),
+	VIDEO(new ModelFileType("Video", new String[] {"m4v", "3gp", "wmv", "mp4", "mpeg", "mpg", "rm", "mov", "avi", "mkv", "flv", "ogg"})),
 	ARCHIVE(new ModelFileType("Archive", new String[] {"zip", "gzip", "rar", "tar", "tar.gz", "gz"})),
     FILESPACE(new ModelFileType("FileSpace", new String[] {"filespace", "jarvis"})),
     WORD(new ModelFileType("Word", new String[] {"doc", "docx"})),
