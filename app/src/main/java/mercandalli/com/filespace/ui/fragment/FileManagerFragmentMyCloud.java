@@ -74,7 +74,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
 	private ProgressBar circularProgressBar;
 	private TextView message;
 	private SwipeRefreshLayout swipeRefreshLayout;
-    Animation animOpen; ImageButton circle, circle2;
+    Animation animOpen, animZoomOut, animZoomIn; ImageButton circle, circle2;
 
     private Stack<Integer> id_file_path = new Stack<>();
     private List<ModelFile> filesToCut = new ArrayList<>();
@@ -111,15 +111,17 @@ public class FileManagerFragmentMyCloud extends Fragment {
             android.R.color.holo_red_light);
 
         this.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				refreshList();
-			}
-		});
+            @Override
+            public void onRefresh() {
+                refreshList();
+            }
+        });
 
         this.circle = ((ImageButton) rootView.findViewById(R.id.circle));
         this.circle.setVisibility(View.GONE);
         this.animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
+        this.animZoomOut = AnimationUtils.loadAnimation(this.app, R.anim.zoom_out);
+        this.animZoomIn = AnimationUtils.loadAnimation(this.app, R.anim.zoom_in);
 
         this.circle2 = ((ImageButton) rootView.findViewById(R.id.circle2));
         this.circle2.setVisibility(View.GONE);
@@ -138,11 +140,17 @@ public class FileManagerFragmentMyCloud extends Fragment {
                     filesToCut.clear();
                 }
                 else {
+                    circle.startAnimation(animZoomOut);
                     FileManagerFragmentMyCloud.this.app.dialog = new DialogAddFileManager(app, FileManagerFragmentMyCloud.this.id_file_path.peek(), new IPostExecuteListener() {
                         @Override
                         public void execute(JSONObject json, String body) {
                             if (json != null)
                                 refreshList();
+                        }
+                    }, new IListener() { // Dismiss
+                        @Override
+                        public void execute() {
+                            circle.startAnimation(animZoomIn);
                         }
                     });
                 }
@@ -351,7 +359,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
 		if(search!=null)
 			parameters.add(new StringPair("search", ""+search));
         parameters.add(new StringPair("id_file_parent", ""+this.id_file_path.peek()));
-        parameters.add(new StringPair("mine", ""+true));
+        parameters.add(new StringPair("mine", "" + true));
 
         if(isInternetConnection(app) && app.isLogged())
             new TaskGet(
@@ -413,10 +421,12 @@ public class FileManagerFragmentMyCloud extends Fragment {
 
             this.adapter.remplaceList(this.files);
 
-            if(this.id_file_path.peek()==-1)
+            if(this.id_file_path.peek()==-1) {
                 this.circle2.setVisibility(View.GONE);
-            else
+            }
+            else {
                 this.circle2.setVisibility(View.VISIBLE);
+            }
 
             this.swipeRefreshLayout.setRefreshing(false);
 		}

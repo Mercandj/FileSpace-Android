@@ -51,13 +51,13 @@ import static mercandalli.com.filespace.util.ImageUtils.load_image;
  * Created by Jonathan on 29/05/2015.
  */
 public class ActivityFilePicture extends Application {
-    private String initate, url, login, password, title;
+    private String url, login, password, title;
     private int id;
     private boolean online;
     private long sizeFile;
     private Date date_creation;
     private ImageButton circle;
-    private TextView title_tv;
+    private TextView title_tv, progress_tv;
 
     Bitmap bitmap;
     ProgressBar progressBar;
@@ -76,12 +76,11 @@ public class ActivityFilePicture extends Application {
         // Translucent notification bar
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
-        // Visibility
-        //((ImageView) this.findViewById(R.id.icon)).setVisibility(View.GONE);
+        // Get views
         this.progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
-        this.progressBar.setVisibility(View.GONE);
-
         this.circle = (ImageButton) this.findViewById(R.id.circle);
+        this.title_tv = (TextView) this.findViewById(R.id.title);
+        this.progress_tv = (TextView) this.findViewById(R.id.progress_tv);
 
         Bundle extras = getIntent().getExtras();
         if(extras == null) {
@@ -100,8 +99,6 @@ public class ActivityFilePicture extends Application {
             this.sizeFile = extras.getLong("SIZE_FILE");
             this.date_creation = (Date) extras.getSerializable("DATE_FILE");
 
-            this.title_tv = (TextView) this.findViewById(R.id.title);
-
             if(this.title != null) {
                 title_tv.setText(this.title);
                 FontUtils.applyFont(this, title_tv, "fonts/Roboto-Regular.ttf");
@@ -111,22 +108,23 @@ public class ActivityFilePicture extends Application {
                 bitmap = load_image(this, this.id);
                 ((ImageView) this.findViewById(R.id.icon)).setImageBitmap(bitmap);
                 int bgColor = ColorUtils.getMutedColor(bitmap);
-                Log.d("ActivityFilePicture", "color=" + bgColor);
                 if(bgColor!=0) {
                     title_tv.setBackgroundColor(bgColor);
                     title_tv.setTextColor(ColorUtils.colorText(bgColor));
                     RippleDrawable cir = ImageUtils.getPressedColorRippleDrawable(bgColor, ColorUtils.getDarkMutedColor(bitmap));
                     this.circle.setBackground(cir);
                 }
+                this.progressBar.setVisibility(View.GONE);
+                this.progress_tv.setVisibility(View.GONE);
             }
             else if(this.id != 0) {
                 this.progressBar.setVisibility(View.VISIBLE);
+                this.progress_tv.setVisibility(View.VISIBLE);
                 (new TaskGetDownloadImage(this, login, password, url, id, sizeFile, -1, new IBitmapListener() {
                     @Override
                     public void execute(Bitmap bitmap) {
                         ((ImageView) findViewById(R.id.icon)).setImageBitmap(bitmap);
                         int bgColor = ColorUtils.getMutedColor(bitmap);
-                        Log.d("ActivityFilePicture", "color=" + bgColor);
                         if (bgColor != 0) {
                             title_tv.setBackgroundColor(bgColor);
                             title_tv.setTextColor(ColorUtils.colorText(bgColor));
@@ -134,11 +132,13 @@ public class ActivityFilePicture extends Application {
                             circle.setBackground(cir);
                         }
                         progressBar.setVisibility(View.GONE);
+                        progress_tv.setVisibility(View.GONE);
                     }
                 }, new ILongListener() {
                     @Override
                     public void execute(long text) {
                         progressBar.setProgress((int)text);
+                        progress_tv.setText(text+"%");
                     }
                 })).execute();
             }

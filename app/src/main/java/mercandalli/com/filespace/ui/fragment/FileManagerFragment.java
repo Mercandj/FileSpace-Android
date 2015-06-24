@@ -213,8 +213,13 @@ public class FileManagerFragment extends Fragment {
 		app.dialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
 			@Override
 			public void execute(JSONObject json, String body) {
-				if(json!=null)
+				if (json != null)
 					refreshListServer();
+			}
+		}, new IListener() { // Dismiss
+			@Override
+			public void execute() {
+
 			}
 		});
 	}

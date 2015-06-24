@@ -31,6 +31,7 @@ import android.view.ViewGroup;
 import org.json.JSONObject;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.activity.ApplicationDrawer;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
@@ -194,8 +195,13 @@ public class TalkManagerFragment extends Fragment {
         app.dialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
             @Override
             public void execute(JSONObject json, String body) {
-                if(json!=null)
+                if (json != null)
                     refreshListServer();
+            }
+        }, new IListener() { // Dismiss
+            @Override
+            public void execute() {
+
             }
         });
     }

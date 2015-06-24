@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.listener.IStringListener;
@@ -61,10 +62,12 @@ public class DialogAddFileManager extends Dialog {
 	Application app;
 	File file;
 	ModelFile modelFile;
+    IListener dismissListener;
 
-	public DialogAddFileManager(final Application app, final int id_file_parent, final IPostExecuteListener listener) {
+	public DialogAddFileManager(final Application app, final int id_file_parent, final IPostExecuteListener listener, final IListener dismissListener) {
 		super(app, android.R.style.Theme_Translucent_NoTitleBar);
 		this.app = app;
+        this.dismissListener = dismissListener;
 		
 		this.setContentView(R.layout.dialog_add_file);
 		this.setCancelable(true);
@@ -218,4 +221,11 @@ public class DialogAddFileManager extends Dialog {
         
         DialogAddFileManager.this.show();
 	}
+
+    @Override
+    public void dismiss() {
+        if(dismissListener != null)
+            dismissListener.execute();
+        super.dismiss();
+    }
 }

@@ -73,7 +73,7 @@ public class FileManagerFragmentCloud extends Fragment {
 	private ProgressBar circularProgressBar;
 	private TextView message;
 	private SwipeRefreshLayout swipeRefreshLayout;
-    Animation animOpen; ImageButton circle, circle2;
+    Animation animOpen, animZoomOut, animZoomIn; ImageButton circle, circle2;
 
     private String url = "";
     private List<ModelFile> filesToCut = new ArrayList<>();
@@ -101,10 +101,10 @@ public class FileManagerFragmentCloud extends Fragment {
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         this.swipeRefreshLayout.setColorSchemeResources(
-            android.R.color.holo_blue_bright,
-            android.R.color.holo_green_light,
-            android.R.color.holo_orange_light,
-            android.R.color.holo_red_light);
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         this.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
@@ -116,6 +116,8 @@ public class FileManagerFragmentCloud extends Fragment {
         this.circle = ((ImageButton) rootView.findViewById(R.id.circle));
         this.circle.setVisibility(View.GONE);
         this.animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
+        this.animZoomOut = AnimationUtils.loadAnimation(this.app, R.anim.zoom_out);
+        this.animZoomIn = AnimationUtils.loadAnimation(this.app, R.anim.zoom_in);
 
         this.circle2 = ((ImageButton) rootView.findViewById(R.id.circle2));
         this.circle2.setVisibility(View.GONE);
@@ -123,11 +125,17 @@ public class FileManagerFragmentCloud extends Fragment {
         this.circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                circle.startAnimation(animZoomOut);
                 FileManagerFragmentCloud.this.app.dialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
                     @Override
                     public void execute(JSONObject json, String body) {
-                    if (json != null)
-                        refreshList();
+                        if (json != null)
+                            refreshList();
+                    }
+                }, new IListener() { // Dismiss
+                    @Override
+                    public void execute() {
+                        circle.startAnimation(animZoomIn);
                     }
                 });
             }
