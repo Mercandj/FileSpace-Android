@@ -466,6 +466,145 @@ public class FileManagerFragmentMyCloud extends Fragment {
                             files.get(position).executeOnline(files, view);
                     }
                 });
+                this.gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                        if(position>=files.size())
+                            return false;
+                        final ModelFile modelFile = files.get(position);
+                        final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentMyCloud.this.app);
+                        String[] menuList = { getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
+                        if(!modelFile.directory) {
+                            if(modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
+                                menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public", "Set as profile"};
+                            }
+                            else if(modelFile.type.equals(ModelFileTypeENUM.APK.type) && app.getConfig().isUserAdmin()) {
+                                menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public", (modelFile.is_apk_update) ? "Remove the update" : "Set as update"};
+                            }
+                            else
+                                menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public"};
+                        }
+                        menuAleart.setTitle(getString(R.string.action));
+                        menuAleart.setItems(menuList,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int item) {
+                                        switch (item) {
+                                            case 0:
+                                                modelFile.download(new IListener() {
+                                                    @Override
+                                                    public void execute() {
+                                                        Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
+                                                        FileManagerFragmentMyCloud.this.app.refreshAdapters();
+                                                    }
+                                                });
+                                                break;
+
+                                            case 1:
+                                                FileManagerFragmentMyCloud.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                                    @Override
+                                                    public void execute(String text) {
+                                                        modelFile.rename(text, new IPostExecuteListener() {
+                                                            @Override
+                                                            public void execute(JSONObject json, String body) {
+                                                                if(filesToCut != null && filesToCut.size() != 0) {
+                                                                    filesToCut.clear();
+                                                                    FileManagerFragmentMyCloud.this.updateCircle();
+                                                                }
+                                                                FileManagerFragmentMyCloud.this.app.refreshAdapters();
+                                                            }
+                                                        });
+                                                    }
+                                                }, "Cancel", null, modelFile.getNameExt());
+                                                break;
+
+                                            case 2:
+                                                FileManagerFragmentMyCloud.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                                    @Override
+                                                    public void execute() {
+                                                        modelFile.delete(new IPostExecuteListener() {
+                                                            @Override
+                                                            public void execute(JSONObject json, String body) {
+                                                                if(filesToCut != null && filesToCut.size() != 0) {
+                                                                    filesToCut.clear();
+                                                                    FileManagerFragmentMyCloud.this.updateCircle();
+                                                                }
+                                                                FileManagerFragmentMyCloud.this.app.refreshAdapters();
+                                                            }
+                                                        });
+                                                    }
+                                                }, "No", null);
+                                                break;
+
+                                            case 3:
+                                                FileManagerFragmentMyCloud.this.filesToCut.add(modelFile);
+                                                Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
+                                                updateCircle();
+                                                break;
+
+                                            case 4:
+                                                FileManagerFragmentMyCloud.this.app.alert(
+                                                        getString(R.string.properties) + " : " + modelFile.name,
+                                                        "Name : " + modelFile.name + "\nExtension : " + modelFile.type + "\nType : " + modelFile.type.getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
+                                                        "OK",
+                                                        null,
+                                                        null,
+                                                        null);
+                                                break;
+
+                                            case 5:
+                                                modelFile.setPublic(!modelFile._public, new IPostExecuteListener() {
+                                                    @Override
+                                                    public void execute(JSONObject json, String body) {
+                                                        FileManagerFragmentMyCloud.this.app.refreshAdapters();
+                                                    }
+                                                });
+                                                break;
+
+                                            case 6:
+                                                // Picture set as profile
+                                                if(modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
+                                                    List<StringPair> parameters = new ArrayList<>();
+                                                    parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
+                                                    (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                        @Override
+                                                        public void execute(JSONObject json, String body) {
+                                                            try {
+                                                                if (json != null)
+                                                                    if (json.has("succeed"))
+                                                                        if (json.getBoolean("succeed"))
+                                                                            app.getConfig().setUserIdFileProfilePicture(modelFile.id);
+                                                            } catch (JSONException e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        }
+                                                    }, parameters)).execute();
+                                                }
+                                                else if(modelFile.type.equals(ModelFileTypeENUM.APK.type) && app.getConfig().isUserAdmin()) {
+                                                    List<StringPair> parameters = new ArrayList<>();
+                                                    parameters.add(new StringPair("is_apk_update", "" + !modelFile.is_apk_update));
+                                                    (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeFile + "/"+modelFile.id, new IPostExecuteListener() {
+                                                        @Override
+                                                        public void execute(JSONObject json, String body) {
+                                                            try {
+                                                                if (json != null)
+                                                                    if (json.has("succeed"))
+                                                                        if (json.getBoolean("succeed"))
+                                                                            FileManagerFragmentMyCloud.this.app.refreshAdapters();
+                                                            } catch (JSONException e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        }
+                                                    }, parameters)).execute();
+                                                }
+                                                break;
+                                        }
+                                    }
+                                });
+                        AlertDialog menuDrop = menuAleart.create();
+                        menuDrop.show();
+                        return false;
+                    }
+                });
             }
 
             this.swipeRefreshLayout.setRefreshing(false);
