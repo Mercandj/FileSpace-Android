@@ -32,7 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.GridLayout;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -78,7 +78,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
     private ArrayList<ModelFile> files = new ArrayList<>();
 	private ProgressBar circularProgressBar;
 	private TextView message;
-	private SwipeRefreshLayout swipeRefreshLayout;
+	private SwipeRefreshLayout swipeRefreshLayout, swipeRefreshLayoutGrid;
     Animation animOpen, animZoomOut, animZoomIn; ImageButton circle, circle2;
 
     private int mode = Const.MODE_LIST;
@@ -121,6 +121,20 @@ public class FileManagerFragmentMyCloud extends Fragment {
             android.R.color.holo_red_light);
 
         this.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshList();
+            }
+        });
+
+        this.swipeRefreshLayoutGrid = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayoutGrid);
+        this.swipeRefreshLayoutGrid.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+        this.swipeRefreshLayoutGrid.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshList();
@@ -405,6 +419,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
             this.message.setText(app.isLogged()?getString(R.string.no_internet_connection):getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
+            this.swipeRefreshLayoutGrid.setRefreshing(false);
         }
 	}
 
@@ -437,15 +452,24 @@ public class FileManagerFragmentMyCloud extends Fragment {
             }
 
             if(mode == Const.MODE_GRID) {
-                this.gridView.setAdapter(new AdapterGridModelFile(app, files, new IModelFileListener() {
+                this.gridView.setAdapter(new AdapterGridModelFile(app, files));
+                this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void execute(ModelFile modelFile) {
-
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if (hasItemSelected()) {
+                            files.get(position).selected = !files.get(position).selected;
+                            adapter.notifyItemChanged(position);
+                        } else if (files.get(position).directory) {
+                            FileManagerFragmentMyCloud.this.id_file_path.add(files.get(position).id);
+                            refreshList();
+                        } else
+                            files.get(position).executeOnline(files, view);
                     }
-                }));
+                });
             }
 
             this.swipeRefreshLayout.setRefreshing(false);
+            this.swipeRefreshLayoutGrid.setRefreshing(false);
 		}
 	}
 
@@ -491,12 +515,16 @@ public class FileManagerFragmentMyCloud extends Fragment {
             case 3:
                 if(this.mode == Const.MODE_GRID) {
                     this.gridView.setVisibility(View.GONE);
+                    this.swipeRefreshLayoutGrid.setVisibility(View.GONE);
                     this.listView.setVisibility(View.VISIBLE);
+                    this.swipeRefreshLayout.setVisibility(View.VISIBLE);
                     this.mode = Const.MODE_LIST;
                 }
                 else if(this.mode == Const.MODE_LIST) {
                     this.gridView.setVisibility(View.VISIBLE);
+                    this.swipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
                     this.listView.setVisibility(View.GONE);
+                    this.swipeRefreshLayout.setVisibility(View.GONE);
                     this.mode = Const.MODE_GRID;
                 }
                 this.updateAdapter();

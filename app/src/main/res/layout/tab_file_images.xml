@@ -4,20 +4,43 @@
 		MERCANDALLI Jonathan
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:transitionName="transitionRoot"
     android:id="@+id/item">
 
-    <ImageView
+    <mercandalli.com.filespace.ui.view.SquareImageView
         android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:contentDescription="@string/image_description"
         android:transitionName="transitionIcon"
         android:src="@drawable/file_default"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:ellipsize="marquee"
+        android:focusable="false"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxLines="1"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textColor="#fff"
+        android:textSize="12sp"
+        android:text="Title"
+        android:textAlignment="center"
+        android:gravity="center_vertical"
+        android:background="#82000000"
+        android:layout_alignBottom="@+id/icon"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -25,24 +48,7 @@
         android:layout_margin="5dp"
         android:visibility="gone">
 
-        <TextView
-            android:id="@+id/title"
-            android:transitionName="transitionTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:focusable="false"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxLines="1"
-            android:paddingLeft="20dp"
-            android:paddingRight="19dp"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textColor="#000"
-            android:textSize="16sp"
-            android:layout_toStartOf="@+id/more"
-            android:gravity="top"
-            android:visibility="gone" />
+
 
         <TextView
             android:id="@+id/subtitle"
@@ -57,8 +63,7 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColor="#666"
-            android:textSize="15sp"
-            android:layout_alignEnd="@+id/title"
+            android:textSize="12sp"
             android:gravity="bottom"
             android:layout_marginBottom="2dp" />
 

@@ -19,18 +19,15 @@
  */
 package mercandalli.com.filespace.ui.adapter;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
@@ -43,14 +40,11 @@ public class AdapterGridModelFile extends BaseAdapter {
 
 	private Application app;
 	public List<ModelFile> files;
-    View.OnClickListener mItemClickListener;
-    View.OnLongClickListener mItemLongClickListener;
 	private IModelFileListener moreListener;
 
-    public AdapterGridModelFile(Application app, List<ModelFile> files, IModelFileListener moreListener) {
+    public AdapterGridModelFile(Application app, List<ModelFile> files) {
         this.app = app;
         this.files = files;
-        this.moreListener = moreListener;
     }
 
     @Override
@@ -78,8 +72,6 @@ public class AdapterGridModelFile extends BaseAdapter {
         TextView subtitle = (TextView) itemLayoutView.findViewById(R.id.subtitle);
         ImageView icon = (ImageView) itemLayoutView.findViewById(R.id.icon);
         ImageView more = (ImageView) itemLayoutView.findViewById(R.id.more);
-        itemLayoutView.setOnClickListener(mItemClickListener);
-        itemLayoutView.setOnLongClickListener(mItemLongClickListener);
 
         if(position<files.size()) {
             final ModelFile file = files.get(position);
@@ -142,13 +134,5 @@ public class AdapterGridModelFile extends BaseAdapter {
 
 
         return itemLayoutView;
-    }
-
-    public void setOnItemClickListener(final View.OnClickListener mItemClickListener) {
-        this.mItemClickListener = mItemClickListener;
-    }
-
-    public void setOnItemLongClickListener(final View.OnLongClickListener mItemLongClickListener) {
-        this.mItemLongClickListener = mItemLongClickListener;
     }
 }
