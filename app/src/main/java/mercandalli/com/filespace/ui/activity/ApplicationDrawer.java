@@ -353,21 +353,8 @@ public abstract class ApplicationDrawer extends Application {
                 ((FileManagerFragment)fragment).goHome();
 	    	return true;
         case R.id.action_sort:
-            final AlertDialog.Builder menuAleart = new AlertDialog.Builder(this);
-            String[] menuList = { "By name (A-Z)", "By size", "By date" };
-            menuAleart.setTitle(getString(R.string.sort));
-            menuAleart.setItems(menuList,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int item) {
-                            switch (item) {
-                                default:
-                                    Toast.makeText(ApplicationDrawer.this, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-                                    break;
-                            }
-                        }
-                    });
-            AlertDialog menuDrop = menuAleart.create();
-            menuDrop.show();
+            if(fragment instanceof FileManagerFragment)
+                ((FileManagerFragment)fragment).sort();
             return true;
 	    }
         return super.onOptionsItemSelected(item);

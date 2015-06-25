@@ -19,7 +19,9 @@
  */
 package mercandalli.com.filespace.ui.fragment;
 
+import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -273,4 +275,23 @@ public class FileManagerFragment extends Fragment {
                     fragmentFileManagerFragment.goHome();
                 }
     }
+
+	public void sort() {
+		final AlertDialog.Builder menuAleart = new AlertDialog.Builder(app);
+		String[] menuList = { "Sort by name (A-Z)", "Sort by size", "Sort by date", "Image View" };
+		menuAleart.setTitle(getString(R.string.view));
+		menuAleart.setItems(menuList,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int item) {
+                        if(listFragment.length>1)
+                            if(listFragment[1]!=null)
+                                if(listFragment[1] instanceof FileManagerFragmentMyCloud) {
+                                    FileManagerFragmentMyCloud fragmentFileManagerFragment = (FileManagerFragmentMyCloud) listFragment[1];
+                                    fragmentFileManagerFragment.sort(item);
+                                }
+					}
+				});
+		AlertDialog menuDrop = menuAleart.create();
+		menuDrop.show();
+	}
 }

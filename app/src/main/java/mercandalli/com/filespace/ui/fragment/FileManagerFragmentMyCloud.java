@@ -32,6 +32,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -46,6 +48,7 @@ import java.util.List;
 import java.util.Stack;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IModelFileListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
@@ -55,6 +58,7 @@ import mercandalli.com.filespace.model.ModelFileTypeENUM;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.ui.adapter.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapter.AdapterModelFile;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
 import mercandalli.com.filespace.ui.view.DividerItemDecoration;
@@ -68,6 +72,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
 
 	private Application app;
 	private RecyclerView listView;
+    private GridView gridView;
     private RecyclerView.LayoutManager mLayoutManager;
     private AdapterModelFile adapter;
     private ArrayList<ModelFile> files = new ArrayList<>();
@@ -75,6 +80,8 @@ public class FileManagerFragmentMyCloud extends Fragment {
 	private TextView message;
 	private SwipeRefreshLayout swipeRefreshLayout;
     Animation animOpen, animZoomOut, animZoomIn; ImageButton circle, circle2;
+
+    private int mode = Const.MODE_LIST;
 
     private Stack<Integer> id_file_path = new Stack<>();
     private List<ModelFile> filesToCut = new ArrayList<>();
@@ -100,6 +107,9 @@ public class FileManagerFragmentMyCloud extends Fragment {
         this.listView.setHasFixedSize(true);
         this.mLayoutManager = new LinearLayoutManager(getActivity());
         this.listView.setLayoutManager(mLayoutManager);
+
+        this.gridView = (GridView) rootView.findViewById(R.id.gridView);
+        this.gridView.setVisibility(View.GONE);
 
         resetPath();
 
@@ -129,8 +139,8 @@ public class FileManagerFragmentMyCloud extends Fragment {
         this.circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(filesToCut != null && filesToCut.size() != 0) {
-                    for(ModelFile file : filesToCut)
+                if (filesToCut != null && filesToCut.size() != 0) {
+                    for (ModelFile file : filesToCut)
                         file.setId_file_parent(FileManagerFragmentMyCloud.this.id_file_path.peek(), new IPostExecuteListener() {
                             @Override
                             public void execute(JSONObject json, String body) {
@@ -138,8 +148,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
                             }
                         });
                     filesToCut.clear();
-                }
-                else {
+                } else {
                     circle.startAnimation(animZoomOut);
                     FileManagerFragmentMyCloud.this.app.dialog = new DialogAddFileManager(app, FileManagerFragmentMyCloud.this.id_file_path.peek(), new IPostExecuteListener() {
                         @Override
@@ -162,7 +171,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
         this.circle2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(id_file_path.peek()!=-1) {
+                if (id_file_path.peek() != -1) {
                     FileManagerFragmentMyCloud.this.id_file_path.pop();
                     FileManagerFragmentMyCloud.this.refreshList();
                 }
@@ -304,6 +313,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
                 menuDrop.show();
             }
         });
+
         this.listView.setAdapter(adapter);
         this.listView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
         this.listView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
@@ -311,15 +321,13 @@ public class FileManagerFragmentMyCloud extends Fragment {
         this.adapter.setOnItemClickListener(new AdapterModelFile.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if(hasItemSelected()) {
+                if (hasItemSelected()) {
                     files.get(position).selected = !files.get(position).selected;
                     adapter.notifyItemChanged(position);
-                }
-                else if(files.get(position).directory) {
+                } else if (files.get(position).directory) {
                     FileManagerFragmentMyCloud.this.id_file_path.add(files.get(position).id);
                     refreshList();
-                }
-                else
+                } else
                     files.get(position).executeOnline(files, view);
             }
         });
@@ -428,6 +436,15 @@ public class FileManagerFragmentMyCloud extends Fragment {
                 this.circle2.setVisibility(View.VISIBLE);
             }
 
+            if(mode == Const.MODE_GRID) {
+                this.gridView.setAdapter(new AdapterGridModelFile(app, files, new IModelFileListener() {
+                    @Override
+                    public void execute(ModelFile modelFile) {
+
+                    }
+                }));
+            }
+
             this.swipeRefreshLayout.setRefreshing(false);
 		}
 	}
@@ -467,5 +484,26 @@ public class FileManagerFragmentMyCloud extends Fragment {
         for(ModelFile file:files)
             file.selected = false;
         updateAdapter();
+    }
+
+    public void sort(int item) {
+        switch (item) {
+            case 3:
+                if(this.mode == Const.MODE_GRID) {
+                    this.gridView.setVisibility(View.GONE);
+                    this.listView.setVisibility(View.VISIBLE);
+                    this.mode = Const.MODE_LIST;
+                }
+                else if(this.mode == Const.MODE_LIST) {
+                    this.gridView.setVisibility(View.VISIBLE);
+                    this.listView.setVisibility(View.GONE);
+                    this.mode = Const.MODE_GRID;
+                }
+                this.updateAdapter();
+                break;
+            default:
+                Toast.makeText(app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }

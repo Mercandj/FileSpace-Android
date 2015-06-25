@@ -42,6 +42,7 @@
     <string name="properties">Properties</string>
     <string name="talk">Talk</string>
     <string name="sort">Sort</string>
+    <string name="view">View</string>
 
     <string name="dialog_server_route">Server Route</string>
     <string name="dialog_server_url">Server URL</string>

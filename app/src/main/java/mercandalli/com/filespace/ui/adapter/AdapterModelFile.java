@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listener.IModelFileListener;
 import mercandalli.com.filespace.model.ModelFile;
 import mercandalli.com.filespace.model.ModelFileTypeENUM;
@@ -44,12 +45,12 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
 	private IModelFileListener moreListener;
-	
-	public AdapterModelFile(Application app, List<ModelFile> files, IModelFileListener moreListener) {
-		this.app = app;
-		this.files = files;
-		this.moreListener = moreListener;
-	}
+
+    public AdapterModelFile(Application app, List<ModelFile> files, IModelFileListener moreListener) {
+        this.app = app;
+        this.files = files;
+        this.moreListener = moreListener;
+    }
 
     @Override
     public AdapterModelFile.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

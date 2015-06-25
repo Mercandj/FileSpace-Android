@@ -34,4 +34,7 @@ public class Const {
 
 	public static final long SIZE_MAX_ONLINE_PICTURE_ICON           = 100000;
     public static final int WIDTH_MAX_ONLINE_PICTURE_BITMAP         = 400;
+
+	public static final int MODE_LIST = 0;
+	public static final int MODE_GRID = 1;
 }
