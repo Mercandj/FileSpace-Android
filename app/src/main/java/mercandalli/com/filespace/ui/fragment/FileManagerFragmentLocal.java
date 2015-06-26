@@ -62,7 +62,7 @@ import mercandalli.com.filespace.ui.adapter.AdapterModelFile;
 import mercandalli.com.filespace.ui.view.DividerItemDecoration;
 import mercandalli.com.filespace.util.FileUtils;
 
-public class FileManagerFragmentLocal extends FabListenerFragment {
+public class FileManagerFragmentLocal extends Fragment {
 	
 	private Application app;
 	private RecyclerView listView;
@@ -72,8 +72,7 @@ public class FileManagerFragmentLocal extends FabListenerFragment {
 	private File jarvisDirectory;
 	private TextView message;
 	private SwipeRefreshLayout swipeRefreshLayout;
-    Animation animOpen;
-    ImageButton circle, circle2;
+    Animation animOpen; ImageButton circle, circle2;
 
     private List<ModelFile> filesToCut = new ArrayList<>();
 
@@ -100,7 +99,59 @@ public class FileManagerFragmentLocal extends FabListenerFragment {
         this.listView.setLayoutManager(mLayoutManager);
         this.listView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
+
+        this.circle = (ImageButton) rootView.findViewById(R.id.circle);
+        this.circle.setVisibility(View.GONE);
+        this.circle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(filesToCut != null && filesToCut.size() != 0) {
+                    for(ModelFile file : filesToCut) {
+                        file.renameLocalByPath(jarvisDirectory.getAbsolutePath() + File.separator + file.getNameExt());
+                    }
+                    filesToCut.clear();
+                    refreshList();
+                }
+                else {
+                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
+                    final String[] menuList = { "New Folder or File" };
+                    menuAlert.setTitle("Action");
+                    menuAlert.setItems(menuList,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int item) {
+                                    switch (item) {
+                                        case 0:
+                                            FileManagerFragmentLocal.this.app.prompt("New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
+                                                @Override
+                                                public void execute(String text) {
+                                                    createFile(jarvisDirectory.getPath()+File.separator, text);
+                                                    refreshList();
+                                                }
+                                            }, getString(R.string.cancel), null, null, "Name");
+                                            break;
+                                    }
+                                }
+                            });
+                    AlertDialog menuDrop = menuAlert.create();
+                    menuDrop.show();
+                }
+                FileManagerFragmentLocal.this.updateCircle();
+            }
+        });
+
         this.animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
+        this.circle2 = (ImageButton) rootView.findViewById(R.id.circle2);
+        this.circle2.setVisibility(View.GONE);
+        this.circle2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(jarvisDirectory.getParent() != null) {
+                    FileManagerFragmentLocal.this.jarvisDirectory = new File(jarvisDirectory.getParentFile().getPath());
+                    //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
+                    FileManagerFragmentLocal.this.refreshList();
+                }
+            }
+        });
 
         this.jarvisDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().localFolderName);
 		if(!jarvisDirectory.exists())
@@ -335,6 +386,10 @@ public class FileManagerFragmentLocal extends FabListenerFragment {
         return false;
     }
 
+    public View getFab() {
+        return circle;
+    }
+
     public void goHome() {
         this.jarvisDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + app.getConfig().localFolderName);
         this.refreshList();
@@ -359,56 +414,4 @@ public class FileManagerFragmentLocal extends FabListenerFragment {
         else
             this.circle.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
     }
-
-    @Override
-    public void onClickFabOne(View circle) {
-        if(filesToCut != null && filesToCut.size() != 0) {
-            for(ModelFile file : filesToCut) {
-                file.renameLocalByPath(jarvisDirectory.getAbsolutePath() + File.separator + file.getNameExt());
-            }
-            filesToCut.clear();
-            refreshList();
-        }
-        else {
-            final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
-            final String[] menuList = { "New Folder or File" };
-            menuAlert.setTitle("Action");
-            menuAlert.setItems(menuList,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int item) {
-                            switch (item) {
-                                case 0:
-                                    FileManagerFragmentLocal.this.app.prompt("New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
-                                        @Override
-                                        public void execute(String text) {
-                                            createFile(jarvisDirectory.getPath()+File.separator, text);
-                                            refreshList();
-                                        }
-                                    }, getString(R.string.cancel), null, null, "Name");
-                                    break;
-                            }
-                        }
-                    });
-            AlertDialog menuDrop = menuAlert.create();
-            menuDrop.show();
-        }
-        FileManagerFragmentLocal.this.updateCircle();
-    }
-
-    @Override
-    public void onClickFabSecond(View circle2) {
-        if(jarvisDirectory.getParent() != null) {
-            FileManagerFragmentLocal.this.jarvisDirectory = new File(jarvisDirectory.getParentFile().getPath());
-            //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
-            FileManagerFragmentLocal.this.refreshList();
-        }
-    }
-
-    @Override
-    public void setFabOne(ImageButton circle) {
-        this.circle = circle;
-    }
-
-    @Override
-    public void setFabSecond(ImageButton circle2) { this.circle2 = circle2; }
 }

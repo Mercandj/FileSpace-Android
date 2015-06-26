@@ -63,7 +63,7 @@ import mercandalli.com.filespace.util.StringPair;
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
 
-public class FileManagerFragmentCloud extends FabListenerFragment {
+public class FileManagerFragmentCloud extends Fragment {
 
 	private Application app;
 	private RecyclerView listView;
@@ -73,8 +73,7 @@ public class FileManagerFragmentCloud extends FabListenerFragment {
 	private ProgressBar circularProgressBar;
 	private TextView message;
 	private SwipeRefreshLayout swipeRefreshLayout;
-    Animation animOpen, animZoomOut, animZoomIn;
-    ImageButton circle, circle2;
+    Animation animOpen, animZoomOut, animZoomIn; ImageButton circle, circle2;
 
     private String url = "";
     private List<ModelFile> filesToCut = new ArrayList<>();
@@ -114,9 +113,41 @@ public class FileManagerFragmentCloud extends FabListenerFragment {
 			}
 		});
 
+        this.circle = ((ImageButton) rootView.findViewById(R.id.circle));
+        this.circle.setVisibility(View.GONE);
         this.animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
         this.animZoomOut = AnimationUtils.loadAnimation(this.app, R.anim.zoom_out);
         this.animZoomIn = AnimationUtils.loadAnimation(this.app, R.anim.zoom_in);
+
+        this.circle2 = ((ImageButton) rootView.findViewById(R.id.circle2));
+        this.circle2.setVisibility(View.GONE);
+
+        this.circle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                circle.startAnimation(animZoomOut);
+                FileManagerFragmentCloud.this.app.dialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
+                    @Override
+                    public void execute(JSONObject json, String body) {
+                        if (json != null)
+                            refreshList();
+                    }
+                }, new IListener() { // Dismiss
+                    @Override
+                    public void execute() {
+                        circle.startAnimation(animZoomIn);
+                    }
+                });
+            }
+        });
+
+        this.circle2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FileManagerFragmentCloud.this.url = "";
+                FileManagerFragmentCloud.this.refreshList();
+            }
+        });
 
         this.adapter = new AdapterModelFile(app, files, new IModelFileListener() {
             @Override
@@ -364,6 +395,10 @@ public class FileManagerFragmentCloud extends FabListenerFragment {
         return false;
     }
 
+    public View getFab() {
+        return circle;
+    }
+
     public boolean hasItemSelected() {
         for(ModelFile file:files)
             if(file.selected)
@@ -383,35 +418,4 @@ public class FileManagerFragmentCloud extends FabListenerFragment {
         else
             this.circle.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
     }
-
-    @Override
-    public void onClickFabOne(final View circle) {
-        circle.startAnimation(animZoomOut);
-        FileManagerFragmentCloud.this.app.dialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
-            @Override
-            public void execute(JSONObject json, String body) {
-                if (json != null)
-                    refreshList();
-            }
-        }, new IListener() { // Dismiss
-            @Override
-            public void execute() {
-                circle.startAnimation(animZoomIn);
-            }
-        });
-    }
-
-    @Override
-    public void onClickFabSecond(final View circle2) {
-        FileManagerFragmentCloud.this.url = "";
-        FileManagerFragmentCloud.this.refreshList();
-    }
-
-    @Override
-    public void setFabOne(ImageButton circle) {
-        this.circle = circle;
-    }
-
-    @Override
-    public void setFabSecond(ImageButton circle2) { this.circle2 = circle2; }
 }

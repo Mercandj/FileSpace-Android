@@ -28,16 +28,11 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import org.json.JSONObject;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.listener.IViewListener;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.activity.ApplicationDrawer;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
@@ -51,14 +46,11 @@ public class FileManagerFragment extends Fragment {
 	
 	private static final int NB_FRAGMENT = 3;
     private static final int INIT_FRAGMENT = 1;
-	public static FabListenerFragment listFragment[] = new FabListenerFragment[NB_FRAGMENT];
+	public static Fragment listFragment[] = new Fragment[NB_FRAGMENT];
 	private Application app;
 	private ViewPager mViewPager;
 	private FileManagerFragmentPagerAdapter mPagerAdapter;
     private PagerSlidingTabStrip tabs;
-
-	ImageButton circle, circle2;
-    Animation animOpen, animZoomOut, animZoomIn;
 	
 	public FileManagerFragment() {
 		super();
@@ -94,28 +86,6 @@ public class FileManagerFragment extends Fragment {
 
         tabs.setViewPager(mViewPager);
         tabs.setIndicatorColor(getResources().getColor(R.color.white));
-
-        this.circle = ((ImageButton) rootView.findViewById(R.id.circle));
-        this.circle.setVisibility(View.GONE);
-        this.circle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listFragment[getCurrentFragmentIndex()].onClickFabOne(v);
-            }
-        });
-        this.circle2 = ((ImageButton) rootView.findViewById(R.id.circle2));
-        this.circle2.setVisibility(View.GONE);
-        this.circle2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listFragment[getCurrentFragmentIndex()].onClickFabSecond(v);
-            }
-        });
-        this.animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
-        this.animZoomOut = AnimationUtils.loadAnimation(this.app, R.anim.zoom_out);
-        this.animZoomIn = AnimationUtils.loadAnimation(this.app, R.anim.zoom_in);
-
-
 		
         return rootView;
 	}
@@ -150,15 +120,13 @@ public class FileManagerFragment extends Fragment {
 		
 		@Override
         public Fragment getItem(int i) {
-            FabListenerFragment fragment = null;
+			Fragment fragment = null;
 			switch(i) {
 			case 0:		fragment = new FileManagerFragmentCloud();  	break;
             case 1:		fragment = new FileManagerFragmentMyCloud(); 	break;
 			case 2:		fragment = new FileManagerFragmentLocal();		break;
 			default:	fragment = new FileManagerFragmentLocal();		break;
 			}
-            fragment.setFabOne(circle);
-            fragment.setFabSecond(circle2);
 			listFragment[i] = fragment;
             return fragment;
         }
@@ -278,6 +246,27 @@ public class FileManagerFragment extends Fragment {
 		}, "No", null);
 	}
 
+	public View getFab() {
+        if(listFragment[0]!=null)
+            if(listFragment[0] instanceof FileManagerFragmentCloud) {
+                FileManagerFragmentCloud fragmentFileManagerFragment = (FileManagerFragmentCloud) listFragment[0];
+                return fragmentFileManagerFragment.getFab();
+            }
+        if(listFragment.length>1)
+            if(listFragment[1]!=null)
+                if(listFragment[1] instanceof FileManagerFragmentMyCloud) {
+                    FileManagerFragmentMyCloud fragmentFileManagerFragment = (FileManagerFragmentMyCloud) listFragment[1];
+                    return fragmentFileManagerFragment.getFab();
+                }
+        if(listFragment.length>2)
+            if(listFragment[2]!=null)
+                if(listFragment[2] instanceof FileManagerFragmentLocal) {
+                    FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[2];
+                    return fragmentFileManagerFragment.getFab();
+                }
+		return null;
+	}
+
     public void goHome() {
         if(listFragment.length>2)
             if(listFragment[2]!=null)
@@ -289,7 +278,7 @@ public class FileManagerFragment extends Fragment {
 
 	public void sort() {
 		final AlertDialog.Builder menuAleart = new AlertDialog.Builder(app);
-		String[] menuList = { "Sort by name (A-Z)", "Sort by size", "Sort by date", app.getConfig().getUserFileModeView()== Const.MODE_LIST ? "Grid View" : "List View" };
+		String[] menuList = { "Sort by name (A-Z)", "Sort by size", "Sort by date", "Image View" };
 		menuAleart.setTitle(getString(R.string.view));
 		menuAleart.setItems(menuList,
 				new DialogInterface.OnClickListener() {
@@ -305,6 +294,4 @@ public class FileManagerFragment extends Fragment {
 		AlertDialog menuDrop = menuAleart.create();
 		menuDrop.show();
 	}
-
-    public View getFab() { return  this.circle; }
 }
