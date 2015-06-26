@@ -30,5 +30,4 @@ public abstract class FabListenerFragment extends Fragment {
     public abstract void onClickFabSecond(View circle2);
     public abstract void setFabOne(ImageButton circle);
     public abstract void setFabSecond(ImageButton circle2);
-    public abstract void updateFab();
 }
