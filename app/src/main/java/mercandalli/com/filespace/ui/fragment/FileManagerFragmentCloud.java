@@ -154,7 +154,7 @@ public class FileManagerFragmentCloud extends FabListenerFragment {
                                                     public void execute(JSONObject json, String body) {
                                                         if(filesToCut != null && filesToCut.size() != 0) {
                                                             filesToCut.clear();
-                                                            FileManagerFragmentCloud.this.updateFabOne();
+                                                            FileManagerFragmentCloud.this.updateFab();
                                                         }
                                                         FileManagerFragmentCloud.this.app.refreshAdapters();
                                                     }
@@ -172,7 +172,7 @@ public class FileManagerFragmentCloud extends FabListenerFragment {
                                                     public void execute(JSONObject json, String body) {
                                                         if(filesToCut != null && filesToCut.size() != 0) {
                                                             filesToCut.clear();
-                                                            FileManagerFragmentCloud.this.updateFabOne();
+                                                            FileManagerFragmentCloud.this.updateFab();
                                                         }
                                                         FileManagerFragmentCloud.this.app.refreshAdapters();
                                                     }
@@ -339,10 +339,15 @@ public class FileManagerFragmentCloud extends FabListenerFragment {
 
             this.adapter.remplaceList(this.files);
 
+            if(this.url==null)
+                this.circle2.setVisibility(View.GONE);
+            else if(this.url.equals(""))
+                this.circle2.setVisibility(View.GONE);
+            else
+                this.circle2.setVisibility(View.VISIBLE);
+
             this.swipeRefreshLayout.setRefreshing(false);
 		}
-        this.updateFabOne();
-        this.updateFabSecond();
 	}
 
     @Override
@@ -353,7 +358,7 @@ public class FileManagerFragmentCloud extends FabListenerFragment {
         }
         else if(filesToCut != null && filesToCut.size() != 0) {
             filesToCut.clear();
-            updateFabSecond();
+            updateFab();
             return true;
         }
         return false;
@@ -373,33 +378,22 @@ public class FileManagerFragmentCloud extends FabListenerFragment {
     }
 
     @Override
-    public void updateFabOne() {
-        if(this.circle != null && app != null) {
-            if (filesToCut != null && filesToCut.size() != 0)
-                this.circle.setImageDrawable(app.getDrawable(R.drawable.ic_menu_paste_holo_dark));
-            else
-                this.circle.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
-        }
-    }
+    public void updateFab() {
+        if(filesToCut != null && filesToCut.size() != 0)
+            this.circle.setImageDrawable(app.getDrawable(R.drawable.ic_menu_paste_holo_dark));
+        else
+            this.circle.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
 
-    @Override
-    public void updateFabSecond() {
-        if(this.circle2 != null) {
+        if(this.url==null)
             this.circle2.setVisibility(View.GONE);
-            /*
-            if (this.url == null)
-                this.circle2.setVisibility(View.GONE);
-            else if (this.url.equals(""))
-                this.circle2.setVisibility(View.GONE);
-            else
-                this.circle2.setVisibility(View.VISIBLE);
-            */
-        }
+        else if(this.url.equals(""))
+            this.circle2.setVisibility(View.GONE);
+        else
+            this.circle2.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void onClickFabOne(final ImageButton circle) {
-        this.circle = circle;
+    public void onClickFabOne(final View circle) {
         circle.startAnimation(animZoomOut);
         FileManagerFragmentCloud.this.app.dialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
             @Override
@@ -416,8 +410,7 @@ public class FileManagerFragmentCloud extends FabListenerFragment {
     }
 
     @Override
-    public void onClickFabSecond(final ImageButton circle2) {
-        this.circle2 = circle2;
+    public void onClickFabSecond(final View circle2) {
         FileManagerFragmentCloud.this.url = "";
         FileManagerFragmentCloud.this.refreshList();
     }

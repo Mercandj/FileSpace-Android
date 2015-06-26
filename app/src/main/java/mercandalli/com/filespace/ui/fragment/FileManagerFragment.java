@@ -81,8 +81,7 @@ public class FileManagerFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 FileManagerFragment.this.app.invalidateOptionsMenu();
-				listFragment[position].updateFabOne();
-                listFragment[position].updateFabSecond();
+				listFragment[position].updateFab();
             }
         });
 		if(isInternetConnection(app) && app.isLogged()) {
@@ -102,7 +101,7 @@ public class FileManagerFragment extends Fragment {
         this.circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listFragment[getCurrentFragmentIndex()].onClickFabOne(circle);
+                listFragment[getCurrentFragmentIndex()].onClickFabOne(v);
             }
         });
         this.circle2 = ((ImageButton) rootView.findViewById(R.id.circle2));
@@ -110,7 +109,7 @@ public class FileManagerFragment extends Fragment {
         this.circle2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listFragment[getCurrentFragmentIndex()].onClickFabSecond(circle2);
+                listFragment[getCurrentFragmentIndex()].onClickFabSecond(v);
             }
         });
         this.animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
@@ -159,8 +158,6 @@ public class FileManagerFragment extends Fragment {
 			}
             fragment.setFabOne(circle);
             fragment.setFabSecond(circle2);
-            fragment.updateFabOne();
-            fragment.updateFabSecond();
 			listFragment[i] = fragment;
             return fragment;
         }

@@ -35,7 +35,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -189,7 +188,7 @@ public class FileManagerFragmentMyCloud extends FabListenerFragment {
                                                     public void execute(JSONObject json, String body) {
                                                         if(filesToCut != null && filesToCut.size() != 0) {
                                                             filesToCut.clear();
-                                                            FileManagerFragmentMyCloud.this.updateFabOne();
+                                                            FileManagerFragmentMyCloud.this.updateFab();
                                                         }
                                                         FileManagerFragmentMyCloud.this.app.refreshAdapters();
                                                     }
@@ -207,7 +206,7 @@ public class FileManagerFragmentMyCloud extends FabListenerFragment {
                                                     public void execute(JSONObject json, String body) {
                                                         if(filesToCut != null && filesToCut.size() != 0) {
                                                             filesToCut.clear();
-                                                            FileManagerFragmentMyCloud.this.updateFabOne();
+                                                            FileManagerFragmentMyCloud.this.updateFab();
                                                         }
                                                         FileManagerFragmentMyCloud.this.app.refreshAdapters();
                                                     }
@@ -219,7 +218,7 @@ public class FileManagerFragmentMyCloud extends FabListenerFragment {
                                     case 3:
                                         FileManagerFragmentMyCloud.this.filesToCut.add(modelFile);
                                         Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
-                                        updateFabOne();
+                                        updateFab();
                                         break;
 
                                     case 4:
@@ -324,31 +323,18 @@ public class FileManagerFragmentMyCloud extends FabListenerFragment {
     }
 
     @Override
-    public void updateFabOne() {
-        if(this.circle != null && app != null ) {
+    public void updateFab() {
+        if(this.circle != null) {
             if (filesToCut != null && filesToCut.size() != 0)
                 this.circle.setImageDrawable(app.getDrawable(R.drawable.ic_menu_paste_holo_dark));
             else
                 this.circle.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
         }
-    }
-
-    @Override
-    public void updateFabSecond() {
-        if(this.circle2 != null) {
-            if(this.id_file_path==null) {
-                this.circle2.setVisibility(View.GONE);
-            }
-            else if(this.id_file_path.size()<1) {
-                this.circle2.setVisibility(View.GONE);
-            }
-            else if(this.id_file_path.peek()==-1) {
-                this.circle2.setVisibility(View.GONE);
-            }
-            else {
-                this.circle2.setVisibility(View.VISIBLE);
-                this.circle2.startAnimation(animZoomIn);
-            }
+        if(this.id_file_path.peek()==-1) {
+            this.circle2.setVisibility(View.GONE);
+        }
+        else {
+            this.circle2.setVisibility(View.VISIBLE);
         }
     }
 
@@ -407,6 +393,10 @@ public class FileManagerFragmentMyCloud extends FabListenerFragment {
 		if(this.listView!=null && this.files!=null && this.isAdded()) {
 
             this.circularProgressBar.setVisibility(View.GONE);
+            if( this.circle.getVisibility()==View.GONE ) {
+                this.circle.setVisibility(View.VISIBLE);
+                this.circle.startAnimation(animOpen);
+            }
 
 			if(this.files.size()==0) {
                 if(this.id_file_path.peek()==-1)
@@ -419,6 +409,13 @@ public class FileManagerFragmentMyCloud extends FabListenerFragment {
 				this.message.setVisibility(View.GONE);
 
             this.adapter.remplaceList(this.files);
+
+            if(this.id_file_path.peek()==-1) {
+                this.circle2.setVisibility(View.GONE);
+            }
+            else {
+                this.circle2.setVisibility(View.VISIBLE);
+            }
 
             if(mode == Const.MODE_GRID) {
 
@@ -483,7 +480,7 @@ public class FileManagerFragmentMyCloud extends FabListenerFragment {
                                                             public void execute(JSONObject json, String body) {
                                                                 if(filesToCut != null && filesToCut.size() != 0) {
                                                                     filesToCut.clear();
-                                                                    FileManagerFragmentMyCloud.this.updateFabOne();
+                                                                    FileManagerFragmentMyCloud.this.updateFab();
                                                                 }
                                                                 FileManagerFragmentMyCloud.this.app.refreshAdapters();
                                                             }
@@ -501,7 +498,7 @@ public class FileManagerFragmentMyCloud extends FabListenerFragment {
                                                             public void execute(JSONObject json, String body) {
                                                                 if(filesToCut != null && filesToCut.size() != 0) {
                                                                     filesToCut.clear();
-                                                                    FileManagerFragmentMyCloud.this.updateFabOne();
+                                                                    FileManagerFragmentMyCloud.this.updateFab();
                                                                 }
                                                                 FileManagerFragmentMyCloud.this.app.refreshAdapters();
                                                             }
@@ -513,7 +510,7 @@ public class FileManagerFragmentMyCloud extends FabListenerFragment {
                                             case 3:
                                                 FileManagerFragmentMyCloud.this.filesToCut.add(modelFile);
                                                 Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
-                                                updateFabSecond();
+                                                updateFab();
                                                 break;
 
                                             case 4:
@@ -591,8 +588,6 @@ public class FileManagerFragmentMyCloud extends FabListenerFragment {
             this.swipeRefreshLayout.setRefreshing(false);
             this.swipeRefreshLayoutGrid.setRefreshing(false);
 		}
-        updateFabOne();
-        updateFabSecond();
 	}
 
     @Override
@@ -608,7 +603,7 @@ public class FileManagerFragmentMyCloud extends FabListenerFragment {
         }
         else if(filesToCut != null && filesToCut.size() != 0) {
             filesToCut.clear();
-            updateFabSecond();
+            updateFab();
             return true;
         }
         else
@@ -645,8 +640,7 @@ public class FileManagerFragmentMyCloud extends FabListenerFragment {
     }
 
     @Override
-    public void onClickFabOne(final ImageButton circle) {
-        this.circle = circle;
+    public void onClickFabOne(final View circle) {
         if (filesToCut != null && filesToCut.size() != 0) {
             for (ModelFile file : filesToCut)
                 file.setId_file_parent(FileManagerFragmentMyCloud.this.id_file_path.peek(), new IPostExecuteListener() {
@@ -672,12 +666,11 @@ public class FileManagerFragmentMyCloud extends FabListenerFragment {
             });
         }
 
-        FileManagerFragmentMyCloud.this.updateFabOne();
+        FileManagerFragmentMyCloud.this.updateFab();
     }
 
     @Override
-    public void onClickFabSecond(ImageButton circle2) {
-        this.circle2 = circle2;
+    public void onClickFabSecond(View circle2) {
         if (id_file_path.peek() != -1) {
             FileManagerFragmentMyCloud.this.id_file_path.pop();
             FileManagerFragmentMyCloud.this.refreshList();

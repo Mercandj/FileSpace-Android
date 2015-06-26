@@ -26,10 +26,9 @@ import android.widget.ImageButton;
  * Created by Jonathan on 26/06/2015.
  */
 public abstract class FabListenerFragment extends Fragment {
-    public abstract void onClickFabOne(ImageButton circle);
-    public abstract void onClickFabSecond(ImageButton circle2);
+    public abstract void onClickFabOne(View circle);
+    public abstract void onClickFabSecond(View circle2);
     public abstract void setFabOne(ImageButton circle);
     public abstract void setFabSecond(ImageButton circle2);
-    public abstract void updateFabOne();
-    public abstract void updateFabSecond();
+    public abstract void updateFab();
 }
