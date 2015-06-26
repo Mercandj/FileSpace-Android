@@ -208,7 +208,7 @@ public class FileManagerFragmentLocal extends FabListenerFragment {
                                                         public void execute(JSONObject json, String body) {
                                                             if(filesToCut != null && filesToCut.size() != 0) {
                                                                 filesToCut.clear();
-                                                                FileManagerFragmentLocal.this.updateFab();
+                                                                FileManagerFragmentLocal.this.updateFabOne();
                                                             }
                                                             FileManagerFragmentLocal.this.app.refreshAdapters();
                                                         }
@@ -225,7 +225,7 @@ public class FileManagerFragmentLocal extends FabListenerFragment {
                                                         public void execute(JSONObject json, String body) {
                                                             if(filesToCut != null && filesToCut.size() != 0) {
                                                                 filesToCut.clear();
-                                                                FileManagerFragmentLocal.this.updateFab();
+                                                                FileManagerFragmentLocal.this.updateFabOne();
                                                             }
                                                             FileManagerFragmentLocal.this.app.refreshAdapters();
                                                         }
@@ -236,7 +236,7 @@ public class FileManagerFragmentLocal extends FabListenerFragment {
                                         case 2:
                                             FileManagerFragmentLocal.this.filesToCut.add(modelFile);
                                             Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
-                                            updateFab();
+                                            updateFabOne();
                                             break;
                                         case 3:
                                             FileManagerFragmentLocal.this.app.alert(
@@ -329,7 +329,7 @@ public class FileManagerFragmentLocal extends FabListenerFragment {
         }
         else if(filesToCut != null && filesToCut.size() != 0) {
             filesToCut.clear();
-            updateFab();
+            updateFabOne();
             return true;
         }
         return false;
@@ -354,22 +354,28 @@ public class FileManagerFragmentLocal extends FabListenerFragment {
     }
 
     @Override
-    public void updateFab() {
-        if(filesToCut != null && filesToCut.size() != 0)
-            this.circle.setImageDrawable(app.getDrawable(R.drawable.ic_menu_paste_holo_dark));
-        else
-            this.circle.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
-
-        if(this.jarvisDirectory==null)
-            this.circle2.setVisibility(View.GONE);
-            /*else if(this.jarvisDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + app.getConfig().localFolderName))
-                this.circle2.setVisibility(View.GONE);*/
-        else
-            this.circle2.setVisibility(View.VISIBLE);
+    public void updateFabOne() {
+        if(this.circle != null && app!=null) {
+            if (filesToCut != null && filesToCut.size() != 0)
+                this.circle.setImageDrawable(app.getDrawable(R.drawable.ic_menu_paste_holo_dark));
+            else
+                this.circle.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
+        }
     }
 
     @Override
-    public void onClickFabOne(View circle) {
+    public void updateFabSecond() {
+        if(this.circle2 != null) {
+            if (this.jarvisDirectory == null)
+                this.circle2.setVisibility(View.GONE);
+            else
+                this.circle2.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onClickFabOne(ImageButton circle) {
+        this.circle = circle;
         if(filesToCut != null && filesToCut.size() != 0) {
             for(ModelFile file : filesToCut) {
                 file.renameLocalByPath(jarvisDirectory.getAbsolutePath() + File.separator + file.getNameExt());
@@ -400,11 +406,12 @@ public class FileManagerFragmentLocal extends FabListenerFragment {
             AlertDialog menuDrop = menuAlert.create();
             menuDrop.show();
         }
-        FileManagerFragmentLocal.this.updateFab();
+        FileManagerFragmentLocal.this.updateFabOne();
     }
 
     @Override
-    public void onClickFabSecond(View circle2) {
+    public void onClickFabSecond(ImageButton circle2) {
+        this.circle2 = circle2;
         if(jarvisDirectory.getParent() != null) {
             FileManagerFragmentLocal.this.jarvisDirectory = new File(jarvisDirectory.getParentFile().getPath());
             //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
