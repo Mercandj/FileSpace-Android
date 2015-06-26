@@ -111,6 +111,8 @@ public class FileManagerFragmentMyCloud extends Fragment {
         this.gridView = (GridView) rootView.findViewById(R.id.gridView);
         this.gridView.setVisibility(View.GONE);
 
+        this.mode = ((app.getConfig().getUserFileModeView() > -1) ? app.getConfig().getUserFileModeView() : Const.MODE_LIST);
+
         resetPath();
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
@@ -380,7 +382,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
 		List<StringPair> parameters = new ArrayList<>();
 		if(search!=null)
 			parameters.add(new StringPair("search", ""+search));
-        parameters.add(new StringPair("id_file_parent", ""+this.id_file_path.peek()));
+        parameters.add(new StringPair("id_file_parent", "" + this.id_file_path.peek()));
         parameters.add(new StringPair("mine", "" + true));
 
         if(isInternetConnection(app) && app.isLogged())
@@ -452,6 +454,11 @@ public class FileManagerFragmentMyCloud extends Fragment {
             }
 
             if(mode == Const.MODE_GRID) {
+                this.gridView.setVisibility(View.VISIBLE);
+                this.swipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
+                this.listView.setVisibility(View.GONE);
+                this.swipeRefreshLayout.setVisibility(View.GONE);
+
                 this.gridView.setAdapter(new AdapterGridModelFile(app, files));
                 this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -606,6 +613,12 @@ public class FileManagerFragmentMyCloud extends Fragment {
                     }
                 });
             }
+            else {
+                this.gridView.setVisibility(View.GONE);
+                this.swipeRefreshLayoutGrid.setVisibility(View.GONE);
+                this.listView.setVisibility(View.VISIBLE);
+                this.swipeRefreshLayout.setVisibility(View.VISIBLE);
+            }
 
             this.swipeRefreshLayout.setRefreshing(false);
             this.swipeRefreshLayoutGrid.setRefreshing(false);
@@ -652,20 +665,11 @@ public class FileManagerFragmentMyCloud extends Fragment {
     public void sort(int item) {
         switch (item) {
             case 3:
-                if(this.mode == Const.MODE_GRID) {
-                    this.gridView.setVisibility(View.GONE);
-                    this.swipeRefreshLayoutGrid.setVisibility(View.GONE);
-                    this.listView.setVisibility(View.VISIBLE);
-                    this.swipeRefreshLayout.setVisibility(View.VISIBLE);
-                    this.mode = Const.MODE_LIST;
-                }
-                else if(this.mode == Const.MODE_LIST) {
-                    this.gridView.setVisibility(View.VISIBLE);
-                    this.swipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
-                    this.listView.setVisibility(View.GONE);
-                    this.swipeRefreshLayout.setVisibility(View.GONE);
+                if(this.mode == Const.MODE_LIST)
                     this.mode = Const.MODE_GRID;
-                }
+                else
+                    this.mode = Const.MODE_LIST;
+                app.getConfig().setUserFileModeView(mode);
                 this.updateAdapter();
                 break;
             default:

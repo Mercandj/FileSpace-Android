@@ -73,6 +73,7 @@ public class Config {
         INTEGER_LAST_TAB				        (0, 	"int_last_tab_1"			            ),
         INTEGER_USER_ID     	                (-1, 	"int_user_id_1"     		            ),
         INTEGER_USER_ID_FILE_PROFILE_PICTURE    (-1, 	"int_user_id_file_profile_picture_1"   	),
+        INTEGER_USER_FILE_MODE_VIEW             (-1, 	"int_user_file_mode_view_1"             ),
         ;
 
         int value;
@@ -272,6 +273,17 @@ public class Config {
         }
     }
 
+    public int getUserFileModeView() {
+        return ENUM_Int.INTEGER_USER_FILE_MODE_VIEW.value;
+    }
+
+    public void setUserFileModeView(int value) {
+        if(ENUM_Int.INTEGER_USER_FILE_MODE_VIEW.value!=value) {
+            ENUM_Int.INTEGER_USER_FILE_MODE_VIEW.value = value;
+            save();
+        }
+    }
+
     public boolean isUserAdmin() {
         return ENUM_Boolean.BOOLEAN_USER_ADMIN.value;
     }
@@ -282,7 +294,7 @@ public class Config {
             save();
         }
     }
-    
+
     public boolean isHomeWelcomeMessage() {
         return ENUM_Boolean.BOOLEAN_HOME_WELCOME_MESSAGE.value;
     }
@@ -347,7 +359,7 @@ public class Config {
         this.load();
         return listServerMessage_1;
     }
-    
+
     /**
      * Reset the saved values
      * (When the user log out)

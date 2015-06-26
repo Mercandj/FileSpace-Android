@@ -33,11 +33,12 @@ import android.widget.Toast;
 import org.json.JSONObject;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.listener.IListener;
+import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.activity.ApplicationDrawer;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
-import mercandalli.com.filespace.listener.IListener;
-import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.ui.view.PagerSlidingTabStrip;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
@@ -76,12 +77,12 @@ public class FileManagerFragment extends Fragment {
             }
         });
 		if(isInternetConnection(app) && app.isLogged()) {
-			mViewPager.setOffscreenPageLimit(this.NB_FRAGMENT - 1);
-			mViewPager.setCurrentItem(this.INIT_FRAGMENT);
+			mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
+			mViewPager.setCurrentItem(INIT_FRAGMENT);
 		}
 		else {
-			mViewPager.setOffscreenPageLimit(this.NB_FRAGMENT);
-			mViewPager.setCurrentItem(this.INIT_FRAGMENT + 1);
+			mViewPager.setOffscreenPageLimit(NB_FRAGMENT);
+			mViewPager.setCurrentItem(INIT_FRAGMENT + 1);
 		}
 
         tabs.setViewPager(mViewPager);
@@ -278,7 +279,7 @@ public class FileManagerFragment extends Fragment {
 
 	public void sort() {
 		final AlertDialog.Builder menuAleart = new AlertDialog.Builder(app);
-		String[] menuList = { "Sort by name (A-Z)", "Sort by size", "Sort by date", "Image View" };
+		String[] menuList = { "Sort by name (A-Z)", "Sort by size", "Sort by date", app.getConfig().getUserFileModeView()== Const.MODE_LIST ? "Grid View" : "List View" };
 		menuAleart.setTitle(getString(R.string.view));
 		menuAleart.setItems(menuList,
 				new DialogInterface.OnClickListener() {
