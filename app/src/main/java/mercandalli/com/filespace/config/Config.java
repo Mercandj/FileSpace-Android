@@ -73,6 +73,7 @@ public class Config {
         INTEGER_LAST_TAB				        (0, 	"int_last_tab_1"			            ),
         INTEGER_USER_ID     	                (-1, 	"int_user_id_1"     		            ),
         INTEGER_USER_ID_FILE_PROFILE_PICTURE    (-1, 	"int_user_id_file_profile_picture_1"   	),
+        INTEGER_USER_FILE_MODE_VIEW             (-1, 	"int_user_file_mode_view_1"             ),
         ;
 
         int value;
@@ -268,6 +269,17 @@ public class Config {
     public void setUserIdFileProfilePicture(int value) {
         if(ENUM_Int.INTEGER_USER_ID_FILE_PROFILE_PICTURE.value!=value) {
             ENUM_Int.INTEGER_USER_ID_FILE_PROFILE_PICTURE.value = value;
+            save();
+        }
+    }
+
+    public int getUserFileModeView() {
+        return ENUM_Int.INTEGER_USER_FILE_MODE_VIEW.value;
+    }
+
+    public void setUserFileModeView(int value) {
+        if(ENUM_Int.INTEGER_USER_FILE_MODE_VIEW.value!=value) {
+            ENUM_Int.INTEGER_USER_FILE_MODE_VIEW.value = value;
             save();
         }
     }

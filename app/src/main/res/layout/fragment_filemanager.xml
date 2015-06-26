@@ -25,4 +25,37 @@
 
     </android.support.v4.view.ViewPager>
 
+    <ImageButton
+        android:id="@+id/circle"
+        android:transitionName="transitionFab"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="25dp"
+        android:background="@drawable/circle_button_ripple"
+        android:elevation="@dimen/circle_button_elevation_high"
+        android:padding="15dp"
+        android:scaleType="fitXY"
+        android:src="@android:drawable/ic_input_add"
+        android:stateListAnimator="@anim/circle_button_elevation"
+        android:tint="@android:color/white" />
+
+    <ImageButton
+        android:id="@+id/circle2"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/circle_button_ripple"
+        android:elevation="@dimen/circle_button_elevation_high"
+        android:padding="15dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/arrowup"
+        android:stateListAnimator="@anim/circle_button_elevation"
+        android:tint="@android:color/white"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_above="@+id/circle"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>

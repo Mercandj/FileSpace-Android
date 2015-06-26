@@ -53,6 +53,7 @@ import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IModelFileListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.listener.IStringListener;
+import mercandalli.com.filespace.listener.IViewListener;
 import mercandalli.com.filespace.model.ModelFile;
 import mercandalli.com.filespace.model.ModelFileTypeENUM;
 import mercandalli.com.filespace.net.TaskGet;
@@ -68,7 +69,7 @@ import mercandalli.com.filespace.util.StringPair;
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
 
-public class FileManagerFragmentMyCloud extends Fragment {
+public class FileManagerFragmentMyCloud extends FabListenerFragment {
 
 	private Application app;
 	private RecyclerView listView;
@@ -79,7 +80,8 @@ public class FileManagerFragmentMyCloud extends Fragment {
 	private ProgressBar circularProgressBar;
 	private TextView message;
 	private SwipeRefreshLayout swipeRefreshLayout, swipeRefreshLayoutGrid;
-    Animation animOpen, animZoomOut, animZoomIn; ImageButton circle, circle2;
+    Animation animOpen, animZoomOut, animZoomIn;
+    ImageButton circle, circle2;
 
     private int mode = Const.MODE_LIST;
 
@@ -111,6 +113,8 @@ public class FileManagerFragmentMyCloud extends Fragment {
         this.gridView = (GridView) rootView.findViewById(R.id.gridView);
         this.gridView.setVisibility(View.GONE);
 
+        this.mode = ((app.getConfig().getUserFileModeView() > -1) ? app.getConfig().getUserFileModeView() : Const.MODE_LIST);
+
         resetPath();
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
@@ -141,56 +145,9 @@ public class FileManagerFragmentMyCloud extends Fragment {
             }
         });
 
-        this.circle = ((ImageButton) rootView.findViewById(R.id.circle));
-        this.circle.setVisibility(View.GONE);
         this.animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
         this.animZoomOut = AnimationUtils.loadAnimation(this.app, R.anim.zoom_out);
         this.animZoomIn = AnimationUtils.loadAnimation(this.app, R.anim.zoom_in);
-
-        this.circle2 = ((ImageButton) rootView.findViewById(R.id.circle2));
-        this.circle2.setVisibility(View.GONE);
-
-        this.circle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (filesToCut != null && filesToCut.size() != 0) {
-                    for (ModelFile file : filesToCut)
-                        file.setId_file_parent(FileManagerFragmentMyCloud.this.id_file_path.peek(), new IPostExecuteListener() {
-                            @Override
-                            public void execute(JSONObject json, String body) {
-                                FileManagerFragmentMyCloud.this.app.refreshAdapters();
-                            }
-                        });
-                    filesToCut.clear();
-                } else {
-                    circle.startAnimation(animZoomOut);
-                    FileManagerFragmentMyCloud.this.app.dialog = new DialogAddFileManager(app, FileManagerFragmentMyCloud.this.id_file_path.peek(), new IPostExecuteListener() {
-                        @Override
-                        public void execute(JSONObject json, String body) {
-                            if (json != null)
-                                refreshList();
-                        }
-                    }, new IListener() { // Dismiss
-                        @Override
-                        public void execute() {
-                            circle.startAnimation(animZoomIn);
-                        }
-                    });
-                }
-
-                FileManagerFragmentMyCloud.this.updateCircle();
-            }
-        });
-
-        this.circle2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (id_file_path.peek() != -1) {
-                    FileManagerFragmentMyCloud.this.id_file_path.pop();
-                    FileManagerFragmentMyCloud.this.refreshList();
-                }
-            }
-        });
 
         this.adapter = new AdapterModelFile(app, files, new IModelFileListener() {
             @Override
@@ -366,10 +323,12 @@ public class FileManagerFragmentMyCloud extends Fragment {
     }
 
     public void updateCircle() {
-        if(filesToCut != null && filesToCut.size() != 0)
-            this.circle.setImageDrawable(app.getDrawable(R.drawable.ic_menu_paste_holo_dark));
-        else
-            this.circle.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
+        if(this.circle != null) {
+            if (filesToCut != null && filesToCut.size() != 0)
+                this.circle.setImageDrawable(app.getDrawable(R.drawable.ic_menu_paste_holo_dark));
+            else
+                this.circle.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
+        }
     }
 
 	public void refreshList() {
@@ -452,6 +411,12 @@ public class FileManagerFragmentMyCloud extends Fragment {
             }
 
             if(mode == Const.MODE_GRID) {
+
+                this.gridView.setVisibility(View.VISIBLE);
+                this.swipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
+                this.listView.setVisibility(View.GONE);
+                this.swipeRefreshLayout.setVisibility(View.GONE);
+
                 this.gridView.setAdapter(new AdapterGridModelFile(app, files));
                 this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -606,6 +571,12 @@ public class FileManagerFragmentMyCloud extends Fragment {
                     }
                 });
             }
+            else {
+                this.gridView.setVisibility(View.GONE);
+                this.swipeRefreshLayoutGrid.setVisibility(View.GONE);
+                this.listView.setVisibility(View.VISIBLE);
+                this.swipeRefreshLayout.setVisibility(View.VISIBLE);
+            }
 
             this.swipeRefreshLayout.setRefreshing(false);
             this.swipeRefreshLayoutGrid.setRefreshing(false);
@@ -652,20 +623,11 @@ public class FileManagerFragmentMyCloud extends Fragment {
     public void sort(int item) {
         switch (item) {
             case 3:
-                if(this.mode == Const.MODE_GRID) {
-                    this.gridView.setVisibility(View.GONE);
-                    this.swipeRefreshLayoutGrid.setVisibility(View.GONE);
-                    this.listView.setVisibility(View.VISIBLE);
-                    this.swipeRefreshLayout.setVisibility(View.VISIBLE);
-                    this.mode = Const.MODE_LIST;
-                }
-                else if(this.mode == Const.MODE_LIST) {
-                    this.gridView.setVisibility(View.VISIBLE);
-                    this.swipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
-                    this.listView.setVisibility(View.GONE);
-                    this.swipeRefreshLayout.setVisibility(View.GONE);
+                if(this.mode == Const.MODE_LIST)
                     this.mode = Const.MODE_GRID;
-                }
+                else
+                    this.mode = Const.MODE_LIST;
+                app.getConfig().setUserFileModeView(mode);
                 this.updateAdapter();
                 break;
             default:
@@ -673,4 +635,50 @@ public class FileManagerFragmentMyCloud extends Fragment {
                 break;
         }
     }
+
+    @Override
+    public void onClickFabOne(final View circle) {
+        if (filesToCut != null && filesToCut.size() != 0) {
+            for (ModelFile file : filesToCut)
+                file.setId_file_parent(FileManagerFragmentMyCloud.this.id_file_path.peek(), new IPostExecuteListener() {
+                    @Override
+                    public void execute(JSONObject json, String body) {
+                        FileManagerFragmentMyCloud.this.app.refreshAdapters();
+                    }
+                });
+            filesToCut.clear();
+        } else {
+            circle.startAnimation(animZoomOut);
+            FileManagerFragmentMyCloud.this.app.dialog = new DialogAddFileManager(app, FileManagerFragmentMyCloud.this.id_file_path.peek(), new IPostExecuteListener() {
+                @Override
+                public void execute(JSONObject json, String body) {
+                    if (json != null)
+                        refreshList();
+                }
+            }, new IListener() { // Dismiss
+                @Override
+                public void execute() {
+                    circle.startAnimation(animZoomIn);
+                }
+            });
+        }
+
+        FileManagerFragmentMyCloud.this.updateCircle();
+    }
+
+    @Override
+    public void onClickFabSecond(View circle2) {
+        if (id_file_path.peek() != -1) {
+            FileManagerFragmentMyCloud.this.id_file_path.pop();
+            FileManagerFragmentMyCloud.this.refreshList();
+        }
+    }
+
+    @Override
+    public void setFabOne(ImageButton circle) {
+        this.circle = circle;
+    }
+
+    @Override
+    public void setFabSecond(ImageButton circle2) { this.circle2 = circle2; }
 }
