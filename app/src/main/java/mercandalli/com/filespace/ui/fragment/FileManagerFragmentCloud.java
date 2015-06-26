@@ -154,7 +154,7 @@ public class FileManagerFragmentCloud extends FabListenerFragment {
                                                     public void execute(JSONObject json, String body) {
                                                         if(filesToCut != null && filesToCut.size() != 0) {
                                                             filesToCut.clear();
-                                                            FileManagerFragmentCloud.this.updateCircle();
+                                                            FileManagerFragmentCloud.this.updateFab();
                                                         }
                                                         FileManagerFragmentCloud.this.app.refreshAdapters();
                                                     }
@@ -172,7 +172,7 @@ public class FileManagerFragmentCloud extends FabListenerFragment {
                                                     public void execute(JSONObject json, String body) {
                                                         if(filesToCut != null && filesToCut.size() != 0) {
                                                             filesToCut.clear();
-                                                            FileManagerFragmentCloud.this.updateCircle();
+                                                            FileManagerFragmentCloud.this.updateFab();
                                                         }
                                                         FileManagerFragmentCloud.this.app.refreshAdapters();
                                                     }
@@ -358,7 +358,7 @@ public class FileManagerFragmentCloud extends FabListenerFragment {
         }
         else if(filesToCut != null && filesToCut.size() != 0) {
             filesToCut.clear();
-            updateCircle();
+            updateFab();
             return true;
         }
         return false;
@@ -377,11 +377,19 @@ public class FileManagerFragmentCloud extends FabListenerFragment {
         updateAdapter();
     }
 
-    public void updateCircle() {
+    @Override
+    public void updateFab() {
         if(filesToCut != null && filesToCut.size() != 0)
             this.circle.setImageDrawable(app.getDrawable(R.drawable.ic_menu_paste_holo_dark));
         else
             this.circle.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
+
+        if(this.url==null)
+            this.circle2.setVisibility(View.GONE);
+        else if(this.url.equals(""))
+            this.circle2.setVisibility(View.GONE);
+        else
+            this.circle2.setVisibility(View.VISIBLE);
     }
 
     @Override

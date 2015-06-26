@@ -81,6 +81,7 @@ public class FileManagerFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 FileManagerFragment.this.app.invalidateOptionsMenu();
+				listFragment[position].updateFab();
             }
         });
 		if(isInternetConnection(app) && app.isLogged()) {
@@ -114,8 +115,6 @@ public class FileManagerFragment extends Fragment {
         this.animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
         this.animZoomOut = AnimationUtils.loadAnimation(this.app, R.anim.zoom_out);
         this.animZoomIn = AnimationUtils.loadAnimation(this.app, R.anim.zoom_in);
-
-
 		
         return rootView;
 	}
