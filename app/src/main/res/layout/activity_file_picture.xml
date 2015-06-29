@@ -6,7 +6,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <ImageView
         android:layout_width="match_parent"
@@ -64,9 +65,10 @@
         android:elevation="@dimen/circle_button_elevation_high"
         android:padding="15dp"
         android:scaleType="fitXY"
-        android:src="@android:drawable/ic_input_add"
+        android:src="@drawable/ic_menu_send_white"
         android:stateListAnimator="@anim/circle_button_elevation"
-        android:tint="@android:color/white" />
+        android:tint="@android:color/white"
+        />
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"

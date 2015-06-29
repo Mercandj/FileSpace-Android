@@ -61,7 +61,7 @@
     <string name="tab_files">Files</string>
     <string name="tab_talks">Talks</string>
     <string name="tab_robotics">Robotics</string>
-    <string name="tab_data">Data</string>
+    <string name="tab_admin">Admin</string>
     <string name="tab_request">Request</string>
     <string name="tab_settings">Settings</string>
     <string name="tab_log_out">Log out</string>

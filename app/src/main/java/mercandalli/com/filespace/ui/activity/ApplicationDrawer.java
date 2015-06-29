@@ -19,9 +19,7 @@
  */
 package mercandalli.com.filespace.ui.activity;
 
-import android.app.AlertDialog;
 import android.app.FragmentManager;
-import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -38,7 +36,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.Stack;
 
@@ -163,7 +160,7 @@ public abstract class ApplicationDrawer extends Application {
 
             // Tab 6
             navDrawerItems.add(
-                    new NavDrawerItem(getString(R.string.tab_data), new IListener() {
+                    new NavDrawerItem(getString(R.string.tab_admin), new IListener() {
                         @Override
                         public void execute() {
                             fragment = new InformationFragment(ApplicationDrawer.this);
