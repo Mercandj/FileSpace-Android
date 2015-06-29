@@ -94,4 +94,9 @@ public class TimeUtils {
         return dateFormatGmt.format(new Date(time)).toString();
     }
 
+    public static String getDate(Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return dateFormat.format(date).toString();
+    }
+
 }

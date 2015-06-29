@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.util.GpsUtils;
 import mercandalli.com.filespace.util.HashUtils;
 import mercandalli.com.filespace.ui.activity.ActivityMain;
 import mercandalli.com.filespace.ui.activity.Application;
@@ -150,6 +151,10 @@ public class InscriptionFragment extends Fragment {
         List<StringPair> parameters = new ArrayList<>();
         parameters.add(new StringPair("username", "" + user.username));
         parameters.add(new StringPair("password", "" + user.password));
+        parameters.add(new StringPair("latitude", "" + GpsUtils.getLatitude(getActivity())));
+        parameters.add(new StringPair("longitude", "" + GpsUtils.getLongitude(getActivity())));
+        parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
+
         if(isInternetConnection(app))
             (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
                 @Override

@@ -17,9 +17,20 @@
         android:layout_marginLeft="15dp"
         android:contentDescription="@string/image_description"
         android:src="@drawable/ic_user"
-        android:layout_marginTop="29dp"
+        android:layout_marginTop="15dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/my_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:scrollbars="vertical"
+        android:layout_below="@+id/icon"
+        android:layout_marginTop="15dp" />
 
     <ProgressBar
         android:id="@+id/circularProgressBar"
@@ -27,6 +38,5 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
-
 
 </RelativeLayout>

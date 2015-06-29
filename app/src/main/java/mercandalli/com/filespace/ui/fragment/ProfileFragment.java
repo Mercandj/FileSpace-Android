@@ -21,6 +21,8 @@ package mercandalli.com.filespace.ui.fragment;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,14 +33,19 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
+import mercandalli.com.filespace.model.ModelSetting;
 import mercandalli.com.filespace.model.ModelUser;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.ui.adapter.AdapterModelSetting;
+import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.StringPair;
+import mercandalli.com.filespace.util.TimeUtils;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
@@ -52,6 +59,10 @@ public class ProfileFragment extends Fragment {
     private ProgressBar circularProgressBar;
     private ModelUser user;
 
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    List<ModelSetting> list = new ArrayList<>();
+
     public ProfileFragment(Application app) {
         this.app = app;
     }
@@ -62,6 +73,11 @@ public class ProfileFragment extends Fragment {
 
         this.circularProgressBar = (ProgressBar) this.rootView.findViewById(R.id.circularProgressBar);
         this.circularProgressBar.setVisibility(View.VISIBLE);
+
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(mLayoutManager);
 
         Bitmap icon_profile_online = app.getConfig().getUserProfilePicture();
         if(icon_profile_online!=null)
@@ -93,6 +109,18 @@ public class ProfileFragment extends Fragment {
                                 if (json != null) {
                                     if (json.has("result")) {
                                         user = new ModelUser(app, json.getJSONObject("result"));
+                                        list.clear();
+                                        list.add(new ModelSetting(app, "Username", "" + user.username));
+                                        list.add(new ModelSetting(app, "Files size", "" + FileUtils.humanReadableByteCount(user.size_files)));
+                                        list.add(new ModelSetting(app, "Files count", "" + user.num_files));
+                                        list.add(new ModelSetting(app, "Creation date", "" + TimeUtils.getDate(user.date_creation)));
+                                        list.add(new ModelSetting(app, "Connection date", "" + TimeUtils.getDate(user.date_last_connection)));
+                                        if(user.isAdmin()) {
+                                            list.add(new ModelSetting(app, "Admin", "" + user.isAdmin()));
+                                            list.add(new ModelSetting(app, "Longitude", "" + user.longitude));
+                                            list.add(new ModelSetting(app, "Latitude", "" + user.latitude));
+                                            list.add(new ModelSetting(app, "Altitude", "" + user.altitude));
+                                        }
                                     }
                                 }
                                 else
@@ -110,5 +138,20 @@ public class ProfileFragment extends Fragment {
 
     public void updateView() {
         this.circularProgressBar.setVisibility(View.GONE);
+
+        if(recyclerView!=null && list!=null) {
+            AdapterModelSetting adapter = new AdapterModelSetting(app, list);
+            adapter.setOnItemClickListener(new AdapterModelSetting.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    if (position < list.size()) {
+                        switch (position) {
+                        }
+
+                    }
+                }
+            });
+            recyclerView.setAdapter(adapter);
+        }
     }
 }

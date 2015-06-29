@@ -51,6 +51,7 @@ public class ModelUser extends Model {
     public long size_files, file_profile_picture_size = -1, num_files;
     private boolean admin = false;
     public Bitmap bitmap;
+    public double longitude, latitude, altitude;
 	
 	public ModelUser() {
 		
@@ -91,6 +92,14 @@ public class ModelUser extends Model {
                 this.file_profile_picture_size = json.getLong("file_profile_picture_size");
             if(json.has("num_files") && !json.isNull("num_files"))
                 this.num_files = json.getLong("num_files");
+
+            if(json.has("longitude") && !json.isNull("longitude"))
+                this.longitude = json.getDouble("longitude");
+            if(json.has("latitude") && !json.isNull("latitude"))
+                this.latitude = json.getDouble("latitude");
+            if(json.has("altitude") && !json.isNull("altitude"))
+                this.altitude = json.getDouble("altitude");
+
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (ParseException e) {
