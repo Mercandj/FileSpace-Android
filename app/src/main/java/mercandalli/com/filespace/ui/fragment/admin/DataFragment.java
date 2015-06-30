@@ -1,23 +1,23 @@
 /**
- * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
+ * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
  *
- * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
+ * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  *
  * LICENSE:
  *
- * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
+ * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
  *
- * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
  *
  * @author Jonathan Mercandalli
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
+ * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package mercandalli.com.filespace.ui.fragment;
+package mercandalli.com.filespace.ui.fragment.admin;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -50,12 +50,13 @@ import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelInformation;
 import mercandalli.com.filespace.net.TaskGet;
+import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.util.StringPair;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
 
-public class InformationFragment extends Fragment {
+public class DataFragment extends Fragment {
 
 	Application app;
 	private View rootView;
@@ -66,25 +67,20 @@ public class InformationFragment extends Fragment {
     List<ModelInformation> list;
     private ProgressBar circulerProgressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
-        
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (Application) activity;
     }
-    
-    public InformationFragment() {
-    	super();
-	}
 
-	public InformationFragment(Application app) {
-		super();
-		this.app = app;
-	}
+    public DataFragment() {
+        super();
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		rootView = inflater.inflate(R.layout.fragment_information, container, false);
+		rootView = inflater.inflate(R.layout.fragment_admin_data, container, false);
 		circulerProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
 		
 		recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
@@ -125,7 +121,7 @@ public class InformationFragment extends Fragment {
                         @Override
                         public void execute(JSONObject json, String body) {
                             list = new ArrayList<ModelInformation>();
-                            list.add(new ModelInformation("Informations", Const.TAB_VIEW_TYPE_SECTION));
+                            list.add(new ModelInformation("Server Data", Const.TAB_VIEW_TYPE_SECTION));
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {

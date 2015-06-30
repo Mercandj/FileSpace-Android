@@ -25,7 +25,7 @@ import android.util.Log;
 import android.view.View;
 
 import mercandalli.com.filespace.notificationpush.NotificationPush;
-import mercandalli.com.filespace.ui.fragment.FileManagerFragment;
+import mercandalli.com.filespace.ui.fragment.file.FileManagerFragment;
 import mercandalli.com.filespace.ui.fragment.TalkManagerFragment;
 
 public class ActivityMain extends ApplicationDrawer {

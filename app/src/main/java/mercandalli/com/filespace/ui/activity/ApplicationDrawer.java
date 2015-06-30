@@ -42,10 +42,10 @@ import java.util.Stack;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listener.IListener;
-import mercandalli.com.filespace.ui.fragment.FileManagerFragment;
+import mercandalli.com.filespace.ui.fragment.admin.AdminFragment;
+import mercandalli.com.filespace.ui.fragment.file.FileManagerFragment;
 import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.ui.fragment.HomeFragment;
-import mercandalli.com.filespace.ui.fragment.InformationFragment;
 import mercandalli.com.filespace.ui.fragment.ProfileFragment;
 import mercandalli.com.filespace.ui.fragment.RequestFragment;
 import mercandalli.com.filespace.ui.fragment.RoboticsFragment;
@@ -163,7 +163,7 @@ public abstract class ApplicationDrawer extends Application {
                     new NavDrawerItem(getString(R.string.tab_admin), new IListener() {
                         @Override
                         public void execute() {
-                            fragment = new InformationFragment(ApplicationDrawer.this);
+                            fragment = new AdminFragment(ApplicationDrawer.this);
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                         }

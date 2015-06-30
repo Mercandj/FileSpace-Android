@@ -141,7 +141,7 @@ public class ModelUser extends Model {
     public String getAdapterSubtitle() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
         String date = dateFormat.format(date_last_connection.getTime());
-        return "#" + this.id + "   " + date + "   " + FileUtils.humanReadableByteCount(size_files);
+        return date + "   " + FileUtils.humanReadableByteCount(size_files) + "   " + this.num_files + " file" + (this.num_files>1?"s":"");
     }
 	
 	public String getAccessLogin() {

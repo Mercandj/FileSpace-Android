@@ -17,7 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
  */
-package mercandalli.com.filespace.ui.fragment;
+package mercandalli.com.filespace.ui.fragment.file;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -61,6 +61,7 @@ import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.adapter.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapter.AdapterModelFile;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
+import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.ui.view.DividerItemDecoration;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.StringPair;

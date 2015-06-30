@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Personal Project : Control server
+		MERCANDALLI Jonathan
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="20dp">
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="15dp"
+            android:ems="10"
+            android:hint="@string/dialog_username"
+            android:padding="10dp"
+            android:textSize="22sp"
+            android:lines="1"
+            android:maxLines="1"
+            android:singleLine="true">
+        </EditText>
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/username"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="@string/dialog_password"
+            android:inputType="textPassword"
+            android:padding="10dp"
+            android:textSize="22sp" >
+        </EditText>
+
+    </RelativeLayout>
+
+    <ImageButton
+        android:id="@+id/circle"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="25dp"
+        android:background="@drawable/circle_button_ripple"
+        android:elevation="@dimen/circle_button_elevation_high"
+        android:padding="15dp"
+        android:scaleType="fitXY"
+        android:src="@android:drawable/ic_input_add"
+        android:stateListAnimator="@anim/circle_button_elevation"
+        android:tint="@android:color/white" />
+
+</RelativeLayout>
