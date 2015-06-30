@@ -275,8 +275,13 @@ public class ActivityRegisterLogin extends Application {
                                 JSONObject user = json.getJSONObject("user");
                                 if (user.has("id"))
                                     ActivityRegisterLogin.this.getConfig().setUserId(user.getInt("id"));
-                                if (user.has("admin"))
-                                    ActivityRegisterLogin.this.getConfig().setUserAdmin(user.getBoolean("admin"));
+                                if (user.has("admin")) {
+                                    Object admin_obj = user.get("admin");
+                                    if(admin_obj instanceof Integer)
+                                        ActivityRegisterLogin.this.getConfig().setUserAdmin(user.getInt("admin") == 1);
+                                    else if(admin_obj instanceof Boolean)
+                                        ActivityRegisterLogin.this.getConfig().setUserAdmin(user.getBoolean("admin"));
+                                }
                                 if (user.has("id_file_profile_picture"))
                                     ActivityRegisterLogin.this.getConfig().setUserIdFileProfilePicture(user.getInt("id_file_profile_picture"));
                             }

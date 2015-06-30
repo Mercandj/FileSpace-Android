@@ -199,7 +199,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                         }
                     }
                 },
-                "Talks",
+                "Community",
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

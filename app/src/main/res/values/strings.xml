@@ -59,7 +59,7 @@
 
     <string name="tab_home">Home</string>
     <string name="tab_files">Files</string>
-    <string name="tab_talks">Talks</string>
+    <string name="tab_community">Community</string>
     <string name="tab_robotics">Robotics</string>
     <string name="tab_admin">Admin</string>
     <string name="tab_request">Request</string>

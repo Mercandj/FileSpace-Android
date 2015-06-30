@@ -17,7 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
  */
-package mercandalli.com.filespace.ui.fragment;
+package mercandalli.com.filespace.ui.fragment.community;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -54,6 +54,7 @@ import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.adapter.AdapterModelUser;
+import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.ui.view.DividerItemDecoration;
 import mercandalli.com.filespace.util.StringPair;
 
@@ -208,8 +209,15 @@ public class UserFragment extends Fragment {
                                             app.alert("Delete " + modelUser.username + "?", "This process cannot be undone.", getString(R.string.delete), new IListener() {
                                                 @Override
                                                 public void execute() {
-                                                    //TODO Delete user. Update the Api. (attention: delete user means delete files, messages, conversations...)
-                                                    Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                                    if(app.getConfig().isUserAdmin())
+                                                        modelUser.delete(new IPostExecuteListener() {
+                                                            @Override
+                                                            public void execute(JSONObject json, String body) {
+                                                                UserFragment.this.refreshList();
+                                                            }
+                                                        });
+                                                    else
+                                                        Toast.makeText(getActivity(), "Not permitted.", Toast.LENGTH_SHORT).show();
                                                 }
                                             }, getString(R.string.cancel), null);
                                             break;

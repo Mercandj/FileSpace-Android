@@ -17,7 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
  */
-package mercandalli.com.filespace.ui.fragment;
+package mercandalli.com.filespace.ui.fragment.community;
 
 import android.app.FragmentManager;
 import android.os.Bundle;
@@ -36,9 +36,10 @@ import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.activity.ApplicationDrawer;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
+import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.ui.view.PagerSlidingTabStrip;
 
-public class TalkManagerFragment extends Fragment {
+public class CommunityManagerFragment extends Fragment {
 
     private static final int NB_FRAGMENT = 2;
     private static final int INIT_FRAGMENT = 1;
@@ -48,18 +49,18 @@ public class TalkManagerFragment extends Fragment {
     private FileManagerFragmentPagerAdapter mPagerAdapter;
     private PagerSlidingTabStrip tabs;
 
-    public TalkManagerFragment() {
+    public CommunityManagerFragment() {
         super();
     }
 
-    public TalkManagerFragment(ApplicationDrawer app) {
+    public CommunityManagerFragment(ApplicationDrawer app) {
         super();
         this.app = app;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_talkmanager, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_communitymanager, container, false);
         mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
 
         tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
@@ -68,7 +69,7 @@ public class TalkManagerFragment extends Fragment {
         mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
             @Override
             public void onPageSelected(int arg0) {
-                TalkManagerFragment.this.app.invalidateOptionsMenu();
+                CommunityManagerFragment.this.app.invalidateOptionsMenu();
             }
             @Override
             public void onPageScrolled(int arg0, float arg1, int arg2) {

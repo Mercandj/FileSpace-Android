@@ -169,8 +169,13 @@ public class LoginFragment extends Fragment {
                                 JSONObject user = json.getJSONObject("user");
                                 if (user.has("id"))
                                     app.getConfig().setUserId(user.getInt("id"));
-                                if (user.has("admin"))
-                                    app.getConfig().setUserAdmin(user.getBoolean("admin"));
+                                if (user.has("admin")) {
+                                    Object admin_obj = user.get("admin");
+                                    if(admin_obj instanceof Integer)
+                                        app.getConfig().setUserAdmin(user.getInt("admin") == 1);
+                                    else if(admin_obj instanceof Boolean)
+                                        app.getConfig().setUserAdmin(user.getBoolean("admin"));
+                                }
                                 if (user.has("id_file_profile_picture"))
                                     app.getConfig().setUserIdFileProfilePicture(user.getInt("id_file_profile_picture"));
                             }

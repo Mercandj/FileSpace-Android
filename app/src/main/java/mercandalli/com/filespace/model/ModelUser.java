@@ -33,6 +33,8 @@ import java.util.TimeZone;
 
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listener.IBitmapListener;
+import mercandalli.com.filespace.listener.IPostExecuteListener;
+import mercandalli.com.filespace.net.TaskDelete;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.util.FileUtils;
@@ -84,8 +86,14 @@ public class ModelUser extends Model {
                 this.date_last_connection = dateFormat.parse(json.getString("date_last_connection"));
             if(json.has("size_files") && !json.isNull("size_files"))
                 this.size_files = json.getLong("size_files");
-            if(json.has("admin"))
-                this.admin = json.getBoolean("admin");
+            if(json.has("admin")) {
+                Object admin_obj = json.get("admin");
+                if(admin_obj instanceof Integer)
+                    this.admin = json.getInt("admin") == 1;
+                else if(admin_obj instanceof Boolean)
+                    this.admin = json.getBoolean("admin");
+            }
+
             if(json.has("id_file_profile_picture"))
                 this.id_file_profile_picture = json.getInt("id_file_profile_picture");
             if(json.has("file_profile_picture_size"))
@@ -164,5 +172,17 @@ public class ModelUser extends Model {
     @Override
     public JSONObject toJSONObject() {
         return null;
+    }
+
+    public void delete(IPostExecuteListener listener) {
+        if(this.app != null) {
+            if(this.app.getConfig().isUserAdmin() && this.id != this.app.getConfig().getUserId()) {
+                String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeUser + "/" + this.id;
+                new TaskDelete(this.app, url, listener).execute();
+                return;
+            }
+        }
+        if(listener!=null)
+            listener.execute(null, null);
     }
 }
