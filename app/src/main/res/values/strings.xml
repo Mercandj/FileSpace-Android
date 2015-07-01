@@ -36,6 +36,7 @@
 
     <string name="action">Action</string>
     <string name="download">Download</string>
+    <string name="upload">Upload</string>
     <string name="rename">Rename</string>
     <string name="delete">Delete</string>
     <string name="cut">Cut</string>

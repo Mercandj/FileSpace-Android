@@ -19,11 +19,11 @@
  */
 package mercandalli.com.filespace.ui.activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RippleDrawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.Date;
 
 import mercandalli.com.filespace.R;
@@ -143,6 +144,16 @@ public class ActivityFilePicture extends Application {
                 })).execute();
             }
         }
+
+        this.circle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent picIntent = new Intent();
+                picIntent.setAction(Intent.ACTION_VIEW);
+                picIntent.setDataAndType(Uri.parse("file://" + (new File(ActivityFilePicture.this.getFilesDir()+"/file_"+id)).getAbsolutePath()), "image/*");
+                ActivityFilePicture.this.startActivity(picIntent);
+            }
+        });
     }
 
     @Override
