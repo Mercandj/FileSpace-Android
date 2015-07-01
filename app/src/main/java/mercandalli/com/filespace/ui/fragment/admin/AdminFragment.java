@@ -111,6 +111,7 @@ public class AdminFragment extends Fragment {
             switch(i) {
                 case 0:		fragment = new DataFragment();  	break;
                 case 1:		fragment = new AddUserFragment(); 	break;
+                case 4:		fragment = new LogsFragment(); 	    break;
                 default:    fragment = new EmptyFragment(); 	break;
             }
             listFragment[i] = fragment;

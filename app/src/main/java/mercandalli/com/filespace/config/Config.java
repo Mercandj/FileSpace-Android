@@ -65,6 +65,7 @@ public class Config {
     public final String routeUserPut	        = "user_put";
     public final String routeUserMessage        = "user_message";
     public final String routeUserConversation   = "user_conversation";
+    public final String routeUserConnection     = "user_connection";
 
     /**
      * Static int to save/load

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Personal Project : Control server
+		MERCANDALLI Jonathan
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:layout_marginBottom="3dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="3dp"
+    android:background="#fff"
+    android:stateListAnimator="@anim/tab_user_elevation"
+    android:translationZ="2.0dp" >
+
+    <ImageView
+        android:id="@+id/more"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/ic_menu_moreoverflow_normal_holo_light" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/more"
+        android:ellipsize="marquee"
+        android:focusable="false"
+        android:gravity="center_vertical"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxLines="1"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"
+        android:paddingLeft="20dp"
+        android:paddingRight="15dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:textColor="#000"
+        android:textSize="18sp"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="10dp"/>
+
+    <TextView
+        android:id="@+id/value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/more"
+        android:ellipsize="marquee"
+        android:focusable="false"
+        android:gravity="center_vertical"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxLines="1"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"
+        android:paddingLeft="20dp"
+        android:paddingRight="15dp"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:textColor="#000"
+        android:textSize="12sp"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="10dp"/>
+
+</RelativeLayout>
