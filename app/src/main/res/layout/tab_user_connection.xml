@@ -6,7 +6,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
+    android:layout_height="60dp"
     android:layout_marginBottom="3dp"
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
@@ -27,7 +27,7 @@
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="38dp"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/more"
         android:ellipsize="marquee"
@@ -42,14 +42,14 @@
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="#000"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:layout_alignParentStart="true"
-        android:layout_marginLeft="10dp"/>
+        android:text="Title" />
 
     <TextView
         android:id="@+id/value"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="34dp"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/more"
         android:ellipsize="marquee"
@@ -64,8 +64,8 @@
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="#000"
-        android:textSize="12sp"
+        android:textSize="11sp"
         android:layout_alignParentStart="true"
-        android:layout_marginLeft="10dp"/>
+        android:text="Value" />
 
 </RelativeLayout>

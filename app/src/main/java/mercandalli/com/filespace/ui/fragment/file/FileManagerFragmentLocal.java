@@ -32,11 +32,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -51,14 +54,17 @@ import java.util.List;
 import java.util.Map;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IModelFileListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.listener.IStringListener;
 import mercandalli.com.filespace.model.ModelFile;
 import mercandalli.com.filespace.model.ModelFileType;
+import mercandalli.com.filespace.model.ModelFileTypeENUM;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.ui.adapter.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapter.AdapterModelFile;
 import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.ui.view.DividerItemDecoration;
@@ -69,12 +75,13 @@ public class FileManagerFragmentLocal extends Fragment {
 	
 	private Application app;
 	private RecyclerView listView;
+    private GridView gridView;
     private RecyclerView.LayoutManager mLayoutManager;
 	private ArrayList<ModelFile> files;
 	private ProgressBar circulerProgressBar;
 	private File jarvisDirectory;
 	private TextView message;
-	private SwipeRefreshLayout swipeRefreshLayout;
+	private SwipeRefreshLayout swipeRefreshLayout, swipeRefreshLayoutGrid;
     Animation animOpen; ImageButton circle, circle2;
 
     private List<ModelFile> filesToCut = new ArrayList<>();
@@ -102,22 +109,23 @@ public class FileManagerFragmentLocal extends Fragment {
         this.listView.setLayoutManager(mLayoutManager);
         this.listView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
+        this.gridView = (GridView) rootView.findViewById(R.id.gridView);
+        this.gridView.setVisibility(View.GONE);
 
         this.circle = (ImageButton) rootView.findViewById(R.id.circle);
         this.circle.setVisibility(View.GONE);
         this.circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(filesToCut != null && filesToCut.size() != 0) {
-                    for(ModelFile file : filesToCut) {
+                if (filesToCut != null && filesToCut.size() != 0) {
+                    for (ModelFile file : filesToCut) {
                         file.renameLocalByPath(jarvisDirectory.getAbsolutePath() + File.separator + file.getNameExt());
                     }
                     filesToCut.clear();
                     refreshList();
-                }
-                else {
+                } else {
                     final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
-                    final String[] menuList = { "New Folder or File" };
+                    final String[] menuList = {"New Folder or File"};
                     menuAlert.setTitle("Action");
                     menuAlert.setItems(menuList,
                             new DialogInterface.OnClickListener() {
@@ -127,7 +135,7 @@ public class FileManagerFragmentLocal extends Fragment {
                                             FileManagerFragmentLocal.this.app.prompt("New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
-                                                    createFile(jarvisDirectory.getPath()+File.separator, text);
+                                                    createFile(jarvisDirectory.getPath() + File.separator, text);
                                                     refreshList();
                                                 }
                                             }, getString(R.string.cancel), null, null, "Name");
@@ -162,10 +170,10 @@ public class FileManagerFragmentLocal extends Fragment {
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         this.swipeRefreshLayout.setColorSchemeResources(
-				android.R.color.holo_blue_bright,
-				android.R.color.holo_green_light,
-				android.R.color.holo_orange_light,
-				android.R.color.holo_red_light);
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         this.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
@@ -173,6 +181,20 @@ public class FileManagerFragmentLocal extends Fragment {
 				refreshList();
 			}
 		});
+
+        this.swipeRefreshLayoutGrid = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayoutGrid);
+        this.swipeRefreshLayoutGrid.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+        this.swipeRefreshLayoutGrid.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshList();
+            }
+        });
 		
 		refreshList();
 
@@ -330,7 +352,7 @@ public class FileManagerFragmentLocal extends Fragment {
 								}
 							});
 					AlertDialog menuDrop = menuAlert.create();
-					menuDrop.show();					
+					menuDrop.show();
 				}				
 			});
 
@@ -366,8 +388,135 @@ public class FileManagerFragmentLocal extends Fragment {
                 this.circle2.setVisibility(View.GONE);*/
             else
                 this.circle2.setVisibility(View.VISIBLE);
-			
+
+
+
+            if(FileManagerFragment.VIEW_MODE == Const.MODE_GRID) {
+                this.gridView.setVisibility(View.VISIBLE);
+                this.swipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
+                this.listView.setVisibility(View.GONE);
+                this.swipeRefreshLayout.setVisibility(View.GONE);
+
+                this.gridView.setAdapter(new AdapterGridModelFile(app, files));
+                this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if(hasItemSelected()) {
+                            files.get(position).selected = !files.get(position).selected;
+                            adapter.notifyItemChanged(position);
+                        }
+                        else if (files.get(position).directory) {
+                            jarvisDirectory = new File(files.get(position).url);
+                            refreshList();
+                        } else
+                            files.get(position).executeLocal(files, view);
+                    }
+                });
+                this.gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                        if(position>=files.size())
+                            return false;
+                        final ModelFile modelFile = files.get(position);
+
+                        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
+                        String[] menuList = { getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
+                        if(app.isLogged())
+                            menuList = new String[]{ getString(R.string.upload), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
+                        menuAlert.setTitle("Action");
+                        menuAlert.setItems(menuList,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int item) {
+                                        if(!app.isLogged())
+                                            item--;
+                                        switch (item) {
+                                            case 0:
+                                                if(modelFile.directory) {
+                                                    Toast.makeText(FileManagerFragmentLocal.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                                }
+                                                else
+                                                    FileManagerFragmentLocal.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
+                                                        @Override
+                                                        public void execute() {
+                                                            if(modelFile != null)
+                                                                if(modelFile.getFile()!=null) {
+                                                                    List<StringPair> parameters = modelFile.getForUpload();
+                                                                    (new TaskPost(app, app.getConfig().getUrlServer()+app.getConfig().routeFile, new IPostExecuteListener() {
+                                                                        @Override
+                                                                        public void execute(JSONObject json, String body) {
+
+                                                                        }
+                                                                    }, parameters, modelFile.getFile())).execute();
+                                                                }
+                                                        }
+                                                    }, getString(R.string.cancel), null);
+                                                break;
+                                            case 1:
+                                                FileManagerFragmentLocal.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                                    @Override
+                                                    public void execute(String text) {
+                                                        modelFile.rename(text, new IPostExecuteListener() {
+                                                            @Override
+                                                            public void execute(JSONObject json, String body) {
+                                                                if (filesToCut != null && filesToCut.size() != 0) {
+                                                                    filesToCut.clear();
+                                                                    FileManagerFragmentLocal.this.updateCircle();
+                                                                }
+                                                                FileManagerFragmentLocal.this.app.refreshAdapters();
+                                                            }
+                                                        });
+                                                    }
+                                                }, "Cancel", null, modelFile.getNameExt());
+                                                break;
+                                            case 2:
+                                                FileManagerFragmentLocal.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                                    @Override
+                                                    public void execute() {
+                                                        modelFile.delete(new IPostExecuteListener() {
+                                                            @Override
+                                                            public void execute(JSONObject json, String body) {
+                                                                if (filesToCut != null && filesToCut.size() != 0) {
+                                                                    filesToCut.clear();
+                                                                    FileManagerFragmentLocal.this.updateCircle();
+                                                                }
+                                                                FileManagerFragmentLocal.this.app.refreshAdapters();
+                                                            }
+                                                        });
+                                                    }
+                                                }, "No", null);
+                                                break;
+                                            case 3:
+                                                FileManagerFragmentLocal.this.filesToCut.add(modelFile);
+                                                Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
+                                                updateCircle();
+                                                break;
+                                            case 4:
+                                                FileManagerFragmentLocal.this.app.alert(
+                                                        getString(R.string.properties) + " : " + modelFile.name,
+                                                        "Name : " + modelFile.name + "\nExtension : " + modelFile.type + "\nType : " + modelFile.type.getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
+                                                        "OK",
+                                                        null,
+                                                        null,
+                                                        null);
+                                                break;
+                                        }
+                                    }
+                                });
+                        AlertDialog menuDrop = menuAlert.create();
+                        menuDrop.show();
+                        return false;
+                    }
+                });
+            }
+            else {
+                this.gridView.setVisibility(View.GONE);
+                this.swipeRefreshLayoutGrid.setVisibility(View.GONE);
+                this.listView.setVisibility(View.VISIBLE);
+                this.swipeRefreshLayout.setVisibility(View.VISIBLE);
+            }
+
 			swipeRefreshLayout.setRefreshing(false);
+			swipeRefreshLayoutGrid.setRefreshing(false);
 		}
 	}
 

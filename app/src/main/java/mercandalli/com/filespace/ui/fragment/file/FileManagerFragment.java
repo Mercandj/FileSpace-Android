@@ -53,6 +53,8 @@ public class FileManagerFragment extends Fragment {
 	private ViewPager mViewPager;
 	private FileManagerFragmentPagerAdapter mPagerAdapter;
     private PagerSlidingTabStrip tabs;
+
+	public static int VIEW_MODE = Const.MODE_LIST;
 	
 	public FileManagerFragment() {
 		super();
@@ -67,6 +69,8 @@ public class FileManagerFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_filemanager, container, false);
 		mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
+
+        VIEW_MODE = ((app.getConfig().getUserFileModeView() > -1) ? app.getConfig().getUserFileModeView() : Const.MODE_LIST);
 
         tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
 		mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
@@ -283,15 +287,39 @@ public class FileManagerFragment extends Fragment {
 		String[] menuList = { "Sort by name (A-Z)", "Sort by size", "Sort by date", app.getConfig().getUserFileModeView()== Const.MODE_LIST ? "Grid View" : "List View" };
 		menuAleart.setTitle(getString(R.string.view));
 		menuAleart.setItems(menuList,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int item) {
-                        if(listFragment.length>1)
-                            if(listFragment[1]!=null)
-                                if(listFragment[1] instanceof FileManagerFragmentMyCloud) {
-                                    FileManagerFragmentMyCloud fragmentFileManagerFragment = (FileManagerFragmentMyCloud) listFragment[1];
-                                    fragmentFileManagerFragment.sort(item);
-                                }
-					}
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+
+                        switch (item) {
+                            case 3:
+                                if (VIEW_MODE == Const.MODE_LIST)
+                                    VIEW_MODE = Const.MODE_GRID;
+                                else
+                                    VIEW_MODE = Const.MODE_LIST;
+                                app.getConfig().setUserFileModeView(VIEW_MODE);
+                                if(listFragment[0]!=null)
+                                    if(listFragment[0] instanceof FileManagerFragmentCloud) {
+                                        FileManagerFragmentCloud fragmentFileManagerFragment = (FileManagerFragmentCloud) listFragment[0];
+                                        fragmentFileManagerFragment.updateAdapter();
+                                    }
+                                if(listFragment.length>1)
+                                    if(listFragment[1]!=null)
+                                        if(listFragment[1] instanceof FileManagerFragmentMyCloud) {
+                                            FileManagerFragmentMyCloud fragmentFileManagerFragment = (FileManagerFragmentMyCloud) listFragment[1];
+                                            fragmentFileManagerFragment.updateAdapter();
+                                        }
+                                if(listFragment.length>2)
+                                    if(listFragment[2]!=null)
+                                        if(listFragment[2] instanceof FileManagerFragmentLocal) {
+                                            FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[2];
+                                            fragmentFileManagerFragment.updateAdapter();
+                                        }
+                                break;
+                            default:
+                                Toast.makeText(app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                    }
 				});
 		AlertDialog menuDrop = menuAleart.create();
 		menuDrop.show();

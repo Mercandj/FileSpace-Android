@@ -32,6 +32,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -45,7 +47,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.ui.adapter.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapter.AdapterModelFile;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
 import mercandalli.com.filespace.listener.IListener;
@@ -68,12 +72,13 @@ public class FileManagerFragmentCloud extends Fragment {
 
 	private Application app;
 	private RecyclerView listView;
+    private GridView gridView;
     private RecyclerView.LayoutManager mLayoutManager;
     private AdapterModelFile adapter;
     private ArrayList<ModelFile> files = new ArrayList<>();
 	private ProgressBar circularProgressBar;
 	private TextView message;
-	private SwipeRefreshLayout swipeRefreshLayout;
+	private SwipeRefreshLayout swipeRefreshLayout, swipeRefreshLayoutGrid;
     Animation animOpen, animZoomOut, animZoomIn; ImageButton circle, circle2;
 
     private String url = "";
@@ -100,6 +105,9 @@ public class FileManagerFragmentCloud extends Fragment {
         this.mLayoutManager = new LinearLayoutManager(getActivity());
         this.listView.setLayoutManager(mLayoutManager);
 
+        this.gridView = (GridView) rootView.findViewById(R.id.gridView);
+        this.gridView.setVisibility(View.GONE);
+
         this.swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         this.swipeRefreshLayout.setColorSchemeResources(
                 android.R.color.holo_blue_bright,
@@ -108,11 +116,25 @@ public class FileManagerFragmentCloud extends Fragment {
                 android.R.color.holo_red_light);
 
         this.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				refreshList();
-			}
-		});
+            @Override
+            public void onRefresh() {
+                refreshList();
+            }
+        });
+
+        this.swipeRefreshLayoutGrid = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayoutGrid);
+        this.swipeRefreshLayoutGrid.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+        this.swipeRefreshLayoutGrid.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshList();
+            }
+        });
 
         this.circle = ((ImageButton) rootView.findViewById(R.id.circle));
         this.circle.setVisibility(View.GONE);
@@ -378,7 +400,156 @@ public class FileManagerFragmentCloud extends Fragment {
             else
                 this.circle2.setVisibility(View.VISIBLE);
 
+            if(FileManagerFragment.VIEW_MODE == Const.MODE_GRID) {
+                this.gridView.setVisibility(View.VISIBLE);
+                this.swipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
+                this.listView.setVisibility(View.GONE);
+                this.swipeRefreshLayout.setVisibility(View.GONE);
+
+                this.gridView.setAdapter(new AdapterGridModelFile(app, files));
+                this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if(hasItemSelected()) {
+                            files.get(position).selected = !files.get(position).selected;
+                            adapter.notifyItemChanged(position);
+                        }
+                        else if(files.get(position).directory) {
+                            FileManagerFragmentCloud.this.url = files.get(position).url + "/";
+                            refreshList();
+                        }
+                        else
+                            files.get(position).executeOnline(files, view);
+                    }
+                });
+                this.gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                        if (position >= files.size())
+                            return false;
+                        final ModelFile modelFile = files.get(position);
+
+                        final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerFragmentCloud.this.app);
+                        String[] menuList = { getString(R.string.download) };
+                        if(!modelFile.directory && modelFile.isMine()) {
+                            if(modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
+                                menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public", "Set as profile"};
+                            }
+                            else
+                                menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public"};
+                        }
+                        menuAleart.setTitle(getString(R.string.action));
+                        menuAleart.setItems(menuList,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int item) {
+                                        switch (item) {
+                                            case 0:
+                                                modelFile.download(new IListener() {
+                                                    @Override
+                                                    public void execute() {
+                                                        Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
+                                                        FileManagerFragmentCloud.this.app.refreshAdapters();
+                                                    }
+                                                });
+                                                break;
+
+                                            case 1:
+                                                FileManagerFragmentCloud.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                                    @Override
+                                                    public void execute(String text) {
+                                                        modelFile.rename(text, new IPostExecuteListener() {
+                                                            @Override
+                                                            public void execute(JSONObject json, String body) {
+                                                                if(filesToCut != null && filesToCut.size() != 0) {
+                                                                    filesToCut.clear();
+                                                                    FileManagerFragmentCloud.this.updateCircle();
+                                                                }
+                                                                FileManagerFragmentCloud.this.app.refreshAdapters();
+                                                            }
+                                                        });
+                                                    }
+                                                }, "Cancel", null, modelFile.getNameExt());
+                                                break;
+
+                                            case 2:
+                                                FileManagerFragmentCloud.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                                    @Override
+                                                    public void execute() {
+                                                        modelFile.delete(new IPostExecuteListener() {
+                                                            @Override
+                                                            public void execute(JSONObject json, String body) {
+                                                                if(filesToCut != null && filesToCut.size() != 0) {
+                                                                    filesToCut.clear();
+                                                                    FileManagerFragmentCloud.this.updateCircle();
+                                                                }
+                                                                FileManagerFragmentCloud.this.app.refreshAdapters();
+                                                            }
+                                                        });
+                                                    }
+                                                }, "No", null);
+                                                break;
+
+                                            case 3:
+                                                FileManagerFragmentCloud.this.filesToCut.add(modelFile);
+                                                Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
+                                                break;
+
+                                            case 4:
+                                                FileManagerFragmentCloud.this.app.alert(
+                                                        getString(R.string.properties) + " : " + modelFile.name,
+                                                        "Name : " + modelFile.name+"\nExtension : " + modelFile.type+"\nType : " + modelFile.type.getTitle()+"\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
+                                                        "OK",
+                                                        null,
+                                                        null,
+                                                        null);
+                                                break;
+
+                                            case 5:
+                                                modelFile.setPublic(!modelFile._public, new IPostExecuteListener() {
+                                                    @Override
+                                                    public void execute(JSONObject json, String body) {
+                                                        FileManagerFragmentCloud.this.app.refreshAdapters();
+                                                    }
+                                                });
+                                                break;
+
+                                            // Picture set as profile
+                                            case 6:
+                                                List<StringPair> parameters = new ArrayList<>();
+                                                parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
+                                                (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                    @Override
+                                                    public void execute(JSONObject json, String body) {
+                                                        try {
+                                                            if (json != null)
+                                                                if (json.has("succeed"))
+                                                                    if (json.getBoolean("succeed"))
+                                                                        app.getConfig().setUserIdFileProfilePicture(modelFile.id);
+                                                        }
+                                                        catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                }, parameters)).execute();
+                                                break;
+                                        }
+                                    }
+                                });
+                        AlertDialog menuDrop = menuAleart.create();
+                        menuDrop.show();
+                        return false;
+                    }
+                });
+            }
+            else {
+                this.gridView.setVisibility(View.GONE);
+                this.swipeRefreshLayoutGrid.setVisibility(View.GONE);
+                this.listView.setVisibility(View.VISIBLE);
+                this.swipeRefreshLayout.setVisibility(View.VISIBLE);
+            }
+
             this.swipeRefreshLayout.setRefreshing(false);
+            this.swipeRefreshLayoutGrid.setRefreshing(false);
 		}
 	}
 

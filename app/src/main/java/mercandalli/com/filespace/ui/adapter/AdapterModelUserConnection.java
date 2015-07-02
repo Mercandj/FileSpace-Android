@@ -57,8 +57,8 @@ public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterMode
         ModelUserConnection model = itemsData.get(position);
         switch(model.viewType) {
     	case Const.TAB_VIEW_TYPE_NORMAL:
-    		viewHolder.title.setText("#"+model.id_user+"  "+model.title);
-            viewHolder.value.setText(""+model.value);
+    		viewHolder.title.setText(model.getAdapterTitle());
+            viewHolder.value.setText(model.getAdapterSubtitle());
     		break;
     	case Const.TAB_VIEW_TYPE_SECTION:
     		viewHolder.title.setText(""+model.title);

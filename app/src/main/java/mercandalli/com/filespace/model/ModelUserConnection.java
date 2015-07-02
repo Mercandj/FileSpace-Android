@@ -22,13 +22,16 @@ package mercandalli.com.filespace.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.util.FileUtils;
 
 public class ModelUserConnection extends Model {
 
-	public String title;
-	public String value;
+	public String title, date_creation, url, username;
 	public int viewType = Const.TAB_VIEW_TYPE_NORMAL;
 	public int id_user;
 
@@ -36,10 +39,10 @@ public class ModelUserConnection extends Model {
 		super();
 	}
 
-	public ModelUserConnection(String title, String value) {
+	public ModelUserConnection(String date_creation, String url) {
 		super();
-		this.title = title;
-		this.value = value;
+		this.date_creation = date_creation;
+		this.url = url;
 	}
 
 	public ModelUserConnection(String title, int viewType) {
@@ -53,16 +56,25 @@ public class ModelUserConnection extends Model {
 		this.app = app;
 		try {
 			if(json.has("date_creation"))
-				this.title = json.getString("date_creation");
+				this.date_creation = json.getString("date_creation");
 			if(json.has("request_uri"))
-				this.value = json.getString("request_uri");
+				this.url = json.getString("request_uri");
 			if(json.has("id_user"))
 				this.id_user = json.getInt("id_user");
-
+			if(json.has("username"))
+				this.username = json.getString("username");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
+
+    public String getAdapterTitle() {
+        if(viewType != Const.TAB_VIEW_TYPE_NORMAL)
+            return title;
+        return this.username + " : " + this.date_creation;
+    }
+
+    public String getAdapterSubtitle() { return "" + this.url; }
 
 	@Override
 	public JSONObject toJSONObject() {

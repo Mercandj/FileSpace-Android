@@ -82,8 +82,6 @@ public class FileManagerFragmentMyCloud extends Fragment {
 	private SwipeRefreshLayout swipeRefreshLayout, swipeRefreshLayoutGrid;
     Animation animOpen, animZoomOut, animZoomIn; ImageButton circle, circle2;
 
-    private int mode = Const.MODE_LIST;
-
     private Stack<Integer> id_file_path = new Stack<>();
     private List<ModelFile> filesToCut = new ArrayList<>();
 	
@@ -111,8 +109,6 @@ public class FileManagerFragmentMyCloud extends Fragment {
 
         this.gridView = (GridView) rootView.findViewById(R.id.gridView);
         this.gridView.setVisibility(View.GONE);
-
-        this.mode = ((app.getConfig().getUserFileModeView() > -1) ? app.getConfig().getUserFileModeView() : Const.MODE_LIST);
 
         resetPath();
 
@@ -454,7 +450,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
                 this.circle2.setVisibility(View.VISIBLE);
             }
 
-            if(mode == Const.MODE_GRID) {
+            if(FileManagerFragment.VIEW_MODE == Const.MODE_GRID) {
                 this.gridView.setVisibility(View.VISIBLE);
                 this.swipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
                 this.listView.setVisibility(View.GONE);
@@ -661,21 +657,5 @@ public class FileManagerFragmentMyCloud extends Fragment {
         for(ModelFile file:files)
             file.selected = false;
         updateAdapter();
-    }
-
-    public void sort(int item) {
-        switch (item) {
-            case 3:
-                if(this.mode == Const.MODE_LIST)
-                    this.mode = Const.MODE_GRID;
-                else
-                    this.mode = Const.MODE_LIST;
-                app.getConfig().setUserFileModeView(mode);
-                this.updateAdapter();
-                break;
-            default:
-                Toast.makeText(app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-                break;
-        }
     }
 }

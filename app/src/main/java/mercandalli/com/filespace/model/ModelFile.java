@@ -22,6 +22,7 @@ package mercandalli.com.filespace.model;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Environment;
@@ -36,6 +37,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -64,6 +66,7 @@ import mercandalli.com.filespace.ui.activity.ActivityFileText;
 import mercandalli.com.filespace.ui.activity.ActivityFileTimer;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.util.FileUtils;
+import mercandalli.com.filespace.util.ImageUtils;
 import mercandalli.com.filespace.util.StringPair;
 
 import static mercandalli.com.filespace.util.ImageUtils.is_image;
@@ -178,7 +181,6 @@ public class ModelFile extends Model implements Parcelable {
         }
 
         if(this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0) {
-
             if(is_image(this.app, this.id)) {
                 ModelFile.this.bitmap = load_image(this.app, this.id);
                 ModelFile.this.app.updateAdapters();
@@ -193,7 +195,7 @@ public class ModelFile extends Model implements Parcelable {
                         }
                     }
                 }).execute();
-		}		
+		}
 	}
 
 	public void executeOnline(ArrayList<ModelFile> files, View view) {
@@ -452,9 +454,7 @@ public class ModelFile extends Model implements Parcelable {
     }
     
     public boolean isAudio() {
-    	if (this.directory || this.type == null)
-    	    return false;
-        return this.type.equals(ModelFileTypeENUM.AUDIO.type);
+        return !(this.directory || this.type == null) && this.type.equals(ModelFileTypeENUM.AUDIO.type);
     }
 
     public static final Parcelable.Creator<ModelFile> CREATOR = new Parcelable.Creator<ModelFile>() {
@@ -516,11 +516,20 @@ public class ModelFile extends Model implements Parcelable {
     }
 
     public void setFile(File file) {
-        this.file = file;
-        this.directory = file.isDirectory();
-        this.size = file.length();
-        this.url = file.getAbsolutePath();
-        int id= file.getName().lastIndexOf(".");
-        this.name = (id==-1) ? file.getName() : file.getName().substring(0, id);
+        if(file != null) {
+            if(file.exists()) {
+                this.file = file;
+                this.directory = file.isDirectory();
+                this.size = file.length();
+                this.url = file.getAbsolutePath();
+                int id = file.getName().lastIndexOf(".");
+                this.name = (id == -1) ? file.getName() : file.getName().substring(0, id);
+                this.type = new ModelFileType(FileUtils.getExtensionFromPath(file.getAbsolutePath()));
+
+                if (this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0) {
+                    this.bitmap = ImageUtils.load_image_thumbnail(this.file, 256, 256);
+                }
+            }
+        }
     }
 }
