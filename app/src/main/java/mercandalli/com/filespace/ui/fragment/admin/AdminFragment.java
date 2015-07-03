@@ -37,7 +37,7 @@ import mercandalli.com.filespace.ui.view.PagerSlidingTabStrip;
 
 public class AdminFragment extends Fragment {
 
-    private static final int NB_FRAGMENT = 5;
+    private static final int NB_FRAGMENT = 6;
     private static final int INIT_FRAGMENT = 0;
     public static Fragment listFragment[] = new Fragment[NB_FRAGMENT];
     private Application app;
@@ -109,10 +109,10 @@ public class AdminFragment extends Fragment {
         public Fragment getItem(int i) {
             Fragment fragment = null;
             switch(i) {
-                case 0:		fragment = new DataFragment();  	break;
-                case 1:		fragment = new AddUserFragment(); 	break;
-                case 4:		fragment = new LogsFragment(); 	    break;
-                default:    fragment = new EmptyFragment(); 	break;
+                case 0:		fragment = new ServerDataFragment();  	break;
+                case 1:		fragment = new ServerLogsFragment();    break;
+                case 2:		fragment = new UserAddFragment(); 	    break;
+                default:    fragment = new EmptyFragment(); 	    break;
             }
             listFragment[i] = fragment;
             return fragment;
@@ -127,11 +127,12 @@ public class AdminFragment extends Fragment {
         public CharSequence getPageTitle(int i) {
             String title = "null";
             switch(i) {
-                case 0:		title = "DATA";             break;
-                case 1:		title = "ADD USER";         break;
-                case 2:		title = "USER LOCATION";    break;
-                case 3:		title = "USER LICENCES";    break;
-                case 4:		title = "LOGS";	            break;
+                case 0:		title = "SERVER DATA";      break;
+                case 1:		title = "SERVER LOGS";	    break;
+                case 2:		title = "USER ADD";         break;
+                case 3:		title = "USER DATA";        break;
+                case 4:		title = "USER LOCATION";    break;
+                case 5:		title = "USER LICENCES";    break;
             }
             return title;
         }

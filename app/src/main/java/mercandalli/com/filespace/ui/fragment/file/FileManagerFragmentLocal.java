@@ -342,7 +342,7 @@ public class FileManagerFragmentLocal extends Fragment {
                                         case 4:
                                             FileManagerFragmentLocal.this.app.alert(
                                                     getString(R.string.properties) + " : " + modelFile.name,
-                                                    "Name : " + modelFile.name + "\nExtension : " + modelFile.type + "\nType : " + modelFile.type.getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
+                                                    modelFile.toSpanned(),
                                                     "OK",
                                                     null,
                                                     null,

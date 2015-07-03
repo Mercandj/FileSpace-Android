@@ -49,11 +49,11 @@
             android:singleLine="true"
             android:textColor="#666"
             android:textSize="15sp"
-            android:layout_alignEnd="@+id/title"
-            android:layout_toEndOf="@+id/icon"
             android:layout_alignBottom="@+id/icon"
             android:gravity="bottom"
-            android:layout_marginBottom="2dp" />
+            android:layout_marginBottom="2dp"
+            android:layout_toEndOf="@+id/icon"
+            android:layout_toStartOf="@+id/more" />
 
         <mercandalli.com.filespace.ui.view.CircularImageView
             android:id="@+id/icon"

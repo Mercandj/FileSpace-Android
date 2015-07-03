@@ -30,6 +30,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -66,8 +69,11 @@ import mercandalli.com.filespace.ui.activity.ActivityFileText;
 import mercandalli.com.filespace.ui.activity.ActivityFileTimer;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.util.FileUtils;
+import mercandalli.com.filespace.util.HtmlUtils;
 import mercandalli.com.filespace.util.ImageUtils;
 import mercandalli.com.filespace.util.StringPair;
+import mercandalli.com.filespace.util.StringUtils;
+import mercandalli.com.filespace.util.TimeUtils;
 
 import static mercandalli.com.filespace.util.ImageUtils.is_image;
 import static mercandalli.com.filespace.util.ImageUtils.load_image;
@@ -525,11 +531,34 @@ public class ModelFile extends Model implements Parcelable {
                 int id = file.getName().lastIndexOf(".");
                 this.name = (id == -1) ? file.getName() : file.getName().substring(0, id);
                 this.type = new ModelFileType(FileUtils.getExtensionFromPath(file.getAbsolutePath()));
+                this.date_creation = new Date(file.lastModified());
 
                 if (this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0) {
                     this.bitmap = ImageUtils.load_image_thumbnail(this.file, 256, 256);
                 }
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
+    public Spanned toSpanned() {
+        List<StringPair> spl = new ArrayList<>();
+        spl.add(new StringPair("Name", this.name));
+        if(!this.directory)
+            spl.add(new StringPair("Extension", this.type.toString()));
+        spl.add(new StringPair("Type", this.type.getTitle()));
+        if(!this.directory || this.size != 0)
+            spl.add(new StringPair("Size", FileUtils.humanReadableByteCount(this.size)));
+        if(this.date_creation != null) {
+            if (this.isOnline())
+                spl.add(new StringPair("Upload date", TimeUtils.getDate(this.date_creation)));
+            else
+                spl.add(new StringPair("Last modification date", TimeUtils.getDate(this.date_creation)));
+        }
+        return HtmlUtils.createListItem(spl);
     }
 }

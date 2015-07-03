@@ -27,6 +27,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +66,7 @@ import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.ui.view.DividerItemDecoration;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.StringPair;
+import mercandalli.com.filespace.util.TimeUtils;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
@@ -266,11 +268,14 @@ public class FileManagerFragmentMyCloud extends Fragment {
                                     case 4:
                                         FileManagerFragmentMyCloud.this.app.alert(
                                                 getString(R.string.properties) + " : " + modelFile.name,
-                                                "Name : " + modelFile.name + "\nExtension : " + modelFile.type + "\nType : " + modelFile.type.getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
+                                                modelFile.toSpanned(),
                                                 "OK",
                                                 null,
                                                 null,
                                                 null);
+
+                                        Html.fromHtml("");
+
                                         break;
 
                                     case 5:

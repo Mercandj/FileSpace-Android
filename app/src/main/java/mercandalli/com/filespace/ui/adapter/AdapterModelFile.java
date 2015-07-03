@@ -87,6 +87,8 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
             if(file.bitmap!=null)
                 viewHolder.icon.setImageBitmap(file.bitmap);
 
+            if(moreListener == null)
+                viewHolder.more.setVisibility(View.GONE);
             viewHolder.more.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

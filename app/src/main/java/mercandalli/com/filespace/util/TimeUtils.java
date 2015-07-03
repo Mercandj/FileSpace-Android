@@ -95,6 +95,8 @@ public class TimeUtils {
     }
 
     public static String getDate(Date date) {
+        if (date==null)
+            return null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return dateFormat.format(date).toString();
     }

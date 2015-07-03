@@ -29,8 +29,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -116,6 +118,31 @@ public abstract class Application extends AppCompatActivity {
 		AlertDialog alert = builder.create();
 		alert.show();
 	}
+
+    public void alert(String title, Spanned message, String positive, final IListener positiveListener, String negative, final IListener negativeListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        if(positive != null)
+            builder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    if(positiveListener!=null)
+                        positiveListener.execute();
+                    dialog.dismiss();
+                }
+            });
+        if(negative != null)
+            builder.setNegativeButton(negative, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if(negativeListener!=null)
+                        negativeListener.execute();
+                    dialog.dismiss();
+                }
+            });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 	
 	public void prompt(String title, String message, String positive, final IStringListener positiveListener, String negative, final IListener negativeListener) {
         prompt(title, message, positive, positiveListener, negative, negativeListener, null);

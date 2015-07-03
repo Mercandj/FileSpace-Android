@@ -44,27 +44,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.ui.adapter.AdapterModelInformation;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
-import mercandalli.com.filespace.model.ModelInformation;
+import mercandalli.com.filespace.model.ModelUserConnection;
 import mercandalli.com.filespace.net.TaskGet;
+import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.ui.adapter.AdapterModelUserConnection;
 import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.util.StringPair;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
 
-public class DataFragment extends Fragment {
+public class ServerLogsFragment extends Fragment {
 
 	Application app;
 	private View rootView;
-	
+
 	private RecyclerView recyclerView;
-    private AdapterModelInformation mAdapter;
+    private AdapterModelUserConnection mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    List<ModelInformation> list;
+    List<ModelUserConnection> list;
     private ProgressBar circulerProgressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -74,7 +74,7 @@ public class DataFragment extends Fragment {
         app = (Application) activity;
     }
 
-    public DataFragment() {
+    public ServerLogsFragment() {
         super();
     }
 
@@ -116,18 +116,18 @@ public class DataFragment extends Fragment {
             new TaskGet(
                     app,
                     this.app.getConfig().getUser(),
-                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeInformation,
+                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeUserConnection,
                     new IPostExecuteListener() {
                         @Override
                         public void execute(JSONObject json, String body) {
-                            list = new ArrayList<ModelInformation>();
-                            list.add(new ModelInformation("Server Data", Const.TAB_VIEW_TYPE_SECTION));
+                            list = new ArrayList<ModelUserConnection>();
+                            list.add(new ModelUserConnection("Server Logs", Const.TAB_VIEW_TYPE_SECTION));
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ModelInformation modelFile = new ModelInformation(app, array.getJSONObject(i));
+                                            ModelUserConnection modelFile = new ModelUserConnection(app, array.getJSONObject(i));
                                             list.add(modelFile);
                                         }
                                     }
@@ -150,7 +150,7 @@ public class DataFragment extends Fragment {
 		if(this.recyclerView!=null && this.list!=null && this.isAdded()) {
             this.circulerProgressBar.setVisibility(View.GONE);
 
-            this.mAdapter = new AdapterModelInformation(app, list);
+            this.mAdapter = new AdapterModelUserConnection(app, list);
             this.recyclerView.setAdapter(mAdapter);
             this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
 
@@ -163,13 +163,13 @@ public class DataFragment extends Fragment {
 	        ((ImageButton) rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {			
 				@Override
 				public void onClick(View v) {
-					mAdapter.addItem(new ModelInformation("Number", ""+i), 0);
+					mAdapter.addItem(new ModelUserConnection("Number", ""+i), 0);
 					recyclerView.scrollToPosition(0);
 					i++;
 				}
 			});
 
-            this.mAdapter.setOnItemClickListener(new AdapterModelInformation.OnItemClickListener() {
+            this.mAdapter.setOnItemClickListener(new AdapterModelUserConnection.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
 

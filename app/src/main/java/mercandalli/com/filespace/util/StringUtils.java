@@ -19,7 +19,11 @@
  */
 package mercandalli.com.filespace.util;
 
+import android.text.Html;
+import android.text.Spanned;
+
 import java.text.Normalizer;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**

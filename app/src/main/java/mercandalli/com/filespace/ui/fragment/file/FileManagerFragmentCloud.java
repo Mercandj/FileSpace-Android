@@ -64,6 +64,7 @@ import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.ui.view.DividerItemDecoration;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.StringPair;
+import mercandalli.com.filespace.util.TimeUtils;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
@@ -243,7 +244,7 @@ public class FileManagerFragmentCloud extends Fragment {
                                     case 4:
                                         FileManagerFragmentCloud.this.app.alert(
                                                 getString(R.string.properties) + " : " + modelFile.name,
-                                                "Name : " + modelFile.name+"\nExtension : " + modelFile.type+"\nType : " + modelFile.type.getTitle()+"\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
+                                                "Name : " + modelFile.name+"\nExtension : " + modelFile.type+"\nType : " + modelFile.type.getTitle()+"\nSize : " + FileUtils.humanReadableByteCount(modelFile.size)+"\nUpload date : " + TimeUtils.getDate(modelFile.date_creation),
                                                 "OK",
                                                 null,
                                                 null,

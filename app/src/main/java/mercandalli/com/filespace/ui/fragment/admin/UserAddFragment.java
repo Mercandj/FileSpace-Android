@@ -67,7 +67,7 @@ import mercandalli.com.filespace.util.StringUtils;
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
 
-public class AddUserFragment extends Fragment {
+public class UserAddFragment extends Fragment {
 
 	Application app;
 	private View rootView;
@@ -83,7 +83,7 @@ public class AddUserFragment extends Fragment {
         app = (Application) activity;
     }
 
-    public AddUserFragment() {
+    public UserAddFragment() {
         super();
     }
 
