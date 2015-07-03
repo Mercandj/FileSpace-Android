@@ -75,7 +75,7 @@ public class FileManagerFragmentLocal extends Fragment {
     private GridView gridView;
     private RecyclerView.LayoutManager mLayoutManager;
 	private ArrayList<ModelFile> files;
-	private ProgressBar circulerProgressBar;
+	private ProgressBar circularProgressBar;
 	private File jarvisDirectory;
 	private TextView message;
 	private SwipeRefreshLayout swipeRefreshLayout, swipeRefreshLayoutGrid;
@@ -96,8 +96,8 @@ public class FileManagerFragmentLocal extends Fragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_filemanager_files, container, false);
-        this.circulerProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
-        this.circulerProgressBar.setVisibility(View.INVISIBLE);
+        this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
+        this.circularProgressBar.setVisibility(View.INVISIBLE);
         this.message = (TextView) rootView.findViewById(R.id.message);
 
         this.listView = (RecyclerView) rootView.findViewById(R.id.listView);

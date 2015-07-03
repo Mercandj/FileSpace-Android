@@ -55,7 +55,7 @@ public class ActivityFileText extends Application {
 
         // Visibility
         ((EditText) this.findViewById(R.id.txt)).setVisibility(View.GONE);
-        ((ProgressBar) this.findViewById(R.id.circulerProgressBar)).setVisibility(View.VISIBLE);
+        ((ProgressBar) this.findViewById(R.id.circularProgressBar)).setVisibility(View.VISIBLE);
 
         Bundle extras = getIntent().getExtras();
         if(extras == null) {
@@ -76,7 +76,7 @@ public class ActivityFileText extends Application {
                     initate = body;
                     ((EditText) ActivityFileText.this.findViewById(R.id.txt)).setText("" + initate);
                     ((EditText) ActivityFileText.this.findViewById(R.id.txt)).setVisibility(View.VISIBLE);
-                    ((ProgressBar) ActivityFileText.this.findViewById(R.id.circulerProgressBar)).setVisibility(View.GONE);
+                    ((ProgressBar) ActivityFileText.this.findViewById(R.id.circularProgressBar)).setVisibility(View.GONE);
                 }
             }).execute();
         }

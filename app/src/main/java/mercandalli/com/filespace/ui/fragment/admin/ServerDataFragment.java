@@ -65,7 +65,7 @@ public class ServerDataFragment extends Fragment {
     private AdapterModelInformation mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     List<ModelInformation> list;
-    private ProgressBar circulerProgressBar;
+    private ProgressBar circularProgressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -81,7 +81,7 @@ public class ServerDataFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_admin_data, container, false);
-		circulerProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
+        circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
 		
 		recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
 		recyclerView.setHasFixedSize(true);
@@ -148,7 +148,7 @@ public class ServerDataFragment extends Fragment {
 	
 	public void updateAdapter() {
 		if(this.recyclerView!=null && this.list!=null && this.isAdded()) {
-            this.circulerProgressBar.setVisibility(View.GONE);
+            this.circularProgressBar.setVisibility(View.GONE);
 
             this.mAdapter = new AdapterModelInformation(app, list);
             this.recyclerView.setAdapter(mAdapter);

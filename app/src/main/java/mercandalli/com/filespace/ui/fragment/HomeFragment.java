@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
     private AdapterModelHome mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     List<ModelHome> list;
-    private ProgressBar circulerProgressBar;
+    private ProgressBar circularProgressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     public TextToSpeech myTTS;
@@ -87,7 +87,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_home, container, false);
-        circulerProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
+        circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -212,7 +212,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
 
     public void updateAdapter() {
         if (this.recyclerView != null && this.list != null && this.isAdded()) {
-            this.circulerProgressBar.setVisibility(View.GONE);
+            this.circularProgressBar.setVisibility(View.GONE);
 
             this.mAdapter = new AdapterModelHome(app, list);
             this.recyclerView.setAdapter(mAdapter);

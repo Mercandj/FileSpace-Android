@@ -34,6 +34,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -51,7 +52,6 @@ import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.adapter.AdapterModelUserConnection;
 import mercandalli.com.filespace.ui.fragment.Fragment;
-import mercandalli.com.filespace.util.StringPair;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
@@ -65,7 +65,8 @@ public class ServerLogsFragment extends Fragment {
     private AdapterModelUserConnection mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     List<ModelUserConnection> list;
-    private ProgressBar circulerProgressBar;
+    private ProgressBar circularProgressBar;
+    private TextView message;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -81,7 +82,8 @@ public class ServerLogsFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_admin_data, container, false);
-		circulerProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
+        circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
+        this.message = (TextView) rootView.findViewById(R.id.message);
 		
 		recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
 		recyclerView.setHasFixedSize(true);
@@ -111,7 +113,6 @@ public class ServerLogsFragment extends Fragment {
 	
 
 	public void refreshList() {
-		List<StringPair> parameters = null;
 		if(isInternetConnection(app))
             new TaskGet(
                     app,
@@ -126,9 +127,9 @@ public class ServerLogsFragment extends Fragment {
                                 if (json != null) {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
-                                        for (int i = 0; i < array.length(); i++) {
-                                            ModelUserConnection modelFile = new ModelUserConnection(app, array.getJSONObject(i));
-                                            list.add(modelFile);
+                                        int array_length = array.length();
+                                        for (int i = 0; i < array_length; i++) {
+                                            list.add(new ModelUserConnection(app, array.getJSONObject(i)));
                                         }
                                     }
                                 }
@@ -140,15 +141,22 @@ public class ServerLogsFragment extends Fragment {
                             updateAdapter();
                         }
                     },
-                    parameters
+                    null
                 ).execute();
+        else {
+            this.circularProgressBar.setVisibility(View.GONE);
+            if(isAdded())
+                this.message.setText(app.isLogged()?getString(R.string.no_internet_connection):getString(R.string.no_logged));
+            this.message.setVisibility(View.VISIBLE);
+            this.swipeRefreshLayout.setRefreshing(false);
+        }
 	}
 	
 	int i;
 	
 	public void updateAdapter() {
 		if(this.recyclerView!=null && this.list!=null && this.isAdded()) {
-            this.circulerProgressBar.setVisibility(View.GONE);
+            this.circularProgressBar.setVisibility(View.GONE);
 
             this.mAdapter = new AdapterModelUserConnection(app, list);
             this.recyclerView.setAdapter(mAdapter);

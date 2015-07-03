@@ -97,7 +97,7 @@ public class FileManagerFragmentCloud extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_filemanager_files, container, false);
-        this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
+        this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         this.message = (TextView) rootView.findViewById(R.id.message);
 
         this.listView = (RecyclerView) rootView.findViewById(R.id.listView);

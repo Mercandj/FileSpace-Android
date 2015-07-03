@@ -66,7 +66,6 @@ import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.ui.view.DividerItemDecoration;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.StringPair;
-import mercandalli.com.filespace.util.TimeUtils;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
@@ -101,7 +100,7 @@ public class FileManagerFragmentMyCloud extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_filemanager_files, container, false);
-        this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circulerProgressBar);
+        this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         this.message = (TextView) rootView.findViewById(R.id.message);
 
         this.listView = (RecyclerView) rootView.findViewById(R.id.listView);

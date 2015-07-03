@@ -62,7 +62,7 @@ public class ActivityFileTimer extends Application {
         }
 
         // Visibility
-        ((ProgressBar) this.findViewById(R.id.circulerProgressBar)).setVisibility(View.GONE);
+        ((ProgressBar) this.findViewById(R.id.circularProgressBar)).setVisibility(View.GONE);
         this.txt = (TextView) ActivityFileTimer.this.findViewById(R.id.txt);
         this.second = (TextView) ActivityFileTimer.this.findViewById(R.id.second);
 
