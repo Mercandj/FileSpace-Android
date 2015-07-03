@@ -48,10 +48,6 @@ import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.ui.adapter.AdapterGridModelFile;
-import mercandalli.com.filespace.ui.adapter.AdapterModelFile;
-import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IModelFileListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
@@ -60,11 +56,14 @@ import mercandalli.com.filespace.model.ModelFile;
 import mercandalli.com.filespace.model.ModelFileTypeENUM;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.ui.adapter.AdapterGridModelFile;
+import mercandalli.com.filespace.ui.adapter.AdapterModelFile;
+import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.ui.view.DividerItemDecoration;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.StringPair;
-import mercandalli.com.filespace.util.TimeUtils;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
@@ -244,7 +243,7 @@ public class FileManagerFragmentCloud extends Fragment {
                                     case 4:
                                         FileManagerFragmentCloud.this.app.alert(
                                                 getString(R.string.properties) + " : " + modelFile.name,
-                                                "Name : " + modelFile.name+"\nExtension : " + modelFile.type+"\nType : " + modelFile.type.getTitle()+"\nSize : " + FileUtils.humanReadableByteCount(modelFile.size)+"\nUpload date : " + TimeUtils.getDate(modelFile.date_creation),
+                                                modelFile.toSpanned(),
                                                 "OK",
                                                 null,
                                                 null,
