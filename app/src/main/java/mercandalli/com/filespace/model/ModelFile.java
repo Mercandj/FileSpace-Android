@@ -22,7 +22,6 @@ package mercandalli.com.filespace.model;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Environment;
@@ -30,8 +29,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
-import android.text.Html;
-import android.text.Spannable;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
@@ -40,10 +37,8 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -72,7 +67,6 @@ import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.HtmlUtils;
 import mercandalli.com.filespace.util.ImageUtils;
 import mercandalli.com.filespace.util.StringPair;
-import mercandalli.com.filespace.util.StringUtils;
 import mercandalli.com.filespace.util.TimeUtils;
 
 import static mercandalli.com.filespace.util.ImageUtils.is_image;
@@ -124,7 +118,7 @@ public class ModelFile extends Model implements Parcelable {
 		if(name!=null)
 			parameters.add(new StringPair("url", this.name));
         if(directory)
-            parameters.add(new StringPair("directory", this.directory?"true":"false"));
+            parameters.add(new StringPair("directory", "true"));
         if(id_file_parent!=-1)
             parameters.add(new StringPair("id_file_parent", ""+this.id_file_parent));
 		return parameters;
@@ -135,13 +129,18 @@ public class ModelFile extends Model implements Parcelable {
         if(name!=null)
             parameters.add(new StringPair("url", this.name));
         if(directory)
-            parameters.add(new StringPair("directory", this.directory?"true":"false"));
+            parameters.add(new StringPair("directory", "true"));
         return parameters;
     }
 	
 	public ModelFile(Application app) {
 		super(app);
 	}
+
+    public ModelFile(Application app, File file) {
+        super(app);
+        setFile(file);
+    }
 	
 	public ModelFile(Application app, JSONObject json) {
 		super(app);
@@ -242,7 +241,7 @@ public class ModelFile extends Model implements Parcelable {
             intent.putExtra("PASSWORD", ""+app.getConfig().getUser().getAccessPassword());
             intent.putExtra("ONLINE", true);
             intent.putExtra("FILE", this);
-            ArrayList<ModelFile> tmpFiles = new ArrayList<ModelFile>();
+            ArrayList<ModelFile> tmpFiles = new ArrayList<>();
             for(ModelFile f:files)
                 if(f.type.equals(ModelFileTypeENUM.AUDIO.type))
                     tmpFiles.add(f);
@@ -308,7 +307,7 @@ public class ModelFile extends Model implements Parcelable {
             Intent intent = new Intent(this.app, ActivityFileAudio.class);
             intent.putExtra("ONLINE", false);
             intent.putExtra("FILE", this);
-            ArrayList<ModelFile> tmpFiles = new ArrayList<ModelFile>();
+            ArrayList<ModelFile> tmpFiles = new ArrayList<>();
             for(ModelFile f:files)
                 if(f.type!=null)
                     if(f.type.equals(ModelFileTypeENUM.AUDIO.type))
@@ -423,8 +422,8 @@ public class ModelFile extends Model implements Parcelable {
             Toast.makeText(app, app.getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
         }
         else {
-            InputStream in = null;
-            OutputStream out = null;
+            InputStream in;
+            OutputStream out;
             try {
                 File dir = new File (outputPath);
                 if (!dir.exists())
@@ -443,9 +442,6 @@ public class ModelFile extends Model implements Parcelable {
                 out.flush();
                 out.close();
                 out = null;
-            }
-            catch (FileNotFoundException e) {
-                Log.e("tag", e.getMessage());
             }
             catch (Exception e) {
                 Log.e("tag", e.getMessage());
@@ -525,16 +521,17 @@ public class ModelFile extends Model implements Parcelable {
         if(file != null) {
             if(file.exists()) {
                 this.file = file;
+                this.id = file.hashCode();
                 this.directory = file.isDirectory();
                 this.size = file.length();
                 this.url = file.getAbsolutePath();
                 int id = file.getName().lastIndexOf(".");
                 this.name = (id == -1) ? file.getName() : file.getName().substring(0, id);
-                this.type = new ModelFileType(FileUtils.getExtensionFromPath(file.getAbsolutePath()));
+                this.type = new ModelFileType(FileUtils.getExtensionFromPath(this.url));
                 this.date_creation = new Date(file.lastModified());
 
                 if (this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0) {
-                    this.bitmap = ImageUtils.load_image_thumbnail(this.file, 256, 256);
+                    this.bitmap = ImageUtils.load_image_thumbnail(this.file, 128, 128);
                 }
             }
         }

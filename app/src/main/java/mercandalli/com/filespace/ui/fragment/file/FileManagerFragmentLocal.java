@@ -39,7 +39,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -60,8 +59,6 @@ import mercandalli.com.filespace.listener.IModelFileListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.listener.IStringListener;
 import mercandalli.com.filespace.model.ModelFile;
-import mercandalli.com.filespace.model.ModelFileType;
-import mercandalli.com.filespace.model.ModelFileTypeENUM;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.adapter.AdapterGridModelFile;
@@ -220,8 +217,8 @@ public class FileManagerFragmentLocal extends Fragment {
             }
         ));
 
-        final Map<File, Long> staticLastModifiedTimes = new HashMap<File,Long>();
-        for(final File f : fs) {
+        final Map<File, Long> staticLastModifiedTimes = new HashMap<>();
+        for(File f : fs) {
             staticLastModifiedTimes.put(f, f.lastModified());
         }
         Collections.sort(fs, new Comparator<File>() {
@@ -231,20 +228,9 @@ public class FileManagerFragmentLocal extends Fragment {
             }
         });
 
-        files = new ArrayList<ModelFile>();
-		if(fs!=null) {
-            int tmp_id = 0;
-            for (File file : fs) {
-                ModelFile modelFile = new ModelFile(app);
-                modelFile.id = file.hashCode()+tmp_id;
-                modelFile.url = file.getAbsolutePath();
-                int id= file.getName().lastIndexOf(".");
-                modelFile.name = (id==-1) ? file.getName() : file.getName().substring(0, id);
-                modelFile.type = new ModelFileType(FileUtils.getExtensionFromPath(file.getAbsolutePath()));
-                modelFile.setFile(file);
-                files.add(modelFile);
-                tmp_id++;
-            }
+        files = new ArrayList<>();
+        for (File file : fs) {
+            files.add(new ModelFile(app, file));
         }
 		
 		updateAdapter();		
@@ -287,16 +273,15 @@ public class FileManagerFragmentLocal extends Fragment {
                                                 FileManagerFragmentLocal.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
                                                     @Override
                                                     public void execute() {
-                                                        if(modelFile != null)
-                                                            if(modelFile.getFile()!=null) {
-                                                                List<StringPair> parameters = modelFile.getForUpload();
-                                                                (new TaskPost(app, app.getConfig().getUrlServer()+app.getConfig().routeFile, new IPostExecuteListener() {
-                                                                    @Override
-                                                                    public void execute(JSONObject json, String body) {
+                                                        if(modelFile.getFile()!=null) {
+                                                            List<StringPair> parameters = modelFile.getForUpload();
+                                                            (new TaskPost(app, app.getConfig().getUrlServer()+app.getConfig().routeFile, new IPostExecuteListener() {
+                                                                @Override
+                                                                public void execute(JSONObject json, String body) {
 
-                                                                    }
-                                                                }, parameters, modelFile.getFile())).execute();
-                                                            }
+                                                                }
+                                                            }, parameters, modelFile.getFile())).execute();
+                                                        }
                                                     }
                                                 }, getString(R.string.cancel), null);
                                             break;
@@ -390,7 +375,6 @@ public class FileManagerFragmentLocal extends Fragment {
                 this.circle2.setVisibility(View.VISIBLE);
 
 
-
             if(FileManagerFragment.VIEW_MODE == Const.MODE_GRID) {
                 this.gridView.setVisibility(View.VISIBLE);
                 this.swipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
@@ -438,16 +422,15 @@ public class FileManagerFragmentLocal extends Fragment {
                                                     FileManagerFragmentLocal.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
                                                         @Override
                                                         public void execute() {
-                                                            if(modelFile != null)
-                                                                if(modelFile.getFile()!=null) {
-                                                                    List<StringPair> parameters = modelFile.getForUpload();
-                                                                    (new TaskPost(app, app.getConfig().getUrlServer()+app.getConfig().routeFile, new IPostExecuteListener() {
-                                                                        @Override
-                                                                        public void execute(JSONObject json, String body) {
+                                                            if(modelFile.getFile()!=null) {
+                                                                List<StringPair> parameters = modelFile.getForUpload();
+                                                                (new TaskPost(app, app.getConfig().getUrlServer()+app.getConfig().routeFile, new IPostExecuteListener() {
+                                                                    @Override
+                                                                    public void execute(JSONObject json, String body) {
 
-                                                                        }
-                                                                    }, parameters, modelFile.getFile())).execute();
-                                                                }
+                                                                    }
+                                                                }, parameters, modelFile.getFile())).execute();
+                                                            }
                                                         }
                                                     }, getString(R.string.cancel), null);
                                                 break;
