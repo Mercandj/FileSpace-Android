@@ -27,9 +27,9 @@ import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.media.ThumbnailUtils;
+import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.listener.IBitmapListener;
 
 /**
  * Created by Jonathan on 29/05/2015.
@@ -397,5 +398,29 @@ public class ImageUtils {
     }
     public static ColorDrawable getColorDrawableFromColor(int color) {
         return new ColorDrawable(color);
+    }
+
+
+    /**
+     * Load async local images
+     */
+    public static class LocalBitmapTask extends AsyncTask<Void, Void, Bitmap> {
+        File file;
+        IBitmapListener outputListener;
+        int width, height;
+        public LocalBitmapTask(File file, IBitmapListener outputListener, int width, int height) {
+            this.file = file;
+            this.outputListener = outputListener;
+            this.width = width;
+            this.height = height;
+        }
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            return ImageUtils.load_image_thumbnail(this.file, width, height);
+        }
+        @Override
+        protected void onPostExecute(Bitmap response) {
+            outputListener.execute(response);
+        }
     }
 }
