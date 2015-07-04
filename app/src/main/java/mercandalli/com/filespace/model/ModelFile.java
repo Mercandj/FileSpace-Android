@@ -65,7 +65,6 @@ import mercandalli.com.filespace.ui.activity.ActivityFileTimer;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.HtmlUtils;
-import mercandalli.com.filespace.util.ImageUtils;
 import mercandalli.com.filespace.util.StringPair;
 import mercandalli.com.filespace.util.TimeUtils;
 
@@ -530,9 +529,12 @@ public class ModelFile extends Model implements Parcelable {
                 this.type = new ModelFileType(FileUtils.getExtensionFromPath(this.url));
                 this.date_creation = new Date(file.lastModified());
 
+                /*
+                // TODO Must be async
                 if (this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0) {
                     this.bitmap = ImageUtils.load_image_thumbnail(this.file, 128, 128);
                 }
+                */
             }
         }
     }
