@@ -122,9 +122,14 @@ public class ServerLogsFragment extends Fragment {
                         @Override
                         public void execute(JSONObject json, String body) {
                             list = new ArrayList<ModelUserConnection>();
-                            list.add(new ModelUserConnection("Server Logs", Const.TAB_VIEW_TYPE_SECTION));
+
                             try {
                                 if (json != null) {
+                                    if (json.has("result_count_all"))
+                                        list.add(new ModelUserConnection("Server Logs ("+json.getInt("result_count_all")+")", Const.TAB_VIEW_TYPE_SECTION));
+                                    else
+                                        list.add(new ModelUserConnection("Server Logs", Const.TAB_VIEW_TYPE_SECTION));
+
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         int array_length = array.length();
@@ -132,6 +137,7 @@ public class ServerLogsFragment extends Fragment {
                                             list.add(new ModelUserConnection(app, array.getJSONObject(i)));
                                         }
                                     }
+
                                 }
                                 else
                                     Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
