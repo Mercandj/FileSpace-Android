@@ -44,6 +44,7 @@ import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.adapter.AdapterModelSetting;
 import mercandalli.com.filespace.util.FileUtils;
+import mercandalli.com.filespace.util.GpsUtils;
 import mercandalli.com.filespace.util.StringPair;
 import mercandalli.com.filespace.util.TimeUtils;
 
