@@ -149,10 +149,14 @@ public class LoginFragment extends Fragment {
 
         // Login : POST /user
         List<StringPair> parameters = new ArrayList<>();
+        double latitude = GpsUtils.getLatitude(getActivity()),
+                longitude = GpsUtils.getLongitude(getActivity());
         parameters.add(new StringPair("login", "true"));
-        parameters.add(new StringPair("latitude", "" + GpsUtils.getLatitude(getActivity())));
-        parameters.add(new StringPair("longitude", "" + GpsUtils.getLongitude(getActivity())));
-        parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
+        if(latitude!=0 && longitude!=0) {
+            parameters.add(new StringPair("latitude", "" + latitude));
+            parameters.add(new StringPair("longitude", "" + longitude));
+            parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
+        }
         Log.d("LoginFragment", "login "+app.getConfig().getUserPassword()+app.getConfig().getUserUsername()+" isInternetConnection="+isInternetConnection(app));
         if(isInternetConnection(app))
             (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
