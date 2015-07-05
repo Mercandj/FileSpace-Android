@@ -22,12 +22,8 @@ package mercandalli.com.filespace.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.util.FileUtils;
 
 public class ModelUserConnection extends Model {
 
@@ -71,7 +67,7 @@ public class ModelUserConnection extends Model {
     public String getAdapterTitle() {
         if(viewType != Const.TAB_VIEW_TYPE_NORMAL)
             return title;
-        return this.username + " : " + this.date_creation;
+        return ((this.username == null) ? "#" + this.id_user : this.username) + " : " + this.date_creation;
     }
 
     public String getAdapterSubtitle() { return "" + this.url; }
