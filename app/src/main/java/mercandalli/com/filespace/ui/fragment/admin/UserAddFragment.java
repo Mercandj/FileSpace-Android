@@ -21,46 +21,29 @@ package mercandalli.com.filespace.ui.fragment.admin;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
-import mercandalli.com.filespace.model.Model;
-import mercandalli.com.filespace.model.ModelFile;
-import mercandalli.com.filespace.model.ModelInformation;
 import mercandalli.com.filespace.model.ModelUser;
-import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.ui.adapter.AdapterModelInformation;
 import mercandalli.com.filespace.ui.fragment.Fragment;
-import mercandalli.com.filespace.util.GpsUtils;
+import mercandalli.com.filespace.util.HashUtils;
 import mercandalli.com.filespace.util.StringPair;
 import mercandalli.com.filespace.util.StringUtils;
 
@@ -126,7 +109,7 @@ public class UserAddFragment extends Fragment {
                 else {
                     circle.setVisibility(View.GONE);
                 }
-                newUser.password = s.toString();
+                newUser.password = HashUtils.sha1(s.toString());
             }
             @Override
             public void afterTextChanged(Editable s) { }
