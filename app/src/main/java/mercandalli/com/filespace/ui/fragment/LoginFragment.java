@@ -32,7 +32,7 @@ import java.util.List;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelUser;
-import mercandalli.com.filespace.net.TaskGet;
+import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.ActivityMain;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.util.GpsUtils;
@@ -155,7 +155,7 @@ public class LoginFragment extends Fragment {
         parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
         Log.d("LoginFragment", "login "+app.getConfig().getUserPassword()+app.getConfig().getUserUsername()+" isInternetConnection="+isInternetConnection(app));
         if(isInternetConnection(app))
-            (new TaskGet(app, app.getConfig().getUser(), app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
+            (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
                 @Override
                 public void execute(JSONObject json, String body) {
                     requestLaunched = false;
