@@ -11,7 +11,21 @@
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="mercandalli.com.filespace.permission.MAPS_RECEIVE" />
+
+    <!-- Required OpenGL ES 2.0. for Maps V2 -->
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <uses-library android:name="com.google.android.maps" />
+
+    <permission
+        android:name="imercandalli.com.filespace.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
 
     <permission
         android:name="mercandalli.com.filespace.permission.C2D_MESSAGE"
@@ -109,6 +123,10 @@
         </receiver>
 
         <service android:name="mercandalli.com.filespace.notificationpush.GCMNotificationIntentService" />
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyALmR120lJH_ZN4NZO4_JyU7K_08OJwG2Q"/>
 
     </application>
 

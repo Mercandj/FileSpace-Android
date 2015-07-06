@@ -7,6 +7,7 @@
     <string name="author_full_name" translate="false">Jonathan Mercandalli</string>
     <string name="author_full_name_by" translate="false">By Jonathan Mercandalli</string>
     <string name="app_description" translate="false">Share, store, control your IT!</string>
+    <string name="api_map_key" translate="false">AIzaSyALmR120lJH_ZN4NZO4_JyU7K_08OJwG2Q</string>
 
     <string name="image_description">Description Image</string>
 

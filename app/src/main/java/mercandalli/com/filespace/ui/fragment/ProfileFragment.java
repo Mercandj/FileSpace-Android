@@ -118,9 +118,12 @@ public class ProfileFragment extends Fragment {
                                         list.add(new ModelSetting(app, "Connection date", "" + TimeUtils.getDate(user.date_last_connection)));
                                         if(user.isAdmin()) {
                                             list.add(new ModelSetting(app, "Admin", "" + user.isAdmin()));
-                                            list.add(new ModelSetting(app, "Longitude", "" + user.longitude));
-                                            list.add(new ModelSetting(app, "Latitude", "" + user.latitude));
-                                            list.add(new ModelSetting(app, "Altitude", "" + user.altitude));
+
+                                            if(user.userLocation != null) {
+                                                list.add(new ModelSetting(app, "Longitude", "" + user.userLocation.longitude));
+                                                list.add(new ModelSetting(app, "Latitude", "" + user.userLocation.latitude));
+                                                list.add(new ModelSetting(app, "Altitude", "" + user.userLocation.altitude));
+                                            }
                                         }
                                     }
                                 }

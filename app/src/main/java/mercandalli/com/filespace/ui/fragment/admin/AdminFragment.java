@@ -112,6 +112,7 @@ public class AdminFragment extends Fragment {
                 case 0:		fragment = new ServerDataFragment();  	break;
                 case 1:		fragment = new ServerLogsFragment();    break;
                 case 2:		fragment = new UserAddFragment(); 	    break;
+                case 4:		fragment = new UserLocationFragment(); 	break;
                 default:    fragment = new EmptyFragment(); 	    break;
             }
             listFragment[i] = fragment;
