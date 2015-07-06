@@ -58,4 +58,38 @@ public class GpsUtils {
         return 0;
     }
 
+
+
+
+
+    public static Location getGpsLocation(Context context) {
+        LocationManager myLocationManager;
+        String PROVIDER = LocationManager.GPS_PROVIDER;
+        myLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
+        //get last known location, if available
+        return myLocationManager.getLastKnownLocation(PROVIDER);
+    }
+
+    public static double getGpsLongitude(Context context) {
+        Location location = getGpsLocation(context);
+        if(location != null)
+            return location.getLongitude();
+        return 0;
+    }
+
+    public static double getGpsLatitude(Context context) {
+        Location location = getGpsLocation(context);
+        if(location != null)
+            return location.getLatitude();
+        return 0;
+    }
+
+    public static double getGpsAltitude(Context context) {
+        Location location = getGpsLocation(context);
+        if(location != null)
+            return location.getAltitude();
+        return 0;
+    }
+
 }

@@ -134,7 +134,7 @@ public class UserFragment extends Fragment {
                     new IPostExecuteListener() {
                         @Override
                         public void execute(JSONObject json, String body) {
-                            list = new ArrayList<ModelUser>();
+                            list = new ArrayList<>();
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {

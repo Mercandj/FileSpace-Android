@@ -21,27 +21,18 @@ package mercandalli.com.filespace.ui.fragment.admin;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,12 +43,10 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelUser;
 import mercandalli.com.filespace.model.ModelUserLocation;
-import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.fragment.Fragment;
-import mercandalli.com.filespace.util.HashUtils;
 import mercandalli.com.filespace.util.StringPair;
-import mercandalli.com.filespace.util.StringUtils;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
@@ -110,6 +99,37 @@ public class UserLocationFragment extends Fragment {
             addLocation(new ModelUserLocation(app, "Zero Zero", 0,0,0));
         }
 
+        List<StringPair> parameters = null;
+        if(isInternetConnection(app) && app.isLogged())
+            new TaskGet(
+                    app,
+                    this.app.getConfig().getUser(),
+                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeUser,
+                    new IPostExecuteListener() {
+                        @Override
+                        public void execute(JSONObject json, String body) {
+                            List<ModelUserLocation> locations = new ArrayList<>();
+                            try {
+                                if (json != null) {
+                                    if (json.has("result")) {
+                                        JSONArray array = json.getJSONArray("result");
+                                        for (int i = 0; i < array.length(); i++) {
+                                            ModelUser modelUser = new ModelUser(app, array.getJSONObject(i));
+                                            locations.add(modelUser.userLocation);
+                                        }
+                                    }
+                                }
+                                else
+                                    Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            addLocations(locations);
+                        }
+                    },
+                    parameters
+            ).execute();
+
         return this.rootView;
 	}
 
@@ -120,7 +140,9 @@ public class UserLocationFragment extends Fragment {
     }
 
     public void addLocation(ModelUserLocation userLocation) {
-        if(map == null)
+        if(map == null || userLocation == null)
+            return;
+        if(userLocation.latitude == 0 && userLocation.longitude == 0)
             return;
         // create marker
         MarkerOptions marker = new MarkerOptions().position(new LatLng(userLocation.latitude, userLocation.longitude)).title(userLocation.title);

@@ -41,6 +41,7 @@ import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelSetting;
 import mercandalli.com.filespace.model.ModelUser;
 import mercandalli.com.filespace.net.TaskGet;
+import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.adapter.AdapterModelSetting;
 import mercandalli.com.filespace.util.FileUtils;
@@ -124,6 +125,25 @@ public class ProfileFragment extends Fragment {
                                                 list.add(new ModelSetting(app, "Latitude", "" + user.userLocation.latitude));
                                                 list.add(new ModelSetting(app, "Altitude", "" + user.userLocation.altitude));
                                             }
+                                        }
+
+                                        double longitude = GpsUtils.getGpsLatitude(app),
+                                                latitude = GpsUtils.getGpsLongitude(app);
+
+                                        list.add(new ModelSetting(app, "Gps Longitude", "" + longitude));
+                                        list.add(new ModelSetting(app, "Gps Latitude", "" + latitude));
+
+                                        if(isInternetConnection(app)) {
+                                            List<StringPair> parameters = new ArrayList<>();
+                                            parameters.add(new StringPair("longitude", "" + longitude));
+                                            parameters.add(new StringPair("latitude", "" + latitude));
+
+                                            (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                @Override
+                                                public void execute(JSONObject json, String body) {
+
+                                                }
+                                            }, parameters)).execute();
                                         }
                                     }
                                 }
