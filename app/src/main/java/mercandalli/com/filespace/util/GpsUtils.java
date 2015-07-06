@@ -21,7 +21,12 @@ package mercandalli.com.filespace.util;
 
 import android.content.Context;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
+import android.os.Looper;
+
+import mercandalli.com.filespace.listener.ILocationListener;
 
 /**
  * Created by Jonathan on 29/06/15.
@@ -58,35 +63,57 @@ public class GpsUtils {
         return 0;
     }
 
-
-
-
-
-    public static Location getGpsLocation(Context context) {
+    public static Location getGpsLocation(Context context, final ILocationListener locationListener) {
         LocationManager myLocationManager;
         String PROVIDER = LocationManager.GPS_PROVIDER;
         myLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
+        myLocationManager.requestSingleUpdate(
+                LocationManager.GPS_PROVIDER,
+                new LocationListener() {
+                    @Override
+                    public void onLocationChanged(Location location) {
+                        locationListener.execute(location);
+                    }
+
+                    @Override
+                    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                    }
+
+                    @Override
+                    public void onProviderEnabled(String provider) {
+
+                    }
+
+                    @Override
+                    public void onProviderDisabled(String provider) {
+
+                    }
+                },
+                Looper.myLooper()
+        );
 
         //get last known location, if available
         return myLocationManager.getLastKnownLocation(PROVIDER);
     }
 
-    public static double getGpsLongitude(Context context) {
-        Location location = getGpsLocation(context);
+    public static double getGpsLongitude(Context context, final ILocationListener locationListener) {
+        Location location = getGpsLocation(context, locationListener);
         if(location != null)
             return location.getLongitude();
         return 0;
     }
 
-    public static double getGpsLatitude(Context context) {
-        Location location = getGpsLocation(context);
+    public static double getGpsLatitude(Context context, final ILocationListener locationListener) {
+        Location location = getGpsLocation(context, locationListener);
         if(location != null)
             return location.getLatitude();
         return 0;
     }
 
-    public static double getGpsAltitude(Context context) {
-        Location location = getGpsLocation(context);
+    public static double getGpsAltitude(Context context, final ILocationListener locationListener) {
+        Location location = getGpsLocation(context, locationListener);
         if(location != null)
             return location.getAltitude();
         return 0;

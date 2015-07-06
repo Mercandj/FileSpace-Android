@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -56,6 +57,7 @@ public class UserLocationFragment extends Fragment {
 	Application app;
 	private View rootView;
     private MapView mapView;
+    private TextView text;
 
     // Google Map
     private GoogleMap map;
@@ -73,6 +75,8 @@ public class UserLocationFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_admin_add_user_location, container, false);
+
+        text = (TextView) rootView.findViewById(R.id.text);
 
         if (map == null && app != null) {
             mapView = (MapView) rootView.findViewById(R.id.mapView);
@@ -134,22 +138,26 @@ public class UserLocationFragment extends Fragment {
 	}
 
     public void addLocations(List<ModelUserLocation> locations) {
+        int nbLocation = 0;
         for(ModelUserLocation userLocation : locations) {
-            addLocation(userLocation);
+            if(addLocation(userLocation))
+                nbLocation++;
         }
+        text.setText(nbLocation + " user location"+((nbLocation>1)?"s":""));
     }
 
-    public void addLocation(ModelUserLocation userLocation) {
+    public boolean addLocation(ModelUserLocation userLocation) {
         if(map == null || userLocation == null)
-            return;
+            return false;
         if(userLocation.latitude == 0 && userLocation.longitude == 0)
-            return;
+            return false;
         // create marker
         MarkerOptions marker = new MarkerOptions().position(new LatLng(userLocation.latitude, userLocation.longitude)).title(userLocation.title);
         // Changing marker icon
         marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         // adding marker
         map.addMarker(marker);
+        return true;
     }
 
     @Override

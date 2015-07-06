@@ -16,14 +16,21 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Text"
+        android:id="@+id/text"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        android:background="#75000000"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:background="#55000000">
-
-    </RelativeLayout>
+        android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>

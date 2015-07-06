@@ -20,6 +20,7 @@
 package mercandalli.com.filespace.ui.fragment;
 
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listener.ILocationListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelSetting;
 import mercandalli.com.filespace.model.ModelUser;
@@ -127,23 +129,51 @@ public class ProfileFragment extends Fragment {
                                             }
                                         }
 
-                                        double longitude = GpsUtils.getGpsLatitude(app),
-                                                latitude = GpsUtils.getGpsLongitude(app);
+                                        Location location = GpsUtils.getGpsLocation(app, new ILocationListener() {
+                                            @Override
+                                            public void execute(Location location) {
+                                                if(location != null) {
+                                                    double longitude = location.getLongitude(),
+                                                            latitude = location.getLatitude();
 
-                                        list.add(new ModelSetting(app, "Gps Longitude", "" + longitude));
-                                        list.add(new ModelSetting(app, "Gps Latitude", "" + latitude));
+                                                    list.add(new ModelSetting(app, "Gps Longitude", "" + longitude));
+                                                    list.add(new ModelSetting(app, "Gps Latitude", "" + latitude));
 
-                                        if(isInternetConnection(app)) {
-                                            List<StringPair> parameters = new ArrayList<>();
-                                            parameters.add(new StringPair("longitude", "" + longitude));
-                                            parameters.add(new StringPair("latitude", "" + latitude));
+                                                    if(isInternetConnection(app) && longitude!=0 && latitude!=0) {
+                                                        List<StringPair> parameters = new ArrayList<>();
+                                                        parameters.add(new StringPair("longitude", "" + longitude));
+                                                        parameters.add(new StringPair("latitude", "" + latitude));
 
-                                            (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
-                                                @Override
-                                                public void execute(JSONObject json, String body) {
+                                                        (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                            @Override
+                                                            public void execute(JSONObject json, String body) {
 
+                                                            }
+                                                        }, parameters)).execute();
+                                                    }
                                                 }
-                                            }, parameters)).execute();
+                                            }
+                                        });
+
+                                        if(location != null) {
+                                            double longitude = location.getLongitude(),
+                                                    latitude = location.getLatitude();
+
+                                            list.add(new ModelSetting(app, "Gps Longitude", "" + longitude));
+                                            list.add(new ModelSetting(app, "Gps Latitude", "" + latitude));
+
+                                            if(isInternetConnection(app) && longitude!=0 && latitude!=0) {
+                                                List<StringPair> parameters = new ArrayList<>();
+                                                parameters.add(new StringPair("longitude", "" + longitude));
+                                                parameters.add(new StringPair("latitude", "" + latitude));
+
+                                                (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                    @Override
+                                                    public void execute(JSONObject json, String body) {
+
+                                                    }
+                                                }, parameters)).execute();
+                                            }
                                         }
                                     }
                                 }
