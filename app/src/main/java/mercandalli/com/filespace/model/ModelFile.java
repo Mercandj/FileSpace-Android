@@ -67,6 +67,7 @@ import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.HtmlUtils;
 import mercandalli.com.filespace.util.ImageUtils;
 import mercandalli.com.filespace.util.StringPair;
+import mercandalli.com.filespace.util.StringUtils;
 import mercandalli.com.filespace.util.TimeUtils;
 
 import static mercandalli.com.filespace.util.ImageUtils.is_image;
@@ -89,6 +90,7 @@ public class ModelFile extends Model implements Parcelable {
     public String onlineUrl;
     public ModelFileContent content;
     public boolean selected = false;
+    public int count;
 
     public CountDownTimer cdt;
 
@@ -102,6 +104,8 @@ public class ModelFile extends Model implements Parcelable {
     }
 
     public String getAdapterSubtitle() {
+        if(this.directory && this.count != 0)
+            return "Directory: " + StringUtils.intToShortString(this.count) + " file" + (this.count > 1 ? "s" : "");
         if(this.directory)
             return "Directory";
         if(this.type.equals(ModelFileTypeENUM.FILESPACE.type) && this.content != null)
@@ -164,6 +168,8 @@ public class ModelFile extends Model implements Parcelable {
                 this.type = new ModelFileType(json.getString("type"));
             if(json.has("size") && !json.isNull("size"))
                 this.size = json.getLong("size");
+            if(json.has("count") && !json.isNull("count"))
+                this.count = json.getInt("count");
             if(json.has("directory") && !json.isNull("directory"))
                 this.directory = json.getInt("directory")==1;
             if(json.has("content") && !json.isNull("content"))
@@ -530,7 +536,7 @@ public class ModelFile extends Model implements Parcelable {
                 this.type = new ModelFileType(FileUtils.getExtensionFromPath(this.url));
                 this.date_creation = new Date(file.lastModified());
 
-                if (this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0) {
+                if(this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0) {
                     (new ImageUtils.LocalBitmapTask(file, new IBitmapListener() {
                         @Override
                         public void execute(Bitmap bitmap) {
@@ -540,6 +546,9 @@ public class ModelFile extends Model implements Parcelable {
                     }, 128, 128)).execute();
                 }
 
+                if(this.directory && file.listFiles() != null) {
+                    this.count = file.listFiles().length;
+                }
             }
         }
     }

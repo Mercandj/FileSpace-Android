@@ -64,4 +64,46 @@ public class StringUtils {
             return true;
         return str.replaceAll(" ","").equals("");
     }
+
+    public static String intToShortString(int nb) {
+        if (nb < 1000) return nb + "";
+        int exp = (int) (Math.log(nb) / Math.log(1000));
+        String pre = "" + ("KMGTPE").charAt(exp-1);
+        return String.format("%.1f %s", nb / Math.pow(1000, exp), pre);
+    }
+
+    public static String capitalize(final String str) {
+        return capitalize(str, null);
+    }
+
+    public static String capitalize(final String str, final char... delimiters) {
+        final int delimLen = delimiters == null ? -1 : delimiters.length;
+        if (isNullOrEmpty(str) || delimLen == 0) {
+            return str;
+        }
+        final char[] buffer = str.toCharArray();
+        boolean capitalizeNext = true;
+        for (int i = 0; i < buffer.length; i++) {
+            final char ch = buffer[i];
+            if (isDelimiter(ch, delimiters)) {
+                    capitalizeNext = true;
+                } else if (capitalizeNext) {
+                    buffer[i] = Character.toTitleCase(ch);
+                capitalizeNext = false;
+                }
+        }
+        return new String(buffer);
+    }
+
+    private static boolean isDelimiter(final char ch, final char[] delimiters) {
+        if (delimiters == null) {
+                return Character.isWhitespace(ch);
+            }
+        for (final char delimiter : delimiters) {
+                if (ch == delimiter) {
+                        return true;
+                    }
+            }
+        return false;
+    }
 }

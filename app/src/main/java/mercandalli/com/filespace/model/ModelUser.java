@@ -50,7 +50,7 @@ public class ModelUser extends Model {
 	public String password;
     public String regId;
     public Date date_creation, date_last_connection;
-    public long size_files, file_profile_picture_size = -1, num_files;
+    public long size_files, file_profile_picture_size = -1, num_files, server_max_size_end_user;
     private boolean admin = false;
     public Bitmap bitmap;
     public ModelUserLocation userLocation;
@@ -86,6 +86,8 @@ public class ModelUser extends Model {
                 this.date_last_connection = dateFormat.parse(json.getString("date_last_connection"));
             if(json.has("size_files") && !json.isNull("size_files"))
                 this.size_files = json.getLong("size_files");
+            if(json.has("server_max_size_end_user") && !json.isNull("server_max_size_end_user"))
+                this.server_max_size_end_user = json.getLong("server_max_size_end_user");
             if(json.has("admin")) {
                 Object admin_obj = json.get("admin");
                 if(admin_obj instanceof Integer)

@@ -21,6 +21,7 @@ package mercandalli.com.filespace.ui.activity;
 
 import android.app.FragmentManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -36,6 +37,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import java.util.Stack;
 
@@ -64,7 +66,10 @@ public abstract class ApplicationDrawer extends Application {
     private final int INIT_FRAGMENT_ID = 2;
     private final int INIT_FRAGMENT_LOGGED_ID = 3;
     private Stack<Integer> ID_FRAGMENT_VISITED = new Stack<>();
-    
+
+    private RelativeLayout toolbar_space;
+
+    protected Toolbar toolbar;
 	protected DrawerLayout mDrawerLayout;
 	protected ListView mDrawerList;
 	protected NavDrawerItemListe navDrawerItems;
@@ -75,7 +80,7 @@ public abstract class ApplicationDrawer extends Application {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         if(toolbar!=null)
             setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -84,6 +89,8 @@ public abstract class ApplicationDrawer extends Application {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
         }
+
+        toolbar_space = (RelativeLayout) findViewById(R.id.toolbar_space);
 
         mDrawerLayout 	= (DrawerLayout) 	findViewById(R.id.drawer_layout);
         mDrawerList 	= (ListView) 		findViewById(R.id.left_drawer);
@@ -286,13 +293,25 @@ public abstract class ApplicationDrawer extends Application {
             ID_FRAGMENT_VISITED = new Stack<>();
         }
         ID_FRAGMENT_VISITED.push(position);
+
+        if(toolbar != null) {
+            if(position == 0) {
+                toolbar.setBackgroundColor(Color.TRANSPARENT);
+                toolbar_space.setVisibility(View.GONE);
+            }
+            else {
+                toolbar.setBackgroundColor(getResources().getColor(R.color.actionbar));
+                toolbar_space.setVisibility(View.VISIBLE);
+            }
+        }
+
     	for(NavDrawerItem nav : navDrawerItems.getListe()) {
     		nav.isSelected = false;
     		if(navDrawerItems.get(position).equals(nav)) {
     			nav.isSelected = true;
     			if(nav.listenerClick!=null)
     				nav.listenerClick.execute();
-                getSupportActionBar().setTitle(nav.title);
+                getSupportActionBar().setTitle((position == 0)?"":nav.title);
     		}
     	}
         mDrawerLayout.closeDrawer(mDrawerList);

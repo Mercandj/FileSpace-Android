@@ -10,16 +10,39 @@
     android:layout_gravity="top"
     android:orientation="vertical" >
 
-    <mercandalli.com.filespace.ui.view.CircularImageView
-        android:id="@+id/icon"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginLeft="15dp"
+    <ImageView
+        android:id="@+id/icon_back"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
         android:contentDescription="@string/image_description"
         android:src="@drawable/ic_user"
-        android:layout_marginTop="15dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentEnd="true"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:id="@+id/gradient_back"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:contentDescription="@string/image_description"
+        android:src="@drawable/linear_gradient"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Username"
+        android:textSize="26sp"
+        android:textColor="#ffffffff"
+        android:layout_alignBottom="@+id/icon_back"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="38dp"
+        android:layout_marginBottom="26dp"
+        android:textIsSelectable="false" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"
@@ -29,8 +52,7 @@
         android:clickable="true"
         android:focusable="true"
         android:scrollbars="vertical"
-        android:layout_below="@+id/icon"
-        android:layout_marginTop="15dp" />
+        android:layout_below="@+id/icon_back" />
 
     <ProgressBar
         android:id="@+id/circularProgressBar"

@@ -20,6 +20,8 @@
 package mercandalli.com.filespace.ui.fragment;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -47,8 +50,11 @@ import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.adapter.AdapterModelSetting;
 import mercandalli.com.filespace.util.FileUtils;
+import mercandalli.com.filespace.util.FontUtils;
 import mercandalli.com.filespace.util.GpsUtils;
+import mercandalli.com.filespace.util.ImageUtils;
 import mercandalli.com.filespace.util.StringPair;
+import mercandalli.com.filespace.util.StringUtils;
 import mercandalli.com.filespace.util.TimeUtils;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
@@ -63,9 +69,12 @@ public class ProfileFragment extends Fragment {
     private ProgressBar circularProgressBar;
     private ModelUser user;
 
+    private TextView username;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     List<ModelSetting> list = new ArrayList<>();
+
+    ImageView icon_back;
 
     public ProfileFragment(Application app) {
         this.app = app;
@@ -78,18 +87,36 @@ public class ProfileFragment extends Fragment {
         this.circularProgressBar = (ProgressBar) this.rootView.findViewById(R.id.circularProgressBar);
         this.circularProgressBar.setVisibility(View.VISIBLE);
 
+        icon_back = (ImageView) rootView.findViewById(R.id.icon_back);
+
         recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
 
         Bitmap icon_profile_online = app.getConfig().getUserProfilePicture();
-        if(icon_profile_online!=null)
-            ((ImageView) rootView.findViewById(R.id.icon)).setImageBitmap(icon_profile_online);
+        if(icon_profile_online!=null) {
+            icon_back.setImageBitmap(ImageUtils.setBlur(ImageUtils.setBrightness(icon_profile_online, -50), 15));
+        }
+
+        this.username = (TextView) this.rootView.findViewById(R.id.username);
+        this.username.setText(StringUtils.capitalize(app.getConfig().getUserUsername()));
+        FontUtils.applyFont(app, this.username, "fonts/Roboto-Regular.ttf");
 
         refreshView();
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        Drawable drawable = icon_back.getDrawable();
+        if (drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            bitmapDrawable.getBitmap().recycle();
+        }
     }
 
     @Override
@@ -115,7 +142,7 @@ public class ProfileFragment extends Fragment {
                                         user = new ModelUser(app, json.getJSONObject("result"));
                                         list.clear();
                                         list.add(new ModelSetting(app, "Username", "" + user.username));
-                                        list.add(new ModelSetting(app, "Files size", "" + FileUtils.humanReadableByteCount(user.size_files)));
+                                        list.add(new ModelSetting(app, "Files size", FileUtils.humanReadableByteCount(user.size_files) + " / " + FileUtils.humanReadableByteCount(user.server_max_size_end_user)));
                                         list.add(new ModelSetting(app, "Files count", "" + user.num_files));
                                         list.add(new ModelSetting(app, "Creation date", "" + TimeUtils.getDate(user.date_creation)));
                                         list.add(new ModelSetting(app, "Connection date", "" + TimeUtils.getDate(user.date_last_connection)));

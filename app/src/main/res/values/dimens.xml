@@ -3,7 +3,6 @@
     <dimen name="circle_button_elevation_low">1dp</dimen>
     <dimen name="circle_button_elevation_high">4dp</dimen>
 
-
     <dimen name="pause_bar_width">6dp</dimen>
     <dimen name="pause_bar_distance">5dp</dimen>
     <dimen name="pause_bar_height">18dp</dimen>

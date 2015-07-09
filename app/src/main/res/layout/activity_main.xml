@@ -9,12 +9,17 @@
     android:clipToPadding="false"
     android:fitsSystemWindows="false" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/toolbar" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:id="@+id/toolbar_space">
+
+        </RelativeLayout>
 
         <FrameLayout
             android:id="@+id/content_frame"
@@ -22,10 +27,15 @@
             android:layout_height="match_parent"
             android:background="#ededed"
             android:clipToPadding="false"
-            android:fitsSystemWindows="true" >
+            android:fitsSystemWindows="true"
+            android:layout_below="@+id/toolbar_space">
 
         </FrameLayout>
-    </LinearLayout>
+
+        <include layout="@layout/toolbar"
+            android:id="@+id/my_toolbar" />
+
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/left_drawer"
