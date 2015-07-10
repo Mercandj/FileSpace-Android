@@ -104,3 +104,5 @@ Thumbs.db
 .gradle
 build/
 *.iml
+
+*.keystore
