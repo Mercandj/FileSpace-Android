@@ -29,6 +29,7 @@ public enum ModelFileTypeENUM {
 	ARCHIVE(new ModelFileType("Archive", new String[] {"zip", "gzip", "rar", "tar", "tar.gz", "gz"})),
     FILESPACE(new ModelFileType("FileSpace", new String[] {"filespace", "jarvis"})),
     WORD(new ModelFileType("Word", new String[] {"doc", "docx"})),
+    POWERPOINT(new ModelFileType("Power Point", new String[] {"ppt", "pptx"})),
     EXCEL(new ModelFileType("Excel", new String[] {"xlsx"})),
     VCF(new ModelFileType("Business card", new String[] {"vcf"})),
     PDF(new ModelFileType("Pdf","pdf")),
