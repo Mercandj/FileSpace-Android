@@ -26,14 +26,18 @@ public enum ModelFileTypeENUM {
 	PICTURE(new ModelFileType("Picture", new String[] {"jpeg",	"jpg", "png", "gif", "raw",	"psd", "bmp", "tiff", "tif"})),
 	AUDIO(new ModelFileType("Audio", new String[] {"mp3", "wav", "m4a", "aiff", "wma", "caf", "flac", "m4p", "amr"})),
 	VIDEO(new ModelFileType("Video", new String[] {"m4v", "3gp", "wmv", "mp4", "mpeg", "mpg", "rm", "mov", "avi", "mkv", "flv", "ogg"})),
-	ARCHIVE(new ModelFileType("Archive", new String[] {"zip", "gzip", "rar", "tar", "tar.gz", "gz"})),
+	ARCHIVE(new ModelFileType("Archive", new String[] {"zip", "gzip", "rar", "tar", "tar.gz", "gz", "7z"})),
     FILESPACE(new ModelFileType("FileSpace", new String[] {"filespace", "jarvis"})),
     WORD(new ModelFileType("Word", new String[] {"doc", "docx"})),
+	OPEN_DOCUMENT(new ModelFileType("OpenDocument", new String[] {"odp"})),
     POWERPOINT(new ModelFileType("Power Point", new String[] {"ppt", "pptx"})),
     EXCEL(new ModelFileType("Excel", new String[] {"xlsx"})),
     VCF(new ModelFileType("Business card", new String[] {"vcf"})),
     PDF(new ModelFileType("Pdf","pdf")),
-    DIRECTORY(new ModelFileType("Directory","dir"));
+    DIRECTORY(new ModelFileType("Directory","dir")),
+	SOURCE(new ModelFileType("Source code", new String[] {"java", "c", "cs", "cpp", "sql", "php", "html", "js", "css"})),
+	THREE_D(new ModelFileType("3d model", new String[] {"3ds", "obj", "max"})),
+	ISO(new ModelFileType("Optical disc", new String[] {"iso"}));
 	
 	public ModelFileType type;
 	
