@@ -49,7 +49,7 @@ import mercandalli.com.filespace.ui.fragment.file.FileManagerFragment;
 import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.ui.fragment.HomeFragment;
 import mercandalli.com.filespace.ui.fragment.ProfileFragment;
-import mercandalli.com.filespace.ui.fragment.RequestFragment;
+import mercandalli.com.filespace.ui.fragment.admin.RequestFragment;
 import mercandalli.com.filespace.ui.fragment.RoboticsFragment;
 import mercandalli.com.filespace.ui.fragment.SettingsFragment;
 import mercandalli.com.filespace.ui.fragment.community.CommunityManagerFragment;
@@ -176,21 +176,9 @@ public abstract class ApplicationDrawer extends Application {
                         }
                     }, R.drawable.q_ic_drawer_data, R.drawable.q_ic_drawer_data_pressed, Const.TAB_VIEW_TYPE_NORMAL)
             );
-
-            // Tab 7
-            navDrawerItems.add(
-                    new NavDrawerItem(getString(R.string.tab_request), new IListener() {
-                        @Override
-                        public void execute() {
-                            fragment = new RequestFragment(ApplicationDrawer.this);
-                            FragmentManager fragmentManager = getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-                        }
-                    }, R.drawable.q_ic_drawer_request, R.drawable.q_ic_drawer_request_pressed, Const.TAB_VIEW_TYPE_NORMAL)
-            );
         }
         
-        // Tab 8
+        // Tab 7
         navDrawerItems.add(
         		new NavDrawerItem( "", R.drawable.ic_launcher, Const.TAB_VIEW_TYPE_SECTION)
         );
@@ -349,8 +337,9 @@ public abstract class ApplicationDrawer extends Application {
         	else 			mDrawerLayout.openDrawer(mDrawerList);
         	return true;
         case R.id.action_delete:
-        	if(fragment instanceof RequestFragment)
-        		((RequestFragment)fragment).deleteConsole();
+        	if(fragment instanceof AdminFragment)
+                if(((AdminFragment)fragment).getCurrentFragmentIndex() == 6)
+        		    ((RequestFragment) AdminFragment.listFragment[((AdminFragment)fragment).getCurrentFragmentIndex()] ).deleteConsole();
         	return true;
 	    case R.id.action_add:
 	    	if(fragment instanceof FileManagerFragment)
@@ -438,8 +427,9 @@ public abstract class ApplicationDrawer extends Application {
         menu.findItem(R.id.action_home) 	.setVisible(false);
         menu.findItem(R.id.action_sort)	    .setVisible(false);
 		
-    	if(fragment instanceof RequestFragment) {
-    		menu.findItem(R.id.action_delete)	.setVisible(!drawerOpen);
+    	if(fragment instanceof AdminFragment) {
+            if(((AdminFragment)fragment).getCurrentFragmentIndex() == 6)
+    		    menu.findItem(R.id.action_delete)	.setVisible(!drawerOpen);
     	}
     	else if(fragment instanceof FileManagerFragment) {
             menu.findItem(R.id.action_search)	.setVisible(!drawerOpen);

@@ -17,8 +17,9 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
  */
-package mercandalli.com.filespace.ui.fragment;
+package mercandalli.com.filespace.ui.fragment.admin;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,12 +36,23 @@ import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.ui.dialog.DialogRequest;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
+import mercandalli.com.filespace.ui.fragment.Fragment;
 
 
 public class RequestFragment extends Fragment {
 
 	private Application app;
 	private View rootView;
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		app = (Application) activity;
+	}
+
+	public RequestFragment() {
+		super();
+	}
 
 	public RequestFragment(Application app) {
 		this.app = app;

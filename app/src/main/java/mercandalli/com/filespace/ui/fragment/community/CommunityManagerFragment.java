@@ -41,7 +41,7 @@ import mercandalli.com.filespace.ui.view.PagerSlidingTabStrip;
 
 public class CommunityManagerFragment extends Fragment {
 
-    private static final int NB_FRAGMENT = 2;
+    private static final int NB_FRAGMENT = 3;
     private static final int INIT_FRAGMENT = 1;
     public static Fragment listFragment[] = new Fragment[NB_FRAGMENT];
     private Application app;
@@ -123,6 +123,7 @@ public class CommunityManagerFragment extends Fragment {
             switch(i) {
                 case 0:		fragment = new UserFragment();  	break;
                 case 1:		fragment = new TalkFragment(); 	    break;
+                case 2:		fragment = new CryptFragment(); 	break;
                 default:	fragment = new UserFragment();		break;
             }
             listFragment[i] = fragment;
@@ -140,6 +141,7 @@ public class CommunityManagerFragment extends Fragment {
             switch(i) {
                 case 0:		title = "USERS";	break;
                 case 1:		title = "TALKS";    break;
+                case 2:		title = "CRYPT";   break;
                 default:	title = "USERS";	break;
             }
             return title;
