@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Personal Project : Control server
+		MERCANDALLI Jonathan
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="20dp">
+
+        <EditText
+            android:id="@+id/input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="5dp"
+            android:hint="Message to crypt"
+            android:padding="10dp"
+            android:textSize="18sp"
+            android:editable="true"
+            android:maxLines="4"
+            android:minLines="2">
+        </EditText>
+
+        <RelativeLayout
+            android:layout_width="160dp"
+            android:layout_height="72dp"
+            android:id="@+id/circles"
+            android:layout_below="@+id/input"
+            android:layout_centerHorizontal="true">
+
+            <ImageButton
+                android:id="@+id/circle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/circle_button_ripple"
+                android:elevation="@dimen/circle_button_elevation_high"
+                android:padding="12dp"
+                android:scaleType="fitXY"
+                android:src="@android:drawable/arrow_down_float"
+                android:stateListAnimator="@anim/circle_button_elevation"
+                android:tint="@android:color/white"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"/>
+
+            <ImageButton
+                android:id="@+id/circle2"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/circle_button_ripple"
+                android:elevation="@dimen/circle_button_elevation_high"
+                android:padding="12dp"
+                android:scaleType="fitXY"
+                android:src="@android:drawable/arrow_up_float"
+                android:stateListAnimator="@anim/circle_button_elevation"
+                android:tint="@android:color/white"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/output"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Message to decrypt"
+            android:padding="10dp"
+            android:textSize="18sp"
+            android:maxLines="5"
+            android:minLines="2"
+            android:nestedScrollingEnabled="false"
+            android:layout_below="@+id/circles"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true">
+        </EditText>
+
+    </RelativeLayout>
+
+</RelativeLayout>
