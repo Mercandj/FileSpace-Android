@@ -26,7 +26,7 @@ import android.view.View;
 
 import mercandalli.com.filespace.notificationpush.NotificationPush;
 import mercandalli.com.filespace.ui.fragment.file.FileManagerFragment;
-import mercandalli.com.filespace.ui.fragment.community.CommunityManagerFragment;
+import mercandalli.com.filespace.ui.fragment.community.CommunityFragment;
 
 public class ActivityMain extends ApplicationDrawer {
 
@@ -55,8 +55,8 @@ public class ActivityMain extends ApplicationDrawer {
 			FileManagerFragment fragmentFileManager = (FileManagerFragment) fragment;					
 			fragmentFileManager.updateAdapterListServer();					
 		}
-		else if(fragment instanceof CommunityManagerFragment) {
-            CommunityManagerFragment fragmentTalkManager = (CommunityManagerFragment) fragment;
+		else if(fragment instanceof CommunityFragment) {
+            CommunityFragment fragmentTalkManager = (CommunityFragment) fragment;
             fragmentTalkManager.updateAdapterListServer();
 		}
 	}

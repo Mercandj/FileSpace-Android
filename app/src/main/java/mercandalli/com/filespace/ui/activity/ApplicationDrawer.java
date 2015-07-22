@@ -44,16 +44,17 @@ import java.util.Stack;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listener.IListener;
-import mercandalli.com.filespace.ui.fragment.admin.AdminFragment;
-import mercandalli.com.filespace.ui.fragment.file.FileManagerFragment;
 import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.ui.fragment.HomeFragment;
 import mercandalli.com.filespace.ui.fragment.ProfileFragment;
-import mercandalli.com.filespace.ui.fragment.admin.RequestFragment;
 import mercandalli.com.filespace.ui.fragment.RoboticsFragment;
 import mercandalli.com.filespace.ui.fragment.SettingsFragment;
-import mercandalli.com.filespace.ui.fragment.community.CommunityManagerFragment;
 import mercandalli.com.filespace.ui.fragment.WebFragment;
+import mercandalli.com.filespace.ui.fragment.admin.AdminFragment;
+import mercandalli.com.filespace.ui.fragment.admin.RequestFragment;
+import mercandalli.com.filespace.ui.fragment.community.CommunityFragment;
+import mercandalli.com.filespace.ui.fragment.file.FileManagerFragment;
+import mercandalli.com.filespace.ui.fragment.workspace.WorkspaceFragment;
 import mercandalli.com.filespace.ui.navdrawer.NavDrawerItem;
 import mercandalli.com.filespace.ui.navdrawer.NavDrawerItemListe;
 import mercandalli.com.filespace.ui.navdrawer.NavDrawerListAdapter;
@@ -141,15 +142,30 @@ public abstract class ApplicationDrawer extends Application {
 
         // Tab 4
         navDrawerItems.add(
-                new NavDrawerItem(getString(R.string.tab_community), new IListener() {
+                new NavDrawerItem(getString(R.string.tab_workspace), new IListener() {
                     @Override
                     public void execute() {
-                        fragment = new CommunityManagerFragment(ApplicationDrawer.this);
+                        fragment = new WorkspaceFragment(ApplicationDrawer.this);
                         FragmentManager fragmentManager = getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                     }
-                }, R.drawable.q_ic_drawer_community, R.drawable.q_ic_drawer_community_pressed, Const.TAB_VIEW_TYPE_NORMAL)
+                }, R.drawable.q_ic_drawer_workspace, R.drawable.q_ic_drawer_workspace_pressed, Const.TAB_VIEW_TYPE_NORMAL)
         );
+
+        // User logged Tabs
+        if(this.getConfig().isLogged()) {
+            // Tab 4
+            navDrawerItems.add(
+                    new NavDrawerItem(getString(R.string.tab_community), new IListener() {
+                        @Override
+                        public void execute() {
+                            fragment = new CommunityFragment(ApplicationDrawer.this);
+                            FragmentManager fragmentManager = getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                        }
+                    }, R.drawable.q_ic_drawer_community, R.drawable.q_ic_drawer_community_pressed, Const.TAB_VIEW_TYPE_NORMAL)
+            );
+        }
 
         // Admin Tabs
         if(this.getConfig().getUser().isAdmin()) {

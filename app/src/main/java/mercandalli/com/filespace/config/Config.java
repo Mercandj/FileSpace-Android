@@ -110,6 +110,7 @@ public class Config {
         STRING_USER_USERNAME	("",                                    "string_user_username_1"		),
         STRING_USER_PASSWORD	("", 			                        "string_user_password_1"		),
         STRING_USER_REGID	    ("", 			                        "string_user_regid_1"   		),
+        STRING_USER_NOTE_WORKSPACE_1  ("",		                        "string_user_note_workspace_1"  ),
         ;
 
         String value;
@@ -208,6 +209,17 @@ public class Config {
     public void setUrlServer(String value) {
         if(ENUM_String.STRING_URL_SERVER.value!=value) {
             ENUM_String.STRING_URL_SERVER.value = value;
+            save();
+        }
+    }
+
+    public String getUserNoteWorkspace1() {
+        return ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value;
+    }
+
+    public void setUserNoteWorkspace1(String value) {
+        if(ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value!=value) {
+            ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value = value;
             save();
         }
     }
@@ -369,6 +381,7 @@ public class Config {
         setUserRegId("");
         setUserUsername("");
         setUserPassword("");
+        setUserNoteWorkspace1("");
         setAutoConnection(true);
         setUserId(-1);
         setUserAdmin(false);
