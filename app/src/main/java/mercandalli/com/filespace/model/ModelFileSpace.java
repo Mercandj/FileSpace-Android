@@ -33,33 +33,38 @@ import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.util.PointLong;
 import mercandalli.com.filespace.util.TimeUtils;
 
+import static mercandalli.com.filespace.model.ModelFileSpace.FileSpaceTypeENUM.*;
+
 /**
  * Created by Jonathan on 22/03/2015.
  */
-public class ModelFileContent {
+public class ModelFileSpace {
 
-    public String type;
-    public Date date_creation, timer_date;
+    public FileSpaceTypeENUM type;
+    public Date date_creation;
     private Application app;
 
-    public ModelFileContent(Application app, Date timer_date) {
+    public Timer timer = new Timer();
+    public Note note = new Note();
+
+    public ModelFileSpace(Application app, String type) {
         this.app = app;
-        this.timer_date = timer_date;
+        this.type = create(type);
     }
 
-    public ModelFileContent(Application app, String content) {
+    public ModelFileSpace(Application app, JSONObject json) {
         this.app = app;
         try {
-            JSONObject json = new JSONObject(content);
             if(json.has("type") && !json.isNull("type"))
-                this.type = json.getString("type");
+                this.type = create(json.getString("type"));
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {
                 if(json.has("date_creation") && !json.isNull("date_creation"))
                     this.date_creation = dateFormat.parse(json.getString("date_creation"));
-                if(json.has("timer_date") && !json.isNull("timer_date"))
-                    this.timer_date = dateFormat.parse(json.getString("timer_date"));
+                if(json.has("timer_date") && !json.isNull("timer_date")) {
+                    this.timer.timer_date = dateFormat.parse(json.getString("timer_date"));
+                }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -72,12 +77,12 @@ public class ModelFileContent {
 
     @Override
     public String toString() {
-        if(timer_date != null) {
+        if(this.timer.timer_date != null) {
             SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
             SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {
-                return TimeUtils.printDifferenceFuture(timer_date, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
+                return TimeUtils.printDifferenceFuture(this.timer.timer_date, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -93,10 +98,56 @@ public class ModelFileContent {
         SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
         long diff = 0;
         try {
-            diff = timer_date.getTime() - dateFormatLocal.parse(dateFormatGmt.format(new Date())).getTime();
+            diff = this.timer.timer_date.getTime() - dateFormatLocal.parse(dateFormatGmt.format(new Date())).getTime();
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return new PointLong(diff / 1000, (diff / 10) % 100);
+    }
+
+    public JSONObject toJSONObject() {
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+        JSONObject json = new JSONObject();
+        try {
+            json.put("type", "timer");
+            json.put("date_creation", dateFormatGmt.format(date_creation));
+            switch (this.type) {
+                case TIMER:
+                    json.put("timer_date", "" + dateFormatGmt.format(this.timer.timer_date));
+                    break;
+                case NOTE:
+                    json.put("note_content", "" + dateFormatGmt.format(this.note.note_content));
+                    break;
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    public enum FileSpaceTypeENUM {
+        TIMER("timer"),
+        NOTE("note");
+        public String type;
+        FileSpaceTypeENUM(String type) {
+            this.type = type;
+        }
+
+        public static FileSpaceTypeENUM create(String type_) {
+            for(FileSpaceTypeENUM var: values())
+                if(var.type.equals(type_))
+                    return var;
+            return null;
+        }
+    }
+
+    public class Timer {
+        public Date timer_date;
+    }
+
+    public class Note {
+        public String note_content;
     }
 }

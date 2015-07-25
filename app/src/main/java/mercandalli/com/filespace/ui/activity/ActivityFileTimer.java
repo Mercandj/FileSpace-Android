@@ -35,7 +35,7 @@ import java.util.Date;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.util.PointLong;
-import mercandalli.com.filespace.model.ModelFileContent;
+import mercandalli.com.filespace.model.ModelFileSpace;
 
 /**
  * Created by Jonathan on 09/05/2015.
@@ -45,7 +45,7 @@ public class ActivityFileTimer extends Application {
     private String initate, url, login;
     private boolean online;
     public Date timer_date;
-    ModelFileContent modelFileContent;
+    ModelFileSpace modelFileContent;
     TextView txt, second;
     Runnable runnable;
     Handler handler;
@@ -81,7 +81,8 @@ public class ActivityFileTimer extends Application {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {
                 this.timer_date = dateFormat.parse("" + extras.getString("TIMER_DATE"));
-                modelFileContent = new ModelFileContent(this, timer_date);
+                modelFileContent = new ModelFileSpace(this, "timer");
+                modelFileContent.timer.timer_date = timer_date;
             } catch (ParseException e) {
                 e.printStackTrace();
             }

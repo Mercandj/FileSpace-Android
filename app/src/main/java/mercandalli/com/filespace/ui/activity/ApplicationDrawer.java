@@ -54,6 +54,8 @@ import mercandalli.com.filespace.ui.fragment.admin.AdminFragment;
 import mercandalli.com.filespace.ui.fragment.admin.RequestFragment;
 import mercandalli.com.filespace.ui.fragment.community.CommunityFragment;
 import mercandalli.com.filespace.ui.fragment.file.FileManagerFragment;
+import mercandalli.com.filespace.ui.fragment.workspace.CryptFragment;
+import mercandalli.com.filespace.ui.fragment.workspace.NoteFragment;
 import mercandalli.com.filespace.ui.fragment.workspace.WorkspaceFragment;
 import mercandalli.com.filespace.ui.navdrawer.NavDrawerItem;
 import mercandalli.com.filespace.ui.navdrawer.NavDrawerItemListe;
@@ -353,9 +355,19 @@ public abstract class ApplicationDrawer extends Application {
         	else 			mDrawerLayout.openDrawer(mDrawerList);
         	return true;
         case R.id.action_delete:
-        	if(fragment instanceof AdminFragment)
-                if(((AdminFragment)fragment).getCurrentFragmentIndex() == 6)
-        		    ((RequestFragment) AdminFragment.listFragment[((AdminFragment)fragment).getCurrentFragmentIndex()] ).deleteConsole();
+        	if(fragment instanceof AdminFragment) {
+                AdminFragment adminFragment = (AdminFragment) fragment;
+                if (adminFragment.getCurrentFragmentIndex() == 6)
+                    ((RequestFragment) AdminFragment.listFragment[adminFragment.getCurrentFragmentIndex()]).delete();
+            }
+            else if(fragment instanceof WorkspaceFragment) {
+                WorkspaceFragment workspaceFragment = (WorkspaceFragment) fragment;
+                int currentIndex = workspaceFragment.getCurrentFragmentIndex();
+                switch (currentIndex) {
+                    case 0:     ((NoteFragment) WorkspaceFragment.listFragment[currentIndex]).delete();     break;
+                    case 1:     ((CryptFragment) WorkspaceFragment.listFragment[currentIndex]).delete();    break;
+                }
+            }
         	return true;
 	    case R.id.action_add:
 	    	if(fragment instanceof FileManagerFragment)
@@ -447,6 +459,10 @@ public abstract class ApplicationDrawer extends Application {
             if(((AdminFragment)fragment).getCurrentFragmentIndex() == 6)
     		    menu.findItem(R.id.action_delete)	.setVisible(!drawerOpen);
     	}
+        else if(fragment instanceof WorkspaceFragment) {
+            if( ((WorkspaceFragment)fragment).getCurrentFragmentIndex() < 2 )
+                menu.findItem(R.id.action_delete)	.setVisible(!drawerOpen);
+        }
     	else if(fragment instanceof FileManagerFragment) {
             menu.findItem(R.id.action_search)	.setVisible(!drawerOpen);
             menu.findItem(R.id.action_sort)	    .setVisible(!drawerOpen);

@@ -23,7 +23,6 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,18 +65,10 @@ public class WorkspaceFragment extends Fragment {
         tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
         mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
         mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+        tabs.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
-            public void onPageSelected(int arg0) {
+            public void onPageSelected(int position) {
                 WorkspaceFragment.this.app.invalidateOptionsMenu();
-            }
-            @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-            }
-            @Override
-            public void onPageScrollStateChanged(int arg0) {
-
             }
         });
         mViewPager.setOffscreenPageLimit(this.NB_FRAGMENT - 1);

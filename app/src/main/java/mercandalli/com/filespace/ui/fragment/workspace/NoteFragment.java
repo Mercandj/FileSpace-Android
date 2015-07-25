@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.model.ModelFileSpace;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.util.FontUtils;
@@ -23,6 +24,8 @@ public class NoteFragment extends Fragment {
     Application app;
     private View rootView;
     private TextView input;
+
+    private ModelFileSpace note;
 
     @Override
     public void onAttach(Activity activity) {
@@ -38,11 +41,13 @@ public class NoteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_workspace_note, container, false);
 
+        note = new ModelFileSpace(app, "note");
+
         this.input = (TextView) this.rootView.findViewById(R.id.input);
-        //this.input.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         FontUtils.applyFont(app, this.input, "fonts/Roboto-Light.ttf");
         if(!StringUtils.isNullOrEmpty(app.getConfig().getUserNoteWorkspace1())) {
             this.input.setText(app.getConfig().getUserNoteWorkspace1());
+            this.note.note.note_content = app.getConfig().getUserNoteWorkspace1();
         }
         this.input.addTextChangedListener(new TextWatcher() {
             @Override
@@ -51,8 +56,10 @@ public class NoteFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s != null)
+                if (s != null) {
                     app.getConfig().setUserNoteWorkspace1(s.toString());
+                    note.note.note_content = s.toString();
+                }
             }
 
             @Override
@@ -66,6 +73,11 @@ public class NoteFragment extends Fragment {
     @Override
     public boolean back() {
         return false;
+    }
+
+    public void delete() {
+        input.setText("");
+        app.getConfig().setUserNoteWorkspace1("");
     }
 }
 

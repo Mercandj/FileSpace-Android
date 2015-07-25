@@ -88,7 +88,7 @@ public class ModelFile extends Model implements Parcelable {
 	public Bitmap bitmap;
 	private File file;
     public String onlineUrl;
-    public ModelFileContent content;
+    public ModelFileSpace content;
     public boolean selected = false;
     public int count;
 
@@ -173,7 +173,7 @@ public class ModelFile extends Model implements Parcelable {
             if(json.has("directory") && !json.isNull("directory"))
                 this.directory = json.getInt("directory")==1;
             if(json.has("content") && !json.isNull("content"))
-                this.content = new ModelFileContent(app, json.getString("content"));
+                this.content = new ModelFileSpace(app, json.getString("content"));
             if(json.has("public") && !json.isNull("public"))
                 this._public = json.getInt("public")==1;
             if(json.has("is_apk_update") && !json.isNull("is_apk_update"))
@@ -265,13 +265,13 @@ public class ModelFile extends Model implements Parcelable {
 		}
         else if(this.type.equals(ModelFileTypeENUM.FILESPACE.type)) {
             if(content != null) {
-                if(content.timer_date != null) {
+                if(content.timer.timer_date != null) {
                     Intent intent = new Intent(app, ActivityFileTimer.class);
                     intent.putExtra("URL_FILE", ""+this.onlineUrl);
                     intent.putExtra("LOGIN", ""+this.app.getConfig().getUser().getAccessLogin());
                     intent.putExtra("ONLINE", true);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    intent.putExtra("TIMER_DATE", "" + dateFormat.format(content.timer_date));
+                    intent.putExtra("TIMER_DATE", "" + dateFormat.format(content.timer.timer_date));
                     this.app.startActivity(intent);
                     this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                 }
@@ -506,6 +506,8 @@ public class ModelFile extends Model implements Parcelable {
 
     @Override
     public JSONObject toJSONObject() {
+        if(this.content != null)
+            return this.content.toJSONObject();
         return null;
     }
     

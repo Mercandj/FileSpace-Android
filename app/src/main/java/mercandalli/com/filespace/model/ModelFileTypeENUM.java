@@ -41,7 +41,7 @@ public enum ModelFileTypeENUM {
 	
 	public ModelFileType type;
 	
-	private ModelFileTypeENUM(ModelFileType type) {
+	ModelFileTypeENUM(ModelFileType type) {
 		this.type = type;
 	}
 }

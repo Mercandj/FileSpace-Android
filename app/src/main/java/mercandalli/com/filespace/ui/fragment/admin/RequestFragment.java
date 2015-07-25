@@ -83,7 +83,7 @@ public class RequestFragment extends Fragment {
         return rootView;
 	}
 	
-	public void deleteConsole() {
+	public void delete() {
 		((EditText) rootView.findViewById(R.id.console)).setText("");
 	}
 

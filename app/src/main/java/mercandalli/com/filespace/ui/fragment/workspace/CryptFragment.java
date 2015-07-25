@@ -89,5 +89,10 @@ public class CryptFragment extends Fragment {
     public boolean back() {
         return false;
     }
+
+    public void delete() {
+        input.setText("");
+        output.setText("");
+    }
 }
 
