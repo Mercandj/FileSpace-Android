@@ -173,7 +173,7 @@ public class ModelFile extends Model implements Parcelable {
             if(json.has("directory") && !json.isNull("directory"))
                 this.directory = json.getInt("directory")==1;
             if(json.has("content") && !json.isNull("content"))
-                this.content = new ModelFileSpace(app, json.getString("content"));
+                this.content = new ModelFileSpace(app, new JSONObject(json.getString("content")));
             if(json.has("public") && !json.isNull("public"))
                 this._public = json.getInt("public")==1;
             if(json.has("is_apk_update") && !json.isNull("is_apk_update"))
