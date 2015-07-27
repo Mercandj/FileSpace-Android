@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.model.ModelFileSpace;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.fragment.Fragment;
@@ -76,8 +77,13 @@ public class NoteFragment extends Fragment {
     }
 
     public void delete() {
-        input.setText("");
-        app.getConfig().setUserNoteWorkspace1("");
+        app.alert("Delete note", "Delete the current note?", getString(R.string.yes), new IListener() {
+            @Override
+            public void execute() {
+                input.setText("");
+                app.getConfig().setUserNoteWorkspace1("");
+            }
+        }, getString(R.string.no), null);
     }
 }
 

@@ -34,6 +34,8 @@
     <string name="ok">Ok</string>
     <string name="ON">ON</string>
     <string name="OFF">OFF</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <string name="action">Action</string>
     <string name="download">Download</string>
