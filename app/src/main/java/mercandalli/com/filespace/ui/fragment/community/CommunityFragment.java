@@ -23,7 +23,6 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,16 +31,16 @@ import org.json.JSONObject;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IListener;
+import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.activity.ApplicationDrawer;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
-import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.ui.view.PagerSlidingTabStrip;
 
 public class CommunityFragment extends Fragment {
 
-    private static final int NB_FRAGMENT = 2;
+    private static final int NB_FRAGMENT = 3;
     private static final int INIT_FRAGMENT = 1;
     public static Fragment listFragment[] = new Fragment[NB_FRAGMENT];
     private Application app;
@@ -66,18 +65,10 @@ public class CommunityFragment extends Fragment {
         tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
         mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
         mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+        tabs.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
-            public void onPageSelected(int arg0) {
+            public void onPageSelected(int position) {
                 CommunityFragment.this.app.invalidateOptionsMenu();
-            }
-            @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-            }
-            @Override
-            public void onPageScrollStateChanged(int arg0) {
-
             }
         });
         mViewPager.setOffscreenPageLimit(this.NB_FRAGMENT - 1);
@@ -121,9 +112,10 @@ public class CommunityFragment extends Fragment {
         public Fragment getItem(int i) {
             Fragment fragment = null;
             switch(i) {
-                case 0:		fragment = new UserFragment();  	break;
-                case 1:		fragment = new TalkFragment(); 	    break;
-                default:	fragment = new UserFragment();		break;
+                case 0:		fragment = new UserFragment();  	    break;
+                case 1:		fragment = new TalkFragment(); 	        break;
+                case 2:		fragment = new UserLocationFragment();  break;
+                default:	fragment = new UserFragment();		    break;
             }
             listFragment[i] = fragment;
             return fragment;
@@ -140,6 +132,7 @@ public class CommunityFragment extends Fragment {
             switch(i) {
                 case 0:		title = "USERS";	break;
                 case 1:		title = "TALKS";    break;
+                case 2:		title = "LOCATIONS"; break;
                 default:	title = "USERS";	break;
             }
             return title;

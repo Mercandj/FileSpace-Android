@@ -33,4 +33,19 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"/>
 
+    <ImageButton
+        android:id="@+id/circle"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="25dp"
+        android:background="@drawable/circle_button_ripple"
+        android:elevation="@dimen/circle_button_elevation_high"
+        android:padding="15dp"
+        android:scaleType="fitXY"
+        android:src="@android:drawable/ic_menu_mylocation"
+        android:stateListAnimator="@anim/circle_button_elevation"
+        android:tint="@android:color/white" />
+
 </RelativeLayout>
