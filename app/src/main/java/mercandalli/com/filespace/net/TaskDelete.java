@@ -40,8 +40,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
 
-import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
+import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.util.StringPair;
 
 /**
@@ -148,6 +149,7 @@ public class TaskDelete extends AsyncTask<Void, Void, String> {
 					if(!json.getString("toast").equals(""))
 						Toast.makeText(app, json.getString("toast"), Toast.LENGTH_SHORT).show();				
 			} catch (JSONException e) {
+				Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
 				e.printStackTrace();				
 				this.listener.execute(null, response);
 			}

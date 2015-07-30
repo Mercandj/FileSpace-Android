@@ -54,7 +54,6 @@ import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listener.IBitmapListener;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
-import mercandalli.com.filespace.net.TaskDelete;
 import mercandalli.com.filespace.net.TaskGetDownload;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
 import mercandalli.com.filespace.net.TaskPost;
@@ -370,8 +369,8 @@ public class ModelFile extends Model implements Parcelable {
 	
 	public void delete(IPostExecuteListener listener) {
 		if(this.isOnline()) {
-			String url = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
-			new TaskDelete(app, url, listener).execute();
+			String url = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFileDelete+"/"+id;
+			new TaskPost(app, url, listener).execute();
 		}
 		else {
             if(file.isDirectory())

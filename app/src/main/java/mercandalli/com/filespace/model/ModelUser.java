@@ -34,8 +34,8 @@ import java.util.TimeZone;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listener.IBitmapListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
-import mercandalli.com.filespace.net.TaskDelete;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
+import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.HashUtils;
@@ -174,8 +174,8 @@ public class ModelUser extends Model {
     public void delete(IPostExecuteListener listener) {
         if(this.app != null) {
             if(this.app.getConfig().isUserAdmin() && this.id != this.app.getConfig().getUserId()) {
-                String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeUser + "/" + this.id;
-                new TaskDelete(this.app, url, listener).execute();
+                String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeUserDelete + "/" + this.id;
+                new TaskPost(this.app, url, listener).execute();
                 return;
             }
         }

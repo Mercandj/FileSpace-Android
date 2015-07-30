@@ -59,9 +59,11 @@ public class Config {
     public final String aboutURL 				= "http://mercandalli.com/";
     public final String webApplication			= "http://mercandalli.com/FileSpace";
     public final String routeFile	 			= "file";
+    public final String routeFileDelete			= "file_delete";
     public final String routeInformation		= "information";
     public final String routeRobotics       	= "robotics";
     public final String routeUser 		        = "user";
+    public final String routeUserDelete 		= "user_delete";
     public final String routeUserPut	        = "user_put";
     public final String routeUserMessage        = "user_message";
     public final String routeUserConversation   = "user_conversation";
