@@ -19,7 +19,9 @@
  */
 package mercandalli.com.filespace.model;
 
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -61,6 +63,7 @@ import mercandalli.com.filespace.ui.activity.ActivityFileAudio;
 import mercandalli.com.filespace.ui.activity.ActivityFilePicture;
 import mercandalli.com.filespace.ui.activity.ActivityFileText;
 import mercandalli.com.filespace.ui.activity.ActivityFileTimer;
+import mercandalli.com.filespace.ui.activity.ActivityFileVideo;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.HtmlUtils;
@@ -108,7 +111,7 @@ public class ModelFile extends Model implements Parcelable {
         if(this.directory)
             return "Directory";
         if(this.type.equals(ModelFileTypeENUM.FILESPACE.type) && this.content != null)
-            return type.getTitle() + " " + this.content.type;
+            return type.getTitle() + " " + StringUtils.capitalize(this.content.type.type.toString());
         return type.getTitle();
     }
 
@@ -277,6 +280,36 @@ public class ModelFile extends Model implements Parcelable {
             }
         }
 	}
+
+    public void openLocalAs(final Application application) {
+        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(application);
+        String[] menuList = {
+                application.getString(R.string.text),
+                application.getString(R.string.image),
+                application.getString(R.string.audio),
+                application.getString(R.string.video),
+                application.getString(R.string.other) };
+        menuAlert.setTitle(application.getString(R.string.open_as));
+
+        menuAlert.setItems(menuList,
+            new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int item) {
+                    String type_mime = "";
+                    switch (item) {
+                        case 0: type_mime = "text/plain";   break;
+                        case 1: type_mime = "image/*";      break;
+                        case 2: type_mime = "audio/*";      break;
+                        case 3: type_mime = "video/*";      break;
+                    }
+                    Intent i = new Intent();
+                    i.setAction(Intent.ACTION_VIEW);
+                    i.setDataAndType(Uri.fromFile(file), type_mime);
+                    application.startActivity(i);
+                }
+            });
+        AlertDialog menuDrop = menuAlert.create();
+        menuDrop.show();
+    }
 	
 	public void executeLocal(ArrayList<ModelFile> files, View view) {
 		if (!file.exists())
@@ -336,10 +369,25 @@ public class ModelFile extends Model implements Parcelable {
             this.app.startActivity(picIntent);
 		}
 		else if(this.type.equals(ModelFileTypeENUM.VIDEO.type)) {
-			Intent movieIntent = new Intent();
-			movieIntent.setAction(Intent.ACTION_VIEW);
-			movieIntent.setDataAndType(Uri.fromFile(file), "video/*");
-			app.startActivity(movieIntent);
+            Intent intent = new Intent(this.app, ActivityFileVideo.class);
+            intent.putExtra("ONLINE", false);
+            intent.putExtra("FILE", this);
+            ArrayList<ModelFile> tmpFiles = new ArrayList<>();
+            for(ModelFile f:files)
+                if(f.type!=null)
+                    if(f.type.equals(ModelFileTypeENUM.AUDIO.type))
+                        tmpFiles.add(f);
+            intent.putParcelableArrayListExtra("FILES", tmpFiles);
+            if(view == null) {
+                this.app.startActivity(intent);
+                this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+            }
+            else {
+                Pair<View, String> p1 = Pair.create(view.findViewById(R.id.icon), "transitionIcon");
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(this.app, p1);
+                this.app.startActivity(intent, options.toBundle());
+            }
 		}
 		else if(this.type.equals(ModelFileTypeENUM.PDF.type)) {
 			Intent pdfIntent = new Intent();

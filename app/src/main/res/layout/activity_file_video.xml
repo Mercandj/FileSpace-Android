@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Personal Project : Control server
+		MERCANDALLI Jonathan
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar" android:id="@+id/my_toolbar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp"
+        android:layout_below="@+id/my_toolbar">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Title"
+            android:id="@+id/title"
+            android:layout_marginBottom="10dp"
+            android:layout_above="@+id/size"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Size"
+            android:id="@+id/size"
+            android:layout_above="@+id/play"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="5dp" />
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="10dp"/>
+
+        <SurfaceView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/videoView"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_above="@+id/title"/>
+
+        <!--
+        <ImageButton
+            android:id="@+id/play"
+            android:transitionName="transitionIcon"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_above="@+id/seekBar"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/circle_button_ripple_music"
+            android:elevation="@dimen/circle_button_elevation_high"
+            android:padding="15dp"
+            android:src="@android:drawable/ic_media_pause"
+            android:stateListAnimator="@anim/circle_button_elevation"
+            android:tint="@android:color/white" />
+            -->
+        <RelativeLayout
+            android:id="@+id/play_position"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_above="@+id/seekBar"
+            android:layout_centerHorizontal="true">
+        </RelativeLayout>
+        <mercandalli.com.filespace.ui.view.PlayPauseView
+            android:id="@+id/play"
+            android:transitionName="transitionIcon"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_above="@+id/seekBar"
+            android:clickable="true"
+            android:foreground="?android:selectableItemBackground"
+            android:elevation="@dimen/circle_button_elevation_high"
+            android:stateListAnimator="@anim/circle_button_elevation"
+            android:layout_alignEnd="@+id/play_position"
+            android:layout_alignStart="@+id/play_position"/>
+
+        <ImageButton
+            android:id="@+id/next"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/circle_button_ripple_music"
+            android:elevation="@dimen/circle_button_elevation_high"
+            android:padding="15dp"
+            android:src="@android:drawable/ic_media_next"
+            android:stateListAnimator="@anim/circle_button_elevation"
+            android:tint="@android:color/white"
+            android:layout_marginStart="38dp"
+            android:layout_alignTop="@+id/play_position"
+            android:layout_toEndOf="@+id/play_position"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="10dp" />
+
+        <ImageButton
+            android:id="@+id/previous"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/circle_button_ripple_music"
+            android:elevation="@dimen/circle_button_elevation_high"
+            android:padding="15dp"
+            android:src="@android:drawable/ic_media_previous"
+            android:stateListAnimator="@anim/circle_button_elevation"
+            android:tint="@android:color/white"
+            android:layout_marginStart="38dp"
+            android:layout_alignTop="@+id/play_position"
+            android:layout_toStartOf="@+id/play_position"
+            android:layout_marginRight="32dp"
+            android:layout_marginTop="10dp" />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

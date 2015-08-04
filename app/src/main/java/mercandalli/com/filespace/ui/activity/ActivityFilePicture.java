@@ -83,6 +83,8 @@ public class ActivityFilePicture extends Application {
         this.title_tv = (TextView) this.findViewById(R.id.title);
         this.progress_tv = (TextView) this.findViewById(R.id.progress_tv);
 
+        this.progressBar.setProgress(0);
+
         Bundle extras = getIntent().getExtras();
         if(extras == null) {
             Log.e(""+getClass().getName(), "extras == null");

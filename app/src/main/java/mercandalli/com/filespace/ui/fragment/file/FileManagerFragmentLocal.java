@@ -257,13 +257,13 @@ public class FileManagerFragmentLocal extends Fragment {
 					final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
 					String[] menuList = { getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
                     if(app.isLogged())
-                        menuList = new String[]{ getString(R.string.upload), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
+                        menuList = new String[]{ getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
                     menuAlert.setTitle("Action");
                     menuAlert.setItems(menuList,
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int item) {
                                     if(!app.isLogged())
-                                        item--;
+                                        item-=2;
 									switch (item) {
                                         case 0:
                                             if(modelFile.directory) {
@@ -286,6 +286,9 @@ public class FileManagerFragmentLocal extends Fragment {
                                                 }, getString(R.string.cancel), null);
                                             break;
                                         case 1:
+                                            modelFile.openLocalAs(FileManagerFragmentLocal.this.app);
+                                            break;
+                                        case 2:
                                             FileManagerFragmentLocal.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
@@ -302,7 +305,7 @@ public class FileManagerFragmentLocal extends Fragment {
                                                 }
                                             }, "Cancel", null, modelFile.getNameExt());
                                             break;
-                                        case 2:
+                                        case 3:
                                             FileManagerFragmentLocal.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                                 @Override
                                                 public void execute() {
@@ -319,12 +322,12 @@ public class FileManagerFragmentLocal extends Fragment {
                                                 }
                                             }, "No", null);
                                             break;
-                                        case 3:
+                                        case 4:
                                             FileManagerFragmentLocal.this.filesToCut.add(modelFile);
                                             Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                             updateCircle();
                                             break;
-                                        case 4:
+                                        case 5:
                                             FileManagerFragmentLocal.this.app.alert(
                                                     getString(R.string.properties) + " : " + modelFile.name,
                                                     modelFile.toSpanned(),

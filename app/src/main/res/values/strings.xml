@@ -40,6 +40,7 @@
     <string name="action">Action</string>
     <string name="download">Download</string>
     <string name="upload">Upload</string>
+    <string name="open_as">Open as...</string>
     <string name="rename">Rename</string>
     <string name="delete">Delete</string>
     <string name="cut">Cut</string>
@@ -47,6 +48,12 @@
     <string name="talk">Talk</string>
     <string name="sort">Sort</string>
     <string name="view">View</string>
+
+    <string name="text">Text</string>
+    <string name="image">Image</string>
+    <string name="audio">Audio</string>
+    <string name="video">Video</string>
+    <string name="other">Other</string>
 
     <string name="dialog_server_route">Server Route</string>
     <string name="dialog_server_url">Server URL</string>
