@@ -45,6 +45,7 @@ import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.util.StringPair;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
+import static mercandalli.com.filespace.util.RoboticsUtils.createProtocolLed;
 
 /**
  * Created by Jonathan on 03/01/2015.
@@ -137,27 +138,11 @@ public class RoboticsFragment extends Fragment {
             public void onClick(View v) {
                 if(isInternetConnection(app)) {
                     List<StringPair> parameters = new ArrayList<>();
-                    String id_ = id.getText().toString();
-                    String value_ = value.getText().toString();
-                    String order_ = order.isChecked() ? "ordre_id" : "mesure_id";
 
-                    /*
-                    if(id_!=null)
-                        if(!id_.equals(""))
-                            parameters.add(new StringPair(order_, ""+id_));
-                    if(value_!=null && order_!=null)
-                        if(!value_.equals("") && order_.equals("ordre_id"))
-                            parameters.add(new StringPair("value", ""+value_));
-                    */
-
-                    //JSONObject json = createProtocolLed(value_);
-                    JSONObject json = new JSONObject();
-                    try {
-                        json.put("id", 1);
-                        json.put("value", "" + value_);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    JSONObject json = createProtocolLed(
+                            Integer.parseInt(id.getText().toString()),
+                            !order.isChecked(),
+                            value.getText().toString());
 
                     parameters.add(new StringPair("json", ""+json.toString()));
 

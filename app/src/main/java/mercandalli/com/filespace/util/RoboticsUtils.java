@@ -108,7 +108,7 @@ public class RoboticsUtils {
      * value = "1" || "0"     *
      * @return JSONObject to raspberry
      */
-    public static JSONObject createProtocolLed(String value) {
+    public static JSONObject createProtocolLed(int id, boolean read, String value) {
         JSONObject user = createUser(
                 1, // id
                 "Jonathan" // username
@@ -117,8 +117,8 @@ public class RoboticsUtils {
         JSONArray hardware  = new JSONArray();
         hardware.put(
                 createHardware(
-                        1, // id
-                        false, // read
+                        id, // id
+                        read, // read
                         value, // value,
                         "led", // type,
                         true // succeed
