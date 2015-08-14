@@ -156,7 +156,7 @@ public abstract class ApplicationDrawer extends Application {
 
         // User logged Tabs
         if(this.getConfig().isLogged()) {
-            // Tab 4
+            // Tab 5
             navDrawerItems.add(
                     new NavDrawerItem(getString(R.string.tab_community), new IListener() {
                         @Override
@@ -171,7 +171,7 @@ public abstract class ApplicationDrawer extends Application {
 
         // Admin Tabs
         if(this.getConfig().getUser().isAdmin()) {
-            // Tab 5
+            // Tab 6
             navDrawerItems.add(
                     new NavDrawerItem(getString(R.string.tab_robotics), new IListener() {
                         @Override
@@ -183,7 +183,7 @@ public abstract class ApplicationDrawer extends Application {
                     }, R.drawable.q_ic_drawer_robotics, R.drawable.q_ic_drawer_robotics_pressed, Const.TAB_VIEW_TYPE_NORMAL)
             );
 
-            // Tab 6
+            // Tab 7
             navDrawerItems.add(
                     new NavDrawerItem(getString(R.string.tab_admin), new IListener() {
                         @Override
@@ -196,17 +196,17 @@ public abstract class ApplicationDrawer extends Application {
             );
         }
         
-        // Tab 7
+        // Tab 8
         navDrawerItems.add(
         		new NavDrawerItem( "", R.drawable.ic_launcher, Const.TAB_VIEW_TYPE_SECTION)
         );
 
-        // Tab 8
+        // Tab 9
         navDrawerItems.add(
                 new NavDrawerItem( "Other", R.drawable.ic_launcher, Const.TAB_VIEW_TYPE_SECTION_TITLE)
         );
         
-        // Tab 9
+        // Tab 10
         navDrawerItems.add(
         		new NavDrawerItem( 
     				getString(R.string.tab_settings),
@@ -222,7 +222,7 @@ public abstract class ApplicationDrawer extends Application {
                 Const.TAB_VIEW_TYPE_SETTING)
         );
 
-        // Tab 10
+        // Tab 11
         navDrawerItems.add(
                 new NavDrawerItem(
                         getString(R.string.tab_log_out),
@@ -242,7 +242,7 @@ public abstract class ApplicationDrawer extends Application {
                         Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE)
         );
         
-        // Tab 11
+        // Tab 12
         navDrawerItems.add(
         		new NavDrawerItem(
         			getString(R.string.tab_about),
@@ -301,7 +301,7 @@ public abstract class ApplicationDrawer extends Application {
         ID_FRAGMENT_VISITED.push(position);
 
         if(toolbar != null) {
-            if(position == 0) {
+            if(position == 0 || (position == 6 && this.getConfig().getUser().isAdmin()) ) {
                 toolbar.setBackgroundColor(Color.TRANSPARENT);
                 toolbar_space.setVisibility(View.GONE);
             }

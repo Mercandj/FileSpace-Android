@@ -8,36 +8,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="top"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="#545454">
 
-    <ToggleButton
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New ToggleButton"
-        android:id="@+id/toggleButtonLED"
-        android:checked="false"
-        android:textOff="@string/OFF"
-        android:textOn="@string/ON"
+        android:id="@+id/output"
+        android:gravity="left|top"
+        android:textSize="10sp"
+        android:background="#545454"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp" />
-
-    <ProgressBar
-        android:id="@+id/circularProgressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/toggleButtonLED"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:textColor="#848484"
+        android:editable="false"
+        android:focusable="false"
+        android:padding="5dp"
+        android:layout_marginTop="62dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_alignParentStart="true"
+        android:layout_height="match_parent"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:id="@+id/relativeLayout4"
+        android:layout_alignTop="@+id/output"
+        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/toggleButtonLED"
-        android:layout_marginTop="50dp">
+        >
 
         <EditText
             android:layout_width="wrap_content"
@@ -49,7 +49,9 @@
             android:layout_alignParentStart="true"
             android:hint="id"
             android:layout_toStartOf="@+id/order"
-            android:layout_marginRight="30dp" />
+            android:layout_marginRight="30dp"
+            android:textColor="#fff"
+            android:textColorHint="#848484"/>
 
         <EditText
             android:layout_width="wrap_content"
@@ -62,7 +64,9 @@
             android:hint="value"
             android:layout_toStartOf="@+id/button"
             android:layout_alignEnd="@+id/id"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="5dp"
+            android:textColorHint="#848484"
+            android:textColor="#fff"/>
 
         <Switch
             android:layout_width="125dp"
@@ -70,21 +74,8 @@
             android:text="Order"
             android:id="@+id/order"
             android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/output"
-            android:layout_below="@+id/value"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:gravity="left|top"
-            android:textSize="10sp"
-            android:background="#fff"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="10dp" />
+            android:textColor="#fff"/>
 
         <Button
             android:layout_width="130dp"
@@ -93,6 +84,66 @@
             android:id="@+id/launch"
             android:layout_alignTop="@+id/value"
             android:layout_alignParentEnd="true" />
+
+
+        <ToggleButton
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="New ToggleButton"
+            android:id="@+id/toggleButton1"
+            android:checked="false"
+            android:textOff="OFF (1)"
+            android:textOn="ON (1)"
+            android:layout_below="@+id/launch"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="26dp"/>
+
+        <ToggleButton
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="New ToggleButton"
+            android:id="@+id/toggleButton2"
+            android:checked="false"
+            android:textOff="OFF (2)"
+            android:textOn="ON (2)"
+            android:layout_alignTop="@+id/toggleButton1"
+            android:layout_toEndOf="@+id/toggleButton1"/>
+
+        <ToggleButton
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="New ToggleButton"
+            android:id="@+id/toggleButton3"
+            android:checked="false"
+            android:textOff="OFF (3)"
+            android:textOn="ON (3)"
+            android:layout_alignTop="@+id/toggleButton2"
+            android:layout_toEndOf="@+id/toggleButton2"/>
+
+
+        <ToggleButton
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="New ToggleButton"
+            android:id="@+id/toggleButton4"
+            android:checked="false"
+            android:textOff="OFF (4)"
+            android:textOn="ON (4)"
+            android:layout_alignTop="@+id/toggleButton3"
+            android:layout_toEndOf="@+id/toggleButton3"/>
+
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar2"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:max="100"
+            android:progress="50"
+            />
+
     </RelativeLayout>
 
 

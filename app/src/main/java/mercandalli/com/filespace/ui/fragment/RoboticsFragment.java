@@ -26,12 +26,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.ToggleButton;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -39,7 +36,6 @@ import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
-import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.util.StringPair;
@@ -54,8 +50,7 @@ public class RoboticsFragment extends Fragment {
 
     private Application app;
     private View rootView;
-    private ToggleButton buttonLED;
-    private ProgressBar circularProgressBar;
+    private ToggleButton toggleButton1;
     private EditText output, id, value;
     Switch order;
 
@@ -67,14 +62,11 @@ public class RoboticsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_robotics, container, false);
 
-        this.circularProgressBar = (ProgressBar) this.rootView.findViewById(R.id.circularProgressBar);
-        this.circularProgressBar.setVisibility(View.VISIBLE);
-
-        this.buttonLED = (ToggleButton) this.rootView.findViewById(R.id.toggleButtonLED);
-        this.buttonLED.setVisibility(View.INVISIBLE);
-        this.buttonLED.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        this.toggleButton1 = (ToggleButton) this.rootView.findViewById(R.id.toggleButton1);
+        this.toggleButton1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                /*
                 List<StringPair> parameters = new ArrayList<>();
                 parameters.add(new StringPair("value", (isChecked) ? "1" : "0"));
                 new TaskPost(
@@ -83,6 +75,7 @@ public class RoboticsFragment extends Fragment {
                         null,
                         parameters
                 ).execute();
+                */
             }
         });
 
@@ -97,41 +90,9 @@ public class RoboticsFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 value.setVisibility(isChecked ? View.VISIBLE : View.INVISIBLE);
-                order.setText(isChecked ? "Order" : "Measure");
+                order.setText(isChecked ? "Write" : "Read");
             }
         });
-
-        if(isInternetConnection(app))
-            new TaskGet(
-                    this.app,
-                    this.app.getConfig().getUser(),
-                    this.app.getConfig().getUrlServer() + RoboticsFragment.this.app.getConfig().routeRobotics + "/18",
-                    new IPostExecuteListener() {
-                        @Override
-                        public void execute(JSONObject json, String body) {
-                            try {
-                                if (json.has("result")) {
-                                    JSONArray result = json.getJSONArray("result");
-                                    if(result != null )
-                                        if (result.getJSONObject(0).has("value")) {
-                                            JSONObject value = new JSONObject(result.getJSONObject(0).getString("value"));
-                                            if (value.has("value")) {
-                                                RoboticsFragment.this.buttonLED.setChecked(value.getInt("value") == 1);
-
-                                                RoboticsFragment.this.buttonLED.setVisibility(View.VISIBLE);
-                                                RoboticsFragment.this.circularProgressBar.setVisibility(View.INVISIBLE);
-                                            }
-                                        }
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    },
-                    null
-            ).execute();
-        else
-            RoboticsFragment.this.circularProgressBar.setVisibility(View.INVISIBLE);
 
         ((Button) this.rootView.findViewById(R.id.launch)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,7 +113,7 @@ public class RoboticsFragment extends Fragment {
                             new IPostExecuteListener() {
                                 @Override
                                 public void execute(JSONObject json, String body) {
-                                    output.setText(""+body);
+                                    addLog(body);
                                 }
                             },
                             parameters
@@ -162,6 +123,10 @@ public class RoboticsFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    private void addLog(String log) {
+        output.setText("\n\n"+log);
     }
 
     @Override
