@@ -19,6 +19,11 @@
  */
 package mercandalli.com.filespace.ui.fragment;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +51,7 @@ import static mercandalli.com.filespace.util.RoboticsUtils.createProtocolLed;
 /**
  * Created by Jonathan on 03/01/2015.
  */
-public class RoboticsFragment extends Fragment {
+public class RoboticsFragment extends Fragment implements SensorEventListener {
 
     private Application app;
     private View rootView;
@@ -84,6 +89,8 @@ public class RoboticsFragment extends Fragment {
         this.value = (EditText) this.rootView.findViewById(R.id.value);
         this.order = (Switch) this.rootView.findViewById(R.id.order);
 
+        this.output.setMovementMethod(null);
+
         this.value.setVisibility(View.INVISIBLE);
         this.order.setText("Measure");
         this.order.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -97,7 +104,7 @@ public class RoboticsFragment extends Fragment {
         ((Button) this.rootView.findViewById(R.id.launch)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isInternetConnection(app)) {
+                if (isInternetConnection(app)) {
                     List<StringPair> parameters = new ArrayList<>();
 
                     JSONObject json = createProtocolLed(
@@ -105,7 +112,7 @@ public class RoboticsFragment extends Fragment {
                             !order.isChecked(),
                             value.getText().toString());
 
-                    parameters.add(new StringPair("json", ""+json.toString()));
+                    parameters.add(new StringPair("json", "" + json.toString()));
 
                     new TaskPost(
                             app,
@@ -113,7 +120,7 @@ public class RoboticsFragment extends Fragment {
                             new IPostExecuteListener() {
                                 @Override
                                 public void execute(JSONObject json, String body) {
-                                    addLog(body);
+                                    log(body);
                                 }
                             },
                             parameters
@@ -122,15 +129,61 @@ public class RoboticsFragment extends Fragment {
             }
         });
 
+        senSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+
         return rootView;
     }
 
-    private void addLog(String log) {
-        output.setText("\n\n"+log);
+    private int id_log = 0;
+    private void log(String log) {
+        output.setText( "#" + id_log + " : " + log + "\n" + output.getText().toString() );
+        id_log++;
     }
 
     @Override
     public boolean back() {
         return false;
+    }
+
+
+
+    /******** SENSOR **********/
+
+    private SensorManager senSensorManager;
+    private Sensor senAccelerometer;
+
+    private long lastUpdate = 0;
+    private float last_x, last_y, last_z;
+    public static float rotationCar;
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        Sensor mySensor = sensorEvent.sensor;
+
+        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+
+            float x = sensorEvent.values[0];
+            float y = sensorEvent.values[1];
+            float z = sensorEvent.values[2];
+
+            long curTime = System.currentTimeMillis();
+
+            if ((curTime - lastUpdate) > 100) {
+                lastUpdate = curTime;
+
+                log("x = " + x + "    y = " + y + "    z = " + z);
+
+                last_x = x;
+                last_y = y;
+                last_z = z;
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }
