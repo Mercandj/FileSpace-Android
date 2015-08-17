@@ -31,6 +31,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.ToggleButton;
 
@@ -57,7 +58,12 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
     private View rootView;
     private ToggleButton toggleButton1;
     private EditText output, id, value;
+
+    private SeekBar seekBar;
+
     Switch order;
+
+    private boolean MODE_ACCELERO = false;
 
     public RoboticsFragment(Application app) {
         this.app = app;
@@ -71,19 +77,11 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
         this.toggleButton1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                /*
-                List<StringPair> parameters = new ArrayList<>();
-                parameters.add(new StringPair("value", (isChecked) ? "1" : "0"));
-                new TaskPost(
-                        RoboticsFragment.this.app,
-                        RoboticsFragment.this.app.getConfig().getUrlServer() + RoboticsFragment.this.app.getConfig().routeRobotics + "/18",
-                        null,
-                        parameters
-                ).execute();
-                */
+                MODE_ACCELERO = isChecked;
             }
         });
 
+        this.seekBar = (SeekBar) this.rootView.findViewById(R.id.seekBar);
         this.output = (EditText) this.rootView.findViewById(R.id.output);
         this.id = (EditText) this.rootView.findViewById(R.id.id);
         this.value = (EditText) this.rootView.findViewById(R.id.value);
@@ -136,7 +134,7 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
         return rootView;
     }
 
-    private int id_log = 0;
+    private long id_log = 0;
     private void log(String log) {
         output.setText( "#" + id_log + " : " + log + "\n" + output.getText().toString() );
         id_log++;
@@ -174,6 +172,15 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
                 lastUpdate = curTime;
 
                 log("x = " + x + "    y = " + y + "    z = " + z);
+
+                if(MODE_ACCELERO) {
+                    double tmp_y = y + 5;
+                    if(tmp_y < 0)
+                        tmp_y = 0;
+                    if(tmp_y > 10)
+                        tmp_y = 10;
+                    this.seekBar.setProgress((int)(tmp_y*10));
+                }
 
                 last_x = x;
                 last_y = y;
