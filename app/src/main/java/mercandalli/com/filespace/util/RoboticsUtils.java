@@ -23,6 +23,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import mercandalli.com.filespace.model.ModelHardware;
+
 import static mercandalli.com.filespace.util.TimeUtils.getCurrentDate;
 
 /**
@@ -108,7 +113,7 @@ public class RoboticsUtils {
      * value = "1" || "0"     *
      * @return JSONObject to raspberry
      */
-    public static JSONObject createProtocolLed(int id, boolean read, String value) {
+    public static JSONObject createProtocolHardware(ModelHardware hard1) {
         JSONObject user = createUser(
                 1, // id
                 "Jonathan" // username
@@ -117,10 +122,10 @@ public class RoboticsUtils {
         JSONArray hardware  = new JSONArray();
         hardware.put(
                 createHardware(
-                        id, // id
-                        read, // read
-                        value, // value,
-                        "led", // type,
+                        hard1.id, // id
+                        hard1.read, // read
+                        hard1.value, // value,
+                        hard1.type, // type,
                         true // succeed
                 )
         );
@@ -142,4 +147,89 @@ public class RoboticsUtils {
         );
     }
 
+    /**
+     * Control LED, hardware id = 1 ???     *
+     * value = "1" || "0"     *
+     * @return JSONObject to raspberry
+     */
+    public static JSONObject createProtocolHardware(ModelHardware hard1, ModelHardware hard2) {
+        JSONObject user = createUser(
+                1, // id
+                "Jonathan" // username
+        );
+
+        JSONArray hardware  = new JSONArray();
+        hardware.put(
+                createHardware(
+                        hard1.id, // id
+                        hard1.read, // read
+                        hard1.value, // value,
+                        hard1.type, // type,
+                        true // succeed
+                )
+        );
+        hardware.put(
+                createHardware(
+                        hard2.id, // id
+                        hard2.read, // read
+                        hard2.value, // value,
+                        hard2.type, // type,
+                        true // succeed
+                )
+        );
+
+        JSONObject content = createContent(
+                user, // user
+                getCurrentDate(), // date_request
+                hardware, // hardware
+                false, // init_hardware
+                -1, // state
+                -1 // ai_mode
+        );
+
+        return createProtocol(
+                true, // succeed
+                "Test toast", // toast
+                "on/off led", // debug
+                content // content
+        );
+    }
+
+
+    public static List<ModelHardware> parseRaspberry(JSONObject json) {
+        List<ModelHardware> result = new ArrayList<>();
+        if(json == null)
+            return result;
+        try {
+            if(!json.has("raspberry-content"))
+                return result;
+
+            json = new JSONObject(json.getString("raspberry-content"));
+
+            if(json.has("content")) {
+                JSONObject content = json.getJSONObject("content");
+                if(content.has("hardware")) {
+                    JSONArray hardware = content.getJSONArray("hardware");
+                    for (int i=0; i<hardware.length(); i++) {
+                        JSONObject hard_json = hardware.getJSONObject(i);
+                        ModelHardware hard = new ModelHardware();
+                        if(hard_json.has("succeed"))
+                            hard.succeed = hard_json.getBoolean("succeed");
+                        if(hard_json.has("id"))
+                            hard.id = hard_json.getInt("id");
+                        if(hard_json.has("value"))
+                            hard.value = hard_json.getString("value");
+                        if(hard_json.has("type"))
+                            hard.type = hard_json.getString("type");
+                        result.add(hard);
+                    }
+                }
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 }

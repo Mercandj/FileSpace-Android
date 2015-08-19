@@ -42,28 +42,47 @@ import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
+import mercandalli.com.filespace.model.ModelHardware;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.util.StringPair;
+import mercandalli.com.filespace.util.StringUtils;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
-import static mercandalli.com.filespace.util.RoboticsUtils.createProtocolLed;
+import static mercandalli.com.filespace.util.RoboticsUtils.createProtocolHardware;
+import static mercandalli.com.filespace.util.RoboticsUtils.parseRaspberry;
 
 /**
  * Created by Jonathan on 03/01/2015.
  */
 public class RoboticsFragment extends Fragment implements SensorEventListener {
 
+    static final int ID_LED_1		= 1;
+    static final int ID_DISTANCE_1	= 2;
+    static final int ID_DISTANCE_2	= 3;
+    static final int ID_SERVO_1		= 4;
+    static final int ID_SERVO_2		= 5;
+
+    ModelHardware LED_1;
+    ModelHardware SERVO_1;
+    ModelHardware SERVO_2;
+
+
     private Application app;
     private View rootView;
-    private ToggleButton toggleButton1;
-    private EditText output, id, value;
+    private ToggleButton toggleButton1, toggleButton2, toggleButton3;
+    private EditText output, id, value, distance_right, distance_left;
 
     private SeekBar seekBar;
 
+    private boolean request_ready = true;
+    private double car_direction = 0.5;
+
     Switch order;
 
+    private boolean MODE_CONNECTION = false;
     private boolean MODE_ACCELERO = false;
+    private boolean MODE_LED_1 = false;
 
     public RoboticsFragment(Application app) {
         this.app = app;
@@ -73,11 +92,42 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_robotics, container, false);
 
+
+        // Create hardware
+        this.SERVO_1 = new ModelHardware();
+        this.SERVO_1.id = ID_SERVO_1;
+        this.SERVO_1.value = ""+this.car_direction;
+
+        this.SERVO_2 = new ModelHardware();
+        this.SERVO_2.id = ID_SERVO_2;
+        this.SERVO_2.value = "0.5";
+
+        this.LED_1 = new ModelHardware();
+        this.LED_1.id = ID_LED_1;
+        this.LED_1.value = "0";
+
+
         this.toggleButton1 = (ToggleButton) this.rootView.findViewById(R.id.toggleButton1);
         this.toggleButton1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                MODE_CONNECTION = isChecked;
+            }
+        });
+
+        this.toggleButton2 = (ToggleButton) this.rootView.findViewById(R.id.toggleButton2);
+        this.toggleButton2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 MODE_ACCELERO = isChecked;
+            }
+        });
+
+        this.toggleButton3 = (ToggleButton) this.rootView.findViewById(R.id.toggleButton3);
+        this.toggleButton3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                MODE_LED_1 = isChecked;
             }
         });
 
@@ -86,8 +136,27 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
         this.id = (EditText) this.rootView.findViewById(R.id.id);
         this.value = (EditText) this.rootView.findViewById(R.id.value);
         this.order = (Switch) this.rootView.findViewById(R.id.order);
+        this.distance_left = (EditText) this.rootView.findViewById(R.id.distance_left);
+        this.distance_right = (EditText) this.rootView.findViewById(R.id.distance_right);
 
         this.output.setMovementMethod(null);
+
+        this.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                RoboticsFragment.this.car_direction = progress*0.01;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         this.value.setVisibility(View.INVISIBLE);
         this.order.setText("Measure");
@@ -102,13 +171,15 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
         ((Button) this.rootView.findViewById(R.id.launch)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isInternetConnection(app)) {
+                if (isInternetConnection(app) && !StringUtils.isNullOrEmpty(id.getText().toString()) ) {
                     List<StringPair> parameters = new ArrayList<>();
 
-                    JSONObject json = createProtocolLed(
-                            Integer.parseInt(id.getText().toString()),
-                            !order.isChecked(),
-                            value.getText().toString());
+                    ModelHardware hard1 = new ModelHardware();
+                    hard1.id = Integer.parseInt(id.getText().toString());
+                    hard1.read = !order.isChecked();
+                    hard1.value = value.getText().toString();
+
+                    JSONObject json = createProtocolHardware(hard1);
 
                     parameters.add(new StringPair("json", "" + json.toString()));
 
@@ -119,6 +190,7 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
                                 @Override
                                 public void execute(JSONObject json, String body) {
                                     log(body);
+                                    handleResponse(parseRaspberry(json));
                                 }
                             },
                             parameters
@@ -153,8 +225,7 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
     private Sensor senAccelerometer;
 
     private long lastUpdate = 0;
-    private float last_x, last_y, last_z;
-    public static float rotationCar;
+    private long lastUpdate2 = 0;
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
@@ -168,10 +239,8 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
 
             long curTime = System.currentTimeMillis();
 
-            if ((curTime - lastUpdate) > 100) {
-                lastUpdate = curTime;
-
-                log("x = " + x + "    y = " + y + "    z = " + z);
+            if ((curTime - lastUpdate2) > 50) {
+                lastUpdate2 = curTime;
 
                 if(MODE_ACCELERO) {
                     double tmp_y = y + 5;
@@ -181,10 +250,40 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
                         tmp_y = 10;
                     this.seekBar.setProgress((int)(tmp_y*10));
                 }
+            }
 
-                last_x = x;
-                last_y = y;
-                last_z = z;
+            if ((curTime - lastUpdate) > 200) {
+                lastUpdate = curTime;
+
+                //log("x = " + x + "    y = " + y + "    z = " + z);
+
+                if (isInternetConnection(app) && request_ready && MODE_CONNECTION) {
+                    List<StringPair> parameters = new ArrayList<>();
+
+                    SERVO_1.read = false; // write
+                    SERVO_1.value = ""+this.car_direction;
+
+                    LED_1.read = false; // write
+                    LED_1.value = ""+(MODE_LED_1?1:0);
+
+                    parameters.add(new StringPair("json", "" + createProtocolHardware(SERVO_1, LED_1).toString()));
+
+                    request_ready = false;
+
+                    new TaskPost(
+                            app,
+                            app.getConfig().getUrlServer() + RoboticsFragment.this.app.getConfig().routeRobotics,
+                            new IPostExecuteListener() {
+                                @Override
+                                public void execute(JSONObject json, String body) {
+                                    log(body);
+                                    handleResponse(parseRaspberry(json));
+                                    request_ready = true;
+                                }
+                            },
+                            parameters
+                    ).execute();
+                }
             }
         }
     }
@@ -192,5 +291,18 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    private void handleResponse(List<ModelHardware> list) {
+        for (ModelHardware hardware : list) {
+            switch(hardware.id) {
+                case ID_DISTANCE_1:
+                    this.distance_left.setText(""+hardware.value);
+                    break;
+                case ID_DISTANCE_2:
+                    this.distance_right.setText(""+hardware.value);
+                    break;
+            }
+        }
     }
 }

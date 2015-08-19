@@ -12,6 +12,36 @@
     android:background="#545454">
 
     <EditText
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/distance_left"
+        android:gravity="right|top"
+        android:textSize="18sp"
+        android:background="#545454"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:textColor="#fff"
+        android:editable="false"
+        android:focusable="false"
+        android:padding="10dp"
+        android:layout_marginTop="5dp"/>
+
+    <EditText
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/distance_right"
+        android:gravity="right|top"
+        android:textSize="18sp"
+        android:background="#545454"
+        android:textColor="#fff"
+        android:editable="false"
+        android:focusable="false"
+        android:padding="10dp"
+        android:layout_alignTop="@+id/distance_left"
+        android:layout_toStartOf="@+id/distance_left"
+        android:layout_marginRight="10dp"/>
+
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/output"

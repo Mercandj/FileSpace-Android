@@ -38,7 +38,6 @@ import mercandalli.com.filespace.listener.ILongListener;
 import mercandalli.com.filespace.model.ModelFile;
 import mercandalli.com.filespace.model.ModelUser;
 import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.util.FileUtils;
 
 import static mercandalli.com.filespace.util.ImageUtils.is_image;
 import static mercandalli.com.filespace.util.ImageUtils.load_image;

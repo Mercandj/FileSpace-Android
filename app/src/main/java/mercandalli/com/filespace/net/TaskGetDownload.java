@@ -101,14 +101,13 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
 
     public File file_from_url_Authorization(String url) {
         File x = null;
-        HttpResponse response;
         HttpGet httpget = new HttpGet(url);
         StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
         String result = Base64.encodeBytes(authentication.toString().getBytes());
         httpget.setHeader("Authorization", "Basic " + result);
         HttpClient httpclient = new DefaultHttpClient();
         try {
-            response = httpclient.execute(httpget);
+            HttpResponse response = httpclient.execute(httpget);
             InputStream inputStream = response.getEntity().getContent();
             long lenghtOfFile = response.getEntity().getContentLength();
             OutputStream outputStream = new FileOutputStream(url_ouput);
