@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +47,23 @@ public class CryptFragment extends Fragment {
 
         this.input = (TextView) this.rootView.findViewById(R.id.input);
         this.output = (TextView) this.rootView.findViewById(R.id.output);
+
+        this.input.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                output.setText(Crypt.crypte(input.getText().toString(), 69));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         this.circle.setOnClickListener(new View.OnClickListener() {
             @Override

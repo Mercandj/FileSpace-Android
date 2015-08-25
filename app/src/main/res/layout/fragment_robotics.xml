@@ -162,16 +162,33 @@
             android:layout_alignTop="@+id/toggleButton3"
             android:layout_toEndOf="@+id/toggleButton3"/>
 
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar_dir"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:max="100"
+            android:progress="50"
+            android:layout_toStartOf="@+id/centerSeekBar"/>
+
+        <RelativeLayout
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/centerSeekBar">
+        </RelativeLayout>
 
         <SeekBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/seekBar"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
+            android:id="@+id/seekBar_speed"
             android:max="100"
-            android:progress="50"/>
+            android:progress="50"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/centerSeekBar"/>
 
     </RelativeLayout>
 

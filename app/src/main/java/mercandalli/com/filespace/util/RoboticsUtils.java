@@ -152,31 +152,43 @@ public class RoboticsUtils {
      * value = "1" || "0"     *
      * @return JSONObject to raspberry
      */
-    public static JSONObject createProtocolHardware(ModelHardware hard1, ModelHardware hard2) {
+    public static JSONObject createProtocolHardware(ModelHardware hard1, ModelHardware hard2, ModelHardware hard3) {
         JSONObject user = createUser(
                 1, // id
                 "Jonathan" // username
         );
 
         JSONArray hardware  = new JSONArray();
-        hardware.put(
-                createHardware(
-                        hard1.id, // id
-                        hard1.read, // read
-                        hard1.value, // value,
-                        hard1.type, // type,
-                        true // succeed
-                )
-        );
-        hardware.put(
-                createHardware(
-                        hard2.id, // id
-                        hard2.read, // read
-                        hard2.value, // value,
-                        hard2.type, // type,
-                        true // succeed
-                )
-        );
+        if(hard1 != null)
+            hardware.put(
+                    createHardware(
+                            hard1.id, // id
+                            hard1.read, // read
+                            hard1.value, // value,
+                            hard1.type, // type,
+                            true // succeed
+                    )
+            );
+        if(hard2 != null)
+            hardware.put(
+                    createHardware(
+                            hard2.id, // id
+                            hard2.read, // read
+                            hard2.value, // value,
+                            hard2.type, // type,
+                            true // succeed
+                    )
+            );
+        if(hard3 != null)
+            hardware.put(
+                    createHardware(
+                            hard3.id, // id
+                            hard3.read, // read
+                            hard3.value, // value,
+                            hard3.type, // type,
+                            true // succeed
+                    )
+            );
 
         JSONObject content = createContent(
                 user, // user

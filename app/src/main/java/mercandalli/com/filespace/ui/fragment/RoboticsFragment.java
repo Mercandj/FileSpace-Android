@@ -73,10 +73,11 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
     private ToggleButton toggleButton1, toggleButton2, toggleButton3;
     private EditText output, id, value, distance_right, distance_left;
 
-    private SeekBar seekBar;
+    private SeekBar seekBar_dir, seekBar_speed;
 
     private boolean request_ready = true;
     private double car_direction = 0.5;
+    private double car_speed = 0.5;
 
     Switch order;
 
@@ -131,7 +132,8 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
             }
         });
 
-        this.seekBar = (SeekBar) this.rootView.findViewById(R.id.seekBar);
+        this.seekBar_dir = (SeekBar) this.rootView.findViewById(R.id.seekBar_dir);
+        this.seekBar_speed = (SeekBar) this.rootView.findViewById(R.id.seekBar_speed);
         this.output = (EditText) this.rootView.findViewById(R.id.output);
         this.id = (EditText) this.rootView.findViewById(R.id.id);
         this.value = (EditText) this.rootView.findViewById(R.id.value);
@@ -141,10 +143,27 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
 
         this.output.setMovementMethod(null);
 
-        this.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        this.seekBar_dir.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                RoboticsFragment.this.car_direction = progress*0.01;
+                RoboticsFragment.this.car_direction = progress * 0.01;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        this.seekBar_speed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                RoboticsFragment.this.car_speed = progress*0.01;
             }
 
             @Override
@@ -248,11 +267,11 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
                         tmp_y = 0;
                     if(tmp_y > 10)
                         tmp_y = 10;
-                    this.seekBar.setProgress((int)(tmp_y*10));
+                    this.seekBar_dir.setProgress((int)(tmp_y*10));
                 }
             }
 
-            if ((curTime - lastUpdate) > 200) {
+            if ((curTime - lastUpdate) > 10) {
                 lastUpdate = curTime;
 
                 //log("x = " + x + "    y = " + y + "    z = " + z);
@@ -263,10 +282,13 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
                     SERVO_1.read = false; // write
                     SERVO_1.value = ""+this.car_direction;
 
+                    SERVO_2.read = false; // write
+                    SERVO_2.value = ""+this.car_speed;
+
                     LED_1.read = false; // write
                     LED_1.value = ""+(MODE_LED_1?1:0);
 
-                    parameters.add(new StringPair("json", "" + createProtocolHardware(SERVO_1, LED_1).toString()));
+                    parameters.add(new StringPair("json", "" + createProtocolHardware(SERVO_1, SERVO_2, LED_1).toString()));
 
                     request_ready = false;
 
