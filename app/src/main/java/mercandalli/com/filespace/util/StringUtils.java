@@ -95,6 +95,10 @@ public class StringUtils {
         return str.toUpperCase();
     }
 
+    public static String substring(final String str, final int nb_first) {
+        return str.substring(0, nb_first);
+    }
+
     private static boolean isDelimiter(final char ch, final char[] delimiters) {
         if (delimiters == null) {
                 return Character.isWhitespace(ch);

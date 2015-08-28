@@ -31,6 +31,7 @@ import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
+import mercandalli.com.filespace.model.ModelGenealogyUser;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.util.StringPair;
@@ -45,15 +46,20 @@ public class DialogAddGenealogyUser extends Dialog {
     private EditText et_last_name;
     private EditText et_date_birth;
     private EditText et_date_death;
+    private Button bt_add;
 
     private CheckBox sexe;
 
-	public DialogAddGenealogyUser(final Application app, final IPostExecuteListener listener) {
+    public DialogAddGenealogyUser(final Application app, final IPostExecuteListener listener) {
+        this(app, listener, app.getString(R.string.genealogy_add_user), null);
+    }
+
+	public DialogAddGenealogyUser(final Application app, final IPostExecuteListener listener, String title, final ModelGenealogyUser genealogyUser) {
 		super(app);
 		this.app = app;
 		
 		this.setContentView(R.layout.dialog_add_genealogy_user);
-		this.setTitle(R.string.genealogy_add_user);
+		this.setTitle(title);
 		this.setCancelable(true);
 
         et_first_name_1 = (EditText) this.findViewById(R.id.et_first_name_1);
@@ -62,6 +68,7 @@ public class DialogAddGenealogyUser extends Dialog {
         et_last_name = (EditText) this.findViewById(R.id.et_last_name);
         et_date_birth = (EditText) this.findViewById(R.id.et_date_birth);
         et_date_death = (EditText) this.findViewById(R.id.et_date_death);
+        bt_add = (Button) this.findViewById(R.id.add);
 
         sexe = (CheckBox) this.findViewById(R.id.sexe);
         sexe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -94,11 +101,25 @@ public class DialogAddGenealogyUser extends Dialog {
 
                 parameters.add(new StringPair("is_man", "" + sexe.isChecked()));
 
-                (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeGenealogy, listener, parameters)).execute();
+                if (genealogyUser == null)
+                    (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeGenealogy, listener, parameters)).execute();
+                else
+                    (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeGenealogyPut + "/" + genealogyUser.id, listener, parameters)).execute();
 
                 DialogAddGenealogyUser.this.dismiss();
             }
         });
+
+        if(genealogyUser != null) {
+            this.bt_add.setText(R.string.modify);
+            this.et_first_name_1.setText(genealogyUser.first_name_1);
+            this.et_first_name_2.setText(genealogyUser.first_name_2);
+            this.et_first_name_3.setText(genealogyUser.first_name_3);
+            this.et_last_name.setText(genealogyUser.last_name);
+            this.et_date_birth.setText(StringUtils.substring(genealogyUser.date_birth, 10));
+            this.et_date_death.setText(StringUtils.substring(genealogyUser.date_death, 10));
+            this.sexe.setChecked(genealogyUser.is_man);
+        }
         
         DialogAddGenealogyUser.this.show();
 	}

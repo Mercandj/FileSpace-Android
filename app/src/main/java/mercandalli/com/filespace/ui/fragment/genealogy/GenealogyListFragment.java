@@ -192,7 +192,12 @@ public class GenealogyListFragment extends Fragment {
                                 public void onClick(DialogInterface dialog, int item) {
                                     switch (item) {
                                         case 0:
-                                            Toast.makeText(app, app.getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                            modelGenealogyUser.modify(new IPostExecuteListener() {
+                                                @Override
+                                                public void execute(JSONObject json, String body) {
+                                                    refreshList();
+                                                }
+                                            });
                                             break;
                                         case 1:
                                             GenealogyListFragment.this.app.alert("Delete", "Delete " + (modelGenealogyUser.first_name_1) + " ?", "Yes", new IListener() {
@@ -209,7 +214,7 @@ public class GenealogyListFragment extends Fragment {
                                             break;
                                         case 2:
                                             GenealogyListFragment.this.app.alert(
-                                                    getString(R.string.properties) + " : " + modelGenealogyUser.first_name_1,
+                                                    getString(R.string.data) + " : " + modelGenealogyUser.first_name_1,
                                                     modelGenealogyUser.toSpanned(),
                                                     "OK",
                                                     null,
@@ -231,7 +236,7 @@ public class GenealogyListFragment extends Fragment {
                 @Override
                 public void onItemClick(View view, int position) {
                     GenealogyListFragment.this.app.alert(
-                            getString(R.string.properties) + " : " + list.get(position).first_name_1,
+                            getString(R.string.data) + " : " + list.get(position).first_name_1,
                             list.get(position).toSpanned(),
                             "OK",
                             null,

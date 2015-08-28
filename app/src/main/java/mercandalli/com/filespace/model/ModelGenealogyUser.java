@@ -30,9 +30,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.ui.dialog.DialogAddGenealogyUser;
 import mercandalli.com.filespace.util.HtmlUtils;
 import mercandalli.com.filespace.util.StringPair;
 import mercandalli.com.filespace.util.StringUtils;
@@ -93,6 +95,17 @@ public class ModelGenealogyUser extends Model {
             listener.execute(null, null);
     }
 
+    public void modify(IPostExecuteListener listener) {
+        if(this.app != null) {
+            if(this.app.getConfig().isUserAdmin() && this.id != this.app.getConfig().getUserId()) {
+                app.dialog = new DialogAddGenealogyUser(app, listener, app.getString(R.string.modify), this);
+                return;
+            }
+        }
+        if(listener!=null)
+            listener.execute(null, null);
+    }
+
     public String getAdapterTitle() {
         if(!StringUtils.isNullOrEmpty(first_name_1) && !StringUtils.isNullOrEmpty(last_name))
             return StringUtils.uppercase(last_name) + " " + first_name_1;
@@ -103,11 +116,11 @@ public class ModelGenealogyUser extends Model {
 
     public String getAdapterSubtitle() {
         if(!StringUtils.isNullOrEmpty(this.date_birth) && !StringUtils.isNullOrEmpty(this.date_death))
-            return "(" + this.date_birth + " - " + this.date_death + ")";
+            return "(" + StringUtils.substring(this.date_birth, 10) + "  -  " + StringUtils.substring(this.date_death, 10) + ")";
         if(!StringUtils.isNullOrEmpty(this.date_birth))
-            return "Born: " + this.date_birth;
+            return "Born: " + StringUtils.substring(this.date_birth, 10);
         if(!StringUtils.isNullOrEmpty(this.date_death))
-            return "Death: " + this.date_death;
+            return "Death: " + StringUtils.substring(this.date_death, 10);
         return "";
     }
 
@@ -122,9 +135,9 @@ public class ModelGenealogyUser extends Model {
         if(!StringUtils.isNullOrEmpty(this.last_name))
             spl.add(new StringPair("Last name", this.last_name));
         if(!StringUtils.isNullOrEmpty(this.date_birth))
-            spl.add(new StringPair("Born", this.date_birth));
+            spl.add(new StringPair("Born", StringUtils.substring(this.date_birth, 10)));
         if(!StringUtils.isNullOrEmpty(this.date_death))
-            spl.add(new StringPair("Death", this.date_death));
+            spl.add(new StringPair("Death", StringUtils.substring(this.date_death, 10)));
         spl.add(new StringPair("Sexe", this.is_man ? "Man" : "Woman"));
         return HtmlUtils.createListItem(spl);
     }
