@@ -112,12 +112,18 @@ public class DialogAddGenealogyUser extends Dialog {
 
         if(genealogyUser != null) {
             this.bt_add.setText(R.string.modify);
-            this.et_first_name_1.setText(genealogyUser.first_name_1);
-            this.et_first_name_2.setText(genealogyUser.first_name_2);
-            this.et_first_name_3.setText(genealogyUser.first_name_3);
-            this.et_last_name.setText(genealogyUser.last_name);
-            this.et_date_birth.setText(StringUtils.substring(genealogyUser.date_birth, 10));
-            this.et_date_death.setText(StringUtils.substring(genealogyUser.date_death, 10));
+            if(!StringUtils.isNullOrEmpty(genealogyUser.first_name_1))
+                this.et_first_name_1.setText(genealogyUser.first_name_1);
+            if(!StringUtils.isNullOrEmpty(genealogyUser.first_name_2))
+                this.et_first_name_2.setText(genealogyUser.first_name_2);
+            if(!StringUtils.isNullOrEmpty(genealogyUser.first_name_3))
+                this.et_first_name_3.setText(genealogyUser.first_name_3);
+            if(!StringUtils.isNullOrEmpty(genealogyUser.last_name))
+                this.et_last_name.setText(genealogyUser.last_name);
+            if(!StringUtils.isNullOrEmpty(genealogyUser.date_birth))
+                this.et_date_birth.setText(StringUtils.substring(genealogyUser.date_birth, 10));
+            if(!StringUtils.isNullOrEmpty(genealogyUser.date_death))
+                this.et_date_death.setText(StringUtils.substring(genealogyUser.date_death, 10));
             this.sexe.setChecked(genealogyUser.is_man);
         }
         

@@ -96,6 +96,8 @@ public class StringUtils {
     }
 
     public static String substring(final String str, final int nb_first) {
+        if(str == null)
+            return "";
         return str.substring(0, nb_first);
     }
 
