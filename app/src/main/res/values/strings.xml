@@ -44,6 +44,7 @@
     <string name="open_as">Open as...</string>
     <string name="rename">Rename</string>
     <string name="delete">Delete</string>
+    <string name="modify">Modify</string>
     <string name="cut">Cut</string>
     <string name="properties">Properties</string>
     <string name="talk">Talk</string>
@@ -95,5 +96,6 @@
     <string name="genealogy_first_name_2">First name 2</string>
     <string name="genealogy_first_name_3">First name 3</string>
     <string name="genealogy_last_name">Last name</string>
+    <string name="genealogy_add_user">Add user</string>
 
 </resources>

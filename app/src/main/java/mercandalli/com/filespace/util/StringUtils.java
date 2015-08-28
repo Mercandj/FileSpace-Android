@@ -19,11 +19,7 @@
  */
 package mercandalli.com.filespace.util;
 
-import android.text.Html;
-import android.text.Spanned;
-
 import java.text.Normalizer;
-import java.util.List;
 import java.util.StringTokenizer;
 
 /**
@@ -93,6 +89,10 @@ public class StringUtils {
                 }
         }
         return new String(buffer);
+    }
+
+    public static String uppercase(final String str) {
+        return str.toUpperCase();
     }
 
     private static boolean isDelimiter(final char ch, final char[] delimiters) {

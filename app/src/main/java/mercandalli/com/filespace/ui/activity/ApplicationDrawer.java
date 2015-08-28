@@ -492,6 +492,10 @@ public abstract class ApplicationDrawer extends Application {
     			break;
     		}
     	}
+        else if(fragment instanceof GenealogyFragment) {
+            menu.findItem(R.id.action_search)	.setVisible(!drawerOpen);
+
+        }
         return super.onPrepareOptionsMenu(menu);
     }
     

@@ -3,73 +3,122 @@
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="10dp" >
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
 
-    <EditText
-        android:id="@+id/et_first_name_1"
-        android:layout_width="wrap_content"
+
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="5dp"
-        android:ems="10"
-        android:gravity="center_vertical"
-        android:hint="@string/genealogy_first_name_1"
-        android:padding="10dp" />
-
-    <EditText
-        android:id="@+id/et_first_name_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/et_first_name_1"
-        android:layout_marginTop="5dp"
-        android:ems="10"
-        android:hint="@string/genealogy_first_name_2"
-        android:padding="10dp" >
-    </EditText>
-
-    <EditText
-        android:id="@+id/et_first_name_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/et_first_name_2"
-        android:layout_marginTop="5dp"
-        android:ems="10"
-        android:hint="@string/genealogy_first_name_3"
-        android:padding="10dp" >
-    </EditText>
-
-    <EditText
-        android:id="@+id/et_last_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/et_first_name_3"
-        android:layout_marginTop="5dp"
-        android:ems="10"
-        android:hint="@string/genealogy_last_name"
-        android:padding="10dp" >
-    </EditText>
-
-    <Button
-        android:id="@+id/add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="5dp"
-        android:text="@string/add"
-        android:layout_below="@+id/et_last_name"/>
+        android:paddingBottom="20dp">
 
 
+        <EditText
+            android:id="@+id/et_last_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/genealogy_last_name"
+            android:padding="10dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/center">
+        </EditText>
 
-</RelativeLayout>
+
+        <EditText
+            android:id="@+id/et_first_name_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/center"
+            android:ems="10"
+            android:gravity="center_vertical"
+            android:hint="@string/genealogy_first_name_1"
+            android:padding="10dp"/>
+
+        <EditText
+            android:id="@+id/et_first_name_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/et_last_name"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/et_first_name_1"
+            android:layout_marginTop="5dp"
+            android:ems="10"
+            android:hint="@string/genealogy_first_name_2"
+            android:padding="10dp">
+        </EditText>
+
+        <EditText
+            android:id="@+id/et_first_name_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/genealogy_first_name_3"
+            android:padding="10dp"
+            android:layout_alignTop="@+id/et_first_name_2"
+            android:layout_alignParentEnd="true"
+            android:layout_alignStart="@+id/et_first_name_1">
+        </EditText>
+
+
+        <Button
+            android:id="@+id/add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignStart="@+id/et_first_name_3"
+            android:layout_below="@+id/et_date_death"
+            android:layout_marginTop="24dp"
+            android:text="@string/add"
+            />
+
+        <RelativeLayout
+            android:id="@+id/center"
+            android:layout_width="50px"
+            android:layout_height="70px"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true">
+        </RelativeLayout>
+
+        <CheckBox
+            android:id="@+id/sexe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/add"
+            android:layout_alignEnd="@+id/et_first_name_2"
+            android:layout_alignParentStart="true"
+            android:text="Is woman"/>
+
+        <EditText
+            android:id="@+id/et_date_birth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/et_first_name_3"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/et_first_name_2"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Birth date 1990-12-25"
+            android:inputType="date"/>
+
+        <EditText
+            android:id="@+id/et_date_death"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/et_first_name_3"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/et_date_birth"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Death date 1990-12-25"
+            android:inputType="date"/>
+    </RelativeLayout>
+
+</ScrollView>
