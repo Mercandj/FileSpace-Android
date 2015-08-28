@@ -41,7 +41,7 @@ import mercandalli.com.filespace.util.StringUtils;
 
 public class ModelGenealogyUser extends Model {
 
-	public String first_name_1, first_name_2, first_name_3, last_name, date_birth, date_death;
+	public String first_name_1, first_name_2, first_name_3, last_name, date_birth, date_death, description;
 	public int id, id_father, id_mother;
     public Date date_creation;
     public boolean is_man = false;
@@ -68,6 +68,8 @@ public class ModelGenealogyUser extends Model {
                 this.date_birth = json.getString("date_birth");
             if(json.has("date_death"))
                 this.date_death = json.getString("date_death");
+            if(json.has("description"))
+                this.description = json.getString("description");
             if(json.has("date_creation") && !json.isNull("date_creation"))
                 this.date_creation = dateFormat.parse(json.getString("date_creation"));
             if(json.has("id_father"))
@@ -139,6 +141,8 @@ public class ModelGenealogyUser extends Model {
         if(!StringUtils.isNullOrEmpty(this.date_death))
             spl.add(new StringPair("Death", StringUtils.substring(this.date_death, 10)));
         spl.add(new StringPair("Sexe", this.is_man ? "Man" : "Woman"));
+        if(!StringUtils.isNullOrEmpty(this.description))
+            spl.add(new StringPair("Notes",this.description));
         return HtmlUtils.createListItem(spl);
     }
 

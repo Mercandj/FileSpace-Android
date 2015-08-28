@@ -46,6 +46,7 @@ public class DialogAddGenealogyUser extends Dialog {
     private EditText et_last_name;
     private EditText et_date_birth;
     private EditText et_date_death;
+    private EditText et_description;
     private Button bt_add;
 
     private CheckBox sexe;
@@ -68,6 +69,7 @@ public class DialogAddGenealogyUser extends Dialog {
         et_last_name = (EditText) this.findViewById(R.id.et_last_name);
         et_date_birth = (EditText) this.findViewById(R.id.et_date_birth);
         et_date_death = (EditText) this.findViewById(R.id.et_date_death);
+        et_description = (EditText) this.findViewById(R.id.et_description);
         bt_add = (Button) this.findViewById(R.id.add);
 
         sexe = (CheckBox) this.findViewById(R.id.sexe);
@@ -92,6 +94,8 @@ public class DialogAddGenealogyUser extends Dialog {
                     parameters.add(new StringPair("first_name_3", et_first_name_3.getText().toString()));
                 if (!StringUtils.isNullOrEmpty(et_last_name.getText().toString()))
                     parameters.add(new StringPair("last_name", et_last_name.getText().toString()));
+                if (!StringUtils.isNullOrEmpty(et_description.getText().toString()))
+                    parameters.add(new StringPair("description", et_description.getText().toString()));
                 if (!StringUtils.isNullOrEmpty(et_date_birth.getText().toString()))
                     if (et_date_birth.getText().toString().length() == 10)
                         parameters.add(new StringPair("date_birth", et_date_birth.getText().toString() + " 12:00:00"));
@@ -124,6 +128,8 @@ public class DialogAddGenealogyUser extends Dialog {
                 this.et_date_birth.setText(StringUtils.substring(genealogyUser.date_birth, 10));
             if(!StringUtils.isNullOrEmpty(genealogyUser.date_death))
                 this.et_date_death.setText(StringUtils.substring(genealogyUser.date_death, 10));
+            if(!StringUtils.isNullOrEmpty(genealogyUser.description))
+                this.et_description.setText(genealogyUser.description);
             this.sexe.setChecked(genealogyUser.is_man);
         }
         

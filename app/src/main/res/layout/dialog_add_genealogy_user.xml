@@ -74,8 +74,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignStart="@+id/et_first_name_3"
-            android:layout_below="@+id/et_date_death"
-            android:layout_marginTop="24dp"
+            android:layout_below="@+id/et_description"
+            android:layout_marginTop="18dp"
             android:text="@string/add"
             />
 
@@ -119,6 +119,21 @@
             android:ems="10"
             android:hint="Death date 1990-12-25"
             android:inputType="date"/>
+
+        <EditText
+            android:id="@+id/et_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/et_first_name_3"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/et_date_death"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Notes"
+            android:maxLines="4"
+            android:lines="2"
+            android:minLines="2"
+            android:gravity="left|top"/>
     </RelativeLayout>
 
 </ScrollView>
