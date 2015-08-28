@@ -54,6 +54,7 @@ import mercandalli.com.filespace.ui.fragment.admin.AdminFragment;
 import mercandalli.com.filespace.ui.fragment.admin.RequestFragment;
 import mercandalli.com.filespace.ui.fragment.community.CommunityFragment;
 import mercandalli.com.filespace.ui.fragment.file.FileManagerFragment;
+import mercandalli.com.filespace.ui.fragment.genealogy.GenealogyFragment;
 import mercandalli.com.filespace.ui.fragment.workspace.CryptFragment;
 import mercandalli.com.filespace.ui.fragment.workspace.NoteFragment;
 import mercandalli.com.filespace.ui.fragment.workspace.WorkspaceFragment;
@@ -185,6 +186,18 @@ public abstract class ApplicationDrawer extends Application {
 
             // Tab 7
             navDrawerItems.add(
+                    new NavDrawerItem(getString(R.string.tab_genealogy), new IListener() {
+                        @Override
+                        public void execute() {
+                            fragment = new GenealogyFragment(ApplicationDrawer.this);
+                            FragmentManager fragmentManager = getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                        }
+                    }, R.drawable.q_ic_drawer_robotics, R.drawable.q_ic_drawer_robotics_pressed, Const.TAB_VIEW_TYPE_NORMAL)
+            );
+
+            // Tab 8
+            navDrawerItems.add(
                     new NavDrawerItem(getString(R.string.tab_admin), new IListener() {
                         @Override
                         public void execute() {
@@ -196,17 +209,17 @@ public abstract class ApplicationDrawer extends Application {
             );
         }
         
-        // Tab 8
+        // Tab 9
         navDrawerItems.add(
         		new NavDrawerItem( "", R.drawable.ic_launcher, Const.TAB_VIEW_TYPE_SECTION)
         );
 
-        // Tab 9
+        // Tab 10
         navDrawerItems.add(
                 new NavDrawerItem( "Other", R.drawable.ic_launcher, Const.TAB_VIEW_TYPE_SECTION_TITLE)
         );
         
-        // Tab 10
+        // Tab 11
         navDrawerItems.add(
         		new NavDrawerItem( 
     				getString(R.string.tab_settings),
@@ -222,7 +235,7 @@ public abstract class ApplicationDrawer extends Application {
                 Const.TAB_VIEW_TYPE_SETTING)
         );
 
-        // Tab 11
+        // Tab 12
         navDrawerItems.add(
                 new NavDrawerItem(
                         getString(R.string.tab_log_out),
@@ -242,7 +255,7 @@ public abstract class ApplicationDrawer extends Application {
                         Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE)
         );
         
-        // Tab 12
+        // Tab 13
         navDrawerItems.add(
         		new NavDrawerItem(
         			getString(R.string.tab_about),

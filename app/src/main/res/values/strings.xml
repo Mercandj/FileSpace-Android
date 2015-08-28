@@ -36,6 +36,7 @@
     <string name="OFF">OFF</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="add">Add</string>
 
     <string name="action">Action</string>
     <string name="download">Download</string>
@@ -73,6 +74,7 @@
     <string name="tab_workspace">Workspace</string>
     <string name="tab_community">Community</string>
     <string name="tab_robotics">Robotics</string>
+    <string name="tab_genealogy">Genealogy</string>
     <string name="tab_admin">Admin</string>
     <string name="tab_request">Request</string>
     <string name="tab_settings">Settings</string>
@@ -88,5 +90,10 @@
     <string name="menu_action_sort">Sort</string>
 
     <string name="failed_google_plus">Google+ connection failed.</string>
+
+    <string name="genealogy_first_name_1">First name 1</string>
+    <string name="genealogy_first_name_2">First name 2</string>
+    <string name="genealogy_first_name_3">First name 3</string>
+    <string name="genealogy_last_name">Last name</string>
 
 </resources>

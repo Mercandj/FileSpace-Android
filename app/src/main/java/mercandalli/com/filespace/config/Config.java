@@ -62,6 +62,7 @@ public class Config {
     public final String routeFileDelete			= "file_delete";
     public final String routeInformation		= "information";
     public final String routeRobotics       	= "robotics";
+    public final String routeGenealogy       	= "genealogy";
     public final String routeUser 		        = "user";
     public final String routeUserDelete 		= "user_delete";
     public final String routeUserPut	        = "user_put";
