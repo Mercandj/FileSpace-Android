@@ -35,6 +35,7 @@ import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelGenealogyUser;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.ui.fragment.genealogy.GenealogyListFragment;
 import mercandalli.com.filespace.util.StringPair;
 import mercandalli.com.filespace.util.StringUtils;
 
@@ -48,9 +49,11 @@ public class DialogAddGenealogyUser extends Dialog {
     private EditText et_date_birth;
     private EditText et_date_death;
     private EditText et_description;
-    private Button bt_add;
+    private Button bt_add, bt_father, bt_mother;
 
     private CheckBox sexe;
+
+    private ModelGenealogyUser mother, father;
 
     public DialogAddGenealogyUser(final Application app, final IPostExecuteListener listener) {
         this(app, listener, app.getString(R.string.genealogy_add_user), null);
@@ -103,6 +106,10 @@ public class DialogAddGenealogyUser extends Dialog {
                 if (!StringUtils.isNullOrEmpty(et_date_death.getText().toString()))
                     if (et_date_death.getText().toString().length() == 10)
                         parameters.add(new StringPair("date_death", et_date_death.getText().toString() + " 12:00:00"));
+                if(father != null)
+                    parameters.add(new StringPair("id_father", ""+father.id));
+                if(mother != null)
+                    parameters.add(new StringPair("id_mother", ""+mother.id));
 
                 parameters.add(new StringPair("is_man", "" + sexe.isChecked()));
 
@@ -115,41 +122,65 @@ public class DialogAddGenealogyUser extends Dialog {
             }
         });
 
-
-        ((Button) this.findViewById(R.id.bt_mother)).setOnClickListener(new View.OnClickListener() {
+        this.bt_mother = (Button) this.findViewById(R.id.bt_mother);
+        this.bt_mother.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(app, app.getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                Toast.makeText(app, "Select the mother", Toast.LENGTH_SHORT).show();
+                GenealogyListFragment.resetMode();
+                GenealogyListFragment.MODE_SELECTION_MOTHER = true;
+                app.dialog.hide();
             }
         });
 
-        ((Button) this.findViewById(R.id.bt_father)).setOnClickListener(new View.OnClickListener() {
+        this.bt_father = (Button) this.findViewById(R.id.bt_father);
+        this.bt_father.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(app, app.getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                Toast.makeText(app, "Select the father", Toast.LENGTH_SHORT).show();
+                GenealogyListFragment.resetMode();
+                GenealogyListFragment.MODE_SELECTION_FATHER = true;
+                app.dialog.hide();
             }
         });
 
         if (genealogyUser != null) {
-        this.bt_add.setText(R.string.modify);
-        if (!StringUtils.isNullOrEmpty(genealogyUser.first_name_1))
-            this.et_first_name_1.setText(genealogyUser.first_name_1);
-        if (!StringUtils.isNullOrEmpty(genealogyUser.first_name_2))
-            this.et_first_name_2.setText(genealogyUser.first_name_2);
-        if (!StringUtils.isNullOrEmpty(genealogyUser.first_name_3))
-            this.et_first_name_3.setText(genealogyUser.first_name_3);
-        if (!StringUtils.isNullOrEmpty(genealogyUser.last_name))
-            this.et_last_name.setText(genealogyUser.last_name);
-        if (!StringUtils.isNullOrEmpty(genealogyUser.date_birth))
-            this.et_date_birth.setText(StringUtils.substring(genealogyUser.date_birth, 10));
-        if (!StringUtils.isNullOrEmpty(genealogyUser.date_death))
-            this.et_date_death.setText(StringUtils.substring(genealogyUser.date_death, 10));
-        if (!StringUtils.isNullOrEmpty(genealogyUser.description))
-            this.et_description.setText(genealogyUser.description);
-        this.sexe.setChecked(genealogyUser.is_man);
+            this.bt_add.setText(R.string.modify);
+            if (!StringUtils.isNullOrEmpty(genealogyUser.first_name_1))
+                this.et_first_name_1.setText(genealogyUser.first_name_1);
+            if (!StringUtils.isNullOrEmpty(genealogyUser.first_name_2))
+                this.et_first_name_2.setText(genealogyUser.first_name_2);
+            if (!StringUtils.isNullOrEmpty(genealogyUser.first_name_3))
+                this.et_first_name_3.setText(genealogyUser.first_name_3);
+            if (!StringUtils.isNullOrEmpty(genealogyUser.last_name))
+                this.et_last_name.setText(genealogyUser.last_name);
+            if (!StringUtils.isNullOrEmpty(genealogyUser.date_birth))
+                this.et_date_birth.setText(StringUtils.substring(genealogyUser.date_birth, 10));
+            if (!StringUtils.isNullOrEmpty(genealogyUser.date_death))
+                this.et_date_death.setText(StringUtils.substring(genealogyUser.date_death, 10));
+            if (!StringUtils.isNullOrEmpty(genealogyUser.description))
+                this.et_description.setText(genealogyUser.description);
+            this.sexe.setChecked(genealogyUser.is_man);
         }
 
         DialogAddGenealogyUser.this.show();
+    }
+
+    public void setMother(ModelGenealogyUser genealogyUser) {
+        this.mother = genealogyUser;
+        refresh();
+    }
+
+    public void setFather(ModelGenealogyUser genealogyUser) {
+        this.father = genealogyUser;
+        refresh();
+    }
+
+    private void refresh() {
+        if(this.mother != null)
+            this.bt_mother.setText(""+this.mother.first_name_1);
+        if(this.father != null)
+            this.bt_father.setText(""+this.father.first_name_1);
     }
 
 }

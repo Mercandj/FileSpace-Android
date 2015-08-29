@@ -13,6 +13,7 @@
 
     <string name="action_failed">Action failed</string>
     <string name="no_user">No User.</string>
+    <string name="no_person">No Person.</string>
     <string name="no_talk">No Talk.</string>
     <string name="no_file">No File</string>
     <string name="no_file_server">No File on server.</string>

@@ -48,6 +48,8 @@ public class ModelGenealogyUser extends Model {
 
     public boolean selected = false;
 
+    public ModelGenealogyUser mother, father;
+
 	public ModelGenealogyUser() {
 		super();
 	}
@@ -80,6 +82,10 @@ public class ModelGenealogyUser extends Model {
                 this.id_mother = json.getInt("id_mother");
             if(json.has("is_man"))
                 this.is_man = json.getInt("is_man") != 0;
+            if(json.has("father"))
+                this.father = new ModelGenealogyUser(app, json.getJSONObject("father"));
+            if(json.has("mother"))
+                this.mother = new ModelGenealogyUser(app, json.getJSONObject("mother"));
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -143,6 +149,10 @@ public class ModelGenealogyUser extends Model {
         if(!StringUtils.isNullOrEmpty(this.date_death))
             spl.add(new StringPair("Death", StringUtils.substring(this.date_death, 10)));
         spl.add(new StringPair("Sexe", this.is_man ? "Man" : "Woman"));
+        if(this.father != null)
+            spl.add(new StringPair("Father", father.getAdapterTitle()));
+        if(this.mother != null)
+            spl.add(new StringPair("Mother", mother.getAdapterTitle()));
         if(!StringUtils.isNullOrEmpty(this.description))
             spl.add(new StringPair("Notes",this.description));
         return HtmlUtils.createListItem(spl);

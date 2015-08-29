@@ -20,17 +20,20 @@
 package mercandalli.com.filespace.ui.fragment.genealogy;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import org.json.JSONObject;
+
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelGenealogyUser;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.fragment.Fragment;
-import mercandalli.com.filespace.util.StringUtils;
 
 /**
  * Created by Jonathan on 28/08/2015.
@@ -43,7 +46,7 @@ public class GenealogyTreeFragment extends Fragment {
 
     static ModelGenealogyUser genealogyUser = null;
 
-    EditText et_user;
+    private EditText et_user, et_father, et_mother;
 
     @Override
     public void onAttach(Activity activity) {
@@ -64,17 +67,64 @@ public class GenealogyTreeFragment extends Fragment {
         this.rootView = inflater.inflate(R.layout.fragment_genealogy_tree, container, false);
 
         this.et_user = (EditText) this.rootView.findViewById(R.id.user);
+        this.et_father = (EditText) this.rootView.findViewById(R.id.et_father);
+        this.et_mother = (EditText) this.rootView.findViewById(R.id.et_mother);
 
         return rootView;
     }
 
     public void update() {
         this.et_user.setText("");
+        this.et_father.setText("");
+        this.et_mother.setText("");
 
         if(genealogyUser != null)
             if(genealogyUser.selected) {
-                this.et_user.setText(StringUtils.uppercase(genealogyUser.last_name) + " " + StringUtils.capitalize(genealogyUser.first_name_1));
+                this.et_user.setText(genealogyUser.getAdapterTitle());
+                this.et_user.setTextColor(Color.parseColor(genealogyUser.is_man ? "#1976D2" : "#E91E63"));
+                this.et_user.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(genealogyUser != null)
+                            genealogyUser.modify(new IPostExecuteListener() {
+                                @Override
+                                public void execute(JSONObject json, String body) {
+                                    update();
+                                }
+                            });
+                    }
+                });
 
+                if(genealogyUser.father != null) {
+                    this.et_father.setText(genealogyUser.father.getAdapterTitle());
+                    this.et_father.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (genealogyUser.father != null)
+                                genealogyUser.father.modify(new IPostExecuteListener() {
+                                    @Override
+                                    public void execute(JSONObject json, String body) {
+                                        update();
+                                    }
+                                });
+                        }
+                    });
+                }
+                if(genealogyUser.mother != null) {
+                    this.et_mother.setText(genealogyUser.mother.getAdapterTitle());
+                    this.et_mother.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (genealogyUser.father != null)
+                                genealogyUser.father.modify(new IPostExecuteListener() {
+                                    @Override
+                                    public void execute(JSONObject json, String body) {
+                                        update();
+                                    }
+                                });
+                        }
+                    });
+                }
             }
     }
 

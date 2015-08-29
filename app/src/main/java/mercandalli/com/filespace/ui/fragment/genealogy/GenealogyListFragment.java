@@ -73,6 +73,13 @@ public class GenealogyListFragment extends Fragment {
     private ProgressBar circularProgressBar;
     private TextView message;
 
+    public static boolean MODE_SELECTION_FATHER = false;
+    public static boolean MODE_SELECTION_MOTHER = false;
+    public static void resetMode() {
+        MODE_SELECTION_FATHER = false;
+        MODE_SELECTION_MOTHER = false;
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -163,7 +170,7 @@ public class GenealogyListFragment extends Fragment {
             ).execute();
         else {
             this.circularProgressBar.setVisibility(View.GONE);
-            this.message.setText(app.isLogged()?getString(R.string.no_internet_connection):getString(R.string.no_logged));
+            this.message.setText(app.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
         }
@@ -174,7 +181,7 @@ public class GenealogyListFragment extends Fragment {
             this.circularProgressBar.setVisibility(View.GONE);
 
             if(this.list.size()==0) {
-                this.message.setText(getString(R.string.no_user));
+                this.message.setText(getString(R.string.no_person));
                 this.message.setVisibility(View.VISIBLE);
             }
             else
@@ -235,13 +242,33 @@ public class GenealogyListFragment extends Fragment {
             this.mAdapter.setOnItemClickListener(new AdapterModelGenealogyUser.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    GenealogyListFragment.this.app.alert(
-                            getString(R.string.data) + " : " + list.get(position).first_name_1,
-                            list.get(position).toSpanned(),
-                            "OK",
-                            null,
-                            null,
-                            null);
+                    if(MODE_SELECTION_FATHER) {
+                        if(app.dialog != null) {
+                            if(app.dialog instanceof DialogAddGenealogyUser) {
+                                ((DialogAddGenealogyUser) app.dialog).setFather(list.get(position));
+                                app.dialog.show();
+                            }
+                        }
+
+                    }
+                    else if(MODE_SELECTION_MOTHER) {
+                        if(app.dialog != null) {
+                            if(app.dialog instanceof DialogAddGenealogyUser) {
+                                ((DialogAddGenealogyUser) app.dialog).setMother(list.get(position));
+                                app.dialog.show();
+                            }
+                        }
+                    }
+                    else {
+                        GenealogyListFragment.this.app.alert(
+                                getString(R.string.data) + " : " + list.get(position).first_name_1,
+                                list.get(position).toSpanned(),
+                                "OK",
+                                null,
+                                null,
+                                null);
+                    }
+                    resetMode();
                 }
             });
 
@@ -253,7 +280,7 @@ public class GenealogyListFragment extends Fragment {
                     list.get(position).selected = tmp;
                     mAdapter.notifyItemChanged(position);
                     GenealogyTreeFragment.select(list.get(position));
-                    if(tmp)
+                    if (tmp)
                         Toast.makeText(app, "Selected for tree", Toast.LENGTH_SHORT).show();
                     return false;
                 }
