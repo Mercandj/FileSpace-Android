@@ -15,15 +15,16 @@
         android:id="@+id/user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="right|top"
         android:textSize="18sp"
         android:textColor="#000"
         android:editable="false"
         android:focusable="false"
-        android:hint="@string/genealogy_last_name"
+        android:hint="Press long on list item"
         android:padding="10dp"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:background="#fff"
+        android:gravity="center"/>
 
 
 </RelativeLayout>

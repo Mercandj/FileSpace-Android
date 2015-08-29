@@ -39,7 +39,7 @@ import mercandalli.com.filespace.ui.activity.Application;
 public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModelGenealogyUser.ViewHolder> {
 
 	private Application app;
-	private List<ModelGenealogyUser> users;
+    public List<ModelGenealogyUser> users;
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
 	private IModelGenealogyUserListener moreListener;
@@ -52,7 +52,7 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
 
     @Override
     public AdapterModelGenealogyUser.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_user, parent, false), viewType);
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file, parent, false), viewType);
     }
 
     @Override
@@ -72,7 +72,13 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
 
             if(!user.is_man)
                 viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_video));
+            else
+                viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_default));
 
+            if(user.selected)
+                viewHolder.item.setBackgroundColor(app.getResources().getColor(R.color.tab_selected));
+            else
+                viewHolder.item.setBackground(null);
         }
     }
 

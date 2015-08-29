@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listener.IModelFileListener;
 import mercandalli.com.filespace.model.ModelFile;
 import mercandalli.com.filespace.model.ModelFileTypeENUM;
@@ -99,9 +98,8 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
 
             if(file.selected)
                 viewHolder.item.setBackgroundColor(app.getResources().getColor(R.color.tab_selected));
-            else {
+            else
                 viewHolder.item.setBackground(null);
-            }
 
             if (file.type.equals(ModelFileTypeENUM.FILESPACE.type)) {
                 /*

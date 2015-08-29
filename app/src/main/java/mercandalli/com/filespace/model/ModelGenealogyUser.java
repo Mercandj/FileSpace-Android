@@ -46,6 +46,8 @@ public class ModelGenealogyUser extends Model {
     public Date date_creation;
     public boolean is_man = false;
 
+    public boolean selected = false;
+
 	public ModelGenealogyUser() {
 		super();
 	}

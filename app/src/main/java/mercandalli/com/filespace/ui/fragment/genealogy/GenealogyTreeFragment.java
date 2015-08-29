@@ -24,15 +24,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-
-import org.json.JSONObject;
+import android.widget.EditText;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.listener.IPostExecuteListener;
+import mercandalli.com.filespace.model.ModelGenealogyUser;
 import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.ui.dialog.DialogAddGenealogyUser;
 import mercandalli.com.filespace.ui.fragment.Fragment;
+import mercandalli.com.filespace.util.StringUtils;
 
 /**
  * Created by Jonathan on 28/08/2015.
@@ -42,6 +40,10 @@ public class GenealogyTreeFragment extends Fragment {
 
     private Application app;
     private View rootView;
+
+    static ModelGenealogyUser genealogyUser = null;
+
+    EditText et_user;
 
     @Override
     public void onAttach(Activity activity) {
@@ -61,12 +63,27 @@ public class GenealogyTreeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_genealogy_tree, container, false);
 
+        this.et_user = (EditText) this.rootView.findViewById(R.id.user);
 
         return rootView;
+    }
+
+    public void update() {
+        this.et_user.setText("");
+
+        if(genealogyUser != null)
+            if(genealogyUser.selected) {
+                this.et_user.setText(StringUtils.uppercase(genealogyUser.last_name) + " " + StringUtils.capitalize(genealogyUser.first_name_1));
+
+            }
     }
 
     @Override
     public boolean back() {
         return false;
+    }
+
+    public static void select(ModelGenealogyUser genealogyUser_) {
+        genealogyUser = genealogyUser_;
     }
 }

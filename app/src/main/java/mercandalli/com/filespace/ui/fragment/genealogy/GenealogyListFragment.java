@@ -65,7 +65,7 @@ public class GenealogyListFragment extends Fragment {
     private Application app;
     private View rootView;
 
-    List<ModelGenealogyUser> list;
+    private List<ModelGenealogyUser> list;
     private RecyclerView recyclerView;
     private AdapterModelGenealogyUser mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -245,7 +245,30 @@ public class GenealogyListFragment extends Fragment {
                 }
             });
 
+            this.mAdapter.setOnItemLongClickListener(new AdapterModelGenealogyUser.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(View view, int position) {
+                    boolean tmp = !list.get(position).selected;
+                    deselect();
+                    list.get(position).selected = tmp;
+                    mAdapter.notifyItemChanged(position);
+                    GenealogyTreeFragment.select(list.get(position));
+                    if(tmp)
+                        Toast.makeText(app, "Selected for tree", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            });
+
             this.swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    public void deselect() {
+        for(int i=0; i<list.size(); i++) {
+            if(list.get(i).selected) {
+                list.get(i).selected = false;
+                mAdapter.notifyItemChanged(i);
+            }
         }
     }
 

@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,26 +115,41 @@ public class DialogAddGenealogyUser extends Dialog {
             }
         });
 
-        if(genealogyUser != null) {
-            this.bt_add.setText(R.string.modify);
-            if(!StringUtils.isNullOrEmpty(genealogyUser.first_name_1))
-                this.et_first_name_1.setText(genealogyUser.first_name_1);
-            if(!StringUtils.isNullOrEmpty(genealogyUser.first_name_2))
-                this.et_first_name_2.setText(genealogyUser.first_name_2);
-            if(!StringUtils.isNullOrEmpty(genealogyUser.first_name_3))
-                this.et_first_name_3.setText(genealogyUser.first_name_3);
-            if(!StringUtils.isNullOrEmpty(genealogyUser.last_name))
-                this.et_last_name.setText(genealogyUser.last_name);
-            if(!StringUtils.isNullOrEmpty(genealogyUser.date_birth))
-                this.et_date_birth.setText(StringUtils.substring(genealogyUser.date_birth, 10));
-            if(!StringUtils.isNullOrEmpty(genealogyUser.date_death))
-                this.et_date_death.setText(StringUtils.substring(genealogyUser.date_death, 10));
-            if(!StringUtils.isNullOrEmpty(genealogyUser.description))
-                this.et_description.setText(genealogyUser.description);
-            this.sexe.setChecked(genealogyUser.is_man);
+
+        ((Button) this.findViewById(R.id.bt_mother)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(app, app.getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        ((Button) this.findViewById(R.id.bt_father)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(app, app.getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        if (genealogyUser != null) {
+        this.bt_add.setText(R.string.modify);
+        if (!StringUtils.isNullOrEmpty(genealogyUser.first_name_1))
+            this.et_first_name_1.setText(genealogyUser.first_name_1);
+        if (!StringUtils.isNullOrEmpty(genealogyUser.first_name_2))
+            this.et_first_name_2.setText(genealogyUser.first_name_2);
+        if (!StringUtils.isNullOrEmpty(genealogyUser.first_name_3))
+            this.et_first_name_3.setText(genealogyUser.first_name_3);
+        if (!StringUtils.isNullOrEmpty(genealogyUser.last_name))
+            this.et_last_name.setText(genealogyUser.last_name);
+        if (!StringUtils.isNullOrEmpty(genealogyUser.date_birth))
+            this.et_date_birth.setText(StringUtils.substring(genealogyUser.date_birth, 10));
+        if (!StringUtils.isNullOrEmpty(genealogyUser.date_death))
+            this.et_date_death.setText(StringUtils.substring(genealogyUser.date_death, 10));
+        if (!StringUtils.isNullOrEmpty(genealogyUser.description))
+            this.et_description.setText(genealogyUser.description);
+        this.sexe.setChecked(genealogyUser.is_man);
         }
-        
+
         DialogAddGenealogyUser.this.show();
-	}
+    }
 
 }

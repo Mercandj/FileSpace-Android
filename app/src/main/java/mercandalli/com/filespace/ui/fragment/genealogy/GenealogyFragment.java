@@ -65,6 +65,9 @@ public class GenealogyFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 GenealogyFragment.this.app.invalidateOptionsMenu();
+                if(listFragment[position] instanceof GenealogyTreeFragment) {
+                    ((GenealogyTreeFragment) listFragment[position]).update();
+                }
             }
         });
         mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
