@@ -115,8 +115,8 @@ public class GenealogyTreeFragment extends Fragment {
                     this.et_mother.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (genealogyUser.father != null)
-                                genealogyUser.father.modify(new IPostExecuteListener() {
+                            if (genealogyUser.mother != null)
+                                genealogyUser.mother.modify(new IPostExecuteListener() {
                                     @Override
                                     public void execute(JSONObject json, String body) {
                                         update();
