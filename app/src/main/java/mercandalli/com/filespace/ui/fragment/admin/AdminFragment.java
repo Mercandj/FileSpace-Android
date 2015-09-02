@@ -37,7 +37,7 @@ import mercandalli.com.filespace.ui.view.PagerSlidingTabStrip;
 
 public class AdminFragment extends Fragment {
 
-    private static final int NB_FRAGMENT = 6;
+    private static final int NB_FRAGMENT = 7;
     private static final int INIT_FRAGMENT = 0;
     public static Fragment listFragment[] = new Fragment[NB_FRAGMENT];
     private Application app;
@@ -113,6 +113,7 @@ public class AdminFragment extends Fragment {
                 case 1:		fragment = new ServerLogsFragment();    break;
                 case 2:		fragment = new UserAddFragment(); 	    break;
                 case 5:		fragment = new RequestFragment();    	break;
+                case 6:		fragment = new GameFragment();    	    break;
                 default:    fragment = new EmptyFragment(); 	    break;
             }
             listFragment[i] = fragment;
@@ -134,6 +135,7 @@ public class AdminFragment extends Fragment {
                 case 3:		title = "USER DATA";        break;
                 case 4:		title = "USER LICENCES";    break;
                 case 5:		title = "REQUEST";          break;
+                case 6:		title = "GAME";             break;
             }
             return title;
         }

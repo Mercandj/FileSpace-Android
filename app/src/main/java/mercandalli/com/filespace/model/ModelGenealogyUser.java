@@ -116,12 +116,16 @@ public class ModelGenealogyUser extends Model {
             listener.execute(null, null);
     }
 
+    public String getAllFirstName() {
+        return "" + (first_name_1!=null?StringUtils.capitalize(first_name_1):"") + (first_name_2!=null?", "+StringUtils.capitalize(first_name_2):"") + (first_name_3!=null?", "+StringUtils.capitalize(first_name_3):"");
+    }
+
     public String getAdapterTitle() {
-        if(!StringUtils.isNullOrEmpty(first_name_1) && !StringUtils.isNullOrEmpty(last_name))
-            return StringUtils.uppercase(last_name) + " " + StringUtils.capitalize(first_name_1);
+        if(!StringUtils.isNullOrEmpty(getAllFirstName()) && !StringUtils.isNullOrEmpty(last_name))
+            return StringUtils.uppercase(last_name) + " " + getAllFirstName();
         if(!StringUtils.isNullOrEmpty(last_name))
             return StringUtils.uppercase(last_name);
-        return StringUtils.capitalize(first_name_1);
+        return getAllFirstName();
     }
 
     public String getAdapterSubtitle() {
@@ -136,12 +140,8 @@ public class ModelGenealogyUser extends Model {
 
     public Spanned toSpanned() {
         List<StringPair> spl = new ArrayList<>();
-        if(!StringUtils.isNullOrEmpty(this.first_name_1))
-            spl.add(new StringPair("First name 1", StringUtils.capitalize(this.first_name_1)));
-        if(!StringUtils.isNullOrEmpty(this.first_name_2))
-            spl.add(new StringPair("First name 2", StringUtils.capitalize(this.first_name_2)));
-        if(!StringUtils.isNullOrEmpty(this.first_name_3))
-            spl.add(new StringPair("First name 3", StringUtils.capitalize(this.first_name_3)));
+        if(!StringUtils.isNullOrEmpty(this.getAllFirstName()))
+            spl.add(new StringPair("First names", this.getAllFirstName()));
         if(!StringUtils.isNullOrEmpty(this.last_name))
             spl.add(new StringPair("Last name", StringUtils.uppercase(this.last_name)));
         if(!StringUtils.isNullOrEmpty(this.date_birth))
