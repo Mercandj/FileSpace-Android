@@ -26,14 +26,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelGenealogyUser;
+import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.fragment.Fragment;
+import mercandalli.com.filespace.util.StringPair;
+
+import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
 /**
  * Created by Jonathan on 28/08/2015.
@@ -44,7 +54,8 @@ public class GenealogyTreeFragment extends Fragment {
     private Application app;
     private View rootView;
 
-    static ModelGenealogyUser genealogyUser = null;
+    private static ModelGenealogyUser genealogyUser = null;
+    private boolean requestReady = true;
 
     private EditText et_user, et_father, et_mother;
 
@@ -73,6 +84,93 @@ public class GenealogyTreeFragment extends Fragment {
         return rootView;
     }
 
+    public void getChildren(int id_user) {
+        List<StringPair> parameters = null;
+        if(isInternetConnection(app) && app.isLogged()) {
+            if (requestReady) {
+                requestReady = false;
+                new TaskGet(
+                        app,
+                        this.app.getConfig().getUser(),
+                        this.app.getConfig().getUrlServer() + this.app.getConfig().routeGenealogyChildren + "/" + id_user,
+                        new IPostExecuteListener() {
+                            @Override
+                            public void execute(JSONObject json, String body) {
+                                requestReady = true;
+                                List<ModelGenealogyUser> listChildren = new ArrayList<>();
+                                try {
+                                    if (json != null) {
+                                        if (json.has("result")) {
+                                            JSONArray array = json.getJSONArray("result");
+                                            for (int i = 0; i < array.length(); i++) {
+                                                listChildren.add(new ModelGenealogyUser(app, array.getJSONObject(i)));
+                                            }
+                                        }
+                                    } else
+                                        Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                if(listChildren.size() != 0) {
+                                    GenealogyTreeFragment.genealogyUser = listChildren.get(0);
+                                    GenealogyTreeFragment.genealogyUser.selected = true;
+                                }
+                                else {
+                                    Toast.makeText(app, "No children", Toast.LENGTH_SHORT).show();
+                                }
+                                update();
+                            }
+                        },
+                        parameters
+                ).execute();
+            }
+            else
+                Toast.makeText(app, getString(R.string.waiting_for_response), Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(app, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void changeUser(int id_user) {
+
+        List<StringPair> parameters = null;
+        if(isInternetConnection(app) && app.isLogged()) {
+            if (requestReady) {
+                requestReady = false;
+                new TaskGet(
+                        app,
+                        this.app.getConfig().getUser(),
+                        this.app.getConfig().getUrlServer() + this.app.getConfig().routeGenealogy + "/" + id_user,
+                        new IPostExecuteListener() {
+                            @Override
+                            public void execute(JSONObject json, String body) {
+                                requestReady = true;
+                                try {
+                                    if (json != null) {
+                                        if (json.has("result")) {
+                                            GenealogyTreeFragment.this.genealogyUser = new ModelGenealogyUser(app, json.getJSONObject("result"));
+                                            GenealogyTreeFragment.this.genealogyUser.selected = true;
+                                        }
+                                    } else
+                                        Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                update();
+                            }
+                        },
+                        parameters
+                ).execute();
+            }
+            else
+                Toast.makeText(app, getString(R.string.waiting_for_response), Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(app, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void update() {
         this.et_user.setText("");
         this.et_father.setText("");
@@ -82,46 +180,76 @@ public class GenealogyTreeFragment extends Fragment {
             if(genealogyUser.selected) {
                 this.et_user.setText(genealogyUser.getAdapterTitle());
                 this.et_user.setTextColor(Color.parseColor(genealogyUser.is_man ? "#1976D2" : "#E91E63"));
-                this.et_user.setOnClickListener(new View.OnClickListener() {
+                this.et_user.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        if(genealogyUser != null)
+                    public boolean onLongClick(View v) {
+                        if (genealogyUser != null) {
                             genealogyUser.modify(new IPostExecuteListener() {
                                 @Override
                                 public void execute(JSONObject json, String body) {
                                     update();
                                 }
                             });
+                        }
+                        return false;
+                    }
+                });
+                this.et_user.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (genealogyUser != null) {
+                            getChildren(genealogyUser.id);
+                        }
                     }
                 });
 
-                if(genealogyUser.father != null) {
+                if (genealogyUser.father != null) {
                     this.et_father.setText(genealogyUser.father.getAdapterTitle());
-                    this.et_father.setOnClickListener(new View.OnClickListener() {
+                    this.et_father.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
-                        public void onClick(View v) {
-                            if (genealogyUser.father != null)
+                        public boolean onLongClick(View v) {
+                            if (genealogyUser.father != null) {
                                 genealogyUser.father.modify(new IPostExecuteListener() {
                                     @Override
                                     public void execute(JSONObject json, String body) {
                                         update();
                                     }
                                 });
+                            }
+                            return false;
+                        }
+                    });
+                    this.et_father.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (genealogyUser.father != null) {
+                                changeUser(genealogyUser.id_father);
+                            }
                         }
                     });
                 }
-                if(genealogyUser.mother != null) {
+                if (genealogyUser.mother != null) {
                     this.et_mother.setText(genealogyUser.mother.getAdapterTitle());
-                    this.et_mother.setOnClickListener(new View.OnClickListener() {
+                    this.et_mother.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
-                        public void onClick(View v) {
-                            if (genealogyUser.mother != null)
+                        public boolean onLongClick(View v) {
+                            if (genealogyUser.mother != null) {
                                 genealogyUser.mother.modify(new IPostExecuteListener() {
                                     @Override
                                     public void execute(JSONObject json, String body) {
                                         update();
                                     }
                                 });
+                            }
+                            return false;
+                        }
+                    });
+                    this.et_mother.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (genealogyUser.mother != null) {
+                                changeUser(genealogyUser.id_mother);
+                            }
                         }
                     });
                 }

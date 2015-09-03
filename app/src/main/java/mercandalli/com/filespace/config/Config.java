@@ -65,6 +65,7 @@ public class Config {
     public final String routeGenealogy       	= "genealogy";
     public final String routeGenealogyDelete   	= "genealogy_delete";
     public final String routeGenealogyPut       = "genealogy_put";
+    public final String routeGenealogyChildren  ="genealogy_children";
     public final String routeUser 		        = "user";
     public final String routeUserDelete 		= "user_delete";
     public final String routeUserPut	        = "user_put";

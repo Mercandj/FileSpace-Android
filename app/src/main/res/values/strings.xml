@@ -38,6 +38,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="add">Add</string>
+    <string name="waiting_for_response">Waiting for response</string>
 
     <string name="action">Action</string>
     <string name="download">Download</string>
