@@ -21,6 +21,7 @@ package mercandalli.com.filespace.model;
 
 import android.text.Spanned;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,6 +50,8 @@ public class ModelGenealogyUser extends Model {
     public boolean selected = false;
 
     public ModelGenealogyUser mother, father;
+
+    public List<ModelGenealogyUser> brothers_sisters_from_mother, brothers_sisters_from_father;
 
 	public ModelGenealogyUser() {
 		super();
@@ -86,6 +89,20 @@ public class ModelGenealogyUser extends Model {
                 this.father = new ModelGenealogyUser(app, json.getJSONObject("father"));
             if(json.has("mother"))
                 this.mother = new ModelGenealogyUser(app, json.getJSONObject("mother"));
+            if(json.has("brothers_sisters_from_mother")) {
+                this.brothers_sisters_from_mother = new ArrayList<>();
+                JSONArray json_b_s = json.getJSONArray("brothers_sisters_from_mother");
+                for(int i=0; i<json_b_s.length(); i++) {
+                    this.brothers_sisters_from_mother.add(new ModelGenealogyUser(app, json_b_s.getJSONObject(i)));
+                }
+            }
+            if(json.has("brothers_sisters_from_father")) {
+                this.brothers_sisters_from_father = new ArrayList<>();
+                JSONArray json_b_s = json.getJSONArray("brothers_sisters_from_father");
+                for(int i=0; i<json_b_s.length(); i++) {
+                    this.brothers_sisters_from_father.add(new ModelGenealogyUser(app, json_b_s.getJSONObject(i)));
+                }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (ParseException e) {
@@ -162,4 +179,33 @@ public class ModelGenealogyUser extends Model {
 	public JSONObject toJSONObject() {
 		return null;
 	}
+
+    @Override
+    public boolean equals(Object o) {
+        if(o==null)
+            return false;
+        if(!(o instanceof ModelGenealogyUser))
+            return false;
+        ModelGenealogyUser obj = (ModelGenealogyUser)o;
+        return obj.id == this.id;
+    }
+
+    public List<ModelGenealogyUser> getBrothersSisters() {
+        List<ModelGenealogyUser> result = new ArrayList<>();
+        if(this.brothers_sisters_from_mother != null) {
+            result = this.brothers_sisters_from_mother;
+        }
+        if(this.brothers_sisters_from_father != null) {
+            for(ModelGenealogyUser tmp_father : this.brothers_sisters_from_father) {
+                boolean bool = true;
+                for(ModelGenealogyUser tmp_mother : this.brothers_sisters_from_mother) {
+                    if(tmp_mother.id == tmp_father.id)
+                        bool = false;
+                }
+                if(bool)
+                    result.add(tmp_father);
+            }
+        }
+        return result;
+    }
 }

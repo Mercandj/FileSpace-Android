@@ -22,10 +22,14 @@ package mercandalli.com.filespace.ui.fragment.genealogy;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -36,11 +40,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listener.IModelGenealogyUserListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelGenealogyUser;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.ui.adapter.AdapterModelGenealogyUser;
 import mercandalli.com.filespace.ui.fragment.Fragment;
+import mercandalli.com.filespace.ui.view.DividerItemDecoration;
 import mercandalli.com.filespace.util.StringPair;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
@@ -50,7 +57,6 @@ import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
  */
 public class GenealogyTreeFragment extends Fragment {
 
-
     private Application app;
     private View rootView;
 
@@ -58,6 +64,12 @@ public class GenealogyTreeFragment extends Fragment {
     private boolean requestReady = true;
 
     private EditText et_user, et_father, et_mother;
+    private TextView brothers_siters;
+
+    private List<ModelGenealogyUser> list;
+    private RecyclerView recyclerView;
+    private AdapterModelGenealogyUser mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     public void onAttach(Activity activity) {
@@ -80,6 +92,19 @@ public class GenealogyTreeFragment extends Fragment {
         this.et_user = (EditText) this.rootView.findViewById(R.id.user);
         this.et_father = (EditText) this.rootView.findViewById(R.id.et_father);
         this.et_mother = (EditText) this.rootView.findViewById(R.id.et_mother);
+
+        this.brothers_siters = (TextView) this.rootView.findViewById(R.id.brothers_siters);
+        this.brothers_siters.setVisibility(View.INVISIBLE);
+
+
+        this.recyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
+        this.recyclerView.setHasFixedSize(true);
+        this.mLayoutManager = new LinearLayoutManager(getActivity());
+        this.recyclerView.setLayoutManager(mLayoutManager);
+        this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
+        this.recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+
+        refreshList();
 
         return rootView;
     }
@@ -254,6 +279,51 @@ public class GenealogyTreeFragment extends Fragment {
                     });
                 }
             }
+        refreshList();
+    }
+
+    public void refreshList() {
+        if(genealogyUser != null)
+            this.list = genealogyUser.getBrothersSisters();
+        else
+            this.list = new ArrayList<>();
+        updateAdapter();
+    }
+
+    public void updateAdapter() {
+        if(this.recyclerView!=null && this.list!=null && this.isAdded()) {
+
+            this.mAdapter = new AdapterModelGenealogyUser(app, list, new IModelGenealogyUserListener() {
+                @Override
+                public void execute(final ModelGenealogyUser modelGenealogyUser) {
+
+                }
+            });
+            this.recyclerView.setAdapter(mAdapter);
+
+            this.mAdapter.setOnItemClickListener(new AdapterModelGenealogyUser.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    changeUser(list.get(position).id);
+                }
+            });
+
+            this.mAdapter.setOnItemLongClickListener(new AdapterModelGenealogyUser.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(View view, int position) {
+
+                    return false;
+                }
+            });
+
+        }
+
+        if(this.list == null)
+            this.brothers_siters.setVisibility(View.INVISIBLE);
+        else if(this.list.size() == 0)
+            this.brothers_siters.setVisibility(View.INVISIBLE);
+        else
+            this.brothers_siters.setVisibility(View.VISIBLE);
     }
 
     @Override
