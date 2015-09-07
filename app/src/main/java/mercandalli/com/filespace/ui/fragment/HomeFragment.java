@@ -274,6 +274,11 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
     }
 
     @Override
+    public void onFocus() {
+
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == 1001 && data!=null) {

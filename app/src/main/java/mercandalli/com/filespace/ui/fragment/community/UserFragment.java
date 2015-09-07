@@ -260,4 +260,9 @@ public class UserFragment extends Fragment {
     public boolean back() {
         return false;
     }
+
+    @Override
+    public void onFocus() {
+
+    }
 }

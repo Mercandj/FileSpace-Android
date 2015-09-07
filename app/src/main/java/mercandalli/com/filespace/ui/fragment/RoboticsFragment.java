@@ -236,6 +236,10 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
         return false;
     }
 
+    @Override
+    public void onFocus() {
+
+    }
 
 
     /******** SENSOR **********/

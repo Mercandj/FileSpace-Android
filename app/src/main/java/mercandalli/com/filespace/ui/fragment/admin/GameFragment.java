@@ -78,4 +78,9 @@ public class GameFragment extends Fragment {
     public boolean back() {
         return false;
     }
+
+    @Override
+    public void onFocus() {
+
+    }
 }

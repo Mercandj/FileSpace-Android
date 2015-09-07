@@ -91,4 +91,9 @@ public class RequestFragment extends Fragment {
     public boolean back() {
         return false;
     }
+
+	@Override
+	public void onFocus() {
+
+	}
 }

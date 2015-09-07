@@ -227,4 +227,9 @@ public class TalkFragment extends Fragment {
     public boolean back() {
         return false;
     }
+
+    @Override
+    public void onFocus() {
+
+    }
 }

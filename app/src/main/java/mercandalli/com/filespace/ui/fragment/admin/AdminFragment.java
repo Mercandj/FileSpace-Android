@@ -66,6 +66,9 @@ public class AdminFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 AdminFragment.this.app.invalidateOptionsMenu();
+                if(position < NB_FRAGMENT)
+                    if(listFragment[position] != null)
+                        listFragment[position].onFocus();
             }
         });
         mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
@@ -95,6 +98,11 @@ public class AdminFragment extends Fragment {
         if(fragment==null)
             return false;
         return fragment.back();
+    }
+
+    @Override
+    public void onFocus() {
+
     }
 
     public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {

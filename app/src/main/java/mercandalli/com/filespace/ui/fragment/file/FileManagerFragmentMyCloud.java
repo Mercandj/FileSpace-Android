@@ -115,10 +115,10 @@ public class FileManagerFragmentMyCloud extends Fragment {
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         this.swipeRefreshLayout.setColorSchemeResources(
-            android.R.color.holo_blue_bright,
-            android.R.color.holo_green_light,
-            android.R.color.holo_orange_light,
-            android.R.color.holo_red_light);
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         this.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -386,51 +386,67 @@ public class FileManagerFragmentMyCloud extends Fragment {
         parameters.add(new StringPair("id_file_parent", "" + this.id_file_path.peek()));
         parameters.add(new StringPair("mine", "" + true));
 
-        if(isInternetConnection(app) && app.isLogged())
+        if(isInternetConnection(app) && app.isLogged()) {
+            this.swipeRefreshLayout.setRefreshing(true);
+            this.swipeRefreshLayoutGrid.setRefreshing(true);
             new TaskGet(
-                app,
-                this.app.getConfig().getUser(),
-                this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile,
-                new IPostExecuteListener() {
-                    @Override
-                    public void execute(JSONObject json, String body) {
-                        if(!isAdded())
-                            return;
-                        files = new ArrayList<>();
-                        try {
-                            if (json != null) {
-                                if (json.has("result")) {
-                                    JSONArray array = json.getJSONArray("result");
-                                    for (int i = 0; i < array.length(); i++) {
-                                        ModelFile modelFile = new ModelFile(app, array.getJSONObject(i));
-                                        files.add(modelFile);
+                    app,
+                    this.app.getConfig().getUser(),
+                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile,
+                    new IPostExecuteListener() {
+                        @Override
+                        public void execute(JSONObject json, String body) {
+                            if (!isAdded())
+                                return;
+                            files = new ArrayList<>();
+                            try {
+                                if (json != null) {
+                                    if (json.has("result")) {
+                                        JSONArray array = json.getJSONArray("result");
+                                        for (int i = 0; i < array.length(); i++) {
+                                            ModelFile modelFile = new ModelFile(app, array.getJSONObject(i));
+                                            files.add(modelFile);
+                                        }
                                     }
-                                }
+                                } else
+                                    Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                            else
-                                Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            updateAdapter();
                         }
-                        updateAdapter();
-                    }
-                },
-                parameters
+                    },
+                    parameters
             ).execute();
+        }
         else {
             this.circularProgressBar.setVisibility(View.GONE);
-            this.message.setText(app.isLogged()?getString(R.string.no_internet_connection):getString(R.string.no_logged));
+            if(this.isAdded())
+                this.message.setText(app.isLogged()?getString(R.string.no_internet_connection):getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
             this.swipeRefreshLayoutGrid.setRefreshing(false);
+
+            if(!isInternetConnection(app)) {
+                this.setListVisibility(false);
+                this.circle.clearAnimation();
+                this.circle.setVisibility(View.GONE);
+            }
         }
 	}
+
+    private void setListVisibility(boolean visible) {
+        if(this.listView != null)
+            this.listView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        if(this.gridView != null)
+            this.gridView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
 
 	public void updateAdapter() {
 		if(this.listView!=null && this.files!=null && this.isAdded()) {
 
             this.circularProgressBar.setVisibility(View.GONE);
-            if( this.circle.getVisibility()==View.GONE ) {
+            if( ( this.circle.getVisibility()==View.GONE || this.circle.getVisibility()==View.INVISIBLE )&& isInternetConnection(app)) {
                 this.circle.setVisibility(View.VISIBLE);
                 this.circle.startAnimation(animOpen);
             }
@@ -661,5 +677,10 @@ public class FileManagerFragmentMyCloud extends Fragment {
         for(ModelFile file:files)
             file.selected = false;
         updateAdapter();
+    }
+
+    @Override
+    public void onFocus() {
+        refreshList();
     }
 }

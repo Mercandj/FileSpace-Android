@@ -109,6 +109,11 @@ public class CryptFragment extends Fragment {
         return false;
     }
 
+    @Override
+    public void onFocus() {
+
+    }
+
     public void delete() {
         input.setText("");
         output.setText("");

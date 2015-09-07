@@ -76,6 +76,11 @@ public class NoteFragment extends Fragment {
         return false;
     }
 
+    @Override
+    public void onFocus() {
+
+    }
+
     public void delete() {
         app.alert("Delete note", "Delete the current note?", getString(R.string.yes), new IListener() {
             @Override

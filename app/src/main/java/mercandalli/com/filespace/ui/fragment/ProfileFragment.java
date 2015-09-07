@@ -124,6 +124,11 @@ public class ProfileFragment extends Fragment {
         return false;
     }
 
+    @Override
+    public void onFocus() {
+
+    }
+
     public void refreshView() {
         if(isInternetConnection(app) && app.isLogged()) {
             List<StringPair> parameters = null;

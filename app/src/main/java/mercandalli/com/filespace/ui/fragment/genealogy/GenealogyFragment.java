@@ -99,6 +99,11 @@ public class GenealogyFragment extends Fragment {
         return fragment.back();
     }
 
+    @Override
+    public void onFocus() {
+
+    }
+
     public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
         Application app;
 
@@ -133,4 +138,6 @@ public class GenealogyFragment extends Fragment {
             return title;
         }
     }
+
+
 }

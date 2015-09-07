@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -73,6 +74,11 @@ public class GenealogyListFragment extends Fragment {
     private ProgressBar circularProgressBar;
     private TextView message;
 
+    private View coordinatorLayoutView;
+    private Snackbar snackbar;
+
+    private ImageButton circle;
+
     public static boolean MODE_SELECTION_FATHER = false;
     public static boolean MODE_SELECTION_MOTHER = false;
     public static void resetMode() {
@@ -97,10 +103,12 @@ public class GenealogyListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_genealogy_list, container, false);
+        this.coordinatorLayoutView = (View) rootView.findViewById(R.id.snackbarPosition);
         this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         this.message = (TextView) rootView.findViewById(R.id.message);
 
-        ((ImageButton) this.rootView.findViewById(R.id.circle)).setOnClickListener(new View.OnClickListener() {
+        this.circle = (ImageButton) this.rootView.findViewById(R.id.circle);
+        this.circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 add();
@@ -173,12 +181,21 @@ public class GenealogyListFragment extends Fragment {
             this.message.setText(app.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
+
+            if(!isInternetConnection(app)) {
+                this.circle.setVisibility(View.GONE);
+                this.recyclerView.setVisibility(View.INVISIBLE);
+                updateNoInternet();
+            }
         }
     }
 
     public void updateAdapter() {
         if(this.recyclerView!=null && this.list!=null && this.isAdded()) {
             this.circularProgressBar.setVisibility(View.GONE);
+
+            this.circle.setVisibility(View.VISIBLE);
+            this.recyclerView.setVisibility(View.VISIBLE);
 
             if(this.list.size()==0) {
                 this.message.setText(getString(R.string.no_person));
@@ -242,24 +259,22 @@ public class GenealogyListFragment extends Fragment {
             this.mAdapter.setOnItemClickListener(new AdapterModelGenealogyUser.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    if(MODE_SELECTION_FATHER) {
-                        if(app.dialog != null) {
-                            if(app.dialog instanceof DialogAddGenealogyUser) {
+                    if (MODE_SELECTION_FATHER) {
+                        if (app.dialog != null) {
+                            if (app.dialog instanceof DialogAddGenealogyUser) {
                                 ((DialogAddGenealogyUser) app.dialog).setFather(list.get(position));
                                 app.dialog.show();
                             }
                         }
 
-                    }
-                    else if(MODE_SELECTION_MOTHER) {
-                        if(app.dialog != null) {
-                            if(app.dialog instanceof DialogAddGenealogyUser) {
+                    } else if (MODE_SELECTION_MOTHER) {
+                        if (app.dialog != null) {
+                            if (app.dialog instanceof DialogAddGenealogyUser) {
                                 ((DialogAddGenealogyUser) app.dialog).setMother(list.get(position));
                                 app.dialog.show();
                             }
                         }
-                    }
-                    else {
+                    } else {
                         GenealogyListFragment.this.app.alert(
                                 getString(R.string.data) + " : " + list.get(position).first_name_1,
                                 list.get(position).toSpanned(),
@@ -302,6 +317,27 @@ public class GenealogyListFragment extends Fragment {
     @Override
     public boolean back() {
         return false;
+    }
+
+    @Override
+    public void onFocus() {
+        refreshList();
+    }
+
+    private void updateNoInternet() {
+        if(!isInternetConnection(app)) {
+            this.snackbar = Snackbar.make(this.coordinatorLayoutView, getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE)
+                    .setAction(getString(R.string.refresh), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(isInternetConnection(app))
+                                onFocus();
+                            else
+                                updateNoInternet();
+                        }
+                    });
+            this.snackbar.show();
+        }
     }
 
     public void add() {

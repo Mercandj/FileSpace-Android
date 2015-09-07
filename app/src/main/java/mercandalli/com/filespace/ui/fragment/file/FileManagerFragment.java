@@ -23,6 +23,7 @@ import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -54,6 +55,9 @@ public class FileManagerFragment extends Fragment {
 	private FileManagerFragmentPagerAdapter mPagerAdapter;
     private PagerSlidingTabStrip tabs;
 
+    private View coordinatorLayoutView;
+    private Snackbar snackbar;
+
 	public static int VIEW_MODE = Const.MODE_LIST;
 	
 	public FileManagerFragment() {
@@ -68,6 +72,9 @@ public class FileManagerFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_filemanager, container, false);
+
+        this.coordinatorLayoutView = (View) rootView.findViewById(R.id.snackbarPosition);
+
 		mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
 
         VIEW_MODE = ((app.getConfig().getUserFileModeView() > -1) ? app.getConfig().getUserFileModeView() : Const.MODE_LIST);
@@ -79,6 +86,17 @@ public class FileManagerFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 FileManagerFragment.this.app.invalidateOptionsMenu();
+                switch (position) {
+                    case 0:
+                        updateNoInternet();
+                        break;
+                    case 1:
+                        updateNoInternet();
+                        break;
+                    default:
+                        if(snackbar != null)
+                            snackbar.dismiss();
+                }
             }
         });
 		if(isInternetConnection(app) && app.isLogged()) {
@@ -115,6 +133,9 @@ public class FileManagerFragment extends Fragment {
             return false;
         return fragment.back();
     }
+
+    @Override
+    public void onFocus() { }
 
     public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
 		Application app;
@@ -324,4 +345,20 @@ public class FileManagerFragment extends Fragment {
 		AlertDialog menuDrop = menuAleart.create();
 		menuDrop.show();
 	}
+
+    private void updateNoInternet() {
+        if(!isInternetConnection(app)) {
+            this.snackbar = Snackbar.make(this.coordinatorLayoutView, getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE)
+                    .setAction(getString(R.string.refresh), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(isInternetConnection(app))
+                                listFragment[getCurrentFragmentIndex()].onFocus();
+                            else
+                                updateNoInternet();
+                        }
+                    });
+            this.snackbar.show();
+        }
+    }
 }

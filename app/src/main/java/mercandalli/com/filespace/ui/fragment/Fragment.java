@@ -24,4 +24,5 @@ package mercandalli.com.filespace.ui.fragment;
  */
 public abstract class Fragment extends android.app.Fragment {
     public abstract boolean back();
+    public abstract void onFocus();
 }

@@ -577,4 +577,7 @@ public class FileManagerFragmentLocal extends Fragment {
         else
             this.circle.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
     }
+
+    @Override
+    public void onFocus() { }
 }

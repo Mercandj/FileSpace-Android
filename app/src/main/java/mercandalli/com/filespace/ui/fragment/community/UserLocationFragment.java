@@ -263,4 +263,9 @@ public class UserLocationFragment extends Fragment {
     public boolean back() {
         return false;
     }
+
+    @Override
+    public void onFocus() {
+
+    }
 }

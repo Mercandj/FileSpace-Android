@@ -69,6 +69,9 @@ public class WorkspaceFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 WorkspaceFragment.this.app.invalidateOptionsMenu();
+                if(position < NB_FRAGMENT)
+                    if(listFragment[position] != null)
+                        listFragment[position].onFocus();
             }
         });
         mViewPager.setOffscreenPageLimit(this.NB_FRAGMENT - 1);
@@ -98,6 +101,11 @@ public class WorkspaceFragment extends Fragment {
         if(fragment==null)
             return false;
         return fragment.back();
+    }
+
+    @Override
+    public void onFocus() {
+
     }
 
     public static class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {

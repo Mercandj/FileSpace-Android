@@ -49,6 +49,7 @@ import mercandalli.com.filespace.ui.adapter.AdapterModelGenealogyUser;
 import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.ui.view.DividerItemDecoration;
 import mercandalli.com.filespace.util.StringPair;
+import mercandalli.com.filespace.util.StringUtils;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
@@ -63,7 +64,7 @@ public class GenealogyTreeFragment extends Fragment {
     private static ModelGenealogyUser genealogyUser = null;
     private boolean requestReady = true;
 
-    private EditText et_user, et_father, et_mother;
+    private EditText et_user, et_user_description, et_father, et_mother;
     private TextView brothers_siters;
 
     private List<ModelGenealogyUser> list;
@@ -90,6 +91,7 @@ public class GenealogyTreeFragment extends Fragment {
         this.rootView = inflater.inflate(R.layout.fragment_genealogy_tree, container, false);
 
         this.et_user = (EditText) this.rootView.findViewById(R.id.user);
+        this.et_user_description = (EditText) this.rootView.findViewById(R.id.user_description);
         this.et_father = (EditText) this.rootView.findViewById(R.id.et_father);
         this.et_mother = (EditText) this.rootView.findViewById(R.id.et_mother);
 
@@ -143,7 +145,7 @@ public class GenealogyTreeFragment extends Fragment {
                                 else {
                                     Toast.makeText(app, "No children", Toast.LENGTH_SHORT).show();
                                 }
-                                update();
+                                onFocus();
                             }
                         },
                         parameters
@@ -198,6 +200,7 @@ public class GenealogyTreeFragment extends Fragment {
 
     public void update() {
         this.et_user.setText("");
+        this.et_user_description.setText("");
         this.et_father.setText("");
         this.et_mother.setText("");
 
@@ -227,6 +230,8 @@ public class GenealogyTreeFragment extends Fragment {
                         }
                     }
                 });
+
+                this.et_user_description.setText(genealogyUser.getAdapterSubtitle()+(StringUtils.isNullOrEmpty(genealogyUser.description)?"":("\n"+genealogyUser.description)));
 
                 if (genealogyUser.father != null) {
                     this.et_father.setText(genealogyUser.father.getAdapterTitle());
@@ -329,6 +334,11 @@ public class GenealogyTreeFragment extends Fragment {
     @Override
     public boolean back() {
         return false;
+    }
+
+    @Override
+    public void onFocus() {
+        update();
     }
 
     public static void select(ModelGenealogyUser genealogyUser_) {

@@ -81,6 +81,8 @@ public class FileManagerFragmentCloud extends Fragment {
 	private SwipeRefreshLayout swipeRefreshLayout, swipeRefreshLayoutGrid;
     Animation animOpen, animZoomOut, animZoomIn; ImageButton circle, circle2;
 
+
+
     private String url = "";
     private List<ModelFile> filesToCut = new ArrayList<>();
 
@@ -367,8 +369,21 @@ public class FileManagerFragmentCloud extends Fragment {
                 this.message.setText(app.isLogged()?getString(R.string.no_internet_connection):getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
+
+            if(!isInternetConnection(app)) {
+                this.setListVisibility(false);
+                this.circle.clearAnimation();
+                this.circle.setVisibility(View.GONE);
+            }
         }
 	}
+
+    private void setListVisibility(boolean visible) {
+        if(this.listView != null)
+            this.listView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        if(this.gridView != null)
+            this.gridView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
 
 	public void updateAdapter() {
 		if(this.listView!=null && this.files!=null && this.isAdded()) {
@@ -379,7 +394,9 @@ public class FileManagerFragmentCloud extends Fragment {
                 this.circle.startAnimation(animOpen);
             }
 
-			if(this.files.size()==0) {
+            if(!isInternetConnection(app))
+                this.message.setText(getString(R.string.no_internet_connection));
+            else if(this.files.size()==0) {
                 if(this.url==null)
 				    this.message.setText(getString(R.string.no_file_server));
                 else if(this.url.equals(""))
@@ -565,6 +582,11 @@ public class FileManagerFragmentCloud extends Fragment {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onFocus() {
+        refreshList();
     }
 
     public View getFab() {
