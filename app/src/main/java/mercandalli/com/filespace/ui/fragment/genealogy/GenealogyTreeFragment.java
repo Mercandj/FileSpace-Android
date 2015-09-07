@@ -145,7 +145,7 @@ public class GenealogyTreeFragment extends Fragment {
                                 else {
                                     Toast.makeText(app, "No children", Toast.LENGTH_SHORT).show();
                                 }
-                                onFocus();
+                                update();
                             }
                         },
                         parameters

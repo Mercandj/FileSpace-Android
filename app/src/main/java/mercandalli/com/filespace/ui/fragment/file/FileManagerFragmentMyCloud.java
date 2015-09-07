@@ -387,8 +387,6 @@ public class FileManagerFragmentMyCloud extends Fragment {
         parameters.add(new StringPair("mine", "" + true));
 
         if(isInternetConnection(app) && app.isLogged()) {
-            this.swipeRefreshLayout.setRefreshing(true);
-            this.swipeRefreshLayoutGrid.setRefreshing(true);
             new TaskGet(
                     app,
                     this.app.getConfig().getUser(),
