@@ -15,14 +15,23 @@
     android:stateListAnimator="@anim/tab_user_elevation"
     android:translationZ="2.0dp" >
 
-    <ImageView
+    <RelativeLayout
         android:id="@+id/more"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/ic_menu_moreoverflow_normal_holo_light" />
+        android:layout_width="55dp"
+        android:layout_height="match_parent"
+        android:paddingRight="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:paddingLeft="10dp">
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/title"

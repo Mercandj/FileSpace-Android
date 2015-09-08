@@ -121,8 +121,8 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         public TextView title, subtitle;
-        public ImageView icon, more;
-        public RelativeLayout item;
+        public ImageView icon;
+        public RelativeLayout item, more;
 
         public ViewHolder(View itemLayoutView, int viewType) {
             super(itemLayoutView);
@@ -130,7 +130,7 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
             title = (TextView) itemLayoutView.findViewById(R.id.title);
             subtitle = (TextView) itemLayoutView.findViewById(R.id.subtitle);
             icon = (ImageView) itemLayoutView.findViewById(R.id.icon);
-            more = (ImageView) itemLayoutView.findViewById(R.id.more);
+            more = (RelativeLayout) itemLayoutView.findViewById(R.id.more);
             itemLayoutView.setOnClickListener(this);
             itemLayoutView.setOnLongClickListener(this);
         }

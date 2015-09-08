@@ -57,14 +57,22 @@
         android:contentDescription="@string/image_description"
         android:src="@drawable/file_default" />
 
-    <ImageView
+    <RelativeLayout
         android:id="@+id/more"
-        android:layout_width="35dp"
+        android:layout_width="55dp"
         android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
+        android:paddingRight="10dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentEnd="true"
+        android:paddingLeft="10dp">
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
 
 </RelativeLayout>
