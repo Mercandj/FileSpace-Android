@@ -17,7 +17,7 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:maxLines="1"
         android:paddingLeft="20dp"
-        android:paddingRight="19dp"
+        android:paddingRight="5dp"
         android:scrollHorizontally="true"
         android:singleLine="true"
         android:textColor="#000"
@@ -25,7 +25,8 @@
         android:layout_toEndOf="@+id/icon"
         android:layout_toStartOf="@+id/more"
         android:layout_alignTop="@+id/icon"
-        android:gravity="top" />
+        android:gravity="top"
+        />
 
     <TextView
         android:id="@+id/subtitle"
@@ -36,7 +37,7 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:maxLines="1"
         android:paddingLeft="20dp"
-        android:paddingRight="13dp"
+        android:paddingRight="5dp"
         android:scrollHorizontally="true"
         android:singleLine="true"
         android:textColor="#666"
@@ -45,7 +46,8 @@
         android:layout_toEndOf="@+id/icon"
         android:layout_alignBottom="@+id/icon"
         android:gravity="bottom"
-        android:layout_marginBottom="2dp" />
+        android:layout_marginBottom="2dp"
+        />
 
     <mercandalli.com.filespace.ui.view.CircularImageView
         android:id="@+id/icon"

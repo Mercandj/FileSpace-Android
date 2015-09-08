@@ -36,7 +36,7 @@ import mercandalli.com.filespace.ui.view.PagerSlidingTabStrip;
 
 public class GenealogyFragment extends Fragment {
 
-    private static final int NB_FRAGMENT = 2;
+    private static final int NB_FRAGMENT = 3;
     private static final int INIT_FRAGMENT = 0;
     public static Fragment listFragment[] = new Fragment[NB_FRAGMENT];
     private Application app;
@@ -68,6 +68,9 @@ public class GenealogyFragment extends Fragment {
                 if(listFragment[position] instanceof GenealogyTreeFragment) {
                     ((GenealogyTreeFragment) listFragment[position]).update();
                 }
+                if(position < NB_FRAGMENT)
+                    if(listFragment[position] != null)
+                        listFragment[position].onFocus();
             }
         });
         mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
@@ -116,8 +119,9 @@ public class GenealogyFragment extends Fragment {
         public Fragment getItem(int i) {
             Fragment fragment = null;
             switch(i) {
-                case 0:		fragment = new GenealogyListFragment();  	break;
-                case 1:		fragment = new GenealogyTreeFragment();    break;
+                case 0:		fragment = new GenealogyListFragment();         break;
+                case 1:		fragment = new GenealogyTreeFragment();         break;
+                case 2:		fragment = new GenealogyStatisticsFragment();   break;
             }
             listFragment[i] = fragment;
             return fragment;
@@ -132,8 +136,9 @@ public class GenealogyFragment extends Fragment {
         public CharSequence getPageTitle(int i) {
             String title = "null";
             switch(i) {
-                case 0:		title = "LIST";      break;
-                case 1:		title = "TREE";	     break;
+                case 0:		title = "LIST";         break;
+                case 1:		title = "TREE";	        break;
+                case 2:		title = "STATISTICS";   break;
             }
             return title;
         }

@@ -1,38 +1,33 @@
 /**
- * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
+ * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
  *
- * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
+ * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
  *
  * LICENSE:
  *
- * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
+ * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
  *
- * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
  *
  * @author Jonathan Mercandalli
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
+ * @copyright 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
  */
-package mercandalli.com.filespace.ui.fragment.admin;
+package mercandalli.com.filespace.ui.fragment.genealogy;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -44,24 +39,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.ui.adapter.AdapterModelInformation;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelInformation;
 import mercandalli.com.filespace.net.TaskGet;
+import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.ui.adapter.AdapterModelInformation;
 import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.util.StringPair;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
+/**
+ * Created by Jonathan on 28/08/2015.
+ */
+public class GenealogyStatisticsFragment extends Fragment {
 
-public class ServerDataFragment extends Fragment {
+    private Application app;
+    private View rootView;
 
-	Application app;
-	private View rootView;
-	
-	private RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     private AdapterModelInformation mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     List<ModelInformation> list;
@@ -74,53 +71,55 @@ public class ServerDataFragment extends Fragment {
         app = (Application) activity;
     }
 
-    public ServerDataFragment() {
+    public GenealogyStatisticsFragment() {
         super();
     }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		rootView = inflater.inflate(R.layout.fragment_admin_data, container, false);
+    public GenealogyStatisticsFragment(Application app) {
+        this.app = app;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_genealogy_statistics, container, false);
         circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
-		
-		recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
-		recyclerView.setHasFixedSize(true);
+
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
+        recyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
 
-        ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.GONE);
-
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
-		swipeRefreshLayout.setColorSchemeResources(
-				android.R.color.holo_blue_bright,
-				android.R.color.holo_green_light,
-				android.R.color.holo_orange_light,
-				android.R.color.holo_red_light);
+        swipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
-		swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				refreshList();
-			}
-		});
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshList();
+            }
+        });
 
         refreshList();
-        
-        return rootView;
-	}
 
-	public void refreshList() {
-		List<StringPair> parameters = null;
-		if(isInternetConnection(app))
+        return rootView;
+    }
+
+    public void refreshList() {
+        List<StringPair> parameters = null;
+        if(isInternetConnection(app))
             new TaskGet(
                     app,
                     this.app.getConfig().getUser(),
-                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeInformation,
+                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeGenealogyStatistics,
                     new IPostExecuteListener() {
                         @Override
                         public void execute(JSONObject json, String body) {
                             list = new ArrayList<ModelInformation>();
-                            list.add(new ModelInformation("Server Data", Const.TAB_VIEW_TYPE_SECTION));
+                            list.add(new ModelInformation("Genealogy Statistics", Const.TAB_VIEW_TYPE_SECTION));
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
@@ -140,33 +139,16 @@ public class ServerDataFragment extends Fragment {
                         }
                     },
                     parameters
-                ).execute();
-	}
-	
-	int i;
-	
-	public void updateAdapter() {
-		if(this.recyclerView!=null && this.list!=null && this.isAdded()) {
+            ).execute();
+    }
+
+    public void updateAdapter() {
+        if(this.recyclerView!=null && this.list!=null && this.isAdded()) {
             this.circularProgressBar.setVisibility(View.GONE);
 
             this.mAdapter = new AdapterModelInformation(app, list);
             this.recyclerView.setAdapter(mAdapter);
             this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
-
-            if( ((ImageButton) rootView.findViewById(R.id.circle)).getVisibility()==View.GONE ) {
-                ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
-                Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
-                ((ImageButton) rootView.findViewById(R.id.circle)).startAnimation(animOpen);
-            }
-
-	        ((ImageButton) rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {			
-				@Override
-				public void onClick(View v) {
-					mAdapter.addItem(new ModelInformation("Number", ""+i), 0);
-					recyclerView.scrollToPosition(0);
-					i++;
-				}
-			});
 
             this.mAdapter.setOnItemClickListener(new AdapterModelInformation.OnItemClickListener() {
                 @Override
@@ -176,9 +158,8 @@ public class ServerDataFragment extends Fragment {
             });
 
             this.swipeRefreshLayout.setRefreshing(false);
-	        i=0;
-		}
-	}
+        }
+    }
 
     @Override
     public boolean back() {
@@ -187,6 +168,6 @@ public class ServerDataFragment extends Fragment {
 
     @Override
     public void onFocus() {
-
+        refreshList();
     }
 }
