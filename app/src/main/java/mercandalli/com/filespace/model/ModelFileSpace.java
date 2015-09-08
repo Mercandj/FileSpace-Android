@@ -31,6 +31,7 @@ import java.util.TimeZone;
 
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.util.PointLong;
+import mercandalli.com.filespace.util.StringUtils;
 import mercandalli.com.filespace.util.TimeUtils;
 
 import static mercandalli.com.filespace.model.ModelFileSpace.FileSpaceTypeENUM.*;
@@ -45,7 +46,7 @@ public class ModelFileSpace {
     private Application app;
 
     public Timer timer = new Timer();
-    public Note note = new Note();
+    public Article article = new Article();
 
     public ModelFileSpace(Application app, String type) {
         this.app = app;
@@ -62,9 +63,12 @@ public class ModelFileSpace {
             try {
                 if(json.has("date_creation") && !json.isNull("date_creation"))
                     this.date_creation = dateFormat.parse(json.getString("date_creation"));
-                if(json.has("timer_date") && !json.isNull("timer_date")) {
+                if(json.has("timer_date") && !json.isNull("timer_date"))
                     this.timer.timer_date = dateFormat.parse(json.getString("timer_date"));
-                }
+                if(json.has("article_title_1") && !json.isNull("article_title_1"))
+                    this.article.article_title_1 = json.getString("article_title_1");
+                if(json.has("article_content_1") && !json.isNull("article_content_1"))
+                    this.article.article_content_1 = json.getString("article_content_1");
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -73,6 +77,24 @@ public class ModelFileSpace {
             Log.e("model ModelFileContent", "JSONException");
             e.printStackTrace();
         }
+    }
+
+    public String getAdapterTitle() {
+        if(this.timer.timer_date != null) {
+            SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+            SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try {
+                return TimeUtils.printDifferenceFuture(this.timer.timer_date, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        if(!StringUtils.isNullOrEmpty(this.article.article_content_1))
+            return this.article.article_title_1;
+        if(this.date_creation != null)
+            return this.date_creation.toString();
+        return "null";
     }
 
     @Override
@@ -116,8 +138,9 @@ public class ModelFileSpace {
                 case TIMER:
                     json.put("timer_date", "" + dateFormatGmt.format(this.timer.timer_date));
                     break;
-                case NOTE:
-                    json.put("note_content", "" + dateFormatGmt.format(this.note.note_content));
+                case ARTICLE:
+                    json.put("article_content_1", "" + this.article.article_content_1);
+                    json.put("article_title_1", "" + this.article.article_title_1);
                     break;
             }
 
@@ -129,7 +152,7 @@ public class ModelFileSpace {
 
     public enum FileSpaceTypeENUM {
         TIMER("timer"),
-        NOTE("note");
+        ARTICLE("article");
         public String type;
         FileSpaceTypeENUM(String type) {
             this.type = type;
@@ -147,7 +170,7 @@ public class ModelFileSpace {
         public Date timer_date;
     }
 
-    public class Note {
-        public String note_content;
+    public class Article {
+        public String article_title_1, article_content_1;
     }
 }

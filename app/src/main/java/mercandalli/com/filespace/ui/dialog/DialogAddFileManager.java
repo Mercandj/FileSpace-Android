@@ -218,6 +218,14 @@ public class DialogAddFileManager extends Dialog {
             }
         });
 
+        ((RelativeLayout) this.findViewById(R.id.addArticle)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogCreateArticle dialogCreateArticle = new DialogCreateArticle(app, listener);
+                dialogCreateArticle.show();
+                DialogAddFileManager.this.dismiss();
+            }
+        });
         
         DialogAddFileManager.this.show();
 	}

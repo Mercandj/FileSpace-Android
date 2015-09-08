@@ -40,11 +40,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
+import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.util.StringPair;
 
 /**
@@ -55,7 +56,7 @@ import mercandalli.com.filespace.util.StringPair;
  */
 public class TaskPost extends AsyncTask<Void, Void, String> {
 
-	String url;
+	String url, contentType;
 	List<StringPair> parameters;
 	IPostExecuteListener listener;
 	File file;
@@ -71,6 +72,14 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
 		this.app = app;
 		this.url = url;
 		this.parameters = parameters;
+		this.listener = listener;
+	}
+
+	public TaskPost(Application app, String url, IPostExecuteListener listener, List<StringPair> parameters, String contentType) {
+		this.app = app;
+		this.url = url;
+		this.parameters = parameters;
+		this.contentType = contentType;
 		this.listener = listener;
 	}
 
@@ -95,17 +104,18 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
 			HttpPost httppost = new HttpPost(url);
 						
 			MultipartEntity mpEntity = new MultipartEntity();
+
 			if(this.file != null) mpEntity.addPart("file", new FileBody(file, "*/*"));
 
             String log_parameters = "";
 			if(this.parameters != null)
 				for(StringPair b : parameters) {
-                    mpEntity.addPart(b.getName(), new StringBody(b.getValue()));
+                    mpEntity.addPart(b.getName(), new StringBody(b.getValue(), Charset.forName("UTF-8")));
                     log_parameters += b.getName()+":"+b.getValue()+" ";
                 }
             Log.d("TaskPost", "url = "+url+" "+log_parameters);
 
-			httppost.setEntity(mpEntity);
+            httppost.setEntity(mpEntity);
 			
 			StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
 	        String result = Base64.encodeBytes(authentication.toString().getBytes());

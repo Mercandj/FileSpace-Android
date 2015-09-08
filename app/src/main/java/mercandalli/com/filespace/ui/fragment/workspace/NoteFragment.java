@@ -26,7 +26,7 @@ public class NoteFragment extends Fragment {
     private View rootView;
     private TextView input;
 
-    private ModelFileSpace note;
+    private ModelFileSpace article;
 
     @Override
     public void onAttach(Activity activity) {
@@ -42,13 +42,13 @@ public class NoteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_workspace_note, container, false);
 
-        note = new ModelFileSpace(app, "note");
+        this.article = new ModelFileSpace(app, "article");
 
         this.input = (TextView) this.rootView.findViewById(R.id.input);
         FontUtils.applyFont(app, this.input, "fonts/Roboto-Light.ttf");
         if(!StringUtils.isNullOrEmpty(app.getConfig().getUserNoteWorkspace1())) {
             this.input.setText(app.getConfig().getUserNoteWorkspace1());
-            this.note.note.note_content = app.getConfig().getUserNoteWorkspace1();
+            this.article.article.article_content_1 = app.getConfig().getUserNoteWorkspace1();
         }
         this.input.addTextChangedListener(new TextWatcher() {
             @Override
@@ -59,7 +59,7 @@ public class NoteFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s != null) {
                     app.getConfig().setUserNoteWorkspace1(s.toString());
-                    note.note.note_content = s.toString();
+                    article.article.article_content_1 = s.toString();
                 }
             }
 

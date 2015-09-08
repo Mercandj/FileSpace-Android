@@ -64,6 +64,12 @@ public class ActivityFileText extends Application {
             this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             return;
         }
+        else if(extras.containsKey("ARTICLE_CONTENT_1")) {
+            initate = extras.getString("ARTICLE_CONTENT_1");
+            ((EditText) ActivityFileText.this.findViewById(R.id.txt)).setText("" + initate);
+            ((EditText) ActivityFileText.this.findViewById(R.id.txt)).setVisibility(View.VISIBLE);
+            ((ProgressBar) ActivityFileText.this.findViewById(R.id.circularProgressBar)).setVisibility(View.GONE);
+        }
         else {
             this.url = extras.getString("URL_FILE");
             this.login = extras.getString("LOGIN");

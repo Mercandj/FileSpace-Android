@@ -98,7 +98,7 @@ public class ModelFile extends Model implements Parcelable {
 
     public String getAdapterTitle() {
         if(this.type.equals(ModelFileTypeENUM.FILESPACE.type) && this.content != null)
-            return this.content.toString();
+            return this.content.getAdapterTitle();
         else if(this.name!=null)
             return this.getNameExt();
         else
@@ -274,6 +274,15 @@ public class ModelFile extends Model implements Parcelable {
                     intent.putExtra("ONLINE", true);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     intent.putExtra("TIMER_DATE", "" + dateFormat.format(content.timer.timer_date));
+                    this.app.startActivity(intent);
+                    this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                }
+                else if(!StringUtils.isNullOrEmpty(content.article.article_content_1)) {
+                    Intent intent = new Intent(this.app, ActivityFileText.class);
+                    intent.putExtra("ARTICLE_CONTENT_1", ""+content.article.article_content_1);
+                    intent.putExtra("LOGIN", ""+this.app.getConfig().getUser().getAccessLogin());
+                    intent.putExtra("PASSWORD", ""+this.app.getConfig().getUser().getAccessPassword());
+                    intent.putExtra("ONLINE", true);
                     this.app.startActivity(intent);
                     this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                 }
