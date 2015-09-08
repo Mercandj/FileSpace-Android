@@ -24,14 +24,11 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import mercandalli.com.filespace.listener.IBitmapListener;
 import mercandalli.com.filespace.listener.ILongListener;
@@ -112,17 +109,18 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         if(this.sizeLimit > 0)
             if(this.sizeLimit < this.sizeFile)
                 return null;
+
         Bitmap x = null;
-        HttpResponse response;
-        HttpGet httpget = new HttpGet(url);
-        StringBuilder authentication = new StringBuilder().append(this.login).append(":").append(this.password);
-        String result = Base64.encodeBytes(authentication.toString().getBytes());
-        httpget.setHeader("Authorization", "Basic " + result);
-        HttpClient httpclient = new DefaultHttpClient();
         try {
-            response = httpclient.execute(httpget);
-            InputStream inputStream = response.getEntity().getContent();
-            long lenghtOfFile = response.getEntity().getContentLength();
+            StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
+            String result = Base64.encodeBytes(authentication.toString().getBytes());
+
+            HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
+            conn.setRequestProperty("Authorization", "Basic " + result);
+            conn.setRequestMethod("GET");
+
+            InputStream inputStream = conn.getInputStream();
+            long lengthOfFile = Long.parseLong(conn.getHeaderField("Content-Length"));
 
             // Get the source image's dimensions
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -138,7 +136,9 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
                 options.inSampleSize = 4;
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
-            x = BitmapFactory.decodeStream(new FlushedInputStream(inputStream, lenghtOfFile), null, options);
+            x = BitmapFactory.decodeStream(new FlushedInputStream(inputStream, lengthOfFile), null, options);
+
+            conn.disconnect();
 
             save_image(this.app, this.idFile, x);
         } catch (IOException e) {

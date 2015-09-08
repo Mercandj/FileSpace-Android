@@ -109,6 +109,9 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 			//int responseCode = response.getStatusLine().getStatusCode();
 			if(responseCode>=300)
 				resultString = "Status Code "+responseCode+". "+resultString;
+
+			conn.disconnect();
+
 			return resultString;
 		} catch (IOException e) {
             e.printStackTrace();

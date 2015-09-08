@@ -101,10 +101,12 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
 	@Override
 	protected String doInBackground(Void... urls) {
 		try {
+
+			// http://stackoverflow.com/questions/9767952/how-to-add-parameters-to-httpurlconnection-using-post
+
 			HttpPost httppost = new HttpPost(url);
 						
 			MultipartEntity mpEntity = new MultipartEntity();
-
 			if(this.file != null) mpEntity.addPart("file", new FileBody(file, "*/*"));
 
             String log_parameters = "";

@@ -25,22 +25,17 @@ import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.model.ModelFile;
+import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.util.FileUtils;
 
 /**
@@ -54,7 +49,6 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
     String url;
     String url_ouput;
     IListener listener;
-    File file;
     Application app;
     ModelFile modelFile;
 
@@ -82,7 +76,7 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
 
     @Override
     protected Void doInBackground(Void... urls) {
-        file = file_from_url_Authorization(this.url);
+        file_from_url_Authorization(this.url);
         return null;
     }
 
@@ -99,36 +93,35 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
         this.listener.execute();
     }
 
-    public File file_from_url_Authorization(String url) {
-        File x = null;
-        HttpGet httpget = new HttpGet(url);
-        StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
-        String result = Base64.encodeBytes(authentication.toString().getBytes());
-        httpget.setHeader("Authorization", "Basic " + result);
-        HttpClient httpclient = new DefaultHttpClient();
+    public void file_from_url_Authorization(String url) {
         try {
-            HttpResponse response = httpclient.execute(httpget);
-            InputStream inputStream = response.getEntity().getContent();
-            long lenghtOfFile = response.getEntity().getContentLength();
+            StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
+            String result = Base64.encodeBytes(authentication.toString().getBytes());
+
+            HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
+            conn.setRequestProperty("Authorization", "Basic " + result);
+            conn.setRequestMethod("GET");
+
+            InputStream inputStream = conn.getInputStream();
+            long lengthOfFile = Long.parseLong(conn.getHeaderField("Content-Length"));
             OutputStream outputStream = new FileOutputStream(url_ouput);
 
             byte data[] = new byte[1024];
-
             long total = 0;
             int missed_value = 50;
-            int missed_conter = 0;
+            int missed_counter = 0;
 
             int count;
             while ((count = inputStream.read(data)) != -1) {
                 total += count;
 
-                missed_conter++;
-                if(missed_conter>missed_value) {
+                missed_counter++;
+                if(missed_counter>missed_value) {
                     // publishing the progress....
                     // After this onProgressUpdate will be called
-                    publishProgress(((total*100)/lenghtOfFile), total);
+                    publishProgress(((total*100)/lengthOfFile), total);
 
-                    missed_conter = 0;
+                    missed_counter = 0;
                 }
 
                 // writing data to file
@@ -142,12 +135,11 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
             outputStream.close();
             inputStream.close();
 
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
+            conn.disconnect();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return x;
     }
 
     @Override
