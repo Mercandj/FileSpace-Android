@@ -144,5 +144,17 @@ public class GenealogyFragment extends Fragment {
         }
     }
 
+    public void refreshListServer() {
+        refreshListServer(null);
+    }
+
+    public void refreshListServer(String search) {
+        if(listFragment[0]!=null)
+            if(listFragment[0] instanceof GenealogyListFragment) {
+                GenealogyListFragment fragmentFileManagerFragment = (GenealogyListFragment) listFragment[0];
+                fragmentFileManagerFragment.refreshList(search);
+            }
+    }
+
 
 }

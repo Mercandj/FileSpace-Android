@@ -428,6 +428,14 @@ public abstract class ApplicationDrawer extends Application {
                         case 2: tmp_fragment.refreshListServer(); break;
                 		}
                 	}
+                    else if(fragment instanceof GenealogyFragment) {
+                        GenealogyFragment tmp_fragment = (GenealogyFragment) fragment;
+                        switch(tmp_fragment.getCurrentFragmentIndex()) {
+                            case 0: tmp_fragment.refreshListServer(); break;
+                            case 1: tmp_fragment.refreshListServer(); break;
+                            case 2: tmp_fragment.refreshListServer(); break;
+                        }
+                    }
             	}
             	return true;
             }
@@ -446,6 +454,14 @@ public abstract class ApplicationDrawer extends Application {
                     case 2: tmp_fragment.refreshListServer(query); break;
             		}
             	}
+                else if(fragment instanceof GenealogyFragment) {
+                    GenealogyFragment tmp_fragment = (GenealogyFragment) fragment;
+                    switch(tmp_fragment.getCurrentFragmentIndex()) {
+                        case 0: tmp_fragment.refreshListServer(query); break;
+                        case 1: tmp_fragment.refreshListServer(query); break;
+                        case 2: tmp_fragment.refreshListServer(query); break;
+                    }
+                }
 				return false;
             }            
         };
@@ -493,8 +509,10 @@ public abstract class ApplicationDrawer extends Application {
     		}
     	}
         else if(fragment instanceof GenealogyFragment) {
-            menu.findItem(R.id.action_search)	.setVisible(!drawerOpen);
-
+            GenealogyFragment tmp_fragment = (GenealogyFragment) fragment;
+            if(tmp_fragment.getCurrentFragmentIndex() == 0) {
+                menu.findItem(R.id.action_search)	.setVisible(!drawerOpen);
+            }
         }
         return super.onPrepareOptionsMenu(menu);
     }

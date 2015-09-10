@@ -64,8 +64,8 @@ public class GenealogyTreeFragment extends Fragment {
     private static ModelGenealogyUser genealogyUser = null;
     private boolean requestReady = true;
 
-    private EditText et_user, et_user_description, et_father, et_mother;
-    private TextView brothers_siters;
+    private EditText et_user, et_user_description, et_father, et_mother, et_father_description, et_mother_description;
+    private TextView brothers_sisters;
 
     private List<ModelGenealogyUser> list;
     private RecyclerView recyclerView;
@@ -93,10 +93,12 @@ public class GenealogyTreeFragment extends Fragment {
         this.et_user = (EditText) this.rootView.findViewById(R.id.user);
         this.et_user_description = (EditText) this.rootView.findViewById(R.id.user_description);
         this.et_father = (EditText) this.rootView.findViewById(R.id.et_father);
+        this.et_father_description = (EditText) this.rootView.findViewById(R.id.et_father_description);
         this.et_mother = (EditText) this.rootView.findViewById(R.id.et_mother);
+        this.et_mother_description = (EditText) this.rootView.findViewById(R.id.et_mother_description);
 
-        this.brothers_siters = (TextView) this.rootView.findViewById(R.id.brothers_siters);
-        this.brothers_siters.setVisibility(View.INVISIBLE);
+        this.brothers_sisters = (TextView) this.rootView.findViewById(R.id.brothers_sisters);
+        this.brothers_sisters.setVisibility(View.INVISIBLE);
 
 
         this.recyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
@@ -203,6 +205,8 @@ public class GenealogyTreeFragment extends Fragment {
         this.et_user_description.setText("");
         this.et_father.setText("");
         this.et_mother.setText("");
+        this.et_father_description.setText("");
+        this.et_mother_description.setText("");
 
         if(genealogyUser != null)
             if(genealogyUser.selected) {
@@ -235,6 +239,7 @@ public class GenealogyTreeFragment extends Fragment {
 
                 if (genealogyUser.father != null) {
                     this.et_father.setText(genealogyUser.father.getAdapterTitle());
+                    this.et_father_description.setText(genealogyUser.father.getAdapterSubtitle());
                     this.et_father.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
@@ -260,6 +265,7 @@ public class GenealogyTreeFragment extends Fragment {
                 }
                 if (genealogyUser.mother != null) {
                     this.et_mother.setText(genealogyUser.mother.getAdapterTitle());
+                    this.et_mother_description.setText(genealogyUser.mother.getAdapterSubtitle());
                     this.et_mother.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
@@ -303,7 +309,7 @@ public class GenealogyTreeFragment extends Fragment {
                 public void execute(final ModelGenealogyUser modelGenealogyUser) {
 
                 }
-            });
+            }, true);
             this.recyclerView.setAdapter(mAdapter);
 
             this.mAdapter.setOnItemClickListener(new AdapterModelGenealogyUser.OnItemClickListener() {
@@ -324,11 +330,11 @@ public class GenealogyTreeFragment extends Fragment {
         }
 
         if(this.list == null)
-            this.brothers_siters.setVisibility(View.INVISIBLE);
+            this.brothers_sisters.setVisibility(View.INVISIBLE);
         else if(this.list.size() == 0)
-            this.brothers_siters.setVisibility(View.INVISIBLE);
+            this.brothers_sisters.setVisibility(View.INVISIBLE);
         else
-            this.brothers_siters.setVisibility(View.VISIBLE);
+            this.brothers_sisters.setVisibility(View.VISIBLE);
     }
 
     @Override

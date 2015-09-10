@@ -43,16 +43,20 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
 	private IModelGenealogyUserListener moreListener;
+    private boolean isTree;
 
-	public AdapterModelGenealogyUser(Application app, List<ModelGenealogyUser> users, IModelGenealogyUserListener moreListener) {
+	public AdapterModelGenealogyUser(Application app, List<ModelGenealogyUser> users, IModelGenealogyUserListener moreListener, boolean isTree) {
 		this.app = app;
 		this.users = users;
 		this.moreListener = moreListener;
+        this.isTree = isTree;
 	}
 
     @Override
     public AdapterModelGenealogyUser.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file, parent, false), viewType);
+        if(!isTree)
+            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file, parent, false), viewType);
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_genealogy_small, parent, false), viewType);
     }
 
     @Override

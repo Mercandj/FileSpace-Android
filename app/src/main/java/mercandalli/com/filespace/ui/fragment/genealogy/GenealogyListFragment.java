@@ -55,6 +55,7 @@ import mercandalli.com.filespace.ui.dialog.DialogAddGenealogyUser;
 import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.ui.view.DividerItemDecoration;
 import mercandalli.com.filespace.util.StringPair;
+import mercandalli.com.filespace.util.StringUtils;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
@@ -146,7 +147,9 @@ public class GenealogyListFragment extends Fragment {
     }
 
     public void refreshList(String search) {
-        List<StringPair> parameters = null;
+        List<StringPair> parameters = new ArrayList<>();
+        if(!StringUtils.isNullOrEmpty(search))
+            parameters.add(new StringPair("search", search));
         if(isInternetConnection(app) && app.isLogged())
             new TaskGet(
                     app,
@@ -253,7 +256,7 @@ public class GenealogyListFragment extends Fragment {
                     menuDrop.show();
 
                 }
-            });
+            }, false);
             this.recyclerView.setAdapter(mAdapter);
 
             this.mAdapter.setOnItemClickListener(new AdapterModelGenealogyUser.OnItemClickListener() {
