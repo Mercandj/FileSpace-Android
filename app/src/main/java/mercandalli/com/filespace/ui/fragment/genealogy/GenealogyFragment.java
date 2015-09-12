@@ -28,6 +28,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listener.IModelGenealogyUserListener;
+import mercandalli.com.filespace.model.ModelGenealogyPerson;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.activity.ApplicationDrawer;
 import mercandalli.com.filespace.ui.fragment.Fragment;
@@ -36,7 +38,7 @@ import mercandalli.com.filespace.ui.view.PagerSlidingTabStrip;
 
 public class GenealogyFragment extends Fragment {
 
-    private static final int NB_FRAGMENT = 3;
+    private static final int NB_FRAGMENT = 4;
     private static final int INIT_FRAGMENT = 0;
     public static Fragment listFragment[] = new Fragment[NB_FRAGMENT];
     private Application app;
@@ -119,9 +121,22 @@ public class GenealogyFragment extends Fragment {
         public Fragment getItem(int i) {
             Fragment fragment = null;
             switch(i) {
-                case 0:		fragment = new GenealogyListFragment();         break;
+                case 0:
+                    fragment = new GenealogyListFragment(new IModelGenealogyUserListener() {
+                        @Override
+                        public void execute(ModelGenealogyPerson modelPerson) {
+                            for(Fragment fr : listFragment) {
+                                if (fr instanceof GenealogyTreeFragment)
+                                    ((GenealogyTreeFragment) fr).select(modelPerson);
+                                else if (fr instanceof GenealogyBigTreeFragment)
+                                    ((GenealogyBigTreeFragment) fr).select(modelPerson);
+                            }
+                        }
+                    });
+                    break;
                 case 1:		fragment = new GenealogyTreeFragment();         break;
-                case 2:		fragment = new GenealogyStatisticsFragment();   break;
+                case 2:		fragment = new GenealogyBigTreeFragment();      break;
+                case 3:		fragment = new GenealogyStatisticsFragment();   break;
             }
             listFragment[i] = fragment;
             return fragment;
@@ -138,7 +153,8 @@ public class GenealogyFragment extends Fragment {
             switch(i) {
                 case 0:		title = "LIST";         break;
                 case 1:		title = "TREE";	        break;
-                case 2:		title = "STATISTICS";   break;
+                case 2:		title = "BIG TREE";	    break;
+                case 3:		title = "STATISTICS";   break;
             }
             return title;
         }

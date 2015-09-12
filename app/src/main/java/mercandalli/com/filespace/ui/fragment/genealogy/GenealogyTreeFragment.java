@@ -42,7 +42,7 @@ import java.util.List;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IModelGenealogyUserListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
-import mercandalli.com.filespace.model.ModelGenealogyUser;
+import mercandalli.com.filespace.model.ModelGenealogyPerson;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.adapter.AdapterModelGenealogyUser;
@@ -61,13 +61,13 @@ public class GenealogyTreeFragment extends Fragment {
     private Application app;
     private View rootView;
 
-    private static ModelGenealogyUser genealogyUser = null;
+    private ModelGenealogyPerson genealogyPerson = null;
     private boolean requestReady = true;
 
     private EditText et_user, et_user_description, et_father, et_mother, et_father_description, et_mother_description;
     private TextView brothers_sisters;
 
-    private List<ModelGenealogyUser> list;
+    private List<ModelGenealogyPerson> list;
     private RecyclerView recyclerView;
     private AdapterModelGenealogyUser mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -126,13 +126,13 @@ public class GenealogyTreeFragment extends Fragment {
                             @Override
                             public void execute(JSONObject json, String body) {
                                 requestReady = true;
-                                List<ModelGenealogyUser> listChildren = new ArrayList<>();
+                                List<ModelGenealogyPerson> listChildren = new ArrayList<>();
                                 try {
                                     if (json != null) {
                                         if (json.has("result")) {
                                             JSONArray array = json.getJSONArray("result");
                                             for (int i = 0; i < array.length(); i++) {
-                                                listChildren.add(new ModelGenealogyUser(app, array.getJSONObject(i)));
+                                                listChildren.add(new ModelGenealogyPerson(app, array.getJSONObject(i)));
                                             }
                                         }
                                     } else
@@ -141,8 +141,8 @@ public class GenealogyTreeFragment extends Fragment {
                                     e.printStackTrace();
                                 }
                                 if(listChildren.size() != 0) {
-                                    GenealogyTreeFragment.genealogyUser = listChildren.get(0);
-                                    GenealogyTreeFragment.genealogyUser.selected = true;
+                                    genealogyPerson = listChildren.get(0);
+                                    genealogyPerson.selected = true;
                                 }
                                 else {
                                     Toast.makeText(app, "No children", Toast.LENGTH_SHORT).show();
@@ -178,8 +178,8 @@ public class GenealogyTreeFragment extends Fragment {
                                 try {
                                     if (json != null) {
                                         if (json.has("result")) {
-                                            GenealogyTreeFragment.this.genealogyUser = new ModelGenealogyUser(app, json.getJSONObject("result"));
-                                            GenealogyTreeFragment.this.genealogyUser.selected = true;
+                                            GenealogyTreeFragment.this.genealogyPerson = new ModelGenealogyPerson(app, json.getJSONObject("result"));
+                                            GenealogyTreeFragment.this.genealogyPerson.selected = true;
                                         }
                                     } else
                                         Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
@@ -208,15 +208,15 @@ public class GenealogyTreeFragment extends Fragment {
         this.et_father_description.setText("");
         this.et_mother_description.setText("");
 
-        if(genealogyUser != null)
-            if(genealogyUser.selected) {
-                this.et_user.setText(genealogyUser.getAdapterTitle());
-                this.et_user.setTextColor(Color.parseColor(genealogyUser.is_man ? "#1976D2" : "#E91E63"));
+        if(genealogyPerson != null)
+            if(genealogyPerson.selected) {
+                this.et_user.setText(genealogyPerson.getAdapterTitle());
+                this.et_user.setTextColor(Color.parseColor(genealogyPerson.is_man ? "#1976D2" : "#E91E63"));
                 this.et_user.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        if (genealogyUser != null) {
-                            genealogyUser.modify(new IPostExecuteListener() {
+                        if (genealogyPerson != null) {
+                            genealogyPerson.modify(new IPostExecuteListener() {
                                 @Override
                                 public void execute(JSONObject json, String body) {
                                     update();
@@ -229,22 +229,22 @@ public class GenealogyTreeFragment extends Fragment {
                 this.et_user.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (genealogyUser != null) {
-                            getChildren(genealogyUser.id);
+                        if (genealogyPerson != null) {
+                            getChildren(genealogyPerson.id);
                         }
                     }
                 });
 
-                this.et_user_description.setText(genealogyUser.getAdapterSubtitle()+(StringUtils.isNullOrEmpty(genealogyUser.description)?"":("\n"+genealogyUser.description)));
+                this.et_user_description.setText(genealogyPerson.getAdapterSubtitle()+(StringUtils.isNullOrEmpty(genealogyPerson.description)?"":("\n"+genealogyPerson.description)));
 
-                if (genealogyUser.father != null) {
-                    this.et_father.setText(genealogyUser.father.getAdapterTitle());
-                    this.et_father_description.setText(genealogyUser.father.getAdapterSubtitle());
+                if (genealogyPerson.father != null) {
+                    this.et_father.setText(genealogyPerson.father.getAdapterTitle());
+                    this.et_father_description.setText(genealogyPerson.father.getAdapterSubtitle());
                     this.et_father.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
-                            if (genealogyUser.father != null) {
-                                genealogyUser.father.modify(new IPostExecuteListener() {
+                            if (genealogyPerson.father != null) {
+                                genealogyPerson.father.modify(new IPostExecuteListener() {
                                     @Override
                                     public void execute(JSONObject json, String body) {
                                         update();
@@ -257,20 +257,20 @@ public class GenealogyTreeFragment extends Fragment {
                     this.et_father.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (genealogyUser.father != null) {
-                                changeUser(genealogyUser.id_father);
+                            if (genealogyPerson.father != null) {
+                                changeUser(genealogyPerson.id_father);
                             }
                         }
                     });
                 }
-                if (genealogyUser.mother != null) {
-                    this.et_mother.setText(genealogyUser.mother.getAdapterTitle());
-                    this.et_mother_description.setText(genealogyUser.mother.getAdapterSubtitle());
+                if (genealogyPerson.mother != null) {
+                    this.et_mother.setText(genealogyPerson.mother.getAdapterTitle());
+                    this.et_mother_description.setText(genealogyPerson.mother.getAdapterSubtitle());
                     this.et_mother.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
-                            if (genealogyUser.mother != null) {
-                                genealogyUser.mother.modify(new IPostExecuteListener() {
+                            if (genealogyPerson.mother != null) {
+                                genealogyPerson.mother.modify(new IPostExecuteListener() {
                                     @Override
                                     public void execute(JSONObject json, String body) {
                                         update();
@@ -283,8 +283,8 @@ public class GenealogyTreeFragment extends Fragment {
                     this.et_mother.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (genealogyUser.mother != null) {
-                                changeUser(genealogyUser.id_mother);
+                            if (genealogyPerson.mother != null) {
+                                changeUser(genealogyPerson.id_mother);
                             }
                         }
                     });
@@ -294,8 +294,8 @@ public class GenealogyTreeFragment extends Fragment {
     }
 
     public void refreshList() {
-        if(genealogyUser != null)
-            this.list = genealogyUser.getBrothersSisters();
+        if(genealogyPerson != null)
+            this.list = genealogyPerson.getBrothersSisters();
         else
             this.list = new ArrayList<>();
         updateAdapter();
@@ -306,7 +306,7 @@ public class GenealogyTreeFragment extends Fragment {
 
             this.mAdapter = new AdapterModelGenealogyUser(app, list, new IModelGenealogyUserListener() {
                 @Override
-                public void execute(final ModelGenealogyUser modelGenealogyUser) {
+                public void execute(final ModelGenealogyPerson modelGenealogyUser) {
 
                 }
             }, true);
@@ -347,7 +347,7 @@ public class GenealogyTreeFragment extends Fragment {
         update();
     }
 
-    public static void select(ModelGenealogyUser genealogyUser_) {
-        genealogyUser = genealogyUser_;
+    public void select(ModelGenealogyPerson genealogyUser_) {
+        genealogyPerson = genealogyUser_;
     }
 }

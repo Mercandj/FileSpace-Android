@@ -32,7 +32,7 @@ import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
-import mercandalli.com.filespace.model.ModelGenealogyUser;
+import mercandalli.com.filespace.model.ModelGenealogyPerson;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.fragment.genealogy.GenealogyListFragment;
@@ -53,13 +53,13 @@ public class DialogAddGenealogyUser extends Dialog {
 
     private CheckBox sexe;
 
-    private ModelGenealogyUser mother, father;
+    private ModelGenealogyPerson mother, father;
 
     public DialogAddGenealogyUser(final Application app, final IPostExecuteListener listener) {
         this(app, listener, app.getString(R.string.genealogy_add_user), null);
     }
 
-	public DialogAddGenealogyUser(final Application app, final IPostExecuteListener listener, String title, final ModelGenealogyUser genealogyUser) {
+	public DialogAddGenealogyUser(final Application app, final IPostExecuteListener listener, String title, final ModelGenealogyPerson genealogyUser) {
 		super(app);
 		this.app = app;
 		
@@ -166,12 +166,12 @@ public class DialogAddGenealogyUser extends Dialog {
         DialogAddGenealogyUser.this.show();
     }
 
-    public void setMother(ModelGenealogyUser genealogyUser) {
+    public void setMother(ModelGenealogyPerson genealogyUser) {
         this.mother = genealogyUser;
         refresh();
     }
 
-    public void setFather(ModelGenealogyUser genealogyUser) {
+    public void setFather(ModelGenealogyPerson genealogyUser) {
         this.father = genealogyUser;
         refresh();
     }

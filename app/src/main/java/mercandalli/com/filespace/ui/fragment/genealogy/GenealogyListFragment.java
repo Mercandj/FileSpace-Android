@@ -47,7 +47,7 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IModelGenealogyUserListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
-import mercandalli.com.filespace.model.ModelGenealogyUser;
+import mercandalli.com.filespace.model.ModelGenealogyPerson;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.adapter.AdapterModelGenealogyUser;
@@ -67,13 +67,15 @@ public class GenealogyListFragment extends Fragment {
     private Application app;
     private View rootView;
 
-    private List<ModelGenealogyUser> list;
+    private List<ModelGenealogyPerson> list;
     private RecyclerView recyclerView;
     private AdapterModelGenealogyUser mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ProgressBar circularProgressBar;
     private TextView message;
+
+    private IModelGenealogyUserListener onSelect;
 
     private View coordinatorLayoutView;
     private Snackbar snackbar;
@@ -93,8 +95,9 @@ public class GenealogyListFragment extends Fragment {
         app = (Application) activity;
     }
 
-    public GenealogyListFragment() {
+    public GenealogyListFragment(IModelGenealogyUserListener onSelect) {
         super();
+        this.onSelect = onSelect;
     }
 
     public GenealogyListFragment(Application app) {
@@ -164,7 +167,7 @@ public class GenealogyListFragment extends Fragment {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ModelGenealogyUser modelUser = new ModelGenealogyUser(app, array.getJSONObject(i));
+                                            ModelGenealogyPerson modelUser = new ModelGenealogyPerson(app, array.getJSONObject(i));
                                             list.add(modelUser);
                                         }
                                     }
@@ -209,7 +212,7 @@ public class GenealogyListFragment extends Fragment {
 
             this.mAdapter = new AdapterModelGenealogyUser(app, list, new IModelGenealogyUserListener() {
                 @Override
-                public void execute(final ModelGenealogyUser modelGenealogyUser) {
+                public void execute(final ModelGenealogyPerson modelGenealogyUser) {
 
                     final AlertDialog.Builder menuAlert = new AlertDialog.Builder(app);
                     String[] menuList = { getString(R.string.modify), getString(R.string.delete), getString(R.string.properties) };
@@ -297,7 +300,9 @@ public class GenealogyListFragment extends Fragment {
                     deselect();
                     list.get(position).selected = tmp;
                     mAdapter.notifyItemChanged(position);
-                    GenealogyTreeFragment.select(list.get(position));
+
+                    onSelect.execute(list.get(position));
+
                     if (tmp)
                         Toast.makeText(app, "Selected for tree", Toast.LENGTH_SHORT).show();
                     return false;
@@ -324,7 +329,7 @@ public class GenealogyListFragment extends Fragment {
 
     @Override
     public void onFocus() {
-        refreshList();
+        //refreshList();
     }
 
     private void updateNoInternet() {

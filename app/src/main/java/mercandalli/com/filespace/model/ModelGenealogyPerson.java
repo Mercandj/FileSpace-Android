@@ -40,7 +40,7 @@ import mercandalli.com.filespace.util.HtmlUtils;
 import mercandalli.com.filespace.util.StringPair;
 import mercandalli.com.filespace.util.StringUtils;
 
-public class ModelGenealogyUser extends Model {
+public class ModelGenealogyPerson extends Model {
 
 	public String first_name_1, first_name_2, first_name_3, last_name, date_birth, date_death, description;
 	public int id, id_father, id_mother;
@@ -48,16 +48,22 @@ public class ModelGenealogyUser extends Model {
     public boolean is_man = false;
 
     public boolean selected = false;
+    private boolean valid = true;
 
-    public ModelGenealogyUser mother, father;
+    public ModelGenealogyPerson mother, father;
 
-    public List<ModelGenealogyUser> brothers_sisters_from_mother, brothers_sisters_from_father;
+    public List<ModelGenealogyPerson> brothers_sisters_from_mother, brothers_sisters_from_father;
 
-	public ModelGenealogyUser() {
+	public ModelGenealogyPerson() {
 		super();
 	}
 
-    public ModelGenealogyUser(Application app, JSONObject json) {
+    public ModelGenealogyPerson(boolean valid) {
+        super();
+        this.valid = valid;
+    }
+
+    public ModelGenealogyPerson(Application app, JSONObject json) {
         super(app);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
@@ -86,21 +92,21 @@ public class ModelGenealogyUser extends Model {
             if(json.has("is_man"))
                 this.is_man = json.getInt("is_man") != 0;
             if(json.has("father"))
-                this.father = new ModelGenealogyUser(app, json.getJSONObject("father"));
+                this.father = new ModelGenealogyPerson(app, json.getJSONObject("father"));
             if(json.has("mother"))
-                this.mother = new ModelGenealogyUser(app, json.getJSONObject("mother"));
+                this.mother = new ModelGenealogyPerson(app, json.getJSONObject("mother"));
             if(json.has("brothers_sisters_from_mother")) {
                 this.brothers_sisters_from_mother = new ArrayList<>();
                 JSONArray json_b_s = json.getJSONArray("brothers_sisters_from_mother");
                 for(int i=0; i<json_b_s.length(); i++) {
-                    this.brothers_sisters_from_mother.add(new ModelGenealogyUser(app, json_b_s.getJSONObject(i)));
+                    this.brothers_sisters_from_mother.add(new ModelGenealogyPerson(app, json_b_s.getJSONObject(i)));
                 }
             }
             if(json.has("brothers_sisters_from_father")) {
                 this.brothers_sisters_from_father = new ArrayList<>();
                 JSONArray json_b_s = json.getJSONArray("brothers_sisters_from_father");
                 for(int i=0; i<json_b_s.length(); i++) {
-                    this.brothers_sisters_from_father.add(new ModelGenealogyUser(app, json_b_s.getJSONObject(i)));
+                    this.brothers_sisters_from_father.add(new ModelGenealogyPerson(app, json_b_s.getJSONObject(i)));
                 }
             }
         } catch (JSONException e) {
@@ -138,6 +144,8 @@ public class ModelGenealogyUser extends Model {
     }
 
     public String getAdapterTitle() {
+        if(!valid)
+            return "xxx xxx";
         if(!StringUtils.isNullOrEmpty(getAllFirstName()) && !StringUtils.isNullOrEmpty(last_name))
             return StringUtils.uppercase(last_name) + " " + getAllFirstName();
         if(!StringUtils.isNullOrEmpty(last_name))
@@ -184,21 +192,21 @@ public class ModelGenealogyUser extends Model {
     public boolean equals(Object o) {
         if(o==null)
             return false;
-        if(!(o instanceof ModelGenealogyUser))
+        if(!(o instanceof ModelGenealogyPerson))
             return false;
-        ModelGenealogyUser obj = (ModelGenealogyUser)o;
+        ModelGenealogyPerson obj = (ModelGenealogyPerson)o;
         return obj.id == this.id;
     }
 
-    public List<ModelGenealogyUser> getBrothersSisters() {
-        List<ModelGenealogyUser> result = new ArrayList<>();
+    public List<ModelGenealogyPerson> getBrothersSisters() {
+        List<ModelGenealogyPerson> result = new ArrayList<>();
         if(this.brothers_sisters_from_mother != null) {
             result = this.brothers_sisters_from_mother;
         }
         if(this.brothers_sisters_from_father != null) {
-            for(ModelGenealogyUser tmp_father : this.brothers_sisters_from_father) {
+            for(ModelGenealogyPerson tmp_father : this.brothers_sisters_from_father) {
                 boolean bool = true;
-                for(ModelGenealogyUser tmp_mother : this.brothers_sisters_from_mother) {
+                for(ModelGenealogyPerson tmp_mother : this.brothers_sisters_from_mother) {
                     if(tmp_mother.id == tmp_father.id)
                         bool = false;
                 }
@@ -207,5 +215,9 @@ public class ModelGenealogyUser extends Model {
             }
         }
         return result;
+    }
+
+    public boolean isValid() {
+        return valid;
     }
 }

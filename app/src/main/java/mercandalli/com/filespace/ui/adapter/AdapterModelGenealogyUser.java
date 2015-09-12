@@ -33,19 +33,19 @@ import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IModelGenealogyUserListener;
-import mercandalli.com.filespace.model.ModelGenealogyUser;
+import mercandalli.com.filespace.model.ModelGenealogyPerson;
 import mercandalli.com.filespace.ui.activity.Application;
 
 public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModelGenealogyUser.ViewHolder> {
 
 	private Application app;
-    public List<ModelGenealogyUser> users;
+    public List<ModelGenealogyPerson> users;
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
 	private IModelGenealogyUserListener moreListener;
     private boolean isTree;
 
-	public AdapterModelGenealogyUser(Application app, List<ModelGenealogyUser> users, IModelGenealogyUserListener moreListener, boolean isTree) {
+	public AdapterModelGenealogyUser(Application app, List<ModelGenealogyPerson> users, IModelGenealogyUserListener moreListener, boolean isTree) {
 		this.app = app;
 		this.users = users;
 		this.moreListener = moreListener;
@@ -62,7 +62,7 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         if(position<users.size()) {
-            final ModelGenealogyUser user = users.get(position);
+            final ModelGenealogyPerson user = users.get(position);
 
             viewHolder.title.setText(user.getAdapterTitle());
             viewHolder.subtitle.setText(user.getAdapterSubtitle());
@@ -122,23 +122,23 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
     }
 
 
-    public void remplaceList(ArrayList<ModelGenealogyUser> list) {
+    public void remplaceList(ArrayList<ModelGenealogyPerson> list) {
         users.clear();
         users.addAll(0, list);
         notifyDataSetChanged();
     }
 
-    public void addFirst(ArrayList<ModelGenealogyUser> list) {
+    public void addFirst(ArrayList<ModelGenealogyPerson> list) {
         users.addAll(0, list);
         notifyDataSetChanged();
     }
 
-    public void addLast(ArrayList<ModelGenealogyUser> list) {
+    public void addLast(ArrayList<ModelGenealogyPerson> list) {
         users.addAll(users.size(), list);
         notifyDataSetChanged();
     }
 
-    public void addItem(ModelGenealogyUser name, int position) {
+    public void addItem(ModelGenealogyPerson name, int position) {
         this.users.add(position, name);
         this.notifyItemInserted(position);
     }
