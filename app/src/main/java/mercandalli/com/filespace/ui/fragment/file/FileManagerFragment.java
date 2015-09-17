@@ -23,6 +23,7 @@ import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -41,6 +42,7 @@ import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.activity.ApplicationDrawer;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragment.Fragment;
+import mercandalli.com.filespace.ui.fragment.FragmentFab;
 import mercandalli.com.filespace.ui.view.PagerSlidingTabStrip;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
@@ -49,11 +51,13 @@ public class FileManagerFragment extends Fragment {
 	
 	private static final int NB_FRAGMENT = 3;
     private static final int INIT_FRAGMENT = 1;
-	public static Fragment listFragment[] = new Fragment[NB_FRAGMENT];
+	public static FragmentFab listFragment[] = new FragmentFab[NB_FRAGMENT];
 	private Application app;
 	private ViewPager mViewPager;
 	private FileManagerFragmentPagerAdapter mPagerAdapter;
     private PagerSlidingTabStrip tabs;
+
+    private FloatingActionButton circle, circle2;
 
     private View coordinatorLayoutView;
     private Snackbar snackbar;
@@ -73,7 +77,7 @@ public class FileManagerFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_filemanager, container, false);
 
-        this.coordinatorLayoutView = (View) rootView.findViewById(R.id.snackbarPosition);
+        this.coordinatorLayoutView = (View) rootView.findViewById(R.id.snackBarPosition);
 
 		mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
 
@@ -97,6 +101,7 @@ public class FileManagerFragment extends Fragment {
                         if(snackbar != null)
                             snackbar.dismiss();
                 }
+                refreshFab(position);
             }
         });
 		if(isInternetConnection(app) && app.isLogged()) {
@@ -110,6 +115,11 @@ public class FileManagerFragment extends Fragment {
 
         tabs.setViewPager(mViewPager);
         tabs.setIndicatorColor(getResources().getColor(R.color.white));
+
+        this.circle = ((FloatingActionButton) rootView.findViewById(R.id.circle));
+        this.circle.setVisibility(View.GONE);
+        this.circle2 = ((FloatingActionButton) rootView.findViewById(R.id.circle2));
+        this.circle2.setVisibility(View.GONE);
 		
         return rootView;
 	}
@@ -128,10 +138,50 @@ public class FileManagerFragment extends Fragment {
         int currentFragmentId = getCurrentFragmentIndex();
         if(listFragment == null || currentFragmentId== -1)
             return false;
-        Fragment fragment = listFragment[currentFragmentId];
+        FragmentFab fragment = listFragment[currentFragmentId];
         if(fragment==null)
             return false;
+        refreshFab(fragment);
         return fragment.back();
+    }
+
+    private void refreshFab() {
+        refreshFab(getCurrentFragmentIndex());
+    }
+
+    private void refreshFab(int currentFragmentId) {
+        if(listFragment == null || currentFragmentId== -1)
+            return;
+        FragmentFab fragment = listFragment[currentFragmentId];
+        if(fragment==null)
+            return;
+        refreshFab(fragment);
+    }
+
+    private void refreshFab(final FragmentFab currentFragment) {
+        if(currentFragment.isFabVisible(0))
+            this.circle.show();
+        else
+            this.circle.hide();
+        this.circle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentFragment.onFabClick(0, circle);
+            }
+        });
+        this.circle.setImageDrawable(currentFragment.getFabDrawable(0));
+
+        if(currentFragment.isFabVisible(1))
+            this.circle2.show();
+        else
+            this.circle2.hide();
+        this.circle2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentFragment.onFabClick(1, circle2);
+            }
+        });
+        this.circle2.setImageDrawable(currentFragment.getFabDrawable(1));
     }
 
     @Override
@@ -147,12 +197,21 @@ public class FileManagerFragment extends Fragment {
 		
 		@Override
         public Fragment getItem(int i) {
-			Fragment fragment = null;
+
+            final IListener refreshFab = new IListener() {
+                @Override
+                public void execute() {
+                    refreshFab();
+                }
+            };
+
+
+			FragmentFab fragment = null;
 			switch(i) {
-			case 0:		fragment = new FileManagerFragmentCloud();  	break;
-            case 1:		fragment = new FileManagerFragmentMyCloud(); 	break;
-			case 2:		fragment = new FileManagerFragmentLocal();		break;
-			default:	fragment = new FileManagerFragmentLocal();		break;
+                case 0:		fragment = new FileManagerFragmentCloud(refreshFab);  	break;
+                case 1:		fragment = new FileManagerFragmentMyCloud(refreshFab); 	break;
+                case 2:		fragment = new FileManagerFragmentLocal(refreshFab);		break;
+                default:	fragment = new FileManagerFragmentLocal(refreshFab);		break;
 			}
 			listFragment[i] = fragment;
             return fragment;
@@ -271,27 +330,6 @@ public class FileManagerFragment extends Fragment {
                 Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
 			}
 		}, "No", null);
-	}
-
-	public View getFab() {
-        if(listFragment[0]!=null)
-            if(listFragment[0] instanceof FileManagerFragmentCloud) {
-                FileManagerFragmentCloud fragmentFileManagerFragment = (FileManagerFragmentCloud) listFragment[0];
-                return fragmentFileManagerFragment.getFab();
-            }
-        if(listFragment.length>1)
-            if(listFragment[1]!=null)
-                if(listFragment[1] instanceof FileManagerFragmentMyCloud) {
-                    FileManagerFragmentMyCloud fragmentFileManagerFragment = (FileManagerFragmentMyCloud) listFragment[1];
-                    return fragmentFileManagerFragment.getFab();
-                }
-        if(listFragment.length>2)
-            if(listFragment[2]!=null)
-                if(listFragment[2] instanceof FileManagerFragmentLocal) {
-                    FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[2];
-                    return fragmentFileManagerFragment.getFab();
-                }
-		return null;
 	}
 
     public void goHome() {

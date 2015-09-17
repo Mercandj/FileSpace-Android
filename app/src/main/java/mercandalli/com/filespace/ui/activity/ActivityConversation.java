@@ -188,11 +188,6 @@ public class ActivityConversation extends Application {
         }
     }
 
-    @Override
-    public View getFab() {
-        return null;
-    }
-
     public void refreshList() {
         refreshList(null);
     }

@@ -22,11 +22,10 @@ package mercandalli.com.filespace.ui.activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 
 import mercandalli.com.filespace.notificationpush.NotificationPush;
-import mercandalli.com.filespace.ui.fragment.file.FileManagerFragment;
 import mercandalli.com.filespace.ui.fragment.community.CommunityFragment;
+import mercandalli.com.filespace.ui.fragment.file.FileManagerFragment;
 
 public class ActivityMain extends ApplicationDrawer {
 
@@ -59,15 +58,6 @@ public class ActivityMain extends ApplicationDrawer {
             CommunityFragment fragmentTalkManager = (CommunityFragment) fragment;
             fragmentTalkManager.updateAdapterListServer();
 		}
-	}
-
-	@Override
-	public View getFab() {
-		if(fragment instanceof FileManagerFragment) {
-			FileManagerFragment fragmentFileManager = (FileManagerFragment) fragment;
-			return fragmentFileManager.getFab();
-		}
-		return null;
 	}
 
 	@Override

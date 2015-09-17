@@ -183,11 +183,6 @@ public class ActivityRegisterLogin extends Application {
 	}
 
     @Override
-    public View getFab() {
-        return null;
-    }
-
-    @Override
 	public void refreshAdapters() {
 		
 	}

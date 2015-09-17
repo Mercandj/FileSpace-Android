@@ -107,7 +107,7 @@ public class GenealogyListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_genealogy_list, container, false);
-        this.coordinatorLayoutView = (View) rootView.findViewById(R.id.snackbarPosition);
+        this.coordinatorLayoutView = (View) rootView.findViewById(R.id.snackBarPosition);
         this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         this.message = (TextView) rootView.findViewById(R.id.message);
 

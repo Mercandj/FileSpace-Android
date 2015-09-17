@@ -63,7 +63,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:id="@+id/snackbarPosition">
+        android:id="@+id/snackBarPosition">
     </android.support.design.widget.CoordinatorLayout>
 
 </RelativeLayout>

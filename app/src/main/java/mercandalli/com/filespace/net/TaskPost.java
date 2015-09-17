@@ -105,7 +105,7 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
 			// http://stackoverflow.com/questions/9767952/how-to-add-parameters-to-httpurlconnection-using-post
 
 			HttpPost httppost = new HttpPost(url);
-						
+
 			MultipartEntity mpEntity = new MultipartEntity();
 			if(this.file != null) mpEntity.addPart("file", new FileBody(file, "*/*"));
 
@@ -118,11 +118,11 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
             Log.d("TaskPost", "url = "+url+" "+log_parameters);
 
             httppost.setEntity(mpEntity);
-			
+
 			StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
 	        String result = Base64.encodeBytes(authentication.toString().getBytes());
 	        httppost.setHeader("Authorization", "Basic " + result);
-			
+
 			HttpClient httpclient = new DefaultHttpClient();
 			HttpResponse response = httpclient.execute(httppost);
 
@@ -130,15 +130,17 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
 			InputStream inputStream = response.getEntity().getContent();
 
 			String resultString = null;
-			
+
 			// convert inputstream to string
 			if (inputStream != null)
-				resultString = convertInputStreamToString(inputStream);			
-			
+				resultString = convertInputStreamToString(inputStream);
+
 			int responseCode = response.getStatusLine().getStatusCode();
 			if(responseCode>=300)
 				resultString = "Status Code "+responseCode+". "+resultString;
 			return resultString;
+
+
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (ClientProtocolException e) {

@@ -22,19 +22,18 @@ package mercandalli.com.filespace.ui.fragment.file;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,12 +62,12 @@ import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.adapter.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapter.AdapterModelFile;
-import mercandalli.com.filespace.ui.fragment.Fragment;
+import mercandalli.com.filespace.ui.fragment.FragmentFab;
 import mercandalli.com.filespace.ui.view.DividerItemDecoration;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.StringPair;
 
-public class FileManagerFragmentLocal extends Fragment {
+public class FileManagerFragmentLocal extends FragmentFab {
 	
 	private Application app;
 	private RecyclerView listView;
@@ -79,7 +78,6 @@ public class FileManagerFragmentLocal extends Fragment {
 	private File jarvisDirectory;
 	private TextView message;
 	private SwipeRefreshLayout swipeRefreshLayout, swipeRefreshLayoutGrid;
-    Animation animOpen; ImageButton circle, circle2;
 
     private List<ModelFile> filesToCut = new ArrayList<>();
 
@@ -88,10 +86,10 @@ public class FileManagerFragmentLocal extends Fragment {
         super.onAttach(activity);
         this.app = (Application) activity;
     }
-	
-	public FileManagerFragmentLocal() {
-		super();
-	}
+
+    public FileManagerFragmentLocal(IListener refreshFab) {
+        super(refreshFab);
+    }
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -108,58 +106,6 @@ public class FileManagerFragmentLocal extends Fragment {
 
         this.gridView = (GridView) rootView.findViewById(R.id.gridView);
         this.gridView.setVisibility(View.GONE);
-
-        this.circle = (ImageButton) rootView.findViewById(R.id.circle);
-        this.circle.setVisibility(View.GONE);
-        this.circle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (filesToCut != null && filesToCut.size() != 0) {
-                    for (ModelFile file : filesToCut) {
-                        file.renameLocalByPath(jarvisDirectory.getAbsolutePath() + File.separator + file.getNameExt());
-                    }
-                    filesToCut.clear();
-                    refreshList();
-                } else {
-                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
-                    final String[] menuList = {"New Folder or File"};
-                    menuAlert.setTitle("Action");
-                    menuAlert.setItems(menuList,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int item) {
-                                    switch (item) {
-                                        case 0:
-                                            FileManagerFragmentLocal.this.app.prompt("New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
-                                                @Override
-                                                public void execute(String text) {
-                                                    createFile(jarvisDirectory.getPath() + File.separator, text);
-                                                    refreshList();
-                                                }
-                                            }, getString(R.string.cancel), null, null, "Name");
-                                            break;
-                                    }
-                                }
-                            });
-                    AlertDialog menuDrop = menuAlert.create();
-                    menuDrop.show();
-                }
-                FileManagerFragmentLocal.this.updateCircle();
-            }
-        });
-
-        this.animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
-        this.circle2 = (ImageButton) rootView.findViewById(R.id.circle2);
-        this.circle2.setVisibility(View.GONE);
-        this.circle2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(jarvisDirectory.getParent() != null) {
-                    FileManagerFragmentLocal.this.jarvisDirectory = new File(jarvisDirectory.getParentFile().getPath());
-                    //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
-                    FileManagerFragmentLocal.this.refreshList();
-                }
-            }
-        });
 
         this.jarvisDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().localFolderName);
 		if(!jarvisDirectory.exists())
@@ -239,10 +185,7 @@ public class FileManagerFragmentLocal extends Fragment {
 	public void updateAdapter() {
 		if(listView!=null && files!=null && isAdded()) {
 
-            if( circle.getVisibility()==View.GONE ) {
-                circle.setVisibility(View.VISIBLE);
-                circle.startAnimation(animOpen);
-            }
+            refreshFab();
 
 			if(files.size()==0) {
 				message.setText(getString(R.string.no_file_local));
@@ -297,7 +240,7 @@ public class FileManagerFragmentLocal extends Fragment {
                                                         public void execute(JSONObject json, String body) {
                                                             if(filesToCut != null && filesToCut.size() != 0) {
                                                                 filesToCut.clear();
-                                                                FileManagerFragmentLocal.this.updateCircle();
+                                                                refreshFab();
                                                             }
                                                             FileManagerFragmentLocal.this.app.refreshAdapters();
                                                         }
@@ -314,7 +257,7 @@ public class FileManagerFragmentLocal extends Fragment {
                                                         public void execute(JSONObject json, String body) {
                                                             if(filesToCut != null && filesToCut.size() != 0) {
                                                                 filesToCut.clear();
-                                                                FileManagerFragmentLocal.this.updateCircle();
+                                                                refreshFab();
                                                             }
                                                             FileManagerFragmentLocal.this.app.refreshAdapters();
                                                         }
@@ -325,7 +268,7 @@ public class FileManagerFragmentLocal extends Fragment {
                                         case 4:
                                             FileManagerFragmentLocal.this.filesToCut.add(modelFile);
                                             Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
-                                            updateCircle();
+                                            refreshFab();
                                             break;
                                         case 5:
                                             FileManagerFragmentLocal.this.app.alert(
@@ -370,12 +313,7 @@ public class FileManagerFragmentLocal extends Fragment {
                 }
             });
 
-            if(this.jarvisDirectory==null)
-                this.circle2.setVisibility(View.GONE);
-            /*else if(this.jarvisDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + app.getConfig().localFolderName))
-                this.circle2.setVisibility(View.GONE);*/
-            else
-                this.circle2.setVisibility(View.VISIBLE);
+
 
 
             if(FileManagerFragment.VIEW_MODE == Const.MODE_GRID) {
@@ -446,7 +384,7 @@ public class FileManagerFragmentLocal extends Fragment {
                                                             public void execute(JSONObject json, String body) {
                                                                 if (filesToCut != null && filesToCut.size() != 0) {
                                                                     filesToCut.clear();
-                                                                    FileManagerFragmentLocal.this.updateCircle();
+                                                                    refreshFab();
                                                                 }
                                                                 FileManagerFragmentLocal.this.app.refreshAdapters();
                                                             }
@@ -463,7 +401,7 @@ public class FileManagerFragmentLocal extends Fragment {
                                                             public void execute(JSONObject json, String body) {
                                                                 if (filesToCut != null && filesToCut.size() != 0) {
                                                                     filesToCut.clear();
-                                                                    FileManagerFragmentLocal.this.updateCircle();
+                                                                    refreshFab();
                                                                 }
                                                                 FileManagerFragmentLocal.this.app.refreshAdapters();
                                                             }
@@ -474,7 +412,7 @@ public class FileManagerFragmentLocal extends Fragment {
                                             case 3:
                                                 FileManagerFragmentLocal.this.filesToCut.add(modelFile);
                                                 Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
-                                                updateCircle();
+                                                refreshFab();
                                                 break;
                                             case 4:
                                                 FileManagerFragmentLocal.this.app.alert(
@@ -543,14 +481,10 @@ public class FileManagerFragmentLocal extends Fragment {
         }
         else if(filesToCut != null && filesToCut.size() != 0) {
             filesToCut.clear();
-            updateCircle();
+            refreshFab();
             return true;
         }
         return false;
-    }
-
-    public View getFab() {
-        return circle;
     }
 
     public void goHome() {
@@ -571,13 +505,79 @@ public class FileManagerFragmentLocal extends Fragment {
         updateAdapter();
     }
 
-    public void updateCircle() {
-        if(filesToCut != null && filesToCut.size() != 0)
-            this.circle.setImageDrawable(app.getDrawable(R.drawable.ic_menu_paste_holo_dark));
-        else
-            this.circle.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
+    @Override
+    public void onFocus() { }
+
+    @Override
+    public void onFabClick(int fab_id, FloatingActionButton fab) {
+
+        switch (fab_id) {
+            case 0:
+                if (filesToCut != null && filesToCut.size() != 0) {
+                    for (ModelFile file : filesToCut) {
+                        file.renameLocalByPath(jarvisDirectory.getAbsolutePath() + File.separator + file.getNameExt());
+                    }
+                    filesToCut.clear();
+                    refreshList();
+                } else {
+                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
+                    final String[] menuList = {"New Folder or File"};
+                    menuAlert.setTitle("Action");
+                    menuAlert.setItems(menuList,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int item) {
+                                    switch (item) {
+                                        case 0:
+                                            FileManagerFragmentLocal.this.app.prompt("New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
+                                                @Override
+                                                public void execute(String text) {
+                                                    createFile(jarvisDirectory.getPath() + File.separator, text);
+                                                    refreshList();
+                                                }
+                                            }, getString(R.string.cancel), null, null, "Name");
+                                            break;
+                                    }
+                                }
+                            });
+                    AlertDialog menuDrop = menuAlert.create();
+                    menuDrop.show();
+                }
+                refreshFab();
+                break;
+
+            case 1:
+                if(jarvisDirectory.getParent() != null) {
+                    FileManagerFragmentLocal.this.jarvisDirectory = new File(jarvisDirectory.getParentFile().getPath());
+                    //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
+                    FileManagerFragmentLocal.this.refreshList();
+                }
+                break;
+        }
     }
 
     @Override
-    public void onFocus() { }
+    public boolean isFabVisible(int fab_id) {
+        switch (fab_id) {
+            case 0:
+                return true;
+            case 1:
+                return this.jarvisDirectory != null;
+        }
+
+        return false;
+    }
+
+    @Override
+    public Drawable getFabDrawable(int fab_id) {
+        switch (fab_id) {
+            case 0:
+                if(filesToCut != null && filesToCut.size() != 0)
+                    return app.getDrawable(R.drawable.ic_menu_paste_holo_dark);
+                else
+                    return app.getDrawable(R.drawable.add);
+            case 1:
+                return app.getDrawable(R.drawable.arrow_up);
+        }
+        return app.getDrawable(R.drawable.add);
+    }
 }

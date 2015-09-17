@@ -30,9 +30,7 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spanned;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -193,8 +191,6 @@ public abstract class Application extends AppCompatActivity {
 
 	public abstract void refreshAdapters();
 	public abstract void updateAdapters();
-
-    public abstract View getFab();
 
     private String buildTagViews(NdefMessage[] msgs){
         if (msgs == null || msgs.length == 0) {
