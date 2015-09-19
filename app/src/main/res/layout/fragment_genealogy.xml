@@ -17,12 +17,12 @@
         custom:pstsIndicatorHeight="2dp"
         android:elevation="4dp"/>
 
-    <android.support.v4.view.ViewPager
+    <mercandalli.com.filespace.ui.view.NonSwipeableViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tabs" >
 
-    </android.support.v4.view.ViewPager>
+    </mercandalli.com.filespace.ui.view.NonSwipeableViewPager>
 
 </RelativeLayout>

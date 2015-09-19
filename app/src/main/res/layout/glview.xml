@@ -1,0 +1,51 @@
+<!--
+	ESIEE OpenSource Project
+		MARTEL Andy
+		MERCANDALLI Jonathan
+-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <mercandalli.com.filespace.physics.MyGLSurfaceView
+        android:id="@+id/GLview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+    </mercandalli.com.filespace.physics.MyGLSurfaceView>
+
+    <Button
+        android:id="@+id/left"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/ic_circle_button"
+        android:layout_above="@+id/back"
+        android:layout_toStartOf="@+id/back"/>
+
+    <Button
+        android:id="@+id/forward"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/ic_circle_button"
+        android:layout_above="@+id/right"
+        android:layout_alignStart="@+id/back"/>
+
+    <Button
+        android:id="@+id/right"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/ic_circle_button"
+        android:layout_above="@+id/back"
+        android:layout_alignParentEnd="true"/>
+
+    <Button
+        android:id="@+id/back"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/ic_circle_button"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/right"/>
+
+</RelativeLayout>

@@ -33,6 +33,7 @@ import mercandalli.com.filespace.model.ModelGenealogyPerson;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.activity.ApplicationDrawer;
 import mercandalli.com.filespace.ui.fragment.Fragment;
+import mercandalli.com.filespace.ui.view.NonSwipeableViewPager;
 import mercandalli.com.filespace.ui.view.PagerSlidingTabStrip;
 
 
@@ -42,7 +43,7 @@ public class GenealogyFragment extends Fragment {
     private static final int INIT_FRAGMENT = 0;
     public static Fragment listFragment[] = new Fragment[NB_FRAGMENT];
     private Application app;
-    private ViewPager mViewPager;
+    private NonSwipeableViewPager mViewPager;
     private FileManagerFragmentPagerAdapter mPagerAdapter;
     private PagerSlidingTabStrip tabs;
 
@@ -61,7 +62,8 @@ public class GenealogyFragment extends Fragment {
         mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
 
         tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
-        mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
+        mViewPager = (NonSwipeableViewPager) rootView.findViewById(R.id.pager);
+        mViewPager.setNonSwipeableItem(2);
         mViewPager.setAdapter(mPagerAdapter);
         tabs.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override

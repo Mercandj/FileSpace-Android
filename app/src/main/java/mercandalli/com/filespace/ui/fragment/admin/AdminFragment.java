@@ -32,16 +32,17 @@ import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.activity.ApplicationDrawer;
 import mercandalli.com.filespace.ui.fragment.EmptyFragment;
 import mercandalli.com.filespace.ui.fragment.Fragment;
+import mercandalli.com.filespace.ui.view.NonSwipeableViewPager;
 import mercandalli.com.filespace.ui.view.PagerSlidingTabStrip;
 
 
 public class AdminFragment extends Fragment {
 
-    private static final int NB_FRAGMENT = 7;
+    private static final int NB_FRAGMENT = 8;
     private static final int INIT_FRAGMENT = 0;
     public static Fragment listFragment[] = new Fragment[NB_FRAGMENT];
     private Application app;
-    private ViewPager mViewPager;
+    private NonSwipeableViewPager mViewPager;
     private FileManagerFragmentPagerAdapter mPagerAdapter;
     private PagerSlidingTabStrip tabs;
 
@@ -60,14 +61,15 @@ public class AdminFragment extends Fragment {
         mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
 
         tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
-        mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
+        mViewPager = (NonSwipeableViewPager) rootView.findViewById(R.id.pager);
+        mViewPager.setNonSwipeableItem(7);
         mViewPager.setAdapter(mPagerAdapter);
         tabs.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 AdminFragment.this.app.invalidateOptionsMenu();
-                if(position < NB_FRAGMENT)
-                    if(listFragment[position] != null)
+                if (position < NB_FRAGMENT)
+                    if (listFragment[position] != null)
                         listFragment[position].onFocus();
             }
         });
@@ -122,6 +124,7 @@ public class AdminFragment extends Fragment {
                 case 2:		fragment = new UserAddFragment(); 	    break;
                 case 5:		fragment = new RequestFragment();    	break;
                 case 6:		fragment = new GameFragment();    	    break;
+                case 7:		fragment = new StatisticsFragment();    break;
                 default:    fragment = new EmptyFragment(); 	    break;
             }
             listFragment[i] = fragment;
@@ -144,6 +147,7 @@ public class AdminFragment extends Fragment {
                 case 4:		title = "USER LICENCES";    break;
                 case 5:		title = "REQUEST";          break;
                 case 6:		title = "GAME";             break;
+                case 7:		title = "STATS";            break;
             }
             return title;
         }
