@@ -22,8 +22,9 @@ package mercandalli.com.filespace.ui.fragment.genealogy;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,7 +32,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,8 +51,8 @@ import mercandalli.com.filespace.model.ModelGenealogyPerson;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.adapter.AdapterModelGenealogyUser;
-import mercandalli.com.filespace.ui.dialog.DialogAddGenealogyUser;
-import mercandalli.com.filespace.ui.fragment.Fragment;
+import mercandalli.com.filespace.ui.dialog.DialogAddGenealogyPerson;
+import mercandalli.com.filespace.ui.fragment.FragmentFab;
 import mercandalli.com.filespace.ui.view.DividerItemDecoration;
 import mercandalli.com.filespace.util.StringPair;
 import mercandalli.com.filespace.util.StringUtils;
@@ -62,7 +62,7 @@ import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 /**
  * Created by Jonathan on 28/08/2015.
  */
-public class GenealogyListFragment extends Fragment {
+public class GenealogyListFragment extends FragmentFab {
 
     private Application app;
     private View rootView;
@@ -78,21 +78,25 @@ public class GenealogyListFragment extends Fragment {
     private IModelGenealogyUserListener onSelect;
 
     private View coordinatorLayoutView;
-    private Snackbar snackbar;
-
-    private ImageButton circle;
 
     public static boolean MODE_SELECTION_FATHER = false;
     public static boolean MODE_SELECTION_MOTHER = false;
+    public static boolean MODE_SELECTION_PARTNER = false;
     public static void resetMode() {
         MODE_SELECTION_FATHER = false;
         MODE_SELECTION_MOTHER = false;
+        MODE_SELECTION_PARTNER = false;
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (Application) activity;
+    }
+
+    public GenealogyListFragment(IListener refreshFab, IModelGenealogyUserListener onSelect) {
+        super(refreshFab);
+        this.onSelect = onSelect;
     }
 
     public GenealogyListFragment(IModelGenealogyUserListener onSelect) {
@@ -110,14 +114,6 @@ public class GenealogyListFragment extends Fragment {
         this.coordinatorLayoutView = (View) rootView.findViewById(R.id.snackBarPosition);
         this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         this.message = (TextView) rootView.findViewById(R.id.message);
-
-        this.circle = (ImageButton) this.rootView.findViewById(R.id.circle);
-        this.circle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                add();
-            }
-        });
 
         this.recyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
         this.recyclerView.setHasFixedSize(true);
@@ -189,9 +185,8 @@ public class GenealogyListFragment extends Fragment {
             this.swipeRefreshLayout.setRefreshing(false);
 
             if(!isInternetConnection(app)) {
-                this.circle.setVisibility(View.GONE);
-                this.recyclerView.setVisibility(View.INVISIBLE);
-                updateNoInternet();
+                this.setListVisibility(false);
+                this.refreshFab.execute();
             }
         }
     }
@@ -200,7 +195,7 @@ public class GenealogyListFragment extends Fragment {
         if(this.recyclerView!=null && this.list!=null && this.isAdded()) {
             this.circularProgressBar.setVisibility(View.GONE);
 
-            this.circle.setVisibility(View.VISIBLE);
+            this.refreshFab.execute();
             this.recyclerView.setVisibility(View.VISIBLE);
 
             if(this.list.size()==0) {
@@ -267,16 +262,23 @@ public class GenealogyListFragment extends Fragment {
                 public void onItemClick(View view, int position) {
                     if (MODE_SELECTION_FATHER) {
                         if (app.dialog != null) {
-                            if (app.dialog instanceof DialogAddGenealogyUser) {
-                                ((DialogAddGenealogyUser) app.dialog).setFather(list.get(position));
+                            if (app.dialog instanceof DialogAddGenealogyPerson) {
+                                ((DialogAddGenealogyPerson) app.dialog).setFather(list.get(position));
                                 app.dialog.show();
                             }
                         }
 
                     } else if (MODE_SELECTION_MOTHER) {
                         if (app.dialog != null) {
-                            if (app.dialog instanceof DialogAddGenealogyUser) {
-                                ((DialogAddGenealogyUser) app.dialog).setMother(list.get(position));
+                            if (app.dialog instanceof DialogAddGenealogyPerson) {
+                                ((DialogAddGenealogyPerson) app.dialog).setMother(list.get(position));
+                                app.dialog.show();
+                            }
+                        }
+                    } else if (MODE_SELECTION_PARTNER) {
+                        if (app.dialog != null) {
+                            if (app.dialog instanceof DialogAddGenealogyPerson) {
+                                ((DialogAddGenealogyPerson) app.dialog).addPartner(list.get(position));
                                 app.dialog.show();
                             }
                         }
@@ -332,28 +334,32 @@ public class GenealogyListFragment extends Fragment {
         //refreshList();
     }
 
-    private void updateNoInternet() {
-        if(!isInternetConnection(app)) {
-            this.snackbar = Snackbar.make(this.coordinatorLayoutView, getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE)
-                    .setAction(getString(R.string.refresh), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if(isInternetConnection(app))
-                                onFocus();
-                            else
-                                updateNoInternet();
-                        }
-                    });
-            this.snackbar.show();
-        }
+    private void setListVisibility(boolean visible) {
+        if(this.recyclerView != null)
+            this.recyclerView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 
     public void add() {
-        app.dialog = new DialogAddGenealogyUser(app,new IPostExecuteListener() {
+        app.dialog = new DialogAddGenealogyPerson(app,new IPostExecuteListener() {
             @Override
             public void execute(JSONObject json, String body) {
                 refreshList();
             }
         });
+    }
+
+    @Override
+    public void onFabClick(int fab_id, FloatingActionButton fab) {
+        add();
+    }
+
+    @Override
+    public boolean isFabVisible(int fab_id) {
+        return true;
+    }
+
+    @Override
+    public Drawable getFabDrawable(int fab_id) {
+        return app.getDrawable(android.R.drawable.ic_input_add);
     }
 }

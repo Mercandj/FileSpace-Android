@@ -101,6 +101,6 @@
     <string name="genealogy_first_name_2">First name 2</string>
     <string name="genealogy_first_name_3">First name 3</string>
     <string name="genealogy_last_name">Last name</string>
-    <string name="genealogy_add_user">Add user</string>
+    <string name="genealogy_add_person">Add person</string>
 
 </resources>

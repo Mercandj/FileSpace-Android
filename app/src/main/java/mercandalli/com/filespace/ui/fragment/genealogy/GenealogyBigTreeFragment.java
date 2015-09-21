@@ -20,7 +20,9 @@
 package mercandalli.com.filespace.ui.fragment.genealogy;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,11 +34,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelGenealogyPerson;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.ui.fragment.Fragment;
+import mercandalli.com.filespace.ui.fragment.FragmentFab;
 import mercandalli.com.filespace.ui.view.GenealogyBigTreeView;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
@@ -44,7 +47,7 @@ import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 /**
  * Created by Jonathan on 28/08/2015.
  */
-public class GenealogyBigTreeFragment extends Fragment {
+public class GenealogyBigTreeFragment extends FragmentFab {
 
     private Application app;
     private View rootView;
@@ -66,6 +69,10 @@ public class GenealogyBigTreeFragment extends Fragment {
 
     public GenealogyBigTreeFragment(Application app) {
         this.app = app;
+    }
+
+    public GenealogyBigTreeFragment(IListener refreshFab) {
+        super(refreshFab);
     }
 
     @Override
@@ -129,5 +136,20 @@ public class GenealogyBigTreeFragment extends Fragment {
             ).execute();
         }
         this.bigTreeView.select(genealogyUser);
+    }
+
+    @Override
+    public void onFabClick(int fab_id, FloatingActionButton fab) {
+
+    }
+
+    @Override
+    public boolean isFabVisible(int fab_id) {
+        return false;
+    }
+
+    @Override
+    public Drawable getFabDrawable(int fab_id) {
+        return null;
     }
 }

@@ -25,4 +25,27 @@
 
     </mercandalli.com.filespace.ui.view.NonSwipeableViewPager>
 
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/snackBarPosition">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/circle"
+            android:transitionName="transitionFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="25dp"
+            android:elevation="@dimen/circle_button_elevation_high"
+            android:scaleType="fitXY"
+            android:src="@drawable/add"
+            android:stateListAnimator="@anim/circle_button_elevation"
+            android:tint="@android:color/white"
+            app:layout_anchor="@id/snackBarPosition"
+            app:layout_anchorGravity="bottom|right|end"/>
+
+    </android.support.design.widget.CoordinatorLayout>
+
 </RelativeLayout>

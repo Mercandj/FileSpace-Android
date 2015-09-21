@@ -101,21 +101,36 @@
         android:clickable="true"
         android:focusable="true"
         android:scrollbars="vertical"
-        android:layout_below="@+id/brothers_sisters"
-        android:layout_marginTop="6dp"/>
+        android:layout_below="@+id/switch_brothers_sisters_marriages"
+        android:layout_marginTop="2dp"/>
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/switch_brothers_sisters_marriages"
+        android:layout_below="@+id/selected"
+        android:textOff="Brothers &amp; Sisters"
+        android:textOn="Marriages"
+        android:showText="false"
+        android:singleLine="true"
+        android:checked="false"
+        android:layout_marginRight="12dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="8dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Brothers &amp; Sisters"
-        android:id="@+id/brothers_sisters"
-        android:layout_below="@+id/selected"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="22dp"
-        android:textSize="12sp"
+        android:textSize="13sp"
         android:textColor="#606060"
-        android:textStyle="italic"/>
+        android:textStyle="italic"
+        android:id="@+id/tv_brothers_sisters_marriages"
+        android:layout_alignTop="@+id/switch_brothers_sisters_marriages"
+        android:layout_toEndOf="@+id/switch_brothers_sisters_marriages"
+        android:layout_marginTop="4dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -123,7 +138,9 @@
         android:layout_below="@+id/parents"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
-        android:id="@+id/selected">
+        android:id="@+id/selected"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp">
 
         <EditText
             android:id="@+id/user"
@@ -155,6 +172,5 @@
             android:textSize="12sp"
             android:textColor="#606060"/>
     </RelativeLayout>
-
 
 </RelativeLayout>

@@ -42,28 +42,4 @@
         android:layout_centerVertical="true"
         android:visibility="gone" />
 
-    <ImageButton
-        android:id="@+id/circle"
-        android:transitionName="transitionFab"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="25dp"
-        android:background="@drawable/circle_button_ripple"
-        android:elevation="@dimen/circle_button_elevation_high"
-        android:padding="15dp"
-        android:scaleType="fitXY"
-        android:src="@android:drawable/ic_input_add"
-        android:stateListAnimator="@anim/circle_button_elevation"
-        android:tint="@android:color/white" />
-
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/snackBarPosition">
-    </android.support.design.widget.CoordinatorLayout>
-
 </RelativeLayout>

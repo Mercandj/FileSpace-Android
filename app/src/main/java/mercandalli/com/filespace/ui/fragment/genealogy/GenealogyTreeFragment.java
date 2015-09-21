@@ -21,14 +21,18 @@ package mercandalli.com.filespace.ui.fragment.genealogy;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,13 +44,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IModelGenealogyUserListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelGenealogyPerson;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.adapter.AdapterModelGenealogyUser;
-import mercandalli.com.filespace.ui.fragment.Fragment;
+import mercandalli.com.filespace.ui.fragment.FragmentFab;
 import mercandalli.com.filespace.ui.view.DividerItemDecoration;
 import mercandalli.com.filespace.util.StringPair;
 import mercandalli.com.filespace.util.StringUtils;
@@ -56,7 +61,7 @@ import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 /**
  * Created by Jonathan on 28/08/2015.
  */
-public class GenealogyTreeFragment extends Fragment {
+public class GenealogyTreeFragment extends FragmentFab {
 
     private Application app;
     private View rootView;
@@ -65,7 +70,8 @@ public class GenealogyTreeFragment extends Fragment {
     private boolean requestReady = true;
 
     private EditText et_user, et_user_description, et_father, et_mother, et_father_description, et_mother_description;
-    private TextView brothers_sisters;
+    private Switch switch_brothers_sisters_marriages;
+    private TextView tv_brothers_sisters_marriages;
 
     private List<ModelGenealogyPerson> list;
     private RecyclerView recyclerView;
@@ -86,6 +92,10 @@ public class GenealogyTreeFragment extends Fragment {
         this.app = app;
     }
 
+    public GenealogyTreeFragment(IListener refreshFab) {
+        super(refreshFab);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_genealogy_tree, container, false);
@@ -97,9 +107,23 @@ public class GenealogyTreeFragment extends Fragment {
         this.et_mother = (EditText) this.rootView.findViewById(R.id.et_mother);
         this.et_mother_description = (EditText) this.rootView.findViewById(R.id.et_mother_description);
 
-        this.brothers_sisters = (TextView) this.rootView.findViewById(R.id.brothers_sisters);
-        this.brothers_sisters.setVisibility(View.INVISIBLE);
-
+        this.tv_brothers_sisters_marriages = (TextView) this.rootView.findViewById(R.id.tv_brothers_sisters_marriages);
+        this.tv_brothers_sisters_marriages.setVisibility(View.INVISIBLE);
+        this.tv_brothers_sisters_marriages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch_brothers_sisters_marriages.setChecked(!switch_brothers_sisters_marriages.isChecked());
+            }
+        });
+        this.switch_brothers_sisters_marriages = (Switch) this.rootView.findViewById(R.id.switch_brothers_sisters_marriages);
+        this.switch_brothers_sisters_marriages.setVisibility(View.INVISIBLE);
+        this.switch_brothers_sisters_marriages.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                tv_brothers_sisters_marriages.setText(isChecked?"Marriages":"Brothers & Sisters");
+                refreshList();
+            }
+        });
 
         this.recyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
         this.recyclerView.setHasFixedSize(true);
@@ -294,8 +318,13 @@ public class GenealogyTreeFragment extends Fragment {
     }
 
     public void refreshList() {
-        if(genealogyPerson != null)
-            this.list = genealogyPerson.getBrothersSisters();
+        if(genealogyPerson != null) {
+            if(switch_brothers_sisters_marriages.isChecked()) {
+                this.list = genealogyPerson.getPartners();
+            }
+            else
+                this.list = genealogyPerson.getBrothersSisters();
+        }
         else
             this.list = new ArrayList<>();
         updateAdapter();
@@ -326,15 +355,14 @@ public class GenealogyTreeFragment extends Fragment {
                     return false;
                 }
             });
-
         }
 
-        if(this.list == null)
-            this.brothers_sisters.setVisibility(View.INVISIBLE);
-        else if(this.list.size() == 0)
-            this.brothers_sisters.setVisibility(View.INVISIBLE);
-        else
-            this.brothers_sisters.setVisibility(View.VISIBLE);
+        int listVisible = genealogyPerson == null ? View.INVISIBLE : View.VISIBLE;
+        if(genealogyPerson != null)
+            if(genealogyPerson.getPartners().size() == 0 && genealogyPerson.getBrothersSisters().size() == 0)
+                listVisible = View.INVISIBLE;
+        this.tv_brothers_sisters_marriages.setVisibility(listVisible);
+        this.switch_brothers_sisters_marriages.setVisibility(listVisible);
     }
 
     @Override
@@ -349,5 +377,20 @@ public class GenealogyTreeFragment extends Fragment {
 
     public void select(ModelGenealogyPerson genealogyUser_) {
         genealogyPerson = genealogyUser_;
+    }
+
+    @Override
+    public void onFabClick(int fab_id, FloatingActionButton fab) {
+
+    }
+
+    @Override
+    public boolean isFabVisible(int fab_id) {
+        return false;
+    }
+
+    @Override
+    public Drawable getFabDrawable(int fab_id) {
+        return null;
     }
 }

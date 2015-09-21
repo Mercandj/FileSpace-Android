@@ -13,9 +13,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-
+        android:layout_height="wrap_content" >
 
         <EditText
             android:id="@+id/et_last_name"
@@ -26,7 +24,10 @@
             android:padding="10dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/center">
+            android:layout_toStartOf="@+id/center"
+            android:lines="1"
+            android:maxLines="1"
+            android:singleLine="true">
         </EditText>
 
 
@@ -40,7 +41,10 @@
             android:ems="10"
             android:gravity="center_vertical"
             android:hint="@string/genealogy_first_name_1"
-            android:padding="10dp"/>
+            android:padding="10dp"
+            android:lines="1"
+            android:maxLines="1"
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/et_first_name_2"
@@ -49,10 +53,13 @@
             android:layout_alignEnd="@+id/et_last_name"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/et_first_name_1"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="4dp"
             android:ems="10"
             android:hint="@string/genealogy_first_name_2"
-            android:padding="10dp">
+            android:padding="10dp"
+            android:lines="1"
+            android:maxLines="1"
+            android:singleLine="true">
         </EditText>
 
         <EditText
@@ -64,7 +71,10 @@
             android:padding="10dp"
             android:layout_alignTop="@+id/et_first_name_2"
             android:layout_alignParentEnd="true"
-            android:layout_alignStart="@+id/et_first_name_1">
+            android:layout_alignStart="@+id/et_first_name_1"
+            android:lines="1"
+            android:maxLines="1"
+            android:singleLine="true">
         </EditText>
 
 
@@ -73,11 +83,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignStart="@+id/et_first_name_3"
             android:layout_below="@+id/bt_father"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="2dp"
             android:text="@string/add"
-            />
+            android:layout_alignStart="@+id/et_first_name_3"/>
 
         <RelativeLayout
             android:id="@+id/center"
@@ -88,13 +97,14 @@
         </RelativeLayout>
 
         <CheckBox
-            android:id="@+id/sexe"
+            android:id="@+id/sex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/add"
             android:layout_alignEnd="@+id/et_first_name_2"
             android:layout_alignParentStart="true"
-            android:text="Is woman"/>
+            android:text="Is woman"
+            android:layout_marginBottom="6dp"/>
 
         <EditText
             android:id="@+id/et_date_birth"
@@ -103,10 +113,13 @@
             android:layout_alignEnd="@+id/et_first_name_3"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/et_first_name_2"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:ems="10"
             android:hint="Birth date 1990-12-25"
-            android:inputType="date"/>
+            android:inputType="date"
+            android:lines="1"
+            android:maxLines="1"
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/et_date_death"
@@ -115,46 +128,87 @@
             android:layout_alignEnd="@+id/et_first_name_3"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/et_date_birth"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:ems="10"
             android:hint="Death date 1990-12-25"
-            android:inputType="date"/>
+            android:inputType="date"
+            android:lines="1"
+            android:maxLines="1"
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/et_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/et_first_name_3"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/et_date_death"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="23dp"
             android:ems="10"
             android:hint="Notes"
             android:maxLines="4"
             android:lines="2"
             android:minLines="2"
-            android:gravity="left|top"/>
+            android:gravity="left|top"
+            android:layout_below="@+id/tv_marriage"
+            android:layout_alignParentStart="true"
+            android:layout_alignEnd="@+id/bt_marriage"/>
 
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="42dp"
             android:text="Father"
             android:id="@+id/bt_father"
             android:layout_below="@+id/et_description"
             android:layout_alignParentStart="true"
-            android:layout_alignEnd="@+id/sexe"
+            android:layout_alignEnd="@+id/sex"
             android:layout_marginTop="5dp"/>
 
         <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="42dp"
             android:text="Mother"
             android:id="@+id/bt_mother"
             android:layout_above="@+id/add"
             android:layout_alignParentEnd="true"
             android:layout_alignStart="@+id/add"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/tv_marriage"
+            android:layout_below="@+id/et_date_death"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="7dp"
+            android:layout_toStartOf="@+id/bt_remove_marriage"
+            android:padding="5dp"
+            android:textSize="13sp"
+            android:hint="Marriages"/>
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:text="Add Marriage"
+            android:id="@+id/bt_marriage"
+            android:layout_alignTop="@+id/tv_marriage"
+            android:layout_alignParentEnd="true"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:layout_marginTop="-4dp"
+            android:layout_toEndOf="@+id/tv_marriage"/>
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:text="Remove Marriage"
+            android:id="@+id/bt_remove_marriage"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:layout_below="@+id/bt_marriage"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="-8dp"/>
     </RelativeLayout>
 
 </ScrollView>

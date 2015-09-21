@@ -199,7 +199,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                         }
                     }
                 },
-                "Community",
+                "Workspace",
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -234,7 +234,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                                 .getPackage().getName());
 
                         // Display an hint to the user about what he should say.
-                        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Jarvis");
+                        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "FileSpace");
 
                         // Given an hint to the recognizer about what the user is going to say
                         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
@@ -292,7 +292,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                 if (!textMatchList.isEmpty()) {
                     Interpreter interpreter = new InterpreterMain(this.app);
                     String input = textMatchList.get(0);
-                    addItemList("Jarvis", interpreter.interpret(input));
+                    addItemList("FileSpace", interpreter.interpret(input));
                 }
         }
 

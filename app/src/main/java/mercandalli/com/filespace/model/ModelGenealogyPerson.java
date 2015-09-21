@@ -35,7 +35,7 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.ui.dialog.DialogAddGenealogyUser;
+import mercandalli.com.filespace.ui.dialog.DialogAddGenealogyPerson;
 import mercandalli.com.filespace.util.HtmlUtils;
 import mercandalli.com.filespace.util.StringPair;
 import mercandalli.com.filespace.util.StringUtils;
@@ -52,7 +52,7 @@ public class ModelGenealogyPerson extends Model {
 
     public ModelGenealogyPerson mother, father;
 
-    public List<ModelGenealogyPerson> brothers_sisters_from_mother, brothers_sisters_from_father;
+    public List<ModelGenealogyPerson> brothers_sisters_from_mother, brothers_sisters_from_father, partners;
 
 	public ModelGenealogyPerson() {
 		super();
@@ -131,7 +131,7 @@ public class ModelGenealogyPerson extends Model {
     public void modify(IPostExecuteListener listener) {
         if(this.app != null) {
             if(this.app.getConfig().isUserAdmin() && this.id != this.app.getConfig().getUserId()) {
-                app.dialog = new DialogAddGenealogyUser(app, listener, app.getString(R.string.modify), this);
+                app.dialog = new DialogAddGenealogyPerson(app, listener, app.getString(R.string.modify), this);
                 return;
             }
         }
@@ -215,6 +215,12 @@ public class ModelGenealogyPerson extends Model {
             }
         }
         return result;
+    }
+
+    public List<ModelGenealogyPerson> getPartners() {
+        if(this.partners != null)
+            return this.partners;
+        return new ArrayList<>();
     }
 
     public boolean isValid() {

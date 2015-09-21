@@ -20,7 +20,9 @@
 package mercandalli.com.filespace.ui.fragment.genealogy;
 
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,12 +42,13 @@ import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelInformation;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.adapter.AdapterModelInformation;
-import mercandalli.com.filespace.ui.fragment.Fragment;
+import mercandalli.com.filespace.ui.fragment.FragmentFab;
 import mercandalli.com.filespace.util.StringPair;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
@@ -53,7 +56,7 @@ import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 /**
  * Created by Jonathan on 28/08/2015.
  */
-public class GenealogyStatisticsFragment extends Fragment {
+public class GenealogyStatisticsFragment extends FragmentFab {
 
     private Application app;
     private View rootView;
@@ -75,8 +78,27 @@ public class GenealogyStatisticsFragment extends Fragment {
         super();
     }
 
+    @Override
+    public void onFabClick(int fab_id, FloatingActionButton fab) {
+
+    }
+
+    @Override
+    public boolean isFabVisible(int fab_id) {
+        return false;
+    }
+
+    @Override
+    public Drawable getFabDrawable(int fab_id) {
+        return null;
+    }
+
     public GenealogyStatisticsFragment(Application app) {
         this.app = app;
+    }
+
+    public GenealogyStatisticsFragment(IListener refreshFab) {
+        super(refreshFab);
     }
 
     @Override

@@ -58,7 +58,6 @@ public class FileManagerFragment extends Fragment {
     private PagerSlidingTabStrip tabs;
 
     private FloatingActionButton circle, circle2;
-
     private View coordinatorLayoutView;
     private Snackbar snackbar;
 
@@ -169,7 +168,10 @@ public class FileManagerFragment extends Fragment {
                 currentFragment.onFabClick(0, circle);
             }
         });
-        this.circle.setImageDrawable(currentFragment.getFabDrawable(0));
+        if(currentFragment.getFabDrawable(0) != null)
+            this.circle.setImageDrawable(currentFragment.getFabDrawable(0));
+        else
+            this.circle.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
 
         if(currentFragment.isFabVisible(1))
             this.circle2.show();
@@ -181,7 +183,10 @@ public class FileManagerFragment extends Fragment {
                 currentFragment.onFabClick(1, circle2);
             }
         });
-        this.circle2.setImageDrawable(currentFragment.getFabDrawable(1));
+        if(currentFragment.getFabDrawable(1) != null)
+            this.circle2.setImageDrawable(currentFragment.getFabDrawable(1));
+        else
+            this.circle2.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
     }
 
     @Override
@@ -204,7 +209,6 @@ public class FileManagerFragment extends Fragment {
                     refreshFab();
                 }
             };
-
 
 			FragmentFab fragment = null;
 			switch(i) {
