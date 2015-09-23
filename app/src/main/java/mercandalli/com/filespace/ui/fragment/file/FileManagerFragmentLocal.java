@@ -314,8 +314,6 @@ public class FileManagerFragmentLocal extends FragmentFab {
             });
 
 
-
-
             if(FileManagerFragment.VIEW_MODE == Const.MODE_GRID) {
                 this.gridView.setVisibility(View.VISIBLE);
                 this.swipeRefreshLayoutGrid.setVisibility(View.VISIBLE);

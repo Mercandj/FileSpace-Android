@@ -34,10 +34,10 @@ public enum ModelFileTypeENUM {
     EXCEL(new ModelFileType("Excel", new String[] {"xlsx"})),
     VCF(new ModelFileType("Business card", new String[] {"vcf"})),
     PDF(new ModelFileType("Pdf","pdf")),
-    DIRECTORY(new ModelFileType("Directory","dir")),
 	SOURCE(new ModelFileType("Source code", new String[] {"java", "c", "cs", "cpp", "sql", "php", "html", "js", "css"})),
 	THREE_D(new ModelFileType("3d model", new String[] {"3ds", "obj", "max"})),
-	ISO(new ModelFileType("Optical disc", new String[] {"iso"}));
+	ISO(new ModelFileType("Optical disc", new String[] {"iso"})),
+	DIRECTORY(new ModelFileType("Directory", new String[] {"dir", ""}));
 	
 	public ModelFileType type;
 	

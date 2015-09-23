@@ -16,6 +16,8 @@
         android:padding="10dp"
         android:layout_below="@+id/my_toolbar">
 
+
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,7 +27,9 @@
             android:layout_marginBottom="10dp"
             android:layout_above="@+id/size"
             android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -36,16 +40,9 @@
             android:layout_above="@+id/play"
             android:layout_alignParentEnd="true"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="5dp" />
-
-        <SeekBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/seekBar"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -56,7 +53,7 @@
             android:layout_alignParentStart="true"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:padding="100dp"
+            android:padding="72dp"
             android:layout_alignParentEnd="true"
             android:layout_above="@+id/title"/>
 
@@ -66,7 +63,7 @@
             android:transitionName="transitionIcon"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_above="@+id/seekBar"
+            android:layout_above="@+id/rl_sliderNumber"
             android:layout_centerHorizontal="true"
             android:background="@drawable/circle_button_ripple_music"
             android:elevation="@dimen/circle_button_elevation_high"
@@ -79,7 +76,7 @@
             android:id="@+id/play_position"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_above="@+id/seekBar"
+            android:layout_above="@+id/rl_sliderNumber"
             android:layout_centerHorizontal="true">
         </RelativeLayout>
         <mercandalli.com.filespace.ui.view.PlayPauseView
@@ -87,7 +84,7 @@
             android:transitionName="transitionIcon"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_above="@+id/seekBar"
+            android:layout_above="@+id/rl_sliderNumber"
             android:clickable="true"
             android:foreground="?android:selectableItemBackground"
             android:elevation="@dimen/circle_button_elevation_high"
@@ -126,6 +123,29 @@
             android:layout_toStartOf="@+id/play_position"
             android:layout_marginRight="32dp"
             android:layout_marginTop="10dp" />
+
+        <!-- SLIDER WITH NUMBER INDICATOR-->
+        <RelativeLayout
+            xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/rl_sliderNumber"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="6dp">
+
+            <mercandalli.com.filespace.ui.view.slider.Slider
+                android:id="@+id/sliderNumber"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@color/actionbar_audio"
+                materialdesign:max="50"
+                materialdesign:min="0"
+                materialdesign:showNumberIndicator="true" />
+        </RelativeLayout>
 
 
     </RelativeLayout>

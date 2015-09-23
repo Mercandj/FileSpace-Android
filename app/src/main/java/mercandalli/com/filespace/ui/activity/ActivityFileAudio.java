@@ -19,6 +19,8 @@
  */
 package mercandalli.com.filespace.ui.activity;
 
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -29,11 +31,12 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +47,9 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.model.ModelFile;
 import mercandalli.com.filespace.net.Base64;
 import mercandalli.com.filespace.ui.view.PlayPauseView;
+import mercandalli.com.filespace.ui.view.slider.Slider;
+
+import static mercandalli.com.filespace.util.FileUtils.getRealPathFromURI;
 
 /**
  * Created by Jonathan on 14/12/2014.
@@ -56,7 +62,7 @@ public class ActivityFileAudio extends Application {
     private ModelFile file;
     private List<ModelFile> files;
 
-    private SeekBar seekBar;
+    private Slider sliderNumber;
     private PlayPauseView play;
     private TextView title, size;
     private MediaPlayer player;
@@ -80,27 +86,10 @@ public class ActivityFileAudio extends Application {
 
     private void updatePosition() {
         this.handler.removeCallbacks(updatePositionRunnable);
-        this.seekBar.setProgress(player.getCurrentPosition());
+        if(!this.sliderNumber.isPress())
+            this.sliderNumber.setProgress(player.getCurrentPosition());
         this.handler.postDelayed(updatePositionRunnable, UPDATE_FREQUENCY);
     }
-
-    private SeekBar.OnSeekBarChangeListener seekBarChanged = new SeekBar.OnSeekBarChangeListener() {
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            isMovingSeekBar = false;
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-            isMovingSeekBar = true;
-        }
-
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            if (isMovingSeekBar)
-                player.seekTo(progress);
-        }
-    };
 
     private MediaPlayer.OnCompletionListener onCompletion = new MediaPlayer.OnCompletionListener() {
         @Override
@@ -175,6 +164,7 @@ public class ActivityFileAudio extends Application {
             setSupportActionBar(toolbar);
             toolbar.setBackgroundColor(this.getResources().getColor(R.color.actionbar_audio));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("FileSpace - Audio");
         }
 
         Window window = this.getWindow();
@@ -184,7 +174,16 @@ public class ActivityFileAudio extends Application {
 
         this.title = (TextView) this.findViewById(R.id.title);
         this.size = (TextView) this.findViewById(R.id.size);
-        this.seekBar = (SeekBar) this.findViewById(R.id.seekBar);
+        this.sliderNumber = (Slider) this.findViewById(R.id.sliderNumber);
+        this.sliderNumber.setValueToDisplay(new Slider.ValueToDisplay() {
+            @Override
+            public String convert(int value) {
+                long minutes = value/60000;
+                long seconds = (value-(minutes*60000))/1000;
+                return (minutes+":"+(seconds<10?"0":"")+seconds);
+            }
+        });
+
         this.play = (PlayPauseView) this.findViewById(R.id.play);
         //this.play.setImageResource(android.R.drawable.ic_media_pause);
         this.play.setOnClickListener(new View.OnClickListener() {
@@ -217,9 +216,40 @@ public class ActivityFileAudio extends Application {
             }
         });
 
-        Bundle extras = getIntent().getExtras();
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
         if(extras == null) {
             Log.e(""+getClass().getName(), "extras == null");
+
+            String action = intent.getAction();
+            String type = intent.getType();
+
+            if(type != null) {
+                if(type.startsWith("audio/")) {
+                    ArrayList<Uri> audioUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+                    Uri audioUri = (Uri) intent.getData();
+                    if (audioUris != null) {
+                        this.files = new ArrayList<>();
+                        this.online = false;
+                        for(Uri uri: audioUris) {
+                            this.files.add(new ModelFile(this, new File(uri.getPath())));
+                        }
+                        if(audioUris.size()!=0) {
+                            this.file = new ModelFile(this, new File(audioUris.get(0).getPath()));
+                            start();
+                            return;
+                        }
+                    }
+                    else if (audioUri != null) {
+                        this.files = new ArrayList<>();
+                        this.online = false;
+                        this.file = new ModelFile(this, new File( "file".equals(audioUri.getScheme()) ? audioUri.getPath() : getRealPathFromURI(this, audioUri) ));
+                        this.files.add(this.file);
+                        start();
+                        return;
+                    }
+                }
+            }
             this.finish();
             this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             return;
@@ -240,7 +270,16 @@ public class ActivityFileAudio extends Application {
 
             this.player = new MediaPlayer();
             this.player.setOnCompletionListener(this.onCompletion);
-            this.seekBar.setOnSeekBarChangeListener(this.seekBarChanged);
+            this.sliderNumber.setOnValueChangedListener(new Slider.OnValueChangedListener() {
+                @Override
+                public void onValueChanged(int value) {
+                }
+
+                @Override
+                public void onValueChangedUp(int value) {
+                    player.seekTo(value);
+                }
+            });
 
             if(this.online) {
                 Map<String, String> headers = new HashMap<String, String>();
@@ -256,12 +295,12 @@ public class ActivityFileAudio extends Application {
             this.player.prepare();
             this.player.start();
 
-            this.seekBar.setProgress(0);
-            this.seekBar.setMax(this.player.getDuration());
+            this.sliderNumber.setProgress(0);
+            this.sliderNumber.setMax(this.player.getDuration());
             this.title.setText(""+this.file.name);
             long minutes = this.player.getDuration()/60000;
             long seconds = (this.player.getDuration()-(minutes*60000))/1000;
-            this.size.setText(""+(this.player.getDuration()/60000)+":"+(seconds<10?"0":"")+seconds);
+            this.size.setText(minutes+":"+(seconds<10?"0":"")+seconds);
 
             updatePosition();
 
@@ -311,5 +350,27 @@ public class ActivityFileAudio extends Application {
             player.reset();
         }
         supportFinishAfterTransition();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        sliderNumber.updateAfterRotation();
+
+        ViewTreeObserver observer = sliderNumber.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            @Override
+            public void onGlobalLayout() {
+                Log.v("ActivityFileAudio",
+                        String.format("new width=%d; new height=%d", sliderNumber.getWidth(),
+                                sliderNumber.getHeight()));
+
+                sliderNumber.updateAfterRotation();
+                sliderNumber.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
+
     }
 }
