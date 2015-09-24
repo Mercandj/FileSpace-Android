@@ -149,7 +149,7 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
         this.seekBar_dir.setValueToDisplay(new Slider.ValueToDisplay() {
             @Override
             public String convert(int value) {
-                return "" + ((value - 50) / 100);
+                return "" + ((value - 50) * 0.01);
             }
         });
         this.seekBar_dir.setOnValueChangedListener(new Slider.OnValueChangedListener() {
@@ -167,7 +167,7 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
         this.seekBar_speed.setValueToDisplay(new Slider.ValueToDisplay() {
             @Override
             public String convert(int value) {
-                return "" + ((value - 50) / 100);
+                return "" + ((value - 50) * 0.01);
             }
         });
         this.seekBar_speed.setOnValueChangedListener(new Slider.OnValueChangedListener() {
