@@ -346,14 +346,28 @@ public class FileManagerFragment extends Fragment {
     }
 
 	public void sort() {
-		final AlertDialog.Builder menuAleart = new AlertDialog.Builder(app);
+		final AlertDialog.Builder menuAlert = new AlertDialog.Builder(app);
 		String[] menuList = { "Sort by name (A-Z)", "Sort by size", "Sort by date", app.getConfig().getUserFileModeView()== Const.MODE_LIST ? "Grid View" : "List View" };
-		menuAleart.setTitle(getString(R.string.view));
-		menuAleart.setItems(menuList,
+        menuAlert.setTitle(getString(R.string.view));
+        menuAlert.setItems(menuList,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
 
                         switch (item) {
+
+                            case 0:
+                            case 1:
+                            case 2:
+                                if(listFragment.length>2)
+                                    if (listFragment[2] != null)
+                                        if (listFragment[2] instanceof FileManagerFragmentLocal) {
+                                            FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[2];
+                                            fragmentFileManagerFragment.setSort(item==0?Const.SORT_ABC:(item==1?Const.SORT_SIZE:Const.SORT_DATE_MODIFICATION));
+                                        }
+                                if(getCurrentFragmentIndex()!=2)
+                                    Toast.makeText(app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                break;
+
                             case 3:
                                 if (VIEW_MODE == Const.MODE_LIST)
                                     VIEW_MODE = Const.MODE_GRID;
@@ -384,7 +398,7 @@ public class FileManagerFragment extends Fragment {
                         }
                     }
 				});
-		AlertDialog menuDrop = menuAleart.create();
+		AlertDialog menuDrop = menuAlert.create();
 		menuDrop.show();
 	}
 

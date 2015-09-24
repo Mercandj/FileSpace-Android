@@ -37,4 +37,7 @@ public class Const {
 
 	public static final int MODE_LIST = 0;
 	public static final int MODE_GRID = 1;
+	public static final int SORT_DATE_MODIFICATION = 2;
+	public static final int SORT_ABC = 3;
+	public static final int SORT_SIZE = 4;
 }

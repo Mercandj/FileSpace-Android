@@ -81,6 +81,8 @@ public class FileManagerFragmentLocal extends FragmentFab {
 
     private List<ModelFile> filesToCut = new ArrayList<>();
 
+    private int sortMode = Const.SORT_DATE_MODIFICATION;
+
 	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -163,25 +165,46 @@ public class FileManagerFragmentLocal extends FragmentFab {
             }
         ));
 
-        final Map<File, Long> staticLastModifiedTimes = new HashMap<>();
-        for(File f : fs) {
-            staticLastModifiedTimes.put(f, f.lastModified());
+        if(sortMode == Const.SORT_ABC) {
+            Collections.sort(fs, new Comparator<File>() {
+                @Override
+                public int compare(final File f1, final File f2) {
+                    return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
+                }
+            });
         }
-        Collections.sort(fs, new Comparator<File>() {
-            @Override
-            public int compare(final File f1, final File f2) {
-                return staticLastModifiedTimes.get(f2).compareTo(staticLastModifiedTimes.get(f1));
+        else if(sortMode == Const.SORT_SIZE) {
+            Collections.sort(fs, new Comparator<File>() {
+                @Override
+                public int compare(final File f1, final File f2) {
+                    return (new Long(f2.length())).compareTo(f1.length());
+                }
+            });
+        }
+        else {
+            final Map<File, Long> staticLastModifiedTimes = new HashMap<>();
+            for(File f : fs) {
+                staticLastModifiedTimes.put(f, f.lastModified());
             }
-        });
+            Collections.sort(fs, new Comparator<File>() {
+                @Override
+                public int compare(final File f1, final File f2) {
+                    return staticLastModifiedTimes.get(f2).compareTo(staticLastModifiedTimes.get(f1));
+                }
+            });
+        }
 
         files = new ArrayList<>();
         for (File file : fs) {
-            files.add(new ModelFile(app, file));
+            ModelFile tmpModelFile = new ModelFile(app, file);
+            if(sortMode == Const.SORT_SIZE)
+                tmpModelFile.adapterTitleStart = FileUtils.humanReadableByteCount(tmpModelFile.size) + " - ";
+            files.add(tmpModelFile);
         }
 		
 		updateAdapter();		
 	}
-	
+
 	public void updateAdapter() {
 		if(listView!=null && files!=null && isAdded()) {
 
@@ -577,5 +600,14 @@ public class FileManagerFragmentLocal extends FragmentFab {
                 return app.getDrawable(R.drawable.arrow_up);
         }
         return app.getDrawable(R.drawable.add);
+    }
+
+    public void setSort(int mode) {
+        if(mode == Const.SORT_ABC ||
+                mode == Const.SORT_DATE_MODIFICATION ||
+                mode == Const.SORT_SIZE) {
+            this.sortMode = mode;
+            refreshList();
+        }
     }
 }

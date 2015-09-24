@@ -96,13 +96,15 @@ public class ModelFile extends Model implements Parcelable {
 
     public CountDownTimer cdt;
 
+    public String adapterTitleStart = "";
+
     public String getAdapterTitle() {
         if(this.type.equals(ModelFileTypeENUM.FILESPACE.type) && this.content != null)
-            return this.content.getAdapterTitle();
+            return this.adapterTitleStart + this.content.getAdapterTitle();
         else if(this.name!=null)
-            return this.getNameExt();
+            return this.adapterTitleStart + this.getNameExt();
         else
-            return this.url;
+            return this.adapterTitleStart + this.url;
     }
 
     public String getAdapterSubtitle() {
