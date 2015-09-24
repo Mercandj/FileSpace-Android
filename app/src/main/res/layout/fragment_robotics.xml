@@ -8,38 +8,59 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="top"
-    android:orientation="vertical"
-    android:background="#545454">
+    android:orientation="vertical">
+
+    <EditText
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/times"
+        android:textSize="18sp"
+        android:textColor="#545454"
+        android:editable="false"
+        android:focusable="false"
+        android:padding="5dp"
+        android:background="#f0f0f0"
+        android:elevation="@dimen/circle_button_elevation_high"
+        android:gravity="center"
+        android:hint="..."
+        android:layout_marginRight="10dp"
+        android:layout_above="@+id/output"
+        android:layout_alignStart="@+id/output"/>
 
     <EditText
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:id="@+id/distance_left"
-        android:gravity="right|top"
         android:textSize="18sp"
-        android:background="#545454"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:textColor="#fff"
+        android:textColor="#545454"
         android:editable="false"
         android:focusable="false"
-        android:padding="10dp"
-        android:layout_marginTop="5dp"/>
+        android:padding="5dp"
+        android:layout_marginTop="10dp"
+        android:background="#f0f0f0"
+        android:elevation="@dimen/circle_button_elevation_high"
+        android:layout_alignParentTop="true"
+        android:layout_alignEnd="@+id/relativeLayout4"
+        android:gravity="center"
+        android:hint="..."
+        android:layout_marginRight="10dp"/>
 
     <EditText
         android:layout_width="60dp"
         android:layout_height="wrap_content"
         android:id="@+id/distance_right"
-        android:gravity="right|top"
+        android:gravity="center"
         android:textSize="18sp"
-        android:background="#545454"
-        android:textColor="#fff"
+        android:textColor="#545454"
         android:editable="false"
         android:focusable="false"
-        android:padding="10dp"
-        android:layout_alignTop="@+id/distance_left"
+        android:layout_marginRight="10dp"
+        android:background="#f0f0f0"
+        android:elevation="@dimen/circle_button_elevation_high"
+        android:layout_above="@+id/output"
         android:layout_toStartOf="@+id/distance_left"
-        android:layout_marginRight="10dp"/>
+        android:padding="5dp"
+        android:hint="..."/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -47,73 +68,29 @@
         android:id="@+id/output"
         android:gravity="left|top"
         android:textSize="8sp"
-        android:background="#545454"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:textColor="#848484"
+        android:textColor="#545454"
         android:editable="false"
         android:focusable="false"
-        android:padding="5dp"
-        android:layout_marginTop="48dp"/>
+        android:padding="4dp"
+        android:layout_marginTop="10dp"
+        android:background="#f0f0f0"
+        android:elevation="@dimen/circle_button_elevation_high"
+        android:lines="10"
+        android:layout_below="@+id/distance_left"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="..."/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:id="@+id/relativeLayout4"
-        android:layout_alignTop="@+id/output"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="24dp">
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="numberSigned"
-            android:ems="10"
-            android:id="@+id/id"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:hint="id"
-            android:layout_toStartOf="@+id/order"
-            android:layout_marginRight="30dp"
-            android:textColor="#fff"
-            android:textColorHint="#848484"/>
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:ems="10"
-            android:id="@+id/value"
-            android:layout_below="@+id/id"
-            android:layout_alignParentStart="true"
-            android:hint="value"
-            android:layout_toStartOf="@+id/button"
-            android:layout_alignEnd="@+id/id"
-            android:layout_marginTop="5dp"
-            android:textColorHint="#848484"
-            android:textColor="#fff"/>
-
-        <Switch
-            android:layout_width="125dp"
-            android:layout_height="wrap_content"
-            android:text="Order"
-            android:id="@+id/order"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:textColor="#fff"/>
-
-        <Button
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:text="Launch"
-            android:id="@+id/launch"
-            android:layout_alignTop="@+id/value"
-            android:layout_alignParentEnd="true" />
+        android:layout_below="@+id/output"
+        android:layout_alignParentEnd="true"
+        android:paddingBottom="6dp">
 
 
         <ToggleButton
@@ -122,11 +99,12 @@
             android:text="New ToggleButton"
             android:id="@+id/toggleButton1"
             android:checked="false"
-            android:textOff="OFF (1)"
-            android:textOn="ON (1)"
-            android:layout_below="@+id/launch"
+            android:textOff="OFF"
+            android:textOn="ON"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="26dp"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="8dp"
+            />
 
         <ToggleButton
             android:layout_width="80dp"
@@ -134,8 +112,8 @@
             android:text="New ToggleButton"
             android:id="@+id/toggleButton2"
             android:checked="false"
-            android:textOff="OFF (2)"
-            android:textOn="ON (2)"
+            android:textOff="ROT OFF"
+            android:textOn="ROT ON"
             android:layout_alignTop="@+id/toggleButton1"
             android:layout_toEndOf="@+id/toggleButton1"/>
 
@@ -145,50 +123,71 @@
             android:text="New ToggleButton"
             android:id="@+id/toggleButton3"
             android:checked="false"
-            android:textOff="OFF (3)"
-            android:textOn="ON (3)"
+            android:textOff="LED OFF"
+            android:textOn="LED ON"
             android:layout_alignTop="@+id/toggleButton2"
             android:layout_toEndOf="@+id/toggleButton2"/>
 
-
-        <ToggleButton
+        <Button
             android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:text="New ToggleButton"
-            android:id="@+id/toggleButton4"
-            android:checked="false"
-            android:textOff="OFF (4)"
-            android:textOn="ON (4)"
+            android:text="RESET"
+            android:id="@+id/button4"
             android:layout_alignTop="@+id/toggleButton3"
             android:layout_toEndOf="@+id/toggleButton3"/>
 
-        <SeekBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/seekBar_dir"
+        <RelativeLayout
+            xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/rl_seekBar_dir"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:layout_toStartOf="@+id/centerSeekBar"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:max="100"
-            android:progress="50"
-            android:layout_toStartOf="@+id/centerSeekBar"/>
+            android:layout_alignParentStart="true">
+
+            <mercandalli.com.filespace.ui.view.slider.Slider
+                android:id="@+id/seekBar_dir"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@color/actionbar_robotics"
+                materialdesign:max="100"
+                materialdesign:value="50"
+                materialdesign:min="0"
+                materialdesign:showNumberIndicator="true" />
+        </RelativeLayout>
+
 
         <RelativeLayout
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="10dp"
+            android:layout_height="40dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:id="@+id/centerSeekBar">
         </RelativeLayout>
 
-        <SeekBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/seekBar_speed"
-            android:max="100"
-            android:progress="50"
+        <!-- SLIDER WITH NUMBER INDICATOR-->
+        <RelativeLayout
+            xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/rl_seekBar_speed"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/centerSeekBar"/>
+            android:layout_toEndOf="@+id/centerSeekBar">
+
+            <mercandalli.com.filespace.ui.view.slider.Slider
+                android:id="@+id/seekBar_speed"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@color/actionbar_robotics"
+                materialdesign:max="100"
+                materialdesign:value="50"
+                materialdesign:min="0"
+                materialdesign:showNumberIndicator="true" />
+        </RelativeLayout>
+
 
     </RelativeLayout>
 

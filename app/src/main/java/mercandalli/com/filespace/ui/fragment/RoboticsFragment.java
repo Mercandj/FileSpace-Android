@@ -31,8 +31,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.ToggleButton;
 
 import org.json.JSONObject;
@@ -45,8 +43,8 @@ import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelHardware;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.ui.view.slider.Slider;
 import mercandalli.com.filespace.util.StringPair;
-import mercandalli.com.filespace.util.StringUtils;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 import static mercandalli.com.filespace.util.RoboticsUtils.createProtocolHardware;
@@ -71,15 +69,14 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
     private Application app;
     private View rootView;
     private ToggleButton toggleButton1, toggleButton2, toggleButton3;
-    private EditText output, id, value, distance_right, distance_left;
+    private EditText output, distance_right, distance_left, times;
+    private Button button4;
 
-    private SeekBar seekBar_dir, seekBar_speed;
+    private Slider seekBar_dir, seekBar_speed;
 
     private boolean request_ready = true;
     private double car_direction = 0.5;
     private double car_speed = 0.5;
-
-    Switch order;
 
     private boolean MODE_CONNECTION = false;
     private boolean MODE_ACCELERO = false;
@@ -92,7 +89,6 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_robotics, container, false);
-
 
         // Create hardware
         this.SERVO_1 = new ModelHardware();
@@ -132,89 +128,57 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
             }
         });
 
-        this.seekBar_dir = (SeekBar) this.rootView.findViewById(R.id.seekBar_dir);
-        this.seekBar_speed = (SeekBar) this.rootView.findViewById(R.id.seekBar_speed);
+        this.seekBar_dir = (Slider) this.rootView.findViewById(R.id.seekBar_dir);
+        this.seekBar_speed = (Slider) this.rootView.findViewById(R.id.seekBar_speed);
         this.output = (EditText) this.rootView.findViewById(R.id.output);
-        this.id = (EditText) this.rootView.findViewById(R.id.id);
-        this.value = (EditText) this.rootView.findViewById(R.id.value);
-        this.order = (Switch) this.rootView.findViewById(R.id.order);
         this.distance_left = (EditText) this.rootView.findViewById(R.id.distance_left);
         this.distance_right = (EditText) this.rootView.findViewById(R.id.distance_right);
+        this.times = (EditText) this.rootView.findViewById(R.id.times);
+        this.button4 = (Button) this.rootView.findViewById(R.id.button4);
 
         this.output.setMovementMethod(null);
 
-        this.seekBar_dir.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                RoboticsFragment.this.car_direction = progress * 0.01;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        this.seekBar_speed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                RoboticsFragment.this.car_speed = progress*0.01;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        this.value.setVisibility(View.INVISIBLE);
-        this.order.setText("Measure");
-        this.order.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                value.setVisibility(isChecked ? View.VISIBLE : View.INVISIBLE);
-                order.setText(isChecked ? "Write" : "Read");
-            }
-        });
-
-        ((Button) this.rootView.findViewById(R.id.launch)).setOnClickListener(new View.OnClickListener() {
+        this.button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isInternetConnection(app) && !StringUtils.isNullOrEmpty(id.getText().toString()) ) {
-                    List<StringPair> parameters = new ArrayList<>();
+                seekBar_dir.setProgress(50);
+                seekBar_speed.setProgress(50);
+            }
+        });
 
-                    ModelHardware hard1 = new ModelHardware();
-                    hard1.id = Integer.parseInt(id.getText().toString());
-                    hard1.read = !order.isChecked();
-                    hard1.value = value.getText().toString();
+        this.seekBar_dir.setValueToDisplay(new Slider.ValueToDisplay() {
+            @Override
+            public String convert(int value) {
+                return "" + ((value - 50) / 100);
+            }
+        });
+        this.seekBar_dir.setOnValueChangedListener(new Slider.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(int value) {
+                RoboticsFragment.this.car_direction = value * 0.01;
+            }
 
-                    JSONObject json = createProtocolHardware(hard1);
+            @Override
+            public void onValueChangedUp(int value) {
 
-                    parameters.add(new StringPair("json", "" + json.toString()));
+            }
+        });
 
-                    new TaskPost(
-                            app,
-                            app.getConfig().getUrlServer() + RoboticsFragment.this.app.getConfig().routeRobotics,
-                            new IPostExecuteListener() {
-                                @Override
-                                public void execute(JSONObject json, String body) {
-                                    log(body);
-                                    handleResponse(parseRaspberry(json));
-                                }
-                            },
-                            parameters
-                    ).execute();
-                }
+        this.seekBar_speed.setValueToDisplay(new Slider.ValueToDisplay() {
+            @Override
+            public String convert(int value) {
+                return "" + ((value - 50) / 100);
+            }
+        });
+        this.seekBar_speed.setOnValueChangedListener(new Slider.OnValueChangedListener() {
+            @Override
+            public void onValueChanged(int value) {
+                RoboticsFragment.this.car_speed = value * 0.01;
+            }
+
+            @Override
+            public void onValueChangedUp(int value) {
+
             }
         });
 
@@ -227,6 +191,7 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
 
     private long id_log = 0;
     private void log(String log) {
+        times.setText("#"+id_log);
         output.setText( "#" + id_log + " : " + log + "\n" + output.getText().toString() );
         id_log++;
     }

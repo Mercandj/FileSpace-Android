@@ -40,6 +40,7 @@ public class Slider extends SliderCustomView {
     private boolean showNumberIndicator = false;
     private int     value               = 0;
     private ValueToDisplay          valueToDisplay;
+    private int initialValue = 0;
 
     public Slider(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -238,7 +239,6 @@ public class Slider extends SliderCustomView {
 
             canvas.drawBitmap(bitmap, 0, 0, new Paint());
         } else {
-
             paint.setColor(Color.parseColor("#B0B0B0"));
             paint.setStrokeWidth(SliderUtils.dpToPx(2, getResources()));
             canvas.drawLine(getHeight() / 2, getHeight() / 2, getWidth()
@@ -295,6 +295,27 @@ public class Slider extends SliderCustomView {
         params.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
         ball.setLayoutParams(params);
         addView(ball);
+
+        initialValue = min;
+
+        if(value != min) {
+
+            initialValue = value;
+            setValue(value);
+
+            /*
+            ViewHelper.setX(ball, getHeight() / 2 - ball.getWidth() / 2);
+            ball.xIni = ViewHelper.getX(ball);
+            ball.xFin = getWidth() - getHeight() / 2 - ball.getWidth() / 2;
+            ball.xCen = getWidth() / 2 - ball.getWidth() / 2;
+
+
+            float division = (ball.xFin - ball.xIni) / max;
+            ViewHelper.setX(ball,
+                    value * division + getHeight() / 2 - ball.getWidth() / 2);
+            ball.changeBackground();
+            */
+        }
 
         // Set if slider content number indicator
         // TODO

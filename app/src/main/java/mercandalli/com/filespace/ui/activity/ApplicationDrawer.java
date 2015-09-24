@@ -314,13 +314,21 @@ public abstract class ApplicationDrawer extends Application {
         ID_FRAGMENT_VISITED.push(position);
 
         if(toolbar != null) {
-            if(position == 0 || (position == 6 && this.getConfig().getUser().isAdmin()) ) {
+            if(position == 0) {
                 toolbar.setBackgroundColor(Color.TRANSPARENT);
+                getWindow().setStatusBarColor(this.getResources().getColor(R.color.notifications_bar));
                 toolbar_space.setVisibility(View.GONE);
+            }
+            else if(position == 6 && this.getConfig().getUser().isAdmin()) {
+                toolbar.setBackgroundColor(getResources().getColor(R.color.actionbar_robotics));
+                getWindow().setStatusBarColor(this.getResources().getColor(R.color.notifications_bar_robotics));
+                toolbar_space.setVisibility(View.VISIBLE);
             }
             else {
                 toolbar.setBackgroundColor(getResources().getColor(R.color.actionbar));
+                getWindow().setStatusBarColor(this.getResources().getColor(R.color.notifications_bar));
                 toolbar_space.setVisibility(View.VISIBLE);
+
             }
         }
 

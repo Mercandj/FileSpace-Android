@@ -24,4 +24,7 @@
     <color name="genealogy_man">#1976D2</color>
     <color name="genealogy_woman">#E91E63</color>
 
+    <color name="actionbar_robotics">#009688</color>
+    <color name="notifications_bar_robotics">#00695C</color>
+
 </resources>
