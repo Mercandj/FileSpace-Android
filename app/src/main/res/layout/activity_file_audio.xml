@@ -57,21 +57,6 @@
             android:layout_alignParentEnd="true"
             android:layout_above="@+id/title"/>
 
-        <!--
-        <ImageButton
-            android:id="@+id/play"
-            android:transitionName="transitionIcon"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_above="@+id/rl_sliderNumber"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/circle_button_ripple_music"
-            android:elevation="@dimen/circle_button_elevation_high"
-            android:padding="15dp"
-            android:src="@android:drawable/ic_media_pause"
-            android:stateListAnimator="@anim/circle_button_elevation"
-            android:tint="@android:color/white" />
-            -->
         <RelativeLayout
             android:id="@+id/play_position"
             android:layout_width="60dp"

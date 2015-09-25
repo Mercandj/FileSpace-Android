@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.common.SignInButton;
@@ -115,8 +116,9 @@ public class NavDrawerListAdapter extends BaseAdapter {
                     }
                 });
                 FontUtils.applyFont(app, signIn, "fonts/Roboto-Medium.ttf");
-
             }
+
+			((RelativeLayout) convertView.findViewById(R.id.root)).setBackgroundResource(item.idBackgroundColor);
 			
 			break;		
 		

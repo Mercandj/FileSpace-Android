@@ -111,7 +111,7 @@ public abstract class ApplicationDrawer extends Application {
                         FragmentManager fragmentManager = getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                     }
-                }, R.drawable.ic_user, Const.TAB_VIEW_TYPE_PROFIL)
+                }, R.drawable.ic_user, R.color.actionbar, Const.TAB_VIEW_TYPE_PROFIL)
         );
         
         // Tab 1
@@ -316,19 +316,18 @@ public abstract class ApplicationDrawer extends Application {
         if(toolbar != null) {
             if(position == 0) {
                 toolbar.setBackgroundColor(Color.TRANSPARENT);
-                getWindow().setStatusBarColor(this.getResources().getColor(R.color.notifications_bar));
                 toolbar_space.setVisibility(View.GONE);
+                setStatusBarColor(R.color.notifications_bar);
             }
             else if(position == 6 && this.getConfig().getUser().isAdmin()) {
                 toolbar.setBackgroundColor(getResources().getColor(R.color.actionbar_robotics));
-                getWindow().setStatusBarColor(this.getResources().getColor(R.color.notifications_bar_robotics));
                 toolbar_space.setVisibility(View.VISIBLE);
+                setStatusBarColor(R.color.notifications_bar_robotics);
             }
             else {
                 toolbar.setBackgroundColor(getResources().getColor(R.color.actionbar));
-                getWindow().setStatusBarColor(this.getResources().getColor(R.color.notifications_bar));
                 toolbar_space.setVisibility(View.VISIBLE);
-
+                setStatusBarColor(R.color.notifications_bar);
             }
         }
 
@@ -347,7 +346,18 @@ public abstract class ApplicationDrawer extends Application {
 
         invalidateOptionsMenu();
     }
-    
+
+    private void setStatusBarColor(int idColor) {
+        getWindow().setStatusBarColor(this.getResources().getColor(idColor));
+        if(navDrawerItems!=null)
+            if(navDrawerItems.size()>0) {
+                navDrawerItems.get(0).idBackgroundColor = idColor;
+                synchronized(navDrawerItems.get(0)) {
+                    navDrawerItems.get(0).notify();
+                }
+            }
+    }
+
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

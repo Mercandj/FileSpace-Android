@@ -70,90 +70,6 @@ public class ActivityFileAudio extends Application {
     private final int UPDATE_FREQUENCY = 1000;
     private boolean isMovingSeekBar = false;
 
-    class UpdaterPosition implements Runnable {
-        private boolean kill = false;
-        @Override
-        public void run() {
-            if(!kill)
-                updatePosition();
-        }
-        public void kill() {
-            this.kill = true;
-        }
-    }
-
-    public final UpdaterPosition updatePositionRunnable = new UpdaterPosition();
-
-    private void updatePosition() {
-        this.handler.removeCallbacks(updatePositionRunnable);
-        if(!this.sliderNumber.isPress())
-            this.sliderNumber.setProgress(player.getCurrentPosition());
-        this.handler.postDelayed(updatePositionRunnable, UPDATE_FREQUENCY);
-    }
-
-    private MediaPlayer.OnCompletionListener onCompletion = new MediaPlayer.OnCompletionListener() {
-        @Override
-        public void onCompletion(MediaPlayer mp) {
-            next();
-        }
-    };
-
-    /**
-     * Play the next song
-     */
-    private void next() {
-        if(this.player.isPlaying()) {
-            this.player.stop();
-        }
-        if(files!=null) {
-            boolean idMark = false;
-            for (ModelFile f:files) {
-                if(idMark && f.isAudio()) {
-                    ActivityFileAudio.this.file = f;
-                    start();
-                    return;
-                }
-                if(f.equals(file))
-                    idMark = true;
-            }
-            for (ModelFile f:files) {
-                if(f.isAudio()) {
-                    ActivityFileAudio.this.file = f;
-                    start();
-                    return;
-                }
-            }
-        }
-    }
-
-    /**
-     * Play the previous song
-     */
-    private void previous() {
-        if(this.player.isPlaying()) {
-            this.player.stop();
-        }
-        if(files!=null) {
-            boolean idMark = false;
-            for (int i = files.size() - 1; i>=0; i--) {
-                if(idMark && files.get(i).isAudio()) {
-                    ActivityFileAudio.this.file = files.get(i);
-                    start();
-                    return;
-                }
-                if(files.get(i).equals(file))
-                    idMark = true;
-            }
-            for (int i = files.size() - 1; i>=0; i--) {
-                if(files.get(i).isAudio()) {
-                    ActivityFileAudio.this.file = files.get(i);
-                    start();
-                    return;
-                }
-            }
-        }
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -264,6 +180,97 @@ public class ActivityFileAudio extends Application {
         }
     }
 
+    private String getTimeStr(long milliseconds) {
+        long minutes = milliseconds/60000;
+        long seconds = (milliseconds-(minutes*60000))/1000;
+        return minutes+":"+(seconds<10?"0":"")+seconds;
+    }
+
+    class UpdaterPosition implements Runnable {
+        private boolean kill = false;
+        @Override
+        public void run() {
+            if(!kill)
+                updatePosition();
+        }
+        public void kill() {
+            this.kill = true;
+        }
+    }
+
+    public final UpdaterPosition updatePositionRunnable = new UpdaterPosition();
+
+    private void updatePosition() {
+        this.handler.removeCallbacks(updatePositionRunnable);
+        if(!this.sliderNumber.isPress())
+            this.sliderNumber.setProgress(player.getCurrentPosition());
+        this.handler.postDelayed(updatePositionRunnable, UPDATE_FREQUENCY);
+        this.size.setText(getTimeStr(this.player.getCurrentPosition())+" / "+getTimeStr(this.player.getDuration()));
+    }
+
+    private MediaPlayer.OnCompletionListener onCompletion = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mp) {
+            next();
+        }
+    };
+
+    /**
+     * Play the next song
+     */
+    private void next() {
+        if(this.player.isPlaying()) {
+            this.player.stop();
+        }
+        if(files!=null) {
+            boolean idMark = false;
+            for (ModelFile f:files) {
+                if(idMark && f.isAudio()) {
+                    ActivityFileAudio.this.file = f;
+                    start();
+                    return;
+                }
+                if(f.equals(file))
+                    idMark = true;
+            }
+            for (ModelFile f:files) {
+                if(f.isAudio()) {
+                    ActivityFileAudio.this.file = f;
+                    start();
+                    return;
+                }
+            }
+        }
+    }
+
+    /**
+     * Play the previous song
+     */
+    private void previous() {
+        if(this.player.isPlaying()) {
+            this.player.stop();
+        }
+        if(files!=null) {
+            boolean idMark = false;
+            for (int i = files.size() - 1; i>=0; i--) {
+                if(idMark && files.get(i).isAudio()) {
+                    ActivityFileAudio.this.file = files.get(i);
+                    start();
+                    return;
+                }
+                if(files.get(i).equals(file))
+                    idMark = true;
+            }
+            for (int i = files.size() - 1; i>=0; i--) {
+                if(files.get(i).isAudio()) {
+                    ActivityFileAudio.this.file = files.get(i);
+                    start();
+                    return;
+                }
+            }
+        }
+    }
+
     public void start() {
         try {
             Uri uri = Uri.parse((this.online) ? file.onlineUrl : file.url);
@@ -298,9 +305,7 @@ public class ActivityFileAudio extends Application {
             this.sliderNumber.setProgress(0);
             this.sliderNumber.setMax(this.player.getDuration());
             this.title.setText(""+this.file.name);
-            long minutes = this.player.getDuration()/60000;
-            long seconds = (this.player.getDuration()-(minutes*60000))/1000;
-            this.size.setText(minutes+":"+(seconds<10?"0":"")+seconds);
+            this.size.setText(getTimeStr(this.player.getCurrentPosition())+" / "+getTimeStr(this.player.getDuration()));
 
             updatePosition();
 
@@ -371,6 +376,5 @@ public class ActivityFileAudio extends Application {
                 sliderNumber.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
-
     }
 }

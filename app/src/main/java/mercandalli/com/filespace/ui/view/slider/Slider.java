@@ -42,6 +42,8 @@ public class Slider extends SliderCustomView {
     private ValueToDisplay          valueToDisplay;
     private int initialValue = 0;
 
+    public boolean isNumberIndicator = true;
+
     public Slider(Context context, AttributeSet attrs) {
         super(context, attrs);
         setAttributes(attrs);
@@ -119,13 +121,21 @@ public class Slider extends SliderCustomView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        return onTouch(event);
+    }
+
+    public boolean onTouch(MotionEvent event) {
         isLastTouch = true;
         if (isEnabled()) {
             if (event.getAction() == MotionEvent.ACTION_DOWN
                     || event.getAction() == MotionEvent.ACTION_MOVE) {
+
                 if (numberIndicator != null
-                        && numberIndicator.isShowing() == false)
+                        && numberIndicator.isShowing() == false
+                        && isNumberIndicator) {
                     numberIndicator.show();
+                }
+
                 if ((event.getX() <= getWidth() && event.getX() >= 0)) {
                     press = true;
                     // calculate value
@@ -138,11 +148,13 @@ public class Slider extends SliderCustomView {
                     } else {
                         newValue = min + (int) ((event.getX() - ball.xIni) / division);
                     }
+
                     if (value != newValue) {
                         value = newValue;
                         if (onValueChangedListener != null)
                             onValueChangedListener.onValueChanged(newValue);
                     }
+
                     // move ball indicator
                     float x = event.getX();
                     x = (x < ball.xIni) ? ball.xIni : x;
@@ -151,7 +163,7 @@ public class Slider extends SliderCustomView {
                     ball.changeBackground();
 
                     // If slider has number indicator
-                    if (numberIndicator != null) {
+                    if (numberIndicator != null && isNumberIndicator) {
                         // move number indicator
                         numberIndicator.indicator.x = x;
                         numberIndicator.indicator.finalY = SliderUtils
@@ -179,10 +191,13 @@ public class Slider extends SliderCustomView {
                     numberIndicator.dismiss();
                 isLastTouch = false;
                 press = false;
+
             }
         }
         return true;
     }
+
+
 
     @Override
     public void setBackgroundColor(int color) {
@@ -299,22 +314,8 @@ public class Slider extends SliderCustomView {
         initialValue = min;
 
         if(value != min) {
-
             initialValue = value;
             setValue(value);
-
-            /*
-            ViewHelper.setX(ball, getHeight() / 2 - ball.getWidth() / 2);
-            ball.xIni = ViewHelper.getX(ball);
-            ball.xFin = getWidth() - getHeight() / 2 - ball.getWidth() / 2;
-            ball.xCen = getWidth() / 2 - ball.getWidth() / 2;
-
-
-            float division = (ball.xFin - ball.xIni) / max;
-            ViewHelper.setX(ball,
-                    value * division + getHeight() / 2 - ball.getWidth() / 2);
-            ball.changeBackground();
-            */
         }
 
         // Set if slider content number indicator
@@ -387,6 +388,7 @@ public class Slider extends SliderCustomView {
         public Indicator(Context context) {
             super(context);
             setBackgroundColor(getResources().getColor(android.R.color.transparent));
+            //setBackgroundColor(getResources().getColor(R.color.actionbar));
 
             paint = new Paint();
             paint.setAntiAlias(true);
@@ -449,15 +451,18 @@ public class Slider extends SliderCustomView {
         TextView  numberIndicator;
 
         public NumberIndicator(Context context) {
+            //super(context, android.R.style.Theme_Translucent);
             super(context, android.R.style.Theme_Translucent);
         }
 
         @Override
         public void dismiss() {
             super.dismiss();
-            indicator.y = 0;
-            indicator.size = 0;
-            indicator.animate = true;
+            if(indicator != null) {
+                indicator.y = 0;
+                indicator.size = 0;
+                indicator.animate = true;
+            }
         }
 
         @Override

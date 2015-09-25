@@ -20,6 +20,7 @@
 package mercandalli.com.filespace.ui.fragment;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -28,13 +29,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,6 +75,7 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
     private ToggleButton toggleButton1, toggleButton2, toggleButton3;
     private EditText output, distance_right, distance_left, times;
     private Button button4;
+    private TextView tv_seekBar_dir, tv_seekBar_speed;
 
     private Slider seekBar_dir, seekBar_speed;
 
@@ -81,6 +86,8 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
     private boolean MODE_CONNECTION = false;
     private boolean MODE_ACCELERO = false;
     private boolean MODE_LED_1 = false;
+
+    private DecimalFormat df;
 
     public RoboticsFragment(Application app) {
         this.app = app;
@@ -102,7 +109,6 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
         this.LED_1 = new ModelHardware();
         this.LED_1.id = ID_LED_1;
         this.LED_1.value = "0";
-
 
         this.toggleButton1 = (ToggleButton) this.rootView.findViewById(R.id.toggleButton1);
         this.toggleButton1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -128,6 +134,8 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
             }
         });
 
+        this.tv_seekBar_dir = (TextView) this.rootView.findViewById(R.id.tv_seekBar_dir);
+        this.tv_seekBar_speed = (TextView) this.rootView.findViewById(R.id.tv_seekBar_speed);
         this.seekBar_dir = (Slider) this.rootView.findViewById(R.id.seekBar_dir);
         this.seekBar_speed = (Slider) this.rootView.findViewById(R.id.seekBar_speed);
         this.output = (EditText) this.rootView.findViewById(R.id.output);
@@ -143,43 +151,34 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
             public void onClick(View v) {
                 seekBar_dir.setProgress(50);
                 seekBar_speed.setProgress(50);
+                tv_seekBar_dir.setText("Direction : " + valueToStr(50));
+                tv_seekBar_speed.setText("Speed : "+valueToStr(50));
             }
         });
 
-        this.seekBar_dir.setValueToDisplay(new Slider.ValueToDisplay() {
-            @Override
-            public String convert(int value) {
-                return "" + ((value - 50) * 0.02);
-            }
-        });
+        this.df = new DecimalFormat("###.##");
+        this.seekBar_dir.isNumberIndicator = false;
         this.seekBar_dir.setOnValueChangedListener(new Slider.OnValueChangedListener() {
             @Override
             public void onValueChanged(int value) {
-                RoboticsFragment.this.car_direction = value * 0.01;
+                RoboticsFragment.this.car_direction = Math.round(value) / 100.0;
+                tv_seekBar_dir.setText("Direction : "+valueToStr(value));
             }
 
             @Override
-            public void onValueChangedUp(int value) {
-
-            }
+            public void onValueChangedUp(int value) { }
         });
 
-        this.seekBar_speed.setValueToDisplay(new Slider.ValueToDisplay() {
-            @Override
-            public String convert(int value) {
-                return "" + ((value - 50) * 0.02);
-            }
-        });
+        this.seekBar_speed.isNumberIndicator = false;
         this.seekBar_speed.setOnValueChangedListener(new Slider.OnValueChangedListener() {
             @Override
             public void onValueChanged(int value) {
-                RoboticsFragment.this.car_speed = value * 0.01;
+                RoboticsFragment.this.car_speed = Math.round(value) / 100.0;
+                tv_seekBar_speed.setText("Speed : "+valueToStr(value));
             }
 
             @Override
-            public void onValueChangedUp(int value) {
-
-            }
+            public void onValueChangedUp(int value) { }
         });
 
         senSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
@@ -187,6 +186,13 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
         return rootView;
+    }
+
+    private String valueToStr(int value) {
+        if(df == null || value - 50.0 == 0)
+            return "0.00";
+        double res = Math.round(value - 50.0) / 100.0;
+        return "" + df.format(res) + (res % 0.1 == 0 || Math.abs(res) == 0.3 || Math.abs(res) == 0.5 ? "0" : "");
     }
 
     private long id_log = 0;
@@ -236,7 +242,9 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
                         tmp_y = 0;
                     if(tmp_y > 10)
                         tmp_y = 10;
-                    this.seekBar_dir.setProgress((int)(tmp_y*10));
+                    int value = (int)(tmp_y*10);
+                    this.seekBar_dir.setProgress(value);
+                    this.tv_seekBar_dir.setText("Direction : " + valueToStr(value));
                 }
             }
 
@@ -295,5 +303,30 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
                     break;
             }
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        seekBar_dir.updateAfterRotation();
+        ViewTreeObserver observer = seekBar_dir.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                seekBar_dir.updateAfterRotation();
+                seekBar_dir.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
+
+        seekBar_speed.updateAfterRotation();
+        observer = seekBar_speed.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                seekBar_speed.updateAfterRotation();
+                seekBar_speed.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
     }
 }

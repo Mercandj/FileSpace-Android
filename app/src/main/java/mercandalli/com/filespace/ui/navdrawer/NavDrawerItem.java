@@ -35,6 +35,8 @@ public class NavDrawerItem {
 	public boolean containsImage;
 	public boolean isSelected = false;
 	public IListener listenerClick = null;
+
+	public int idBackgroundColor;
 	
 	public boolean initChecked = false;
 	//public OnCheckedChangeListener onCheckedChangeListener = null;
@@ -65,6 +67,17 @@ public class NavDrawerItem {
 		this.containsImage = true;
 		this.listenerClick = listenerClick;
 	}
+
+    public NavDrawerItem(String title, String subtitle, IListener listenerClick, int icon, int idBackgroundColor, int viewType) {
+        super();
+        this.title = title;
+        this.subtitle = subtitle;
+        this.icon = icon;
+        this.viewType = viewType;
+        this.containsImage = true;
+        this.listenerClick = listenerClick;
+        this.idBackgroundColor = idBackgroundColor;
+    }
 	
 	public NavDrawerItem(String title, IListener listenerClick, int icon, int viewType) {
 		super();
