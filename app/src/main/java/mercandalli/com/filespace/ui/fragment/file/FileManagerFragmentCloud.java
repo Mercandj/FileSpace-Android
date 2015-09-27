@@ -63,7 +63,6 @@ import mercandalli.com.filespace.ui.fragment.FragmentFab;
 import mercandalli.com.filespace.ui.view.DividerItemDecoration;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.StringPair;
-import mercandalli.com.filespace.util.StringUtils;
 
 import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
@@ -581,7 +580,7 @@ public class FileManagerFragmentCloud extends FragmentFab {
 
     @Override
     public boolean isFabVisible(int fab_id) {
-        if(!isInternetConnection(app))
+        if(!isInternetConnection(app) || !app.isLogged())
             return false;
         switch (fab_id) {
             case 0:

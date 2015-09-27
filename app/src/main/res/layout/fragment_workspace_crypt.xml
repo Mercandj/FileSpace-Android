@@ -12,7 +12,10 @@
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:layout_margin="20dp">
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="15dp">
 
         <EditText
             android:id="@+id/input"
@@ -21,7 +24,6 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="5dp"
             android:hint="Message to crypt"
             android:padding="10dp"
             android:textSize="18sp"
@@ -85,6 +87,29 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true">
         </EditText>
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:longClickable="false"
+            android:max="100"
+            android:progress="50"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Crypt key = 50"
+            android:id="@+id/tv_cryptKey"
+            android:layout_above="@+id/seekBar"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="22dp"
+            android:layout_marginLeft="10dp"/>
+
 
     </RelativeLayout>
 

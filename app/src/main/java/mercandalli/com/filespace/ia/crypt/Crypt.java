@@ -7,14 +7,14 @@ public class Crypt {
 	
 	public static String crypte(String pmessage, int offset) {
 		Message message = new Message(pmessage);
-		METHODE_1.crypter(message);
+		(new CryptCesar(new Noise(new NoisePeriodic(2)),offset)).crypter(message);
 		
 		return message.toString();
 	}	
 	
 	public static String decrypte(String pmessage, int offset) {
 		Message message = new Message(pmessage);
-		METHODE_1.decrypter(message);
+		(new CryptCesar(new Noise(new NoisePeriodic(2)),offset)).decrypter(message);
 		
 		return message.toString();
 	}

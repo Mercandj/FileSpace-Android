@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.model;
 
+import android.view.View;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import org.json.JSONObject;
@@ -30,6 +31,7 @@ public class ModelSetting extends Model {
 	public OnCheckedChangeListener toggleButtonListener = null;
 	public boolean toggleButtonInitValue = false;	
 	public String title, subtitle;
+	public View.OnClickListener onClickListener;
 	
 	public ModelSetting(Application app, String title) {
 		super(app);
@@ -62,6 +64,19 @@ public class ModelSetting extends Model {
 		this.toggleButtonListener = toggleButtonListener;
 		this.toggleButtonInitValue = toggleButtonInitValue;
 	}
+
+    public ModelSetting(Application app, String title, View.OnClickListener onClickListener) {
+        super(app);
+        this.title = title;
+        this.onClickListener = onClickListener;
+    }
+
+    public ModelSetting(Application app, String title, String subtitle, View.OnClickListener onClickListener) {
+        super(app);
+        this.title = title;
+        this.subtitle = subtitle;
+        this.onClickListener = onClickListener;
+    }
 
 	@Override
 	public JSONObject toJSONObject() {

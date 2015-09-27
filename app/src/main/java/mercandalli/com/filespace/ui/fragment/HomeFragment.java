@@ -30,6 +30,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.Spanned;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -160,6 +161,11 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
         }
 
         if(this.app.getConfig().isHomeWelcomeMessage()) {
+
+            Spanned htmlMessage = Html.fromHtml("<a>This app give you the control on your local files. Please <font color=\"#26AEEE\">login</font> or <font color=\"#26AEEE\">sign in</font> in order to share files between different devices.</a>");
+            if(app.getConfig().isLogged())
+                htmlMessage = Html.fromHtml("<a>This app give you the Cloud control from your Android device and your PC thanks to the <font color=\"#26AEEE\">web application</font>. You can share files and talk with your friends.</a>");
+
             if(this.app.isLogged()) {
                 list.add(new ModelHome(list.size(), "Welcome", new IModelHomeListener() {
                     @Override
@@ -167,7 +173,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                         removeItemList(modelHome);
                         app.getConfig().setHomeWelcomeMessage(false);
                     }
-                }, Html.fromHtml("<a>This app give you the Cloud control from your Android device and your PC thanks to the <font color=\"#26AEEE\">web application</font>. You can share files and talk with your friends.</a>"), Const.TAB_VIEW_TYPE_HOME_INFORMATION));
+                }, htmlMessage, Const.TAB_VIEW_TYPE_HOME_INFORMATION));
             }
             else {
                 list.add(new ModelHome(list.size(), "Welcome", new IModelHomeListener() {
@@ -184,7 +190,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                         app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                         app.finish();
                     }
-                }, Html.fromHtml("<a>This app give you the Cloud control from your Android device and your PC thanks to the <font color=\"#26AEEE\">web application</font>. You can share files and talk with your friends.</a>"), Const.TAB_VIEW_TYPE_HOME_INFORMATION));
+                }, htmlMessage, Const.TAB_VIEW_TYPE_HOME_INFORMATION));
             }
         }
 

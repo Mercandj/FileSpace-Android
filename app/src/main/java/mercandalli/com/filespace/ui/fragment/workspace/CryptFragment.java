@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,8 +26,11 @@ public class CryptFragment extends Fragment {
 
     Application app;
     private View rootView;
-    private TextView input, output;
+    private TextView input, output, tv_cryptKey;
     private ImageButton circle, circle2;
+    private SeekBar seekBar;
+
+    private int cryptKey = 50;
 
     @Override
     public void onAttach(Activity activity) {
@@ -48,6 +52,8 @@ public class CryptFragment extends Fragment {
         this.input = (TextView) this.rootView.findViewById(R.id.input);
         this.output = (TextView) this.rootView.findViewById(R.id.output);
 
+        this.tv_cryptKey = (TextView) this.rootView.findViewById(R.id.tv_cryptKey);
+
         this.input.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -56,7 +62,7 @@ public class CryptFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                output.setText(Crypt.crypte(input.getText().toString(), 69));
+                output.setText(Crypt.crypte(input.getText().toString(), cryptKey));
             }
 
             @Override
@@ -68,14 +74,14 @@ public class CryptFragment extends Fragment {
         this.circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                output.setText(Crypt.crypte(input.getText().toString(), 69));
+                output.setText(Crypt.crypte(input.getText().toString(), cryptKey));
             }
         });
 
         this.circle2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                input.setText(Crypt.decrypte(output.getText().toString(), 69));
+                input.setText(Crypt.decrypte(output.getText().toString(), cryptKey));
             }
         });
 
@@ -101,6 +107,24 @@ public class CryptFragment extends Fragment {
             }
         });
 
+        this.seekBar = (SeekBar) this.rootView.findViewById(R.id.seekBar);
+        this.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                setCryptKey(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
         return this.rootView;
     }
 
@@ -117,6 +141,12 @@ public class CryptFragment extends Fragment {
     public void delete() {
         input.setText("");
         output.setText("");
+    }
+
+    private void setCryptKey(int value) {
+        this.cryptKey = value;
+        this.tv_cryptKey.setText("Crypt key = "+value);
+        output.setText(Crypt.crypte(input.getText().toString(), cryptKey));
     }
 }
 

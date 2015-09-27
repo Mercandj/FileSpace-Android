@@ -153,6 +153,8 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
                 seekBar_speed.setProgress(50);
                 tv_seekBar_dir.setText("Direction : " + valueToStr(50));
                 tv_seekBar_speed.setText("Speed : "+valueToStr(50));
+                RoboticsFragment.this.car_direction = 0.5f;
+                RoboticsFragment.this.car_speed = 0.5f;
             }
         });
 
@@ -243,6 +245,7 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
                     if(tmp_y > 10)
                         tmp_y = 10;
                     int value = (int)(tmp_y*10);
+                    RoboticsFragment.this.car_direction = value;
                     this.seekBar_dir.setProgress(value);
                     this.tv_seekBar_dir.setText("Direction : " + valueToStr(value));
                 }

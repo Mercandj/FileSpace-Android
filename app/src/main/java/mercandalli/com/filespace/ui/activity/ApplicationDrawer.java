@@ -67,7 +67,7 @@ public abstract class ApplicationDrawer extends Application {
 	public static final int[] noSelectable 	= new int[] {Const.TAB_VIEW_TYPE_SECTION, Const.TAB_VIEW_TYPE_SECTION_TITLE, Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE};
 
     public Fragment fragment;
-    private final int INIT_FRAGMENT_ID = 2;
+    private final int INIT_FRAGMENT_ID = 3;
     private final int INIT_FRAGMENT_LOGGED_ID = 3;
     private Stack<Integer> ID_FRAGMENT_VISITED = new Stack<>();
 
@@ -236,24 +236,26 @@ public abstract class ApplicationDrawer extends Application {
         );
 
         // Tab 12
-        navDrawerItems.add(
-                new NavDrawerItem(
-                        getString(R.string.tab_log_out),
-                        new IListener() {
-                            @Override
-                            public void execute() {
-                                ApplicationDrawer.this.alert("Log out", "Do you want to log out?", "Yes", new IListener() {
-                                    @Override
-                                    public void execute() {
-                                        ApplicationDrawer.this.getConfig().reset();
-                                        ApplicationDrawer.this.finish();
-                                    }
-                                }, getString(R.string.cancel), null);
-                            }
-                        },
-                        R.drawable.ic_log_out,
-                        Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE)
-        );
+        if(this.getConfig().isLogged()) {
+            navDrawerItems.add(
+                    new NavDrawerItem(
+                            getString(R.string.tab_log_out),
+                            new IListener() {
+                                @Override
+                                public void execute() {
+                                    ApplicationDrawer.this.alert("Log out", "Do you want to log out?", "Yes", new IListener() {
+                                        @Override
+                                        public void execute() {
+                                            ApplicationDrawer.this.getConfig().reset();
+                                            ApplicationDrawer.this.finish();
+                                        }
+                                    }, getString(R.string.cancel), null);
+                                }
+                            },
+                            R.drawable.ic_log_out,
+                            Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE)
+            );
+        }
         
         // Tab 13
         navDrawerItems.add(

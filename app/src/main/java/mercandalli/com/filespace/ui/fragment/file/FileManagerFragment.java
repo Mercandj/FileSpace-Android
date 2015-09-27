@@ -214,8 +214,8 @@ public class FileManagerFragment extends Fragment {
 			switch(i) {
                 case 0:		fragment = new FileManagerFragmentCloud(refreshFab);  	break;
                 case 1:		fragment = new FileManagerFragmentMyCloud(refreshFab); 	break;
-                case 2:		fragment = new FileManagerFragmentLocal(refreshFab);		break;
-                default:	fragment = new FileManagerFragmentLocal(refreshFab);		break;
+                case 2:		fragment = new FileManagerFragmentLocal(refreshFab);	break;
+                default:	fragment = new FileManagerFragmentLocal(refreshFab);	break;
 			}
 			listFragment[i] = fragment;
             return fragment;

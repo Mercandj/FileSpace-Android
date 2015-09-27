@@ -31,7 +31,6 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,22 +72,63 @@ public class SettingsFragment extends Fragment {
 	}
 	
 	public void refreshList() {
-		list = new ArrayList<ModelSetting>();
+		list = new ArrayList<>();
 		list.add(new ModelSetting(app, "Settings", Const.TAB_VIEW_TYPE_SECTION));
-		list.add(new ModelSetting(app, "Auto connection", new OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				app.getConfig().setAutoConnection(isChecked);
-			}
-		}, app.getConfig().isAutoConncetion()));
-        list.add(new ModelSetting(app, "Web application"));
-        list.add(new ModelSetting(app, "Welcome on home screen"));
-        list.add(new ModelSetting(app, "Change password"));
+        if(app.getConfig().isLogged()) {
+            list.add(new ModelSetting(app, "Auto connection", new OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    app.getConfig().setAutoConnection(isChecked);
+                }
+            }, app.getConfig().isAutoConncetion()));
+            list.add(new ModelSetting(app, "Web application", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ENUM_Action.WEB_SEARCH.action.action(app, app.getConfig().webApplication);
+                }
+            }));
+        }
+        list.add(new ModelSetting(app, "Welcome on home screen", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(app, "Welcome message enabled.", Toast.LENGTH_SHORT).show();
+                app.getConfig().setHomeWelcomeMessage(true);
+            }
+        }));
+        if(app.getConfig().isLogged()) {
+            list.add(new ModelSetting(app, "Change password", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //TODO Change passord
+                    Toast.makeText(app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                }
+            }));
+        }
 
 		try {
 			PackageInfo pInfo = app.getPackageManager().getPackageInfo(app.getPackageName(), 0);
             list.add(new ModelSetting(app, "Last update date GMT", TimeUtils.getGMTDate(pInfo.lastUpdateTime)));
-            list.add(new ModelSetting(app, "Version", pInfo.versionName));
+            list.add(new ModelSetting(app, "Version", pInfo.versionName, new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (click_version == 11) {
+                        Toast.makeText(app, "Development settings activated.", Toast.LENGTH_SHORT).show();
+                    } else if (click_version < 11) {
+                        if (click_version >= 1) {
+                            final Toast t = Toast.makeText(app, "" + (11 - click_version), Toast.LENGTH_SHORT);
+                            t.show();
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    t.cancel();
+                                }
+                            }, 700);
+                        }
+                        click_version++;
+                    }
+                }
+            }));
 		} catch (PackageManager.NameNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -103,38 +143,8 @@ public class SettingsFragment extends Fragment {
                 @Override
                 public void onItemClick(View view, int position) {
                     if (position < list.size()) {
-                        switch (position) {
-                            case 2:
-                                ENUM_Action.WEB_SEARCH.action.action(app, app.getConfig().webApplication);
-                                break;
-                            case 3:
-                                Toast.makeText(app, "Welcome message enabled.", Toast.LENGTH_SHORT).show();
-                                app.getConfig().setHomeWelcomeMessage(true);
-                                break;
-                            case 4:
-                                //TODO Change passord
-                                Toast.makeText(app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-                                break;
-                            case 6:
-                                if (click_version == 11) {
-                                    Toast.makeText(app, "Development settings activated.", Toast.LENGTH_SHORT).show();
-                                } else if (click_version < 11) {
-                                    if (click_version >= 1) {
-                                        final Toast t = Toast.makeText(app, "" + (11 - click_version), Toast.LENGTH_SHORT);
-                                        t.show();
-                                        Handler handler = new Handler();
-                                        handler.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                t.cancel();
-                                            }
-                                        }, 700);
-                                    }
-                                    click_version++;
-                                }
-                                break;
-                        }
-
+                        if(list.get(position).onClickListener != null)
+                            list.get(position).onClickListener.onClick(view);
                     }
                 }
             });

@@ -75,7 +75,7 @@ public class FileManagerFragmentLocal extends FragmentFab {
     private RecyclerView.LayoutManager mLayoutManager;
 	private ArrayList<ModelFile> files;
 	private ProgressBar circularProgressBar;
-	private File jarvisDirectory;
+	private File currentDirectory;
 	private TextView message;
 	private SwipeRefreshLayout swipeRefreshLayout, swipeRefreshLayoutGrid;
 
@@ -109,9 +109,9 @@ public class FileManagerFragmentLocal extends FragmentFab {
         this.gridView = (GridView) rootView.findViewById(R.id.gridView);
         this.gridView.setVisibility(View.GONE);
 
-        this.jarvisDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().localFolderName);
-		if(!jarvisDirectory.exists())
-			jarvisDirectory.mkdir();
+        this.currentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().localFolderName);
+		if(!currentDirectory.exists())
+            currentDirectory.mkdir();
 
         this.swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         this.swipeRefreshLayout.setColorSchemeResources(
@@ -153,10 +153,10 @@ public class FileManagerFragmentLocal extends FragmentFab {
     }
 	
 	public void refreshList(final String search) {
-		if(jarvisDirectory==null)
+		if(currentDirectory==null)
 			return;
 
-        List<File> fs = Arrays.asList((search==null) ? jarvisDirectory.listFiles() : jarvisDirectory.listFiles(
+        List<File> fs = Arrays.asList((search==null) ? currentDirectory.listFiles() : currentDirectory.listFiles(
             new FilenameFilter() {
                 @Override
                 public boolean accept(File dir, String name) {
@@ -211,7 +211,7 @@ public class FileManagerFragmentLocal extends FragmentFab {
             refreshFab();
 
 			if(files.size()==0) {
-				message.setText(getString(R.string.no_file_local));
+				message.setText(getString(R.string.no_file_local_folder, ""+currentDirectory.getName()));
 				message.setVisibility(View.VISIBLE);
 			}
 			else
@@ -229,7 +229,7 @@ public class FileManagerFragmentLocal extends FragmentFab {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int item) {
                                     if(!app.isLogged())
-                                        item-=2;
+                                        item+=2;
 									switch (item) {
                                         case 0:
                                             if(modelFile.directory) {
@@ -320,7 +320,7 @@ public class FileManagerFragmentLocal extends FragmentFab {
                         adapter.notifyItemChanged(position);
                     }
                     else if (files.get(position).directory) {
-                        jarvisDirectory = new File(files.get(position).url);
+                        currentDirectory = new File(files.get(position).url);
                         refreshList();
                     } else
                         files.get(position).executeLocal(files, view);
@@ -352,7 +352,7 @@ public class FileManagerFragmentLocal extends FragmentFab {
                             adapter.notifyItemChanged(position);
                         }
                         else if (files.get(position).directory) {
-                            jarvisDirectory = new File(files.get(position).url);
+                            currentDirectory = new File(files.get(position).url);
                             refreshList();
                         } else
                             files.get(position).executeLocal(files, view);
@@ -493,9 +493,9 @@ public class FileManagerFragmentLocal extends FragmentFab {
             deselectAll();
             return true;
         }
-        else if(!jarvisDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().localFolderName)) {
-            if(jarvisDirectory.getParent() != null) {
-                FileManagerFragmentLocal.this.jarvisDirectory = new File(jarvisDirectory.getParentFile().getPath());
+        else if(!currentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().localFolderName)) {
+            if(currentDirectory.getParent() != null) {
+                FileManagerFragmentLocal.this.currentDirectory = new File(currentDirectory.getParentFile().getPath());
                 FileManagerFragmentLocal.this.refreshList();
                 return true;
             }
@@ -509,7 +509,7 @@ public class FileManagerFragmentLocal extends FragmentFab {
     }
 
     public void goHome() {
-        this.jarvisDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + app.getConfig().localFolderName);
+        this.currentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + app.getConfig().localFolderName);
         this.refreshList();
     }
 
@@ -536,7 +536,7 @@ public class FileManagerFragmentLocal extends FragmentFab {
             case 0:
                 if (filesToCut != null && filesToCut.size() != 0) {
                     for (ModelFile file : filesToCut) {
-                        file.renameLocalByPath(jarvisDirectory.getAbsolutePath() + File.separator + file.getNameExt());
+                        file.renameLocalByPath(currentDirectory.getAbsolutePath() + File.separator + file.getNameExt());
                     }
                     filesToCut.clear();
                     refreshList();
@@ -552,7 +552,7 @@ public class FileManagerFragmentLocal extends FragmentFab {
                                             FileManagerFragmentLocal.this.app.prompt("New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
-                                                    createFile(jarvisDirectory.getPath() + File.separator, text);
+                                                    createFile(currentDirectory.getPath() + File.separator, text);
                                                     refreshList();
                                                 }
                                             }, getString(R.string.cancel), null, null, "Name");
@@ -567,8 +567,8 @@ public class FileManagerFragmentLocal extends FragmentFab {
                 break;
 
             case 1:
-                if(jarvisDirectory.getParent() != null) {
-                    FileManagerFragmentLocal.this.jarvisDirectory = new File(jarvisDirectory.getParentFile().getPath());
+                if(currentDirectory.getParent() != null) {
+                    FileManagerFragmentLocal.this.currentDirectory = new File(currentDirectory.getParentFile().getPath());
                     //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
                     FileManagerFragmentLocal.this.refreshList();
                 }
@@ -582,9 +582,8 @@ public class FileManagerFragmentLocal extends FragmentFab {
             case 0:
                 return true;
             case 1:
-                return this.jarvisDirectory != null;
+                return this.currentDirectory != null;
         }
-
         return false;
     }
 

@@ -649,7 +649,7 @@ public class FileManagerFragmentMyCloud extends FragmentFab {
 
     @Override
     public boolean isFabVisible(int fab_id) {
-        if(!isInternetConnection(app))
+        if(!isInternetConnection(app) || !app.isLogged())
             return false;
         switch (fab_id) {
             case 0:
