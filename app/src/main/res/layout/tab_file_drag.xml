@@ -7,14 +7,32 @@
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:transitionName="transitionRoot"
-    android:id="@+id/item"
     android:background="@color/tab_file">
+
+    <RelativeLayout
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:id="@+id/rl_left">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_menu_drag"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="12dp"/>
+
+
+
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:attr/selectableItemBackground">
-
+        android:background="?android:attr/selectableItemBackground"
+        android:id="@+id/item"
+        android:layout_toEndOf="@+id/rl_left">
 
         <TextView
             android:id="@+id/title"
@@ -26,7 +44,6 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:maxLines="1"
             android:paddingLeft="20dp"
-            android:paddingRight="5dp"
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColor="#000"
@@ -46,7 +63,6 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:maxLines="1"
             android:paddingLeft="20dp"
-            android:paddingRight="5dp"
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColor="#666"
@@ -64,7 +80,6 @@
             android:layout_height="50dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
             android:contentDescription="@string/image_description"
             android:transitionName="transitionIcon"
             android:src="@drawable/file_default" />

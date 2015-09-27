@@ -99,7 +99,7 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
             if(file.selected)
                 viewHolder.item.setBackgroundColor(app.getResources().getColor(R.color.tab_selected));
             else
-                viewHolder.item.setBackground(null);
+                viewHolder.item.setBackgroundColor(app.getResources().getColor(R.color.tab_file));
 
             if (file.type.equals(ModelFileTypeENUM.FILESPACE.type)) {
                 /*

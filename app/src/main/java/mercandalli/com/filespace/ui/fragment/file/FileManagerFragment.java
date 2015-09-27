@@ -49,7 +49,7 @@ import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
 public class FileManagerFragment extends Fragment {
 	
-	private static final int NB_FRAGMENT = 3;
+	private static final int NB_FRAGMENT = 4;
     private static final int INIT_FRAGMENT = 1;
 	public static FragmentFab listFragment[] = new FragmentFab[NB_FRAGMENT];
 	private Application app;
@@ -97,20 +97,26 @@ public class FileManagerFragment extends Fragment {
                         updateNoInternet();
                         break;
                     default:
-                        if(snackbar != null)
+                        if (snackbar != null)
                             snackbar.dismiss();
                 }
                 refreshFab(position);
             }
         });
-		if(isInternetConnection(app) && app.isLogged()) {
-			mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
-			mViewPager.setCurrentItem(INIT_FRAGMENT);
-		}
-		else {
-			mViewPager.setOffscreenPageLimit(NB_FRAGMENT);
-			mViewPager.setCurrentItem(INIT_FRAGMENT + 1);
-		}
+        if(app.isLogged()) {
+            if (isInternetConnection(app)) {
+                mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
+                mViewPager.setCurrentItem(INIT_FRAGMENT);
+            } else {
+                mViewPager.setOffscreenPageLimit(NB_FRAGMENT);
+                mViewPager.setCurrentItem(INIT_FRAGMENT + 1);
+            }
+        }
+        else {
+            mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
+            mViewPager.setCurrentItem(0);
+        }
+
 
         tabs.setViewPager(mViewPager);
         tabs.setIndicatorColor(getResources().getColor(R.color.white));
@@ -210,29 +216,36 @@ public class FileManagerFragment extends Fragment {
                 }
             };
 
+            if(!app.isLogged())
+                i+=2;
+
 			FragmentFab fragment = null;
 			switch(i) {
-                case 0:		fragment = new FileManagerFragmentCloud(refreshFab);  	break;
-                case 1:		fragment = new FileManagerFragmentMyCloud(refreshFab); 	break;
-                case 2:		fragment = new FileManagerFragmentLocal(refreshFab);	break;
-                default:	fragment = new FileManagerFragmentLocal(refreshFab);	break;
+                case 0:		fragment = new FileManagerFragmentCloud(refreshFab);  	    break;
+                case 1:		fragment = new FileManagerFragmentMyCloud(refreshFab); 	    break;
+                case 2:		fragment = new FileManagerFragmentLocal(refreshFab);	    break;
+                case 3:		fragment = new FileManagerFragmentLocalMusic(refreshFab);	break;
+                default:	fragment = new FileManagerFragmentLocal(refreshFab);	    break;
 			}
 			listFragment[i] = fragment;
-            return fragment;
+            return listFragment[i];
         }
 
         @Override
         public int getCount() {
-            return NB_FRAGMENT;
+            return NB_FRAGMENT - (app.isLogged()?0:2);
         }
 
         @Override
         public CharSequence getPageTitle(int i) {
+            if(!app.isLogged())
+                i+=2;
         	String title = "null";
 			switch(i) {
-			case 0:		title = "PUBLIC CLOUD";		break;
-            case 1:		title = "MY CLOUD";		break;
-			case 2:		title = "LOCAL";		break;
+                case 0:		title = "PUBLIC CLOUD";	break;
+                case 1:		title = "MY CLOUD";		break;
+                case 2:		title = "LOCAL";		break;
+                case 3:		title = "MUSIC";		break;
 			}
 			return title;
         }
@@ -244,61 +257,61 @@ public class FileManagerFragment extends Fragment {
 	}
 	
 	public void refreshListServer(String search) {
-		if(listFragment[0]!=null)
-			if(listFragment[0] instanceof FileManagerFragmentCloud) {
-                FileManagerFragmentCloud fragmentFileManagerFragment = (FileManagerFragmentCloud) listFragment[0];
-				fragmentFileManagerFragment.refreshList(search);
-			}
-        if(listFragment[1]!=null)
-            if(listFragment[1] instanceof FileManagerFragmentMyCloud) {
-                FileManagerFragmentMyCloud fragmentFileManagerFragment = (FileManagerFragmentMyCloud) listFragment[1];
-                fragmentFileManagerFragment.refreshList(search);
+        for(FragmentFab fr : listFragment) {
+            if(fr!=null) {
+                if (fr instanceof FileManagerFragmentCloud) {
+                    FileManagerFragmentCloud fragmentFileManagerFragment = (FileManagerFragmentCloud) fr;
+                    fragmentFileManagerFragment.refreshList(search);
+                }
+                else if (fr instanceof FileManagerFragmentMyCloud) {
+                    FileManagerFragmentMyCloud fragmentFileManagerFragment = (FileManagerFragmentMyCloud) fr;
+                    fragmentFileManagerFragment.refreshList(search);
+                }
+                else if (fr instanceof FileManagerFragmentLocal) {
+                    FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) fr;
+                    fragmentFileManagerFragment.refreshList(search);
+                }
             }
-        if(listFragment[2]!=null)
-            if(listFragment[2] instanceof FileManagerFragmentLocal) {
-                FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[2];
-                fragmentFileManagerFragment.refreshList(search);
-            }
+        }
 	}
 	
 	public void updateAdapterListServer() {
-		if(listFragment[0]!=null)
-			if(listFragment[0] instanceof FileManagerFragmentCloud) {
-				FileManagerFragmentCloud fragmentFileManagerFragment = (FileManagerFragmentCloud) listFragment[0];
-				fragmentFileManagerFragment.updateAdapter();
-			}
-        if(listFragment.length>1)
-            if(listFragment[1]!=null)
-                if(listFragment[1] instanceof FileManagerFragmentMyCloud) {
-                    FileManagerFragmentMyCloud fragmentFileManagerFragment = (FileManagerFragmentMyCloud) listFragment[1];
+
+        for(FragmentFab fr : listFragment) {
+            if(fr!=null) {
+                if (fr instanceof FileManagerFragmentCloud) {
+                    FileManagerFragmentCloud fragmentFileManagerFragment = (FileManagerFragmentCloud) fr;
                     fragmentFileManagerFragment.updateAdapter();
                 }
-		if(listFragment.length>2)
-			if(listFragment[2]!=null)
-				if(listFragment[2] instanceof FileManagerFragmentLocal) {
-					FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[2];
-					fragmentFileManagerFragment.updateAdapter();
-				}
+                else if (fr instanceof FileManagerFragmentMyCloud) {
+                    FileManagerFragmentMyCloud fragmentFileManagerFragment = (FileManagerFragmentMyCloud) fr;
+                    fragmentFileManagerFragment.updateAdapter();
+                }
+                else if (fr instanceof FileManagerFragmentLocal) {
+                    FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) fr;
+                    fragmentFileManagerFragment.updateAdapter();
+                }
+            }
+        }
 	}
 	
 	public void refreshAdapterListServer() {
-		if(listFragment[0]!=null)
-			if(listFragment[0] instanceof FileManagerFragmentCloud) {
-                FileManagerFragmentCloud fragmentFileManagerFragment = (FileManagerFragmentCloud) listFragment[0];
-				fragmentFileManagerFragment.refreshList();
-			}		
-		if(listFragment.length>1)
-			if(listFragment[1]!=null)
-				if(listFragment[1] instanceof FileManagerFragmentMyCloud) {
-                    FileManagerFragmentMyCloud fragmentFileManagerFragment = (FileManagerFragmentMyCloud) listFragment[1];
-					fragmentFileManagerFragment.refreshList();
-				}
-        if(listFragment.length>2)
-            if(listFragment[2]!=null)
-                if(listFragment[2] instanceof FileManagerFragmentLocal) {
-                    FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[2];
+        for(FragmentFab fr : listFragment) {
+            if(fr!=null) {
+                if (fr instanceof FileManagerFragmentCloud) {
+                    FileManagerFragmentCloud fragmentFileManagerFragment = (FileManagerFragmentCloud) fr;
                     fragmentFileManagerFragment.refreshList();
                 }
+                if (fr instanceof FileManagerFragmentMyCloud) {
+                    FileManagerFragmentMyCloud fragmentFileManagerFragment = (FileManagerFragmentMyCloud) fr;
+                    fragmentFileManagerFragment.refreshList();
+                }
+                if (fr instanceof FileManagerFragmentLocal) {
+                    FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) fr;
+                    fragmentFileManagerFragment.refreshList();
+                }
+            }
+        }
 	}
 
 	public void add() {
