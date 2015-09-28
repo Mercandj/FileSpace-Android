@@ -18,10 +18,10 @@
         android:textSize="35sp"
         app:reflectionColor="#ccc"
         android:gravity="center"
-        android:layout_marginTop="34dp"
+        android:layout_marginTop="28dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="24dp"/>
+        android:layout_marginBottom="18dp"/>
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -47,7 +47,7 @@
         android:gravity="center"
         android:textColor="#555"
         android:textSize="22sp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="12dp"
         app:reflectionColor="#ccc"/>
 
 </RelativeLayout>
