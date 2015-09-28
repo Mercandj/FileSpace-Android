@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,7 @@ import mercandalli.com.filespace.model.ModelSetting;
 import mercandalli.com.filespace.ui.activity.ActivityRegisterLogin;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.adapter.AdapterModelSetting;
+import mercandalli.com.filespace.ui.dialog.DialogAuthorLabel;
 import mercandalli.com.filespace.util.TimeUtils;
 
 public class SettingsFragment extends Fragment {
@@ -118,6 +120,13 @@ public class SettingsFragment extends Fragment {
                 }
             }));
         }
+
+        list.add(new ModelSetting(app, app.getString(R.string.about), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DialogAuthorLabel(app);
+            }
+        }));
 
 		try {
 			PackageInfo pInfo = app.getPackageManager().getPackageInfo(app.getPackageName(), 0);

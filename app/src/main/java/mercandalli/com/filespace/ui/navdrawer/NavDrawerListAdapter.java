@@ -27,7 +27,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -90,24 +89,23 @@ public class NavDrawerListAdapter extends BaseAdapter {
 			else if(navDrawerItems.get(position).containsImage)
 				((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(item.icon));
 			else
-				((ImageView) convertView.findViewById(R.id.icon)).setVisibility(View.GONE);
+				convertView.findViewById(R.id.icon).setVisibility(View.GONE);
+
+			StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getAbsolutePath());
+			long blockSize = statFs.getBlockSize();
+			long totalSize = statFs.getBlockCount()*blockSize;
+			long availableSize = statFs.getAvailableBlocks()*blockSize;
+			long freeSize = statFs.getFreeBlocks()*blockSize;
 
             if(app.isLogged())
                 convertView.findViewById(R.id.imageStorage).setVisibility(View.GONE);
 			else {
-				((ImageView) convertView.findViewById(R.id.icon)).setVisibility(View.INVISIBLE);
-
-                StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getAbsolutePath());
-                long blockSize = statFs.getBlockSize();
-                long totalSize = statFs.getBlockCount()*blockSize;
-                long availableSize = statFs.getAvailableBlocks()*blockSize;
-                long freeSize = statFs.getFreeBlocks()*blockSize;
-
+				convertView.findViewById(R.id.icon).setVisibility(View.INVISIBLE);
                 ((TextView) convertView.findViewById(R.id.title)).setText( ((int)(((totalSize-availableSize)*100.0/totalSize))) + "% Full");
-                ((TextView) convertView.findViewById(R.id.subtitle)).setText("Using "+ FileUtils.humanReadableByteCount(totalSize-availableSize) + " of " + FileUtils.humanReadableByteCount(totalSize));
 			}
 
-			((RelativeLayout) convertView.findViewById(R.id.root)).setBackgroundResource(item.idBackgroundColor);
+			((TextView) convertView.findViewById(R.id.subtitle)).setText("Using "+ FileUtils.humanReadableByteCount(totalSize-availableSize) + " of " + FileUtils.humanReadableByteCount(totalSize));
+			convertView.findViewById(R.id.root).setBackgroundResource(item.idBackgroundColor);
 			
 			break;		
 		
@@ -127,7 +125,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
 					((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(item.icon));
 			}
 			else
-				((ImageView) convertView.findViewById(R.id.icon)).setVisibility(View.GONE);
+				convertView.findViewById(R.id.icon).setVisibility(View.GONE);
 			
 			break;
 			
@@ -154,7 +152,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
 			if(navDrawerItems.get(position).containsImage)
 				((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(item.icon));
 			else
-				((ImageView) convertView.findViewById(R.id.icon)).setVisibility(View.GONE);
+				convertView.findViewById(R.id.icon).setVisibility(View.GONE);
 			
 			break;
 		}

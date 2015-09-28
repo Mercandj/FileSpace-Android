@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Personal Project : Control server
+		MERCANDALLI Jonathan
+-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.romainpiel.shimmer.ShimmerTextView
+        android:id="@+id/shimmer_tv"
+        android:text="@string/author_full_name"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:textColor="#555"
+        android:textSize="35sp"
+        app:reflectionColor="#ccc"
+        android:gravity="center"
+        android:layout_marginTop="34dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ok"
+        android:id="@+id/dismiss"
+        android:layout_below="@+id/version_tv"
+        android:layout_alignParentEnd="true"
+        android:paddingLeft="26dp"
+        android:paddingRight="26sp"
+        android:layout_margin="16dp"/>
+
+    <com.romainpiel.shimmer.ShimmerTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/ok"
+        android:id="@+id/version_tv"
+        android:layout_below="@+id/shimmer_tv"
+        android:layout_alignStart="@+id/shimmer_tv"
+        android:layout_alignEnd="@+id/shimmer_tv"
+        android:gravity="center"
+        android:textColor="#555"
+        android:textSize="22sp"
+        android:layout_marginBottom="16dp"
+        app:reflectionColor="#ccc"/>
+
+</RelativeLayout>

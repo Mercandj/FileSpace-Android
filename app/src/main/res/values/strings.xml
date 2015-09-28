@@ -11,6 +11,8 @@
 
     <string name="image_description">Description Image</string>
 
+    <string name="author">Author</string>
+    <string name="about">About</string>
     <string name="action_failed">Action failed</string>
     <string name="no_user">No User.</string>
     <string name="no_person">No Person.</string>
