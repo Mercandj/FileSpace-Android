@@ -103,8 +103,8 @@ public class NavDrawerListAdapter extends BaseAdapter {
                 long availableSize = statFs.getAvailableBlocks()*blockSize;
                 long freeSize = statFs.getFreeBlocks()*blockSize;
 
-                ((TextView) convertView.findViewById(R.id.title)).setText( ((int)((availableSize*100.0/totalSize))) + "% Full");
-                ((TextView) convertView.findViewById(R.id.subtitle)).setText("Using "+ FileUtils.humanReadableByteCount(availableSize) + " of " + FileUtils.humanReadableByteCount(totalSize));
+                ((TextView) convertView.findViewById(R.id.title)).setText( ((int)(((totalSize-availableSize)*100.0/totalSize))) + "% Full");
+                ((TextView) convertView.findViewById(R.id.subtitle)).setText("Using "+ FileUtils.humanReadableByteCount(totalSize-availableSize) + " of " + FileUtils.humanReadableByteCount(totalSize));
 			}
 
 			((RelativeLayout) convertView.findViewById(R.id.root)).setBackgroundResource(item.idBackgroundColor);
