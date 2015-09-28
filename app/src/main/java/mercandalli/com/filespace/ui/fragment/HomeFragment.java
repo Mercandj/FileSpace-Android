@@ -57,7 +57,6 @@ import mercandalli.com.filespace.ia.InterpreterResult;
 import mercandalli.com.filespace.listener.IModelHomeListener;
 import mercandalli.com.filespace.model.ModelHome;
 import mercandalli.com.filespace.model.ModelServerMessage;
-import mercandalli.com.filespace.ui.activity.ActivityRegisterLogin;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.activity.ApplicationDrawer;
 import mercandalli.com.filespace.ui.adapter.AdapterModelHome;
@@ -162,7 +161,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
 
         if(this.app.getConfig().isHomeWelcomeMessage()) {
 
-            Spanned htmlMessage = Html.fromHtml("<a>This app give you the control on your local files. Please <font color=\"#26AEEE\">login</font> or <font color=\"#26AEEE\">sign in</font> in order to share files between different devices.</a>");
+            Spanned htmlMessage = Html.fromHtml("<a>This app give you the control on your local <font color=\"#26AEEE\">files</font>. This app is also a <font color=\"#f57c00\">music</font> player.</a>");
             if(app.getConfig().isLogged())
                 htmlMessage = Html.fromHtml("<a>This app give you the Cloud control from your Android device and your PC thanks to the <font color=\"#26AEEE\">web application</font>. You can share files and talk with your friends.</a>");
 
@@ -182,7 +181,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                         removeItemList(modelHome);
                         app.getConfig().setHomeWelcomeMessage(false);
                     }
-                }, new IModelHomeListener() {
+                }/*, new IModelHomeListener() {
                     @Override
                     public void execute(ModelHome modelHome) {
                         Intent intent = new Intent(app, ActivityRegisterLogin.class);
@@ -190,7 +189,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                         app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                         app.finish();
                     }
-                }, htmlMessage, Const.TAB_VIEW_TYPE_HOME_INFORMATION));
+                }*/, htmlMessage, Const.TAB_VIEW_TYPE_HOME_INFORMATION));
             }
         }
 

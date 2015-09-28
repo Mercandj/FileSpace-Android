@@ -19,25 +19,23 @@
  */
 package mercandalli.com.filespace.ui.navdrawer;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Environment;
+import android.os.StatFs;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.google.android.gms.common.SignInButton;
 
 import java.util.ArrayList;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.ui.activity.ActivityRegisterLogin;
 import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.FontUtils;
 
 /**
@@ -94,29 +92,20 @@ public class NavDrawerListAdapter extends BaseAdapter {
 			else
 				((ImageView) convertView.findViewById(R.id.icon)).setVisibility(View.GONE);
 
-			SignInButton signInButton = ((SignInButton) convertView.findViewById(R.id.signInButton));
-            Button signIn = ((Button) convertView.findViewById(R.id.signIn));
-            if(app.isLogged()) {
-                signInButton.setVisibility(View.GONE);
-                signIn.setVisibility(View.GONE);
-            }
-            else {
-                ((TextView) convertView.findViewById(R.id.title)).setVisibility(View.GONE);
-                ((TextView) convertView.findViewById(R.id.subtitle)).setVisibility(View.GONE);
-                ((ImageView) convertView.findViewById(R.id.icon)).setVisibility(View.GONE);
-                signInButton.setVisibility(View.VISIBLE);
-                signIn.setVisibility(View.VISIBLE);
-                signIn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(app, ActivityRegisterLogin.class);
-                        app.startActivity(intent);
-                        app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                        app.finish();
-                    }
-                });
-                FontUtils.applyFont(app, signIn, "fonts/Roboto-Medium.ttf");
-            }
+            if(app.isLogged())
+                convertView.findViewById(R.id.imageStorage).setVisibility(View.GONE);
+			else {
+				((ImageView) convertView.findViewById(R.id.icon)).setVisibility(View.INVISIBLE);
+
+                StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getAbsolutePath());
+                long blockSize = statFs.getBlockSize();
+                long totalSize = statFs.getBlockCount()*blockSize;
+                long availableSize = statFs.getAvailableBlocks()*blockSize;
+                long freeSize = statFs.getFreeBlocks()*blockSize;
+
+                ((TextView) convertView.findViewById(R.id.title)).setText( ((int)((availableSize*100.0/totalSize))) + "% Full");
+                ((TextView) convertView.findViewById(R.id.subtitle)).setText("Using "+ FileUtils.humanReadableByteCount(availableSize) + " of " + FileUtils.humanReadableByteCount(totalSize));
+			}
 
 			((RelativeLayout) convertView.findViewById(R.id.root)).setBackgroundResource(item.idBackgroundColor);
 			

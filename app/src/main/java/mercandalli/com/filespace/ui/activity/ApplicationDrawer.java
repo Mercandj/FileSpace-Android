@@ -59,7 +59,7 @@ import mercandalli.com.filespace.ui.fragment.workspace.CryptFragment;
 import mercandalli.com.filespace.ui.fragment.workspace.NoteFragment;
 import mercandalli.com.filespace.ui.fragment.workspace.WorkspaceFragment;
 import mercandalli.com.filespace.ui.navdrawer.NavDrawerItem;
-import mercandalli.com.filespace.ui.navdrawer.NavDrawerItemListe;
+import mercandalli.com.filespace.ui.navdrawer.NavDrawerItemList;
 import mercandalli.com.filespace.ui.navdrawer.NavDrawerListAdapter;
 
 public abstract class ApplicationDrawer extends Application {
@@ -76,7 +76,7 @@ public abstract class ApplicationDrawer extends Application {
     protected Toolbar toolbar;
 	protected DrawerLayout mDrawerLayout;
 	protected ListView mDrawerList;
-	protected NavDrawerItemListe navDrawerItems;
+	protected NavDrawerItemList navDrawerItems;
 	protected ActionBarDrawerToggle mDrawerToggle;
 		
 	@Override
@@ -100,16 +100,18 @@ public abstract class ApplicationDrawer extends Application {
         mDrawerList 	= (ListView) 		findViewById(R.id.left_drawer);
         
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        navDrawerItems = new NavDrawerItemListe();
+        navDrawerItems = new NavDrawerItemList();
         
         // Tab 0
         navDrawerItems.add(
         		new NavDrawerItem( this.getConfig().getUserUsername(), "Edit your profile", new IListener() {
                     @Override
                     public void execute() {
-                        fragment = new ProfileFragment(ApplicationDrawer.this);
-                        FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                        if(isLogged()) {
+                            fragment = new ProfileFragment(ApplicationDrawer.this);
+                            FragmentManager fragmentManager = getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                        }
                     }
                 }, R.drawable.ic_user, R.color.actionbar, Const.TAB_VIEW_TYPE_PROFIL)
         );
@@ -316,7 +318,7 @@ public abstract class ApplicationDrawer extends Application {
         ID_FRAGMENT_VISITED.push(position);
 
         if(toolbar != null) {
-            if(position == 0) {
+            if(position == 0 && isLogged()) {
                 toolbar.setBackgroundColor(Color.TRANSPARENT);
                 toolbar_space.setVisibility(View.GONE);
                 setStatusBarColor(R.color.notifications_bar);
@@ -336,10 +338,11 @@ public abstract class ApplicationDrawer extends Application {
     	for(NavDrawerItem nav : navDrawerItems.getListe()) {
     		nav.isSelected = false;
     		if(navDrawerItems.get(position).equals(nav)) {
-    			nav.isSelected = true;
+                nav.isSelected = true;
     			if(nav.listenerClick!=null)
     				nav.listenerClick.execute();
-                getSupportActionBar().setTitle((position == 0)?"":nav.title);
+                if( !(position == 0 && !isLogged()) )
+                    getSupportActionBar().setTitle((position == 0 && isLogged())?"":nav.title);
     		}
     	}
         mDrawerLayout.closeDrawer(mDrawerList);
@@ -443,9 +446,9 @@ public abstract class ApplicationDrawer extends Application {
             		if(fragment instanceof FileManagerFragment) {
                 		FileManagerFragment tmp_fragment = (FileManagerFragment) fragment;    		
                 		switch(tmp_fragment.getCurrentFragmentIndex()) {
-                		case 0: tmp_fragment.refreshListServer(); break;
-                        case 1: tmp_fragment.refreshListServer(); break;
-                        case 2: tmp_fragment.refreshListServer(); break;
+                            case 0: tmp_fragment.refreshListServer(); break;
+                            case 1: tmp_fragment.refreshListServer(); break;
+                            case 2: tmp_fragment.refreshListServer(); break;
                 		}
                 	}
                     else if(fragment instanceof GenealogyFragment) {
@@ -469,9 +472,9 @@ public abstract class ApplicationDrawer extends Application {
             	if(fragment instanceof FileManagerFragment) {
             		FileManagerFragment tmp_fragment = (FileManagerFragment) fragment;    		
             		switch(tmp_fragment.getCurrentFragmentIndex()) {
-            		case 0: tmp_fragment.refreshListServer(query); break;
-                    case 1: tmp_fragment.refreshListServer(query); break;
-                    case 2: tmp_fragment.refreshListServer(query); break;
+                        case 0: tmp_fragment.refreshListServer(query); break;
+                        case 1: tmp_fragment.refreshListServer(query); break;
+                        case 2: tmp_fragment.refreshListServer(query); break;
             		}
             	}
                 else if(fragment instanceof GenealogyFragment) {

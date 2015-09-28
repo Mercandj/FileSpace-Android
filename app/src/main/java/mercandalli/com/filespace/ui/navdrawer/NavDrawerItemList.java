@@ -26,7 +26,7 @@ import java.util.ArrayList;
  * @author Jonathan
  *
  */
-public class NavDrawerItemListe {
+public class NavDrawerItemList {
 
     private ArrayList<NavDrawerItem> liste = new ArrayList<NavDrawerItem>();
 	

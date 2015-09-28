@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.ui.fragment;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.ia.action.ENUM_Action;
 import mercandalli.com.filespace.model.ModelSetting;
+import mercandalli.com.filespace.ui.activity.ActivityRegisterLogin;
 import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.adapter.AdapterModelSetting;
 import mercandalli.com.filespace.util.TimeUtils;
@@ -49,8 +51,9 @@ public class SettingsFragment extends Fragment {
 	
 	private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    List<ModelSetting> list;
-	int click_version;
+    private List<ModelSetting> list;
+    private int click_version;
+    private boolean isDevelopper = false;
 
 	public SettingsFragment(Application app) {
 		this.app = app;
@@ -99,8 +102,19 @@ public class SettingsFragment extends Fragment {
             list.add(new ModelSetting(app, "Change password", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //TODO Change passord
+                    //TODO Change password
                     Toast.makeText(app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                }
+            }));
+        }
+        if(isDevelopper) {
+            list.add(new ModelSetting(app, "Login / Sign in", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(app, ActivityRegisterLogin.class);
+                    app.startActivity(intent);
+                    app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                    app.finish();
                 }
             }));
         }
@@ -113,6 +127,8 @@ public class SettingsFragment extends Fragment {
                 public void onClick(View view) {
                     if (click_version == 11) {
                         Toast.makeText(app, "Development settings activated.", Toast.LENGTH_SHORT).show();
+                        isDevelopper = true;
+                        refreshList();
                     } else if (click_version < 11) {
                         if (click_version >= 1) {
                             final Toast t = Toast.makeText(app, "" + (11 - click_version), Toast.LENGTH_SHORT);

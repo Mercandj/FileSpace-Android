@@ -89,18 +89,22 @@ public class FileManagerFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 FileManagerFragment.this.app.invalidateOptionsMenu();
-                switch (position) {
-                    case 0:
-                        updateNoInternet();
-                        break;
-                    case 1:
-                        updateNoInternet();
-                        break;
-                    default:
-                        if (snackbar != null)
-                            snackbar.dismiss();
+                if(app.isLogged()) {
+                    switch (position) {
+                        case 0:
+                            updateNoInternet();
+                            break;
+                        case 1:
+                            updateNoInternet();
+                            break;
+                        default:
+                            if (snackbar != null)
+                                snackbar.dismiss();
+                    }
+                    refreshFab(position);
                 }
-                refreshFab(position);
+                else
+                    refreshFab(position+2);
             }
         });
         if(app.isLogged()) {
@@ -135,7 +139,7 @@ public class FileManagerFragment extends Fragment {
         int result = mViewPager.getCurrentItem();
 		if(result >= listFragment.length)
             return -1;
-        return mViewPager.getCurrentItem();
+        return mViewPager.getCurrentItem() + (app.isLogged()?0:2);
 	}
 
     @Override
