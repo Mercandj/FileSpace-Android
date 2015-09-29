@@ -46,7 +46,6 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelHardware;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.view.slider.Slider;
 import mercandalli.com.filespace.util.StringPair;
 
@@ -69,8 +68,6 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
     ModelHardware SERVO_1;
     ModelHardware SERVO_2;
 
-
-    private Application app;
     private View rootView;
     private ToggleButton toggleButton1, toggleButton2, toggleButton3;
     private EditText output, distance_right, distance_left, times;
@@ -89,8 +86,8 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
 
     private DecimalFormat df;
 
-    public RoboticsFragment(Application app) {
-        this.app = app;
+    public RoboticsFragment() {
+        super();
     }
 
     @Override

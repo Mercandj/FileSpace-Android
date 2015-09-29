@@ -65,7 +65,6 @@ import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
  */
 public class UserFragment extends Fragment {
 
-    Application app;
     private View rootView;
 
     private RecyclerView recyclerView;

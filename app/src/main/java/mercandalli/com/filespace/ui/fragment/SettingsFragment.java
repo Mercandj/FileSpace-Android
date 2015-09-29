@@ -41,14 +41,12 @@ import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.ia.action.ENUM_Action;
 import mercandalli.com.filespace.model.ModelSetting;
 import mercandalli.com.filespace.ui.activity.ActivityRegisterLogin;
-import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.adapter.AdapterModelSetting;
 import mercandalli.com.filespace.ui.dialog.DialogAuthorLabel;
 import mercandalli.com.filespace.util.TimeUtils;
 
 public class SettingsFragment extends Fragment {
 
-	private Application app;
 	private View rootView;
 	
 	private RecyclerView recyclerView;
@@ -57,8 +55,8 @@ public class SettingsFragment extends Fragment {
     private int click_version;
     private boolean isDevelopper = false;
 
-	public SettingsFragment(Application app) {
-		this.app = app;
+	public SettingsFragment() {
+		super();
 	}
 
 	@Override

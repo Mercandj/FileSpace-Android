@@ -108,7 +108,8 @@ public abstract class ApplicationDrawer extends Application {
                     @Override
                     public void execute() {
                         if(isLogged()) {
-                            fragment = new ProfileFragment(ApplicationDrawer.this);
+                            fragment = new ProfileFragment();
+                            fragment.setApp(ApplicationDrawer.this);
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                         }
@@ -126,7 +127,8 @@ public abstract class ApplicationDrawer extends Application {
                 new NavDrawerItem(getString(R.string.tab_home), new IListener() {
                     @Override
                     public void execute() {
-                        fragment = new HomeFragment(ApplicationDrawer.this);
+                        fragment = new HomeFragment();
+                        fragment.setApp(ApplicationDrawer.this);
                         FragmentManager fragmentManager = getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                     }
@@ -138,7 +140,8 @@ public abstract class ApplicationDrawer extends Application {
         		new NavDrawerItem(getString(R.string.tab_files), new IListener() {
 						@Override
 						public void execute() {
-							fragment = new FileManagerFragment(ApplicationDrawer.this);
+							fragment = new FileManagerFragment();
+                            fragment.setApp(ApplicationDrawer.this);
 					        FragmentManager fragmentManager = getFragmentManager();
 					        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 						}
@@ -150,7 +153,8 @@ public abstract class ApplicationDrawer extends Application {
                 new NavDrawerItem(getString(R.string.tab_workspace), new IListener() {
                     @Override
                     public void execute() {
-                        fragment = new WorkspaceFragment(ApplicationDrawer.this);
+                        fragment = new WorkspaceFragment();
+                        fragment.setApp(ApplicationDrawer.this);
                         FragmentManager fragmentManager = getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                     }
@@ -164,7 +168,8 @@ public abstract class ApplicationDrawer extends Application {
                     new NavDrawerItem(getString(R.string.tab_community), new IListener() {
                         @Override
                         public void execute() {
-                            fragment = new CommunityFragment(ApplicationDrawer.this);
+                            fragment = new CommunityFragment();
+                            fragment.setApp(ApplicationDrawer.this);
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                         }
@@ -179,7 +184,8 @@ public abstract class ApplicationDrawer extends Application {
                     new NavDrawerItem(getString(R.string.tab_robotics), new IListener() {
                         @Override
                         public void execute() {
-                            fragment = new RoboticsFragment(ApplicationDrawer.this);
+                            fragment = new RoboticsFragment();
+                            fragment.setApp(ApplicationDrawer.this);
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                         }
@@ -191,7 +197,8 @@ public abstract class ApplicationDrawer extends Application {
                     new NavDrawerItem(getString(R.string.tab_genealogy), new IListener() {
                         @Override
                         public void execute() {
-                            fragment = new GenealogyFragment(ApplicationDrawer.this);
+                            fragment = new GenealogyFragment();
+                            fragment.setApp(ApplicationDrawer.this);
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                         }
@@ -203,7 +210,8 @@ public abstract class ApplicationDrawer extends Application {
                     new NavDrawerItem(getString(R.string.tab_admin), new IListener() {
                         @Override
                         public void execute() {
-                            fragment = new AdminFragment(ApplicationDrawer.this);
+                            fragment = new AdminFragment();
+                            fragment.setApp(ApplicationDrawer.this);
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                         }
@@ -228,7 +236,8 @@ public abstract class ApplicationDrawer extends Application {
     				new IListener() {
 						@Override
 						public void execute() {
-							fragment = new SettingsFragment(ApplicationDrawer.this);
+							fragment = new SettingsFragment();
+                            fragment.setApp(ApplicationDrawer.this);
 					        FragmentManager fragmentManager = getFragmentManager();
 					        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 						}
@@ -266,7 +275,10 @@ public abstract class ApplicationDrawer extends Application {
         			new IListener() {
 						@Override
 						public void execute() {
-							fragment = new WebFragment(ApplicationDrawer.this, ApplicationDrawer.this.getConfig().aboutURL);
+                            WebFragment fr = new WebFragment();
+                            fr.setApp(ApplicationDrawer.this);
+                            fr.setInitURL(ApplicationDrawer.this.getConfig().aboutURL);
+                            fragment = fr;
 					        FragmentManager fragmentManager = getFragmentManager();
 					        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 						}

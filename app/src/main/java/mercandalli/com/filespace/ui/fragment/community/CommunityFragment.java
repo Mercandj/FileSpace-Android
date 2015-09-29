@@ -33,7 +33,6 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.ui.activity.ApplicationDrawer;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.ui.view.PagerSlidingTabStrip;
@@ -43,18 +42,12 @@ public class CommunityFragment extends Fragment {
     private static final int NB_FRAGMENT = 3;
     private static final int INIT_FRAGMENT = 1;
     public static Fragment listFragment[] = new Fragment[NB_FRAGMENT];
-    private Application app;
     private ViewPager mViewPager;
     private FileManagerFragmentPagerAdapter mPagerAdapter;
     private PagerSlidingTabStrip tabs;
 
     public CommunityFragment() {
         super();
-    }
-
-    public CommunityFragment(ApplicationDrawer app) {
-        super();
-        this.app = app;
     }
 
     @Override

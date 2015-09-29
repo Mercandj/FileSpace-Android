@@ -33,14 +33,9 @@ import mercandalli.com.filespace.ui.activity.Application;
  */
 public class EmptyFragment extends Fragment {
 
-    private Application app;
     private View rootView;
 
     public EmptyFragment() {
-        this.app = app;
-    }
-
-    public EmptyFragment(Application app) {
         this.app = app;
     }
 

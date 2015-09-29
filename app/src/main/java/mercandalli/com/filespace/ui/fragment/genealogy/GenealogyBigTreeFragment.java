@@ -34,7 +34,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelGenealogyPerson;
 import mercandalli.com.filespace.net.TaskGet;
@@ -49,7 +48,6 @@ import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
  */
 public class GenealogyBigTreeFragment extends FragmentFab {
 
-    private Application app;
     private View rootView;
 
     private static ModelGenealogyPerson genealogyPerson = null;
@@ -65,14 +63,6 @@ public class GenealogyBigTreeFragment extends FragmentFab {
 
     public GenealogyBigTreeFragment() {
         super();
-    }
-
-    public GenealogyBigTreeFragment(Application app) {
-        this.app = app;
-    }
-
-    public GenealogyBigTreeFragment(IListener refreshFab) {
-        super(refreshFab);
     }
 
     @Override

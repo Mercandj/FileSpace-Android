@@ -19,10 +19,16 @@
  */
 package mercandalli.com.filespace.ui.fragment;
 
+import mercandalli.com.filespace.ui.activity.Application;
+
 /**
  * Created by Jonathan on 17/04/2015.
  */
 public abstract class Fragment extends android.app.Fragment {
     public abstract boolean back();
     public abstract void onFocus();
+    protected Application app;
+    public void setApp(Application app) {
+        this.app = app;
+    }
 }

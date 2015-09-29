@@ -41,7 +41,6 @@ public class AdminFragment extends Fragment {
     private static final int NB_FRAGMENT = 8;
     private static final int INIT_FRAGMENT = 0;
     public static Fragment listFragment[] = new Fragment[NB_FRAGMENT];
-    private Application app;
     private NonSwipeableViewPager mViewPager;
     private FileManagerFragmentPagerAdapter mPagerAdapter;
     private PagerSlidingTabStrip tabs;
@@ -50,8 +49,7 @@ public class AdminFragment extends Fragment {
         super();
     }
 
-    public AdminFragment(ApplicationDrawer app) {
-        super();
+    public void setApp(ApplicationDrawer app) {
         this.app = app;
     }
 

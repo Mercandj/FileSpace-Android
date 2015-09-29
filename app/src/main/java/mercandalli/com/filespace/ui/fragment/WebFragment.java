@@ -29,7 +29,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
-import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.ui.view.MyWebViewClient;
 
@@ -40,16 +39,18 @@ import mercandalli.com.filespace.ui.view.MyWebViewClient;
  */
 public class WebFragment extends Fragment {
 
-	Application app;
 	private ProgressBar progress_web;
 	private WebView webView;
 	private View rootView;    
 	private String initURL;
     
-    public WebFragment(Application app, String initURL) {
-    	this.app = app;
-    	this.initURL = initURL;
+    public WebFragment() {
+    	super();
     }
+
+	public void setInitURL(String initURL) {
+		this.initURL = initURL;
+	}
 
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -71,7 +71,6 @@ import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
 public class FileManagerFragmentMyCloud extends FragmentFab {
 
-	private Application app;
 	private RecyclerView listView;
     private GridView gridView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -89,10 +88,6 @@ public class FileManagerFragmentMyCloud extends FragmentFab {
         super.onAttach(activity);
         app = (Application) activity;
         resetPath();
-    }
-
-    public FileManagerFragmentMyCloud(IListener refreshFab) {
-        super(refreshFab);
     }
 
 	@Override

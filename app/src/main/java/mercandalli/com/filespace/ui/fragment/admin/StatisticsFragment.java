@@ -22,7 +22,6 @@ import mercandalli.com.filespace.ui.fragment.Fragment;
  */
 public class StatisticsFragment extends Fragment {
 
-    private Application app;
     private View rootView;
     public MyGLSurfaceView mGLView;
     public SensorManager mSensorManager;
@@ -42,10 +41,6 @@ public class StatisticsFragment extends Fragment {
 
     public StatisticsFragment() {
         super();
-    }
-
-    public StatisticsFragment(Application app) {
-        this.app = app;
     }
 
     @Override

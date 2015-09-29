@@ -19,7 +19,6 @@ import mercandalli.com.filespace.ui.view.game.Way;
  */
 public class GameFragment extends Fragment {
 
-    private Application app;
     private View rootView;
     GameView gameView;
 
@@ -31,10 +30,6 @@ public class GameFragment extends Fragment {
 
     public GameFragment() {
         super();
-    }
-
-    public GameFragment(Application app) {
-        this.app = app;
     }
 
     @Override

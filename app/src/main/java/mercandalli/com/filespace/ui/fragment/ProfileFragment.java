@@ -47,7 +47,6 @@ import mercandalli.com.filespace.model.ModelSetting;
 import mercandalli.com.filespace.model.ModelUser;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.adapter.AdapterModelSetting;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.FontUtils;
@@ -64,7 +63,6 @@ import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
  */
 public class ProfileFragment extends Fragment {
 
-    private Application app;
     private View rootView;
     private ProgressBar circularProgressBar;
     private ModelUser user;
@@ -76,8 +74,8 @@ public class ProfileFragment extends Fragment {
 
     ImageView icon_back;
 
-    public ProfileFragment(Application app) {
-        this.app = app;
+    public ProfileFragment() {
+        super();
     }
 
     @Override

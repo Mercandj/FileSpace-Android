@@ -64,7 +64,6 @@ import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
  */
 public class GenealogyListFragment extends FragmentFab {
 
-    private Application app;
     private View rootView;
 
     private List<ModelGenealogyPerson> list;
@@ -94,18 +93,8 @@ public class GenealogyListFragment extends FragmentFab {
         app = (Application) activity;
     }
 
-    public GenealogyListFragment(IListener refreshFab, IModelGenealogyUserListener onSelect) {
-        super(refreshFab);
+    public void setOnSelect(IModelGenealogyUserListener onSelect) {
         this.onSelect = onSelect;
-    }
-
-    public GenealogyListFragment(IModelGenealogyUserListener onSelect) {
-        super();
-        this.onSelect = onSelect;
-    }
-
-    public GenealogyListFragment(Application app) {
-        this.app = app;
     }
 
     @Override

@@ -52,7 +52,6 @@ import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
 public class UserAddFragment extends Fragment {
 
-	Application app;
 	private View rootView;
     private TextView username, password;
     private ImageButton circle;

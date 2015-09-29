@@ -69,7 +69,6 @@ import mercandalli.com.filespace.util.StringPair;
 
 public class FileManagerFragmentLocal extends FragmentFab {
 	
-	private Application app;
 	private RecyclerView listView;
     private GridView gridView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -87,10 +86,6 @@ public class FileManagerFragmentLocal extends FragmentFab {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.app = (Application) activity;
-    }
-
-    public FileManagerFragmentLocal(IListener refreshFab) {
-        super(refreshFab);
     }
 
 	@Override

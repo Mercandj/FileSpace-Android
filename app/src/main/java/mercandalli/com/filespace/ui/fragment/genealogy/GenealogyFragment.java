@@ -34,7 +34,6 @@ import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IModelGenealogyUserListener;
 import mercandalli.com.filespace.model.ModelGenealogyPerson;
 import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.ui.activity.ApplicationDrawer;
 import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.ui.fragment.FragmentFab;
 import mercandalli.com.filespace.ui.view.NonSwipeableViewPager;
@@ -48,7 +47,6 @@ public class GenealogyFragment extends Fragment {
     private static final int NB_FRAGMENT = 4;
     private static final int INIT_FRAGMENT = 0;
     public static FragmentFab listFragment[] = new FragmentFab[NB_FRAGMENT];
-    private Application app;
     private NonSwipeableViewPager mViewPager;
     private FileManagerFragmentPagerAdapter mPagerAdapter;
     private PagerSlidingTabStrip tabs;
@@ -59,11 +57,6 @@ public class GenealogyFragment extends Fragment {
 
     public GenealogyFragment() {
         super();
-    }
-
-    public GenealogyFragment(ApplicationDrawer app) {
-        super();
-        this.app = app;
     }
 
     @Override
@@ -169,16 +162,11 @@ public class GenealogyFragment extends Fragment {
 
         @Override
         public Fragment getItem(int i) {
-            FragmentFab fragment = null;
-            final IListener refreshFab = new IListener() {
-                @Override
-                public void execute() {
-                    refreshFab();
-                }
-            };
+            FragmentFab fragment;
             switch(i) {
                 case 0:
-                    fragment = new GenealogyListFragment(refreshFab, new IModelGenealogyUserListener() {
+                    GenealogyListFragment fr = new GenealogyListFragment();
+                    fr.setOnSelect(new IModelGenealogyUserListener() {
                         @Override
                         public void execute(ModelGenealogyPerson modelPerson) {
                             for(Fragment fr : listFragment) {
@@ -189,11 +177,19 @@ public class GenealogyFragment extends Fragment {
                             }
                         }
                     });
+                    fragment = fr;
                     break;
-                case 1:		fragment = new GenealogyTreeFragment(refreshFab);         break;
-                case 2:		fragment = new GenealogyBigTreeFragment(refreshFab);      break;
-                case 3:		fragment = new GenealogyStatisticsFragment(refreshFab);   break;
+                case 1:		fragment = new GenealogyTreeFragment();         break;
+                case 2:		fragment = new GenealogyBigTreeFragment();      break;
+                case 3:		fragment = new GenealogyStatisticsFragment();   break;
+                default:    fragment = new GenealogyTreeFragment();
             }
+            fragment.setRefreshFab(new IListener() {
+                @Override
+                public void execute() {
+                    refreshFab();
+                }
+            });
             listFragment[i] = fragment;
             return fragment;
         }

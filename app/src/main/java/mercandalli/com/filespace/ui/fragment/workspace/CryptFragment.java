@@ -24,7 +24,6 @@ import mercandalli.com.filespace.ui.fragment.Fragment;
  */
 public class CryptFragment extends Fragment {
 
-    Application app;
     private View rootView;
     private TextView input, output, tv_cryptKey;
     private ImageButton circle, circle2;

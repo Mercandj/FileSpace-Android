@@ -42,7 +42,6 @@ import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelInformation;
 import mercandalli.com.filespace.net.TaskGet;
@@ -58,7 +57,6 @@ import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
  */
 public class GenealogyStatisticsFragment extends FragmentFab {
 
-    private Application app;
     private View rootView;
 
     private RecyclerView recyclerView;
@@ -91,14 +89,6 @@ public class GenealogyStatisticsFragment extends FragmentFab {
     @Override
     public Drawable getFabDrawable(int fab_id) {
         return null;
-    }
-
-    public GenealogyStatisticsFragment(Application app) {
-        this.app = app;
-    }
-
-    public GenealogyStatisticsFragment(IListener refreshFab) {
-        super(refreshFab);
     }
 
     @Override

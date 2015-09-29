@@ -60,7 +60,6 @@ import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
 public class UserLocationFragment extends Fragment {
 
-	Application app;
 	private View rootView;
     private MapView mapView;
     private TextView text;

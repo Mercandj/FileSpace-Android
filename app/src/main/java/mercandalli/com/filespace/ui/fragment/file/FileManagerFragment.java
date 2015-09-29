@@ -39,7 +39,6 @@ import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.ui.activity.ApplicationDrawer;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragment.Fragment;
 import mercandalli.com.filespace.ui.fragment.FragmentFab;
@@ -52,7 +51,6 @@ public class FileManagerFragment extends Fragment {
 	private static final int NB_FRAGMENT = 4;
     private static final int INIT_FRAGMENT = 1;
 	public static FragmentFab listFragment[] = new FragmentFab[NB_FRAGMENT];
-	private Application app;
 	private ViewPager mViewPager;
 	private FileManagerFragmentPagerAdapter mPagerAdapter;
     private PagerSlidingTabStrip tabs;
@@ -65,11 +63,6 @@ public class FileManagerFragment extends Fragment {
 	
 	public FileManagerFragment() {
 		super();
-	}
-	
-	public FileManagerFragment(ApplicationDrawer app) {
-		super();
-		this.app = app;
 	}
 	
 	@Override
@@ -212,25 +205,23 @@ public class FileManagerFragment extends Fragment {
 		
 		@Override
         public Fragment getItem(int i) {
-
-            final IListener refreshFab = new IListener() {
-                @Override
-                public void execute() {
-                    refreshFab();
-                }
-            };
-
             if(!app.isLogged())
                 i+=2;
 
 			FragmentFab fragment = null;
 			switch(i) {
-                case 0:		fragment = new FileManagerFragmentCloud(refreshFab);  	    break;
-                case 1:		fragment = new FileManagerFragmentMyCloud(refreshFab); 	    break;
-                case 2:		fragment = new FileManagerFragmentLocal(refreshFab);	    break;
-                case 3:		fragment = new FileManagerFragmentLocalMusic(refreshFab);	break;
-                default:	fragment = new FileManagerFragmentLocal(refreshFab);	    break;
+                case 0:		fragment = new FileManagerFragmentCloud();  	break;
+                case 1:		fragment = new FileManagerFragmentMyCloud(); 	break;
+                case 2:		fragment = new FileManagerFragmentLocal();	    break;
+                case 3:		fragment = new FileManagerFragmentLocalMusic();	break;
+                default:	fragment = new FileManagerFragmentLocal();	    break;
 			}
+            fragment.setRefreshFab(new IListener() {
+                @Override
+                public void execute() {
+                    refreshFab();
+                }
+            });
 			listFragment[i] = fragment;
             return listFragment[i];
         }

@@ -41,7 +41,6 @@ import mercandalli.com.filespace.ui.fragment.Fragment;
 
 public class RequestFragment extends Fragment {
 
-	private Application app;
 	private View rootView;
 
 	@Override
@@ -52,10 +51,6 @@ public class RequestFragment extends Fragment {
 
 	public RequestFragment() {
 		super();
-	}
-
-	public RequestFragment(Application app) {
-		this.app = app;
 	}
 
 	@Override

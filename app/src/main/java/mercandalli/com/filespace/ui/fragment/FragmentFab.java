@@ -13,8 +13,7 @@ public abstract class FragmentFab extends Fragment {
     public FragmentFab() {
         super();
     }
-    public FragmentFab(IListener refreshFab) {
-        super();
+    public void setRefreshFab(IListener refreshFab) {
         this.refreshFab = refreshFab;
     }
     public abstract void onFabClick(int fab_id, FloatingActionButton fab);

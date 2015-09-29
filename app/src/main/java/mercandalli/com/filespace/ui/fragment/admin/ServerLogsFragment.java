@@ -58,7 +58,6 @@ import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 
 public class ServerLogsFragment extends Fragment {
 
-	Application app;
 	private View rootView;
 
 	private RecyclerView recyclerView;

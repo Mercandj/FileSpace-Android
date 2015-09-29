@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IModelGenealogyUserListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelGenealogyPerson;
@@ -63,7 +62,6 @@ import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
  */
 public class GenealogyTreeFragment extends FragmentFab {
 
-    private Application app;
     private View rootView;
 
     private ModelGenealogyPerson genealogyPerson = null;
@@ -86,14 +84,6 @@ public class GenealogyTreeFragment extends FragmentFab {
 
     public GenealogyTreeFragment() {
         super();
-    }
-
-    public GenealogyTreeFragment(Application app) {
-        this.app = app;
-    }
-
-    public GenealogyTreeFragment(IListener refreshFab) {
-        super(refreshFab);
     }
 
     @Override

@@ -22,7 +22,6 @@ import mercandalli.com.filespace.util.StringUtils;
  */
 public class NoteFragment extends Fragment {
 
-    Application app;
     private View rootView;
     private TextView input;
 

@@ -67,7 +67,6 @@ import mercandalli.com.filespace.util.StringPair;
 
 public class FileManagerFragmentLocalMusic extends FragmentFab {
 
-	private Application app;
 	private DynamicListView dynamicListView; // http://nhaarman.github.io/ListViewAnimations/
     private GridView gridView;
 	private ArrayList<ModelFile> files;
@@ -81,10 +80,6 @@ public class FileManagerFragmentLocalMusic extends FragmentFab {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.app = (Application) activity;
-    }
-
-    public FileManagerFragmentLocalMusic(IListener refreshFab) {
-        super(refreshFab);
     }
 
 	@Override

@@ -57,7 +57,6 @@ import mercandalli.com.filespace.ia.InterpreterResult;
 import mercandalli.com.filespace.listener.IModelHomeListener;
 import mercandalli.com.filespace.model.ModelHome;
 import mercandalli.com.filespace.model.ModelServerMessage;
-import mercandalli.com.filespace.ui.activity.Application;
 import mercandalli.com.filespace.ui.activity.ApplicationDrawer;
 import mercandalli.com.filespace.ui.adapter.AdapterModelHome;
 
@@ -66,7 +65,6 @@ import mercandalli.com.filespace.ui.adapter.AdapterModelHome;
  */
 public class HomeFragment extends Fragment implements TextToSpeech.OnInitListener {
 
-    private Application app;
     private View rootView;
 
     private RecyclerView recyclerView;
@@ -80,8 +78,8 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
 
     private EditText input;
 
-    public HomeFragment(Application app) {
-        this.app = app;
+    public HomeFragment() {
+        super();
     }
 
     @Override

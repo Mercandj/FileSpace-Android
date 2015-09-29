@@ -37,6 +37,7 @@ public enum ModelFileTypeENUM {
 	SOURCE(new ModelFileType("Source code", new String[] {"java", "c", "cs", "cpp", "sql", "php", "html", "js", "css"})),
 	THREE_D(new ModelFileType("3d model", new String[] {"3ds", "obj", "max"})),
 	ISO(new ModelFileType("Optical disc", new String[] {"iso"})),
+	KEYSTORE(new ModelFileType("KeyStore", new String[] {"keystore", "jdk"})),
 	DIRECTORY(new ModelFileType("Directory", new String[] {"dir", ""}));
 	
 	public ModelFileType type;
