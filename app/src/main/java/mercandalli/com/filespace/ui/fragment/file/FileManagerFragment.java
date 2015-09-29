@@ -366,14 +366,21 @@ public class FileManagerFragment extends Fragment {
                             case 0:
                             case 1:
                             case 2:
-                                if(listFragment.length>2)
-                                    if (listFragment[2] != null)
-                                        if (listFragment[2] instanceof FileManagerFragmentLocal) {
-                                            FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[2];
-                                            fragmentFileManagerFragment.setSort(item==0?Const.SORT_ABC:(item==1?Const.SORT_SIZE:Const.SORT_DATE_MODIFICATION));
-                                        }
-                                if(getCurrentFragmentIndex()!=2)
+                                if (getCurrentFragmentIndex() != 2 && getCurrentFragmentIndex() != 3)
                                     Toast.makeText(app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                else {
+                                    for (Fragment fr : listFragment) {
+                                        if (fr != null) {
+                                            if (fr instanceof FileManagerFragmentLocal) {
+                                                FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) fr;
+                                                fragmentFileManagerFragment.setSort(item == 0 ? Const.SORT_ABC : (item == 1 ? Const.SORT_SIZE : Const.SORT_DATE_MODIFICATION));
+                                            } else if (fr instanceof FileManagerFragmentLocalMusic) {
+                                                FileManagerFragmentLocalMusic fragmentFileManagerFragment = (FileManagerFragmentLocalMusic) fr;
+                                                fragmentFileManagerFragment.setSort(item == 0 ? Const.SORT_ABC : (item == 1 ? Const.SORT_SIZE : Const.SORT_DATE_MODIFICATION));
+                                            }
+                                        }
+                                    }
+                                }
                                 break;
 
                             case 3:
@@ -382,30 +389,30 @@ public class FileManagerFragment extends Fragment {
                                 else
                                     VIEW_MODE = Const.MODE_LIST;
                                 app.getConfig().setUserFileModeView(VIEW_MODE);
-                                if(listFragment[0]!=null)
-                                    if(listFragment[0] instanceof FileManagerFragmentCloud) {
-                                        FileManagerFragmentCloud fragmentFileManagerFragment = (FileManagerFragmentCloud) listFragment[0];
-                                        fragmentFileManagerFragment.updateAdapter();
+                                for (Fragment fr : listFragment) {
+                                    if (fr != null) {
+                                        if (fr instanceof FileManagerFragmentCloud) {
+                                            FileManagerFragmentCloud fragmentFileManagerFragment = (FileManagerFragmentCloud) fr;
+                                            fragmentFileManagerFragment.updateAdapter();
+                                        } else if (fr instanceof FileManagerFragmentMyCloud) {
+                                            FileManagerFragmentMyCloud fragmentFileManagerFragment = (FileManagerFragmentMyCloud) fr;
+                                            fragmentFileManagerFragment.updateAdapter();
+                                        } else if (fr instanceof FileManagerFragmentLocal) {
+                                            FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) fr;
+                                            fragmentFileManagerFragment.updateAdapter();
+                                        } else if (fr instanceof FileManagerFragmentLocalMusic) {
+                                            FileManagerFragmentLocalMusic fragmentFileManagerFragment = (FileManagerFragmentLocalMusic) fr;
+                                            fragmentFileManagerFragment.updateAdapter();
+                                        }
                                     }
-                                if(listFragment.length>1)
-                                    if(listFragment[1]!=null)
-                                        if(listFragment[1] instanceof FileManagerFragmentMyCloud) {
-                                            FileManagerFragmentMyCloud fragmentFileManagerFragment = (FileManagerFragmentMyCloud) listFragment[1];
-                                            fragmentFileManagerFragment.updateAdapter();
-                                        }
-                                if(listFragment.length>2)
-                                    if(listFragment[2]!=null)
-                                        if(listFragment[2] instanceof FileManagerFragmentLocal) {
-                                            FileManagerFragmentLocal fragmentFileManagerFragment = (FileManagerFragmentLocal) listFragment[2];
-                                            fragmentFileManagerFragment.updateAdapter();
-                                        }
+                                }
                                 break;
                             default:
                                 Toast.makeText(app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-                                break;
+                            break;
                         }
                     }
-				});
+        });
 		AlertDialog menuDrop = menuAlert.create();
 		menuDrop.show();
 	}

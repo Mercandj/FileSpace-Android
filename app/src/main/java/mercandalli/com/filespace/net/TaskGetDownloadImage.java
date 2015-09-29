@@ -56,6 +56,17 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
     int idFile;
     long sizeLimit, sizeFile;
     ILongListener progressListener;
+    private boolean isAuthentication = true;
+    private boolean isModelFile = true;
+
+    public TaskGetDownloadImage(Application app, String url, long sizeLimit, IBitmapListener listener, boolean isAuthentication, boolean isModelFile) {
+        this.app = app;
+        this.url = url;
+        this.listener = listener;
+        this.sizeLimit = sizeLimit;
+        this.isAuthentication = isAuthentication;
+        this.isModelFile = isModelFile;
+    }
 
     public TaskGetDownloadImage(Application app, ModelUser user, ModelFile fileModel, long sizeLimit, IBitmapListener listener) {
         this.app = app;
@@ -104,8 +115,10 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
 
     public Bitmap drawable_from_url_Authorization() {
         Log.d("TaskGetDownloadImage", "id:" + idFile + "  url:"+url);
-        if(is_image(this.app, this.idFile))
-            return load_image(this.app, this.idFile);
+
+        if(isModelFile)
+            if(is_image(this.app, this.idFile))
+                return load_image(this.app, this.idFile);
         if(this.sizeLimit > 0)
             if(this.sizeLimit < this.sizeFile)
                 return null;
@@ -116,7 +129,8 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
             String result = Base64.encodeBytes(authentication.toString().getBytes());
 
             HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
-            conn.setRequestProperty("Authorization", "Basic " + result);
+            if(isAuthentication)
+                conn.setRequestProperty("Authorization", "Basic " + result);
             conn.setRequestMethod("GET");
 
             InputStream inputStream = conn.getInputStream();
@@ -140,7 +154,8 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
 
             conn.disconnect();
 
-            save_image(this.app, this.idFile, x);
+            if(isModelFile)
+                save_image(this.app, this.idFile, x);
         } catch (IOException e) {
             e.printStackTrace();
         }

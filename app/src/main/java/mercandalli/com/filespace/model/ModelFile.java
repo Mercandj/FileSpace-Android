@@ -99,7 +99,13 @@ public class ModelFile extends Model implements Parcelable {
     public String adapterTitleStart = "";
 
     public String getAdapterTitle() {
-        if(this.type.equals(ModelFileTypeENUM.FILESPACE.type) && this.content != null)
+        if(this.type == null) {
+            if(this.name!=null)
+                return this.adapterTitleStart + this.getNameExt();
+            else
+                return this.adapterTitleStart + this.url;
+        }
+        else if(this.type.equals(ModelFileTypeENUM.FILESPACE.type) && this.content != null)
             return this.adapterTitleStart + this.content.getAdapterTitle();
         else if(this.name!=null)
             return this.adapterTitleStart + this.getNameExt();
@@ -418,7 +424,7 @@ public class ModelFile extends Model implements Parcelable {
             return;
         }
 		String url = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+id;
-		String url_ouput = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+app.getConfig().localFolderName+File.separator+this.getNameExt();
+		String url_ouput = Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+app.getConfig().getLocalFolderName()+File.separator+this.getNameExt();
 		new TaskGetDownload(this.app, url, url_ouput, this, listener).execute();
 	}
 	

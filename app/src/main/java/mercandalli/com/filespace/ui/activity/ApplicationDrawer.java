@@ -114,7 +114,7 @@ public abstract class ApplicationDrawer extends Application {
                             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                         }
                     }
-                }, R.drawable.ic_user, R.color.actionbar, Const.TAB_VIEW_TYPE_PROFIL)
+                }, R.drawable.ic_user, R.color.actionbar, Const.TAB_VIEW_TYPE_PROFILE)
         );
         
         // Tab 1

@@ -1,21 +1,21 @@
 /**
- * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
+ * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
  *
- * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
+ * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  *
  * LICENSE:
  *
- * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
+ * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
  *
- * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
  *
  * @author Jonathan Mercandalli
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
+ * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
 package mercandalli.com.filespace.ui.fragment;
 
@@ -55,10 +55,14 @@ import mercandalli.com.filespace.ia.Interpreter;
 import mercandalli.com.filespace.ia.InterpreterMain;
 import mercandalli.com.filespace.ia.InterpreterResult;
 import mercandalli.com.filespace.listener.IModelHomeListener;
+import mercandalli.com.filespace.listener.IModelNasaImageListener;
 import mercandalli.com.filespace.model.ModelHome;
+import mercandalli.com.filespace.model.ModelNasaImage;
 import mercandalli.com.filespace.model.ModelServerMessage;
 import mercandalli.com.filespace.ui.activity.ApplicationDrawer;
 import mercandalli.com.filespace.ui.adapter.AdapterModelHome;
+
+import static mercandalli.com.filespace.util.NasaUtils.getNasaRandomPicture;
 
 /**
  * Created by Jonathan on 03/01/2015.
@@ -100,7 +104,7 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
                     Interpreter interpreter = new InterpreterMain(app);
-                    addItemList("Jarvis", interpreter.interpret(input.getText().toString()));
+                    addItemList("FileSpace", interpreter.interpret(input.getText().toString()));
                     input.setText("");
                     return true;
                 }
@@ -133,16 +137,33 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                getNasaRandomPicture(app, new IModelNasaImageListener() {
+                    @Override
+                    public void execute(ModelNasaImage modelNasaImage) {
+                        refreshList(modelNasaImage);
+                    }
+                });
                 refreshList();
             }
         });
 
         refreshList();
 
+        getNasaRandomPicture(app, new IModelNasaImageListener() {
+            @Override
+            public void execute(ModelNasaImage modelNasaImage) {
+                refreshList(modelNasaImage);
+            }
+        });
+
         return rootView;
     }
 
     public void refreshList() {
+        refreshList(null);
+    }
+
+    public void refreshList(ModelNasaImage modelNasaImage) {
         list = new ArrayList<>();
 
         List<ModelServerMessage> serverMessageList = app.getConfig().getListServerMessage_1();
@@ -210,6 +231,16 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
                     }
                 },
                 Const.TAB_VIEW_TYPE_TWO_BUTTONS));
+
+        if(modelNasaImage != null) {
+            list.add(new ModelHome(list.size(), "NASA Image - "+modelNasaImage.date, new IModelHomeListener() {
+                @Override
+                public void execute(ModelHome modelHome) {
+                    removeItemList(modelHome);
+                }
+            }, modelNasaImage.explanation, modelNasaImage.bitmap, Const.TAB_VIEW_TYPE_HOME_IMAGE));
+        }
+
         updateAdapter();
     }
 

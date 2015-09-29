@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.model;
 
+import android.graphics.Bitmap;
 import android.view.View;
 
 import org.json.JSONException;
@@ -34,6 +35,8 @@ public class ModelHome extends Model {
 	public int id, viewType = Const.TAB_VIEW_TYPE_NORMAL;
     public ModelServerMessage serverMessage;
     public ModelForm modelForm;
+
+    public Bitmap image;
 
     public View.OnClickListener listener1, listener2;
     public IModelHomeListener listenerHome1, listenerHome2;
@@ -58,6 +61,16 @@ public class ModelHome extends Model {
 		this.title1 = title1;
 		this.viewType = viewType;
 	}
+
+    public ModelHome(int id, String title1, IModelHomeListener listenerHome1, String title2, Bitmap image, int viewType) {
+        super();
+        this.id = id;
+        this.title1 = title1;
+        this.title2 = title2;
+        this.listenerHome1 = listenerHome1;
+        this.image = image;
+        this.viewType = viewType;
+    }
 
     public ModelHome(int id, String title1, String title2, int viewType) {
         super();

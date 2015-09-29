@@ -228,8 +228,8 @@ public abstract class Application extends AppCompatActivity {
     public ModelFile createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_Jarvis_";
-        File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.getConfig().localFolderName);
+        String imageFileName = "JPEG_" + timeStamp + "_FileSpace_";
+        File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.getConfig().getLocalFolderName());
         ModelFile result = new ModelFile(this);
         result.name = imageFileName + ".jpg";
         result.setFile(File.createTempFile(

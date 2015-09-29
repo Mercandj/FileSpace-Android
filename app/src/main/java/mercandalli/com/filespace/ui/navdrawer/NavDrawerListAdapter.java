@@ -74,7 +74,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
 		NavDrawerItem item = navDrawerItems.get(position);
 		
 		switch(navDrawerItems.get(position).viewType) {
-		case Const.TAB_VIEW_TYPE_PROFIL:
+		case Const.TAB_VIEW_TYPE_PROFILE:
 			convertView = inflater.inflate(R.layout.tab_navdrawer_profil, parent, false);
 			
 			((TextView) convertView.findViewById(R.id.title)).setText(item.title);

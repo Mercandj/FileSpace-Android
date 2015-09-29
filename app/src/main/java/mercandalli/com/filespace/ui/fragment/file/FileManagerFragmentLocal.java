@@ -104,7 +104,7 @@ public class FileManagerFragmentLocal extends FragmentFab {
         this.gridView = (GridView) rootView.findViewById(R.id.gridView);
         this.gridView.setVisibility(View.GONE);
 
-        this.currentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().localFolderName);
+        this.currentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().getLocalFolderName());
 		if(!currentDirectory.exists())
             currentDirectory.mkdir();
 
@@ -216,7 +216,7 @@ public class FileManagerFragmentLocal extends FragmentFab {
 				@Override
 				public void execute(final ModelFile modelFile) {
 					final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
-					String[] menuList = { getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
+					String[] menuList = { getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
                     if(app.isLogged())
                         menuList = new String[]{ getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
                     menuAlert.setTitle("Action");
@@ -224,7 +224,7 @@ public class FileManagerFragmentLocal extends FragmentFab {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int item) {
                                     if(!app.isLogged())
-                                        item+=2;
+                                        item+=1;
 									switch (item) {
                                         case 0:
                                             if(modelFile.directory) {
@@ -488,7 +488,7 @@ public class FileManagerFragmentLocal extends FragmentFab {
             deselectAll();
             return true;
         }
-        else if(!currentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().localFolderName)) {
+        else if(!currentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().getLocalFolderName())) {
             if(currentDirectory.getParent() != null) {
                 FileManagerFragmentLocal.this.currentDirectory = new File(currentDirectory.getParentFile().getPath());
                 FileManagerFragmentLocal.this.refreshList();
@@ -504,7 +504,7 @@ public class FileManagerFragmentLocal extends FragmentFab {
     }
 
     public void goHome() {
-        this.currentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + app.getConfig().localFolderName);
+        this.currentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + app.getConfig().getLocalFolderName());
         this.refreshList();
     }
 
@@ -577,7 +577,7 @@ public class FileManagerFragmentLocal extends FragmentFab {
             case 0:
                 return true;
             case 1:
-                return this.currentDirectory != null;
+                return this.currentDirectory != null && currentDirectory.getParent() != null;
         }
         return false;
     }

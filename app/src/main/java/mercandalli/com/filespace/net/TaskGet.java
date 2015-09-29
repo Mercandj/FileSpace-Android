@@ -61,6 +61,7 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 	ModelUser user;
 	List<StringPair> parameters;
 	Application app;
+	boolean isAuthentication = true;
 
 	public TaskGet(Application app, ModelUser user, String url, IPostExecuteListener listener) {
 		this.app = app;
@@ -75,6 +76,15 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 		this.url = url;
 		this.listener = listener;
 		this.parameters = parameters;
+	}
+
+	public TaskGet(Application app, ModelUser user, String url, IPostExecuteListener listener, List<StringPair> parameters, boolean isAuthentication) {
+		this.app = app;
+		this.user = user;
+		this.url = url;
+		this.listener = listener;
+		this.parameters = parameters;
+		this.isAuthentication = isAuthentication;
 	}
 
 	@Override
@@ -95,7 +105,8 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
             conn.setRequestMethod("GET");
             String authentication = user.getAccessLogin()+":"+user.getAccessPassword();
             String result = Base64.encodeBytes(authentication.getBytes());
-            conn.setRequestProperty ("Authorization", "Basic " + result);
+			if(isAuthentication)
+            	conn.setRequestProperty ("Authorization", "Basic " + result);
             conn.setUseCaches(false);
             conn.setDoInput(true);
 

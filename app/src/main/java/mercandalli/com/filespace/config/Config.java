@@ -52,7 +52,7 @@ public class Config {
     public String currentToken					= null;
 
     // Local routes
-    public final String localFolderName			= "FileSpace";
+    private static  final String localFolderNameDefault  = "FileSpace";
     private static final String fileName        = "settings_json_1.txt";
 
     // Server routes
@@ -113,11 +113,12 @@ public class Config {
      * Static Sctring to save/load
      */
     private enum ENUM_String {
-        STRING_URL_SERVER		("http://mercandalli.com/FileSpace-API/", 	"string_url_server_1"			),
-        STRING_USER_USERNAME	("",                                    "string_user_username_1"		),
-        STRING_USER_PASSWORD	("", 			                        "string_user_password_1"		),
-        STRING_USER_REGID	    ("", 			                        "string_user_regid_1"   		),
-        STRING_USER_NOTE_WORKSPACE_1  ("",		                        "string_user_note_workspace_1"  ),
+        STRING_URL_SERVER		("http://mercandalli.com/FileSpace-API/", 	"string_url_server_1"		    ),
+        STRING_USER_USERNAME	("",                                        "string_user_username_1"		),
+        STRING_USER_PASSWORD	("", 			                            "string_user_password_1"		),
+        STRING_USER_REGID	    ("", 			                            "string_user_regid_1"   		),
+        STRING_USER_NOTE_WORKSPACE_1  ("",		                            "string_user_note_workspace_1"  ),
+        STRING_LOCAL_FOLDER_NAME_1  (""+localFolderNameDefault,             "string_user_note_workspace_1"  ),
         ;
 
         String value;
@@ -238,6 +239,17 @@ public class Config {
     public void setUserUsername(String value) {
         if(ENUM_String.STRING_USER_USERNAME.value!=value) {
             ENUM_String.STRING_USER_USERNAME.value = value;
+            save();
+        }
+    }
+
+    public String getLocalFolderName() {
+        return ENUM_String.STRING_LOCAL_FOLDER_NAME_1.value;
+    }
+
+    public void setLocalFolderName(String value) {
+        if(ENUM_String.STRING_LOCAL_FOLDER_NAME_1.value!=value) {
+            ENUM_String.STRING_LOCAL_FOLDER_NAME_1.value = value;
             save();
         }
     }
