@@ -79,6 +79,7 @@ public class FileManagerFragmentLocal extends FragmentFab {
 	private SwipeRefreshLayout swipeRefreshLayout, swipeRefreshLayoutGrid;
 
     private List<ModelFile> filesToCut = new ArrayList<>();
+    private List<ModelFile> filesToCopy = new ArrayList<>();
 
     private int sortMode = Const.SORT_DATE_MODIFICATION;
 
@@ -216,9 +217,9 @@ public class FileManagerFragmentLocal extends FragmentFab {
 				@Override
 				public void execute(final ModelFile modelFile) {
 					final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
-					String[] menuList = { getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
+					String[] menuList = { getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties) };
                     if(app.isLogged())
-                        menuList = new String[]{ getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
+                        menuList = new String[]{ getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties) };
                     menuAlert.setTitle("Action");
                     menuAlert.setItems(menuList,
 							new DialogInterface.OnClickListener() {
@@ -260,6 +261,10 @@ public class FileManagerFragmentLocal extends FragmentFab {
                                                                 filesToCut.clear();
                                                                 refreshFab();
                                                             }
+                                                            if(filesToCopy != null && filesToCopy.size() != 0) {
+                                                                filesToCopy.clear();
+                                                                refreshFab();
+                                                            }
                                                             FileManagerFragmentLocal.this.app.refreshAdapters();
                                                         }
                                                     });
@@ -277,6 +282,10 @@ public class FileManagerFragmentLocal extends FragmentFab {
                                                                 filesToCut.clear();
                                                                 refreshFab();
                                                             }
+                                                            if(filesToCopy != null && filesToCopy.size() != 0) {
+                                                                filesToCopy.clear();
+                                                                refreshFab();
+                                                            }
                                                             FileManagerFragmentLocal.this.app.refreshAdapters();
                                                         }
                                                     });
@@ -284,11 +293,16 @@ public class FileManagerFragmentLocal extends FragmentFab {
                                             }, "No", null);
                                             break;
                                         case 4:
+                                            FileManagerFragmentLocal.this.filesToCopy.add(modelFile);
+                                            Toast.makeText(app, "File ready to copy.", Toast.LENGTH_SHORT).show();
+                                            refreshFab();
+                                            break;
+                                        case 5:
                                             FileManagerFragmentLocal.this.filesToCut.add(modelFile);
                                             Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                             refreshFab();
                                             break;
-                                        case 5:
+                                        case 6:
                                             FileManagerFragmentLocal.this.app.alert(
                                                     getString(R.string.properties) + " : " + modelFile.name,
                                                     modelFile.toSpanned(),
@@ -361,9 +375,9 @@ public class FileManagerFragmentLocal extends FragmentFab {
                         final ModelFile modelFile = files.get(position);
 
                         final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
-                        String[] menuList = { getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
+                        String[] menuList = { getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties) };
                         if(app.isLogged())
-                            menuList = new String[]{ getString(R.string.upload), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
+                            menuList = new String[]{ getString(R.string.upload), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties) };
                         menuAlert.setTitle("Action");
                         menuAlert.setItems(menuList,
                                 new DialogInterface.OnClickListener() {
@@ -426,11 +440,16 @@ public class FileManagerFragmentLocal extends FragmentFab {
                                                 }, "No", null);
                                                 break;
                                             case 3:
+                                                FileManagerFragmentLocal.this.filesToCopy.add(modelFile);
+                                                Toast.makeText(app, "File ready to copy.", Toast.LENGTH_SHORT).show();
+                                                refreshFab();
+                                                break;
+                                            case 4:
                                                 FileManagerFragmentLocal.this.filesToCut.add(modelFile);
                                                 Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                                 refreshFab();
                                                 break;
-                                            case 4:
+                                            case 5:
                                                 FileManagerFragmentLocal.this.app.alert(
                                                         getString(R.string.properties) + " : " + modelFile.name,
                                                         "Name : " + modelFile.name + "\nExtension : " + modelFile.type + "\nType : " + modelFile.type.getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
@@ -495,8 +514,11 @@ public class FileManagerFragmentLocal extends FragmentFab {
                 return true;
             }
         }
-        else if(filesToCut != null && filesToCut.size() != 0) {
-            filesToCut.clear();
+        else if((filesToCopy != null && filesToCopy.size() != 0) || (filesToCut != null && filesToCut.size() != 0)) {
+            if(filesToCopy != null)
+                filesToCopy.clear();
+            if(filesToCut != null)
+                filesToCut.clear();
             refreshFab();
             return true;
         }
@@ -529,11 +551,19 @@ public class FileManagerFragmentLocal extends FragmentFab {
 
         switch (fab_id) {
             case 0:
-                if (filesToCut != null && filesToCut.size() != 0) {
-                    for (ModelFile file : filesToCut) {
-                        file.renameLocalByPath(currentDirectory.getAbsolutePath() + File.separator + file.getNameExt());
+                if( (filesToCopy != null && filesToCopy.size() != 0) || (filesToCut != null && filesToCut.size() != 0)){
+                    if(filesToCopy != null) {
+                        for (ModelFile file : filesToCopy) {
+                            file.copyFile(currentDirectory.getAbsolutePath() + File.separator);
+                        }
+                        filesToCopy.clear();
                     }
-                    filesToCut.clear();
+                    if(filesToCut != null) {
+                        for (ModelFile file : filesToCut) {
+                            file.renameLocalByPath(currentDirectory.getAbsolutePath() + File.separator + file.getNameExt());
+                        }
+                        filesToCut.clear();
+                    }
                     refreshList();
                 } else {
                     final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerFragmentLocal.this.app);
@@ -586,7 +616,9 @@ public class FileManagerFragmentLocal extends FragmentFab {
     public Drawable getFabDrawable(int fab_id) {
         switch (fab_id) {
             case 0:
-                if(filesToCut != null && filesToCut.size() != 0)
+                if(filesToCopy != null && filesToCopy.size() != 0)
+                    return app.getDrawable(R.drawable.ic_menu_paste_holo_dark);
+                else if(filesToCut != null && filesToCut.size() != 0)
                     return app.getDrawable(R.drawable.ic_menu_paste_holo_dark);
                 else
                     return app.getDrawable(R.drawable.add);

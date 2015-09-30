@@ -53,6 +53,7 @@
     <string name="rename">Rename</string>
     <string name="delete">Delete</string>
     <string name="modify">Modify</string>
+    <string name="copy">Copy</string>
     <string name="cut">Cut</string>
     <string name="properties">Properties</string>
     <string name="data">Data</string>

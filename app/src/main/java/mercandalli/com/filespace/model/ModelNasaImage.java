@@ -30,7 +30,7 @@ public class ModelNasaImage extends Model {
             if(json.has("explanation"))
                 this.explanation = json.getString("explanation");
             if(json.has("concepts")) {
-                JSONArray explanation_jr = json.getJSONArray("explanation");
+                JSONArray explanation_jr = json.getJSONArray("concepts");
                 this.concepts = new String[explanation_jr.length()];
                 for(int i=0; i<explanation_jr.length();i++) {
                     this.concepts[i] = explanation_jr.getString(i);

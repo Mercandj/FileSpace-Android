@@ -134,7 +134,12 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
             conn.setRequestMethod("GET");
 
             InputStream inputStream = conn.getInputStream();
-            long lengthOfFile = Long.parseLong(conn.getHeaderField("Content-Length"));
+
+            String contentLength = conn.getHeaderField("Content-Length");
+            if(contentLength == null)
+                return x;
+
+            long lengthOfFile = Long.parseLong(contentLength);
 
             // Get the source image's dimensions
             BitmapFactory.Options options = new BitmapFactory.Options();

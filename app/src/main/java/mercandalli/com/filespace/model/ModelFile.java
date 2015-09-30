@@ -127,6 +127,10 @@ public class ModelFile extends Model implements Parcelable {
         return this.name + ((this.directory) ? "" : ("." + this.type));
     }
 
+    public String getNameExtCopy() {
+        return this.name + " - Copy" +((this.directory) ? "" : ("." + this.type));
+    }
+
 	public List<StringPair> getForUpload() {
 		List<StringPair> parameters = new ArrayList<>();
 		if(name!=null)
@@ -486,7 +490,11 @@ public class ModelFile extends Model implements Parcelable {
         file.renameTo(tmp);
     }
 
-    private void copyFile(String outputPath, IPostExecuteListener listener) {
+    public void copyFile(String outputPath) {
+        copyFile(outputPath, null);
+    }
+
+    public void copyFile(String outputPath, IPostExecuteListener listener) {
         if(this.isOnline()) {
             //TODO copy online
             Toast.makeText(app, app.getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
@@ -495,23 +503,36 @@ public class ModelFile extends Model implements Parcelable {
             InputStream in;
             OutputStream out;
             try {
-                File dir = new File (outputPath);
+                File dir = new File(outputPath);
                 if (!dir.exists())
                     dir.mkdirs();
 
-                in = new FileInputStream(this.file.getAbsoluteFile());
-                out = new FileOutputStream(outputPath + this.getNameExt());
-
-                byte[] buffer = new byte[1024];
-                int read;
-                while ((read = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, read);
+                String outputUrl = outputPath + this.getNameExt();
+                while ((new File(outputUrl)).exists()) {
+                    outputUrl = outputPath + this.getNameExtCopy();
                 }
-                in.close();
-                in = null;
-                out.flush();
-                out.close();
-                out = null;
+
+                if(directory) {
+                    File copy = new File(outputUrl);
+                    copy.mkdirs();
+                    File[] children = file.listFiles();
+                    for (int i=0; i<children.length; i++) {
+                        (new ModelFile(app, children[i])).copyFile(copy.getAbsolutePath() + File.separator);
+                    }
+                }
+                else {
+                    in = new FileInputStream(this.file.getAbsoluteFile());
+                    out = new FileOutputStream(outputUrl);
+
+                    byte[] buffer = new byte[1024];
+                    int read;
+                    while ((read = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, read);
+                    }
+                    in.close();
+                    out.flush();
+                    out.close();
+                }
             }
             catch (Exception e) {
                 Log.e("tag", e.getMessage());

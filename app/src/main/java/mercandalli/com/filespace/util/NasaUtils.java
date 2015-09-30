@@ -1,8 +1,13 @@
 package mercandalli.com.filespace.util;
 
 import android.graphics.Bitmap;
+import android.text.format.DateFormat;
 
 import org.json.JSONObject;
+
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 
 import mercandalli.com.filespace.listener.IBitmapListener;
 import mercandalli.com.filespace.listener.IModelNasaImageListener;
@@ -20,10 +25,13 @@ import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 public class NasaUtils {
 
     public static String getRandomDate() {
-        int YY = MathUtils.random(2012,2014);
-        int MM = MathUtils.random(1,11);
-        int DD = MathUtils.random(1,28);
-        return YY+"-"+MM+"-"+DD;
+        long beginTime;
+        long endTime;
+        beginTime = Timestamp.valueOf("2015-05-01 00:00:00").getTime();
+        endTime = Calendar.getInstance().getTimeInMillis();
+        long diff = endTime - beginTime + 1;
+        Date date = new Date(beginTime + (long) (Math.random() * diff));
+        return DateFormat.format("yyyy-MM-dd", date).toString();
     }
 
     public static String getNasaPhoto(String date) {
@@ -46,20 +54,22 @@ public class NasaUtils {
                             if(json == null)
                                 return;
                             final ModelNasaImage modelNasaImage = new ModelNasaImage(json, date);
-                            new TaskGetDownloadImage(
-                                    app,
-                                    modelNasaImage.url,
-                                    2000000,
-                                    new IBitmapListener() {
-                                        @Override
-                                        public void execute(Bitmap bitmap) {
-                                            modelNasaImage.bitmap = bitmap;
-                                            modelNasaImageListener.execute(modelNasaImage);
-                                        }
-                                    },
-                                    false,
-                                    false
-                            ).execute();
+                            if(modelNasaImage.media_type != null)
+                                if(modelNasaImage.media_type.equals("image"))
+                                    new TaskGetDownloadImage(
+                                            app,
+                                            modelNasaImage.url,
+                                            2000000,
+                                            new IBitmapListener() {
+                                                @Override
+                                                public void execute(Bitmap bitmap) {
+                                                    modelNasaImage.bitmap = bitmap;
+                                                    modelNasaImageListener.execute(modelNasaImage);
+                                                }
+                                            },
+                                            false,
+                                            false
+                                    ).execute();
                         }
                     },
                     null,
