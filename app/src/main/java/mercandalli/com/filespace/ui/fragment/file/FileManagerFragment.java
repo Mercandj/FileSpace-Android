@@ -237,10 +237,10 @@ public class FileManagerFragment extends Fragment {
                 i+=2;
         	String title = "null";
 			switch(i) {
-                case 0:		title = "PUBLIC CLOUD";	break;
-                case 1:		title = "MY CLOUD";		break;
-                case 2:		title = "LOCAL";		break;
-                case 3:		title = "MUSIC";		break;
+                case 0:	title = getString(R.string.file_fragment_public_cloud);	break;
+                case 1:	title = getString(R.string.file_fragment_my_cloud);		break;
+                case 2:	title = getString(R.string.file_fragment_local);		break;
+                case 3:	title = getString(R.string.file_fragment_music);	    break;
 			}
 			return title;
         }

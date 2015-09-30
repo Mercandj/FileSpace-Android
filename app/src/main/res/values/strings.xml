@@ -99,6 +99,11 @@
     <string name="menu_action_download">Download</string>
     <string name="menu_action_sort">Sort</string>
 
+    <string name="file_fragment_public_cloud">PUBLIC CLOUD</string>
+    <string name="file_fragment_my_cloud">MY CLOUD</string>
+    <string name="file_fragment_local">LOCAL</string>
+    <string name="file_fragment_music">MUSIC</string>
+
     <string name="failed_google_plus">Google+ connection failed.</string>
 
     <string name="genealogy_first_name_1">First name 1</string>
