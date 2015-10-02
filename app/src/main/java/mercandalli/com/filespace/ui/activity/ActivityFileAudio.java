@@ -293,9 +293,9 @@ public class ActivityFileAudio extends Application {
      * Play the previous song
      */
     private void previous() {
-        if(this.player.isPlaying()) {
-            this.player.stop();
-        }
+        if(this.player != null)
+            if(this.player.isPlaying())
+                this.player.stop();
         if(files!=null) {
             boolean idMark = false;
             for (int i = files.size() - 1; i>=0; i--) {
@@ -318,6 +318,8 @@ public class ActivityFileAudio extends Application {
     }
 
     public void start() {
+        if(file == null)
+            return;
         try {
             Uri uri = Uri.parse((this.online) ? file.onlineUrl : file.url);
 
