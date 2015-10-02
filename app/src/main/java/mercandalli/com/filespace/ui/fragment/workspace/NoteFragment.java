@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.io.UnsupportedEncodingException;
+
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.model.ModelFileSpace;
@@ -45,10 +47,17 @@ public class NoteFragment extends Fragment {
 
         this.input = (TextView) this.rootView.findViewById(R.id.input);
         FontUtils.applyFont(app, this.input, "fonts/Roboto-Light.ttf");
-        if(!StringUtils.isNullOrEmpty(app.getConfig().getUserNoteWorkspace1())) {
-            this.input.setText(app.getConfig().getUserNoteWorkspace1());
-            this.article.article.article_content_1 = app.getConfig().getUserNoteWorkspace1();
-        }
+
+        String txt = app.getConfig().getUserNoteWorkspace1();
+        if(!StringUtils.isNullOrEmpty(txt))
+            try {
+                String txt_tmp = new String(txt.getBytes("ISO-8859-1"), "UTF-8");
+                this.input.setText(txt_tmp);
+                this.article.article.article_content_1 = txt_tmp;
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
         this.input.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

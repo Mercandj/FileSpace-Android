@@ -19,6 +19,10 @@
  */
 package mercandalli.com.filespace.ui.activity;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.AudioManager;
@@ -34,6 +38,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import java.io.File;
@@ -109,10 +114,12 @@ public class ActivityFileAudio extends Application {
                     if(ActivityFileAudio.this.player.isPlaying()) {
                         //play.setImageResource(android.R.drawable.ic_media_play);
                         ActivityFileAudio.this.player.pause();
+                        setNotification(false);
                     }
                     else {
                         //play.setImageResource(android.R.drawable.ic_media_pause);
                         ActivityFileAudio.this.player.start();
+                        setNotification(true);
                     }
                     play.toggle();
                 }
@@ -177,6 +184,45 @@ public class ActivityFileAudio extends Application {
             this.file = (ModelFile) extras.getParcelable("FILE");
             this.files = (ArrayList) extras.getParcelableArrayList("FILES");
             start();
+        }
+
+        String action = (String) extras.get("do_action");
+        if (action != null) {
+            if (action.equals("close")) {
+                if(player!=null) {
+                    player.pause();
+                }
+            }
+            else if (action.equals("next")) {
+                next();
+            }
+            else if (action.equals("prev")) {
+                previous();
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+
+        String action = extras.getString("do_action");
+        if(action == null)
+            action = intent.getStringExtra("do_action");
+        if (action != null) {
+            if (action.equals("close")) {
+                if(player!=null) {
+                    player.pause();
+                }
+            }
+            else if (action.equals("next")) {
+                next();
+            }
+            else if (action.equals("prev")) {
+                previous();
+            }
         }
     }
 
@@ -304,13 +350,57 @@ public class ActivityFileAudio extends Application {
 
             this.sliderNumber.setProgress(0);
             this.sliderNumber.setMax(this.player.getDuration());
-            this.title.setText(""+this.file.name);
-            this.size.setText(getTimeStr(this.player.getCurrentPosition())+" / "+getTimeStr(this.player.getDuration()));
+            this.title.setText("" + this.file.name);
+            this.size.setText(getTimeStr(this.player.getCurrentPosition()) + " / " + getTimeStr(this.player.getDuration()));
 
             updatePosition();
 
+            setNotification(true);
+
         } catch (IllegalArgumentException | SecurityException | IllegalStateException | IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void setNotification(boolean activated) {
+        if(activated) {
+            Intent intent = this.getIntent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            Intent buttonsIntent_close = new Intent(this, ActivityFileAudio.class);
+            buttonsIntent_close.putExtra("do_action", "close");
+            Intent buttonsIntent_next = new Intent(this, ActivityFileAudio.class);
+            buttonsIntent_close.putExtra("do_action", "next");
+            Intent buttonsIntent_prev = new Intent(this, ActivityFileAudio.class);
+            buttonsIntent_close.putExtra("do_action", "prev");
+
+            RemoteViews remoteViews = new RemoteViews(this.getPackageName(), R.layout.notification_musique);
+            remoteViews.setTextViewText(R.id.titre_notif, file.name);
+            remoteViews.setOnClickPendingIntent(R.id.close, PendingIntent.getActivity(this, 0, buttonsIntent_close, 0));
+            remoteViews.setOnClickPendingIntent(R.id.play, PendingIntent.getActivity(this, 0, buttonsIntent_close, 0));
+            remoteViews.setOnClickPendingIntent(R.id.next, PendingIntent.getActivity(this, 0, buttonsIntent_next, 0));
+            remoteViews.setOnClickPendingIntent(R.id.prev, PendingIntent.getActivity(this, 0, buttonsIntent_prev, 0));
+            remoteViews.setOnClickPendingIntent(R.id.titre_notif, PendingIntent.getActivity(this, 0, intent, 0));
+
+            PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+            Notification.Builder mNotifyBuilder = new Notification.Builder(this);
+            Notification foregroundNote = mNotifyBuilder.setSmallIcon(R.drawable.audio)
+                    /*
+                    .setContentTitle("Music")
+                    .setContentText( "Text" )*/
+                    //.setContentIntent(pIntent)
+                    .setAutoCancel(false)
+                    .setOngoing(true)
+                    .setContent(remoteViews)
+                    .build();
+            foregroundNote.bigContentView = remoteViews;
+            if (player.isPlaying()) {
+                NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.notify(0, foregroundNote);
+            }
+        }
+        else {
+            NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(0);
         }
     }
 
@@ -328,13 +418,7 @@ public class ActivityFileAudio extends Application {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if(updatePositionRunnable!=null)
-                    updatePositionRunnable.kill();
-                if(player!=null) {
-                    player.stop();
-                    player.reset();
-                }
-                supportFinishAfterTransition();
+                finishActivity();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -348,6 +432,7 @@ public class ActivityFileAudio extends Application {
     }
 
     public void finishActivity() {
+        setNotification(false);
         if(updatePositionRunnable!=null)
             updatePositionRunnable.kill();
         if(player!=null) {
