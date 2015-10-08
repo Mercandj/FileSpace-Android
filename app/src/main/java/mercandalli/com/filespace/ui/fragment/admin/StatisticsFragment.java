@@ -33,14 +33,17 @@ public class StatisticsFragment extends Fragment {
 
     public static Button forward, back, left, right;
 
+    public static StatisticsFragment newInstance() {
+        Bundle args = new Bundle();
+        StatisticsFragment fragment = new StatisticsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (Application) activity;
-    }
-
-    public StatisticsFragment() {
-        super();
     }
 
     @Override

@@ -82,8 +82,11 @@ public class HomeFragment extends Fragment implements TextToSpeech.OnInitListene
 
     private EditText input;
 
-    public HomeFragment() {
-        super();
+    public static HomeFragment newInstance() {
+        Bundle args = new Bundle();
+        HomeFragment fragment = new HomeFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

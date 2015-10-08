@@ -43,14 +43,17 @@ public class RequestFragment extends Fragment {
 
 	private View rootView;
 
+	public static RequestFragment newInstance() {
+		Bundle args = new Bundle();
+		RequestFragment fragment = new RequestFragment();
+		fragment.setArguments(args);
+		return fragment;
+	}
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		app = (Application) activity;
-	}
-
-	public RequestFragment() {
-		super();
 	}
 
 	@Override

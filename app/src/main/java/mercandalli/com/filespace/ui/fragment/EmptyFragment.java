@@ -35,8 +35,11 @@ public class EmptyFragment extends Fragment {
 
     private View rootView;
 
-    public EmptyFragment() {
-        this.app = app;
+    public static EmptyFragment newInstance() {
+        Bundle args = new Bundle();
+        EmptyFragment fragment = new EmptyFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

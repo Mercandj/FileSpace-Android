@@ -59,14 +59,17 @@ public class UserAddFragment extends Fragment {
     private ModelUser newUser;
     private boolean requestLaunched = false;
 
+    public static UserAddFragment newInstance() {
+        Bundle args = new Bundle();
+        UserAddFragment fragment = new UserAddFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (Application) activity;
-    }
-
-    public UserAddFragment() {
-        super();
     }
 
 	@Override

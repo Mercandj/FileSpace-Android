@@ -87,6 +87,13 @@ public class GenealogyListFragment extends FragmentFab {
         MODE_SELECTION_PARTNER = false;
     }
 
+    public static GenealogyListFragment newInstance() {
+        Bundle args = new Bundle();
+        GenealogyListFragment fragment = new GenealogyListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

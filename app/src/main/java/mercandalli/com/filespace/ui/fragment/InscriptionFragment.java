@@ -59,7 +59,14 @@ public class InscriptionFragment extends Fragment {
 
     private boolean requestLaunched = false; // Block the second task if one launch
 
-    EditText username, password;
+    private EditText username, password;
+
+    public static InscriptionFragment newInstance() {
+        Bundle args = new Bundle();
+        InscriptionFragment fragment = new InscriptionFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
 	@Override
     public void onAttach(Activity activity) {

@@ -55,9 +55,12 @@ public class SettingsFragment extends Fragment {
     private int click_version;
     private boolean isDevelopper = false;
 
-	public SettingsFragment() {
-		super();
-	}
+    public static SettingsFragment newInstance() {
+        Bundle args = new Bundle();
+        SettingsFragment fragment = new SettingsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

@@ -73,14 +73,17 @@ public class TalkFragment extends Fragment {
     private TextView message;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    public static TalkFragment newInstance() {
+        Bundle args = new Bundle();
+        TalkFragment fragment = new TalkFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (Application) activity;
-    }
-
-    public TalkFragment() {
-        super();
     }
 
     @Override

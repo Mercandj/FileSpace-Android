@@ -70,14 +70,17 @@ public class UserLocationFragment extends Fragment {
     // Google Map
     private GoogleMap map;
 
+    public static UserLocationFragment newInstance() {
+        Bundle args = new Bundle();
+        UserLocationFragment fragment = new UserLocationFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (Application) activity;
-    }
-
-    public UserLocationFragment() {
-        super();
     }
 
 	@Override

@@ -81,6 +81,13 @@ public class FileManagerFragmentCloud extends FragmentFab {
     private String url = "";
     private List<ModelFile> filesToCut = new ArrayList<>();
 
+    public static FileManagerFragmentCloud newInstance() {
+        Bundle args = new Bundle();
+        FileManagerFragmentCloud fragment = new FileManagerFragmentCloud();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

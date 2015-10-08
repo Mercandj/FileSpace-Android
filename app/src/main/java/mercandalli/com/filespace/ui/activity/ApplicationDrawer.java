@@ -73,7 +73,7 @@ public abstract class ApplicationDrawer extends Application {
 
     private RelativeLayout toolbar_space;
 
-    protected Toolbar toolbar;
+    protected Toolbar mToolbar;
 	protected DrawerLayout mDrawerLayout;
 	protected ListView mDrawerList;
 	protected NavDrawerItemList navDrawerItems;
@@ -84,11 +84,12 @@ public abstract class ApplicationDrawer extends Application {
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        if(toolbar!=null)
-            setSupportActionBar(toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        if (mToolbar!=null) {
+            setSupportActionBar(mToolbar);
+        }
         ActionBar actionBar = getSupportActionBar();
-        if(actionBar!=null) {
+        if (actionBar!=null) {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
@@ -108,7 +109,7 @@ public abstract class ApplicationDrawer extends Application {
                     @Override
                     public void execute() {
                         if(isLogged()) {
-                            fragment = new ProfileFragment();
+                            fragment = ProfileFragment.newInstance();
                             fragment.setApp(ApplicationDrawer.this);
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -127,7 +128,7 @@ public abstract class ApplicationDrawer extends Application {
                 new NavDrawerItem(getString(R.string.tab_home), new IListener() {
                     @Override
                     public void execute() {
-                        fragment = new HomeFragment();
+                        fragment = HomeFragment.newInstance();
                         fragment.setApp(ApplicationDrawer.this);
                         FragmentManager fragmentManager = getFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -140,7 +141,7 @@ public abstract class ApplicationDrawer extends Application {
         		new NavDrawerItem(getString(R.string.tab_files), new IListener() {
 						@Override
 						public void execute() {
-							fragment = new FileManagerFragment();
+							fragment = FileManagerFragment.newInstance();
                             fragment.setApp(ApplicationDrawer.this);
 					        FragmentManager fragmentManager = getFragmentManager();
 					        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -168,7 +169,7 @@ public abstract class ApplicationDrawer extends Application {
                     new NavDrawerItem(getString(R.string.tab_community), new IListener() {
                         @Override
                         public void execute() {
-                            fragment = new CommunityFragment();
+                            fragment = CommunityFragment.newInstance();
                             fragment.setApp(ApplicationDrawer.this);
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -184,7 +185,7 @@ public abstract class ApplicationDrawer extends Application {
                     new NavDrawerItem(getString(R.string.tab_robotics), new IListener() {
                         @Override
                         public void execute() {
-                            fragment = new RoboticsFragment();
+                            fragment = RoboticsFragment.newInstance();
                             fragment.setApp(ApplicationDrawer.this);
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -236,7 +237,7 @@ public abstract class ApplicationDrawer extends Application {
     				new IListener() {
 						@Override
 						public void execute() {
-							fragment = new SettingsFragment();
+							fragment = SettingsFragment.newInstance();
                             fragment.setApp(ApplicationDrawer.this);
 					        FragmentManager fragmentManager = getFragmentManager();
 					        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -275,7 +276,7 @@ public abstract class ApplicationDrawer extends Application {
         			new IListener() {
 						@Override
 						public void execute() {
-                            WebFragment fr = new WebFragment();
+                            WebFragment fr = WebFragment.newInstance();
                             fr.setApp(ApplicationDrawer.this);
                             fr.setInitURL(ApplicationDrawer.this.getConfig().aboutURL);
                             fragment = fr;
@@ -329,19 +330,19 @@ public abstract class ApplicationDrawer extends Application {
         }
         ID_FRAGMENT_VISITED.push(position);
 
-        if(toolbar != null) {
+        if(mToolbar != null) {
             if(position == 0 && isLogged()) {
-                toolbar.setBackgroundColor(Color.TRANSPARENT);
+                mToolbar.setBackgroundColor(Color.TRANSPARENT);
                 toolbar_space.setVisibility(View.GONE);
                 setStatusBarColor(R.color.notifications_bar);
             }
             else if(position == 6 && this.getConfig().getUser().isAdmin()) {
-                toolbar.setBackgroundColor(getResources().getColor(R.color.actionbar_robotics));
+                mToolbar.setBackgroundColor(getResources().getColor(R.color.actionbar_robotics));
                 toolbar_space.setVisibility(View.VISIBLE);
                 setStatusBarColor(R.color.notifications_bar_robotics);
             }
             else {
-                toolbar.setBackgroundColor(getResources().getColor(R.color.actionbar));
+                mToolbar.setBackgroundColor(getResources().getColor(R.color.actionbar));
                 toolbar_space.setVisibility(View.VISIBLE);
                 setStatusBarColor(R.color.notifications_bar);
             }
@@ -353,7 +354,7 @@ public abstract class ApplicationDrawer extends Application {
                 nav.isSelected = true;
     			if(nav.listenerClick!=null)
     				nav.listenerClick.execute();
-                if( !(position == 0 && !isLogged()) )
+                if ( !(position == 0 && !isLogged()) )
                     getSupportActionBar().setTitle((position == 0 && isLogged())?"":nav.title);
     		}
     	}
@@ -399,7 +400,7 @@ public abstract class ApplicationDrawer extends Application {
     	boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
         switch (item.getItemId()) {
         case android.R.id.home:
-        	if(drawerOpen) 	mDrawerLayout.closeDrawer(mDrawerList);
+        	if (drawerOpen) mDrawerLayout.closeDrawer(mDrawerList);
         	else 			mDrawerLayout.openDrawer(mDrawerList);
         	return true;
         case R.id.action_delete:
@@ -418,23 +419,23 @@ public abstract class ApplicationDrawer extends Application {
             }
         	return true;
 	    case R.id.action_add:
-	    	if(fragment instanceof FileManagerFragment)
+	    	if (fragment instanceof FileManagerFragment)
 	    		((FileManagerFragment)fragment).add();
 	    	return true;
 	    case R.id.action_download:
-	    	if(fragment instanceof FileManagerFragment)
+	    	if (fragment instanceof FileManagerFragment)
 	    		((FileManagerFragment)fragment).download();
 	    	return true;
 	    case R.id.action_upload:
-	    	if(fragment instanceof FileManagerFragment)
+	    	if (fragment instanceof FileManagerFragment)
 	    		((FileManagerFragment)fragment).upload();
             return true;
         case R.id.action_home:
-            if(fragment instanceof FileManagerFragment)
+            if (fragment instanceof FileManagerFragment)
                 ((FileManagerFragment)fragment).goHome();
 	    	return true;
         case R.id.action_sort:
-            if(fragment instanceof FileManagerFragment)
+            if (fragment instanceof FileManagerFragment)
                 ((FileManagerFragment)fragment).sort();
             return true;
 	    }
@@ -452,10 +453,11 @@ public abstract class ApplicationDrawer extends Application {
         SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
         	@Override
             public boolean onQueryTextChange(String query) {
-        		if(query == null)
-            		return true;
-            	if(query.replaceAll(" ", "").equals("")) {
-            		if(fragment instanceof FileManagerFragment) {
+        		if (query == null) {
+                    return true;
+                }
+            	if (query.replaceAll(" ", "").equals("")) {
+            		if (fragment instanceof FileManagerFragment) {
                 		FileManagerFragment tmp_fragment = (FileManagerFragment) fragment;    		
                 		switch(tmp_fragment.getCurrentFragmentIndex()) {
                             case 0: tmp_fragment.refreshListServer(); break;
@@ -463,7 +465,7 @@ public abstract class ApplicationDrawer extends Application {
                             case 2: tmp_fragment.refreshListServer(); break;
                 		}
                 	}
-                    else if(fragment instanceof GenealogyFragment) {
+                    else if (fragment instanceof GenealogyFragment) {
                         GenealogyFragment tmp_fragment = (GenealogyFragment) fragment;
                         switch(tmp_fragment.getCurrentFragmentIndex()) {
                             case 0: tmp_fragment.refreshListServer(); break;

@@ -76,14 +76,17 @@ public class GenealogyTreeFragment extends FragmentFab {
     private AdapterModelGenealogyUser mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    public static GenealogyTreeFragment newInstance() {
+        Bundle args = new Bundle();
+        GenealogyTreeFragment fragment = new GenealogyTreeFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (Application) activity;
-    }
-
-    public GenealogyTreeFragment() {
-        super();
     }
 
     @Override

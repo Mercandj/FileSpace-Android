@@ -117,13 +117,13 @@ public class AdminFragment extends Fragment {
         public Fragment getItem(int i) {
             Fragment fragment = null;
             switch(i) {
-                case 0:		fragment = new ServerDataFragment();  	break;
-                case 1:		fragment = new ServerLogsFragment();    break;
-                case 2:		fragment = new UserAddFragment(); 	    break;
-                case 5:		fragment = new RequestFragment();    	break;
-                case 6:		fragment = new GameFragment();    	    break;
-                case 7:		fragment = new StatisticsFragment();    break;
-                default:    fragment = new EmptyFragment(); 	    break;
+                case 0:		fragment = ServerDataFragment.newInstance();  	break;
+                case 1:		fragment = ServerLogsFragment.newInstance();    break;
+                case 2:		fragment = UserAddFragment.newInstance(); 	    break;
+                case 5:		fragment = RequestFragment.newInstance();    	break;
+                case 6:		fragment = GameFragment.newInstance();    	    break;
+                case 7:		fragment = StatisticsFragment.newInstance();    break;
+                default:    fragment = EmptyFragment.newInstance();         break;
             }
             listFragment[i] = fragment;
             return fragment;

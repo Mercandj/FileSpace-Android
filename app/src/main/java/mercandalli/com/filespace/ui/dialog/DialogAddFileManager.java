@@ -157,7 +157,7 @@ public class DialogAddFileManager extends Dialog {
             @Override
             public void onClick(View v) {
 
-                Calendar mcurrentTime = Calendar.getInstance();
+                Calendar mCurrentTime = Calendar.getInstance();
 
                 DialogDatePicker dialogDate = new DialogDatePicker(app, new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -211,7 +211,7 @@ public class DialogAddFileManager extends Dialog {
                         dialogTime.show();
 
                     }
-                },mcurrentTime.get(Calendar.YEAR), mcurrentTime.get(Calendar.MONTH), mcurrentTime.get(Calendar.DAY_OF_MONTH));
+                }, mCurrentTime.get(Calendar.YEAR), mCurrentTime.get(Calendar.MONTH), mCurrentTime.get(Calendar.DAY_OF_MONTH));
                 dialogDate.show();
 
                 DialogAddFileManager.this.dismiss();

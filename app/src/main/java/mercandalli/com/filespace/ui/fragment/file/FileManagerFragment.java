@@ -60,12 +60,15 @@ public class FileManagerFragment extends Fragment {
     private Snackbar snackbar;
 
 	public static int VIEW_MODE = Const.MODE_LIST;
-	
-	public FileManagerFragment() {
-		super();
-	}
-	
-	@Override
+
+    public static FileManagerFragment newInstance() {
+        Bundle args = new Bundle();
+        FileManagerFragment fragment = new FileManagerFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_filemanager, container, false);
 
@@ -210,11 +213,11 @@ public class FileManagerFragment extends Fragment {
 
 			FragmentFab fragment = null;
 			switch(i) {
-                case 0:		fragment = new FileManagerFragmentCloud();  	break;
-                case 1:		fragment = new FileManagerFragmentMyCloud(); 	break;
-                case 2:		fragment = new FileManagerFragmentLocal();	    break;
-                case 3:		fragment = new FileManagerFragmentLocalMusic();	break;
-                default:	fragment = new FileManagerFragmentLocal();	    break;
+                case 0:		fragment = FileManagerFragmentCloud.newInstance();  	break;
+                case 1:		fragment = FileManagerFragmentMyCloud.newInstance(); 	break;
+                case 2:		fragment = FileManagerFragmentLocal.newInstance();	    break;
+                case 3:		fragment = FileManagerFragmentLocalMusic.newInstance();	break;
+                default:	fragment = FileManagerFragmentLocal.newInstance();	    break;
 			}
             fragment.setRefreshFab(new IListener() {
                 @Override

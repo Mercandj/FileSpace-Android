@@ -45,20 +45,21 @@ import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
 public class LoginFragment extends Fragment {
 
 	private Application app;
-
     private boolean requestLaunched = false; // Block the second task if one launch
+    private EditText username, password;
 
-    EditText username, password;
+    public static LoginFragment newInstance() {
+        Bundle args = new Bundle();
+        LoginFragment fragment = new LoginFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
 	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.app = (Application) activity;
     }
-
-	public LoginFragment() {
-		super();
-	}
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

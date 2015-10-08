@@ -86,8 +86,11 @@ public class RoboticsFragment extends Fragment implements SensorEventListener {
 
     private DecimalFormat df;
 
-    public RoboticsFragment() {
-        super();
+    public static RoboticsFragment newInstance() {
+        Bundle args = new Bundle();
+        RoboticsFragment fragment = new RoboticsFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

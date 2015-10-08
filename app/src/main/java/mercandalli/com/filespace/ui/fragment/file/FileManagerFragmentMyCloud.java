@@ -82,8 +82,15 @@ public class FileManagerFragmentMyCloud extends FragmentFab {
 
     private Stack<Integer> id_file_path = new Stack<>();
     private List<ModelFile> filesToCut = new ArrayList<>();
-	
-	@Override
+
+    public static FileManagerFragmentMyCloud newInstance() {
+        Bundle args = new Bundle();
+        FileManagerFragmentMyCloud fragment = new FileManagerFragmentMyCloud();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (Application) activity;

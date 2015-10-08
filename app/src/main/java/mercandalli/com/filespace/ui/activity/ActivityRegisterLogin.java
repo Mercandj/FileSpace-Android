@@ -203,9 +203,9 @@ public class ActivityRegisterLogin extends Application {
         public Fragment getItem(int i) {
             Fragment fragment;
             switch(i) {
-                case 0:		fragment = new InscriptionFragment();  	break;
-                case 1:		fragment = new LoginFragment(); 	    break;
-                default:	fragment = new InscriptionFragment();	break;
+                case 0:		fragment = InscriptionFragment.newInstance();  	break;
+                case 1:		fragment = LoginFragment.newInstance();         break;
+                default:	fragment = InscriptionFragment.newInstance();	break;
             }
             listFragment[i] = fragment;
             return fragment;

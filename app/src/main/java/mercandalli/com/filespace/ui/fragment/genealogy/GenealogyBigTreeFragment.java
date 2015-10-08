@@ -55,14 +55,17 @@ public class GenealogyBigTreeFragment extends FragmentFab {
 
     private static ModelGenealogyPerson genealogyUser = null;
 
+    public static GenealogyBigTreeFragment newInstance() {
+        Bundle args = new Bundle();
+        GenealogyBigTreeFragment fragment = new GenealogyBigTreeFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (Application) activity;
-    }
-
-    public GenealogyBigTreeFragment() {
-        super();
     }
 
     @Override

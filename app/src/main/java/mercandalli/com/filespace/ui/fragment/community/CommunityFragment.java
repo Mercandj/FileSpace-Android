@@ -46,8 +46,11 @@ public class CommunityFragment extends Fragment {
     private FileManagerFragmentPagerAdapter mPagerAdapter;
     private PagerSlidingTabStrip tabs;
 
-    public CommunityFragment() {
-        super();
+    public static CommunityFragment newInstance() {
+        Bundle args = new Bundle();
+        CommunityFragment fragment = new CommunityFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -113,10 +116,10 @@ public class CommunityFragment extends Fragment {
         public Fragment getItem(int i) {
             Fragment fragment = null;
             switch(i) {
-                case 0:		fragment = new UserFragment();  	    break;
-                case 1:		fragment = new TalkFragment(); 	        break;
-                case 2:		fragment = new UserLocationFragment();  break;
-                default:	fragment = new UserFragment();		    break;
+                case 0:		fragment = UserFragment.newInstance();  	    break;
+                case 1:		fragment = TalkFragment.newInstance(); 	        break;
+                case 2:		fragment = UserLocationFragment.newInstance();  break;
+                default:	fragment = UserFragment.newInstance();		    break;
             }
             listFragment[i] = fragment;
             return fragment;

@@ -66,14 +66,17 @@ public class GenealogyStatisticsFragment extends FragmentFab {
     private ProgressBar circularProgressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    public static GenealogyStatisticsFragment newInstance() {
+        Bundle args = new Bundle();
+        GenealogyStatisticsFragment fragment = new GenealogyStatisticsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (Application) activity;
-    }
-
-    public GenealogyStatisticsFragment() {
-        super();
     }
 
     @Override

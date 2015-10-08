@@ -70,12 +70,15 @@ public class ProfileFragment extends Fragment {
     private TextView username;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    List<ModelSetting> list = new ArrayList<>();
+    private List<ModelSetting> list = new ArrayList<>();
 
-    ImageView icon_back;
+    private ImageView icon_back;
 
-    public ProfileFragment() {
-        super();
+    public static ProfileFragment newInstance() {
+        Bundle args = new Bundle();
+        ProfileFragment fragment = new ProfileFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override

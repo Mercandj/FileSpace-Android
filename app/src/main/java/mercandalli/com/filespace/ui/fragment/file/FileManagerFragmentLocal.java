@@ -83,6 +83,13 @@ public class FileManagerFragmentLocal extends FragmentFab {
 
     private int sortMode = Const.SORT_DATE_MODIFICATION;
 
+    public static FileManagerFragmentLocal newInstance() {
+        Bundle args = new Bundle();
+        FileManagerFragmentLocal fragment = new FileManagerFragmentLocal();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

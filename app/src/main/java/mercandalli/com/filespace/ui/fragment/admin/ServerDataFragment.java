@@ -67,14 +67,17 @@ public class ServerDataFragment extends Fragment {
     private ProgressBar circularProgressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    public static ServerDataFragment newInstance() {
+        Bundle args = new Bundle();
+        ServerDataFragment fragment = new ServerDataFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (Application) activity;
-    }
-
-    public ServerDataFragment() {
-        super();
     }
 
 	@Override

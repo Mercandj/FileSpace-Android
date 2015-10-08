@@ -20,16 +20,19 @@ import mercandalli.com.filespace.ui.view.game.Way;
 public class GameFragment extends Fragment {
 
     private View rootView;
-    GameView gameView;
+    private GameView gameView;
+
+    public static GameFragment newInstance() {
+        Bundle args = new Bundle();
+        GameFragment fragment = new GameFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (Application) activity;
-    }
-
-    public GameFragment() {
-        super();
     }
 
     @Override

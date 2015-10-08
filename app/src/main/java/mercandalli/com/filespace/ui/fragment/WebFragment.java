@@ -43,10 +43,13 @@ public class WebFragment extends Fragment {
 	private WebView webView;
 	private View rootView;    
 	private String initURL;
-    
-    public WebFragment() {
-    	super();
-    }
+
+	public static WebFragment newInstance() {
+		Bundle args = new Bundle();
+		WebFragment fragment = new WebFragment();
+		fragment.setArguments(args);
+		return fragment;
+	}
 
 	public void setInitURL(String initURL) {
 		this.initURL = initURL;

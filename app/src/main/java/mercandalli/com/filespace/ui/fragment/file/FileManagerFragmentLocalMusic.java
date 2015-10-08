@@ -76,6 +76,13 @@ public class FileManagerFragmentLocalMusic extends FragmentFab {
 
     private int sortMode = Const.SORT_DATE_MODIFICATION;
 
+    public static FileManagerFragmentLocalMusic newInstance() {
+        Bundle args = new Bundle();
+        FileManagerFragmentLocalMusic fragment = new FileManagerFragmentLocalMusic();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

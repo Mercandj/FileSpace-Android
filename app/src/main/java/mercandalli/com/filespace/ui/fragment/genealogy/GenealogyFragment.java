@@ -165,7 +165,7 @@ public class GenealogyFragment extends Fragment {
             FragmentFab fragment;
             switch(i) {
                 case 0:
-                    GenealogyListFragment fr = new GenealogyListFragment();
+                    GenealogyListFragment fr = GenealogyListFragment.newInstance();
                     fr.setOnSelect(new IModelGenealogyUserListener() {
                         @Override
                         public void execute(ModelGenealogyPerson modelPerson) {
@@ -179,10 +179,10 @@ public class GenealogyFragment extends Fragment {
                     });
                     fragment = fr;
                     break;
-                case 1:		fragment = new GenealogyTreeFragment();         break;
-                case 2:		fragment = new GenealogyBigTreeFragment();      break;
-                case 3:		fragment = new GenealogyStatisticsFragment();   break;
-                default:    fragment = new GenealogyTreeFragment();
+                case 1:		fragment = GenealogyTreeFragment.newInstance();         break;
+                case 2:		fragment = GenealogyBigTreeFragment.newInstance();      break;
+                case 3:		fragment = GenealogyStatisticsFragment.newInstance();   break;
+                default:    fragment = GenealogyTreeFragment.newInstance();
             }
             fragment.setRefreshFab(new IListener() {
                 @Override
