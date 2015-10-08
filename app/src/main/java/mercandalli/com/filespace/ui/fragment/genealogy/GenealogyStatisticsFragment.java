@@ -62,7 +62,7 @@ public class GenealogyStatisticsFragment extends FragmentFab {
     private RecyclerView recyclerView;
     private AdapterModelInformation mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    List<ModelInformation> list;
+    private List<ModelInformation> list;
     private ProgressBar circularProgressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
