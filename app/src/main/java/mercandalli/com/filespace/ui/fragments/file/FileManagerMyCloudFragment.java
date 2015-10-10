@@ -61,6 +61,7 @@ import mercandalli.com.filespace.ui.activities.Application;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
 import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
+import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
 import mercandalli.com.filespace.utils.FileUtils;
@@ -69,7 +70,7 @@ import mercandalli.com.filespace.utils.StringPair;
 import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
 
-public class FileManagerMyCloudFragment extends FabFragment {
+public class FileManagerMyCloudFragment extends FabFragment implements BackFragment.IListViewMode {
 
 	private RecyclerView listView;
     private GridView gridView;
@@ -82,6 +83,8 @@ public class FileManagerMyCloudFragment extends FabFragment {
 
     private Stack<Integer> id_file_path = new Stack<>();
     private List<ModelFile> filesToCut = new ArrayList<>();
+
+    private int mViewMode = Const.MODE_LIST;
 
     public static FileManagerMyCloudFragment newInstance() {
         Bundle args = new Bundle();
@@ -400,7 +403,7 @@ public class FileManagerMyCloudFragment extends FabFragment {
 
             refreshFab();
 
-            if(FileManagerFragment.VIEW_MODE == Const.MODE_GRID) {
+            if(mViewMode == Const.MODE_GRID) {
                 this.gridView.setVisibility(View.VISIBLE);
                 this.swipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
                 this.listView.setVisibility(View.GONE);
@@ -674,5 +677,13 @@ public class FileManagerMyCloudFragment extends FabFragment {
                 return app.getDrawable(R.drawable.arrow_up);
         }
         return app.getDrawable(R.drawable.add);
+    }
+
+    @Override
+    public void setViewMode(int viewMode) {
+        if (viewMode != mViewMode) {
+            mViewMode = viewMode;
+            updateAdapter();
+        }
     }
 }

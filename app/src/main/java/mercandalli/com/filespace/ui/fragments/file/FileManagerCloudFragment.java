@@ -59,6 +59,7 @@ import mercandalli.com.filespace.ui.activities.Application;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
 import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
+import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
 import mercandalli.com.filespace.utils.FileUtils;
@@ -67,7 +68,7 @@ import mercandalli.com.filespace.utils.StringPair;
 import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
 
-public class FileManagerCloudFragment extends FabFragment {
+public class FileManagerCloudFragment extends FabFragment implements BackFragment.IListViewMode {
 
 	private RecyclerView listView;
     private GridView gridView;
@@ -80,6 +81,11 @@ public class FileManagerCloudFragment extends FabFragment {
 
     private String url = "";
     private List<ModelFile> filesToCut = new ArrayList<>();
+
+    /**
+     * {@link Const#MODE_LIST} or {@link Const#MODE_GRID}
+     */
+    private int mViewMode = Const.MODE_LIST;
 
     public static FileManagerCloudFragment newInstance() {
         Bundle args = new Bundle();
@@ -369,7 +375,7 @@ public class FileManagerCloudFragment extends FabFragment {
 
             this.refreshFab.execute();
 
-            if (FileManagerFragment.VIEW_MODE == Const.MODE_GRID) {
+            if (mViewMode == Const.MODE_GRID) {
                 this.gridView.setVisibility(View.VISIBLE);
                 this.swipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
                 this.listView.setVisibility(View.GONE);
@@ -605,5 +611,13 @@ public class FileManagerCloudFragment extends FabFragment {
                 return app.getDrawable(R.drawable.arrow_up);
         }
         return app.getDrawable(android.R.drawable.ic_input_add);
+    }
+
+    @Override
+    public void setViewMode(int viewMode) {
+        if (viewMode != mViewMode) {
+            mViewMode = viewMode;
+            updateAdapter();
+        }
     }
 }

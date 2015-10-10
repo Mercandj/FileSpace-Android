@@ -62,12 +62,13 @@ import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activities.Application;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
+import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.StringPair;
 
-public class FileManagerLocalFragment extends FabFragment {
+public class FileManagerLocalFragment extends FabFragment implements BackFragment.IListViewMode, BackFragment.ISortMode {
 	
 	private RecyclerView listView;
     private GridView gridView;
@@ -82,6 +83,7 @@ public class FileManagerLocalFragment extends FabFragment {
     private List<ModelFile> filesToCopy = new ArrayList<>();
 
     private int sortMode = Const.SORT_DATE_MODIFICATION;
+    private int mViewMode = Const.MODE_LIST;
 
     public static FileManagerLocalFragment newInstance() {
         Bundle args = new Bundle();
@@ -353,7 +355,7 @@ public class FileManagerLocalFragment extends FabFragment {
             });
 
 
-            if(FileManagerFragment.VIEW_MODE == Const.MODE_GRID) {
+            if(mViewMode == Const.MODE_GRID) {
                 this.gridView.setVisibility(View.VISIBLE);
                 this.swipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
                 this.listView.setVisibility(View.GONE);
@@ -635,12 +637,23 @@ public class FileManagerLocalFragment extends FabFragment {
         return app.getDrawable(R.drawable.add);
     }
 
-    public void setSort(int mode) {
-        if(mode == Const.SORT_ABC ||
-                mode == Const.SORT_DATE_MODIFICATION ||
-                mode == Const.SORT_SIZE) {
-            this.sortMode = mode;
+    @Override
+    public void setSortMode(int sortMode) {
+        if(sortMode == Const.SORT_ABC ||
+                sortMode == Const.SORT_DATE_MODIFICATION ||
+                sortMode == Const.SORT_SIZE) {
+            this.sortMode = sortMode;
             refreshList();
         }
     }
+
+    @Override
+    public void setViewMode(int viewMode) {
+        if (viewMode != mViewMode) {
+            mViewMode = viewMode;
+            updateAdapter();
+        }
+    }
+
+
 }

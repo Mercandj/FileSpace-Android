@@ -61,11 +61,12 @@ import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activities.Application;
 import mercandalli.com.filespace.ui.adapters.AdapterDragModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
+import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.StringPair;
 
-public class FileManagerLocalMusicFragment extends FabFragment {
+public class FileManagerLocalMusicFragment extends FabFragment implements BackFragment.IListViewMode, BackFragment.ISortMode {
 
 	private DynamicListView dynamicListView; // http://nhaarman.github.io/ListViewAnimations/
     private GridView gridView;
@@ -74,7 +75,8 @@ public class FileManagerLocalMusicFragment extends FabFragment {
 	private TextView message;
 	private SwipeRefreshLayout swipeRefreshLayoutGrid;
 
-    private int sortMode = Const.SORT_DATE_MODIFICATION;
+    private int mSortMode = Const.SORT_DATE_MODIFICATION;
+    private int mViewMode = Const.MODE_LIST;
 
     public static FileManagerLocalMusicFragment newInstance() {
         Bundle args = new Bundle();
@@ -158,7 +160,7 @@ public class FileManagerLocalMusicFragment extends FabFragment {
             cursor.close();
         }
 
-        if(sortMode == Const.SORT_ABC) {
+        if(mSortMode == Const.SORT_ABC) {
             Collections.sort(fs, new Comparator<File>() {
                 @Override
                 public int compare(final File f1, final File f2) {
@@ -166,7 +168,7 @@ public class FileManagerLocalMusicFragment extends FabFragment {
                 }
             });
         }
-        else if(sortMode == Const.SORT_SIZE) {
+        else if(mSortMode == Const.SORT_SIZE) {
             Collections.sort(fs, new Comparator<File>() {
                 @Override
                 public int compare(final File f1, final File f2) {
@@ -190,7 +192,7 @@ public class FileManagerLocalMusicFragment extends FabFragment {
         files = new ArrayList<>();
         for (File file : fs) {
             ModelFile tmpModelFile = new ModelFile(app, file);
-            if(sortMode == Const.SORT_SIZE)
+            if(mSortMode == Const.SORT_SIZE)
                 tmpModelFile.adapterTitleStart = FileUtils.humanReadableByteCount(tmpModelFile.size) + " - ";
             files.add(tmpModelFile);
         }
@@ -310,7 +312,7 @@ public class FileManagerLocalMusicFragment extends FabFragment {
                     }
             );
 
-            if(FileManagerFragment.VIEW_MODE == Const.MODE_GRID) {
+            if (mViewMode == Const.MODE_GRID) {
                 this.gridView.setVisibility(View.VISIBLE);
                 this.swipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
                 this.dynamicListView.setVisibility(View.GONE);
@@ -437,12 +439,21 @@ public class FileManagerLocalMusicFragment extends FabFragment {
         return app.getDrawable(R.drawable.add);
     }
 
-    public void setSort(int mode) {
-        if(mode == Const.SORT_ABC ||
-                mode == Const.SORT_DATE_MODIFICATION ||
-                mode == Const.SORT_SIZE) {
-            this.sortMode = mode;
+    @Override
+    public void setSortMode(int sortMode) {
+        if(sortMode == Const.SORT_ABC ||
+                sortMode == Const.SORT_DATE_MODIFICATION ||
+                sortMode == Const.SORT_SIZE) {
+            mSortMode = sortMode;
             refreshList();
+        }
+    }
+
+    @Override
+    public void setViewMode(int viewMode) {
+        if (viewMode != mViewMode) {
+            mViewMode = viewMode;
+            updateAdapter();
         }
     }
 }

@@ -21,6 +21,7 @@ package mercandalli.com.filespace.ui.fragments;
 
 import android.app.Fragment;
 
+import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.ui.activities.Application;
 
 /**
@@ -45,4 +46,20 @@ public abstract class BackFragment extends Fragment {
      * For example: on a ViewPager.
      */
     public abstract void onFocus();
+
+    public interface IListViewMode {
+        /**
+         * Define if the list or grid.
+         * @param viewMode {@link Const#MODE_LIST} or {@link Const#MODE_GRID}
+         */
+       void setViewMode(int viewMode);
+    }
+
+    public interface ISortMode {
+        /**
+         * Define the list sort.
+         * @param sortMode {@link Const#SORT_ABC}, {@link Const#SORT_SIZE} or {@link Const#SORT_DATE_MODIFICATION}
+         */
+        void setSortMode(int sortMode);
+    }
 }

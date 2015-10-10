@@ -59,7 +59,7 @@ public class FileManagerFragment extends BackFragment implements ViewPager.OnPag
     private View coordinatorLayoutView;
     private Snackbar snackbar;
 
-	public static int VIEW_MODE = Const.MODE_LIST;
+	protected int mViewMode = Const.MODE_LIST;
 
     public static FileManagerFragment newInstance() {
         Bundle args = new Bundle();
@@ -76,7 +76,7 @@ public class FileManagerFragment extends BackFragment implements ViewPager.OnPag
 
 		mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
 
-        VIEW_MODE = ((app.getConfig().getUserFileModeView() > -1) ? app.getConfig().getUserFileModeView() : Const.MODE_LIST);
+        mViewMode = ((app.getConfig().getUserFileModeView() > -1) ? app.getConfig().getUserFileModeView() : Const.MODE_LIST);
 
         tabs = (TabLayout) rootView.findViewById(R.id.fragment_file_manager_tab_layout);
 		mViewPager = (ViewPager) rootView.findViewById(R.id.fragment_file_manager_view_pager);
@@ -385,12 +385,8 @@ public class FileManagerFragment extends BackFragment implements ViewPager.OnPag
                                 else {
                                     for (BackFragment fr : listFragment) {
                                         if (fr != null) {
-                                            if (fr instanceof FileManagerLocalFragment) {
-                                                FileManagerLocalFragment fragmentFileManagerFragment = (FileManagerLocalFragment) fr;
-                                                fragmentFileManagerFragment.setSort(item == 0 ? Const.SORT_ABC : (item == 1 ? Const.SORT_SIZE : Const.SORT_DATE_MODIFICATION));
-                                            } else if (fr instanceof FileManagerLocalMusicFragment) {
-                                                FileManagerLocalMusicFragment fragmentFileManagerFragment = (FileManagerLocalMusicFragment) fr;
-                                                fragmentFileManagerFragment.setSort(item == 0 ? Const.SORT_ABC : (item == 1 ? Const.SORT_SIZE : Const.SORT_DATE_MODIFICATION));
+                                            if (fr instanceof ISortMode) {
+                                                ((ISortMode) fr).setSortMode(item == 0 ? Const.SORT_ABC : (item == 1 ? Const.SORT_SIZE : Const.SORT_DATE_MODIFICATION));
                                             }
                                         }
                                     }
@@ -398,25 +394,16 @@ public class FileManagerFragment extends BackFragment implements ViewPager.OnPag
                                 break;
 
                             case 3:
-                                if (VIEW_MODE == Const.MODE_LIST)
-                                    VIEW_MODE = Const.MODE_GRID;
+                                if (mViewMode == Const.MODE_LIST)
+                                    mViewMode = Const.MODE_GRID;
                                 else
-                                    VIEW_MODE = Const.MODE_LIST;
-                                app.getConfig().setUserFileModeView(VIEW_MODE);
+                                    mViewMode = Const.MODE_LIST;
+                                app.getConfig().setUserFileModeView(mViewMode);
                                 for (BackFragment fr : listFragment) {
                                     if (fr != null) {
-                                        if (fr instanceof FileManagerCloudFragment) {
-                                            FileManagerCloudFragment fragmentFileManagerFragment = (FileManagerCloudFragment) fr;
-                                            fragmentFileManagerFragment.updateAdapter();
-                                        } else if (fr instanceof FileManagerMyCloudFragment) {
-                                            FileManagerMyCloudFragment fragmentFileManagerFragment = (FileManagerMyCloudFragment) fr;
-                                            fragmentFileManagerFragment.updateAdapter();
-                                        } else if (fr instanceof FileManagerLocalFragment) {
-                                            FileManagerLocalFragment fragmentFileManagerFragment = (FileManagerLocalFragment) fr;
-                                            fragmentFileManagerFragment.updateAdapter();
-                                        } else if (fr instanceof FileManagerLocalMusicFragment) {
-                                            FileManagerLocalMusicFragment fragmentFileManagerFragment = (FileManagerLocalMusicFragment) fr;
-                                            fragmentFileManagerFragment.updateAdapter();
+                                        if (fr instanceof IListViewMode) {
+                                            IListViewMode fragmentFileManagerFragment = (IListViewMode) fr;
+                                            fragmentFileManagerFragment.setViewMode(mViewMode);
                                         }
                                     }
                                 }
