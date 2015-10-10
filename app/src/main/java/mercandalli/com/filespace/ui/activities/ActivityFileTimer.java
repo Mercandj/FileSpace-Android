@@ -56,7 +56,7 @@ public class ActivityFileTimer extends Application {
         setContentView(R.layout.activity_file_timer);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        if(toolbar!=null) {
+        if (toolbar!=null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }

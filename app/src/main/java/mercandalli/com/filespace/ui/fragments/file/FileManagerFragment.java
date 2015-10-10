@@ -46,7 +46,7 @@ import mercandalli.com.filespace.ui.fragments.FabFragment;
 
 import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
-public class FileManagerFragment extends BackFragment {
+public class FileManagerFragment extends BackFragment implements ViewPager.OnPageChangeListener {
 	
 	private static final int NB_FRAGMENT = 4;
     private static final int INIT_FRAGMENT = 1;
@@ -70,74 +70,19 @@ public class FileManagerFragment extends BackFragment {
 
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_filemanager, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_file_manager, container, false);
 
-        this.coordinatorLayoutView = (View) rootView.findViewById(R.id.snackBarPosition);
+        coordinatorLayoutView = (View) rootView.findViewById(R.id.fragment_file_manager_coordinator_layout);
 
 		mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
 
         VIEW_MODE = ((app.getConfig().getUserFileModeView() > -1) ? app.getConfig().getUserFileModeView() : Const.MODE_LIST);
 
-        tabs = (TabLayout) rootView.findViewById(R.id.tabs);
-		mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
+        tabs = (TabLayout) rootView.findViewById(R.id.fragment_file_manager_tab_layout);
+		mViewPager = (ViewPager) rootView.findViewById(R.id.fragment_file_manager_view_pager);
 		mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        mViewPager.addOnPageChangeListener(this);
 
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                FileManagerFragment.this.app.invalidateOptionsMenu();
-                if(app.isLogged()) {
-                    switch (position) {
-                        case 0:
-                            updateNoInternet();
-                            break;
-                        case 1:
-                            updateNoInternet();
-                            break;
-                        default:
-                            if (snackbar != null)
-                                snackbar.dismiss();
-                    }
-                    refreshFab(position);
-                }
-                else
-                    refreshFab(position+2);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-        /*
-        tabs.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                FileManagerFragment.this.app.invalidateOptionsMenu();
-                if(app.isLogged()) {
-                    switch (position) {
-                        case 0:
-                            updateNoInternet();
-                            break;
-                        case 1:
-                            updateNoInternet();
-                            break;
-                        default:
-                            if (snackbar != null)
-                                snackbar.dismiss();
-                    }
-                    refreshFab(position);
-                }
-                else
-                    refreshFab(position+2);
-            }
-        });
-        */
         if(app.isLogged()) {
             if (isInternetConnection(app)) {
                 mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
@@ -153,7 +98,6 @@ public class FileManagerFragment extends BackFragment {
         }
 
         tabs.setupWithViewPager(mViewPager);
-        //tabs.setIndicatorColor(getResources().getColor(R.color.white));
 
         this.circle = ((FloatingActionButton) rootView.findViewById(R.id.circle));
         this.circle.setVisibility(View.GONE);
@@ -238,6 +182,33 @@ public class FileManagerFragment extends BackFragment {
     @Override
     public void onFocus() { }
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+
+    @Override
+    public void onPageScrollStateChanged(int state) { }
+
+    @Override
+    public void onPageSelected(int position) {
+        FileManagerFragment.this.app.invalidateOptionsMenu();
+        if(app.isLogged()) {
+            switch (position) {
+                case 0:
+                    updateNoInternet();
+                    break;
+                case 1:
+                    updateNoInternet();
+                    break;
+                default:
+                    if (snackbar != null)
+                        snackbar.dismiss();
+            }
+            refreshFab(position);
+        }
+        else
+            refreshFab(position+2);
+    }
+
     public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
 		Application app;
 		
@@ -251,7 +222,7 @@ public class FileManagerFragment extends BackFragment {
             if(!app.isLogged())
                 i+=2;
 
-			FabFragment fragment = null;
+			FabFragment fragment;
 			switch(i) {
                 case 0:		fragment = FileManagerCloudFragment.newInstance();  	break;
                 case 1:		fragment = FileManagerMyCloudFragment.newInstance(); 	break;

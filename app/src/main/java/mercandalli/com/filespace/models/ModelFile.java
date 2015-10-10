@@ -341,7 +341,7 @@ public class ModelFile extends Model implements Parcelable {
 			apkIntent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
             this.app.startActivity(apkIntent);
 		}
-		else if(this.type.equals(ModelFileTypeENUM.TEXT.type)) {
+		else if (this.type.equals(ModelFileTypeENUM.TEXT.type)) {
 			Intent txtIntent = new Intent();
 			txtIntent.setAction(Intent.ACTION_VIEW);
 			txtIntent.setDataAndType(Uri.fromFile(file), "text/plain");
@@ -362,17 +362,17 @@ public class ModelFile extends Model implements Parcelable {
 				Toast.makeText(this.app, "ERREUR", Toast.LENGTH_SHORT).show();
 			}
 		}
-		else if(this.type.equals(ModelFileTypeENUM.AUDIO.type)) {
+		else if (this.type.equals(ModelFileTypeENUM.AUDIO.type)) {
             Intent intent = new Intent(this.app, ActivityFileAudio.class);
             intent.putExtra("ONLINE", false);
             intent.putExtra("FILE", this);
             ArrayList<ModelFile> tmpFiles = new ArrayList<>();
-            for(ModelFile f:files)
-                if(f.type!=null)
-                    if(f.type.equals(ModelFileTypeENUM.AUDIO.type))
+            for (ModelFile f:files)
+                if (f.type!=null)
+                    if (f.type.equals(ModelFileTypeENUM.AUDIO.type))
                         tmpFiles.add(f);
             intent.putParcelableArrayListExtra("FILES", tmpFiles);
-            if(view == null) {
+            if (view == null) {
                 this.app.startActivity(intent);
                 this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
             }
@@ -395,11 +395,11 @@ public class ModelFile extends Model implements Parcelable {
             intent.putExtra("FILE", this);
             ArrayList<ModelFile> tmpFiles = new ArrayList<>();
             for(ModelFile f:files)
-                if(f.type!=null)
+                if (f.type!=null)
                     if(f.type.equals(ModelFileTypeENUM.AUDIO.type))
                         tmpFiles.add(f);
             intent.putParcelableArrayListExtra("FILES", tmpFiles);
-            if(view == null) {
+            if (view == null) {
                 this.app.startActivity(intent);
                 this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
             }
@@ -598,9 +598,9 @@ public class ModelFile extends Model implements Parcelable {
     
     @Override
     public boolean equals(Object o) {
-        if(o==null)
+        if (o==null)
             return false;
-        if(!(o instanceof ModelFile))
+        if (!(o instanceof ModelFile))
             return false;
         ModelFile obj = (ModelFile)o;
         return obj.id == this.id;
@@ -648,17 +648,22 @@ public class ModelFile extends Model implements Parcelable {
     public Spanned toSpanned() {
         List<StringPair> spl = new ArrayList<>();
         spl.add(new StringPair("Name", this.name));
-        if(!this.directory)
+        if (!this.directory) {
             spl.add(new StringPair("Extension", this.type.toString()));
-        spl.add(new StringPair("Type", this.type.getTitle()));
-        if(!this.directory || this.size != 0)
-            spl.add(new StringPair("Size", FileUtils.humanReadableByteCount(this.size)));
-        if(this.date_creation != null) {
-            if (this.isOnline())
-                spl.add(new StringPair("Upload date", TimeUtils.getDate(this.date_creation)));
-            else
-                spl.add(new StringPair("Last modification date", TimeUtils.getDate(this.date_creation)));
         }
+        spl.add(new StringPair("Type", this.type.getTitle()));
+        if (!this.directory || this.size != 0) {
+            spl.add(new StringPair("Size", FileUtils.humanReadableByteCount(this.size)));
+        }
+        if (this.date_creation != null) {
+            if (this.isOnline()) {
+                spl.add(new StringPair("Upload date", TimeUtils.getDate(this.date_creation)));
+            } else {
+                spl.add(new StringPair("Last modification date", TimeUtils.getDate(this.date_creation)));
+            }
+        }
+        if (this.isOnline())
+            spl.add(new StringPair("Visibility", _public ? "Public" : "Private"));
         return HtmlUtils.createListItem(spl);
     }
 }

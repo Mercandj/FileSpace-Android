@@ -99,7 +99,7 @@ public class FileManagerMyCloudFragment extends FabFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_filemanager_files, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_file_manager_files, container, false);
         this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         this.message = (TextView) rootView.findViewById(R.id.message);
 

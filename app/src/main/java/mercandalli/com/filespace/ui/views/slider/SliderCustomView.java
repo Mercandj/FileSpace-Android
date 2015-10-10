@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
  */
 public class SliderCustomView extends RelativeLayout {
 
-
     final static String MATERIALDESIGNXML = "http://schemas.android.com/apk/res-auto";
     final static String ANDROIDXML = "http://schemas.android.com/apk/res/android";
 
@@ -28,7 +27,7 @@ public class SliderCustomView extends RelativeLayout {
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
-        if(enabled)
+        if (enabled)
             setBackgroundColor(beforeBackground);
         else
             setBackgroundColor(disabledBackgroundColor);
@@ -52,7 +51,7 @@ public class SliderCustomView extends RelativeLayout {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if(animation)
+        if (animation)
             invalidate();
     }
 }

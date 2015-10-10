@@ -141,7 +141,7 @@ public class ActivityFileAudio extends Application {
 
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        if(extras == null) {
+        if (extras == null) {
             Log.e(""+getClass().getName(), "extras == null");
 
             String action = intent.getAction();
@@ -189,7 +189,7 @@ public class ActivityFileAudio extends Application {
         String action = (String) extras.get("do_action");
         if (action != null) {
             if (action.equals("close")) {
-                if(player!=null) {
+                if (player!=null) {
                     player.pause();
                 }
             }
@@ -236,7 +236,7 @@ public class ActivityFileAudio extends Application {
         private boolean kill = false;
         @Override
         public void run() {
-            if(!kill)
+            if (!kill)
                 updatePosition();
         }
         public void kill() {
@@ -271,16 +271,16 @@ public class ActivityFileAudio extends Application {
         if(files!=null) {
             boolean idMark = false;
             for (ModelFile f:files) {
-                if(idMark && f.isAudio()) {
+                if (idMark && f.isAudio()) {
                     ActivityFileAudio.this.file = f;
                     start();
                     return;
                 }
-                if(f.equals(file))
+                if (f.equals(file))
                     idMark = true;
             }
             for (ModelFile f:files) {
-                if(f.isAudio()) {
+                if (f.isAudio()) {
                     ActivityFileAudio.this.file = f;
                     start();
                     return;
@@ -318,7 +318,7 @@ public class ActivityFileAudio extends Application {
     }
 
     public void start() {
-        if(file == null)
+        if (file == null)
             return;
         try {
             Uri uri = Uri.parse((this.online) ? file.onlineUrl : file.url);

@@ -48,7 +48,7 @@ public class ActivityFileText extends Application {
         setContentView(R.layout.activity_file_text);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        if(toolbar!=null) {
+        if (toolbar!=null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -58,13 +58,13 @@ public class ActivityFileText extends Application {
         ((ProgressBar) this.findViewById(R.id.circularProgressBar)).setVisibility(View.VISIBLE);
 
         Bundle extras = getIntent().getExtras();
-        if(extras == null) {
+        if (extras == null) {
             Log.e(""+getClass().getName(), "extras == null");
             this.finish();
             this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             return;
         }
-        else if(extras.containsKey("ARTICLE_CONTENT_1")) {
+        else if (extras.containsKey("ARTICLE_CONTENT_1")) {
             initate = extras.getString("ARTICLE_CONTENT_1");
             ((EditText) ActivityFileText.this.findViewById(R.id.txt)).setText("" + initate);
             ((EditText) ActivityFileText.this.findViewById(R.id.txt)).setVisibility(View.VISIBLE);

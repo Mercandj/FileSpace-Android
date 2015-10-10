@@ -167,11 +167,11 @@ public class ActivityConversation extends Application {
 
     @Override
     public void updateAdapters() {
-        if(this.listView!=null && this.list!=null) {
-            if(this.list.size()==0) {
-                if(this.url==null)
+        if (this.listView!=null && this.list!=null) {
+            if (this.list.size()==0) {
+                if (this.url==null)
                     this.message.setText(getString(R.string.no_file_server));
-                else if(this.url.equals(""))
+                else if (this.url.equals(""))
                     this.message.setText(getString(R.string.no_file_server));
                 else
                     this.message.setText(getString(R.string.no_file_directory));

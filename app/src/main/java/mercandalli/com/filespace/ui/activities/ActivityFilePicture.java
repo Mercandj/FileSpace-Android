@@ -86,7 +86,7 @@ public class ActivityFilePicture extends Application {
         this.progressBar.setProgress(0);
 
         Bundle extras = getIntent().getExtras();
-        if(extras == null) {
+        if (extras == null) {
             Log.e(""+getClass().getName(), "extras == null");
             this.finish();
             this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -107,11 +107,11 @@ public class ActivityFilePicture extends Application {
                 FontUtils.applyFont(this, title_tv, "fonts/Roboto-Regular.ttf");
             }
 
-            if(is_image(this, this.id)) {
+            if (is_image(this, this.id)) {
                 bitmap = load_image(this, this.id);
                 ((ImageView) this.findViewById(R.id.icon)).setImageBitmap(bitmap);
                 int bgColor = ColorUtils.getMutedColor(bitmap);
-                if(bgColor!=0) {
+                if (bgColor!=0) {
                     title_tv.setBackgroundColor(bgColor);
                     title_tv.setTextColor(ColorUtils.colorText(bgColor));
                     RippleDrawable cir = ImageUtils.getPressedColorRippleDrawable(bgColor, ColorUtils.getDarkMutedColor(bitmap));
@@ -120,7 +120,7 @@ public class ActivityFilePicture extends Application {
                 this.progressBar.setVisibility(View.GONE);
                 this.progress_tv.setVisibility(View.GONE);
             }
-            else if(this.id != 0) {
+            else if (this.id != 0) {
                 this.progressBar.setVisibility(View.VISIBLE);
                 this.progress_tv.setVisibility(View.VISIBLE);
                 (new TaskGetDownloadImage(this, login, password, url, id, sizeFile, -1, new IBitmapListener() {

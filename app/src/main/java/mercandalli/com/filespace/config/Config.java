@@ -138,14 +138,14 @@ public class Config {
         try {
             JSONObject tmp_json = new JSONObject();
             JSONObject tmp_settings_1 = new JSONObject();
-            for(ENUM_Int enum_int : ENUM_Int.values())
+            for (ENUM_Int enum_int : ENUM_Int.values())
                 tmp_settings_1.put(enum_int.key, enum_int.value);
-            for(ENUM_Boolean enum_boolean : ENUM_Boolean.values())
+            for (ENUM_Boolean enum_boolean : ENUM_Boolean.values())
                 tmp_settings_1.put(enum_boolean.key, enum_boolean.value);
-            for(ENUM_String enum_string : ENUM_String.values())
+            for (ENUM_String enum_string : ENUM_String.values())
                 tmp_settings_1.put(enum_string.key, enum_string.value);
 
-            if(listServerMessage_1 != null) {
+            if (listServerMessage_1 != null) {
                 JSONArray array_listServerMessage_1 = new JSONArray();
                 for (Model model : listServerMessage_1)
                     array_listServerMessage_1.put(model.toJSONObject());
@@ -192,7 +192,7 @@ public class Config {
     }
 
     public void setDisplayPosition(int value) {
-        if(ENUM_Int.INTEGER_LAST_TAB.value!=value) {
+        if (ENUM_Int.INTEGER_LAST_TAB.value!=value) {
             ENUM_Int.INTEGER_LAST_TAB.value = value;
             save();
         }
@@ -215,7 +215,7 @@ public class Config {
     }
 
     public void setUrlServer(String value) {
-        if(ENUM_String.STRING_URL_SERVER.value!=value) {
+        if(!ENUM_String.STRING_URL_SERVER.value.equals(value)) {
             ENUM_String.STRING_URL_SERVER.value = value;
             save();
         }
@@ -226,7 +226,7 @@ public class Config {
     }
 
     public void setUserNoteWorkspace1(String value) {
-        if(!ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value.equals(value)) {
+        if (!ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value.equals(value)) {
             ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value = value;
             save();
         }
@@ -237,7 +237,7 @@ public class Config {
     }
 
     public void setUserUsername(String value) {
-        if(!ENUM_String.STRING_USER_USERNAME.value.equals(value)) {
+        if (!ENUM_String.STRING_USER_USERNAME.value.equals(value)) {
             ENUM_String.STRING_USER_USERNAME.value = value;
             save();
         }
@@ -248,7 +248,7 @@ public class Config {
     }
 
     public void setLocalFolderName(String value) {
-        if(!ENUM_String.STRING_LOCAL_FOLDER_NAME_1.value.equals(value)) {
+        if (!ENUM_String.STRING_LOCAL_FOLDER_NAME_1.value.equals(value)) {
             ENUM_String.STRING_LOCAL_FOLDER_NAME_1.value = value;
             save();
         }
@@ -259,7 +259,7 @@ public class Config {
     }
 
     public void setUserPassword(String value) {
-        if(!ENUM_String.STRING_USER_PASSWORD.value.equals(value)) {
+        if (!ENUM_String.STRING_USER_PASSWORD.value.equals(value)) {
             ENUM_String.STRING_USER_PASSWORD.value = value;
             save();
         }
@@ -278,9 +278,10 @@ public class Config {
 
     public Bitmap getUserProfilePicture() {
         File file = new File(this.app.getFilesDir()+"/file_"+this.getUserIdFileProfilePicture());
-        if(file.exists())
+        if (file.exists()) {
             return BitmapFactory.decodeFile(file.getPath());
-        else if(isInternetConnection(app)) {
+        }
+        else if (isInternetConnection(app)) {
             ModelFile modelFile = new ModelFile(app);
             modelFile.id = this.getUserIdFileProfilePicture();
             modelFile.onlineUrl = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+this.getUserIdFileProfilePicture();
@@ -299,7 +300,7 @@ public class Config {
     }
 
     public void setUserIdFileProfilePicture(int value) {
-        if(ENUM_Int.INTEGER_USER_ID_FILE_PROFILE_PICTURE.value!=value) {
+        if (ENUM_Int.INTEGER_USER_ID_FILE_PROFILE_PICTURE.value!=value) {
             ENUM_Int.INTEGER_USER_ID_FILE_PROFILE_PICTURE.value = value;
             save();
         }
@@ -310,7 +311,7 @@ public class Config {
     }
 
     public void setUserFileModeView(int value) {
-        if(ENUM_Int.INTEGER_USER_FILE_MODE_VIEW.value!=value) {
+        if (ENUM_Int.INTEGER_USER_FILE_MODE_VIEW.value!=value) {
             ENUM_Int.INTEGER_USER_FILE_MODE_VIEW.value = value;
             save();
         }
@@ -321,7 +322,7 @@ public class Config {
     }
 
     public void setUserAdmin(boolean value) {
-        if(ENUM_Boolean.BOOLEAN_USER_ADMIN.value!=value) {
+        if (ENUM_Boolean.BOOLEAN_USER_ADMIN.value!=value) {
             ENUM_Boolean.BOOLEAN_USER_ADMIN.value = value;
             save();
         }
@@ -332,7 +333,7 @@ public class Config {
     }
 
     public void setHomeWelcomeMessage(boolean value) {
-        if(ENUM_Boolean.BOOLEAN_HOME_WELCOME_MESSAGE.value!=value) {
+        if (ENUM_Boolean.BOOLEAN_HOME_WELCOME_MESSAGE.value!=value) {
             ENUM_Boolean.BOOLEAN_HOME_WELCOME_MESSAGE.value = value;
             save();
         }
@@ -343,7 +344,7 @@ public class Config {
     }
 
     public void setAutoConnection(boolean value) {
-        if(ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value!=value) {
+        if (ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value!=value) {
             ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value = value;
             save();
         }
@@ -354,15 +355,15 @@ public class Config {
     }
 
     public void addServerMessage(ModelServerMessage serverMessage) {
-        if(listServerMessage_1 == null)
+        if (listServerMessage_1 == null)
             listServerMessage_1 = new ArrayList<>();
-        if(serverMessage == null)
+        if (serverMessage == null)
             return;
         boolean add = true;
-        for(ModelServerMessage s:listServerMessage_1)
-            if(serverMessage.equals(s))
+        for (ModelServerMessage s:listServerMessage_1)
+            if (serverMessage.equals(s))
                 add = false;
-        if(add)
+        if (add)
             listServerMessage_1.add(serverMessage);
         save();
     }
@@ -372,9 +373,9 @@ public class Config {
             listServerMessage_1 = new ArrayList<>();
             return;
         }
-        if(serverMessage == null)
+        if (serverMessage == null)
             return;
-        for(int i=0; i<listServerMessage_1.size();i++) {
+        for (int i=0; i<listServerMessage_1.size();i++) {
             if(listServerMessage_1.get(i).equals(serverMessage)) {
                 listServerMessage_1.remove(i);
                 save();
