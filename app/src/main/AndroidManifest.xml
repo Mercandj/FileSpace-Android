@@ -52,7 +52,7 @@
         <uses-library android:name="com.google.android.maps" android:required="false" />
 
         <activity
-            android:name="mercandalli.com.filespace.ui.activity.ActivityMain"
+            android:name="mercandalli.com.filespace.ui.activities.ActivityMain"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
@@ -68,7 +68,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="mercandalli.com.filespace.ui.activity.ActivityRegisterLogin"
+            android:name="mercandalli.com.filespace.ui.activities.ActivityRegisterLogin"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
@@ -76,14 +76,14 @@
             android:windowSoftInputMode="adjustNothing" >
         </activity>
         <activity
-            android:name="mercandalli.com.filespace.ui.activity.ActivityFileText"
+            android:name="mercandalli.com.filespace.ui.activities.ActivityFileText"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
-            android:name="mercandalli.com.filespace.ui.activity.ActivityFilePicture"
+            android:name="mercandalli.com.filespace.ui.activities.ActivityFilePicture"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppThemeImage"
@@ -91,7 +91,7 @@
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
-            android:name="mercandalli.com.filespace.ui.activity.ActivityFileAudio"
+            android:name="mercandalli.com.filespace.ui.activities.ActivityFileAudio"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
@@ -117,21 +117,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="mercandalli.com.filespace.ui.activity.ActivityFileVideo"
+            android:name="mercandalli.com.filespace.ui.activities.ActivityFileVideo"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
-            android:name="mercandalli.com.filespace.ui.activity.ActivityFileTimer"
+            android:name="mercandalli.com.filespace.ui.activities.ActivityFileTimer"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
-            android:name="mercandalli.com.filespace.ui.activity.ActivityConversation"
+            android:name="mercandalli.com.filespace.ui.activities.ActivityConversation"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"

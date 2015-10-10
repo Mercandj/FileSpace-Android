@@ -3,10 +3,6 @@
 		MERCANDALLI Jonathan
 -->
 <resources>
-
-    <!--
-    <style name="AppTheme" parent="AppBaseTheme"></style>
-    -->
     
     <style name="whiteedittext" parent="@android:style/Widget.Button">
         <item name="android:textSize">15sp</item>
@@ -28,7 +24,6 @@
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Replace ActionBar by Toolbar -->
         <item name="android:typeface">sans</item>
         <item name="android:statusBarColor">@color/notifications_bar</item>
         <item name="colorPrimary">@color/actionbar</item>
@@ -38,10 +33,10 @@
         <item name="windowNoTitle">true</item>
 
         <item name="android:windowContentTransitions">true</item>
+
     </style>
 
     <style name="AppThemeImage" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Replace ActionBar by Toolbar -->
         <item name="android:typeface">sans</item>
         <item name="android:statusBarColor">@color/notifications_bar_picture</item>
         <item name="colorPrimary">@color/actionbar</item>
@@ -64,6 +59,13 @@
 
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/actionbar</item>        
+    </style>
+
+
+    <style name="TextAppearanceTabLayout">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

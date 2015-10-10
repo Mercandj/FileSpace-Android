@@ -8,4 +8,11 @@
     <dimen name="pause_bar_height">18dp</dimen>
 
     <dimen name="notification_bar_height">25dp</dimen>
+
+    <!-- Default values -->
+    <dimen name="default_8">8dp</dimen>
+    <dimen name="default_16">16dp</dimen>
+    <dimen name="default_24">24dp</dimen>
+    <dimen name="default_32">32dp</dimen>
+    <dimen name="default_64">64dp</dimen>
 </resources>

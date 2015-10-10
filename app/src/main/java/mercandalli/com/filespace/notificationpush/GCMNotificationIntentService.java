@@ -36,11 +36,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.ui.activity.ActivityConversation;
-import mercandalli.com.filespace.model.ModelServerMessage;
+import mercandalli.com.filespace.ui.activities.ActivityConversation;
+import mercandalli.com.filespace.models.ModelServerMessage;
 
-import static mercandalli.com.filespace.util.FileUtils.readStringFile;
-import static mercandalli.com.filespace.util.FileUtils.writeStringFile;
+import static mercandalli.com.filespace.utils.FileUtils.readStringFile;
+import static mercandalli.com.filespace.utils.FileUtils.writeStringFile;
 
 public class GCMNotificationIntentService extends IntentService {
 	private static final String TAG = "GCMNotificationIntentS";

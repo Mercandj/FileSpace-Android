@@ -3,19 +3,25 @@
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <mercandalli.com.filespace.ui.view.PagerSlidingTabStrip
+    <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="42dip"
         android:background="@color/actionbar"
-        custom:pstsUnderlineHeight="0dp"
-        custom:pstsIndicatorHeight="2dp"
-        android:elevation="4dp"/>
+        android:layout_gravity="bottom"
+        android:elevation="4dp"
+        app:tabMode="scrollable"
+        app:tabTextAppearance="@style/TextAppearanceTabLayout"
+        app:tabTextColor="@color/white_70"
+        app:tabSelectedTextColor="@color/white"
+        app:tabIndicatorHeight="2dp"
+        app:tabIndicatorColor="@color/white" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"

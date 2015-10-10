@@ -19,7 +19,7 @@
  */
 package mercandalli.com.filespace.ia.action;
 
-import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.ui.activities.Application;
 
 public interface Action {
 	public abstract String action(Application app, String input);

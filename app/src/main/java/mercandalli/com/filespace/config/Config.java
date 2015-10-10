@@ -30,17 +30,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import mercandalli.com.filespace.listener.IBitmapListener;
-import mercandalli.com.filespace.model.Model;
-import mercandalli.com.filespace.model.ModelFile;
-import mercandalli.com.filespace.model.ModelServerMessage;
-import mercandalli.com.filespace.model.ModelUser;
+import mercandalli.com.filespace.listeners.IBitmapListener;
+import mercandalli.com.filespace.models.Model;
+import mercandalli.com.filespace.models.ModelFile;
+import mercandalli.com.filespace.models.ModelServerMessage;
+import mercandalli.com.filespace.models.ModelUser;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
-import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.ui.activities.Application;
 
-import static mercandalli.com.filespace.util.FileUtils.readStringFile;
-import static mercandalli.com.filespace.util.FileUtils.writeStringFile;
-import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
+import static mercandalli.com.filespace.utils.FileUtils.readStringFile;
+import static mercandalli.com.filespace.utils.FileUtils.writeStringFile;
+import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
 /**
  * Created by Jonathan on 10/12/2014.
@@ -226,7 +226,7 @@ public class Config {
     }
 
     public void setUserNoteWorkspace1(String value) {
-        if(ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value!=value) {
+        if(!ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value.equals(value)) {
             ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value = value;
             save();
         }
@@ -237,7 +237,7 @@ public class Config {
     }
 
     public void setUserUsername(String value) {
-        if(ENUM_String.STRING_USER_USERNAME.value!=value) {
+        if(!ENUM_String.STRING_USER_USERNAME.value.equals(value)) {
             ENUM_String.STRING_USER_USERNAME.value = value;
             save();
         }
@@ -248,7 +248,7 @@ public class Config {
     }
 
     public void setLocalFolderName(String value) {
-        if(ENUM_String.STRING_LOCAL_FOLDER_NAME_1.value!=value) {
+        if(!ENUM_String.STRING_LOCAL_FOLDER_NAME_1.value.equals(value)) {
             ENUM_String.STRING_LOCAL_FOLDER_NAME_1.value = value;
             save();
         }
@@ -259,7 +259,7 @@ public class Config {
     }
 
     public void setUserPassword(String value) {
-        if(ENUM_String.STRING_USER_PASSWORD.value!=value) {
+        if(!ENUM_String.STRING_USER_PASSWORD.value.equals(value)) {
             ENUM_String.STRING_USER_PASSWORD.value = value;
             save();
         }
@@ -270,7 +270,7 @@ public class Config {
     }
 
     public void setUserRegId(String value) {
-        if(ENUM_String.STRING_USER_REGID.value!=value) {
+        if(!ENUM_String.STRING_USER_REGID.value.equals(value)) {
             ENUM_String.STRING_USER_REGID.value = value;
             save();
         }

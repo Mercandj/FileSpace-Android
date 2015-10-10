@@ -21,9 +21,9 @@ package mercandalli.com.filespace.ia;
 
 import android.util.Log;
 
-import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.ui.activities.Application;
 
-import static mercandalli.com.filespace.util.StringUtils.nomalizeString;
+import static mercandalli.com.filespace.utils.StringUtils.nomalizeString;
 
 /**
  * Created by Jonathan on 19/04/2015.

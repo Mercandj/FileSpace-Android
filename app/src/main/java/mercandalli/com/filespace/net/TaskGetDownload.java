@@ -33,10 +33,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.listener.IListener;
-import mercandalli.com.filespace.model.ModelFile;
-import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.util.FileUtils;
+import mercandalli.com.filespace.listeners.IListener;
+import mercandalli.com.filespace.models.ModelFile;
+import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.utils.FileUtils;
 
 /**
  * Global behavior : DDL file

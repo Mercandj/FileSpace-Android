@@ -100,9 +100,19 @@ Thumbs.db
 
 # Android Studio - IntelliJ IDEA
 .idea
+.idea/
 #.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
 .gradle
 build/
 *.iml
 
 *.keystore
+
+/gradle.properties
+out/
+captures/
+
+# jni files
+*.o
+*.o.d
+*.db

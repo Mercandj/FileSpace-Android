@@ -2,43 +2,36 @@
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawer_layout"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_main_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
     android:fitsSystemWindows="false" >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/app_background" >
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:id="@+id/toolbar_space">
-
-        </RelativeLayout>
+        <include
+            layout="@layout/toolbar"
+            android:id="@+id/my_toolbar" />
 
         <FrameLayout
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ededed"
             android:clipToPadding="false"
-            android:fitsSystemWindows="true"
-            android:layout_below="@+id/toolbar_space">
-
+            android:fitsSystemWindows="true" >
         </FrameLayout>
 
-        <include layout="@layout/toolbar"
-            android:id="@+id/my_toolbar" />
-
-    </RelativeLayout>
+    </LinearLayout>
 
     <ListView
-        android:id="@+id/left_drawer"
+        android:id="@+id/activity_main_left_drawer"
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"

@@ -19,7 +19,7 @@
  */
 package mercandalli.com.filespace.ia;
 
-import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.ui.activities.Application;
 import mercandalli.com.filespace.ia.action.ENUM_Action;
 
 /**

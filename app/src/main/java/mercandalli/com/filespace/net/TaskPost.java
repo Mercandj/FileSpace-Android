@@ -44,9 +44,9 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.listener.IPostExecuteListener;
-import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.util.StringPair;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.utils.StringPair;
 
 /**
  * Global behavior : http Post

@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <mercandalli.com.filespace.ui.view.PagerSlidingTabStrip
+    <mercandalli.com.filespace.ui.views.PagerSlidingTabStrip
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="42dip"
@@ -17,13 +17,13 @@
         custom:pstsIndicatorHeight="2dp"
         android:elevation="4dp"/>
 
-    <mercandalli.com.filespace.ui.view.NonSwipeableViewPager
+    <mercandalli.com.filespace.ui.views.NonSwipeableViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tabs" >
 
-    </mercandalli.com.filespace.ui.view.NonSwipeableViewPager>
+    </mercandalli.com.filespace.ui.views.NonSwipeableViewPager>
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"

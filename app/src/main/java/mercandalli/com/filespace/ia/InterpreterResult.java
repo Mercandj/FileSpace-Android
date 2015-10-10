@@ -19,7 +19,7 @@
  */
 package mercandalli.com.filespace.ia;
 
-import mercandalli.com.filespace.model.ModelForm;
+import mercandalli.com.filespace.models.ModelForm;
 
 /**
  * Created by Jonathan on 14/05/2015.

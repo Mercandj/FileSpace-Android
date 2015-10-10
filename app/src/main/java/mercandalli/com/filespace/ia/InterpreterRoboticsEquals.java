@@ -26,15 +26,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.ui.activity.ApplicationDrawer;
-import mercandalli.com.filespace.ui.fragment.HomeFragment;
-import mercandalli.com.filespace.listener.IPostExecuteListener;
+import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationDrawer;
+import mercandalli.com.filespace.ui.fragments.HomeFragment;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.util.StringPair;
+import mercandalli.com.filespace.utils.StringPair;
 
-import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
+import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
 /**
  * Created by Jonathan on 19/04/2015.
@@ -124,10 +124,10 @@ public class InterpreterRoboticsEquals extends Interpreter {
     public void speak(String input) {
         if(app instanceof ApplicationDrawer) {
             ApplicationDrawer tmpApp = (ApplicationDrawer) app;
-            if(tmpApp.fragment != null)
-                if(tmpApp.fragment instanceof HomeFragment)
+            if(tmpApp.backFragment != null)
+                if(tmpApp.backFragment instanceof HomeFragment)
                 {
-                    ((HomeFragment)tmpApp.fragment).addItemList("Jarvis", new InterpreterResult(input));
+                    ((HomeFragment)tmpApp.backFragment).addItemList("Jarvis", new InterpreterResult(input));
                 }
         }
     }

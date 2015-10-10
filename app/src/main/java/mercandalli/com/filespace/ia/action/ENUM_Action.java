@@ -30,7 +30,7 @@ import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.provider.Settings;
 
-import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.ui.activities.Application;
 
 public enum ENUM_Action {	
 	

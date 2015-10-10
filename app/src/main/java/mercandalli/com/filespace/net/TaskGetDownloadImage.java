@@ -30,15 +30,15 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import mercandalli.com.filespace.listener.IBitmapListener;
-import mercandalli.com.filespace.listener.ILongListener;
-import mercandalli.com.filespace.model.ModelFile;
-import mercandalli.com.filespace.model.ModelUser;
-import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.listeners.IBitmapListener;
+import mercandalli.com.filespace.listeners.ILongListener;
+import mercandalli.com.filespace.models.ModelFile;
+import mercandalli.com.filespace.models.ModelUser;
+import mercandalli.com.filespace.ui.activities.Application;
 
-import static mercandalli.com.filespace.util.ImageUtils.is_image;
-import static mercandalli.com.filespace.util.ImageUtils.load_image;
-import static mercandalli.com.filespace.util.ImageUtils.save_image;
+import static mercandalli.com.filespace.utils.ImageUtils.is_image;
+import static mercandalli.com.filespace.utils.ImageUtils.load_image;
+import static mercandalli.com.filespace.utils.ImageUtils.save_image;
 
 /**
  * Global behavior : DDL Image

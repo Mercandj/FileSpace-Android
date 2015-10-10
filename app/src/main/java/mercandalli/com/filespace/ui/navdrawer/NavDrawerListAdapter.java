@@ -33,9 +33,9 @@ import java.util.ArrayList;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.util.FileUtils;
-import mercandalli.com.filespace.util.FontUtils;
+import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.utils.FileUtils;
+import mercandalli.com.filespace.utils.FontUtils;
 
 /**
  * Sliding Menu stuff

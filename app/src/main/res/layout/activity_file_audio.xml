@@ -64,7 +64,7 @@
             android:layout_above="@+id/rl_sliderNumber"
             android:layout_centerHorizontal="true">
         </RelativeLayout>
-        <mercandalli.com.filespace.ui.view.PlayPauseView
+        <mercandalli.com.filespace.ui.views.PlayPauseView
             android:id="@+id/play"
             android:transitionName="transitionIcon"
             android:layout_width="match_parent"
@@ -121,7 +121,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="6dp">
 
-            <mercandalli.com.filespace.ui.view.slider.Slider
+            <mercandalli.com.filespace.ui.views.slider.Slider
                 android:id="@+id/sliderNumber"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

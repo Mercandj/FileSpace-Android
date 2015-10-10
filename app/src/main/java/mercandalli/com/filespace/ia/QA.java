@@ -28,8 +28,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.util.MathUtils;
+import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.utils.MathUtils;
 
 /**
  * Created by Jonathan on 21/04/2015.

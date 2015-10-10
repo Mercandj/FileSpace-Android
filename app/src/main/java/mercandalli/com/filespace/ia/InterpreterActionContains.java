@@ -24,16 +24,16 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import mercandalli.com.filespace.ui.activity.Application;
+import mercandalli.com.filespace.ui.activities.Application;
 import mercandalli.com.filespace.ia.action.ENUM_Action;
-import mercandalli.com.filespace.listener.IModelFormListener;
-import mercandalli.com.filespace.listener.IPostExecuteListener;
-import mercandalli.com.filespace.model.ModelForm;
+import mercandalli.com.filespace.listeners.IModelFormListener;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.models.ModelForm;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.util.StringPair;
+import mercandalli.com.filespace.utils.StringPair;
 
-import static mercandalli.com.filespace.util.AlarmUtils.setAlarmFromString;
-import static mercandalli.com.filespace.util.NetUtils.isInternetConnection;
+import static mercandalli.com.filespace.utils.AlarmUtils.setAlarmFromString;
+import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
 /**
  * Created by Jonathan on 19/04/2015.

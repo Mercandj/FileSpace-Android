@@ -1,0 +1,478 @@
+/**
+ * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
+ *
+ * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
+ *
+ * LICENSE:
+ *
+ * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
+ * later version.
+ *
+ * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * @author Jonathan Mercandalli
+ * @license http://www.gnu.org/licenses/gpl.html
+ * @copyright 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
+ */
+package mercandalli.com.filespace.ui.fragments.file;
+
+import android.app.AlertDialog;
+import android.app.FragmentManager;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
+import org.json.JSONObject;
+
+import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.listeners.IListener;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
+import mercandalli.com.filespace.ui.fragments.BackFragment;
+import mercandalli.com.filespace.ui.fragments.FabFragment;
+
+import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
+
+public class FileManagerFragment extends BackFragment {
+	
+	private static final int NB_FRAGMENT = 4;
+    private static final int INIT_FRAGMENT = 1;
+	public static FabFragment listFragment[] = new FabFragment[NB_FRAGMENT];
+	private ViewPager mViewPager;
+	private FileManagerFragmentPagerAdapter mPagerAdapter;
+    private TabLayout tabs;
+
+    private FloatingActionButton circle, circle2;
+    private View coordinatorLayoutView;
+    private Snackbar snackbar;
+
+	public static int VIEW_MODE = Const.MODE_LIST;
+
+    public static FileManagerFragment newInstance() {
+        Bundle args = new Bundle();
+        FileManagerFragment fragment = new FileManagerFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_filemanager, container, false);
+
+        this.coordinatorLayoutView = (View) rootView.findViewById(R.id.snackBarPosition);
+
+		mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
+
+        VIEW_MODE = ((app.getConfig().getUserFileModeView() > -1) ? app.getConfig().getUserFileModeView() : Const.MODE_LIST);
+
+        tabs = (TabLayout) rootView.findViewById(R.id.tabs);
+		mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
+		mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                FileManagerFragment.this.app.invalidateOptionsMenu();
+                if(app.isLogged()) {
+                    switch (position) {
+                        case 0:
+                            updateNoInternet();
+                            break;
+                        case 1:
+                            updateNoInternet();
+                            break;
+                        default:
+                            if (snackbar != null)
+                                snackbar.dismiss();
+                    }
+                    refreshFab(position);
+                }
+                else
+                    refreshFab(position+2);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        /*
+        tabs.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                FileManagerFragment.this.app.invalidateOptionsMenu();
+                if(app.isLogged()) {
+                    switch (position) {
+                        case 0:
+                            updateNoInternet();
+                            break;
+                        case 1:
+                            updateNoInternet();
+                            break;
+                        default:
+                            if (snackbar != null)
+                                snackbar.dismiss();
+                    }
+                    refreshFab(position);
+                }
+                else
+                    refreshFab(position+2);
+            }
+        });
+        */
+        if(app.isLogged()) {
+            if (isInternetConnection(app)) {
+                mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
+                mViewPager.setCurrentItem(INIT_FRAGMENT);
+            } else {
+                mViewPager.setOffscreenPageLimit(NB_FRAGMENT);
+                mViewPager.setCurrentItem(INIT_FRAGMENT + 1);
+            }
+        }
+        else {
+            mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
+            mViewPager.setCurrentItem(0);
+        }
+
+        tabs.setupWithViewPager(mViewPager);
+        //tabs.setIndicatorColor(getResources().getColor(R.color.white));
+
+        this.circle = ((FloatingActionButton) rootView.findViewById(R.id.circle));
+        this.circle.setVisibility(View.GONE);
+        this.circle2 = ((FloatingActionButton) rootView.findViewById(R.id.circle2));
+        this.circle2.setVisibility(View.GONE);
+		
+        return rootView;
+	}
+	
+	public int getCurrentFragmentIndex() {
+        if(mViewPager == null)
+            return -1;
+        int result = mViewPager.getCurrentItem();
+		if(result >= listFragment.length)
+            return -1;
+        return mViewPager.getCurrentItem() + (app.isLogged()?0:2);
+	}
+
+    @Override
+    public boolean back() {
+        int currentFragmentId = getCurrentFragmentIndex();
+        if(listFragment == null || currentFragmentId== -1)
+            return false;
+        FabFragment fragment = listFragment[currentFragmentId];
+        if(fragment==null)
+            return false;
+        refreshFab(fragment);
+        return fragment.back();
+    }
+
+    private void refreshFab() {
+        refreshFab(getCurrentFragmentIndex());
+    }
+
+    private void refreshFab(int currentFragmentId) {
+        if(listFragment == null || currentFragmentId== -1)
+            return;
+        FabFragment fragment = listFragment[currentFragmentId];
+        if(fragment==null)
+            return;
+        refreshFab(fragment);
+    }
+
+    private void refreshFab(final FabFragment currentFragment) {
+        if (circle == null) {
+            return;
+        }
+        if (currentFragment.isFabVisible(0))
+            circle.show();
+        else
+            circle.hide();
+        circle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentFragment.onFabClick(0, circle);
+            }
+        });
+        if(currentFragment.getFabDrawable(0) != null)
+            circle.setImageDrawable(currentFragment.getFabDrawable(0));
+        else
+            circle.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
+
+        if (circle2 == null) {
+            return;
+        }
+        if(currentFragment.isFabVisible(1))
+            circle2.show();
+        else
+            circle2.hide();
+        circle2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentFragment.onFabClick(1, circle2);
+            }
+        });
+        if (currentFragment.getFabDrawable(1) != null)
+            circle2.setImageDrawable(currentFragment.getFabDrawable(1));
+        else
+            circle2.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
+    }
+
+    @Override
+    public void onFocus() { }
+
+    public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
+		Application app;
+		
+		public FileManagerFragmentPagerAdapter(FragmentManager fm, Application app) {
+			super(fm);
+			this.app = app;
+		}
+		
+		@Override
+        public BackFragment getItem(int i) {
+            if(!app.isLogged())
+                i+=2;
+
+			FabFragment fragment = null;
+			switch(i) {
+                case 0:		fragment = FileManagerCloudFragment.newInstance();  	break;
+                case 1:		fragment = FileManagerMyCloudFragment.newInstance(); 	break;
+                case 2:		fragment = FileManagerLocalFragment.newInstance();	    break;
+                case 3:		fragment = FileManagerLocalMusicFragment.newInstance();	break;
+                default:	fragment = FileManagerLocalFragment.newInstance();	    break;
+			}
+            fragment.setRefreshFab(new IListener() {
+                @Override
+                public void execute() {
+                    refreshFab();
+                }
+            });
+			listFragment[i] = fragment;
+            return listFragment[i];
+        }
+
+        @Override
+        public int getCount() {
+            return NB_FRAGMENT - (app.isLogged()?0:2);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int i) {
+            if(!app.isLogged())
+                i+=2;
+        	String title = "null";
+			switch(i) {
+                case 0:	title = getString(R.string.file_fragment_public_cloud);	break;
+                case 1:	title = getString(R.string.file_fragment_my_cloud);		break;
+                case 2:	title = getString(R.string.file_fragment_local);		break;
+                case 3:	title = getString(R.string.file_fragment_music);	    break;
+			}
+			return title;
+        }
+    }
+	
+
+	public void refreshListServer() {
+		refreshListServer(null);
+	}
+	
+	public void refreshListServer(String search) {
+        for(FabFragment fr : listFragment) {
+            if(fr!=null) {
+                if (fr instanceof FileManagerCloudFragment) {
+                    FileManagerCloudFragment fragmentFileManagerFragment = (FileManagerCloudFragment) fr;
+                    fragmentFileManagerFragment.refreshList(search);
+                }
+                else if (fr instanceof FileManagerMyCloudFragment) {
+                    FileManagerMyCloudFragment fragmentFileManagerFragment = (FileManagerMyCloudFragment) fr;
+                    fragmentFileManagerFragment.refreshList(search);
+                }
+                else if (fr instanceof FileManagerLocalFragment) {
+                    FileManagerLocalFragment fragmentFileManagerFragment = (FileManagerLocalFragment) fr;
+                    fragmentFileManagerFragment.refreshList(search);
+                }
+            }
+        }
+	}
+	
+	public void updateAdapterListServer() {
+
+        for(FabFragment fr : listFragment) {
+            if(fr!=null) {
+                if (fr instanceof FileManagerCloudFragment) {
+                    FileManagerCloudFragment fragmentFileManagerFragment = (FileManagerCloudFragment) fr;
+                    fragmentFileManagerFragment.updateAdapter();
+                }
+                else if (fr instanceof FileManagerMyCloudFragment) {
+                    FileManagerMyCloudFragment fragmentFileManagerFragment = (FileManagerMyCloudFragment) fr;
+                    fragmentFileManagerFragment.updateAdapter();
+                }
+                else if (fr instanceof FileManagerLocalFragment) {
+                    FileManagerLocalFragment fragmentFileManagerFragment = (FileManagerLocalFragment) fr;
+                    fragmentFileManagerFragment.updateAdapter();
+                }
+            }
+        }
+	}
+	
+	public void refreshAdapterListServer() {
+        for(FabFragment fr : listFragment) {
+            if(fr!=null) {
+                if (fr instanceof FileManagerCloudFragment) {
+                    FileManagerCloudFragment fragmentFileManagerFragment = (FileManagerCloudFragment) fr;
+                    fragmentFileManagerFragment.refreshList();
+                }
+                if (fr instanceof FileManagerMyCloudFragment) {
+                    FileManagerMyCloudFragment fragmentFileManagerFragment = (FileManagerMyCloudFragment) fr;
+                    fragmentFileManagerFragment.refreshList();
+                }
+                if (fr instanceof FileManagerLocalFragment) {
+                    FileManagerLocalFragment fragmentFileManagerFragment = (FileManagerLocalFragment) fr;
+                    fragmentFileManagerFragment.refreshList();
+                }
+            }
+        }
+	}
+
+	public void add() {
+		app.dialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
+			@Override
+			public void execute(JSONObject json, String body) {
+				if (json != null)
+					refreshListServer();
+			}
+		}, new IListener() { // Dismiss
+			@Override
+			public void execute() {
+
+			}
+		});
+	}
+
+	public void download() {
+		this.app.alert("Download", "Download all files ?", "Yes", new IListener() {
+			@Override
+			public void execute() {
+                // TODO download all
+                Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+			}
+		}, "No", null);
+	}
+
+	public void upload() {
+		this.app.alert("Upload", "Upload all files ?", "Yes", new IListener() {			
+			@Override
+			public void execute() {
+                // TODO Upload all
+                Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+			}
+		}, "No", null);
+	}
+
+    public void goHome() {
+        if(listFragment.length>2)
+            if(listFragment[2]!=null)
+                if(listFragment[2] instanceof FileManagerLocalFragment) {
+                    FileManagerLocalFragment fragmentFileManagerFragment = (FileManagerLocalFragment) listFragment[2];
+                    fragmentFileManagerFragment.goHome();
+                }
+    }
+
+	public void sort() {
+		final AlertDialog.Builder menuAlert = new AlertDialog.Builder(app);
+		String[] menuList = { "Sort by name (A-Z)", "Sort by size", "Sort by date", app.getConfig().getUserFileModeView()== Const.MODE_LIST ? "Grid View" : "List View" };
+        menuAlert.setTitle(getString(R.string.view));
+        menuAlert.setItems(menuList,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+
+                        switch (item) {
+
+                            case 0:
+                            case 1:
+                            case 2:
+                                if (getCurrentFragmentIndex() != 2 && getCurrentFragmentIndex() != 3)
+                                    Toast.makeText(app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                else {
+                                    for (BackFragment fr : listFragment) {
+                                        if (fr != null) {
+                                            if (fr instanceof FileManagerLocalFragment) {
+                                                FileManagerLocalFragment fragmentFileManagerFragment = (FileManagerLocalFragment) fr;
+                                                fragmentFileManagerFragment.setSort(item == 0 ? Const.SORT_ABC : (item == 1 ? Const.SORT_SIZE : Const.SORT_DATE_MODIFICATION));
+                                            } else if (fr instanceof FileManagerLocalMusicFragment) {
+                                                FileManagerLocalMusicFragment fragmentFileManagerFragment = (FileManagerLocalMusicFragment) fr;
+                                                fragmentFileManagerFragment.setSort(item == 0 ? Const.SORT_ABC : (item == 1 ? Const.SORT_SIZE : Const.SORT_DATE_MODIFICATION));
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+
+                            case 3:
+                                if (VIEW_MODE == Const.MODE_LIST)
+                                    VIEW_MODE = Const.MODE_GRID;
+                                else
+                                    VIEW_MODE = Const.MODE_LIST;
+                                app.getConfig().setUserFileModeView(VIEW_MODE);
+                                for (BackFragment fr : listFragment) {
+                                    if (fr != null) {
+                                        if (fr instanceof FileManagerCloudFragment) {
+                                            FileManagerCloudFragment fragmentFileManagerFragment = (FileManagerCloudFragment) fr;
+                                            fragmentFileManagerFragment.updateAdapter();
+                                        } else if (fr instanceof FileManagerMyCloudFragment) {
+                                            FileManagerMyCloudFragment fragmentFileManagerFragment = (FileManagerMyCloudFragment) fr;
+                                            fragmentFileManagerFragment.updateAdapter();
+                                        } else if (fr instanceof FileManagerLocalFragment) {
+                                            FileManagerLocalFragment fragmentFileManagerFragment = (FileManagerLocalFragment) fr;
+                                            fragmentFileManagerFragment.updateAdapter();
+                                        } else if (fr instanceof FileManagerLocalMusicFragment) {
+                                            FileManagerLocalMusicFragment fragmentFileManagerFragment = (FileManagerLocalMusicFragment) fr;
+                                            fragmentFileManagerFragment.updateAdapter();
+                                        }
+                                    }
+                                }
+                                break;
+                            default:
+                                Toast.makeText(app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                    }
+        });
+		AlertDialog menuDrop = menuAlert.create();
+		menuDrop.show();
+	}
+
+    private void updateNoInternet() {
+        if(!isInternetConnection(app)) {
+            this.snackbar = Snackbar.make(this.coordinatorLayoutView, getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE)
+                    .setAction(getString(R.string.refresh), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(isInternetConnection(app))
+                                listFragment[getCurrentFragmentIndex()].onFocus();
+                            else
+                                updateNoInternet();
+                        }
+                    });
+            this.snackbar.show();
+        }
+    }
+}

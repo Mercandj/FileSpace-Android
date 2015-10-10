@@ -39,13 +39,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-import mercandalli.com.filespace.listener.IPostExecuteListener;
-import mercandalli.com.filespace.model.ModelFile;
-import mercandalli.com.filespace.model.ModelUser;
-import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.util.NetUtils;
-import mercandalli.com.filespace.util.StringPair;
-import mercandalli.com.filespace.util.StringUtils;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.models.ModelFile;
+import mercandalli.com.filespace.models.ModelUser;
+import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.utils.NetUtils;
+import mercandalli.com.filespace.utils.StringPair;
+import mercandalli.com.filespace.utils.StringUtils;
 
 /**
  * Global behavior : http Get

@@ -27,10 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.ia.language.Sentence;
-import mercandalli.com.filespace.ui.activity.Application;
-import mercandalli.com.filespace.util.MathUtils;
+import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.utils.MathUtils;
 
-import static mercandalli.com.filespace.util.FileUtils.readStringAssets;
+import static mercandalli.com.filespace.utils.FileUtils.readStringAssets;
 
 /**
  * Created by Jonathan on 24/04/2015.

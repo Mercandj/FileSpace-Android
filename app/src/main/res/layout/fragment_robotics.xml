@@ -147,7 +147,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false">
 
-            <mercandalli.com.filespace.ui.view.slider.Slider
+            <mercandalli.com.filespace.ui.views.slider.Slider
                 android:id="@+id/seekBar_dir"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -182,7 +182,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false">
 
-            <mercandalli.com.filespace.ui.view.slider.Slider
+            <mercandalli.com.filespace.ui.views.slider.Slider
                 xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/seekBar_speed"
                 android:layout_width="fill_parent"
