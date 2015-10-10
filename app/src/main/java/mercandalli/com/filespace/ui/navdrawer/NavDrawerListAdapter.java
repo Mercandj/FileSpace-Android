@@ -87,7 +87,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
 			if(icon_profile_online!=null)
 				((ImageView) convertView.findViewById(R.id.icon)).setImageBitmap(icon_profile_online);
 			else if(navDrawerItems.get(position).containsImage)
-				((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(item.icon));
+				((ImageView) convertView.findViewById(R.id.icon)).setImageResource(item.icon);
 			else
 				convertView.findViewById(R.id.icon).setVisibility(View.GONE);
 
@@ -120,9 +120,9 @@ public class NavDrawerListAdapter extends BaseAdapter {
 
 			if(navDrawerItems.get(position).containsImage) {
 				if(item.isSelected && item.icon_pressed != -1)
-					((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(item.icon_pressed));
+					((ImageView) convertView.findViewById(R.id.icon)).setImageResource(item.icon_pressed);
 				else
-					((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(item.icon));
+					((ImageView) convertView.findViewById(R.id.icon)).setImageResource(item.icon);
 			}
 			else
 				convertView.findViewById(R.id.icon).setVisibility(View.GONE);
@@ -150,7 +150,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
 				FontUtils.applyFont(app, ((TextView) convertView.findViewById(R.id.title)), "fonts/MYRIADAM.TTF");
 			
 			if(navDrawerItems.get(position).containsImage)
-				((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(item.icon));
+				((ImageView) convertView.findViewById(R.id.icon)).setImageResource(item.icon);
 			else
 				convertView.findViewById(R.id.icon).setVisibility(View.GONE);
 			

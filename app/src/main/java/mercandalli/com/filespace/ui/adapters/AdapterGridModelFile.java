@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.ui.adapters;
 
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -80,23 +81,23 @@ public class AdapterGridModelFile extends BaseAdapter {
             subtitle.setText(file.getAdapterSubtitle());
 
             if(file.directory)
-                icon.setImageDrawable(app.getDrawable(R.drawable.directory));
+                icon.setImageResource(R.drawable.directory);
             else if(file.type!=null) {
                 if (file.type.equals(ModelFileTypeENUM.AUDIO.type))
-                    icon.setImageDrawable(app.getDrawable(R.drawable.file_audio));
+                    icon.setImageResource(R.drawable.file_audio);
                 else if (file.type.equals(ModelFileTypeENUM.PDF.type))
-                    icon.setImageDrawable(app.getDrawable(R.drawable.file_pdf));
+                    icon.setImageResource(R.drawable.file_pdf);
                 else if (file.type.equals(ModelFileTypeENUM.APK.type))
-                    icon.setImageDrawable(app.getDrawable(R.drawable.file_apk));
+                    icon.setImageResource(R.drawable.file_apk);
                 else if (file.type.equals(ModelFileTypeENUM.ARCHIVE.type))
-                    icon.setImageDrawable(app.getDrawable(R.drawable.file_archive));
+                    icon.setImageResource(R.drawable.file_archive);
                 else if (file.type.equals(ModelFileTypeENUM.FILESPACE.type))
-                    icon.setImageDrawable(app.getDrawable(R.drawable.file_jarvis));
+                    icon.setImageResource(R.drawable.file_jarvis);
                 else
-                    icon.setImageDrawable(app.getDrawable(R.drawable.file_default));
+                    icon.setImageResource(R.drawable.file_default);
             }
             else
-                icon.setImageDrawable(app.getDrawable(R.drawable.file_default));
+                icon.setImageResource(R.drawable.file_default);
 
             if(file.bitmap!=null)
                 icon.setImageBitmap(file.bitmap);
@@ -109,9 +110,9 @@ public class AdapterGridModelFile extends BaseAdapter {
                 }
             });
 
-            if(file.selected)
-                item.setBackgroundColor(app.getResources().getColor(R.color.tab_selected));
-            else {
+            if(file.selected) {
+                item.setBackgroundColor(ContextCompat.getColor(app, R.color.tab_selected));
+            } else {
                 item.setBackground(null);
             }
 
@@ -131,7 +132,6 @@ public class AdapterGridModelFile extends BaseAdapter {
                 */
             }
         }
-
 
         return itemLayoutView;
     }

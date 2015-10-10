@@ -66,23 +66,23 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
             viewHolder.subtitle.setText(file.getAdapterSubtitle());
 
             if(file.directory)
-                viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.directory));
+                viewHolder.icon.setImageResource(R.drawable.directory);
             else if(file.type!=null) {
                 if (file.type.equals(ModelFileTypeENUM.AUDIO.type))
-                    viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_audio));
+                    viewHolder.icon.setImageResource(R.drawable.file_audio);
                 else if (file.type.equals(ModelFileTypeENUM.PDF.type))
-                    viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_pdf));
+                    viewHolder.icon.setImageResource(R.drawable.file_pdf);
                 else if (file.type.equals(ModelFileTypeENUM.APK.type))
-                    viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_apk));
+                    viewHolder.icon.setImageResource(R.drawable.file_apk);
                 else if (file.type.equals(ModelFileTypeENUM.ARCHIVE.type))
-                    viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_archive));
+                    viewHolder.icon.setImageResource(R.drawable.file_archive);
                 else if (file.type.equals(ModelFileTypeENUM.FILESPACE.type))
-                    viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_jarvis));
+                    viewHolder.icon.setImageResource(R.drawable.file_jarvis);
                 else
-                    viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_default));
+                    viewHolder.icon.setImageResource(R.drawable.file_default);
             }
             else
-                viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_default));
+                viewHolder.icon.setImageResource(R.drawable.file_default);
 
             if(file.bitmap!=null)
                 viewHolder.icon.setImageBitmap(file.bitmap);

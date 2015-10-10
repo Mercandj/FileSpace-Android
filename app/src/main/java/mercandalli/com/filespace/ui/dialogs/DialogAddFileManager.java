@@ -30,7 +30,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.DatePicker;
-import android.widget.RelativeLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -49,11 +48,11 @@ import java.util.TimeZone;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IListener;
-import mercandalli.com.filespace.ui.activities.Application;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.listeners.IStringListener;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activities.Application;
 import mercandalli.com.filespace.utils.StringPair;
 
 public class DialogAddFileManager extends Dialog {
@@ -73,16 +72,16 @@ public class DialogAddFileManager extends Dialog {
 		this.setCancelable(true);
 
         Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.dialog_add_file_open);
-        ((RelativeLayout) this.findViewById(R.id.relativeLayout)).startAnimation(animOpen);
+        (this.findViewById(R.id.relativeLayout)).startAnimation(animOpen);
 
-        ((RelativeLayout) this.findViewById(R.id.relativeLayout)).setOnClickListener(new View.OnClickListener() {
+        (this.findViewById(R.id.relativeLayout)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogAddFileManager.this.dismiss();
             }
         });
 
-        ((RelativeLayout) this.findViewById(R.id.uploadFile)).setOnClickListener(new View.OnClickListener() {
+        (this.findViewById(R.id.uploadFile)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 app.dialog = new DialogUpload(app, id_file_parent, listener);
@@ -90,7 +89,7 @@ public class DialogAddFileManager extends Dialog {
             }
         });
 
-        ((RelativeLayout) this.findViewById(R.id.addDirectory)).setOnClickListener(new View.OnClickListener() {
+        (this.findViewById(R.id.addDirectory)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 app.prompt(app.getString(R.string.dialog_file_create_folder), app.getString(R.string.dialog_file_name_interrogation), app.getString(R.string.dialog_file_create), new IStringListener() {
@@ -114,7 +113,7 @@ public class DialogAddFileManager extends Dialog {
             }
         });
 
-        ((RelativeLayout) this.findViewById(R.id.txtFile)).setOnClickListener(new View.OnClickListener() {
+        (this.findViewById(R.id.txtFile)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 app.prompt(app.getString(R.string.dialog_file_create_txt), app.getString(R.string.dialog_file_name_interrogation), app.getString(R.string.dialog_file_create), new IStringListener() {
@@ -128,7 +127,7 @@ public class DialogAddFileManager extends Dialog {
             }
         });
 
-        ((RelativeLayout) this.findViewById(R.id.scan)).setOnClickListener(new View.OnClickListener() {
+        (this.findViewById(R.id.scan)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -153,7 +152,7 @@ public class DialogAddFileManager extends Dialog {
             }
         });
 
-        ((RelativeLayout) this.findViewById(R.id.addTimer)).setOnClickListener(new View.OnClickListener() {
+        (this.findViewById(R.id.addTimer)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -218,7 +217,7 @@ public class DialogAddFileManager extends Dialog {
             }
         });
 
-        ((RelativeLayout) this.findViewById(R.id.addArticle)).setOnClickListener(new View.OnClickListener() {
+        (this.findViewById(R.id.addArticle)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogCreateArticle dialogCreateArticle = new DialogCreateArticle(app, listener);

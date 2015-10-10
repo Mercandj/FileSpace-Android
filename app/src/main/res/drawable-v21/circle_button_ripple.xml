@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/fab_pressed"
-    android:shape="rectangle" >
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/fab_pressed" >
 
     <item>
         <shape android:shape="oval" >
@@ -9,4 +8,4 @@
         </shape>
     </item>
 
-</shape>
+</ripple>

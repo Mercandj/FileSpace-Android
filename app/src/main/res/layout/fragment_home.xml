@@ -29,16 +29,14 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
 
-    <ImageButton
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/circle"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
+        android:transitionName="transitionFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
         android:layout_margin="25dp"
-        android:background="@drawable/circle_button_ripple"
         android:elevation="@dimen/circle_button_elevation_high"
-        android:padding="15dp"
         android:scaleType="fitXY"
         android:src="@drawable/perm_group_microphone_white"
         android:stateListAnimator="@anim/circle_button_elevation"

@@ -19,10 +19,13 @@
  */
 package mercandalli.com.filespace.ui.activities;
 
+import android.annotation.TargetApi;
 import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -357,15 +360,19 @@ public abstract class ApplicationDrawer extends Application {
         invalidateOptionsMenu();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setStatusBarColor(int idColor) {
-        getWindow().setStatusBarColor(this.getResources().getColor(idColor));
-        if(navDrawerItems!=null)
-            if(navDrawerItems.size()>0) {
-                navDrawerItems.get(0).idBackgroundColor = idColor;
-                synchronized(navDrawerItems.get(0)) {
-                    navDrawerItems.get(0).notify();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(this, idColor));
+            if (navDrawerItems != null) {
+                if (navDrawerItems.size() > 0) {
+                    navDrawerItems.get(0).idBackgroundColor = idColor;
+                    synchronized (navDrawerItems.get(0)) {
+                        navDrawerItems.get(0).notify();
+                    }
                 }
             }
+        }
     }
 
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
