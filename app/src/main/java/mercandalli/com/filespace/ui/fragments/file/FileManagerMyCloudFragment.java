@@ -665,7 +665,7 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
     }
 
     @Override
-    public int getFabDrawable(int fab_id) {
+    public int getFabImageResource(int fab_id) {
         switch (fab_id) {
             case 0:
                 if(filesToCut != null && filesToCut.size() != 0)

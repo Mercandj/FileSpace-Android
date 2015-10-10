@@ -137,7 +137,7 @@ public class GenealogyFragment extends BackFragment {
     private void refreshFab(final FabFragment currentFragment) {
         if (currentFragment.isFabVisible(0)) {
             this.circle.show();
-            int imageResource = currentFragment.getFabDrawable(0);
+            int imageResource = currentFragment.getFabImageResource(0);
             if(imageResource == -1)
                 imageResource = android.R.drawable.ic_input_add;
             this.circle.setImageResource(imageResource);

@@ -148,7 +148,7 @@ public class FileManagerFragment extends BackFragment implements ViewPager.OnPag
         int imageResource;
         if (currentFragment.isFabVisible(0)) {
             circle.show();
-            imageResource = currentFragment.getFabDrawable(0);
+            imageResource = currentFragment.getFabImageResource(0);
             if(imageResource == -1)
                 imageResource = android.R.drawable.ic_input_add;
             circle.setImageResource(imageResource);
@@ -167,7 +167,7 @@ public class FileManagerFragment extends BackFragment implements ViewPager.OnPag
         }
         if(currentFragment.isFabVisible(1)) {
             circle2.show();
-            imageResource = currentFragment.getFabDrawable(1);
+            imageResource = currentFragment.getFabImageResource(1);
             if (imageResource == -1)
                 imageResource = android.R.drawable.ic_input_add;
             circle2.setImageResource(imageResource);

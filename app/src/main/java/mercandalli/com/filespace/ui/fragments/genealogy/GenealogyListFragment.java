@@ -354,7 +354,7 @@ public class GenealogyListFragment extends FabFragment {
     }
 
     @Override
-    public int getFabDrawable(int fab_id) {
+    public int getFabImageResource(int fab_id) {
         return android.R.drawable.ic_input_add;
     }
 }

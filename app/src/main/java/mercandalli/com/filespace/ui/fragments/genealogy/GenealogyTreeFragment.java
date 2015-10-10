@@ -382,7 +382,7 @@ public class GenealogyTreeFragment extends FabFragment {
     }
 
     @Override
-    public int getFabDrawable(int fab_id) {
+    public int getFabImageResource(int fab_id) {
         return -1;
     }
 }

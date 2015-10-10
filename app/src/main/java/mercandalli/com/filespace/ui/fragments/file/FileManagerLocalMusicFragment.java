@@ -434,7 +434,7 @@ public class FileManagerLocalMusicFragment extends FabFragment implements BackFr
     }
 
     @Override
-    public int getFabDrawable(int fab_id) {
+    public int getFabImageResource(int fab_id) {
         return R.drawable.add;
     }
 

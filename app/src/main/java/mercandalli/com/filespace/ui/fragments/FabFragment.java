@@ -17,7 +17,7 @@ public abstract class FabFragment extends BackFragment {
     }
     public abstract void onFabClick(int fab_id, FloatingActionButton fab);
     public abstract boolean isFabVisible(int fab_id);
-    public abstract int getFabDrawable(int fab_id);
+    public abstract int getFabImageResource(int fab_id);
     public void refreshFab() {
         if(refreshFab != null)
             refreshFab.execute();

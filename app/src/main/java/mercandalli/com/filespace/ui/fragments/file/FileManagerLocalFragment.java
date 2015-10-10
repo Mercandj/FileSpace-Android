@@ -621,7 +621,7 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
     }
 
     @Override
-    public int getFabDrawable(int fab_id) {
+    public int getFabImageResource(int fab_id) {
         switch (fab_id) {
             case 0:
                 if(filesToCopy != null && filesToCopy.size() != 0)
