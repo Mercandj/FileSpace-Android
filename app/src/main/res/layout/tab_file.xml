@@ -3,18 +3,18 @@
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    android:id="@+id/item"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:transitionName="transitionRoot"
-    android:id="@+id/item"
     android:background="@color/tab_file">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground">
-
 
         <TextView
             android:id="@+id/title"
@@ -25,8 +25,8 @@
             android:focusable="false"
             android:marqueeRepeatLimit="marquee_forever"
             android:maxLines="1"
-            android:paddingLeft="20dp"
-            android:paddingRight="5dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="5dp"
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColor="#000"
@@ -34,8 +34,7 @@
             android:layout_toEndOf="@+id/icon"
             android:layout_toStartOf="@+id/more"
             android:layout_alignTop="@+id/icon"
-            android:gravity="top"
-            />
+            android:gravity="top" />
 
         <TextView
             android:id="@+id/subtitle"
@@ -45,8 +44,8 @@
             android:focusable="false"
             android:marqueeRepeatLimit="marquee_forever"
             android:maxLines="1"
-            android:paddingLeft="20dp"
-            android:paddingRight="5dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="5dp"
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColor="#666"
@@ -55,40 +54,30 @@
             android:gravity="bottom"
             android:layout_marginBottom="2dp"
             android:layout_toEndOf="@+id/icon"
-            android:layout_toStartOf="@+id/more"
-            />
+            android:layout_toStartOf="@+id/more" />
 
         <mercandalli.com.filespace.ui.views.CircularImageView
             android:id="@+id/icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:contentDescription="@string/image_description"
             android:transitionName="transitionIcon"
             android:src="@drawable/file_default" />
 
-        <RelativeLayout
+        <ImageButton
             android:id="@+id/more"
             android:layout_width="55dp"
             android:layout_height="match_parent"
-            android:paddingRight="10dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:paddingLeft="10dp">
-
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentBottom="true" />
-        </RelativeLayout>
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
+            android:padding="18dp"
+            android:scaleType="centerCrop" />
 
     </RelativeLayout>
 
-
-
-</RelativeLayout>
+</FrameLayout>

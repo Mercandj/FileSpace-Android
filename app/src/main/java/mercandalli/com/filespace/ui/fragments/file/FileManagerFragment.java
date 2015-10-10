@@ -145,38 +145,41 @@ public class FileManagerFragment extends BackFragment implements ViewPager.OnPag
         if (circle == null) {
             return;
         }
-        if (currentFragment.isFabVisible(0))
+        int imageResource;
+        if (currentFragment.isFabVisible(0)) {
             circle.show();
+            imageResource = currentFragment.getFabDrawable(0);
+            if(imageResource == -1)
+                imageResource = android.R.drawable.ic_input_add;
+            circle.setImageResource(imageResource);
+            circle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    currentFragment.onFabClick(0, circle);
+                }
+            });
+        }
         else
             circle.hide();
-        circle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentFragment.onFabClick(0, circle);
-            }
-        });
-        if(currentFragment.getFabDrawable(0) != null)
-            circle.setImageDrawable(currentFragment.getFabDrawable(0));
-        else
-            circle.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
 
         if (circle2 == null) {
             return;
         }
-        if(currentFragment.isFabVisible(1))
+        if(currentFragment.isFabVisible(1)) {
             circle2.show();
+            imageResource = currentFragment.getFabDrawable(1);
+            if (imageResource == -1)
+                imageResource = android.R.drawable.ic_input_add;
+            circle2.setImageResource(imageResource);
+            circle2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    currentFragment.onFabClick(1, circle2);
+                }
+            });
+        }
         else
             circle2.hide();
-        circle2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentFragment.onFabClick(1, circle2);
-            }
-        });
-        if (currentFragment.getFabDrawable(1) != null)
-            circle2.setImageDrawable(currentFragment.getFabDrawable(1));
-        else
-            circle2.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
     }
 
     @Override

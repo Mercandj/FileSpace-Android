@@ -22,7 +22,6 @@ package mercandalli.com.filespace.ui.fragments.file;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -666,17 +665,17 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
     }
 
     @Override
-    public Drawable getFabDrawable(int fab_id) {
+    public int getFabDrawable(int fab_id) {
         switch (fab_id) {
             case 0:
                 if(filesToCut != null && filesToCut.size() != 0)
-                    return app.getDrawable(R.drawable.ic_menu_paste_holo_dark);
+                    return R.drawable.ic_menu_paste_holo_dark;
                 else
-                    return app.getDrawable(R.drawable.add);
+                    return R.drawable.add;
             case 1:
-                return app.getDrawable(R.drawable.arrow_up);
+                return R.drawable.arrow_up;
         }
-        return app.getDrawable(R.drawable.add);
+        return R.drawable.add;
     }
 
     @Override

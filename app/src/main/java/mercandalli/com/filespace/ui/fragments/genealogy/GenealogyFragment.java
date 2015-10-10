@@ -41,7 +41,6 @@ import mercandalli.com.filespace.ui.views.PagerSlidingTabStrip;
 
 import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
-
 public class GenealogyFragment extends BackFragment {
 
     private static final int NB_FRAGMENT = 4;
@@ -136,20 +135,21 @@ public class GenealogyFragment extends BackFragment {
     }
 
     private void refreshFab(final FabFragment currentFragment) {
-        if(currentFragment.isFabVisible(0))
+        if (currentFragment.isFabVisible(0)) {
             this.circle.show();
+            int imageResource = currentFragment.getFabDrawable(0);
+            if(imageResource == -1)
+                imageResource = android.R.drawable.ic_input_add;
+            this.circle.setImageResource(imageResource);
+            this.circle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    currentFragment.onFabClick(0, circle);
+                }
+            });
+        }
         else
             this.circle.hide();
-        this.circle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentFragment.onFabClick(0, circle);
-            }
-        });
-        if(currentFragment.getFabDrawable(0) != null)
-            this.circle.setImageDrawable(currentFragment.getFabDrawable(0));
-        else
-            this.circle.setImageDrawable(app.getDrawable(android.R.drawable.ic_input_add));
     }
 
     public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {

@@ -1,6 +1,5 @@
 package mercandalli.com.filespace.ui.fragments;
 
-import android.graphics.drawable.Drawable;
 import android.support.design.widget.FloatingActionButton;
 
 import mercandalli.com.filespace.listeners.IListener;
@@ -18,7 +17,7 @@ public abstract class FabFragment extends BackFragment {
     }
     public abstract void onFabClick(int fab_id, FloatingActionButton fab);
     public abstract boolean isFabVisible(int fab_id);
-    public abstract Drawable getFabDrawable(int fab_id);
+    public abstract int getFabDrawable(int fab_id);
     public void refreshFab() {
         if(refreshFab != null)
             refreshFab.execute();

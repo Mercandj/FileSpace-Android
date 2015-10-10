@@ -34,6 +34,7 @@ dependencies {
     compile 'com.android.support:support-v13:23.0.1'
     compile 'com.android.support:recyclerview-v7:23.0.1'
     compile 'com.android.support:palette-v7:23.0.1'
+    compile 'com.android.support:support-annotations:23.0.1'
 
     compile 'com.nhaarman.listviewanimations:lib-core:3.1.0@aar'
     compile 'com.nhaarman.listviewanimations:lib-manipulation:3.1.0@aar'

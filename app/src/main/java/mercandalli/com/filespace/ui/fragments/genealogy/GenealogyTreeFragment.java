@@ -21,7 +21,6 @@ package mercandalli.com.filespace.ui.fragments.genealogy;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -383,7 +382,7 @@ public class GenealogyTreeFragment extends FabFragment {
     }
 
     @Override
-    public Drawable getFabDrawable(int fab_id) {
-        return null;
+    public int getFabDrawable(int fab_id) {
+        return -1;
     }
 }

@@ -63,7 +63,7 @@ public class AdapterDragModelFile extends BaseAdapter implements Swappable {
             ((TextView) convertView.findViewById(R.id.title)).setText(file.getAdapterTitle());
             ((TextView) convertView.findViewById(R.id.subtitle)).setText(file.getAdapterSubtitle());
 
-            if(file.directory)
+            if (file.directory)
                 ((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.directory));
             else if(file.type!=null) {
                 if (file.type.equals(ModelFileTypeENUM.AUDIO.type))

@@ -24,8 +24,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -122,15 +123,16 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         public TextView title, subtitle;
         public ImageView icon;
-        public RelativeLayout item, more;
+        public FrameLayout item;
+        public ImageButton more;
 
         public ViewHolder(View itemLayoutView, int viewType) {
             super(itemLayoutView);
-            item = (RelativeLayout) itemLayoutView.findViewById(R.id.item);
+            item = (FrameLayout) itemLayoutView.findViewById(R.id.item);
             title = (TextView) itemLayoutView.findViewById(R.id.title);
             subtitle = (TextView) itemLayoutView.findViewById(R.id.subtitle);
             icon = (ImageView) itemLayoutView.findViewById(R.id.icon);
-            more = (RelativeLayout) itemLayoutView.findViewById(R.id.more);
+            more = (ImageButton) itemLayoutView.findViewById(R.id.more);
             itemLayoutView.setOnClickListener(this);
             itemLayoutView.setOnLongClickListener(this);
         }

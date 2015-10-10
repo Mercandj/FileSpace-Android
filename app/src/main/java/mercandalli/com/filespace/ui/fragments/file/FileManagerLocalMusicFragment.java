@@ -23,7 +23,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -435,8 +434,8 @@ public class FileManagerLocalMusicFragment extends FabFragment implements BackFr
     }
 
     @Override
-    public Drawable getFabDrawable(int fab_id) {
-        return app.getDrawable(R.drawable.add);
+    public int getFabDrawable(int fab_id) {
+        return R.drawable.add;
     }
 
     @Override

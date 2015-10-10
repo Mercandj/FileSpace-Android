@@ -20,7 +20,6 @@
 package mercandalli.com.filespace.ui.fragments.genealogy;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -90,8 +89,8 @@ public class GenealogyStatisticsFragment extends FabFragment {
     }
 
     @Override
-    public Drawable getFabDrawable(int fab_id) {
-        return null;
+    public int getFabDrawable(int fab_id) {
+        return -1;
     }
 
     @Override
