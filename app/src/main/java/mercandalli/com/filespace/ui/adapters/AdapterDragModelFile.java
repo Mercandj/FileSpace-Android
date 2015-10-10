@@ -64,23 +64,23 @@ public class AdapterDragModelFile extends BaseAdapter implements Swappable {
             ((TextView) convertView.findViewById(R.id.subtitle)).setText(file.getAdapterSubtitle());
 
             if (file.directory)
-                ((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.directory));
+                ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.directory);
             else if(file.type!=null) {
                 if (file.type.equals(ModelFileTypeENUM.AUDIO.type))
-                    ((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_audio));
+                    ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.file_audio);
                 else if (file.type.equals(ModelFileTypeENUM.PDF.type))
-                    ((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_pdf));
+                    ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.file_pdf);
                 else if (file.type.equals(ModelFileTypeENUM.APK.type))
-                    ((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_apk));
+                    ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.file_apk);
                 else if (file.type.equals(ModelFileTypeENUM.ARCHIVE.type))
-                    ((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_archive));
+                    ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.file_archive);
                 else if (file.type.equals(ModelFileTypeENUM.FILESPACE.type))
-                    ((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_jarvis));
+                    ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.file_jarvis);
                 else
-                    ((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_default));
+                    ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.file_default);
             }
             else
-                ((ImageView) convertView.findViewById(R.id.icon)).setImageDrawable(app.getDrawable(R.drawable.file_default));
+                ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.file_default);
 
             if(file.bitmap!=null)
                 ((ImageView) convertView.findViewById(R.id.icon)).setImageBitmap(file.bitmap);

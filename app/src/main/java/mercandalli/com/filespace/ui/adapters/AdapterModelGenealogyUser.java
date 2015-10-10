@@ -70,15 +70,15 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
             viewHolder.more.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(moreListener!=null)
+                    if (moreListener != null)
                         moreListener.execute(user);
                 }
             });
 
             if(!user.is_man)
-                viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_video));
+                viewHolder.icon.setImageResource(R.drawable.file_video);
             else
-                viewHolder.icon.setImageDrawable(app.getDrawable(R.drawable.file_default));
+                viewHolder.icon.setImageResource(R.drawable.file_default);
 
             if(user.selected)
                 viewHolder.item.setBackgroundColor(app.getResources().getColor(R.color.tab_selected));
@@ -107,13 +107,13 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
         @Override
         public void onClick(View v) {
             if (mItemClickListener != null)
-                mItemClickListener.onItemClick(v, getPosition());
+                mItemClickListener.onItemClick(v, getAdapterPosition());
         }
 
         @Override
         public boolean onLongClick(View v) {
             if (mItemLongClickListener != null)
-                return mItemLongClickListener.onItemLongClick(v, getPosition());
+                return mItemLongClickListener.onItemLongClick(v, getAdapterPosition());
             return false;
         }
     }
