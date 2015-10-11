@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name" translate="false">FileSpace</string>
+    <string name="app_name_uppercase" translate="false">FILESPACE</string>
+    <string name="app_name_full" translate="false">Control your files</string>
+    <string name="author_full_name" translate="false">Jonathan Mercandalli</string>
+    <string name="author_full_name_by" translate="false">By Jonathan Mercandalli</string>
+    <string name="app_description" translate="false">Share, store, control your IT!</string>
+    <string name="api_map_key" translate="false">AIzaSyDQnix0ebkhokWcBkXZNNcWVu-kQcSG_8g</string>
+
+    <string name="navigation_drawer_open" translate="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translate="false">Close navigation drawer</string>
+
+    <string name="image_description">Description Image</string>
+
+    <string name="author">Author</string>
+    <string name="about">About</string>
+    <string name="action_failed">Action failed</string>
+    <string name="no_user">No User.</string>
+    <string name="no_person">No Person.</string>
+    <string name="no_talk">No Talk.</string>
+    <string name="no_music">No Music.</string>
+    <string name="no_file">No File</string>
+    <string name="no_file_server">No File on server.</string>
+    <string name="no_file_directory">No File on this directory.</string>
+    <string name="no_file_local">No File on local FileSpace folder.</string>
+    <string name="no_file_local_folder">No File on local /%1$s folder.</string>
+    <string name="no_internet_connection">No internet connection.</string>
+    <string name="not_implemented">Not implemented.</string>
+    <string name="no_logged">You are not logged.</string>
+    <string name="file">File</string>
+    <string name="request">Request</string>
+    <string name="signin">Sign in</string>
+    <string name="login">Log in</string>
+    <string name="cancel">Cancel</string>
+    <string name="up">Up</string>
+    <string name="console">Console</string>
+    <string name="server_error">No server response.</string>
+    <string name="method">Method</string>
+    <string name="auto_connection">log me on automatically</string>
+    <string name="ok">Ok</string>
+    <string name="ON">ON</string>
+    <string name="OFF">OFF</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="add">Add</string>
+    <string name="waiting_for_response">Waiting for response</string>
+    <string name="refresh">Refresh</string>
+    <string name="back">Back</string>
+
+    <string name="action">Action</string>
+    <string name="download">Download</string>
+    <string name="upload">Upload</string>
+    <string name="open_as">Open as...</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="modify">Modify</string>
+    <string name="copy">Copy</string>
+    <string name="cut">Cut</string>
+    <string name="properties">Properties</string>
+    <string name="data">Data</string>
+    <string name="talk">Talk</string>
+    <string name="sort">Sort</string>
+    <string name="view">View</string>
+
+    <string name="text">Text</string>
+    <string name="image">Image</string>
+    <string name="audio">Audio</string>
+    <string name="video">Video</string>
+    <string name="other">Other</string>
+
+    <string name="dialog_server_route">Server Route</string>
+    <string name="dialog_server_url">Server URL</string>
+    <string name="dialog_username">Username</string>
+    <string name="dialog_password">Password</string>
+    <string name="dialog_register">Register</string>
+    <string name="dialog_login">Log in</string>
+    <string name="dialog_json">Json</string>
+
+    <string name="dialog_file_create">Create</string>
+    <string name="dialog_file_create_folder">Create Folder</string>
+    <string name="dialog_file_create_txt">Create TXT File</string>
+    <string name="dialog_file_name_interrogation">Name ?</string>
+
+    <string name="tab_home">Home</string>
+    <string name="tab_files">Files</string>
+    <string name="tab_workspace">Workspace</string>
+    <string name="tab_community">Community</string>
+    <string name="tab_robotics">Robotics</string>
+    <string name="tab_genealogy">Genealogy</string>
+    <string name="tab_admin">Admin</string>
+    <string name="tab_request">Request</string>
+    <string name="tab_settings">Settings</string>
+    <string name="tab_log_out">Log out</string>
+    <string name="tab_about">About Dev</string>
+
+    <string name="menu_action_search">Search</string>
+    <string name="menu_action_delete">Delete</string>
+    <string name="menu_action_add">Add</string>
+    <string name="menu_action_home">Home</string>
+    <string name="menu_action_upload">Upload</string>
+    <string name="menu_action_download">Download</string>
+    <string name="menu_action_sort">Sort</string>
+
+    <string name="file_fragment_public_cloud">CLOUD</string>
+    <string name="file_fragment_my_cloud">MY CLOUD</string>
+    <string name="file_fragment_local">LOCAL</string>
+    <string name="file_fragment_music">MUSIC</string>
+
+    <string name="failed_google_plus">Google+ connection failed.</string>
+
+    <string name="genealogy_first_name_1">First name 1</string>
+    <string name="genealogy_first_name_2">First name 2</string>
+    <string name="genealogy_first_name_3">First name 3</string>
+    <string name="genealogy_last_name">Last name</string>
+    <string name="genealogy_add_person">Add person</string>
+
+</resources>
