@@ -124,17 +124,20 @@ public abstract class ApplicationDrawer extends Application implements INavigati
 			    }, R.drawable.q_ic_drawer_files, R.drawable.q_ic_drawer_files_pressed, Const.TAB_VIEW_TYPE_NORMAL)
         );
 
-        navDrawerItems.add(
-                new NavDrawerItem("Test", new IListener() {
-                    @Override
-                    public void execute() {
-                        backFragment = MultimediaFragment.newInstance();
-                        backFragment.setApp(ApplicationDrawer.this);
-                        FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.content_frame, backFragment).commit();
-                    }
-                }, R.drawable.q_ic_drawer_home, R.drawable.q_ic_drawer_home_pressed, Const.TAB_VIEW_TYPE_NORMAL)
-        );
+        // Test
+        if (this.getConfig().getUser().isAdmin()) {
+            navDrawerItems.add(
+                    new NavDrawerItem("Test", new IListener() {
+                        @Override
+                        public void execute() {
+                            backFragment = MultimediaFragment.newInstance();
+                            backFragment.setApp(ApplicationDrawer.this);
+                            FragmentManager fragmentManager = getFragmentManager();
+                            fragmentManager.beginTransaction().replace(R.id.content_frame, backFragment).commit();
+                        }
+                    }, R.drawable.q_ic_drawer_home, R.drawable.q_ic_drawer_home_pressed, Const.TAB_VIEW_TYPE_NORMAL)
+            );
+        }
 
         // Tab 4
         navDrawerItems.add(
@@ -150,7 +153,7 @@ public abstract class ApplicationDrawer extends Application implements INavigati
         );
 
         // User logged Tabs
-        if(this.getConfig().isLogged()) {
+        if (this.getConfig().isLogged()) {
             // Tab 5
             navDrawerItems.add(
                     new NavDrawerItem(getString(R.string.tab_community), new IListener() {
@@ -297,10 +300,10 @@ public abstract class ApplicationDrawer extends Application implements INavigati
 	}
 	
 	public void selectItem(int position) {
-        if(position >= navDrawerItems.size())
+        if (position >= navDrawerItems.size())
             return;
-		for(NavDrawerItem nav : navDrawerItems.getListe())
-			if(navDrawerItems.get(position).equals(nav)) {
+		for (NavDrawerItem nav : navDrawerItems.getListe())
+			if (navDrawerItems.get(position).equals(nav)) {
                 for (int i : noSelectable)
                     if (nav.viewType == i) {
                         if (nav.listenerClick != null)
@@ -308,42 +311,23 @@ public abstract class ApplicationDrawer extends Application implements INavigati
                         return;
                     }
             }
-        if(position == getInitFragmentId()) {
+        if (position == getInitFragmentId()) {
             ID_FRAGMENT_VISITED = new Stack<>();
         }
         ID_FRAGMENT_VISITED.push(position);
 
-    	for(NavDrawerItem nav : navDrawerItems.getListe()) {
+    	for (NavDrawerItem nav : navDrawerItems.getListe()) {
     		nav.isSelected = false;
-    		if(navDrawerItems.get(position).equals(nav)) {
+    		if (navDrawerItems.get(position).equals(nav)) {
                 nav.isSelected = true;
-    			if(nav.listenerClick!=null)
+    			if (nav.listenerClick!=null)
     				nav.listenerClick.execute();
     		}
     	}
         mDrawerLayout.closeDrawer(mDrawerList);
         mDrawerList.setAdapter(new NavDrawerListAdapter(this, navDrawerItems.getListe()));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
-
-        //invalidateOptionsMenu();
     }
-
-    /*
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public void setStatusBarColor(int idColor) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this, idColor));
-            if (navDrawerItems != null) {
-                if (navDrawerItems.size() > 0) {
-                    navDrawerItems.get(0).idBackgroundColor = idColor;
-                    synchronized (navDrawerItems.get(0)) {
-                        navDrawerItems.get(0).notify();
-                    }
-                }
-            }
-        }
-    }
-    */
 
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
 		@Override
@@ -369,29 +353,29 @@ public abstract class ApplicationDrawer extends Application implements INavigati
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
-            if(backPressed())
+            if (backPressed())
                 return true;
         return super.onKeyDown(keyCode, event);
     }
 
     public boolean backPressed() {
-        if(mDrawerLayout.isDrawerOpen(mDrawerList)) {
+        if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
             mDrawerLayout.closeDrawer(mDrawerList);
             return true;
         }
-        if(this.backFragment !=null) {
-            if(this.backFragment.back())
+        if (this.backFragment != null) {
+            if (this.backFragment.back())
                 return true;
         }
-        if(this.ID_FRAGMENT_VISITED==null) {
+        if (this.ID_FRAGMENT_VISITED == null) {
             Log.e("ApplicationDrawer", "backPressed() this.ID_FRAGMENT_VISITED==null");
             return false;
         }
-        if(this.ID_FRAGMENT_VISITED.empty()) {
+        if (this.ID_FRAGMENT_VISITED.empty()) {
             Log.e("ApplicationDrawer", "backPressed() this.ID_FRAGMENT_VISITED.empty()");
             return false;
         }
-        if(this.ID_FRAGMENT_VISITED.pop() == getInitFragmentId())
+        if (this.ID_FRAGMENT_VISITED.pop() == getInitFragmentId())
             return false;
         this.selectItem(this.ID_FRAGMENT_VISITED.pop());
         return true;
