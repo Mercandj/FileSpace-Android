@@ -2,7 +2,7 @@ package mercandalli.com.filespace.ia.crypt;
 
 /**
  * 
- * Permet de définir une chaîne de cryptage. L'opération de cryptage doit être inversible, afin de pouvoir décrypter le message obtenu.
+ * Permet de dÃ©finir une chaine de cryptage. L'opÃ©ration de cryptage doit Ãªtre inversible, afin de pouvoir dÃ©crypter le message obtenu.
  * 
  */
 public abstract class CryptMethod {

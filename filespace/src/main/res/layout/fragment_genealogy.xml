@@ -3,49 +3,62 @@
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/snackBarPosition"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-    <mercandalli.com.filespace.ui.views.PagerSlidingTabStrip
-        android:id="@+id/tabs"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/fragment_genealogy_app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="42dip"
-        android:background="@color/actionbar"
-        custom:pstsUnderlineHeight="0dp"
-        custom:pstsIndicatorHeight="2dp"
-        android:elevation="4dp"/>
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/my_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:titleTextAppearance="@style/ToolbarTitle"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:layout_scrollFlags="scroll|enterAlways"/>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/fragment_genealogy_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="42dip"
+            android:background="@color/actionbar"
+            app:tabTextAppearance="@style/TextAppearanceTabLayout"
+            app:tabTextColor="@color/white"
+            app:tabSelectedTextColor="@color/white"
+            app:tabIndicatorHeight="2dp"
+            app:tabIndicatorColor="@color/white"
+            android:layout_alignParentTop="false"/>
+
+    </android.support.design.widget.AppBarLayout>
 
     <mercandalli.com.filespace.ui.views.NonSwipeableViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tabs" >
-
-    </mercandalli.com.filespace.ui.views.NonSwipeableViewPager>
-
-    <android.support.design.widget.CoordinatorLayout
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/snackBarPosition">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/circle"
-            android:transitionName="transitionFab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_margin="25dp"
-            android:elevation="@dimen/circle_button_elevation_high"
-            android:scaleType="fitXY"
-            android:src="@drawable/add"
-            android:stateListAnimator="@anim/circle_button_elevation"
-            android:tint="@android:color/white"
-            app:layout_anchor="@id/snackBarPosition"
-            app:layout_anchorGravity="bottom|right|end"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/circle"
+        android:transitionName="transitionFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="25dp"
+        android:elevation="@dimen/circle_button_elevation_high"
+        android:scaleType="fitXY"
+        android:src="@drawable/add"
+        android:stateListAnimator="@anim/circle_button_elevation"
+        android:tint="@android:color/white"
+        app:layout_anchor="@id/snackBarPosition"
+        app:layout_anchorGravity="bottom|right|end"/>
 
-    </android.support.design.widget.CoordinatorLayout>
-
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

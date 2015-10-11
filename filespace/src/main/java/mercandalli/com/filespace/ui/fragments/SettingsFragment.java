@@ -22,8 +22,10 @@ package mercandalli.com.filespace.ui.fragments;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -68,13 +70,10 @@ public class SettingsFragment extends BackFragment {
 		rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
         app.setTitle(R.string.tab_settings);
-
         Toolbar mToolbar = (Toolbar) rootView.findViewById(R.id.my_toolbar);
-        if (mToolbar!=null) {
-            //mToolbar.setBackgroundColor(getResources().getColor(R.color.actionbar));
-            app.setToolbar(mToolbar);
-            //app.setStatusBarColor(R.color.notifications_bar);
-        }
+        app.setToolbar(mToolbar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            app.getWindow().setStatusBarColor(ContextCompat.getColor(app, R.color.notifications_bar));
 		
 		recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
 		recyclerView.setHasFixedSize(true);

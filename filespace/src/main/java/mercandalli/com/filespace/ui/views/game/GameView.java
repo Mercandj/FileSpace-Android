@@ -31,7 +31,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         });
 
         setKeepScreenOn(true);
-        setFocusable(true); // être sur d'avoir les events
+        setFocusable(true); // etre sur d'avoir les events
     }
 
     @Override
@@ -40,7 +40,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         y_move = (int)event.getY(0);
 
 
-        // Remet les variables du tactile à zero
+        // Remet les variables du tactile a zero
         x_down=0; y_down=0; x_move=0; y_move=0; x_up=0; y_up=0;
 
         // Appel ondraw

@@ -20,11 +20,12 @@
 package mercandalli.com.filespace.ui.fragments.workspace;
 
 import android.app.FragmentManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -51,8 +52,6 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     private FileManagerFragmentPagerAdapter mPagerAdapter;
     private TabLayout tabs;
 
-    private Toolbar mToolbar;
-
     public WorkspaceFragment() {
         super();
     }
@@ -62,23 +61,10 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
         View rootView = inflater.inflate(R.layout.fragment_workspace, container, false);
 
         app.setTitle(R.string.tab_workspace);
-
-        mToolbar = (Toolbar) rootView.findViewById(R.id.my_toolbar);
-        if (mToolbar!=null) {
-            //mToolbar.setBackgroundColor(getResources().getColor(R.color.actionbar));
-            app.setToolbar(mToolbar);
-            //app.setStatusBarColor(R.color.notifications_bar);
-        }
-
-        final ActionBar actionBar = app.getSupportActionBar();
-        if (actionBar!=null) {
-            /*actionBar.setTitle(R.string.tab_files);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayUseLogoEnabled(false);
-            actionBar.setHomeButtonEnabled(true);*/
-        }
+        Toolbar mToolbar = (Toolbar) rootView.findViewById(R.id.my_toolbar);
+        app.setToolbar(mToolbar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            app.getWindow().setStatusBarColor(ContextCompat.getColor(app, R.color.notifications_bar));
         setHasOptionsMenu(true);
 
         mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);

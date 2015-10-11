@@ -20,11 +20,16 @@
 package mercandalli.com.filespace.ui.fragments.genealogy;
 
 import android.app.FragmentManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,22 +42,23 @@ import mercandalli.com.filespace.ui.activities.Application;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.ui.views.NonSwipeableViewPager;
-import mercandalli.com.filespace.ui.views.PagerSlidingTabStrip;
 
 import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
-public class GenealogyFragment extends BackFragment {
+public class GenealogyFragment extends BackFragment implements ViewPager.OnPageChangeListener {
 
     private static final int NB_FRAGMENT = 4;
     private static final int INIT_FRAGMENT = 0;
     public static FabFragment listFragment[] = new FabFragment[NB_FRAGMENT];
     private NonSwipeableViewPager mViewPager;
     private FileManagerFragmentPagerAdapter mPagerAdapter;
-    private PagerSlidingTabStrip tabs;
+    private TabLayout tabs;
 
     private FloatingActionButton circle, circle2;
     private View coordinatorLayoutView;
     private Snackbar snackbar;
+
+    private AppBarLayout mAppBarLayout;
 
     public GenealogyFragment() {
         super();
@@ -62,33 +68,28 @@ public class GenealogyFragment extends BackFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_genealogy, container, false);
 
+        app.setTitle(R.string.tab_genealogy);
+        Toolbar mToolbar = (Toolbar) rootView.findViewById(R.id.my_toolbar);
+        app.setToolbar(mToolbar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            app.getWindow().setStatusBarColor(ContextCompat.getColor(app, R.color.notifications_bar));
+        setHasOptionsMenu(true);
+
+        mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.fragment_genealogy_app_bar_layout);
         this.coordinatorLayoutView = (View) rootView.findViewById(R.id.snackBarPosition);
 
         mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
 
-        tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
+        tabs = (TabLayout) rootView.findViewById(R.id.fragment_genealogy_tab_layout);
         mViewPager = (NonSwipeableViewPager) rootView.findViewById(R.id.pager);
         mViewPager.setNonSwipeableItem(2);
         mViewPager.setAdapter(mPagerAdapter);
-        tabs.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                GenealogyFragment.this.app.invalidateOptionsMenu();
-                if (listFragment[position] instanceof GenealogyTreeFragment) {
-                    ((GenealogyTreeFragment) listFragment[position]).update();
-                }
-                if (position < NB_FRAGMENT)
-                    if (listFragment[position] != null)
-                        listFragment[position].onFocus();
-                updateNoInternet();
-                refreshFab(position);
-            }
-        });
+        mViewPager.addOnPageChangeListener(this);
+
         mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
         mViewPager.setCurrentItem(INIT_FRAGMENT);
 
-        tabs.setViewPager(mViewPager);
-        tabs.setIndicatorColor(getResources().getColor(R.color.white));
+        tabs.setupWithViewPager(mViewPager);
 
         this.circle = ((FloatingActionButton) rootView.findViewById(R.id.circle));
         this.circle.setVisibility(View.GONE);
@@ -108,12 +109,10 @@ public class GenealogyFragment extends BackFragment {
     @Override
     public boolean back() {
         int currentFragmentId = getCurrentFragmentIndex();
-        if(listFragment == null || currentFragmentId== -1)
+        if (listFragment == null || currentFragmentId == -1)
             return false;
         BackFragment backFragment = listFragment[currentFragmentId];
-        if(backFragment ==null)
-            return false;
-        return backFragment.back();
+        return backFragment != null && backFragment.back();
     }
 
     @Override
@@ -150,6 +149,30 @@ public class GenealogyFragment extends BackFragment {
         }
         else
             this.circle.hide();
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        GenealogyFragment.this.app.invalidateOptionsMenu();
+        mAppBarLayout.setExpanded(true);
+        if (listFragment[position] instanceof GenealogyTreeFragment) {
+            ((GenealogyTreeFragment) listFragment[position]).update();
+        }
+        if (position < NB_FRAGMENT)
+            if (listFragment[position] != null)
+                listFragment[position].onFocus();
+        updateNoInternet();
+        refreshFab(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 
     public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {

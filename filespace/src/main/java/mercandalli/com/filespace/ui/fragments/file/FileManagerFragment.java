@@ -29,7 +29,6 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -86,21 +85,7 @@ public class FileManagerFragment extends BackFragment implements ViewPager.OnPag
         app.setTitle(R.string.tab_files);
 
         mToolbar = (Toolbar) rootView.findViewById(R.id.my_toolbar);
-        if (mToolbar!=null) {
-            //mToolbar.setBackgroundColor(getResources().getColor(R.color.actionbar));
-            app.setToolbar(mToolbar);
-            //app.setStatusBarColor(R.color.notifications_bar);
-        }
-
-        final ActionBar actionBar = app.getSupportActionBar();
-        if (actionBar!=null) {
-            /*actionBar.setTitle(R.string.tab_files);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setDisplayUseLogoEnabled(false);
-            actionBar.setHomeButtonEnabled(true);*/
-        }
+        app.setToolbar(mToolbar);
         setHasOptionsMenu(true);
 
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.fragment_file_manager_app_bar_layout);

@@ -11,7 +11,7 @@
     android:fitsSystemWindows="true" >
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/fragment_file_manager_app_bar_layout"
+        android:id="@+id/fragment_settings_app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">

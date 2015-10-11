@@ -3,225 +3,250 @@
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="top"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <EditText
-        android:layout_width="60dp"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/fragment_settings_app_bar_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/times"
-        android:textSize="18sp"
-        android:textColor="#545454"
-        android:editable="false"
-        android:focusable="false"
-        android:padding="5dp"
-        android:background="#f0f0f0"
-        android:elevation="@dimen/circle_button_elevation_high"
-        android:gravity="center"
-        android:hint="..."
-        android:layout_marginRight="10dp"
-        android:layout_above="@+id/output"
-        android:layout_alignStart="@+id/output"/>
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    <EditText
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/distance_left"
-        android:textSize="18sp"
-        android:textColor="#545454"
-        android:editable="false"
-        android:focusable="false"
-        android:padding="5dp"
-        android:layout_marginTop="10dp"
-        android:background="#f0f0f0"
-        android:elevation="@dimen/circle_button_elevation_high"
-        android:layout_alignParentTop="true"
-        android:layout_alignEnd="@+id/relativeLayout4"
-        android:gravity="center"
-        android:hint="..."
-        android:layout_marginRight="10dp"/>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/my_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/actionbar_robotics"
+            app:titleTextAppearance="@style/ToolbarTitle"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <EditText
-        android:layout_width="60dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/distance_right"
-        android:gravity="center"
-        android:textSize="18sp"
-        android:textColor="#545454"
-        android:editable="false"
-        android:focusable="false"
-        android:layout_marginRight="10dp"
-        android:background="#f0f0f0"
-        android:elevation="@dimen/circle_button_elevation_high"
-        android:layout_above="@+id/output"
-        android:layout_toStartOf="@+id/distance_left"
-        android:padding="5dp"
-        android:hint="..."/>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/output"
-        android:gravity="left|top"
-        android:textSize="8sp"
-        android:textColor="#545454"
-        android:editable="false"
-        android:focusable="false"
-        android:padding="4dp"
-        android:layout_marginTop="10dp"
-        android:background="#f0f0f0"
-        android:elevation="@dimen/circle_button_elevation_high"
-        android:lines="10"
-        android:layout_below="@+id/distance_left"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:hint="..."/>
+    </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/relativeLayout4"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/output"
-        android:layout_alignParentEnd="true"
-        android:paddingBottom="6dp">
+        android:orientation="vertical">
 
-
-        <ToggleButton
-            android:layout_width="80dp"
+        <EditText
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:text="New ToggleButton"
-            android:id="@+id/toggleButton1"
-            android:checked="false"
-            android:textOff="OFF"
-            android:textOn="ON"
-            android:layout_alignParentStart="true"
+            android:id="@+id/times"
+            android:textSize="18sp"
+            android:textColor="#545454"
+            android:editable="false"
+            android:focusable="false"
+            android:padding="5dp"
+            android:background="#f0f0f0"
+            android:elevation="@dimen/circle_button_elevation_high"
+            android:gravity="center"
+            android:hint="..."
+            android:layout_marginRight="10dp"
+            android:layout_above="@+id/output"
+            android:layout_alignStart="@+id/output"/>
+
+        <EditText
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/distance_left"
+            android:textSize="18sp"
+            android:textColor="#545454"
+            android:editable="false"
+            android:focusable="false"
+            android:padding="5dp"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="8dp"
-            />
+            android:background="#f0f0f0"
+            android:elevation="@dimen/circle_button_elevation_high"
+            android:layout_alignParentTop="true"
+            android:layout_alignEnd="@+id/relativeLayout4"
+            android:gravity="center"
+            android:hint="..."
+            android:layout_marginRight="10dp"/>
 
-        <ToggleButton
-            android:layout_width="80dp"
+        <EditText
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:text="New ToggleButton"
-            android:id="@+id/toggleButton2"
-            android:checked="false"
-            android:textOff="ROT OFF"
-            android:textOn="ROT ON"
-            android:layout_alignTop="@+id/toggleButton1"
-            android:layout_toEndOf="@+id/toggleButton1"/>
-
-        <ToggleButton
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="New ToggleButton"
-            android:id="@+id/toggleButton3"
-            android:checked="false"
-            android:textOff="LED OFF"
-            android:textOn="LED ON"
-            android:layout_alignTop="@+id/toggleButton2"
-            android:layout_toEndOf="@+id/toggleButton2"/>
-
-        <Button
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:text="RESET"
-            android:id="@+id/button4"
-            android:layout_alignTop="@+id/toggleButton3"
-            android:layout_toEndOf="@+id/toggleButton3"/>
-
-        <RelativeLayout
-            xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/rl_seekBar_dir"
-            android:layout_width="fill_parent"
-            android:layout_height="48dp"
-            android:layout_toStartOf="@+id/centerSeekBar"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
+            android:id="@+id/distance_right"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textColor="#545454"
+            android:editable="false"
             android:focusable="false"
-            android:focusableInTouchMode="false">
+            android:layout_marginRight="10dp"
+            android:background="#f0f0f0"
+            android:elevation="@dimen/circle_button_elevation_high"
+            android:layout_above="@+id/output"
+            android:layout_toStartOf="@+id/distance_left"
+            android:padding="5dp"
+            android:hint="..."/>
 
-            <mercandalli.com.filespace.ui.views.slider.Slider
-                android:id="@+id/seekBar_dir"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:background="@color/actionbar_robotics"
-                materialdesign:max="100"
-                materialdesign:value="50"
-                materialdesign:min="0"
-                materialdesign:showNumberIndicator="true"
-                android:focusable="false"
-                android:focusableInTouchMode="false"/>
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:layout_width="2dp"
-            android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/centerSeekBar">
-        </RelativeLayout>
-
-        <!-- SLIDER WITH NUMBER INDICATOR-->
-        <RelativeLayout
-            xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/rl_seekBar_speed"
-            android:layout_width="fill_parent"
-            android:layout_height="48dp"
-            android:layout_alignParentBottom="true"
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/output"
+            android:gravity="left|top"
+            android:textSize="8sp"
+            android:textColor="#545454"
+            android:editable="false"
+            android:focusable="false"
+            android:padding="4dp"
+            android:layout_marginTop="10dp"
+            android:background="#f0f0f0"
+            android:elevation="@dimen/circle_button_elevation_high"
+            android:lines="10"
+            android:layout_below="@+id/distance_left"
+            android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/centerSeekBar"
-            android:focusable="false"
-            android:focusableInTouchMode="false">
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:hint="..."/>
 
-            <mercandalli.com.filespace.ui.views.slider.Slider
-                xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/seekBar_speed"
-                android:layout_width="fill_parent"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/relativeLayout4"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/output"
+            android:layout_alignParentEnd="true"
+            android:paddingBottom="6dp">
+
+
+            <ToggleButton
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:background="@color/actionbar_robotics"
-                materialdesign:max="100"
-                materialdesign:value="50"
-                materialdesign:min="0"
-                materialdesign:showNumberIndicator="true"
-                android:focusableInTouchMode="false"
-                android:focusable="false"/>
+                android:text="New ToggleButton"
+                android:id="@+id/toggleButton1"
+                android:checked="false"
+                android:textOff="OFF"
+                android:textOn="ON"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="8dp"
+                />
+
+            <ToggleButton
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="New ToggleButton"
+                android:id="@+id/toggleButton2"
+                android:checked="false"
+                android:textOff="ROT OFF"
+                android:textOn="ROT ON"
+                android:layout_alignTop="@+id/toggleButton1"
+                android:layout_toEndOf="@+id/toggleButton1"/>
+
+            <ToggleButton
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="New ToggleButton"
+                android:id="@+id/toggleButton3"
+                android:checked="false"
+                android:textOff="LED OFF"
+                android:textOn="LED ON"
+                android:layout_alignTop="@+id/toggleButton2"
+                android:layout_toEndOf="@+id/toggleButton2"/>
+
+            <Button
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="RESET"
+                android:id="@+id/button4"
+                android:layout_alignTop="@+id/toggleButton3"
+                android:layout_toEndOf="@+id/toggleButton3"/>
+
+            <RelativeLayout
+                xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/rl_seekBar_dir"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:layout_toStartOf="@+id/centerSeekBar"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:focusable="false"
+                android:focusableInTouchMode="false">
+
+                <mercandalli.com.filespace.ui.views.slider.Slider
+                    android:id="@+id/seekBar_dir"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@color/actionbar_robotics"
+                    materialdesign:max="100"
+                    materialdesign:value="50"
+                    materialdesign:min="0"
+                    materialdesign:showNumberIndicator="true"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="2dp"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/centerSeekBar">
+            </RelativeLayout>
+
+            <!-- SLIDER WITH NUMBER INDICATOR-->
+            <RelativeLayout
+                xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/rl_seekBar_speed"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@+id/centerSeekBar"
+                android:focusable="false"
+                android:focusableInTouchMode="false">
+
+                <mercandalli.com.filespace.ui.views.slider.Slider
+                    xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/seekBar_speed"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@color/actionbar_robotics"
+                    materialdesign:max="100"
+                    materialdesign:value="50"
+                    materialdesign:min="0"
+                    materialdesign:showNumberIndicator="true"
+                    android:focusableInTouchMode="false"
+                    android:focusable="false"/>
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Direction : 0.00"
+                android:id="@+id/tv_seekBar_dir"
+                android:layout_above="@+id/rl_seekBar_dir"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="22dp"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Speed : 0.00"
+                android:id="@+id/tv_seekBar_speed"
+                android:layout_alignBaseline="@+id/tv_seekBar_dir"
+                android:layout_alignBottom="@+id/tv_seekBar_dir"
+                android:layout_alignStart="@+id/rl_seekBar_speed"
+                android:layout_marginLeft="22dp"
+                android:layout_marginBottom="16dp"/>
+
+
         </RelativeLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Direction : 0.00"
-            android:id="@+id/tv_seekBar_dir"
-            android:layout_above="@+id/rl_seekBar_dir"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="22dp"
-            android:layout_marginBottom="16dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Speed : 0.00"
-            android:id="@+id/tv_seekBar_speed"
-            android:layout_alignBaseline="@+id/tv_seekBar_dir"
-            android:layout_alignBottom="@+id/tv_seekBar_dir"
-            android:layout_alignStart="@+id/rl_seekBar_speed"
-            android:layout_marginLeft="22dp"
-            android:layout_marginBottom="16dp"/>
 
 
     </RelativeLayout>
 
-
-</RelativeLayout>
+</LinearLayout>

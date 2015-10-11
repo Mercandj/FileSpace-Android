@@ -26,7 +26,7 @@ public class GenealogyBigTreeView extends View {
 	ArrayList<Float> tableau_coord_horizontales_noms_old;			// coordonnees X (horizontales) pointant sur le milieu du nom de la ligne du dessous
 
 	
-	//Paramètres de l'écran tactile
+	//Parametres de l'ecran tactile
 	// --- un doigt
 	private int x_down;				// down : appui
 	private int y_down;
@@ -47,12 +47,12 @@ public class GenealogyBigTreeView extends View {
 	private int ecart;				// ecart entre les 2 doigts (multi-touch)
 	private int ecart_old;			// ancien ecart entre les 2 doigts : permet comparaison et ajustement taille de l affichage => coeff-taille
 	
-	private int deltaXcomp;			// mesure les variations horizontales quand le doigt touche l ecran après le multi-touch et si c est le 2eme doigt qui continue a toucher l'ecran (eq deltaXmouv)
-	private int deltaYcomp;			// mesure les variations verticales quand le doigt touche l ecran après le multi-touch et si c est le 2eme doigt qui continue a toucher l'ecran (eq deltaYmouv)
+	private int deltaXcomp;			// mesure les variations horizontales quand le doigt touche l ecran apres le multi-touch et si c est le 2eme doigt qui continue a toucher l'ecran (eq deltaXmouv)
+	private int deltaYcomp;			// mesure les variations verticales quand le doigt touche l ecran apres le multi-touch et si c est le 2eme doigt qui continue a toucher l'ecran (eq deltaYmouv)
 
 	private int multi_touch;		// 1 quand multi-touch, 0 sinon
-	private int id_premier_doigt;	// ID du contact mono-touch ;permet de savoir a la fin du multi-touch si c est le meme doigt qui touche l ecran ou l autre (cas compliqué)
-	private int inversion_doigt;	// 1 quand inversion des doigts apres un multi touch (c est le 2ieme doigt posé qui reste ensuite sur l ecran quand on repasse en mono-touch
+	private int id_premier_doigt;	// ID du contact mono-touch ;permet de savoir a la fin du multi-touch si c est le meme doigt qui touche l ecran ou l autre (cas complique)
+	private int inversion_doigt;	// 1 quand inversion des doigts apres un multi touch (c est le 2ieme doigt pose qui reste ensuite sur l ecran quand on repasse en mono-touch
 
 	
     // dessin des arbres genealogiques
@@ -209,10 +209,10 @@ public class GenealogyBigTreeView extends View {
 		else{
 			// on est en mono-touch depuis le debut de l action
 			if (multi_touch == 0) {
-				// gestion du cas ou un multi-touch a eu lieu avant avec changement de doigts (deltaXcomp et deltaYcomp ont fonctionnés pour gerer deplacement du doigt)
+				// gestion du cas ou un multi-touch a eu lieu avant avec changement de doigts (deltaXcomp et deltaYcomp ont fonctionnes pour gerer deplacement du doigt)
 				if ((inversion_doigt == 1)){
-					// on additionne deltaXcomp à deltaX et on met à 0 deltaXcomp, ce qui ne change rien en terme de deplacement de l arbre (termes additionnés) mais se remet dans bonne config pour prochain multi-touch : deltaXcomp = 0)
-					// idem bien sur pour deltaYcomp à deltaY
+					// on additionne deltaXcomp a deltaX et on met a 0 deltaXcomp, ce qui ne change rien en terme de deplacement de l arbre (termes additionnes) mais se remet dans bonne config pour prochain multi-touch : deltaXcomp = 0)
+					// idem bien sur pour deltaYcomp a deltaY
 					deltaX = deltaX + deltaXcomp;
 					deltaY = deltaY + deltaYcomp;
 					deltaXcomp = 0;
@@ -225,7 +225,7 @@ public class GenealogyBigTreeView extends View {
 					// remise a 0 indicateur d inversion doigt pendant multi-touch
 					inversion_doigt = 0;
 				}
-				// gestion des déplacements du doigt
+				// gestion des deplacements du doigt
 				Log.d("ArbreView_onTouch","x_move : " + x_move + " - y_move : " + y_move);
 				// --- variation X et Y entre le moment ou le doigt touche l ecran et ou il s enleve
 				deltaX = deltaX + (x_up - x_down);
@@ -239,13 +239,13 @@ public class GenealogyBigTreeView extends View {
 			}
 			// on passe du multi-touch au mono-touch
 			else {
-				// gestion du cas ou le doigt encore en contact avec l ecran n etait pas le premier posé
+				// gestion du cas ou le doigt encore en contact avec l ecran n etait pas le premier pose
 				if(event.getPointerId(0) != id_premier_doigt){
 					// deltaXcomp et deltaYcomp gerent le deplacement du doigt (eq deltaXmouv et deltaYmouv en mono-touch)
 					deltaXcomp = x_move - x_move_multi;
 					deltaYcomp = y_move - y_move_multi;
-					// on additionne deltaXmouv à deltaX et on met à 0 deltaXmouv, ce qui ne change rien en terme de deplacement de l arbre (termes additionnés) mais se remet dans bonne config pour prochain mono-touch : deltaXmouv = 0)
-					// idem bien sur pour deltaYmouv à deltaY
+					// on additionne deltaXmouv a deltaX et on met a 0 deltaXmouv, ce qui ne change rien en terme de deplacement de l arbre (termes additionnes) mais se remet dans bonne config pour prochain mono-touch : deltaXmouv = 0)
+					// idem bien sur pour deltaYmouv a deltaY
 					deltaX = deltaX + deltaXmouv;
 					deltaY = deltaY + deltaYmouv;
 					deltaXmouv = 0;
@@ -253,7 +253,7 @@ public class GenealogyBigTreeView extends View {
 					// on met  l indicateur d inversion de doigt pendant le multi-touch a 1 pour indiquer que  l on est dans ce cas
 					inversion_doigt = 1;
 				}
-				// gestion du cas ou le doigt encore en contact avec l ecran etait le premier posé
+				// gestion du cas ou le doigt encore en contact avec l ecran etait le premier pose
 				// aucun pb, on revient en mono-touch directement...
 				else {
 					multi_touch = 0;
@@ -261,8 +261,8 @@ public class GenealogyBigTreeView extends View {
 					deltaYcomp = 0;
 					// ... mais il faut gerer le cas ou la personne leve son doigt principal sans deplacement
 					if (x_up != 0 || y_up != 0){
-						// on additionne deltaXmouv à deltaX et on met à 0 deltaXmouv, ce qui ne change rien en terme de deplacement de l arbre (termes additionnés) mais se remet dans bonne config pour prochain mono-touch : deltaXmouv = 0)
-						// idem bien sur pour deltaYmouv à deltaY
+						// on additionne deltaXmouv a deltaX et on met a 0 deltaXmouv, ce qui ne change rien en terme de deplacement de l arbre (termes additionnes) mais se remet dans bonne config pour prochain mono-touch : deltaXmouv = 0)
+						// idem bien sur pour deltaYmouv a deltaY
 						deltaX = deltaX + deltaXmouv;
 						deltaY = deltaY + deltaYmouv;
 						deltaXmouv = 0;
@@ -280,7 +280,7 @@ public class GenealogyBigTreeView extends View {
 		x_down=0; y_down=0; x_move=0; y_move=0; x_up=0; y_up=0;
 		
 		this.invalidate(); //Permet de relanche onDraw : un peu comme g.repaint();
-	} //Methode appellée ici par l'Activity
+	} //Methode appellee ici par l'Activity
 
 	
 	protected void onDraw(Canvas canvas) {
@@ -399,7 +399,7 @@ public class GenealogyBigTreeView extends View {
 					coord_horizontale_milieu_nom, 
 					coord_verticale_en_dessous, 
 					paint);
-			// --- --- calcul de la position horizontale courante compte tenu de ce qui vient d etre affiché
+			// --- --- calcul de la position horizontale courante compte tenu de ce qui vient d etre affiche
 			longueur_courante = longueur_courante + paint.measureText(string_a_afficher) + (DECALAGE_TEXTE_HORIZONTAL + ((position_ds_ligne_courante)%2)*DECALAGE_TEXTE_HORIZONTAL)*coeff_taille;
 		}
 

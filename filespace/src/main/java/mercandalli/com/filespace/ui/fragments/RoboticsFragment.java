@@ -25,7 +25,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,6 +99,13 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_robotics, container, false);
+
+        app.setTitle(R.string.tab_settings);
+
+        Toolbar mToolbar = (Toolbar) rootView.findViewById(R.id.my_toolbar);
+        app.setToolbar(mToolbar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            app.getWindow().setStatusBarColor(ContextCompat.getColor(app, R.color.notifications_bar_robotics));
 
         // Create hardware
         this.SERVO_1 = new ModelHardware();
