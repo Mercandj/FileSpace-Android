@@ -62,24 +62,26 @@ import mercandalli.com.filespace.ui.adapters.AdapterDragModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
+import mercandalli.com.filespace.ui.fragments.ISwipeFragment;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.StringPair;
 
-public class FileManagerLocalMusicFragment extends FabFragment implements BackFragment.IListViewMode, BackFragment.ISortMode {
+public class FileLocalMusicFragment extends FabFragment
+        implements BackFragment.IListViewMode, BackFragment.ISortMode, ISwipeFragment {
 
 	private DynamicListView dynamicListView; // http://nhaarman.github.io/ListViewAnimations/
     private GridView gridView;
 	private ArrayList<ModelFile> files;
 	private ProgressBar circularProgressBar;
 	private TextView message;
-	private SwipeRefreshLayout swipeRefreshLayoutGrid;
+	private SwipeRefreshLayout mSwipeRefreshLayoutGrid;
 
     private int mSortMode = Const.SORT_DATE_MODIFICATION;
     private int mViewMode = Const.MODE_LIST;
 
-    public static FileManagerLocalMusicFragment newInstance() {
+    public static FileLocalMusicFragment newInstance() {
         Bundle args = new Bundle();
-        FileManagerLocalMusicFragment fragment = new FileManagerLocalMusicFragment();
+        FileLocalMusicFragment fragment = new FileLocalMusicFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -92,7 +94,7 @@ public class FileManagerLocalMusicFragment extends FabFragment implements BackFr
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_file_manager_drag_drop, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_file_drag_drop, container, false);
         this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         this.circularProgressBar.setVisibility(View.INVISIBLE);
         this.message = (TextView) rootView.findViewById(R.id.message);
@@ -102,14 +104,14 @@ public class FileManagerLocalMusicFragment extends FabFragment implements BackFr
         this.gridView = (GridView) rootView.findViewById(R.id.gridView);
         this.gridView.setVisibility(View.GONE);
 
-        this.swipeRefreshLayoutGrid = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayoutGrid);
-        this.swipeRefreshLayoutGrid.setColorSchemeResources(
+        this.mSwipeRefreshLayoutGrid = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayoutGrid);
+        this.mSwipeRefreshLayoutGrid.setColorSchemeResources(
                 android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        this.swipeRefreshLayoutGrid.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        this.mSwipeRefreshLayoutGrid.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshList();
@@ -221,7 +223,7 @@ public class FileManagerLocalMusicFragment extends FabFragment implements BackFr
             final AdapterDragModelFile adapter = new AdapterDragModelFile(app, files, new IModelFileListener() {
 				@Override
 				public void execute(final ModelFile modelFile) {
-					final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerLocalMusicFragment.this.app);
+					final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalMusicFragment.this.app);
 					String[] menuList = { getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
                     if(app.isLogged())
                         menuList = new String[]{ getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.properties) };
@@ -234,10 +236,10 @@ public class FileManagerLocalMusicFragment extends FabFragment implements BackFr
 									switch (item) {
                                         case 0:
                                             if(modelFile.directory) {
-                                                Toast.makeText(FileManagerLocalMusicFragment.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(FileLocalMusicFragment.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                             }
                                             else
-                                                FileManagerLocalMusicFragment.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
+                                                FileLocalMusicFragment.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
                                                     @Override
                                                     public void execute() {
                                                         if(modelFile.getFile()!=null) {
@@ -253,36 +255,36 @@ public class FileManagerLocalMusicFragment extends FabFragment implements BackFr
                                                 }, getString(R.string.cancel), null);
                                             break;
                                         case 1:
-                                            modelFile.openLocalAs(FileManagerLocalMusicFragment.this.app);
+                                            modelFile.openLocalAs(FileLocalMusicFragment.this.app);
                                             break;
                                         case 2:
-                                            FileManagerLocalMusicFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                            FileLocalMusicFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
                                                     modelFile.rename(text, new IPostExecuteListener() {
                                                         @Override
                                                         public void execute(JSONObject json, String body) {
-                                                            FileManagerLocalMusicFragment.this.app.refreshAdapters();
+                                                            FileLocalMusicFragment.this.app.refreshAdapters();
                                                         }
                                                     });
                                                 }
                                             }, "Cancel", null, modelFile.getNameExt());
                                             break;
                                         case 3:
-                                            FileManagerLocalMusicFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                            FileLocalMusicFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                                 @Override
                                                 public void execute() {
                                                     modelFile.delete(new IPostExecuteListener() {
                                                         @Override
                                                         public void execute(JSONObject json, String body) {
-                                                            FileManagerLocalMusicFragment.this.app.refreshAdapters();
+                                                            FileLocalMusicFragment.this.app.refreshAdapters();
                                                         }
                                                     });
                                                 }
                                             }, "No", null);
                                             break;
                                         case 4:
-                                            FileManagerLocalMusicFragment.this.app.alert(
+                                            FileLocalMusicFragment.this.app.alert(
                                                     getString(R.string.properties) + " : " + modelFile.name,
                                                     modelFile.toSpanned(),
                                                     "OK",
@@ -320,7 +322,7 @@ public class FileManagerLocalMusicFragment extends FabFragment implements BackFr
 
             if (mViewMode == Const.MODE_GRID) {
                 this.gridView.setVisibility(View.VISIBLE);
-                this.swipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
+                this.mSwipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
                 this.dynamicListView.setVisibility(View.GONE);
 
                 this.gridView.setAdapter(new AdapterGridModelFile(app, files));
@@ -337,7 +339,7 @@ public class FileManagerLocalMusicFragment extends FabFragment implements BackFr
                             return false;
                         final ModelFile modelFile = files.get(position);
 
-                        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerLocalMusicFragment.this.app);
+                        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalMusicFragment.this.app);
                         String[] menuList = { getString(R.string.rename), getString(R.string.delete), getString(R.string.properties) };
                         if(app.isLogged())
                             menuList = new String[]{ getString(R.string.upload), getString(R.string.rename), getString(R.string.delete), getString(R.string.properties) };
@@ -350,10 +352,10 @@ public class FileManagerLocalMusicFragment extends FabFragment implements BackFr
                                         switch (item) {
                                             case 0:
                                                 if(modelFile.directory) {
-                                                    Toast.makeText(FileManagerLocalMusicFragment.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(FileLocalMusicFragment.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                                 }
                                                 else
-                                                    FileManagerLocalMusicFragment.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
+                                                    FileLocalMusicFragment.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
                                                         @Override
                                                         public void execute() {
                                                             if(modelFile.getFile()!=null) {
@@ -369,33 +371,33 @@ public class FileManagerLocalMusicFragment extends FabFragment implements BackFr
                                                     }, getString(R.string.cancel), null);
                                                 break;
                                             case 1:
-                                                FileManagerLocalMusicFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                                FileLocalMusicFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                                     @Override
                                                     public void execute(String text) {
                                                         modelFile.rename(text, new IPostExecuteListener() {
                                                             @Override
                                                             public void execute(JSONObject json, String body) {
-                                                                FileManagerLocalMusicFragment.this.app.refreshAdapters();
+                                                                FileLocalMusicFragment.this.app.refreshAdapters();
                                                             }
                                                         });
                                                     }
                                                 }, "Cancel", null, modelFile.getNameExt());
                                                 break;
                                             case 2:
-                                                FileManagerLocalMusicFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                                FileLocalMusicFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                                     @Override
                                                     public void execute() {
                                                         modelFile.delete(new IPostExecuteListener() {
                                                             @Override
                                                             public void execute(JSONObject json, String body) {
-                                                                FileManagerLocalMusicFragment.this.app.refreshAdapters();
+                                                                FileLocalMusicFragment.this.app.refreshAdapters();
                                                             }
                                                         });
                                                     }
                                                 }, "No", null);
                                                 break;
                                             case 3:
-                                                FileManagerLocalMusicFragment.this.app.alert(
+                                                FileLocalMusicFragment.this.app.alert(
                                                         getString(R.string.properties) + " : " + modelFile.name,
                                                         "Name : " + modelFile.name + "\nExtension : " + modelFile.type + "\nType : " + modelFile.type.getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
                                                         "OK",
@@ -414,11 +416,11 @@ public class FileManagerLocalMusicFragment extends FabFragment implements BackFr
             }
             else {
                 this.gridView.setVisibility(View.GONE);
-                this.swipeRefreshLayoutGrid.setVisibility(View.GONE);
+                this.mSwipeRefreshLayoutGrid.setVisibility(View.GONE);
                 this.dynamicListView.setVisibility(View.VISIBLE);
             }
 
-			swipeRefreshLayoutGrid.setRefreshing(false);
+            mSwipeRefreshLayoutGrid.setRefreshing(false);
 		}
 	}
 
@@ -461,5 +463,11 @@ public class FileManagerLocalMusicFragment extends FabFragment implements BackFr
             mViewMode = viewMode;
             updateAdapter();
         }
+    }
+
+    @Override
+    public void setSwipeEnabled(boolean enabled) {
+        if (mSwipeRefreshLayoutGrid != null)
+            mSwipeRefreshLayoutGrid.setEnabled(enabled);
     }
 }

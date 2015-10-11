@@ -36,6 +36,7 @@ import java.util.List;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.models.ModelFile;
+import mercandalli.com.filespace.models.ModelFileType;
 import mercandalli.com.filespace.models.ModelFileTypeENUM;
 import mercandalli.com.filespace.ui.activities.Application;
 
@@ -69,15 +70,16 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
             if(file.directory)
                 viewHolder.icon.setImageResource(R.drawable.directory);
             else if(file.type!=null) {
-                if (file.type.equals(ModelFileTypeENUM.AUDIO.type))
+                ModelFileType type = file.type;
+                if (type.equals(ModelFileTypeENUM.AUDIO.type))
                     viewHolder.icon.setImageResource(R.drawable.file_audio);
-                else if (file.type.equals(ModelFileTypeENUM.PDF.type))
+                else if (type.equals(ModelFileTypeENUM.PDF.type))
                     viewHolder.icon.setImageResource(R.drawable.file_pdf);
-                else if (file.type.equals(ModelFileTypeENUM.APK.type))
+                else if (type.equals(ModelFileTypeENUM.APK.type))
                     viewHolder.icon.setImageResource(R.drawable.file_apk);
-                else if (file.type.equals(ModelFileTypeENUM.ARCHIVE.type))
+                else if (type.equals(ModelFileTypeENUM.ARCHIVE.type))
                     viewHolder.icon.setImageResource(R.drawable.file_archive);
-                else if (file.type.equals(ModelFileTypeENUM.FILESPACE.type))
+                else if (type.equals(ModelFileTypeENUM.FILESPACE.type))
                     viewHolder.icon.setImageResource(R.drawable.file_jarvis);
                 else
                     viewHolder.icon.setImageResource(R.drawable.file_default);
@@ -130,9 +132,7 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
 
         @Override
         public boolean onLongClick(View v) {
-            if (mItemLongClickListener != null)
-                return mItemLongClickListener.onItemLongClick(v, getAdapterPosition());
-            return false;
+            return mItemLongClickListener != null && mItemLongClickListener.onItemLongClick(v, getAdapterPosition());
         }
     }
 

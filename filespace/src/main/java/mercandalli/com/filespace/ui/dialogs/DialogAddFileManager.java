@@ -57,10 +57,8 @@ import mercandalli.com.filespace.utils.StringPair;
 
 public class DialogAddFileManager extends Dialog {
 
-	DialogFileChooser dialogFileChooser;
 	Application app;
 	File file;
-	ModelFile modelFile;
     IListener dismissListener;
 
 	public DialogAddFileManager(final Application app, final int id_file_parent, final IPostExecuteListener listener, final IListener dismissListener) {
@@ -231,7 +229,7 @@ public class DialogAddFileManager extends Dialog {
 
     @Override
     public void dismiss() {
-        if(dismissListener != null)
+        if (dismissListener != null)
             dismissListener.execute();
         super.dismiss();
     }

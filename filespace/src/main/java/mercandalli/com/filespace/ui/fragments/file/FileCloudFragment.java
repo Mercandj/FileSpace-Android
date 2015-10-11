@@ -28,7 +28,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
@@ -62,6 +60,7 @@ import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
 import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
+import mercandalli.com.filespace.ui.fragments.ISwipeFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.StringPair;
@@ -69,7 +68,7 @@ import mercandalli.com.filespace.utils.StringPair;
 import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
 
-public class FileManagerMyCloudFragment extends FabFragment implements BackFragment.IListViewMode {
+public class FileCloudFragment extends FabFragment implements BackFragment.IListViewMode, ISwipeFragment {
 
 	private RecyclerView listView;
     private GridView gridView;
@@ -78,30 +77,32 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
     private ArrayList<ModelFile> files = new ArrayList<>();
 	private ProgressBar circularProgressBar;
 	private TextView message;
-	private SwipeRefreshLayout swipeRefreshLayout, swipeRefreshLayoutGrid;
+	private SwipeRefreshLayout mSwipeRefreshLayout, mSwipeRefreshLayoutGrid;
 
-    private Stack<Integer> id_file_path = new Stack<>();
+    private String url = "";
     private List<ModelFile> filesToCut = new ArrayList<>();
 
+    /**
+     * {@link Const#MODE_LIST} or {@link Const#MODE_GRID}
+     */
     private int mViewMode = Const.MODE_LIST;
 
-    public static FileManagerMyCloudFragment newInstance() {
+    public static FileCloudFragment newInstance() {
         Bundle args = new Bundle();
-        FileManagerMyCloudFragment fragment = new FileManagerMyCloudFragment();
+        FileCloudFragment fragment = new FileCloudFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    @Override
+	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         app = (ApplicationDrawer) activity;
-        resetPath();
     }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_file_manager_files, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_file_files, container, false);
         this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         this.message = (TextView) rootView.findViewById(R.id.message);
 
@@ -113,30 +114,28 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
         this.gridView = (GridView) rootView.findViewById(R.id.gridView);
         this.gridView.setVisibility(View.GONE);
 
-        resetPath();
-
-        this.swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
-        this.swipeRefreshLayout.setColorSchemeResources(
+        this.mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        this.mSwipeRefreshLayout.setColorSchemeResources(
                 android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        this.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        this.mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshList();
             }
         });
 
-        this.swipeRefreshLayoutGrid = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayoutGrid);
-        this.swipeRefreshLayoutGrid.setColorSchemeResources(
+        this.mSwipeRefreshLayoutGrid = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayoutGrid);
+        this.mSwipeRefreshLayoutGrid.setColorSchemeResources(
                 android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        this.swipeRefreshLayoutGrid.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        this.mSwipeRefreshLayoutGrid.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshList();
@@ -146,14 +145,11 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
         this.adapter = new AdapterModelFile(app, files, new IModelFileListener() {
             @Override
             public void execute(final ModelFile modelFile) {
-                final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerMyCloudFragment.this.app);
-                String[] menuList = { getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
-                if(!modelFile.directory) {
+                final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileCloudFragment.this.app);
+                String[] menuList = { getString(R.string.download) };
+                if(!modelFile.directory && modelFile.isMine()) {
                     if(modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
                         menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public", "Set as profile"};
-                    }
-                    else if(modelFile.type.equals(ModelFileTypeENUM.APK.type) && app.getConfig().isUserAdmin()) {
-                        menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public", (modelFile.is_apk_update) ? "Remove the update" : "Set as update"};
                     }
                     else
                         menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public"};
@@ -168,13 +164,13 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
                                             @Override
                                             public void execute() {
                                                 Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
-                                                FileManagerMyCloudFragment.this.app.refreshAdapters();
+                                                FileCloudFragment.this.app.refreshAdapters();
                                             }
                                         });
                                         break;
 
                                     case 1:
-                                        FileManagerMyCloudFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                        FileCloudFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                             @Override
                                             public void execute(String text) {
                                                 modelFile.rename(text, new IPostExecuteListener() {
@@ -182,9 +178,9 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
                                                     public void execute(JSONObject json, String body) {
                                                         if(filesToCut != null && filesToCut.size() != 0) {
                                                             filesToCut.clear();
-                                                            refreshFab();
+                                                            refreshFab.execute();
                                                         }
-                                                        FileManagerMyCloudFragment.this.app.refreshAdapters();
+                                                        FileCloudFragment.this.app.refreshAdapters();
                                                     }
                                                 });
                                             }
@@ -192,7 +188,7 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
                                         break;
 
                                     case 2:
-                                        FileManagerMyCloudFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                        FileCloudFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                             @Override
                                             public void execute() {
                                                 modelFile.delete(new IPostExecuteListener() {
@@ -200,9 +196,9 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
                                                     public void execute(JSONObject json, String body) {
                                                         if(filesToCut != null && filesToCut.size() != 0) {
                                                             filesToCut.clear();
-                                                            refreshFab();
+                                                            refreshFab.execute();
                                                         }
-                                                        FileManagerMyCloudFragment.this.app.refreshAdapters();
+                                                        FileCloudFragment.this.app.refreshAdapters();
                                                     }
                                                 });
                                             }
@@ -210,69 +206,47 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
                                         break;
 
                                     case 3:
-                                        FileManagerMyCloudFragment.this.filesToCut.add(modelFile);
+                                        FileCloudFragment.this.filesToCut.add(modelFile);
                                         Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
-                                        refreshFab();
                                         break;
 
                                     case 4:
-                                        FileManagerMyCloudFragment.this.app.alert(
+                                        FileCloudFragment.this.app.alert(
                                                 getString(R.string.properties) + " : " + modelFile.name,
                                                 modelFile.toSpanned(),
                                                 "OK",
                                                 null,
                                                 null,
                                                 null);
-
-                                        Html.fromHtml("");
-
                                         break;
 
                                     case 5:
                                         modelFile.setPublic(!modelFile._public, new IPostExecuteListener() {
                                             @Override
                                             public void execute(JSONObject json, String body) {
-                                                FileManagerMyCloudFragment.this.app.refreshAdapters();
+                                                FileCloudFragment.this.app.refreshAdapters();
                                             }
                                         });
                                         break;
 
+                                    // Picture set as profile
                                     case 6:
-                                        // Picture set as profile
-                                        if(modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
-                                            List<StringPair> parameters = new ArrayList<>();
-                                            parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
-                                            (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
-                                                @Override
-                                                public void execute(JSONObject json, String body) {
-                                                    try {
-                                                        if (json != null)
-                                                            if (json.has("succeed"))
-                                                                if (json.getBoolean("succeed"))
-                                                                    app.getConfig().setUserIdFileProfilePicture(modelFile.id);
-                                                    } catch (JSONException e) {
-                                                        e.printStackTrace();
-                                                    }
+                                        List<StringPair> parameters = new ArrayList<>();
+                                        parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
+                                        (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                            @Override
+                                            public void execute(JSONObject json, String body) {
+                                                try {
+                                                    if (json != null)
+                                                        if (json.has("succeed"))
+                                                            if (json.getBoolean("succeed"))
+                                                                app.getConfig().setUserIdFileProfilePicture(modelFile.id);
                                                 }
-                                            }, parameters)).execute();
-                                        }
-                                        else if(modelFile.type.equals(ModelFileTypeENUM.APK.type) && app.getConfig().isUserAdmin()) {
-                                            List<StringPair> parameters = new ArrayList<>();
-                                            parameters.add(new StringPair("is_apk_update", "" + !modelFile.is_apk_update));
-                                            (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeFile + "/"+modelFile.id, new IPostExecuteListener() {
-                                                @Override
-                                                public void execute(JSONObject json, String body) {
-                                                    try {
-                                                        if (json != null)
-                                                            if (json.has("succeed"))
-                                                                if (json.getBoolean("succeed"))
-                                                                    FileManagerMyCloudFragment.this.app.refreshAdapters();
-                                                    } catch (JSONException e) {
-                                                        e.printStackTrace();
-                                                    }
+                                                catch (JSONException e) {
+                                                    e.printStackTrace();
                                                 }
-                                            }, parameters)).execute();
-                                        }
+                                            }
+                                        }, parameters)).execute();
                                         break;
                                 }
                             }
@@ -281,7 +255,6 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
                 menuDrop.show();
             }
         });
-
         this.listView.setAdapter(adapter);
         this.listView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
         this.listView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
@@ -289,13 +262,15 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
         this.adapter.setOnItemClickListener(new AdapterModelFile.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if (hasItemSelected()) {
+                if(hasItemSelected()) {
                     files.get(position).selected = !files.get(position).selected;
                     adapter.notifyItemChanged(position);
-                } else if (files.get(position).directory) {
-                    FileManagerMyCloudFragment.this.id_file_path.add(files.get(position).id);
+                }
+                else if(files.get(position).directory) {
+                    FileCloudFragment.this.url = files.get(position).url + "/";
                     refreshList();
-                } else
+                }
+                else
                     files.get(position).executeOnline(files, view);
             }
         });
@@ -313,12 +288,7 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
 
 		return rootView;
 	}
-
-    public void resetPath() {
-        this.id_file_path = new Stack<>();
-        this.id_file_path.add(-1);
-    }
-
+	
 	public void refreshList() {
 		refreshList(null);
 	}
@@ -327,51 +297,50 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
 		List<StringPair> parameters = new ArrayList<>();
 		if(search!=null)
 			parameters.add(new StringPair("search", ""+search));
-        parameters.add(new StringPair("id_file_parent", "" + this.id_file_path.peek()));
-        parameters.add(new StringPair("mine", "" + true));
+        parameters.add(new StringPair("url", ""+this.url));
+        parameters.add(new StringPair("all-public", "" + true));
 
-        if(isInternetConnection(app) && app.isLogged()) {
+        if(isInternetConnection(app) && app.isLogged())
             new TaskGet(
-                    app,
-                    this.app.getConfig().getUser(),
-                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile,
-                    new IPostExecuteListener() {
-                        @Override
-                        public void execute(JSONObject json, String body) {
-                            if (!isAdded())
-                                return;
-                            files = new ArrayList<>();
-                            try {
-                                if (json != null) {
-                                    if (json.has("result")) {
-                                        JSONArray array = json.getJSONArray("result");
-                                        for (int i = 0; i < array.length(); i++) {
-                                            ModelFile modelFile = new ModelFile(app, array.getJSONObject(i));
-                                            files.add(modelFile);
-                                        }
+                app,
+                this.app.getConfig().getUser(),
+                this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile,
+                new IPostExecuteListener() {
+                    @Override
+                    public void execute(JSONObject json, String body) {
+                        if(!isAdded())
+                            return;
+                        files = new ArrayList<>();
+                        try {
+                            if (json != null) {
+                                if (json.has("result")) {
+                                    JSONArray array = json.getJSONArray("result");
+                                    for (int i = 0; i < array.length(); i++) {
+                                        ModelFile modelFile = new ModelFile(app, array.getJSONObject(i));
+                                        files.add(modelFile);
                                     }
-                                } else
-                                    Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                }
                             }
-                            updateAdapter();
+                            else
+                                Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    },
-                    parameters
+                        updateAdapter();
+                    }
+                },
+                parameters
             ).execute();
-        }
         else {
             this.circularProgressBar.setVisibility(View.GONE);
-            if(this.isAdded())
+            if(isAdded())
                 this.message.setText(app.isLogged()?getString(R.string.no_internet_connection):getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
-            this.swipeRefreshLayout.setRefreshing(false);
-            this.swipeRefreshLayoutGrid.setRefreshing(false);
+            this.mSwipeRefreshLayout.setRefreshing(false);
 
             if(!isInternetConnection(app)) {
                 this.setListVisibility(false);
-                refreshFab();
+                this.refreshFab.execute();
             }
         }
 	}
@@ -388,9 +357,13 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
 
             this.circularProgressBar.setVisibility(View.GONE);
 
-			if(this.files.size()==0) {
-                if(this.id_file_path.peek()==-1)
+            if (!isInternetConnection(app))
+                this.message.setText(getString(R.string.no_internet_connection));
+            else if(this.files.size()==0) {
+                if(this.url==null)
 				    this.message.setText(getString(R.string.no_file_server));
+                else if(this.url.equals(""))
+                    this.message.setText(getString(R.string.no_file_server));
                 else
                     this.message.setText(getString(R.string.no_file_directory));
 				this.message.setVisibility(View.VISIBLE);
@@ -400,42 +373,42 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
 
             this.adapter.remplaceList(this.files);
 
-            refreshFab();
+            this.refreshFab.execute();
 
-            if(mViewMode == Const.MODE_GRID) {
+            if (mViewMode == Const.MODE_GRID) {
                 this.gridView.setVisibility(View.VISIBLE);
-                this.swipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
+                this.mSwipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
                 this.listView.setVisibility(View.GONE);
-                this.swipeRefreshLayout.setVisibility(View.GONE);
+                this.mSwipeRefreshLayout.setVisibility(View.GONE);
 
                 this.gridView.setAdapter(new AdapterGridModelFile(app, files));
                 this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        if (hasItemSelected()) {
+                        if(hasItemSelected()) {
                             files.get(position).selected = !files.get(position).selected;
                             adapter.notifyItemChanged(position);
-                        } else if (files.get(position).directory) {
-                            FileManagerMyCloudFragment.this.id_file_path.add(files.get(position).id);
+                        }
+                        else if(files.get(position).directory) {
+                            FileCloudFragment.this.url = files.get(position).url + "/";
                             refreshList();
-                        } else
+                        }
+                        else
                             files.get(position).executeOnline(files, view);
                     }
                 });
                 this.gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                        if(position>=files.size())
+                        if (position >= files.size())
                             return false;
                         final ModelFile modelFile = files.get(position);
-                        final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileManagerMyCloudFragment.this.app);
-                        String[] menuList = { getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
-                        if(!modelFile.directory) {
+
+                        final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileCloudFragment.this.app);
+                        String[] menuList = { getString(R.string.download) };
+                        if(!modelFile.directory && modelFile.isMine()) {
                             if(modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
                                 menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public", "Set as profile"};
-                            }
-                            else if(modelFile.type.equals(ModelFileTypeENUM.APK.type) && app.getConfig().isUserAdmin()) {
-                                menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public", (modelFile.is_apk_update) ? "Remove the update" : "Set as update"};
                             }
                             else
                                 menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public"};
@@ -450,13 +423,13 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
                                                     @Override
                                                     public void execute() {
                                                         Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
-                                                        FileManagerMyCloudFragment.this.app.refreshAdapters();
+                                                        FileCloudFragment.this.app.refreshAdapters();
                                                     }
                                                 });
                                                 break;
 
                                             case 1:
-                                                FileManagerMyCloudFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                                FileCloudFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                                     @Override
                                                     public void execute(String text) {
                                                         modelFile.rename(text, new IPostExecuteListener() {
@@ -464,9 +437,9 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
                                                             public void execute(JSONObject json, String body) {
                                                                 if(filesToCut != null && filesToCut.size() != 0) {
                                                                     filesToCut.clear();
-                                                                    refreshFab();
+                                                                    refreshFab.execute();
                                                                 }
-                                                                FileManagerMyCloudFragment.this.app.refreshAdapters();
+                                                                FileCloudFragment.this.app.refreshAdapters();
                                                             }
                                                         });
                                                     }
@@ -474,7 +447,7 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
                                                 break;
 
                                             case 2:
-                                                FileManagerMyCloudFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                                FileCloudFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                                     @Override
                                                     public void execute() {
                                                         modelFile.delete(new IPostExecuteListener() {
@@ -482,9 +455,9 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
                                                             public void execute(JSONObject json, String body) {
                                                                 if(filesToCut != null && filesToCut.size() != 0) {
                                                                     filesToCut.clear();
-                                                                    refreshFab();
+                                                                    refreshFab.execute();
                                                                 }
-                                                                FileManagerMyCloudFragment.this.app.refreshAdapters();
+                                                                FileCloudFragment.this.app.refreshAdapters();
                                                             }
                                                         });
                                                     }
@@ -492,15 +465,14 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
                                                 break;
 
                                             case 3:
-                                                FileManagerMyCloudFragment.this.filesToCut.add(modelFile);
+                                                FileCloudFragment.this.filesToCut.add(modelFile);
                                                 Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
-                                                refreshFab();
                                                 break;
 
                                             case 4:
-                                                FileManagerMyCloudFragment.this.app.alert(
+                                                FileCloudFragment.this.app.alert(
                                                         getString(R.string.properties) + " : " + modelFile.name,
-                                                        "Name : " + modelFile.name + "\nExtension : " + modelFile.type + "\nType : " + modelFile.type.getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
+                                                        "Name : " + modelFile.name+"\nExtension : " + modelFile.type+"\nType : " + modelFile.type.getTitle()+"\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
                                                         "OK",
                                                         null,
                                                         null,
@@ -511,47 +483,29 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
                                                 modelFile.setPublic(!modelFile._public, new IPostExecuteListener() {
                                                     @Override
                                                     public void execute(JSONObject json, String body) {
-                                                        FileManagerMyCloudFragment.this.app.refreshAdapters();
+                                                        FileCloudFragment.this.app.refreshAdapters();
                                                     }
                                                 });
                                                 break;
 
+                                            // Picture set as profile
                                             case 6:
-                                                // Picture set as profile
-                                                if(modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
-                                                    List<StringPair> parameters = new ArrayList<>();
-                                                    parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
-                                                    (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
-                                                        @Override
-                                                        public void execute(JSONObject json, String body) {
-                                                            try {
-                                                                if (json != null)
-                                                                    if (json.has("succeed"))
-                                                                        if (json.getBoolean("succeed"))
-                                                                            app.getConfig().setUserIdFileProfilePicture(modelFile.id);
-                                                            } catch (JSONException e) {
-                                                                e.printStackTrace();
-                                                            }
+                                                List<StringPair> parameters = new ArrayList<>();
+                                                parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
+                                                (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                    @Override
+                                                    public void execute(JSONObject json, String body) {
+                                                        try {
+                                                            if (json != null)
+                                                                if (json.has("succeed"))
+                                                                    if (json.getBoolean("succeed"))
+                                                                        app.getConfig().setUserIdFileProfilePicture(modelFile.id);
                                                         }
-                                                    }, parameters)).execute();
-                                                }
-                                                else if(modelFile.type.equals(ModelFileTypeENUM.APK.type) && app.getConfig().isUserAdmin()) {
-                                                    List<StringPair> parameters = new ArrayList<>();
-                                                    parameters.add(new StringPair("is_apk_update", "" + !modelFile.is_apk_update));
-                                                    (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeFile + "/"+modelFile.id, new IPostExecuteListener() {
-                                                        @Override
-                                                        public void execute(JSONObject json, String body) {
-                                                            try {
-                                                                if (json != null)
-                                                                    if (json.has("succeed"))
-                                                                        if (json.getBoolean("succeed"))
-                                                                            FileManagerMyCloudFragment.this.app.refreshAdapters();
-                                                            } catch (JSONException e) {
-                                                                e.printStackTrace();
-                                                            }
+                                                        catch (JSONException e) {
+                                                            e.printStackTrace();
                                                         }
-                                                    }, parameters)).execute();
-                                                }
+                                                    }
+                                                }, parameters)).execute();
                                                 break;
                                         }
                                     }
@@ -564,13 +518,13 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
             }
             else {
                 this.gridView.setVisibility(View.GONE);
-                this.swipeRefreshLayoutGrid.setVisibility(View.GONE);
+                this.mSwipeRefreshLayoutGrid.setVisibility(View.GONE);
                 this.listView.setVisibility(View.VISIBLE);
-                this.swipeRefreshLayout.setVisibility(View.VISIBLE);
+                this.mSwipeRefreshLayout.setVisibility(View.VISIBLE);
             }
 
-            this.swipeRefreshLayout.setRefreshing(false);
-            this.swipeRefreshLayoutGrid.setRefreshing(false);
+            this.mSwipeRefreshLayout.setRefreshing(false);
+            this.mSwipeRefreshLayoutGrid.setRefreshing(false);
 		}
 	}
 
@@ -580,18 +534,17 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
             deselectAll();
             return true;
         }
-        else if(this.id_file_path.peek()!=-1) {
-            FileManagerMyCloudFragment.this.id_file_path.pop();
-            FileManagerMyCloudFragment.this.refreshList();
-            return true;
-        }
         else if(filesToCut != null && filesToCut.size() != 0) {
             filesToCut.clear();
-            refreshFab();
+            refreshFab.execute();
             return true;
         }
-        else
-            return false;
+        return false;
+    }
+
+    @Override
+    public void onFocus() {
+        refreshList();
     }
 
     public boolean hasItemSelected() {
@@ -608,45 +561,27 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
     }
 
     @Override
-    public void onFocus() {
-        refreshList();
-    }
-
-    @Override
     public void onFabClick(int fab_id, final FloatingActionButton fab) {
         switch (fab_id) {
             case 0:
-                if (filesToCut != null && filesToCut.size() != 0) {
-                    for (ModelFile file : filesToCut)
-                        file.setId_file_parent(FileManagerMyCloudFragment.this.id_file_path.peek(), new IPostExecuteListener() {
-                            @Override
-                            public void execute(JSONObject json, String body) {
-                                FileManagerMyCloudFragment.this.app.refreshAdapters();
-                            }
-                        });
-                    filesToCut.clear();
-                } else {
-                    fab.hide();
-                    FileManagerMyCloudFragment.this.app.dialog = new DialogAddFileManager(app, FileManagerMyCloudFragment.this.id_file_path.peek(), new IPostExecuteListener() {
-                        @Override
-                        public void execute(JSONObject json, String body) {
-                            if (json != null)
-                                refreshList();
-                        }
-                    }, new IListener() { // Dismiss
-                        @Override
-                        public void execute() {
-                            fab.show();
-                        }
-                    });
-                }
-                refreshFab();
+                fab.hide();
+                FileCloudFragment.this.app.dialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
+                    @Override
+                    public void execute(JSONObject json, String body) {
+                        if (json != null)
+                            refreshList();
+                    }
+                }, new IListener() { // Dismiss
+                    @Override
+                    public void execute() {
+                        fab.show();
+                    }
+                });
                 break;
+
             case 1:
-                if (id_file_path.peek() != -1) {
-                    FileManagerMyCloudFragment.this.id_file_path.pop();
-                    FileManagerMyCloudFragment.this.refreshList();
-                }
+                FileCloudFragment.this.url = "";
+                FileCloudFragment.this.refreshList();
                 break;
         }
     }
@@ -659,7 +594,7 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
             case 0:
                 return true;
             case 1:
-                return this.id_file_path.peek()!=-1;
+                return false;
         }
         return false;
     }
@@ -675,7 +610,7 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
             case 1:
                 return R.drawable.arrow_up;
         }
-        return R.drawable.add;
+        return android.R.drawable.ic_input_add;
     }
 
     @Override
@@ -684,5 +619,13 @@ public class FileManagerMyCloudFragment extends FabFragment implements BackFragm
             mViewMode = viewMode;
             updateAdapter();
         }
+    }
+
+    @Override
+    public void setSwipeEnabled(boolean enabled) {
+        if (mSwipeRefreshLayout != null)
+            mSwipeRefreshLayout.setEnabled(enabled);
+        if (mSwipeRefreshLayoutGrid != null)
+            mSwipeRefreshLayoutGrid.setEnabled(enabled);
     }
 }

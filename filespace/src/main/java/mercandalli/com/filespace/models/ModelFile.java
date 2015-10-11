@@ -25,7 +25,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -93,8 +92,6 @@ public class ModelFile extends Model implements Parcelable {
     public ModelFileSpace content;
     public boolean selected = false;
     public int count;
-
-    public CountDownTimer cdt;
 
     public String adapterTitleStart = "";
 

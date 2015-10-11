@@ -40,7 +40,7 @@ public enum ModelFileTypeENUM {
 	KEYSTORE(new ModelFileType("KeyStore", new String[] {"keystore", "jdk"})),
 	DIRECTORY(new ModelFileType("Directory", new String[] {"dir", ""}));
 	
-	public ModelFileType type;
+	public final ModelFileType type;
 	
 	ModelFileTypeENUM(ModelFileType type) {
 		this.type = type;

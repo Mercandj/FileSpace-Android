@@ -46,7 +46,7 @@ import mercandalli.com.filespace.ui.fragments.SettingsFragment;
 import mercandalli.com.filespace.ui.fragments.WebFragment;
 import mercandalli.com.filespace.ui.fragments.admin.AdminFragment;
 import mercandalli.com.filespace.ui.fragments.community.CommunityFragment;
-import mercandalli.com.filespace.ui.fragments.file.FileManagerFragment;
+import mercandalli.com.filespace.ui.fragments.file.FileFragment;
 import mercandalli.com.filespace.ui.fragments.genealogy.GenealogyFragment;
 import mercandalli.com.filespace.ui.fragments.workspace.WorkspaceFragment;
 import mercandalli.com.filespace.ui.navdrawer.NavDrawerItem;
@@ -116,7 +116,7 @@ public abstract class ApplicationDrawer extends Application implements INavigati
         		new NavDrawerItem(getString(R.string.tab_files), new IListener() {
 						@Override
 						public void execute() {
-							backFragment = FileManagerFragment.newInstance();
+							backFragment = FileFragment.newInstance();
                             backFragment.setApp(ApplicationDrawer.this);
 					        FragmentManager fragmentManager = getFragmentManager();
 					        fragmentManager.beginTransaction().replace(R.id.content_frame, backFragment).commit();

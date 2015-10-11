@@ -25,7 +25,7 @@ import android.util.Log;
 
 import mercandalli.com.filespace.notificationpush.NotificationPush;
 import mercandalli.com.filespace.ui.fragments.community.CommunityFragment;
-import mercandalli.com.filespace.ui.fragments.file.FileManagerFragment;
+import mercandalli.com.filespace.ui.fragments.file.FileFragment;
 
 public class ActivityMain extends ApplicationDrawer {
 
@@ -33,8 +33,8 @@ public class ActivityMain extends ApplicationDrawer {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		if(backFragment instanceof FileManagerFragment) {
-			FileManagerFragment fragmentFileManager = (FileManagerFragment) backFragment;
+		if(backFragment instanceof FileFragment) {
+			FileFragment fragmentFileManager = (FileFragment) backFragment;
 			fragmentFileManager.refreshListServer();					
 		}
 
@@ -50,8 +50,8 @@ public class ActivityMain extends ApplicationDrawer {
 	
 	@Override
 	public void updateAdapters() {
-		if(backFragment instanceof FileManagerFragment) {
-			FileManagerFragment fragmentFileManager = (FileManagerFragment) backFragment;
+		if(backFragment instanceof FileFragment) {
+			FileFragment fragmentFileManager = (FileFragment) backFragment;
 			fragmentFileManager.updateAdapterListServer();					
 		}
 		else if(backFragment instanceof CommunityFragment) {
@@ -62,8 +62,8 @@ public class ActivityMain extends ApplicationDrawer {
 
 	@Override
 	public void refreshAdapters() {
-		if(backFragment instanceof FileManagerFragment) {
-			FileManagerFragment fragmentFileManager = (FileManagerFragment) backFragment;
+		if(backFragment instanceof FileFragment) {
+			FileFragment fragmentFileManager = (FileFragment) backFragment;
 			fragmentFileManager.refreshAdapterListServer();					
 		}
 	}

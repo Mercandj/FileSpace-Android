@@ -33,6 +33,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,10 +52,11 @@ import mercandalli.com.filespace.ui.activities.Application;
 import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
+import mercandalli.com.filespace.ui.fragments.ISwipeFragment;
 
 import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
-public class FileManagerFragment extends BackFragment implements ViewPager.OnPageChangeListener {
+public class FileFragment extends BackFragment implements ViewPager.OnPageChangeListener, ISwipeFragment {
 	
 	private static final int NB_FRAGMENT = 4;
     private static final int INIT_FRAGMENT = 1;
@@ -71,33 +73,46 @@ public class FileManagerFragment extends BackFragment implements ViewPager.OnPag
 
 	protected int mViewMode = Const.MODE_LIST;
 
-    public static FileManagerFragment newInstance() {
+    private boolean mSwipeEnabled = true;
+
+    public static FileFragment newInstance() {
         Bundle args = new Bundle();
-        FileManagerFragment fragment = new FileManagerFragment();
+        FileFragment fragment = new FileFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_file_manager, container, false);
+		View rootView = inflater.inflate(R.layout.fragment_file, container, false);
 
         app.setTitle(R.string.tab_files);
-        mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_file_manager_toolbar);
+        mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_file_toolbar);
         app.setToolbar(mToolbar);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             app.getWindow().setStatusBarColor(ContextCompat.getColor(app, R.color.notifications_bar));
         setHasOptionsMenu(true);
 
-        mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.fragment_file_manager_app_bar_layout);
-        coordinatorLayoutView = rootView.findViewById(R.id.fragment_file_manager_coordinator_layout);
+        mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.fragment_file_app_bar_layout);
+        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+                if (i == 0 && !mSwipeEnabled) {
+                    setSwipeEnabled(true);
+                } else if(mSwipeEnabled) {
+                    setSwipeEnabled(false);
+                }
+                Log.d("",""+i);
+            }
+        });
+        coordinatorLayoutView = rootView.findViewById(R.id.fragment_file_coordinator_layout);
 
         FileManagerFragmentPagerAdapter mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
 
         mViewMode = ((app.getConfig().getUserFileModeView() > -1) ? app.getConfig().getUserFileModeView() : Const.MODE_LIST);
 
-        TabLayout tabs = (TabLayout) rootView.findViewById(R.id.fragment_file_manager_tab_layout);
-		mViewPager = (ViewPager) rootView.findViewById(R.id.fragment_file_manager_view_pager);
+        TabLayout tabs = (TabLayout) rootView.findViewById(R.id.fragment_file_tab_layout);
+		mViewPager = (ViewPager) rootView.findViewById(R.id.fragment_file_view_pager);
 		mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
 
@@ -210,7 +225,7 @@ public class FileManagerFragment extends BackFragment implements ViewPager.OnPag
 
     @Override
     public void onPageSelected(int position) {
-        FileManagerFragment.this.app.invalidateOptionsMenu();
+        FileFragment.this.app.invalidateOptionsMenu();
         mAppBarLayout.setExpanded(true);
         if (app.isLogged()) {
             switch (position) {
@@ -245,11 +260,11 @@ public class FileManagerFragment extends BackFragment implements ViewPager.OnPag
 
 			FabFragment fragment;
 			switch (i) {
-                case 0:		fragment = FileManagerCloudFragment.newInstance();  	break;
-                case 1:		fragment = FileManagerMyCloudFragment.newInstance(); 	break;
-                case 2:		fragment = FileManagerLocalFragment.newInstance();	    break;
-                case 3:		fragment = FileManagerLocalMusicFragment.newInstance();	break;
-                default:	fragment = FileManagerLocalFragment.newInstance();	    break;
+                case 0:		fragment = FileCloudFragment.newInstance();  	break;
+                case 1:		fragment = FileMyCloudFragment.newInstance(); 	break;
+                case 2:		fragment = FileLocalFragment.newInstance();	    break;
+                case 3:		fragment = FileLocalMusicFragment.newInstance();	break;
+                default:	fragment = FileLocalFragment.newInstance();	    break;
 			}
             fragment.setRefreshFab(new IListener() {
                 @Override
@@ -289,20 +304,20 @@ public class FileManagerFragment extends BackFragment implements ViewPager.OnPag
 	public void refreshListServer(String search) {
         for (FabFragment fr : listFragment) {
             if (fr != null) {
-                if (fr instanceof FileManagerCloudFragment) {
-                    FileManagerCloudFragment fragmentFileManagerFragment = (FileManagerCloudFragment) fr;
+                if (fr instanceof FileCloudFragment) {
+                    FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fr;
                     fragmentFileManagerFragment.refreshList(search);
                 }
-                else if (fr instanceof FileManagerMyCloudFragment) {
-                    FileManagerMyCloudFragment fragmentFileManagerFragment = (FileManagerMyCloudFragment) fr;
+                else if (fr instanceof FileMyCloudFragment) {
+                    FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fr;
                     fragmentFileManagerFragment.refreshList(search);
                 }
-                else if (fr instanceof FileManagerLocalFragment) {
-                    FileManagerLocalFragment fragmentFileManagerFragment = (FileManagerLocalFragment) fr;
+                else if (fr instanceof FileLocalFragment) {
+                    FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fr;
                     fragmentFileManagerFragment.refreshList(search);
                 }
-                else if (fr instanceof FileManagerLocalMusicFragment) {
-                    FileManagerLocalMusicFragment fragmentFileManagerFragment = (FileManagerLocalMusicFragment) fr;
+                else if (fr instanceof FileLocalMusicFragment) {
+                    FileLocalMusicFragment fragmentFileManagerFragment = (FileLocalMusicFragment) fr;
                     fragmentFileManagerFragment.refreshList(search);
                 }
             }
@@ -312,16 +327,16 @@ public class FileManagerFragment extends BackFragment implements ViewPager.OnPag
 	public void updateAdapterListServer() {
         for (FabFragment fr : listFragment) {
             if (fr != null) {
-                if (fr instanceof FileManagerCloudFragment) {
-                    FileManagerCloudFragment fragmentFileManagerFragment = (FileManagerCloudFragment) fr;
+                if (fr instanceof FileCloudFragment) {
+                    FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fr;
                     fragmentFileManagerFragment.updateAdapter();
                 }
-                else if (fr instanceof FileManagerMyCloudFragment) {
-                    FileManagerMyCloudFragment fragmentFileManagerFragment = (FileManagerMyCloudFragment) fr;
+                else if (fr instanceof FileMyCloudFragment) {
+                    FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fr;
                     fragmentFileManagerFragment.updateAdapter();
                 }
-                else if (fr instanceof FileManagerLocalFragment) {
-                    FileManagerLocalFragment fragmentFileManagerFragment = (FileManagerLocalFragment) fr;
+                else if (fr instanceof FileLocalFragment) {
+                    FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fr;
                     fragmentFileManagerFragment.updateAdapter();
                 }
             }
@@ -331,16 +346,16 @@ public class FileManagerFragment extends BackFragment implements ViewPager.OnPag
 	public void refreshAdapterListServer() {
         for (FabFragment fr : listFragment) {
             if (fr != null) {
-                if (fr instanceof FileManagerCloudFragment) {
-                    FileManagerCloudFragment fragmentFileManagerFragment = (FileManagerCloudFragment) fr;
+                if (fr instanceof FileCloudFragment) {
+                    FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fr;
                     fragmentFileManagerFragment.refreshList();
                 }
-                if (fr instanceof FileManagerMyCloudFragment) {
-                    FileManagerMyCloudFragment fragmentFileManagerFragment = (FileManagerMyCloudFragment) fr;
+                if (fr instanceof FileMyCloudFragment) {
+                    FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fr;
                     fragmentFileManagerFragment.refreshList();
                 }
-                if (fr instanceof FileManagerLocalFragment) {
-                    FileManagerLocalFragment fragmentFileManagerFragment = (FileManagerLocalFragment) fr;
+                if (fr instanceof FileLocalFragment) {
+                    FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fr;
                     fragmentFileManagerFragment.refreshList();
                 }
             }
@@ -385,8 +400,8 @@ public class FileManagerFragment extends BackFragment implements ViewPager.OnPag
     public void goHome() {
         if(listFragment.length>2)
             if(listFragment[2]!=null)
-                if(listFragment[2] instanceof FileManagerLocalFragment) {
-                    FileManagerLocalFragment fragmentFileManagerFragment = (FileManagerLocalFragment) listFragment[2];
+                if(listFragment[2] instanceof FileLocalFragment) {
+                    FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) listFragment[2];
                     fragmentFileManagerFragment.goHome();
                 }
     }
@@ -536,5 +551,18 @@ public class FileManagerFragment extends BackFragment implements ViewPager.OnPag
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void setSwipeEnabled(boolean enabled) {
+        mSwipeEnabled = enabled;
+        for (FabFragment fr : listFragment) {
+            if (fr != null) {
+                if (fr instanceof ISwipeFragment) {
+                    ISwipeFragment fragmentFileManagerFragment = (ISwipeFragment) fr;
+                    fragmentFileManagerFragment.setSwipeEnabled(enabled);
+                }
+            }
+        }
     }
 }

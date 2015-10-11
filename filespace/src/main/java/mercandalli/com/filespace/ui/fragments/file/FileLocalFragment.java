@@ -63,11 +63,13 @@ import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
+import mercandalli.com.filespace.ui.fragments.ISwipeFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.StringPair;
 
-public class FileManagerLocalFragment extends FabFragment implements BackFragment.IListViewMode, BackFragment.ISortMode {
+public class FileLocalFragment extends FabFragment
+        implements BackFragment.IListViewMode, BackFragment.ISortMode, ISwipeFragment {
 	
 	private RecyclerView listView;
     private GridView gridView;
@@ -76,7 +78,7 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
 	private ProgressBar circularProgressBar;
 	private File currentDirectory;
 	private TextView message;
-	private SwipeRefreshLayout swipeRefreshLayout, swipeRefreshLayoutGrid;
+	private SwipeRefreshLayout mSwipeRefreshLayout, mSwipeRefreshLayoutGrid;
 
     private List<ModelFile> filesToCut = new ArrayList<>();
     private List<ModelFile> filesToCopy = new ArrayList<>();
@@ -84,9 +86,9 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
     private int sortMode = Const.SORT_DATE_MODIFICATION;
     private int mViewMode = Const.MODE_LIST;
 
-    public static FileManagerLocalFragment newInstance() {
+    public static FileLocalFragment newInstance() {
         Bundle args = new Bundle();
-        FileManagerLocalFragment fragment = new FileManagerLocalFragment();
+        FileLocalFragment fragment = new FileLocalFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -99,7 +101,7 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_file_manager_files, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_file_files, container, false);
         this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         this.circularProgressBar.setVisibility(View.INVISIBLE);
         this.message = (TextView) rootView.findViewById(R.id.message);
@@ -117,28 +119,28 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
 		if(!currentDirectory.exists())
             currentDirectory.mkdir();
 
-        this.swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
-        this.swipeRefreshLayout.setColorSchemeResources(
+        this.mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+        this.mSwipeRefreshLayout.setColorSchemeResources(
                 android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        this.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        this.mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
 				refreshList();
 			}
 		});
 
-        this.swipeRefreshLayoutGrid = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayoutGrid);
-        this.swipeRefreshLayoutGrid.setColorSchemeResources(
+        this.mSwipeRefreshLayoutGrid = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayoutGrid);
+        this.mSwipeRefreshLayoutGrid.setColorSchemeResources(
                 android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        this.swipeRefreshLayoutGrid.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        this.mSwipeRefreshLayoutGrid.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshList();
@@ -224,7 +226,7 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
             final AdapterModelFile adapter = new AdapterModelFile(app, files, new IModelFileListener() {
 				@Override
 				public void execute(final ModelFile modelFile) {
-					final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerLocalFragment.this.app);
+					final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalFragment.this.app);
 					String[] menuList = { getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties) };
                     if(app.isLogged())
                         menuList = new String[]{ getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties) };
@@ -237,10 +239,10 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
 									switch (item) {
                                         case 0:
                                             if(modelFile.directory) {
-                                                Toast.makeText(FileManagerLocalFragment.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(FileLocalFragment.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                             }
                                             else
-                                                FileManagerLocalFragment.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
+                                                FileLocalFragment.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
                                                     @Override
                                                     public void execute() {
                                                         if(modelFile.getFile()!=null) {
@@ -256,10 +258,10 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
                                                 }, getString(R.string.cancel), null);
                                             break;
                                         case 1:
-                                            modelFile.openLocalAs(FileManagerLocalFragment.this.app);
+                                            modelFile.openLocalAs(FileLocalFragment.this.app);
                                             break;
                                         case 2:
-                                            FileManagerLocalFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                            FileLocalFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
                                                     modelFile.rename(text, new IPostExecuteListener() {
@@ -273,14 +275,14 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
                                                                 filesToCopy.clear();
                                                                 refreshFab();
                                                             }
-                                                            FileManagerLocalFragment.this.app.refreshAdapters();
+                                                            FileLocalFragment.this.app.refreshAdapters();
                                                         }
                                                     });
                                                 }
                                             }, "Cancel", null, modelFile.getNameExt());
                                             break;
                                         case 3:
-                                            FileManagerLocalFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                            FileLocalFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                                 @Override
                                                 public void execute() {
                                                     modelFile.delete(new IPostExecuteListener() {
@@ -294,24 +296,24 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
                                                                 filesToCopy.clear();
                                                                 refreshFab();
                                                             }
-                                                            FileManagerLocalFragment.this.app.refreshAdapters();
+                                                            FileLocalFragment.this.app.refreshAdapters();
                                                         }
                                                     });
                                                 }
                                             }, "No", null);
                                             break;
                                         case 4:
-                                            FileManagerLocalFragment.this.filesToCopy.add(modelFile);
+                                            FileLocalFragment.this.filesToCopy.add(modelFile);
                                             Toast.makeText(app, "File ready to copy.", Toast.LENGTH_SHORT).show();
                                             refreshFab();
                                             break;
                                         case 5:
-                                            FileManagerLocalFragment.this.filesToCut.add(modelFile);
+                                            FileLocalFragment.this.filesToCut.add(modelFile);
                                             Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                             refreshFab();
                                             break;
                                         case 6:
-                                            FileManagerLocalFragment.this.app.alert(
+                                            FileLocalFragment.this.app.alert(
                                                     getString(R.string.properties) + " : " + modelFile.name,
                                                     modelFile.toSpanned(),
                                                     "OK",
@@ -356,9 +358,9 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
 
             if(mViewMode == Const.MODE_GRID) {
                 this.gridView.setVisibility(View.VISIBLE);
-                this.swipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
+                this.mSwipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
                 this.listView.setVisibility(View.GONE);
-                this.swipeRefreshLayout.setVisibility(View.GONE);
+                this.mSwipeRefreshLayout.setVisibility(View.GONE);
 
                 this.gridView.setAdapter(new AdapterGridModelFile(app, files));
                 this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -382,7 +384,7 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
                             return false;
                         final ModelFile modelFile = files.get(position);
 
-                        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerLocalFragment.this.app);
+                        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalFragment.this.app);
                         String[] menuList = { getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties) };
                         if(app.isLogged())
                             menuList = new String[]{ getString(R.string.upload), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties) };
@@ -395,10 +397,10 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
                                         switch (item) {
                                             case 0:
                                                 if(modelFile.directory) {
-                                                    Toast.makeText(FileManagerLocalFragment.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(FileLocalFragment.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                                 }
                                                 else
-                                                    FileManagerLocalFragment.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
+                                                    FileLocalFragment.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
                                                         @Override
                                                         public void execute() {
                                                             if(modelFile.getFile()!=null) {
@@ -414,7 +416,7 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
                                                     }, getString(R.string.cancel), null);
                                                 break;
                                             case 1:
-                                                FileManagerLocalFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                                FileLocalFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                                     @Override
                                                     public void execute(String text) {
                                                         modelFile.rename(text, new IPostExecuteListener() {
@@ -424,14 +426,14 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
                                                                     filesToCut.clear();
                                                                     refreshFab();
                                                                 }
-                                                                FileManagerLocalFragment.this.app.refreshAdapters();
+                                                                FileLocalFragment.this.app.refreshAdapters();
                                                             }
                                                         });
                                                     }
                                                 }, "Cancel", null, modelFile.getNameExt());
                                                 break;
                                             case 2:
-                                                FileManagerLocalFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                                FileLocalFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                                     @Override
                                                     public void execute() {
                                                         modelFile.delete(new IPostExecuteListener() {
@@ -441,24 +443,24 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
                                                                     filesToCut.clear();
                                                                     refreshFab();
                                                                 }
-                                                                FileManagerLocalFragment.this.app.refreshAdapters();
+                                                                FileLocalFragment.this.app.refreshAdapters();
                                                             }
                                                         });
                                                     }
                                                 }, "No", null);
                                                 break;
                                             case 3:
-                                                FileManagerLocalFragment.this.filesToCopy.add(modelFile);
+                                                FileLocalFragment.this.filesToCopy.add(modelFile);
                                                 Toast.makeText(app, "File ready to copy.", Toast.LENGTH_SHORT).show();
                                                 refreshFab();
                                                 break;
                                             case 4:
-                                                FileManagerLocalFragment.this.filesToCut.add(modelFile);
+                                                FileLocalFragment.this.filesToCut.add(modelFile);
                                                 Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                                 refreshFab();
                                                 break;
                                             case 5:
-                                                FileManagerLocalFragment.this.app.alert(
+                                                FileLocalFragment.this.app.alert(
                                                         getString(R.string.properties) + " : " + modelFile.name,
                                                         "Name : " + modelFile.name + "\nExtension : " + modelFile.type + "\nType : " + modelFile.type.getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
                                                         "OK",
@@ -477,13 +479,13 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
             }
             else {
                 this.gridView.setVisibility(View.GONE);
-                this.swipeRefreshLayoutGrid.setVisibility(View.GONE);
+                this.mSwipeRefreshLayoutGrid.setVisibility(View.GONE);
                 this.listView.setVisibility(View.VISIBLE);
-                this.swipeRefreshLayout.setVisibility(View.VISIBLE);
+                this.mSwipeRefreshLayout.setVisibility(View.VISIBLE);
             }
 
-			swipeRefreshLayout.setRefreshing(false);
-			swipeRefreshLayoutGrid.setRefreshing(false);
+            mSwipeRefreshLayout.setRefreshing(false);
+            mSwipeRefreshLayoutGrid.setRefreshing(false);
 		}
 	}
 
@@ -517,8 +519,8 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
         }
         else if(!currentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().getLocalFolderName())) {
             if(currentDirectory.getParent() != null) {
-                FileManagerLocalFragment.this.currentDirectory = new File(currentDirectory.getParentFile().getPath());
-                FileManagerLocalFragment.this.refreshList();
+                FileLocalFragment.this.currentDirectory = new File(currentDirectory.getParentFile().getPath());
+                FileLocalFragment.this.refreshList();
                 return true;
             }
         }
@@ -574,7 +576,7 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
                     }
                     refreshList();
                 } else {
-                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileManagerLocalFragment.this.app);
+                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalFragment.this.app);
                     final String[] menuList = {"New Folder or File"};
                     menuAlert.setTitle("Action");
                     menuAlert.setItems(menuList,
@@ -582,7 +584,7 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
                                 public void onClick(DialogInterface dialog, int item) {
                                     switch (item) {
                                         case 0:
-                                            FileManagerLocalFragment.this.app.prompt("New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
+                                            FileLocalFragment.this.app.prompt("New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
                                                     createFile(currentDirectory.getPath() + File.separator, text);
@@ -601,9 +603,9 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
 
             case 1:
                 if(currentDirectory.getParent() != null) {
-                    FileManagerLocalFragment.this.currentDirectory = new File(currentDirectory.getParentFile().getPath());
+                    FileLocalFragment.this.currentDirectory = new File(currentDirectory.getParentFile().getPath());
                     //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
-                    FileManagerLocalFragment.this.refreshList();
+                    FileLocalFragment.this.refreshList();
                 }
                 break;
         }
@@ -654,5 +656,11 @@ public class FileManagerLocalFragment extends FabFragment implements BackFragmen
         }
     }
 
-
+    @Override
+    public void setSwipeEnabled(boolean enabled) {
+        if (mSwipeRefreshLayout != null)
+            mSwipeRefreshLayout.setEnabled(enabled);
+        if (mSwipeRefreshLayoutGrid != null)
+            mSwipeRefreshLayoutGrid.setEnabled(enabled);
+    }
 }
