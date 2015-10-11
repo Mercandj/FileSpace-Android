@@ -3,25 +3,48 @@
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-    <mercandalli.com.filespace.ui.views.PagerSlidingTabStrip
-        android:id="@+id/tabs"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/fragment_admin_app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="42dip"
-        android:background="@color/actionbar"
-        custom:pstsUnderlineHeight="0dp"
-        custom:pstsIndicatorHeight="2dp"
-        android:elevation="4dp"/>
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/my_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:titleTextAppearance="@style/ToolbarTitle"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:layout_scrollFlags="scroll|enterAlways"/>
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/fragment_admin_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="42dip"
+            android:background="@color/actionbar"
+            app:tabTextAppearance="@style/TextAppearanceTabLayout"
+            app:tabTextColor="@color/white"
+            app:tabSelectedTextColor="@color/white"
+            app:tabIndicatorHeight="2dp"
+            app:tabIndicatorColor="@color/white"
+            app:tabMode="scrollable"
+            android:layout_alignParentTop="false"/>
+
+    </android.support.design.widget.AppBarLayout>
 
     <mercandalli.com.filespace.ui.views.NonSwipeableViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tabs" >
+        android:layout_height="match_parent"
+        android:layout_below="@+id/fragment_admin_app_bar_layout">
 
     </mercandalli.com.filespace.ui.views.NonSwipeableViewPager>
 

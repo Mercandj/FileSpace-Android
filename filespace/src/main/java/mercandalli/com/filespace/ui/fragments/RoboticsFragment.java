@@ -90,10 +90,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
     private DecimalFormat df;
 
     public static RoboticsFragment newInstance() {
-        Bundle args = new Bundle();
-        RoboticsFragment fragment = new RoboticsFragment();
-        fragment.setArguments(args);
-        return fragment;
+        return new RoboticsFragment();
     }
 
     @Override

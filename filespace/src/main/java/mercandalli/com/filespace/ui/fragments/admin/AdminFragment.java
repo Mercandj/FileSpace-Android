@@ -20,9 +20,14 @@
 package mercandalli.com.filespace.ui.fragments.admin;
 
 import android.app.FragmentManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,23 +35,24 @@ import android.view.ViewGroup;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.ui.activities.Application;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawer;
-import mercandalli.com.filespace.ui.fragments.EmptyFragment;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
+import mercandalli.com.filespace.ui.fragments.EmptyFragment;
 import mercandalli.com.filespace.ui.views.NonSwipeableViewPager;
-import mercandalli.com.filespace.ui.views.PagerSlidingTabStrip;
 
 
-public class AdminFragment extends BackFragment {
+public class AdminFragment extends BackFragment implements ViewPager.OnPageChangeListener {
 
     private static final int NB_FRAGMENT = 8;
     private static final int INIT_FRAGMENT = 0;
     public static final BackFragment LIST_BACK_FRAGMENT[] = new BackFragment[NB_FRAGMENT];
     private NonSwipeableViewPager mViewPager;
     private FileManagerFragmentPagerAdapter mPagerAdapter;
-    private PagerSlidingTabStrip tabs;
+    private TabLayout tabs;
 
-    public AdminFragment() {
-        super();
+    private AppBarLayout mAppBarLayout;
+
+    public static AdminFragment newInstance() {
+        return new AdminFragment();
     }
 
     public void setApp(ApplicationDrawer app) {
@@ -56,26 +62,28 @@ public class AdminFragment extends BackFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_admin, container, false);
+
+        app.setTitle(R.string.tab_admin);
+        Toolbar mToolbar = (Toolbar) rootView.findViewById(R.id.my_toolbar);
+        app.setToolbar(mToolbar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            app.getWindow().setStatusBarColor(ContextCompat.getColor(app, R.color.notifications_bar));
+        setHasOptionsMenu(true);
+
+        mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.fragment_admin_app_bar_layout);
         mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
 
-        tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
+        tabs = (TabLayout) rootView.findViewById(R.id.fragment_admin_tab_layout);
         mViewPager = (NonSwipeableViewPager) rootView.findViewById(R.id.pager);
         mViewPager.setNonSwipeableItem(7);
         mViewPager.setAdapter(mPagerAdapter);
-        tabs.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                AdminFragment.this.app.invalidateOptionsMenu();
-                if (position < NB_FRAGMENT)
-                    if (LIST_BACK_FRAGMENT[position] != null)
-                        LIST_BACK_FRAGMENT[position].onFocus();
-            }
-        });
+
+        mViewPager.addOnPageChangeListener(this);
+
         mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
         mViewPager.setCurrentItem(INIT_FRAGMENT);
 
-        tabs.setViewPager(mViewPager);
-        tabs.setIndicatorColor(getResources().getColor(R.color.white));
+        tabs.setupWithViewPager(mViewPager);
 
         return rootView;
     }
@@ -102,6 +110,25 @@ public class AdminFragment extends BackFragment {
 
     @Override
     public void onFocus() {
+
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        AdminFragment.this.app.invalidateOptionsMenu();
+        mAppBarLayout.setExpanded(true);
+        if (position < NB_FRAGMENT)
+            if (LIST_BACK_FRAGMENT[position] != null)
+                LIST_BACK_FRAGMENT[position].onFocus();
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
 
     }
 

@@ -185,7 +185,7 @@ public abstract class ApplicationDrawer extends Application implements INavigati
                     new NavDrawerItem(getString(R.string.tab_genealogy), new IListener() {
                         @Override
                         public void execute() {
-                            backFragment = new GenealogyFragment();
+                            backFragment = GenealogyFragment.newInstance();
                             backFragment.setApp(ApplicationDrawer.this);
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_frame, backFragment).commit();
@@ -198,7 +198,7 @@ public abstract class ApplicationDrawer extends Application implements INavigati
                     new NavDrawerItem(getString(R.string.tab_admin), new IListener() {
                         @Override
                         public void execute() {
-                            backFragment = new AdminFragment();
+                            backFragment = AdminFragment.newInstance();
                             backFragment.setApp(ApplicationDrawer.this);
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction().replace(R.id.content_frame, backFragment).commit();
@@ -277,10 +277,6 @@ public abstract class ApplicationDrawer extends Application implements INavigati
         
         // Initial Fragment
         selectItem(getInitFragmentId());
-        /*
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setIcon(R.drawable.transparent);
-        */
 
         mDrawerList.setAdapter(new NavDrawerListAdapter(this, navDrawerItems.getListe()));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());

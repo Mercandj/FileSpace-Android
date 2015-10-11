@@ -54,14 +54,14 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
     private FileManagerFragmentPagerAdapter mPagerAdapter;
     private TabLayout tabs;
 
-    private FloatingActionButton circle, circle2;
+    private FloatingActionButton circle;
     private View coordinatorLayoutView;
     private Snackbar snackbar;
 
     private AppBarLayout mAppBarLayout;
 
-    public GenealogyFragment() {
-        super();
+    public static GenealogyFragment newInstance() {
+        return new GenealogyFragment();
     }
 
     @Override
@@ -76,7 +76,7 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
         setHasOptionsMenu(true);
 
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.fragment_genealogy_app_bar_layout);
-        this.coordinatorLayoutView = (View) rootView.findViewById(R.id.snackBarPosition);
+        this.coordinatorLayoutView = rootView.findViewById(R.id.snackBarPosition);
 
         mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
 
@@ -128,7 +128,7 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
         if(listFragment == null || currentFragmentId== -1)
             return;
         FabFragment fragment = listFragment[currentFragmentId];
-        if(fragment==null)
+        if(fragment == null)
             return;
         refreshFab(fragment);
     }
