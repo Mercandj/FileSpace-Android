@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.ui.adapters;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,25 +99,9 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
             });
 
             if(file.selected)
-                viewHolder.item.setBackgroundColor(app.getResources().getColor(R.color.tab_selected));
+                viewHolder.item.setBackgroundColor(ContextCompat.getColor(app, R.color.tab_selected));
             else
-                viewHolder.item.setBackgroundColor(app.getResources().getColor(R.color.tab_file));
-
-            if (file.type.equals(ModelFileTypeENUM.FILESPACE.type)) {
-                /*
-                final Handler timerHandler = new Handler();
-
-                Runnable timerRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        if(v)
-                        viewHolder.title.notify();
-                        timerHandler.postDelayed(this, 1000); // run every s
-                    }
-                };
-                timerRunnable.run();
-                */
-            }
+                viewHolder.item.setBackgroundColor(ContextCompat.getColor(app, R.color.tab_file));
         }
     }
 
@@ -140,13 +125,13 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
         @Override
         public void onClick(View v) {
             if (mItemClickListener != null)
-                mItemClickListener.onItemClick(v, getPosition());
+                mItemClickListener.onItemClick(v, getAdapterPosition());
         }
 
         @Override
         public boolean onLongClick(View v) {
             if (mItemLongClickListener != null)
-                return mItemLongClickListener.onItemLongClick(v, getPosition());
+                return mItemLongClickListener.onItemLongClick(v, getAdapterPosition());
             return false;
         }
     }
@@ -194,7 +179,7 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(View view , int position);
+        void onItemClick(View view , int position);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -202,7 +187,7 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
     }
 
     public interface OnItemLongClickListener {
-        public boolean onItemLongClick(View view , int position);
+        boolean onItemLongClick(View view , int position);
     }
 
     public void setOnItemLongClickListener(final OnItemLongClickListener mItemLongClickListener) {

@@ -29,6 +29,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -100,10 +103,10 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
     @Override
     public boolean back() {
         int currentFragmentId = getCurrentFragmentIndex();
-        if(LIST_BACK_FRAGMENT == null || currentFragmentId== -1)
+        if(LIST_BACK_FRAGMENT == null || currentFragmentId == -1)
             return false;
         BackFragment backFragment = LIST_BACK_FRAGMENT[currentFragmentId];
-        if(backFragment ==null)
+        if(backFragment == null)
             return false;
         return backFragment.back();
     }
@@ -142,7 +145,7 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
 
         @Override
         public BackFragment getItem(int i) {
-            BackFragment backFragment = null;
+            BackFragment backFragment;
             switch(i) {
                 case 0:		backFragment = ServerDataFragment.newInstance();  	break;
                 case 1:		backFragment = ServerLogsFragment.newInstance();    break;
@@ -176,5 +179,36 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
             }
             return title;
         }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_search)	.setVisible(false);
+        menu.findItem(R.id.action_delete)	.setVisible(false);
+        menu.findItem(R.id.action_add)		.setVisible(false);
+        menu.findItem(R.id.action_download)	.setVisible(false);
+        menu.findItem(R.id.action_upload)	.setVisible(false);
+        menu.findItem(R.id.action_home) 	.setVisible(false);
+        menu.findItem(R.id.action_sort)	    .setVisible(false);
+
+        if (getCurrentFragmentIndex() == 5) {
+            menu.findItem(R.id.action_delete)	.setVisible(true);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                if (getCurrentFragmentIndex() == 5)
+                    ((RequestFragment) AdminFragment.LIST_BACK_FRAGMENT[getCurrentFragmentIndex()]).delete();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

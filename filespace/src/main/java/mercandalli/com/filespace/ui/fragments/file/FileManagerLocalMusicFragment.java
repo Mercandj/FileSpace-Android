@@ -131,10 +131,17 @@ public class FileManagerLocalMusicFragment extends FabFragment implements BackFr
         List<File> fs = new ArrayList<>();
 
         String[] STAR = { "*" };
+
         Uri allsongsuri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
 
-        Cursor cursor = app.getContentResolver().query(allsongsuri, STAR, selection, null, null);
+        String[] searchArray = null;
+        if (search != null) {
+            searchArray = new String[] { "%" + search + "%" };
+            selection += " AND " + MediaStore.Audio.Media.DISPLAY_NAME + " LIKE ?";
+        }
+
+        Cursor cursor = app.getContentResolver().query(allsongsuri, STAR, selection, searchArray, null);
 
         if (cursor != null) {
             if (cursor.moveToFirst()) {

@@ -29,8 +29,12 @@ import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -261,5 +265,68 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
                     });
             this.snackbar.show();
         }
+    }
+
+
+
+
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView mSearchView = (SearchView) searchItem.getActionView();
+
+        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String query) {
+                if (query == null) {
+                    return true;
+                }
+                if (query.replaceAll(" ", "").equals("")) {
+                    refreshListServer();
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if(query == null)
+                    return false;
+                if(query.replaceAll(" ", "").equals(""))
+                    return false;
+                refreshListServer(query);
+                return false;
+            }
+        };
+
+        if(mSearchView!=null)
+            mSearchView.setOnQueryTextListener(queryTextListener);
+
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_search)	.setVisible(false);
+        menu.findItem(R.id.action_delete)	.setVisible(false);
+        menu.findItem(R.id.action_add)		.setVisible(false);
+        menu.findItem(R.id.action_download)	.setVisible(false);
+        menu.findItem(R.id.action_upload)	.setVisible(false);
+        menu.findItem(R.id.action_home) 	.setVisible(false);
+        menu.findItem(R.id.action_sort)	    .setVisible(false);
+
+        switch(getCurrentFragmentIndex()) {
+            case 0:
+                menu.findItem(R.id.action_search)	.setVisible(true);
+                break;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        return super.onOptionsItemSelected(item);
     }
 }
