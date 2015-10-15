@@ -93,7 +93,7 @@ public class ProfileFragment extends BackFragment {
         recyclerView.setLayoutManager(mLayoutManager);
 
         Bitmap icon_profile_online = app.getConfig().getUserProfilePicture();
-        if(icon_profile_online!=null) {
+        if(icon_profile_online != null) {
             icon_back.setImageBitmap(ImageUtils.setBlur(ImageUtils.setBrightness(icon_profile_online, -50), 15));
         }
 
