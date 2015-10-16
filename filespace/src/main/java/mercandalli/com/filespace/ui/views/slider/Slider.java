@@ -29,17 +29,17 @@ import mercandalli.com.filespace.R;
 public class Slider extends SliderCustomView {
 
     private int backgroundColor = Color.parseColor("#4CAF50");
-    private Ball   ball;
+    private Ball ball;
     private Bitmap bitmap;
     private int max = 100;
     private int min = 0;
-    private NumberIndicator        numberIndicator;
+    private NumberIndicator numberIndicator;
     private OnValueChangedListener onValueChangedListener;
-    private boolean placedBall          = false;
-    private boolean press               = false;
+    private boolean placedBall = false;
+    private boolean press = false;
     private boolean showNumberIndicator = false;
-    private int     value               = 0;
-    private ValueToDisplay          valueToDisplay;
+    private int value = 0;
+    private ValueToDisplay valueToDisplay;
     private int initialValue = 0;
 
     public boolean isNumberIndicator = true;
@@ -198,7 +198,6 @@ public class Slider extends SliderCustomView {
     }
 
 
-
     @Override
     public void setBackgroundColor(int color) {
         backgroundColor = color;
@@ -313,7 +312,7 @@ public class Slider extends SliderCustomView {
 
         initialValue = min;
 
-        if(value != min) {
+        if (value != min) {
             initialValue = value;
             setValue(value);
         }
@@ -341,6 +340,7 @@ public class Slider extends SliderCustomView {
     // Event when slider change value
     public interface OnValueChangedListener {
         public void onValueChanged(int value);
+
         public void onValueChangedUp(int value);
     }
 
@@ -371,17 +371,17 @@ public class Slider extends SliderCustomView {
 
     class Indicator extends RelativeLayout {
 
-        boolean animate               = true;
+        boolean animate = true;
         // Final size after animation
-        float   finalSize             = 0;
+        float finalSize = 0;
         // Final y position after animation
-        float   finalY                = 0;
+        float finalY = 0;
         boolean numberIndicatorResize = false;
         // Size of number indicator
-        float   size                  = 0;
+        float size = 0;
         // Position of number indicator
-        float   x                     = 0;
-        float   y                     = 0;
+        float x = 0;
+        float y = 0;
 
         private Paint paint, paintBorder;
 
@@ -422,9 +422,9 @@ public class Slider extends SliderCustomView {
             float cx = ViewHelper.getX(ball) + SliderUtils.getRelativeLeft((View) ball.getParent())
                     + ball.getWidth() / 2;
 
-            paintBorder.setShadowLayer(size/1.6f, 0.0f, size/4.0f, Color.BLACK);
+            paintBorder.setShadowLayer(size / 1.6f, 0.0f, size / 4.0f, Color.BLACK);
 
-            canvas.drawCircle(cx, y, size/1.6f, paintBorder);
+            canvas.drawCircle(cx, y, size / 1.6f, paintBorder);
             canvas.drawCircle(cx, y, size, paint);
 
             if (animate && size >= finalSize)
@@ -434,7 +434,7 @@ public class Slider extends SliderCustomView {
                         cx - size);
                 ViewHelper.setY(numberIndicator.numberIndicator, y - size);
 
-                if(valueToDisplay!=null)
+                if (valueToDisplay != null)
                     numberIndicator.numberIndicator.setText(valueToDisplay.convert(value));
                 else
                     numberIndicator.numberIndicator.setText(value + "");
@@ -448,7 +448,7 @@ public class Slider extends SliderCustomView {
     class NumberIndicator extends Dialog {
 
         Indicator indicator;
-        TextView  numberIndicator;
+        TextView numberIndicator;
 
         public NumberIndicator(Context context) {
             //super(context, android.R.style.Theme_Translucent);
@@ -458,7 +458,7 @@ public class Slider extends SliderCustomView {
         @Override
         public void dismiss() {
             super.dismiss();
-            if(indicator != null) {
+            if (indicator != null) {
                 indicator.y = 0;
                 indicator.size = 0;
                 indicator.animate = true;

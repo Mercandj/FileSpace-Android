@@ -4,9 +4,9 @@
 		MERCANDALLI Jonathan
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:background="#ccc" >
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#ccc">
 
     <TextView
         android:id="@+id/title"
@@ -18,6 +18,6 @@
         android:paddingRight="47dp"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="#000"
-        android:textSize="17sp" />
+        android:textSize="17sp"/>
 
 </RelativeLayout>

@@ -4,18 +4,19 @@
 		MERCANDALLI Jonathan
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-    <include layout="@layout/toolbar" android:id="@+id/my_toolbar" />
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/my_toolbar"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="10dp"
         android:layout_below="@+id/my_toolbar">
-
 
 
         <TextView
@@ -64,6 +65,7 @@
             android:layout_above="@+id/rl_sliderNumber"
             android:layout_centerHorizontal="true">
         </RelativeLayout>
+
         <mercandalli.com.filespace.ui.views.PlayPauseView
             android:id="@+id/play"
             android:transitionName="transitionIcon"
@@ -91,7 +93,7 @@
             android:layout_alignTop="@+id/play_position"
             android:layout_toEndOf="@+id/play_position"
             android:layout_marginLeft="32dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"/>
 
         <ImageButton
             android:id="@+id/previous"
@@ -107,7 +109,7 @@
             android:layout_alignTop="@+id/play_position"
             android:layout_toStartOf="@+id/play_position"
             android:layout_marginRight="32dp"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="10dp"/>
 
         <!-- SLIDER WITH NUMBER INDICATOR-->
         <RelativeLayout
@@ -129,7 +131,7 @@
                 android:background="@color/actionbar_audio"
                 materialdesign:max="50"
                 materialdesign:min="0"
-                materialdesign:showNumberIndicator="true" />
+                materialdesign:showNumberIndicator="true"/>
         </RelativeLayout>
 
     </RelativeLayout>

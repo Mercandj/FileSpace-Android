@@ -51,6 +51,7 @@ import java.util.Map;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.listeners.IEnableSwipeToRefreshCallback;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
@@ -62,12 +63,11 @@ import mercandalli.com.filespace.ui.adapters.AdapterDragModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
-import mercandalli.com.filespace.ui.fragments.EnableSwipeToRefreshCallback;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.StringPair;
 
 public class FileLocalMusicFragment extends FabFragment
-        implements BackFragment.IListViewMode, BackFragment.ISortMode, EnableSwipeToRefreshCallback {
+        implements BackFragment.IListViewMode, BackFragment.ISortMode, IEnableSwipeToRefreshCallback {
 
     private DynamicListView dynamicListView; // http://nhaarman.github.io/ListViewAnimations/
     private GridView gridView;

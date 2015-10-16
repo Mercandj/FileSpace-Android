@@ -51,7 +51,6 @@ import mercandalli.com.filespace.utils.StringUtils;
  * Global behavior : http Get
  *
  * @author Jonathan
- *
  */
 public class TaskGet extends AsyncTask<Void, Void, String> {
 

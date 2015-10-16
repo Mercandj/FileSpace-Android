@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -46,22 +46,22 @@ import org.json.JSONObject;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.listeners.IEnableSwipeToRefreshCallback;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
-import mercandalli.com.filespace.ui.fragments.EnableSwipeToRefreshCallback;
 
 import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
-public class FileFragment extends BackFragment implements ViewPager.OnPageChangeListener, EnableSwipeToRefreshCallback {
-	
-	private static final int NB_FRAGMENT = 4;
+public class FileFragment extends BackFragment implements ViewPager.OnPageChangeListener, IEnableSwipeToRefreshCallback {
+
+    private static final int NB_FRAGMENT = 4;
     private static final int INIT_FRAGMENT = 1;
-	public static FabFragment listFragment[] = new FabFragment[NB_FRAGMENT];
-	private ViewPager mViewPager;
+    public static FabFragment listFragment[] = new FabFragment[NB_FRAGMENT];
+    private ViewPager mViewPager;
 
     private FloatingActionButton circle, circle2;
     private View coordinatorLayoutView;
@@ -71,7 +71,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
     protected Toolbar mToolbar;
 
-	protected int mViewMode = Const.MODE_LIST;
+    protected int mViewMode = Const.MODE_LIST;
 
     private boolean mSwipeEnabled = true;
 
@@ -83,8 +83,8 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     }
 
     @Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_file, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_file, container, false);
 
         app.setTitle(R.string.tab_files);
         mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_file_toolbar);
@@ -99,10 +99,10 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
             public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
                 if (i == 0 && !mSwipeEnabled) {
                     setSwipeEnabled(true);
-                } else if(mSwipeEnabled) {
+                } else if (mSwipeEnabled) {
                     setSwipeEnabled(false);
                 }
-                Log.d("",""+i);
+                Log.d("", "" + i);
             }
         });
         coordinatorLayoutView = rootView.findViewById(R.id.fragment_file_coordinator_layout);
@@ -112,11 +112,11 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         mViewMode = ((app.getConfig().getUserFileModeView() > -1) ? app.getConfig().getUserFileModeView() : Const.MODE_LIST);
 
         TabLayout tabs = (TabLayout) rootView.findViewById(R.id.fragment_file_tab_layout);
-		mViewPager = (ViewPager) rootView.findViewById(R.id.fragment_file_view_pager);
-		mViewPager.setAdapter(mPagerAdapter);
+        mViewPager = (ViewPager) rootView.findViewById(R.id.fragment_file_view_pager);
+        mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
 
-        if(app.isLogged()) {
+        if (app.isLogged()) {
             if (isInternetConnection(app)) {
                 mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
                 mViewPager.setCurrentItem(INIT_FRAGMENT);
@@ -135,18 +135,18 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         this.circle.setVisibility(View.GONE);
         this.circle2 = ((FloatingActionButton) rootView.findViewById(R.id.circle2));
         this.circle2.setVisibility(View.GONE);
-		
+
         return rootView;
-	}
-	
-	public int getCurrentFragmentIndex() {
-        if(mViewPager == null)
+    }
+
+    public int getCurrentFragmentIndex() {
+        if (mViewPager == null)
             return -1;
         int result = mViewPager.getCurrentItem();
-		if(result >= listFragment.length)
+        if (result >= listFragment.length)
             return -1;
-        return mViewPager.getCurrentItem() + (app.isLogged()?0:2);
-	}
+        return mViewPager.getCurrentItem() + (app.isLogged() ? 0 : 2);
+    }
 
     @Override
     public boolean back() {
@@ -181,7 +181,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         if (currentFragment.isFabVisible(0)) {
             circle.show();
             imageResource = currentFragment.getFabImageResource(0);
-            if(imageResource == -1)
+            if (imageResource == -1)
                 imageResource = android.R.drawable.ic_input_add;
             circle.setImageResource(imageResource);
             circle.setOnClickListener(new View.OnClickListener() {
@@ -190,14 +190,13 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                     currentFragment.onFabClick(0, circle);
                 }
             });
-        }
-        else
+        } else
             circle.hide();
 
         if (circle2 == null) {
             return;
         }
-        if(currentFragment.isFabVisible(1)) {
+        if (currentFragment.isFabVisible(1)) {
             circle2.show();
             imageResource = currentFragment.getFabImageResource(1);
             if (imageResource == -1)
@@ -209,19 +208,21 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                     currentFragment.onFabClick(1, circle2);
                 }
             });
-        }
-        else
+        } else
             circle2.hide();
     }
 
     @Override
-    public void onFocus() { }
+    public void onFocus() {
+    }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
 
     @Override
-    public void onPageScrollStateChanged(int state) { }
+    public void onPageScrollStateChanged(int state) {
+    }
 
     @Override
     public void onPageSelected(int position) {
@@ -246,33 +247,43 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     }
 
     public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
-		ApplicationActivity app;
-		
-		public FileManagerFragmentPagerAdapter(FragmentManager fm, ApplicationActivity app) {
-			super(fm);
-			this.app = app;
-		}
-		
-		@Override
+        ApplicationActivity app;
+
+        public FileManagerFragmentPagerAdapter(FragmentManager fm, ApplicationActivity app) {
+            super(fm);
+            this.app = app;
+        }
+
+        @Override
         public BackFragment getItem(int i) {
             if (!app.isLogged())
                 i += 2;
 
-			FabFragment fragment;
-			switch (i) {
-                case 0:		fragment = FileCloudFragment.newInstance();  	break;
-                case 1:		fragment = FileMyCloudFragment.newInstance(); 	break;
-                case 2:		fragment = FileLocalFragment.newInstance();	    break;
-                case 3:		fragment = FileLocalMusicFragment.newInstance();	break;
-                default:	fragment = FileLocalFragment.newInstance();	    break;
-			}
+            FabFragment fragment;
+            switch (i) {
+                case 0:
+                    fragment = FileCloudFragment.newInstance();
+                    break;
+                case 1:
+                    fragment = FileMyCloudFragment.newInstance();
+                    break;
+                case 2:
+                    fragment = FileLocalFragment.newInstance();
+                    break;
+                case 3:
+                    fragment = FileLocalMusicFragment.newInstance();
+                    break;
+                default:
+                    fragment = FileLocalFragment.newInstance();
+                    break;
+            }
             fragment.setRefreshFab(new IListener() {
                 @Override
                 public void execute() {
                     refreshFab();
                 }
             });
-			listFragment[i] = fragment;
+            listFragment[i] = fragment;
             return listFragment[i];
         }
 
@@ -283,67 +294,70 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
         @Override
         public CharSequence getPageTitle(int i) {
-            if(!app.isLogged())
-                i+=2;
-        	String title = "null";
-			switch(i) {
-                case 0:	title = getString(R.string.file_fragment_public_cloud);        break;
-                case 1:	title = getString(R.string.file_fragment_my_cloud);     break;
-                case 2:	title = getString(R.string.file_fragment_local);		break;
-                case 3:	title = getString(R.string.file_fragment_music);	    break;
-			}
-			return title;
+            if (!app.isLogged())
+                i += 2;
+            String title = "null";
+            switch (i) {
+                case 0:
+                    title = getString(R.string.file_fragment_public_cloud);
+                    break;
+                case 1:
+                    title = getString(R.string.file_fragment_my_cloud);
+                    break;
+                case 2:
+                    title = getString(R.string.file_fragment_local);
+                    break;
+                case 3:
+                    title = getString(R.string.file_fragment_music);
+                    break;
+            }
+            return title;
         }
     }
-	
 
-	public void refreshListServer() {
-		refreshListServer(null);
-	}
-	
-	public void refreshListServer(String search) {
+
+    public void refreshListServer() {
+        refreshListServer(null);
+    }
+
+    public void refreshListServer(String search) {
         for (FabFragment fr : listFragment) {
             if (fr != null) {
                 if (fr instanceof FileCloudFragment) {
                     FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fr;
                     fragmentFileManagerFragment.refreshList(search);
-                }
-                else if (fr instanceof FileMyCloudFragment) {
+                } else if (fr instanceof FileMyCloudFragment) {
                     FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fr;
                     fragmentFileManagerFragment.refreshList(search);
-                }
-                else if (fr instanceof FileLocalFragment) {
+                } else if (fr instanceof FileLocalFragment) {
                     FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fr;
                     fragmentFileManagerFragment.refreshList(search);
-                }
-                else if (fr instanceof FileLocalMusicFragment) {
+                } else if (fr instanceof FileLocalMusicFragment) {
                     FileLocalMusicFragment fragmentFileManagerFragment = (FileLocalMusicFragment) fr;
                     fragmentFileManagerFragment.refreshList(search);
                 }
             }
         }
-	}
-	
-	public void updateAdapterListServer() {
+    }
+
+    public void updateAdapterListServer() {
         for (FabFragment fr : listFragment) {
             if (fr != null) {
                 if (fr instanceof FileCloudFragment) {
                     FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fr;
                     fragmentFileManagerFragment.updateAdapter();
-                }
-                else if (fr instanceof FileMyCloudFragment) {
+                } else if (fr instanceof FileMyCloudFragment) {
                     FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fr;
                     fragmentFileManagerFragment.updateAdapter();
-                }
-                else if (fr instanceof FileLocalFragment) {
+                } else if (fr instanceof FileLocalFragment) {
                     FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fr;
                     fragmentFileManagerFragment.updateAdapter();
                 }
             }
         }
-	}
-	
-	public void refreshAdapterListServer() {
+    }
+
+    public void refreshAdapterListServer() {
         for (FabFragment fr : listFragment) {
             if (fr != null) {
                 if (fr instanceof FileCloudFragment) {
@@ -360,55 +374,55 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                 }
             }
         }
-	}
+    }
 
-	public void add() {
-		app.dialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
-			@Override
-			public void execute(JSONObject json, String body) {
-				if (json != null)
-					refreshListServer();
-			}
-		}, new IListener() { // Dismiss
-			@Override
-			public void execute() {
+    public void add() {
+        app.dialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
+            @Override
+            public void execute(JSONObject json, String body) {
+                if (json != null)
+                    refreshListServer();
+            }
+        }, new IListener() { // Dismiss
+            @Override
+            public void execute() {
 
-			}
-		});
-	}
+            }
+        });
+    }
 
-	public void download() {
-		this.app.alert("Download", "Download all files ?", "Yes", new IListener() {
-			@Override
-			public void execute() {
+    public void download() {
+        this.app.alert("Download", "Download all files ?", "Yes", new IListener() {
+            @Override
+            public void execute() {
                 // TODO download all
                 Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-			}
-		}, "No", null);
-	}
+            }
+        }, "No", null);
+    }
 
-	public void upload() {
-		this.app.alert("Upload", "Upload all files ?", "Yes", new IListener() {
+    public void upload() {
+        this.app.alert("Upload", "Upload all files ?", "Yes", new IListener() {
             @Override
             public void execute() {
                 // TODO Upload all
                 Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
             }
         }, "No", null);
-	}
+    }
 
     public void goHome() {
-        if(listFragment.length>2)
-            if(listFragment[2]!=null)
-                if(listFragment[2] instanceof FileLocalFragment) {
+        if (listFragment.length > 2)
+            if (listFragment[2] != null)
+                if (listFragment[2] instanceof FileLocalFragment) {
                     FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) listFragment[2];
                     fragmentFileManagerFragment.goHome();
                 }
     }
 
-	public void sort() {
-		final AlertDialog.Builder menuAlert = new AlertDialog.Builder(app);
-		String[] menuList = { "Sort by name (A-Z)", "Sort by size", "Sort by date", app.getConfig().getUserFileModeView()== Const.MODE_LIST ? "Grid View" : "List View" };
+    public void sort() {
+        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(app);
+        String[] menuList = {"Sort by name (A-Z)", "Sort by size", "Sort by date", app.getConfig().getUserFileModeView() == Const.MODE_LIST ? "Grid View" : "List View"};
         menuAlert.setTitle(getString(R.string.view));
         menuAlert.setItems(menuList,
                 new DialogInterface.OnClickListener() {
@@ -449,21 +463,21 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                                 break;
                             default:
                                 Toast.makeText(app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-                            break;
+                                break;
                         }
                     }
-        });
-		AlertDialog menuDrop = menuAlert.create();
-		menuDrop.show();
-	}
+                });
+        AlertDialog menuDrop = menuAlert.create();
+        menuDrop.show();
+    }
 
     private void updateNoInternet() {
-        if(!isInternetConnection(app)) {
+        if (!isInternetConnection(app)) {
             this.snackbar = Snackbar.make(this.coordinatorLayoutView, getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE)
                     .setAction(getString(R.string.refresh), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(isInternetConnection(app))
+                            if (isInternetConnection(app))
                                 listFragment[getCurrentFragmentIndex()].onFocus();
                             else
                                 updateNoInternet();
@@ -510,23 +524,23 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_search)	.setVisible(true);
-        menu.findItem(R.id.action_delete)	.setVisible(false);
-        menu.findItem(R.id.action_add)		.setVisible(false);
-        menu.findItem(R.id.action_download)	.setVisible(false);
-        menu.findItem(R.id.action_upload)	.setVisible(false);
-        menu.findItem(R.id.action_home) 	.setVisible(false);
-        menu.findItem(R.id.action_sort)	    .setVisible(true);
+        menu.findItem(R.id.action_search).setVisible(true);
+        menu.findItem(R.id.action_delete).setVisible(false);
+        menu.findItem(R.id.action_add).setVisible(false);
+        menu.findItem(R.id.action_download).setVisible(false);
+        menu.findItem(R.id.action_upload).setVisible(false);
+        menu.findItem(R.id.action_home).setVisible(false);
+        menu.findItem(R.id.action_sort).setVisible(true);
 
-        switch(getCurrentFragmentIndex()) {
+        switch (getCurrentFragmentIndex()) {
             case 0:
-                menu.findItem(R.id.action_download)	.setVisible(true);
+                menu.findItem(R.id.action_download).setVisible(true);
                 break;
             case 1:
-                menu.findItem(R.id.action_download)	.setVisible(true);
+                menu.findItem(R.id.action_download).setVisible(true);
                 break;
             case 2:
-                menu.findItem(R.id.action_home)	.setVisible(true);
+                menu.findItem(R.id.action_home).setVisible(true);
                 break;
         }
     }
@@ -547,7 +561,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                 goHome();
                 return true;
             case R.id.action_sort:
-                    sort();
+                sort();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -558,8 +572,8 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         mSwipeEnabled = enabled;
         for (FabFragment fr : listFragment) {
             if (fr != null) {
-                if (fr instanceof EnableSwipeToRefreshCallback) {
-                    EnableSwipeToRefreshCallback fragmentFileManagerFragment = (EnableSwipeToRefreshCallback) fr;
+                if (fr instanceof IEnableSwipeToRefreshCallback) {
+                    IEnableSwipeToRefreshCallback fragmentFileManagerFragment = (IEnableSwipeToRefreshCallback) fr;
                     fragmentFileManagerFragment.setSwipeEnabled(enabled);
                 }
             }

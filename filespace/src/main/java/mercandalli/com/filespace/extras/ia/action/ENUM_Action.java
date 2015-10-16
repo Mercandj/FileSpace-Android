@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -32,91 +32,91 @@ import android.provider.Settings;
 
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
-public enum ENUM_Action {	
-	
-	BATTERIE(new Action() {
-			@Override
-			public String action(ApplicationActivity app, String input) {
-				IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-				Intent batteryStatus = app.registerReceiver(null, ifilter);
-				int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-				int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-	
-				float batteryPct = level / (float)scale;
-				batteryPct*=100.0;
-				
-				return "Tu as "+batteryPct+"% de batterie.";
-			}
-		}
-	),
-	WIFI(new Action() {
-			@Override
-			public String action(ApplicationActivity app, String input) {
-				WifiManager wifiManager = (WifiManager) app.getSystemService(Context.WIFI_SERVICE);
-				if(wifiManager.getWifiState()==WifiManager.WIFI_STATE_ENABLED)
-					return "Le wifi est activ�.";
-				else
-					return "Le wifi n'est pas activ�.";
-			}
-		}
-	),
-	WIFI_ON(new Action() {
-			@Override
-			public String action(ApplicationActivity app, String input) {
-				WifiManager wifiManager = (WifiManager) app.getSystemService(Context.WIFI_SERVICE);
-				wifiManager.setWifiEnabled(true);
-				return "Le wifi est activ�.";
-			}
-		}
-	),
-	WIFI_OFF(new Action() {
-			@Override
-			public String action(ApplicationActivity app, String input) {
-				WifiManager wifiManager = (WifiManager) app.getSystemService(Context.WIFI_SERVICE);
-				wifiManager.setWifiEnabled(false);
-				return "Le wifi est �teint.";
-			}
-		}
-	),
-	MODE_AVION(new Action() {
-			@Override
-			public String action(ApplicationActivity app, String input) {
-				if(Settings.System.getInt(app.getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1)
-					return "Tu es en mode avion.";
-				else
-					return "Le mode avion n'est pas activ�.";
-			}
-		}
-	),
-	LOCALISATION(new Action() {
-			@Override
-			public String action(ApplicationActivity app, String input) {
-				LocationManager myLocationManager;
-				String PROVIDER = LocationManager.NETWORK_PROVIDER;				
-				myLocationManager = (LocationManager) app.getSystemService(Context.LOCATION_SERVICE);
-				   
-				//get last known location, if available
-				Location location = myLocationManager.getLastKnownLocation(PROVIDER);
-				
-				if(location!=null)
-					return "Votre longitude est : "+location.getLongitude()+".\nVotre latitude est : "+location.getLatitude()+".";
-				else		
-					return "Pas de localisation.";
-			}
-		}
-	),	
-	VERSION_DROID(new Action() {
-			@Override
-			public String action(ApplicationActivity app, String input) {
-                try {
-                    return app.getPackageManager().getPackageInfo(app.getPackageName(), 0).versionName;
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-                return "";
-			}
-		}
-	),
+public enum ENUM_Action {
+
+    BATTERIE(new Action() {
+        @Override
+        public String action(ApplicationActivity app, String input) {
+            IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+            Intent batteryStatus = app.registerReceiver(null, ifilter);
+            int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+            int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+            float batteryPct = level / (float) scale;
+            batteryPct *= 100.0;
+
+            return "Tu as " + batteryPct + "% de batterie.";
+        }
+    }
+    ),
+    WIFI(new Action() {
+        @Override
+        public String action(ApplicationActivity app, String input) {
+            WifiManager wifiManager = (WifiManager) app.getSystemService(Context.WIFI_SERVICE);
+            if (wifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED)
+                return "Le wifi est activ�.";
+            else
+                return "Le wifi n'est pas activ�.";
+        }
+    }
+    ),
+    WIFI_ON(new Action() {
+        @Override
+        public String action(ApplicationActivity app, String input) {
+            WifiManager wifiManager = (WifiManager) app.getSystemService(Context.WIFI_SERVICE);
+            wifiManager.setWifiEnabled(true);
+            return "Le wifi est activ�.";
+        }
+    }
+    ),
+    WIFI_OFF(new Action() {
+        @Override
+        public String action(ApplicationActivity app, String input) {
+            WifiManager wifiManager = (WifiManager) app.getSystemService(Context.WIFI_SERVICE);
+            wifiManager.setWifiEnabled(false);
+            return "Le wifi est �teint.";
+        }
+    }
+    ),
+    MODE_AVION(new Action() {
+        @Override
+        public String action(ApplicationActivity app, String input) {
+            if (Settings.System.getInt(app.getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1)
+                return "Tu es en mode avion.";
+            else
+                return "Le mode avion n'est pas activ�.";
+        }
+    }
+    ),
+    LOCALISATION(new Action() {
+        @Override
+        public String action(ApplicationActivity app, String input) {
+            LocationManager myLocationManager;
+            String PROVIDER = LocationManager.NETWORK_PROVIDER;
+            myLocationManager = (LocationManager) app.getSystemService(Context.LOCATION_SERVICE);
+
+            //get last known location, if available
+            Location location = myLocationManager.getLastKnownLocation(PROVIDER);
+
+            if (location != null)
+                return "Votre longitude est : " + location.getLongitude() + ".\nVotre latitude est : " + location.getLatitude() + ".";
+            else
+                return "Pas de localisation.";
+        }
+    }
+    ),
+    VERSION_DROID(new Action() {
+        @Override
+        public String action(ApplicationActivity app, String input) {
+            try {
+                return app.getPackageManager().getPackageInfo(app.getPackageName(), 0).versionName;
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            return "";
+        }
+    }
+    ),
     QUIT(new Action() {
         @Override
         public String action(ApplicationActivity app, String input) {
@@ -127,18 +127,17 @@ public enum ENUM_Action {
     WEB_SEARCH(new Action() {
         @Override
         public String action(ApplicationActivity app, String input) {
-            if(input == null)
+            if (input == null)
                 return null;
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW,   Uri.parse(input));
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(input));
             app.startActivity(browserIntent);
             return null;
         }
-    })
-	;
-	
-	public Action action;
-	
-	private ENUM_Action(Action action) {
-		this.action = action;
-	}
+    });
+
+    public Action action;
+
+    private ENUM_Action(Action action) {
+        this.action = action;
+    }
 }

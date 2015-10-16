@@ -44,7 +44,7 @@ public class Way implements Iterable<Case> {
 
         @Override
         public Case next() {
-            if(revert) {
+            if (revert) {
                 pointer--;
                 return array.get(pointer + 1);
             }

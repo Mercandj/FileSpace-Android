@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -52,12 +52,12 @@ public class ImageUtils {
     public synchronized static void save_image(Context context, int fileId, Bitmap bm) {
         images.put(fileId, bm);
 
-        File file = new File(context.getFilesDir()+"/file_"+fileId);
-        if(file.exists()) return;
+        File file = new File(context.getFilesDir() + "/file_" + fileId);
+        if (file.exists()) return;
 
         FileOutputStream fOut;
         try {
-            fOut = new FileOutputStream(context.getFilesDir()+"/file_"+fileId);
+            fOut = new FileOutputStream(context.getFilesDir() + "/file_" + fileId);
             bm.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
             fOut.flush();
             fOut.close();
@@ -74,21 +74,20 @@ public class ImageUtils {
     }
 
     public static Bitmap load_image(File file) {
-        try
-        {
+        try {
             FileInputStream fis = new FileInputStream(file);
             Bitmap imageBitmap = BitmapFactory.decodeStream(fis);
             return imageBitmap;
+        } catch (Exception ex) {
         }
-        catch(Exception ex) { }
         return null;
     }
 
     public synchronized static Bitmap load_image(Context context, int fileId) {
-        if(images.containsKey(fileId))
+        if (images.containsKey(fileId))
             return images.get(fileId);
-        File file = new File(context.getFilesDir()+"/file_"+fileId);
-        if(file != null) {
+        File file = new File(context.getFilesDir() + "/file_" + fileId);
+        if (file != null) {
             if (file.exists()) {
 
                 int desiredWidth = Const.WIDTH_MAX_ONLINE_PICTURE_BITMAP;
@@ -135,9 +134,9 @@ public class ImageUtils {
     }
 
     public synchronized static boolean is_image(Context context, int fileId) {
-        if(images.containsKey(fileId))
+        if (images.containsKey(fileId))
             return true;
-        File file = new File(context.getFilesDir()+"/file_"+fileId);
+        File file = new File(context.getFilesDir() + "/file_" + fileId);
         return file.exists();
     }
 
@@ -323,7 +322,7 @@ public class ImageUtils {
             stackpointer = radius;
             for (y = 0; y < h; y++) {
                 // Preserve alpha channel: ( 0xff000000 & pix[yi] )
-                pix[yi] = ( 0xff000000 & pix[yi] ) | ( dv[rsum] << 16 ) | ( dv[gsum] << 8 ) | dv[bsum];
+                pix[yi] = (0xff000000 & pix[yi]) | (dv[rsum] << 16) | (dv[gsum] << 8) | dv[bsum];
 
                 rsum -= routsum;
                 gsum -= goutsum;
@@ -385,8 +384,8 @@ public class ImageUtils {
         int pixel;
 
         // scan through all pixels
-        for(int x = 0; x < width; ++x) {
-            for(int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            for (int y = 0; y < height; ++y) {
                 // get pixel color
                 pixel = src.getPixel(x, y);
                 A = Color.alpha(pixel);
@@ -396,16 +395,25 @@ public class ImageUtils {
 
                 // increase/decrease each channel
                 R += value;
-                if(R > 255) { R = 255; }
-                else if(R < 0) { R = 0; }
+                if (R > 255) {
+                    R = 255;
+                } else if (R < 0) {
+                    R = 0;
+                }
 
                 G += value;
-                if(G > 255) { G = 255; }
-                else if(G < 0) { G = 0; }
+                if (G > 255) {
+                    G = 255;
+                } else if (G < 0) {
+                    G = 0;
+                }
 
                 B += value;
-                if(B > 255) { B = 255; }
-                else if(B < 0) { B = 0; }
+                if (B > 255) {
+                    B = 255;
+                } else if (B < 0) {
+                    B = 0;
+                }
 
                 // apply new pixel color to output bitmap
                 bmOut.setPixel(x, y, Color.argb(A, R, G, B));
@@ -439,26 +447,35 @@ public class ImageUtils {
         double contrast = Math.pow((100 + value) / 100, 2);
 
         // scan through all pixels
-        for(int x = 0; x < width; ++x) {
-            for(int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            for (int y = 0; y < height; ++y) {
                 // get pixel color
                 pixel = src.getPixel(x, y);
                 A = Color.alpha(pixel);
                 // apply filter contrast for every channel R, G, B
                 R = Color.red(pixel);
-                R = (int)(((((R / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
-                if(R < 0) { R = 0; }
-                else if(R > 255) { R = 255; }
+                R = (int) (((((R / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
+                if (R < 0) {
+                    R = 0;
+                } else if (R > 255) {
+                    R = 255;
+                }
 
                 G = Color.green(pixel);
-                G = (int)(((((G / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
-                if(G < 0) { G = 0; }
-                else if(G > 255) { G = 255; }
+                G = (int) (((((G / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
+                if (G < 0) {
+                    G = 0;
+                } else if (G > 255) {
+                    G = 255;
+                }
 
                 B = Color.blue(pixel);
-                B = (int)(((((B / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
-                if(B < 0) { B = 0; }
-                else if(B > 255) { B = 255; }
+                B = (int) (((((B / 255.0) - 0.5) * contrast) + 0.5) * 255.0);
+                if (B < 0) {
+                    B = 0;
+                } else if (B > 255) {
+                    B = 255;
+                }
 
                 // set new pixel color to output bitmap
                 bmOut.setPixel(x, y, Color.argb(A, R, G, B));
@@ -470,6 +487,7 @@ public class ImageUtils {
 
     /**
      * Create drawable with ripple
+     *
      * @param normalColor
      * @param pressedColor
      * @return
@@ -477,22 +495,24 @@ public class ImageUtils {
     public static RippleDrawable getPressedColorRippleDrawable(int normalColor, int pressedColor) {
         return new RippleDrawable(getPressedColorSelector(normalColor, pressedColor), getColorDrawableFromColor(normalColor), null);
     }
+
     public static ColorStateList getPressedColorSelector(int normalColor, int pressedColor) {
         return new ColorStateList(
-                new int[][] {
-                    new int[]{android.R.attr.state_pressed},
-                    new int[]{android.R.attr.state_focused},
-                    new int[]{android.R.attr.state_activated},
-                    new int[]{}
+                new int[][]{
+                        new int[]{android.R.attr.state_pressed},
+                        new int[]{android.R.attr.state_focused},
+                        new int[]{android.R.attr.state_activated},
+                        new int[]{}
                 },
-                new int[] {
-                    pressedColor,
-                    pressedColor,
-                    pressedColor,
-                    normalColor
+                new int[]{
+                        pressedColor,
+                        pressedColor,
+                        pressedColor,
+                        normalColor
                 }
         );
     }
+
     public static ColorDrawable getColorDrawableFromColor(int color) {
         return new ColorDrawable(color);
     }
@@ -505,16 +525,19 @@ public class ImageUtils {
         File file;
         IBitmapListener outputListener;
         int width, height;
+
         public LocalBitmapTask(File file, IBitmapListener outputListener, int width, int height) {
             this.file = file;
             this.outputListener = outputListener;
             this.width = width;
             this.height = height;
         }
+
         @Override
         protected Bitmap doInBackground(Void... params) {
             return ImageUtils.load_image_thumbnail(this.file, width, height);
         }
+
         @Override
         protected void onPostExecute(Bitmap response) {
             outputListener.execute(response);

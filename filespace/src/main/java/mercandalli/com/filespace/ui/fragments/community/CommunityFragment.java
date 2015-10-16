@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -62,7 +62,7 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
         app.setTitle(R.string.tab_community);
 
         mToolbar = (Toolbar) rootView.findViewById(R.id.my_toolbar);
-        if (mToolbar!=null) {
+        if (mToolbar != null) {
             //mToolbar.setBackgroundColor(getResources().getColor(R.color.actionbar));
             app.setToolbar(mToolbar);
             //app.setStatusBarColor(R.color.notifications_bar);
@@ -86,10 +86,10 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public int getCurrentFragmentIndex() {
-        if(mViewPager == null)
+        if (mViewPager == null)
             return -1;
         int result = mViewPager.getCurrentItem();
-        if(result >= listBackFragment.length)
+        if (result >= listBackFragment.length)
             return -1;
         return mViewPager.getCurrentItem();
     }
@@ -97,10 +97,10 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     @Override
     public boolean back() {
         int currentFragmentId = getCurrentFragmentIndex();
-        if(listBackFragment == null || currentFragmentId== -1)
+        if (listBackFragment == null || currentFragmentId == -1)
             return false;
         BackFragment backFragment = listBackFragment[currentFragmentId];
-        if(backFragment ==null)
+        if (backFragment == null)
             return false;
         return backFragment.back();
     }
@@ -139,11 +139,19 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
         @Override
         public BackFragment getItem(int i) {
             BackFragment backFragment = null;
-            switch(i) {
-                case 0:		backFragment = UserFragment.newInstance();  	    break;
-                case 1:		backFragment = TalkFragment.newInstance(); 	        break;
-                case 2:		backFragment = UserLocationFragment.newInstance();  break;
-                default:	backFragment = UserFragment.newInstance();		    break;
+            switch (i) {
+                case 0:
+                    backFragment = UserFragment.newInstance();
+                    break;
+                case 1:
+                    backFragment = TalkFragment.newInstance();
+                    break;
+                case 2:
+                    backFragment = UserLocationFragment.newInstance();
+                    break;
+                default:
+                    backFragment = UserFragment.newInstance();
+                    break;
             }
             listBackFragment[i] = backFragment;
             return backFragment;
@@ -157,11 +165,19 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
         @Override
         public CharSequence getPageTitle(int i) {
             String title = "null";
-            switch(i) {
-                case 0:		title = "USERS";	break;
-                case 1:		title = "TALKS";    break;
-                case 2:		title = "LOCATIONS"; break;
-                default:	title = "USERS";	break;
+            switch (i) {
+                case 0:
+                    title = "USERS";
+                    break;
+                case 1:
+                    title = "TALKS";
+                    break;
+                case 2:
+                    title = "LOCATIONS";
+                    break;
+                default:
+                    title = "USERS";
+                    break;
             }
             return title;
         }
@@ -173,41 +189,41 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public void refreshListServer(String search) {
-        if(listBackFragment[0]!=null)
-            if(listBackFragment[0] instanceof UserFragment) {
+        if (listBackFragment[0] != null)
+            if (listBackFragment[0] instanceof UserFragment) {
                 UserFragment fragmentFileManagerFragment = (UserFragment) listBackFragment[0];
                 fragmentFileManagerFragment.refreshList(search);
             }
-        if(listBackFragment[1]!=null)
-            if(listBackFragment[1] instanceof TalkFragment) {
+        if (listBackFragment[1] != null)
+            if (listBackFragment[1] instanceof TalkFragment) {
                 TalkFragment fragmentFileManagerFragment = (TalkFragment) listBackFragment[1];
                 fragmentFileManagerFragment.refreshList(search);
             }
     }
 
     public void updateAdapterListServer() {
-        if(listBackFragment[0]!=null)
-            if(listBackFragment[0] instanceof UserFragment) {
+        if (listBackFragment[0] != null)
+            if (listBackFragment[0] instanceof UserFragment) {
                 UserFragment fragmentFileManagerFragment = (UserFragment) listBackFragment[0];
                 fragmentFileManagerFragment.updateAdapter();
             }
-        if(listBackFragment.length>1)
-            if(listBackFragment[1]!=null)
-                if(listBackFragment[1] instanceof TalkFragment) {
+        if (listBackFragment.length > 1)
+            if (listBackFragment[1] != null)
+                if (listBackFragment[1] instanceof TalkFragment) {
                     TalkFragment fragmentFileManagerFragment = (TalkFragment) listBackFragment[1];
                     fragmentFileManagerFragment.updateAdapter();
                 }
     }
 
     public void refreshAdapterListServer() {
-        if(listBackFragment[0]!=null)
-            if(listBackFragment[0] instanceof UserFragment) {
+        if (listBackFragment[0] != null)
+            if (listBackFragment[0] instanceof UserFragment) {
                 UserFragment fragmentFileManagerFragment = (UserFragment) listBackFragment[0];
                 fragmentFileManagerFragment.refreshList();
             }
-        if(listBackFragment.length>1)
-            if(listBackFragment[1]!=null)
-                if(listBackFragment[1] instanceof TalkFragment) {
+        if (listBackFragment.length > 1)
+            if (listBackFragment[1] != null)
+                if (listBackFragment[1] instanceof TalkFragment) {
                     TalkFragment fragmentFileManagerFragment = (TalkFragment) listBackFragment[1];
                     fragmentFileManagerFragment.refreshList();
                 }

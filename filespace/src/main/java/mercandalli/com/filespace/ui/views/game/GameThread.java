@@ -18,7 +18,10 @@ import java.util.TimerTask;
 public class GameThread extends Thread {
 
     public Grille grille = new Grille(30);
-    public int getValeurCase(int i, int j) {return this.grille.getValeurCase(i, j);}
+
+    public int getValeurCase(int i, int j) {
+        return this.grille.getValeurCase(i, j);
+    }
 
     private int couleur_non_brouillon_ = Color.rgb(10, 83, 180);
     private int couleur_brouillon_ = Color.rgb(10, 180, 70);
@@ -67,9 +70,9 @@ public class GameThread extends Thread {
         Canvas c = null;
         try {
             c = mSurfaceHolder.lockCanvas();
-            if (c!=null){
+            if (c != null) {
                 synchronized (mSurfaceHolder) {
-                    doDraw(c);				// dessine le canvas
+                    doDraw(c);                // dessine le canvas
                 }
             }
         } finally {
@@ -111,36 +114,34 @@ public class GameThread extends Thread {
 
     private void dessineMatrices(Canvas canvas) {
         if (largeurPixel < hauteurPixel) { // Portrait
-            int decalageY = (hauteurPixel-largeurPixel)/2;
+            int decalageY = (hauteurPixel - largeurPixel) / 2;
             dessineMatrice(canvas, largeurPixel / grille.size, 0, decalageY);
-        }
-        else { // Landscape
-            int decalageX = (largeurPixel-hauteurPixel)/2;
+        } else { // Landscape
+            int decalageX = (largeurPixel - hauteurPixel) / 2;
             dessineMatrice(canvas, hauteurPixel / grille.size, decalageX, 0);
         }
     }
 
     private void dessineMatrice(Canvas canvas, int coteCarreau, int decalageX, int decalageY) {
-        int hauteur_txt = coteCarreau/2;
+        int hauteur_txt = coteCarreau / 2;
         paint.setColor(couleur_non_brouillon_);
         paint.setTextSize(hauteur_txt);
         paint.setFakeBoldText(true);
-        for(int i=0;i<grille.size;i++)
-            for(int j=0;j<grille.size;j++)
-                if(-10<getValeurCase(i,j) && getValeurCase(i,j)<10 && getValeurCase(i,j) != 0) {
-                    paint.setColor(getValeurCase(i,j) < 0 ? couleur_brouillon_ : couleur_non_brouillon_);
-                    canvas.drawText(""+getValeurCase(i,j),i*coteCarreau+coteCarreau/2-(int)paint.measureText(""+getValeurCase(i,j))/2+decalageX,j*coteCarreau+coteCarreau/2+hauteur_txt/2+decalageY,paint);
+        for (int i = 0; i < grille.size; i++)
+            for (int j = 0; j < grille.size; j++)
+                if (-10 < getValeurCase(i, j) && getValeurCase(i, j) < 10 && getValeurCase(i, j) != 0) {
+                    paint.setColor(getValeurCase(i, j) < 0 ? couleur_brouillon_ : couleur_non_brouillon_);
+                    canvas.drawText("" + getValeurCase(i, j), i * coteCarreau + coteCarreau / 2 - (int) paint.measureText("" + getValeurCase(i, j)) / 2 + decalageX, j * coteCarreau + coteCarreau / 2 + hauteur_txt / 2 + decalageY, paint);
                 }
     }
 
     private void dessineTableau(Canvas canvas) {
         if (largeurPixel < hauteurPixel) { // Portrait
-            int decalageY = (hauteurPixel-largeurPixel)/2;
-            dessineTableau(canvas, largeurPixel/grille.size, 0, decalageY);
-        }
-        else { // Landscape
-            int decalageX = (largeurPixel-hauteurPixel)/2;
-            dessineTableau(canvas, hauteurPixel/grille.size, decalageX, 0);
+            int decalageY = (hauteurPixel - largeurPixel) / 2;
+            dessineTableau(canvas, largeurPixel / grille.size, 0, decalageY);
+        } else { // Landscape
+            int decalageX = (largeurPixel - hauteurPixel) / 2;
+            dessineTableau(canvas, hauteurPixel / grille.size, decalageX, 0);
         }
     }
 
@@ -149,8 +150,8 @@ public class GameThread extends Thread {
         for (int i = 0; i < grille.size + 1; i++) {
             if ((i) % 3 == 0) paint.setStrokeWidth(4);
             else paint.setStrokeWidth(2);
-            canvas.drawLine(decalageX, i*coteCarreau+decalageY, largeurPixel-decalageX, i*coteCarreau+decalageY, paint);
-            canvas.drawLine(i*coteCarreau+decalageX, decalageY, i*coteCarreau+decalageX, hauteurPixel-decalageY, paint);
+            canvas.drawLine(decalageX, i * coteCarreau + decalageY, largeurPixel - decalageX, i * coteCarreau + decalageY, paint);
+            canvas.drawLine(i * coteCarreau + decalageX, decalageY, i * coteCarreau + decalageX, hauteurPixel - decalageY, paint);
         }
     }
 

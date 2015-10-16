@@ -41,13 +41,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.utils.GpsUtils;
-import mercandalli.com.filespace.utils.HashUtils;
-import mercandalli.com.filespace.ui.activities.MainActivity;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelUser;
 import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.MainActivity;
+import mercandalli.com.filespace.utils.GpsUtils;
+import mercandalli.com.filespace.utils.HashUtils;
 import mercandalli.com.filespace.utils.StringPair;
 import mercandalli.com.filespace.utils.StringUtils;
 

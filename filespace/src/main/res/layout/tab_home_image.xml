@@ -4,9 +4,9 @@
 		MERCANDALLI Jonathan
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:paddingBottom="120dp">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="120dp">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -35,7 +35,7 @@
             android:text="Section"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -85,7 +85,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp" />
+            android:layout_marginBottom="20dp"/>
 
         <Button
             android:layout_width="90dp"
@@ -97,7 +97,7 @@
             android:id="@+id/buttonSend"
             android:layout_marginLeft="20dp"
             android:layout_alignTop="@+id/button"
-            android:layout_toStartOf="@+id/button" />
+            android:layout_toStartOf="@+id/button"/>
 
     </RelativeLayout>
 </RelativeLayout>

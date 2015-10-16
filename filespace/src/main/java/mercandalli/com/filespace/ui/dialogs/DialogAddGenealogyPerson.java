@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -44,7 +44,7 @@ import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
 public class DialogAddGenealogyPerson extends Dialog {
 
-	private ApplicationActivity app;
+    private ApplicationActivity app;
     private EditText et_first_name_1;
     private EditText et_first_name_2;
     private EditText et_first_name_3;
@@ -64,13 +64,13 @@ public class DialogAddGenealogyPerson extends Dialog {
         this(app, listener, app.getString(R.string.genealogy_add_person), null);
     }
 
-	public DialogAddGenealogyPerson(final ApplicationActivity app, final IPostExecuteListener listener, String title, final ModelGenealogyPerson genealogyUser) {
-		super(app);
-		this.app = app;
-		
-		this.setContentView(R.layout.dialog_add_genealogy_person);
-		this.setTitle(title);
-		this.setCancelable(true);
+    public DialogAddGenealogyPerson(final ApplicationActivity app, final IPostExecuteListener listener, String title, final ModelGenealogyPerson genealogyUser) {
+        super(app);
+        this.app = app;
+
+        this.setContentView(R.layout.dialog_add_genealogy_person);
+        this.setTitle(title);
+        this.setCancelable(true);
 
         this.et_first_name_1 = (EditText) this.findViewById(R.id.et_first_name_1);
         this.et_first_name_2 = (EditText) this.findViewById(R.id.et_first_name_2);
@@ -97,11 +97,11 @@ public class DialogAddGenealogyPerson extends Dialog {
             public void onClick(View v) {
 
                 boolean isFormEmpty = StringUtils.isNullOrEmpty(et_last_name.getText().toString()) &&
-                    StringUtils.isNullOrEmpty(et_first_name_1.getText().toString()) &&
-                    StringUtils.isNullOrEmpty(et_first_name_2.getText().toString()) &&
-                    StringUtils.isNullOrEmpty(et_first_name_3.getText().toString());
+                        StringUtils.isNullOrEmpty(et_first_name_1.getText().toString()) &&
+                        StringUtils.isNullOrEmpty(et_first_name_2.getText().toString()) &&
+                        StringUtils.isNullOrEmpty(et_first_name_3.getText().toString());
 
-                if(isInternetConnection(app) && !isFormEmpty) {
+                if (isInternetConnection(app) && !isFormEmpty) {
                     List<StringPair> parameters = new ArrayList<>();
 
                     if (!StringUtils.isNullOrEmpty(et_first_name_1.getText().toString()))
@@ -133,8 +133,7 @@ public class DialogAddGenealogyPerson extends Dialog {
                         (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeGenealogyPut + "/" + genealogyUser.id, listener, parameters)).execute();
 
                     DialogAddGenealogyPerson.this.dismiss();
-                }
-                else if(isFormEmpty)
+                } else if (isFormEmpty)
                     Toast.makeText(app, "No name or first name", Toast.LENGTH_SHORT).show();
                 else
                     Toast.makeText(app, app.getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
@@ -214,32 +213,32 @@ public class DialogAddGenealogyPerson extends Dialog {
     }
 
     public void addPartner(ModelGenealogyPerson genealogyPerson) {
-        if(this.marriages == null)
+        if (this.marriages == null)
             this.marriages = new ArrayList<>();
-        if(genealogyPerson != null) {
+        if (genealogyPerson != null) {
             boolean addPerson = true;
-            for(ModelGenealogyPerson person : this.marriages) {
-                if(person.id == genealogyPerson.id)
+            for (ModelGenealogyPerson person : this.marriages) {
+                if (person.id == genealogyPerson.id)
                     addPerson = false;
             }
-            if(addPerson)
+            if (addPerson)
                 this.marriages.add(genealogyPerson);
         }
         refresh();
     }
 
     private void refresh() {
-        if(this.mother != null)
-            this.bt_mother.setText(""+this.mother.first_name_1);
-        if(this.father != null)
-            this.bt_father.setText(""+this.father.first_name_1);
+        if (this.mother != null)
+            this.bt_mother.setText("" + this.mother.first_name_1);
+        if (this.father != null)
+            this.bt_father.setText("" + this.father.first_name_1);
         this.tv_marriage.setText(null);
-        if(this.marriages != null) {
-            if(this.marriages.size() != 0) {
+        if (this.marriages != null) {
+            if (this.marriages.size() != 0) {
                 String tv_marriage_str = "Partner" + (this.marriages.size() > 1 ? "s: " : ": ");
                 int marriages_size = this.marriages.size();
-                for (int i=0; i<marriages_size; i++) {
-                    tv_marriage_str += this.marriages.get(i).first_name_1 + (i<marriages_size-1?", ":"");
+                for (int i = 0; i < marriages_size; i++) {
+                    tv_marriage_str += this.marriages.get(i).first_name_1 + (i < marriages_size - 1 ? ", " : "");
                 }
                 this.tv_marriage.setText(tv_marriage_str);
             }

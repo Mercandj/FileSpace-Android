@@ -2,20 +2,20 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:state_pressed="true">
-        <objectAnimator 
+        <objectAnimator
             android:duration="300"
             android:propertyName="translationZ"
             android:valueFrom="0.0dp"
             android:valueTo="5dp"
-            android:valueType="floatType" />
+            android:valueType="floatType"/>
     </item>
     <item>
-        <objectAnimator        
-        	android:duration="300"
-        	android:propertyName="translationZ"
-        	android:valueFrom="5dp"
-        	android:valueTo="0.0dp"
-        	android:valueType="floatType" />
+        <objectAnimator
+            android:duration="300"
+            android:propertyName="translationZ"
+            android:valueFrom="5dp"
+            android:valueTo="0.0dp"
+            android:valueType="floatType"/>
     </item>
 
 </selector>

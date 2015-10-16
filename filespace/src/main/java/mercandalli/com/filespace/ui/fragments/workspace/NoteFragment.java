@@ -49,7 +49,7 @@ public class NoteFragment extends BackFragment {
         FontUtils.applyFont(app, this.input, "fonts/Roboto-Light.ttf");
 
         String txt = app.getConfig().getUserNoteWorkspace1();
-        if(!StringUtils.isNullOrEmpty(txt))
+        if (!StringUtils.isNullOrEmpty(txt))
             try {
                 String txt_tmp = new String(txt.getBytes("ISO-8859-1"), "UTF-8");
                 this.input.setText(txt_tmp);

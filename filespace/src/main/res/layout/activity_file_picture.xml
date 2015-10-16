@@ -4,9 +4,9 @@
 		MERCANDALLI Jonathan
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
     >
 
     <ImageView
@@ -17,7 +17,7 @@
         android:src="@drawable/ic_launcher"
         android:scaleType="centerCrop"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"/>
 
     <android.support.v7.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -29,7 +29,7 @@
         app:titleTextAppearance="@style/ToolbarTitle"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        android:layout_marginTop="@dimen/notification_bar_height" />
+        android:layout_marginTop="@dimen/notification_bar_height"/>
 
     <TextView
         android:id="@+id/title"
@@ -51,7 +51,7 @@
         android:layout_alignParentEnd="true"
         android:textAlignment="center"
         android:gravity="center_vertical"
-        android:background="@color/actionbar" />
+        android:background="@color/actionbar"/>
 
     <ImageButton
         android:id="@+id/circle"
@@ -80,7 +80,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/title"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="-7dp" />
+        android:layout_marginTop="-7dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -91,5 +91,5 @@
         android:layout_below="@+id/progressBar"
         android:layout_marginRight="10dp"
         android:layout_marginTop="2dp"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"/>
 </RelativeLayout>

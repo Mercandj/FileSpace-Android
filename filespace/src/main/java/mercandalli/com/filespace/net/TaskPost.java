@@ -52,7 +52,6 @@ import mercandalli.com.filespace.utils.StringPair;
  * Global behavior : http Post
  *
  * @author Jonathan
- *
  */
 public class TaskPost extends AsyncTask<Void, Void, String> {
 

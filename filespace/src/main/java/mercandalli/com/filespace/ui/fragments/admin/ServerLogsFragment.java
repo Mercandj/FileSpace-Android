@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -58,9 +58,9 @@ import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
 public class ServerLogsFragment extends BackFragment {
 
-	private View rootView;
+    private View rootView;
 
-	private RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     private AdapterModelUserConnection mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     List<ModelUserConnection> list;
@@ -81,41 +81,41 @@ public class ServerLogsFragment extends BackFragment {
         app = (ApplicationDrawerActivity) activity;
     }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		rootView = inflater.inflate(R.layout.fragment_admin_data, container, false);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_admin_data, container, false);
         circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         this.message = (TextView) rootView.findViewById(R.id.message);
-		
-		recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
-		recyclerView.setHasFixedSize(true);
+
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
+        recyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
 
         ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.GONE);
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
-		swipeRefreshLayout.setColorSchemeResources(
-				android.R.color.holo_blue_bright,
-				android.R.color.holo_green_light,
-				android.R.color.holo_orange_light,
-				android.R.color.holo_red_light);
+        swipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
-		swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				refreshList();
-			}
-		});
+        swipeRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshList();
+            }
+        });
 
         refreshList();
-        
-        return rootView;
-	}
-	
 
-	public void refreshList() {
-		if(isInternetConnection(app))
+        return rootView;
+    }
+
+
+    public void refreshList() {
+        if (isInternetConnection(app))
             new TaskGet(
                     app,
                     this.app.getConfig().getUser(),
@@ -128,7 +128,7 @@ public class ServerLogsFragment extends BackFragment {
                             try {
                                 if (json != null) {
                                     if (json.has("result_count_all"))
-                                        list.add(new ModelUserConnection("Server Logs ("+json.getInt("result_count_all")+")", Const.TAB_VIEW_TYPE_SECTION));
+                                        list.add(new ModelUserConnection("Server Logs (" + json.getInt("result_count_all") + ")", Const.TAB_VIEW_TYPE_SECTION));
                                     else
                                         list.add(new ModelUserConnection("Server Logs", Const.TAB_VIEW_TYPE_SECTION));
 
@@ -140,8 +140,7 @@ public class ServerLogsFragment extends BackFragment {
                                         }
                                     }
 
-                                }
-                                else
+                                } else
                                     Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -150,40 +149,40 @@ public class ServerLogsFragment extends BackFragment {
                         }
                     },
                     null
-                ).execute();
+            ).execute();
         else {
             this.circularProgressBar.setVisibility(View.GONE);
-            if(isAdded())
-                this.message.setText(app.isLogged()?getString(R.string.no_internet_connection):getString(R.string.no_logged));
+            if (isAdded())
+                this.message.setText(app.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
         }
-	}
-	
-	int i;
-	
-	public void updateAdapter() {
-		if(this.recyclerView!=null && this.list!=null && this.isAdded()) {
+    }
+
+    int i;
+
+    public void updateAdapter() {
+        if (this.recyclerView != null && this.list != null && this.isAdded()) {
             this.circularProgressBar.setVisibility(View.GONE);
 
             this.mAdapter = new AdapterModelUserConnection(app, list);
             this.recyclerView.setAdapter(mAdapter);
             this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
 
-            if( ((ImageButton) rootView.findViewById(R.id.circle)).getVisibility()==View.GONE ) {
+            if (((ImageButton) rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
                 ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
                 Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
                 ((ImageButton) rootView.findViewById(R.id.circle)).startAnimation(animOpen);
             }
 
-	        ((ImageButton) rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {			
-				@Override
-				public void onClick(View v) {
-					mAdapter.addItem(new ModelUserConnection("Number", ""+i), 0);
-					recyclerView.scrollToPosition(0);
-					i++;
-				}
-			});
+            ((ImageButton) rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAdapter.addItem(new ModelUserConnection("Number", "" + i), 0);
+                    recyclerView.scrollToPosition(0);
+                    i++;
+                }
+            });
 
             this.mAdapter.setOnItemClickListener(new AdapterModelUserConnection.OnItemClickListener() {
                 @Override
@@ -193,9 +192,9 @@ public class ServerLogsFragment extends BackFragment {
             });
 
             this.swipeRefreshLayout.setRefreshing(false);
-	        i=0;
-		}
-	}
+            i = 0;
+        }
+    }
 
     @Override
     public boolean back() {

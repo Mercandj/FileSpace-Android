@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -39,16 +39,16 @@ import mercandalli.com.filespace.utils.StringUtils;
 
 public class DialogAuthorLabel extends Dialog {
 
-	ApplicationActivity app;
+    ApplicationActivity app;
     ShimmerTextView myShimmerTextView, version_tv;
 
-	public DialogAuthorLabel(final ApplicationActivity app) {
-		super(app, android.R.style.Theme_Material_Dialog);
-		this.app = app;
-		
-		this.setContentView(R.layout.dialog_author_label);
-		this.setTitle(R.string.app_name);
-		this.setCancelable(true);
+    public DialogAuthorLabel(final ApplicationActivity app) {
+        super(app, android.R.style.Theme_Material_Dialog);
+        this.app = app;
+
+        this.setContentView(R.layout.dialog_author_label);
+        this.setTitle(R.string.app_name);
+        this.setCancelable(true);
 
         version_tv = (ShimmerTextView) this.findViewById(R.id.version_tv);
         countDown(version_tv, 5);
@@ -64,9 +64,9 @@ public class DialogAuthorLabel extends Dialog {
                 dismiss();
             }
         });
-        
+
         DialogAuthorLabel.this.show();
-	}
+    }
 
     private void countDown(final ShimmerTextView tv, final int count) {
         if (count == 0) {
@@ -84,7 +84,7 @@ public class DialogAuthorLabel extends Dialog {
 
             public void onAnimationEnd(Animation anim) {
                 countDown(tv, count - 1);
-                if(count == 1) {
+                if (count == 1) {
                     try {
                         FontUtils.applyFont(app, tv, "fonts/Roboto-Light.ttf");
                         getShimmer(tv).start(tv);
@@ -111,7 +111,7 @@ public class DialogAuthorLabel extends Dialog {
             tv.setText(text); //Note: the TextView will be visible again here.
             return;
         }
-        tv.setText(""+ StringUtils.substring(text, rec));
+        tv.setText("" + StringUtils.substring(text, rec));
         AlphaAnimation animation = new AlphaAnimation(1.0f, 1.0f);
         animation.setDuration(75);
         animation.setAnimationListener(new Animation.AnimationListener() {
@@ -121,7 +121,7 @@ public class DialogAuthorLabel extends Dialog {
             }
 
             public void onAnimationEnd(Animation anim) {
-                if(rec<text.length()+1)
+                if (rec < text.length() + 1)
                     version(tv, text, rec + 1);
             }
 

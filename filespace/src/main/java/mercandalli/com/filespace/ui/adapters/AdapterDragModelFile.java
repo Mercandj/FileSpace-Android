@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -57,7 +57,7 @@ public class AdapterDragModelFile extends BaseAdapter implements Swappable {
         LayoutInflater inflater = app.getLayoutInflater();
         convertView = inflater.inflate(R.layout.tab_file_drag, parent, false);
 
-        if(position<files.size()) {
+        if (position < files.size()) {
             final ModelFile file = files.get(position);
 
             ((TextView) convertView.findViewById(R.id.title)).setText(file.getAdapterTitle());
@@ -65,7 +65,7 @@ public class AdapterDragModelFile extends BaseAdapter implements Swappable {
 
             if (file.directory)
                 ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.directory);
-            else if(file.type!=null) {
+            else if (file.type != null) {
                 if (file.type.equals(ModelFileTypeENUM.AUDIO.type))
                     ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.file_audio);
                 else if (file.type.equals(ModelFileTypeENUM.PDF.type))
@@ -78,14 +78,13 @@ public class AdapterDragModelFile extends BaseAdapter implements Swappable {
                     ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.file_jarvis);
                 else
                     ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.file_default);
-            }
-            else
+            } else
                 ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.file_default);
 
-            if(file.bitmap!=null)
+            if (file.bitmap != null)
                 ((ImageView) convertView.findViewById(R.id.icon)).setImageBitmap(file.bitmap);
 
-            if(moreListener == null)
+            if (moreListener == null)
                 convertView.findViewById(R.id.more).setVisibility(View.GONE);
             convertView.findViewById(R.id.more).setOnClickListener(new OnClickListener() {
                 @Override
@@ -98,7 +97,7 @@ public class AdapterDragModelFile extends BaseAdapter implements Swappable {
             convertView.findViewById(R.id.item).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(mItemClickListener!=null)
+                    if (mItemClickListener != null)
                         mItemClickListener.onItemClick(v, position);
                 }
             });
@@ -111,8 +110,6 @@ public class AdapterDragModelFile extends BaseAdapter implements Swappable {
         files.addAll(0, list);
         notifyDataSetChanged();
     }
-
-
 
 
     @Override
@@ -132,7 +129,7 @@ public class AdapterDragModelFile extends BaseAdapter implements Swappable {
 
     @Override
     public int getItemViewType(int position) {
-        if(position<files.size())
+        if (position < files.size())
             return files.get(position).viewType;
         return 0;
     }
@@ -146,7 +143,7 @@ public class AdapterDragModelFile extends BaseAdapter implements Swappable {
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(View view , int position);
+        public void onItemClick(View view, int position);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -154,7 +151,7 @@ public class AdapterDragModelFile extends BaseAdapter implements Swappable {
     }
 
     public interface OnItemLongClickListener {
-        public boolean onItemLongClick(View view , int position);
+        public boolean onItemLongClick(View view, int position);
     }
 
     public void setOnItemLongClickListener(final OnItemLongClickListener mItemLongClickListener) {

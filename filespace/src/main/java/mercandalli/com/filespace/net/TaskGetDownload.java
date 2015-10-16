@@ -42,7 +42,6 @@ import mercandalli.com.filespace.utils.FileUtils;
  * Global behavior : DDL file
  *
  * @author Jonathan
- *
  */
 public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
 

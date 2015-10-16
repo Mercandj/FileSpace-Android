@@ -46,7 +46,7 @@ public class GameFragment extends BackFragment {
             public void onClick(View v) {
 
                 Way way = gameView.thread.grille.findWay();
-                for(int i=way.array.size()-1; i>=0; i--)
+                for (int i = way.array.size() - 1; i >= 0; i--)
                     gameView.thread.grille.setValeurCase(way.array.get(i).x, way.array.get(i).y, 8);
             }
         });

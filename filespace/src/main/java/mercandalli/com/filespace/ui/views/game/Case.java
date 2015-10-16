@@ -27,11 +27,11 @@ public class Case {
 
     @Override
     public boolean equals(Object o) {
-        if(o==null)
+        if (o == null)
             return false;
-        if(!(o instanceof Case))
+        if (!(o instanceof Case))
             return false;
-        Case obj = (Case)o;
+        Case obj = (Case) o;
         return obj.x == this.x && obj.y == this.y && obj.value == this.value;
     }
 }

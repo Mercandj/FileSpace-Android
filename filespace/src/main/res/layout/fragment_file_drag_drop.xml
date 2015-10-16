@@ -5,10 +5,10 @@
 
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="top"
-    android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="top"
+                android:orientation="vertical">
 
     <com.nhaarman.listviewanimations.itemmanipulation.DynamicListView
         android:id="@+id/listView"
@@ -17,7 +17,7 @@
         android:layout_alignParentTop="true"
         android:clickable="true"
         android:focusable="true"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayoutGrid"
@@ -29,6 +29,7 @@
         android:layout_marginRight="8px"
         android:layout_marginBottom="10px"
         android:visibility="gone">
+
         <GridView
             android:id="@+id/gridView"
             android:layout_width="match_parent"
@@ -52,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"/>
 
     <TextView
         android:id="@+id/message"
@@ -60,6 +61,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 </RelativeLayout>

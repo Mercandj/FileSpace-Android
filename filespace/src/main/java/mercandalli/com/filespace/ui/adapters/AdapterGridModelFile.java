@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -39,9 +39,9 @@ import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class AdapterGridModelFile extends BaseAdapter {
 
-	private ApplicationActivity app;
-	public List<ModelFile> files;
-	private IModelFileListener moreListener;
+    private ApplicationActivity app;
+    public List<ModelFile> files;
+    private IModelFileListener moreListener;
 
     public AdapterGridModelFile(ApplicationActivity app, List<ModelFile> files) {
         this.app = app;
@@ -74,15 +74,15 @@ public class AdapterGridModelFile extends BaseAdapter {
         ImageView icon = (ImageView) itemLayoutView.findViewById(R.id.icon);
         ImageView more = (ImageView) itemLayoutView.findViewById(R.id.more);
 
-        if(position<files.size()) {
+        if (position < files.size()) {
             final ModelFile file = files.get(position);
 
             title.setText(file.getAdapterTitle());
             subtitle.setText(file.getAdapterSubtitle());
 
-            if(file.directory)
+            if (file.directory)
                 icon.setImageResource(R.drawable.directory);
-            else if(file.type!=null) {
+            else if (file.type != null) {
                 if (file.type.equals(ModelFileTypeENUM.AUDIO.type))
                     icon.setImageResource(R.drawable.file_audio);
                 else if (file.type.equals(ModelFileTypeENUM.PDF.type))
@@ -95,11 +95,10 @@ public class AdapterGridModelFile extends BaseAdapter {
                     icon.setImageResource(R.drawable.file_jarvis);
                 else
                     icon.setImageResource(R.drawable.file_default);
-            }
-            else
+            } else
                 icon.setImageResource(R.drawable.file_default);
 
-            if(file.bitmap!=null)
+            if (file.bitmap != null)
                 icon.setImageBitmap(file.bitmap);
 
             more.setOnClickListener(new OnClickListener() {
@@ -110,7 +109,7 @@ public class AdapterGridModelFile extends BaseAdapter {
                 }
             });
 
-            if(file.selected) {
+            if (file.selected) {
                 item.setBackgroundColor(ContextCompat.getColor(app, R.color.tab_selected));
             } else {
                 item.setBackground(null);

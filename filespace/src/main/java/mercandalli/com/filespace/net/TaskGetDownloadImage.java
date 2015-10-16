@@ -44,7 +44,6 @@ import static mercandalli.com.filespace.utils.ImageUtils.save_image;
  * Global behavior : DDL Image
  *
  * @author Jonathan
- *
  */
 public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
 
@@ -169,8 +168,8 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
 
     /**
      * DDL image
-     * @author Jonathan
      *
+     * @author Jonathan
      */
     public class FlushedInputStream extends FilterInputStream {
 

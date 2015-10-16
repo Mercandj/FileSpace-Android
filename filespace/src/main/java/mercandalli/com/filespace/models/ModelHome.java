@@ -25,9 +25,9 @@ import android.view.View;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listeners.IModelHomeListener;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class ModelHome extends Model {
 

@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -32,23 +32,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.listeners.IModelUserListener;
 import mercandalli.com.filespace.models.ModelConversationUser;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class AdapterModelConnversationUser extends RecyclerView.Adapter<AdapterModelConnversationUser.ViewHolder> {
 
-	private ApplicationActivity app;
-	private List<ModelConversationUser> users;
+    private ApplicationActivity app;
+    private List<ModelConversationUser> users;
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
-	private IModelUserListener moreListener;
+    private IModelUserListener moreListener;
 
-	public AdapterModelConnversationUser(ApplicationActivity app, List<ModelConversationUser> users, IModelUserListener moreListener) {
-		this.app = app;
-		this.users = users;
-		this.moreListener = moreListener;
-	}
+    public AdapterModelConnversationUser(ApplicationActivity app, List<ModelConversationUser> users, IModelUserListener moreListener) {
+        this.app = app;
+        this.users = users;
+        this.moreListener = moreListener;
+    }
 
     @Override
     public AdapterModelConnversationUser.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -57,7 +57,7 @@ public class AdapterModelConnversationUser extends RecyclerView.Adapter<AdapterM
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
-        if(position<users.size()) {
+        if (position < users.size()) {
             final ModelConversationUser user = users.get(position);
 
             viewHolder.title.setText(user.getAdapterTitle());
@@ -123,7 +123,7 @@ public class AdapterModelConnversationUser extends RecyclerView.Adapter<AdapterM
 
     public void removeAll() {
         int size = users.size();
-        if(size>0) {
+        if (size > 0) {
             users = new ArrayList<>();
             this.notifyItemRangeInserted(0, size - 1);
         }
@@ -131,7 +131,7 @@ public class AdapterModelConnversationUser extends RecyclerView.Adapter<AdapterM
 
     @Override
     public int getItemViewType(int position) {
-        if(position<users.size())
+        if (position < users.size())
             return users.get(position).viewType;
         return 0;
     }

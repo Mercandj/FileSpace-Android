@@ -21,8 +21,8 @@ package mercandalli.com.filespace.models;
 
 import org.json.JSONObject;
 
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public abstract class Model {
 

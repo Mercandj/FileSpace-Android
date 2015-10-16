@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -83,10 +83,10 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public int getCurrentFragmentIndex() {
-        if(mViewPager == null)
+        if (mViewPager == null)
             return -1;
         int result = mViewPager.getCurrentItem();
-        if(result >= LIST_BACK_FRAGMENT.length)
+        if (result >= LIST_BACK_FRAGMENT.length)
             return -1;
         return mViewPager.getCurrentItem();
     }
@@ -94,10 +94,10 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     @Override
     public boolean back() {
         int currentFragmentId = getCurrentFragmentIndex();
-        if(LIST_BACK_FRAGMENT == null || currentFragmentId== -1)
+        if (LIST_BACK_FRAGMENT == null || currentFragmentId == -1)
             return false;
         BackFragment backFragment = LIST_BACK_FRAGMENT[currentFragmentId];
-        if(backFragment ==null)
+        if (backFragment == null)
             return false;
         return backFragment.back();
     }
@@ -136,10 +136,16 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
         @Override
         public BackFragment getItem(int i) {
             BackFragment backFragment = null;
-            switch(i) {
-                case 0:		backFragment = new NoteFragment();      break;
-                case 1:		backFragment = new CryptFragment(); 	break;
-                default:	backFragment = new CryptFragment();		break;
+            switch (i) {
+                case 0:
+                    backFragment = new NoteFragment();
+                    break;
+                case 1:
+                    backFragment = new CryptFragment();
+                    break;
+                default:
+                    backFragment = new CryptFragment();
+                    break;
             }
             LIST_BACK_FRAGMENT[i] = backFragment;
             return backFragment;
@@ -153,10 +159,16 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
         @Override
         public CharSequence getPageTitle(int i) {
             String title = "null";
-            switch(i) {
-                case 0:		title = "NOTE";     break;
-                case 1:		title = "CRYPT";    break;
-                default:	title = "CRYPT";	break;
+            switch (i) {
+                case 0:
+                    title = "NOTE";
+                    break;
+                case 1:
+                    title = "CRYPT";
+                    break;
+                default:
+                    title = "CRYPT";
+                    break;
             }
             return title;
         }
@@ -193,13 +205,13 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_search)	.setVisible(false);
-        menu.findItem(R.id.action_delete)	.setVisible(true);
-        menu.findItem(R.id.action_add)		.setVisible(false);
-        menu.findItem(R.id.action_download)	.setVisible(false);
-        menu.findItem(R.id.action_upload)	.setVisible(false);
-        menu.findItem(R.id.action_home) 	.setVisible(false);
-        menu.findItem(R.id.action_sort)	    .setVisible(false);
+        menu.findItem(R.id.action_search).setVisible(false);
+        menu.findItem(R.id.action_delete).setVisible(true);
+        menu.findItem(R.id.action_add).setVisible(false);
+        menu.findItem(R.id.action_download).setVisible(false);
+        menu.findItem(R.id.action_upload).setVisible(false);
+        menu.findItem(R.id.action_home).setVisible(false);
+        menu.findItem(R.id.action_sort).setVisible(false);
     }
 
     @Override
@@ -208,8 +220,12 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
             case R.id.action_delete:
                 final int currentIndex = getCurrentFragmentIndex();
                 switch (currentIndex) {
-                    case 0:     ((NoteFragment) WorkspaceFragment.LIST_BACK_FRAGMENT[currentIndex]).delete();     break;
-                    case 1:     ((CryptFragment) WorkspaceFragment.LIST_BACK_FRAGMENT[currentIndex]).delete();    break;
+                    case 0:
+                        ((NoteFragment) WorkspaceFragment.LIST_BACK_FRAGMENT[currentIndex]).delete();
+                        break;
+                    case 1:
+                        ((CryptFragment) WorkspaceFragment.LIST_BACK_FRAGMENT[currentIndex]).delete();
+                        break;
                 }
                 return true;
         }

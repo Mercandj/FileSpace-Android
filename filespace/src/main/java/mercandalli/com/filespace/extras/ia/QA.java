@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -46,14 +46,14 @@ public class QA {
         this.q = new ArrayList<>();
         this.a = new ArrayList<>();
         try {
-            if(this.qa_json.has("q")) {
+            if (this.qa_json.has("q")) {
                 JSONArray q_array = this.qa_json.getJSONArray("q");
-                for(int j=q_array.length()-1; j>=0; j--)
+                for (int j = q_array.length() - 1; j >= 0; j--)
                     q.add(q_array.getString(j));
             }
-            if(this.qa_json.has("a")) {
+            if (this.qa_json.has("a")) {
                 JSONArray a_array = this.qa_json.getJSONArray("a");
-                for(int j=a_array.length()-1; j>=0; j--)
+                for (int j = a_array.length() - 1; j >= 0; j--)
                     a.add(a_array.getString(j));
             }
         } catch (JSONException e) {
@@ -77,19 +77,19 @@ public class QA {
     }
 
     public String getAnswer(String input) {
-        for(String q_str : q)
-            if(q_str.equals(input))
+        for (String q_str : q)
+            if (q_str.equals(input))
                 return a.get(MathUtils.random(0, a.size() - 1));
         return null;
     }
 
     public boolean isValid() {
         boolean result = true;
-        if(this.q == null || this.a == null)
+        if (this.q == null || this.a == null)
             result = false;
-        if(this.q.isEmpty() || this.a.isEmpty())
+        if (this.q.isEmpty() || this.a.isEmpty())
             result = false;
-        if(!result)
+        if (!result)
             Log.e("action.QA", "qa object is not valid.");
         return result;
     }

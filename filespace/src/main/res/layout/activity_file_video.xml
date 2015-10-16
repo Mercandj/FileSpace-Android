@@ -4,57 +4,59 @@
 		MERCANDALLI Jonathan
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-    <include layout="@layout/toolbar" android:id="@+id/my_toolbar" />
+    <include
+        android:id="@+id/my_toolbar"
+        layout="@layout/toolbar"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp"
-        android:layout_below="@+id/my_toolbar">
+        android:layout_below="@+id/my_toolbar"
+        android:padding="10dp">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Title"
             android:id="@+id/title"
-            android:layout_marginBottom="10dp"
-            android:layout_above="@+id/size"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true" />
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Size"
+            android:layout_above="@+id/size"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="10dp"
+            android:text="Title"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+        <TextView
             android:id="@+id/size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_above="@+id/play"
             android:layout_alignParentEnd="true"
             android:layout_alignParentStart="true"
-            android:layout_marginBottom="5dp" />
+            android:layout_marginBottom="5dp"
+            android:text="Size"
+            android:textAppearance="?android:attr/textAppearanceMedium"/>
 
         <SeekBar
+            android:id="@+id/seekBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/seekBar"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
             android:layout_marginTop="10dp"/>
 
         <SurfaceView
+            android:id="@+id/videoView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/videoView"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
+            android:layout_above="@+id/title"
             android:layout_alignParentEnd="true"
-            android:layout_above="@+id/title"/>
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"/>
 
         <!--
         <ImageButton
@@ -78,50 +80,51 @@
             android:layout_above="@+id/seekBar"
             android:layout_centerHorizontal="true">
         </RelativeLayout>
+
         <mercandalli.com.filespace.ui.views.PlayPauseView
             android:id="@+id/play"
-            android:transitionName="transitionIcon"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_above="@+id/seekBar"
-            android:clickable="true"
-            android:foreground="?android:selectableItemBackground"
-            android:elevation="@dimen/circle_button_elevation_high"
-            android:stateListAnimator="@anim/circle_button_elevation"
             android:layout_alignEnd="@+id/play_position"
-            android:layout_alignStart="@+id/play_position"/>
+            android:layout_alignStart="@+id/play_position"
+            android:clickable="true"
+            android:elevation="@dimen/circle_button_elevation_high"
+            android:foreground="?android:selectableItemBackground"
+            android:stateListAnimator="@anim/circle_button_elevation"
+            android:transitionName="transitionIcon"/>
 
         <ImageButton
             android:id="@+id/next"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_alignTop="@+id/play_position"
+            android:layout_marginLeft="32dp"
+            android:layout_marginStart="38dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/play_position"
             android:background="@drawable/circle_button_ripple_music"
             android:elevation="@dimen/circle_button_elevation_high"
             android:padding="15dp"
             android:src="@android:drawable/ic_media_next"
             android:stateListAnimator="@anim/circle_button_elevation"
-            android:tint="@android:color/white"
-            android:layout_marginStart="38dp"
-            android:layout_alignTop="@+id/play_position"
-            android:layout_toEndOf="@+id/play_position"
-            android:layout_marginLeft="32dp"
-            android:layout_marginTop="10dp" />
+            android:tint="@android:color/white"/>
 
         <ImageButton
             android:id="@+id/previous"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_alignTop="@+id/play_position"
+            android:layout_marginRight="32dp"
+            android:layout_marginStart="38dp"
+            android:layout_marginTop="10dp"
+            android:layout_toStartOf="@+id/play_position"
             android:background="@drawable/circle_button_ripple_music"
             android:elevation="@dimen/circle_button_elevation_high"
             android:padding="15dp"
             android:src="@android:drawable/ic_media_previous"
             android:stateListAnimator="@anim/circle_button_elevation"
-            android:tint="@android:color/white"
-            android:layout_marginStart="38dp"
-            android:layout_alignTop="@+id/play_position"
-            android:layout_toStartOf="@+id/play_position"
-            android:layout_marginRight="32dp"
-            android:layout_marginTop="10dp" />
+            android:tint="@android:color/white"/>
 
 
     </RelativeLayout>

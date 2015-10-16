@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -39,30 +39,30 @@ import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModelGenealogyUser.ViewHolder> {
 
-	private ApplicationActivity app;
+    private ApplicationActivity app;
     public List<ModelGenealogyPerson> users;
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
-	private IModelGenealogyUserListener moreListener;
+    private IModelGenealogyUserListener moreListener;
     private boolean isTree;
 
-	public AdapterModelGenealogyUser(ApplicationActivity app, List<ModelGenealogyPerson> users, IModelGenealogyUserListener moreListener, boolean isTree) {
-		this.app = app;
-		this.users = users;
-		this.moreListener = moreListener;
+    public AdapterModelGenealogyUser(ApplicationActivity app, List<ModelGenealogyPerson> users, IModelGenealogyUserListener moreListener, boolean isTree) {
+        this.app = app;
+        this.users = users;
+        this.moreListener = moreListener;
         this.isTree = isTree;
-	}
+    }
 
     @Override
     public AdapterModelGenealogyUser.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(!isTree)
+        if (!isTree)
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file, parent, false), viewType);
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_genealogy_small, parent, false), viewType);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
-        if(position<users.size()) {
+        if (position < users.size()) {
             final ModelGenealogyPerson user = users.get(position);
 
             viewHolder.title.setText(user.getAdapterTitle());
@@ -75,12 +75,12 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
                 }
             });
 
-            if(!user.is_man)
+            if (!user.is_man)
                 viewHolder.icon.setImageResource(R.drawable.file_video);
             else
                 viewHolder.icon.setImageResource(R.drawable.file_default);
 
-            if(user.selected)
+            if (user.selected)
                 viewHolder.item.setBackgroundColor(app.getResources().getColor(R.color.tab_selected));
             else
                 viewHolder.item.setBackground(null);
@@ -147,7 +147,7 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
 
     public void removeAll() {
         int size = users.size();
-        if(size>0) {
+        if (size > 0) {
             users = new ArrayList<>();
             this.notifyItemRangeInserted(0, size - 1);
         }
@@ -155,7 +155,7 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
 
     @Override
     public int getItemViewType(int position) {
-        if(position<users.size())
+        if (position < users.size())
             return users.get(position).viewType;
         return 0;
     }

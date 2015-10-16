@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -60,7 +60,7 @@ import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
 public class UserLocationFragment extends BackFragment {
 
-	private View rootView;
+    private View rootView;
     private MapView mapView;
     private TextView text;
     private ImageButton circle;
@@ -83,8 +83,8 @@ public class UserLocationFragment extends BackFragment {
         app = (ApplicationDrawerActivity) activity;
     }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_admin_add_user_location, container, false);
 
         this.text = (TextView) rootView.findViewById(R.id.text);
@@ -98,7 +98,7 @@ public class UserLocationFragment extends BackFragment {
             mapView.onCreate(savedInstanceState);
             mapView.onResume(); //without this, map showed but was empty
 
-            if(mapView != null) {
+            if (mapView != null) {
                 map = mapView.getMap();
 
                 /*
@@ -114,9 +114,8 @@ public class UserLocationFragment extends BackFragment {
                 */
             }
 
-            addLocation(new ModelUserLocation(app, "Zero Zero", 0,0,0));
+            addLocation(new ModelUserLocation(app, "Zero Zero", 0, 0, 0));
         }
-
 
 
         this.circle.setOnClickListener(new View.OnClickListener() {
@@ -175,11 +174,11 @@ public class UserLocationFragment extends BackFragment {
         refreshMap();
 
         return this.rootView;
-	}
+    }
 
     public void refreshMap() {
         List<StringPair> parameters = null;
-        if(isInternetConnection(app) && app.isLogged())
+        if (isInternetConnection(app) && app.isLogged())
             new TaskGet(
                     app,
                     this.app.getConfig().getUser(),
@@ -197,8 +196,7 @@ public class UserLocationFragment extends BackFragment {
                                             locations.add(modelUser.userLocation);
                                         }
                                     }
-                                }
-                                else
+                                } else
                                     Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -212,17 +210,17 @@ public class UserLocationFragment extends BackFragment {
 
     public void addLocations(List<ModelUserLocation> locations) {
         int nbLocation = 0;
-        for(ModelUserLocation userLocation : locations) {
-            if(addLocation(userLocation))
+        for (ModelUserLocation userLocation : locations) {
+            if (addLocation(userLocation))
                 nbLocation++;
         }
-        text.setText(nbLocation + " user location"+((nbLocation>1)?"s":""));
+        text.setText(nbLocation + " user location" + ((nbLocation > 1) ? "s" : ""));
     }
 
     public boolean addLocation(ModelUserLocation userLocation) {
-        if(map == null || userLocation == null)
+        if (map == null || userLocation == null)
             return false;
-        if(userLocation.latitude == 0 && userLocation.longitude == 0)
+        if (userLocation.latitude == 0 && userLocation.longitude == 0)
             return false;
         // create marker
         MarkerOptions marker = new MarkerOptions().position(new LatLng(userLocation.latitude, userLocation.longitude)).title(userLocation.title);
@@ -235,14 +233,14 @@ public class UserLocationFragment extends BackFragment {
 
     @Override
     public void onPause() {
-        if(mapView != null)
+        if (mapView != null)
             mapView.onPause();
         super.onPause();
     }
 
     @Override
     public void onResume() {
-        if(mapView != null)
+        if (mapView != null)
             mapView.onResume();
         super.onResume();
     }
@@ -250,14 +248,14 @@ public class UserLocationFragment extends BackFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(mapView != null)
+        if (mapView != null)
             mapView.onDestroy();
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        if(mapView != null)
+        if (mapView != null)
             mapView.onLowMemory();
     }
 

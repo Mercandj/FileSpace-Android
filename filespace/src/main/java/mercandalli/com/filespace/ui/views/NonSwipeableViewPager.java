@@ -23,10 +23,10 @@ public class NonSwipeableViewPager extends ViewPager {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         // Never allow swiping to switch between pages, return false
-        if(nonSwipeableItem == null)
+        if (nonSwipeableItem == null)
             return super.onInterceptTouchEvent(event);
-        for(Integer i:nonSwipeableItem) {
-            if(i == getCurrentItem())
+        for (Integer i : nonSwipeableItem) {
+            if (i == getCurrentItem())
                 return false;
         }
         return super.onInterceptTouchEvent(event);
@@ -35,10 +35,10 @@ public class NonSwipeableViewPager extends ViewPager {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         // Never allow swiping to switch between pages, return false
-        if(nonSwipeableItem == null)
+        if (nonSwipeableItem == null)
             return super.onTouchEvent(event);
-        for(Integer i:nonSwipeableItem) {
-            if(i == getCurrentItem())
+        for (Integer i : nonSwipeableItem) {
+            if (i == getCurrentItem())
                 return false;
         }
         return super.onTouchEvent(event);
@@ -49,6 +49,6 @@ public class NonSwipeableViewPager extends ViewPager {
     }
 
     public void setNonSwipeableItem(int nonSwipeableItem) {
-        this.nonSwipeableItem = new int[] {nonSwipeableItem};
+        this.nonSwipeableItem = new int[]{nonSwipeableItem};
     }
 }

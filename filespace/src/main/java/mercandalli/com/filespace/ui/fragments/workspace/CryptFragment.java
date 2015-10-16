@@ -144,7 +144,7 @@ public class CryptFragment extends BackFragment {
 
     private void setCryptKey(int value) {
         this.cryptKey = value;
-        this.tv_cryptKey.setText("Crypt key = "+value);
+        this.tv_cryptKey.setText("Crypt key = " + value);
         output.setText(Crypt.crypte(input.getText().toString(), cryptKey));
     }
 }

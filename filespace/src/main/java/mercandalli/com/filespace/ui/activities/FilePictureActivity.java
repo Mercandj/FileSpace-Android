@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -69,7 +69,7 @@ public class FilePictureActivity extends ApplicationActivity {
         setContentView(R.layout.activity_file_picture);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        if(toolbar!=null) {
+        if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -87,12 +87,11 @@ public class FilePictureActivity extends ApplicationActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
-            Log.e(""+getClass().getName(), "extras == null");
+            Log.e("" + getClass().getName(), "extras == null");
             this.finish();
             this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             return;
-        }
-        else {
+        } else {
             this.id = extras.getInt("ID");
             this.title = extras.getString("TITLE");
             this.url = extras.getString("URL_FILE");
@@ -102,7 +101,7 @@ public class FilePictureActivity extends ApplicationActivity {
             this.sizeFile = extras.getLong("SIZE_FILE");
             this.date_creation = (Date) extras.getSerializable("DATE_FILE");
 
-            if(this.title != null) {
+            if (this.title != null) {
                 title_tv.setText(this.title);
                 FontUtils.applyFont(this, title_tv, "fonts/Roboto-Regular.ttf");
             }
@@ -111,7 +110,7 @@ public class FilePictureActivity extends ApplicationActivity {
                 bitmap = load_image(this, this.id);
                 ((ImageView) this.findViewById(R.id.icon)).setImageBitmap(bitmap);
                 int bgColor = ColorUtils.getMutedColor(bitmap);
-                if (bgColor!=0) {
+                if (bgColor != 0) {
                     title_tv.setBackgroundColor(bgColor);
                     title_tv.setTextColor(ColorUtils.colorText(bgColor));
                     RippleDrawable cir = ImageUtils.getPressedColorRippleDrawable(bgColor, ColorUtils.getDarkMutedColor(bitmap));
@@ -119,8 +118,7 @@ public class FilePictureActivity extends ApplicationActivity {
                 }
                 this.progressBar.setVisibility(View.GONE);
                 this.progress_tv.setVisibility(View.GONE);
-            }
-            else if (this.id != 0) {
+            } else if (this.id != 0) {
                 this.progressBar.setVisibility(View.VISIBLE);
                 this.progress_tv.setVisibility(View.VISIBLE);
                 (new TaskGetDownloadImage(this, login, password, url, id, sizeFile, -1, new IBitmapListener() {
@@ -140,8 +138,8 @@ public class FilePictureActivity extends ApplicationActivity {
                 }, new ILongListener() {
                     @Override
                     public void execute(long text) {
-                        progressBar.setProgress((int)text);
-                        progress_tv.setText(text+"%");
+                        progressBar.setProgress((int) text);
+                        progress_tv.setText(text + "%");
                     }
                 })).execute();
             }
@@ -152,7 +150,7 @@ public class FilePictureActivity extends ApplicationActivity {
             public void onClick(View v) {
                 Intent picIntent = new Intent();
                 picIntent.setAction(Intent.ACTION_VIEW);
-                picIntent.setDataAndType(Uri.parse("file://" + (new File(FilePictureActivity.this.getFilesDir()+"/file_"+id)).getAbsolutePath()), "image/*");
+                picIntent.setDataAndType(Uri.parse("file://" + (new File(FilePictureActivity.this.getFilesDir() + "/file_" + id)).getAbsolutePath()), "image/*");
                 FilePictureActivity.this.startActivity(picIntent);
             }
         });

@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -34,7 +34,7 @@ import mercandalli.com.filespace.utils.PointLong;
 import mercandalli.com.filespace.utils.StringUtils;
 import mercandalli.com.filespace.utils.TimeUtils;
 
-import static mercandalli.com.filespace.models.ModelFileSpace.FileSpaceTypeENUM.*;
+import static mercandalli.com.filespace.models.ModelFileSpace.FileSpaceTypeENUM.create;
 
 /**
  * Created by Jonathan on 22/03/2015.
@@ -56,18 +56,18 @@ public class ModelFileSpace {
     public ModelFileSpace(ApplicationActivity app, JSONObject json) {
         this.app = app;
         try {
-            if(json.has("type") && !json.isNull("type"))
+            if (json.has("type") && !json.isNull("type"))
                 this.type = create(json.getString("type"));
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {
-                if(json.has("date_creation") && !json.isNull("date_creation"))
+                if (json.has("date_creation") && !json.isNull("date_creation"))
                     this.date_creation = dateFormat.parse(json.getString("date_creation"));
-                if(json.has("timer_date") && !json.isNull("timer_date"))
+                if (json.has("timer_date") && !json.isNull("timer_date"))
                     this.timer.timer_date = dateFormat.parse(json.getString("timer_date"));
-                if(json.has("article_title_1") && !json.isNull("article_title_1"))
+                if (json.has("article_title_1") && !json.isNull("article_title_1"))
                     this.article.article_title_1 = json.getString("article_title_1");
-                if(json.has("article_content_1") && !json.isNull("article_content_1"))
+                if (json.has("article_content_1") && !json.isNull("article_content_1"))
                     this.article.article_content_1 = json.getString("article_content_1");
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -80,7 +80,7 @@ public class ModelFileSpace {
     }
 
     public String getAdapterTitle() {
-        if(this.timer.timer_date != null) {
+        if (this.timer.timer_date != null) {
             SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
             SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -90,16 +90,16 @@ public class ModelFileSpace {
                 e.printStackTrace();
             }
         }
-        if(!StringUtils.isNullOrEmpty(this.article.article_content_1))
+        if (!StringUtils.isNullOrEmpty(this.article.article_content_1))
             return this.article.article_title_1;
-        if(this.date_creation != null)
+        if (this.date_creation != null)
             return this.date_creation.toString();
         return "null";
     }
 
     @Override
     public String toString() {
-        if(this.timer.timer_date != null) {
+        if (this.timer.timer_date != null) {
             SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
             SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -109,7 +109,7 @@ public class ModelFileSpace {
                 e.printStackTrace();
             }
         }
-        if(date_creation != null)
+        if (date_creation != null)
             return date_creation.toString();
         return "null";
     }
@@ -154,13 +154,14 @@ public class ModelFileSpace {
         TIMER("timer"),
         ARTICLE("article");
         public String type;
+
         FileSpaceTypeENUM(String type) {
             this.type = type;
         }
 
         public static FileSpaceTypeENUM create(String type_) {
-            for(FileSpaceTypeENUM var: values())
-                if(var.type.equals(type_))
+            for (FileSpaceTypeENUM var : values())
+                if (var.type.equals(type_))
                     return var;
             return null;
         }

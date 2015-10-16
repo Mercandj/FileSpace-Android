@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -92,10 +92,10 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
     }
 
     public int getCurrentFragmentIndex() {
-        if(mViewPager == null)
+        if (mViewPager == null)
             return -1;
         int result = mViewPager.getCurrentItem();
-        if(result >= LIST_BACK_FRAGMENT.length)
+        if (result >= LIST_BACK_FRAGMENT.length)
             return -1;
         return mViewPager.getCurrentItem();
     }
@@ -103,10 +103,10 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
     @Override
     public boolean back() {
         int currentFragmentId = getCurrentFragmentIndex();
-        if(LIST_BACK_FRAGMENT == null || currentFragmentId == -1)
+        if (LIST_BACK_FRAGMENT == null || currentFragmentId == -1)
             return false;
         BackFragment backFragment = LIST_BACK_FRAGMENT[currentFragmentId];
-        if(backFragment == null)
+        if (backFragment == null)
             return false;
         return backFragment.back();
     }
@@ -146,14 +146,28 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
         @Override
         public BackFragment getItem(int i) {
             BackFragment backFragment;
-            switch(i) {
-                case 0:		backFragment = ServerDataFragment.newInstance();  	break;
-                case 1:		backFragment = ServerLogsFragment.newInstance();    break;
-                case 2:		backFragment = UserAddFragment.newInstance(); 	    break;
-                case 5:		backFragment = RequestFragment.newInstance();    	break;
-                case 6:		backFragment = GameFragment.newInstance();    	    break;
-                case 7:		backFragment = StatisticsFragment.newInstance();    break;
-                default:    backFragment = EmptyFragment.newInstance();         break;
+            switch (i) {
+                case 0:
+                    backFragment = ServerDataFragment.newInstance();
+                    break;
+                case 1:
+                    backFragment = ServerLogsFragment.newInstance();
+                    break;
+                case 2:
+                    backFragment = UserAddFragment.newInstance();
+                    break;
+                case 5:
+                    backFragment = RequestFragment.newInstance();
+                    break;
+                case 6:
+                    backFragment = GameFragment.newInstance();
+                    break;
+                case 7:
+                    backFragment = StatisticsFragment.newInstance();
+                    break;
+                default:
+                    backFragment = EmptyFragment.newInstance();
+                    break;
             }
             LIST_BACK_FRAGMENT[i] = backFragment;
             return backFragment;
@@ -167,15 +181,31 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
         @Override
         public CharSequence getPageTitle(int i) {
             String title = "null";
-            switch(i) {
-                case 0:		title = "SERVER DATA";      break;
-                case 1:		title = "SERVER LOGS";	    break;
-                case 2:		title = "USER ADD";         break;
-                case 3:		title = "USER DATA";        break;
-                case 4:		title = "USER LICENCES";    break;
-                case 5:		title = "REQUEST";          break;
-                case 6:		title = "GAME";             break;
-                case 7:		title = "STATS";            break;
+            switch (i) {
+                case 0:
+                    title = "SERVER DATA";
+                    break;
+                case 1:
+                    title = "SERVER LOGS";
+                    break;
+                case 2:
+                    title = "USER ADD";
+                    break;
+                case 3:
+                    title = "USER DATA";
+                    break;
+                case 4:
+                    title = "USER LICENCES";
+                    break;
+                case 5:
+                    title = "REQUEST";
+                    break;
+                case 6:
+                    title = "GAME";
+                    break;
+                case 7:
+                    title = "STATS";
+                    break;
             }
             return title;
         }
@@ -188,16 +218,16 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_search)	.setVisible(false);
-        menu.findItem(R.id.action_delete)	.setVisible(false);
-        menu.findItem(R.id.action_add)		.setVisible(false);
-        menu.findItem(R.id.action_download)	.setVisible(false);
-        menu.findItem(R.id.action_upload)	.setVisible(false);
-        menu.findItem(R.id.action_home) 	.setVisible(false);
-        menu.findItem(R.id.action_sort)	    .setVisible(false);
+        menu.findItem(R.id.action_search).setVisible(false);
+        menu.findItem(R.id.action_delete).setVisible(false);
+        menu.findItem(R.id.action_add).setVisible(false);
+        menu.findItem(R.id.action_download).setVisible(false);
+        menu.findItem(R.id.action_upload).setVisible(false);
+        menu.findItem(R.id.action_home).setVisible(false);
+        menu.findItem(R.id.action_sort).setVisible(false);
 
         if (getCurrentFragmentIndex() == 5) {
-            menu.findItem(R.id.action_delete)	.setVisible(true);
+            menu.findItem(R.id.action_delete).setVisible(true);
         }
     }
 

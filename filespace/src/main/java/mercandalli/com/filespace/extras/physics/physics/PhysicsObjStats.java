@@ -1,6 +1,6 @@
 /**
  * ESIEE OpenSource Project : OpenGL
- *
+ * <p/>
  * MARTEL Andy
  * MERCANDALLI Jonathan
  */
@@ -13,12 +13,12 @@ package mercandalli.com.filespace.extras.physics.physics;
  *
  */
 public class PhysicsObjStats {
-	public 	float 		mass 		= 0;
-	public 	boolean		noContact	= false;
-	public 	int			bounce		= 100;
-	
-	public PhysicsObjStats() {
-		mass = 0;
-	}
-	
+    public float mass = 0;
+    public boolean noContact = false;
+    public int bounce = 100;
+
+    public PhysicsObjStats() {
+        mass = 0;
+    }
+
 }

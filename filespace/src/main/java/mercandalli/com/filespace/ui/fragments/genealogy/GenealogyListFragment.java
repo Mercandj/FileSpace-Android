@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -80,6 +80,7 @@ public class GenealogyListFragment extends FabFragment {
     public static boolean MODE_SELECTION_FATHER = false;
     public static boolean MODE_SELECTION_MOTHER = false;
     public static boolean MODE_SELECTION_PARTNER = false;
+
     public static void resetMode() {
         MODE_SELECTION_FATHER = false;
         MODE_SELECTION_MOTHER = false;
@@ -142,9 +143,9 @@ public class GenealogyListFragment extends FabFragment {
 
     public void refreshList(String search) {
         List<StringPair> parameters = new ArrayList<>();
-        if(!StringUtils.isNullOrEmpty(search))
+        if (!StringUtils.isNullOrEmpty(search))
             parameters.add(new StringPair("search", search));
-        if(isInternetConnection(app) && app.isLogged())
+        if (isInternetConnection(app) && app.isLogged())
             new TaskGet(
                     app,
                     this.app.getConfig().getUser(),
@@ -162,8 +163,7 @@ public class GenealogyListFragment extends FabFragment {
                                             list.add(modelUser);
                                         }
                                     }
-                                }
-                                else
+                                } else
                                     Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -179,7 +179,7 @@ public class GenealogyListFragment extends FabFragment {
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
 
-            if(!isInternetConnection(app)) {
+            if (!isInternetConnection(app)) {
                 this.setListVisibility(false);
                 this.refreshFab.execute();
             }
@@ -187,17 +187,16 @@ public class GenealogyListFragment extends FabFragment {
     }
 
     public void updateAdapter() {
-        if(this.recyclerView!=null && this.list!=null && this.isAdded()) {
+        if (this.recyclerView != null && this.list != null && this.isAdded()) {
             this.circularProgressBar.setVisibility(View.GONE);
 
             this.refreshFab.execute();
             this.recyclerView.setVisibility(View.VISIBLE);
 
-            if(this.list.size()==0) {
+            if (this.list.size() == 0) {
                 this.message.setText(getString(R.string.no_person));
                 this.message.setVisibility(View.VISIBLE);
-            }
-            else
+            } else
                 this.message.setVisibility(View.GONE);
 
             this.mAdapter = new AdapterModelGenealogyUser(app, list, new IModelGenealogyUserListener() {
@@ -205,7 +204,7 @@ public class GenealogyListFragment extends FabFragment {
                 public void execute(final ModelGenealogyPerson modelGenealogyUser) {
 
                     final AlertDialog.Builder menuAlert = new AlertDialog.Builder(app);
-                    String[] menuList = { getString(R.string.modify), getString(R.string.delete), getString(R.string.properties) };
+                    String[] menuList = {getString(R.string.modify), getString(R.string.delete), getString(R.string.properties)};
                     menuAlert.setTitle("Action");
                     menuAlert.setItems(menuList,
                             new DialogInterface.OnClickListener() {
@@ -311,8 +310,8 @@ public class GenealogyListFragment extends FabFragment {
     }
 
     public void deselect() {
-        for(int i=0; i<list.size(); i++) {
-            if(list.get(i).selected) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).selected) {
                 list.get(i).selected = false;
                 mAdapter.notifyItemChanged(i);
             }
@@ -330,12 +329,12 @@ public class GenealogyListFragment extends FabFragment {
     }
 
     private void setListVisibility(boolean visible) {
-        if(this.recyclerView != null)
+        if (this.recyclerView != null)
             this.recyclerView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 
     public void add() {
-        app.dialog = new DialogAddGenealogyPerson(app,new IPostExecuteListener() {
+        app.dialog = new DialogAddGenealogyPerson(app, new IPostExecuteListener() {
             @Override
             public void execute(JSONObject json, String body) {
                 refreshList();

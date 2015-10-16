@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -28,19 +28,19 @@ import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class ModelServerMessage extends Model {
 
-	private String content, id_conversation;
+    private String content, id_conversation;
 
-	public ModelServerMessage() {
-		super();
-	}
+    public ModelServerMessage() {
+        super();
+    }
 
     public ModelServerMessage(ApplicationActivity app, JSONObject json) {
         super(app);
 
         try {
-            if(json.has("content"))
+            if (json.has("content"))
                 this.content = json.getString("content");
-            if(json.has("id_conversation"))
+            if (json.has("id_conversation"))
                 this.id_conversation = json.getString("id_conversation");
         } catch (JSONException e) {
             Log.e("ModelServerMessage", "JSONException");
@@ -50,9 +50,9 @@ public class ModelServerMessage extends Model {
 
     public ModelServerMessage(JSONObject json) {
         try {
-            if(json.has("content"))
+            if (json.has("content"))
                 this.content = json.getString("content");
-            if(json.has("id_conversation"))
+            if (json.has("id_conversation"))
                 this.id_conversation = json.getString("id_conversation");
         } catch (JSONException e) {
             Log.e("ModelServerMessage", "JSONException");
@@ -72,7 +72,7 @@ public class ModelServerMessage extends Model {
     }
 
     public boolean isConversationMessage() {
-        if(this.id_conversation==null)
+        if (this.id_conversation == null)
             return false;
         return !this.id_conversation.equals("");
     }
@@ -99,14 +99,14 @@ public class ModelServerMessage extends Model {
 
     @Override
     public boolean equals(Object o) {
-        if(o==null)
+        if (o == null)
             return false;
-        if(!(o instanceof ModelServerMessage))
+        if (!(o instanceof ModelServerMessage))
             return false;
-        ModelServerMessage obj = (ModelServerMessage)o;
-        if((obj.content == null && this.content!=null) || (obj.content != null && this.content==null))
+        ModelServerMessage obj = (ModelServerMessage) o;
+        if ((obj.content == null && this.content != null) || (obj.content != null && this.content == null))
             return false;
-        if((obj.id_conversation == null && this.id_conversation!=null) || (obj.id_conversation != null && this.id_conversation==null))
+        if ((obj.id_conversation == null && this.id_conversation != null) || (obj.id_conversation != null && this.id_conversation == null))
             return false;
         return (obj.content.equals(this.content)) && (obj.id_conversation.equals(this.id_conversation));
     }

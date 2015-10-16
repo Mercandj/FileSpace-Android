@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -112,7 +112,7 @@ public class GenealogyTreeFragment extends FabFragment {
         this.switch_brothers_sisters_marriages.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                tv_brothers_sisters_marriages.setText(isChecked?"Marriages":"Brothers & Sisters");
+                tv_brothers_sisters_marriages.setText(isChecked ? "Marriages" : "Brothers & Sisters");
                 refreshList();
             }
         });
@@ -131,7 +131,7 @@ public class GenealogyTreeFragment extends FabFragment {
 
     public void getChildren(int id_user) {
         List<StringPair> parameters = null;
-        if(isInternetConnection(app) && app.isLogged()) {
+        if (isInternetConnection(app) && app.isLogged()) {
             if (requestReady) {
                 requestReady = false;
                 new TaskGet(
@@ -156,11 +156,10 @@ public class GenealogyTreeFragment extends FabFragment {
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                                if(listChildren.size() != 0) {
+                                if (listChildren.size() != 0) {
                                     genealogyPerson = listChildren.get(0);
                                     genealogyPerson.selected = true;
-                                }
-                                else {
+                                } else {
                                     Toast.makeText(app, "No children", Toast.LENGTH_SHORT).show();
                                 }
                                 update();
@@ -168,11 +167,9 @@ public class GenealogyTreeFragment extends FabFragment {
                         },
                         parameters
                 ).execute();
-            }
-            else
+            } else
                 Toast.makeText(app, getString(R.string.waiting_for_response), Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
             Toast.makeText(app, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
         }
     }
@@ -180,7 +177,7 @@ public class GenealogyTreeFragment extends FabFragment {
     public void changeUser(int id_user) {
 
         List<StringPair> parameters = null;
-        if(isInternetConnection(app) && app.isLogged()) {
+        if (isInternetConnection(app) && app.isLogged()) {
             if (requestReady) {
                 requestReady = false;
                 new TaskGet(
@@ -207,11 +204,9 @@ public class GenealogyTreeFragment extends FabFragment {
                         },
                         parameters
                 ).execute();
-            }
-            else
+            } else
                 Toast.makeText(app, getString(R.string.waiting_for_response), Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
             Toast.makeText(app, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
         }
     }
@@ -224,8 +219,8 @@ public class GenealogyTreeFragment extends FabFragment {
         this.et_father_description.setText("");
         this.et_mother_description.setText("");
 
-        if(genealogyPerson != null)
-            if(genealogyPerson.selected) {
+        if (genealogyPerson != null)
+            if (genealogyPerson.selected) {
                 this.et_user.setText(genealogyPerson.getAdapterTitle());
                 this.et_user.setTextColor(Color.parseColor(genealogyPerson.is_man ? "#1976D2" : "#E91E63"));
                 this.et_user.setOnLongClickListener(new View.OnLongClickListener() {
@@ -251,7 +246,7 @@ public class GenealogyTreeFragment extends FabFragment {
                     }
                 });
 
-                this.et_user_description.setText(genealogyPerson.getAdapterSubtitle()+(StringUtils.isNullOrEmpty(genealogyPerson.description)?"":("\n"+genealogyPerson.description)));
+                this.et_user_description.setText(genealogyPerson.getAdapterSubtitle() + (StringUtils.isNullOrEmpty(genealogyPerson.description) ? "" : ("\n" + genealogyPerson.description)));
 
                 if (genealogyPerson.father != null) {
                     this.et_father.setText(genealogyPerson.father.getAdapterTitle());
@@ -310,20 +305,18 @@ public class GenealogyTreeFragment extends FabFragment {
     }
 
     public void refreshList() {
-        if(genealogyPerson != null) {
-            if(switch_brothers_sisters_marriages.isChecked()) {
+        if (genealogyPerson != null) {
+            if (switch_brothers_sisters_marriages.isChecked()) {
                 this.list = genealogyPerson.getPartners();
-            }
-            else
+            } else
                 this.list = genealogyPerson.getBrothersSisters();
-        }
-        else
+        } else
             this.list = new ArrayList<>();
         updateAdapter();
     }
 
     public void updateAdapter() {
-        if(this.recyclerView!=null && this.list!=null && this.isAdded()) {
+        if (this.recyclerView != null && this.list != null && this.isAdded()) {
 
             this.mAdapter = new AdapterModelGenealogyUser(app, list, new IModelGenealogyUserListener() {
                 @Override
@@ -350,8 +343,8 @@ public class GenealogyTreeFragment extends FabFragment {
         }
 
         int listVisible = genealogyPerson == null ? View.INVISIBLE : View.VISIBLE;
-        if(genealogyPerson != null)
-            if(genealogyPerson.getPartners().size() == 0 && genealogyPerson.getBrothersSisters().size() == 0)
+        if (genealogyPerson != null)
+            if (genealogyPerson.getPartners().size() == 0 && genealogyPerson.getBrothersSisters().size() == 0)
                 listVisible = View.INVISIBLE;
         this.tv_brothers_sisters_marriages.setVisibility(listVisible);
         this.switch_brothers_sisters_marriages.setVisibility(listVisible);

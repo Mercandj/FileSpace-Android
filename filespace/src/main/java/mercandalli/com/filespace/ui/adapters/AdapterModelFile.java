@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -42,11 +42,11 @@ import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.ViewHolder> {
 
-	private ApplicationActivity app;
-	public List<ModelFile> files;
+    private ApplicationActivity app;
+    public List<ModelFile> files;
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
-	private IModelFileListener moreListener;
+    private IModelFileListener moreListener;
 
     public AdapterModelFile(ApplicationActivity app, List<ModelFile> files, IModelFileListener moreListener) {
         this.app = app;
@@ -61,15 +61,15 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
-        if(position<files.size()) {
+        if (position < files.size()) {
             final ModelFile file = files.get(position);
 
             viewHolder.title.setText(file.getAdapterTitle());
             viewHolder.subtitle.setText(file.getAdapterSubtitle());
 
-            if(file.directory)
+            if (file.directory)
                 viewHolder.icon.setImageResource(R.drawable.directory);
-            else if(file.type!=null) {
+            else if (file.type != null) {
                 ModelFileType type = file.type;
                 if (type.equals(ModelFileTypeENUM.AUDIO.type))
                     viewHolder.icon.setImageResource(R.drawable.file_audio);
@@ -83,14 +83,13 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
                     viewHolder.icon.setImageResource(R.drawable.file_jarvis);
                 else
                     viewHolder.icon.setImageResource(R.drawable.file_default);
-            }
-            else
+            } else
                 viewHolder.icon.setImageResource(R.drawable.file_default);
 
-            if(file.bitmap!=null)
+            if (file.bitmap != null)
                 viewHolder.icon.setImageBitmap(file.bitmap);
 
-            if(moreListener == null)
+            if (moreListener == null)
                 viewHolder.more.setVisibility(View.GONE);
             viewHolder.more.setOnClickListener(new OnClickListener() {
                 @Override
@@ -100,7 +99,7 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
                 }
             });
 
-            if(file.selected)
+            if (file.selected)
                 viewHolder.item.setBackgroundColor(ContextCompat.getColor(app, R.color.tab_selected));
             else
                 viewHolder.item.setBackgroundColor(ContextCompat.getColor(app, R.color.tab_file));
@@ -165,7 +164,7 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
 
     public void removeAll() {
         int size = files.size();
-        if(size>0) {
+        if (size > 0) {
             files = new ArrayList<>();
             this.notifyItemRangeInserted(0, size - 1);
         }
@@ -173,13 +172,13 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
 
     @Override
     public int getItemViewType(int position) {
-        if(position<files.size())
+        if (position < files.size())
             return files.get(position).viewType;
         return 0;
     }
 
     public interface OnItemClickListener {
-        void onItemClick(View view , int position);
+        void onItemClick(View view, int position);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -187,7 +186,7 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
     }
 
     public interface OnItemLongClickListener {
-        boolean onItemLongClick(View view , int position);
+        boolean onItemLongClick(View view, int position);
     }
 
     public void setOnItemLongClickListener(final OnItemLongClickListener mItemLongClickListener) {

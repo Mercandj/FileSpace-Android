@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -52,7 +52,7 @@ import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
 public class UserAddFragment extends BackFragment {
 
-	private View rootView;
+    private View rootView;
     private TextView username, password;
     private ImageButton circle;
 
@@ -72,9 +72,9 @@ public class UserAddFragment extends BackFragment {
         app = (ApplicationDrawerActivity) activity;
     }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		this.rootView = inflater.inflate(R.layout.fragment_admin_add_user, container, false);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        this.rootView = inflater.inflate(R.layout.fragment_admin_add_user, container, false);
 
         this.circle = (ImageButton) this.rootView.findViewById(R.id.circle);
         this.circle.setVisibility(View.GONE);
@@ -86,35 +86,41 @@ public class UserAddFragment extends BackFragment {
 
         this.username.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!StringUtils.isNullOrEmpty(s.toString()) && !StringUtils.isNullOrEmpty(password.getText().toString())) {
+                if (!StringUtils.isNullOrEmpty(s.toString()) && !StringUtils.isNullOrEmpty(password.getText().toString())) {
                     circle.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     circle.setVisibility(View.GONE);
                 }
                 newUser.username = s.toString();
             }
+
             @Override
-            public void afterTextChanged(Editable s) { }
+            public void afterTextChanged(Editable s) {
+            }
         });
         this.password.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(!StringUtils.isNullOrEmpty(s.toString()) && !StringUtils.isNullOrEmpty(username.getText().toString())) {
+                if (!StringUtils.isNullOrEmpty(s.toString()) && !StringUtils.isNullOrEmpty(username.getText().toString())) {
                     circle.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     circle.setVisibility(View.GONE);
                 }
                 newUser.password = HashUtils.sha1(s.toString());
             }
+
             @Override
-            public void afterTextChanged(Editable s) { }
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         this.circle.setOnClickListener(new OnClickListener() {
@@ -125,7 +131,7 @@ public class UserAddFragment extends BackFragment {
                 parameters.add(new StringPair("username", "" + newUser.username));
                 parameters.add(new StringPair("password", "" + newUser.password));
 
-                if(isInternetConnection(app) && !StringUtils.isNullOrEmpty(newUser.username) && !StringUtils.isNullOrEmpty(newUser.password)) {
+                if (isInternetConnection(app) && !StringUtils.isNullOrEmpty(newUser.username) && !StringUtils.isNullOrEmpty(newUser.password)) {
                     requestLaunched = true;
                     (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
                         @Override
@@ -149,8 +155,7 @@ public class UserAddFragment extends BackFragment {
                             requestLaunched = false;
                         }
                     }, parameters)).execute();
-                }
-                else {
+                } else {
                     requestLaunched = false;
                     Toast.makeText(getActivity(), "Request not sent", Toast.LENGTH_SHORT).show();
                 }
@@ -158,7 +163,7 @@ public class UserAddFragment extends BackFragment {
         });
 
         return this.rootView;
-	}
+    }
 
     @Override
     public boolean back() {

@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -126,7 +126,7 @@ public class TalkFragment extends BackFragment {
 
     public void refreshList(String search) {
         List<StringPair> parameters = null;
-        if(isInternetConnection(app) && app.isLogged())
+        if (isInternetConnection(app) && app.isLogged())
             new TaskGet(
                     app,
                     this.app.getConfig().getUser(),
@@ -144,8 +144,7 @@ public class TalkFragment extends BackFragment {
                                             list.add(modelUser);
                                         }
                                     }
-                                }
-                                else
+                                } else
                                     Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -157,7 +156,7 @@ public class TalkFragment extends BackFragment {
             ).execute();
         else {
             this.circularProgressBar.setVisibility(View.GONE);
-            this.message.setText(app.isLogged()?getString(R.string.no_internet_connection):getString(R.string.no_logged));
+            this.message.setText(app.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
         }
@@ -166,25 +165,24 @@ public class TalkFragment extends BackFragment {
     int i;
 
     public void updateAdapter() {
-        if(this.recyclerView!=null && this.list!=null && this.isAdded()) {
+        if (this.recyclerView != null && this.list != null && this.isAdded()) {
             this.circularProgressBar.setVisibility(View.GONE);
 
-            if(this.list.size()==0) {
+            if (this.list.size() == 0) {
                 this.message.setText(getString(R.string.no_talk));
                 this.message.setVisibility(View.VISIBLE);
-            }
-            else
+            } else
                 this.message.setVisibility(View.GONE);
 
 
             this.mAdapter = new AdapterModelConnversationUser(app, list, new IModelUserListener() {
                 @Override
                 public void execute(final ModelUser modelUser) {
-                    app.prompt("Send Message", "Write your message", "Send", new IStringListener(){
+                    app.prompt("Send Message", "Write your message", "Send", new IStringListener() {
                         @Override
                         public void execute(String text) {
                             String url = app.getConfig().getUrlServer() + app.getConfig().routeUserMessage + "/" + modelUser.id;
-                            List < StringPair > parameters = new ArrayList<>();
+                            List<StringPair> parameters = new ArrayList<>();
                             parameters.add(new StringPair("message", "" + text));
 
                             new TaskPost(app, url, new IPostExecuteListener() {
@@ -199,7 +197,7 @@ public class TalkFragment extends BackFragment {
             });
             this.recyclerView.setAdapter(mAdapter);
 
-            if( ((ImageButton) rootView.findViewById(R.id.circle)).getVisibility()==View.GONE ) {
+            if (((ImageButton) rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
                 ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
                 Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
                 ((ImageButton) rootView.findViewById(R.id.circle)).startAnimation(animOpen);
@@ -221,7 +219,7 @@ public class TalkFragment extends BackFragment {
             });
 
             this.swipeRefreshLayout.setRefreshing(false);
-            i=0;
+            i = 0;
         }
     }
 

@@ -6,10 +6,11 @@
 <FrameLayout
     android:id="@+id/item"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="70dp"
-    android:transitionName="transitionRoot"
-    android:background="@color/tab_file">
+    android:background="@color/tab_file"
+    android:transitionName="transitionRoot">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,43 +19,45 @@
 
         <TextView
             android:id="@+id/title"
-            android:transitionName="transitionTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/icon"
+            android:layout_toEndOf="@+id/icon"
+            android:layout_toStartOf="@+id/more"
             android:ellipsize="marquee"
             android:focusable="false"
+            android:gravity="top"
             android:marqueeRepeatLimit="marquee_forever"
             android:maxLines="1"
-            android:paddingStart="20dp"
             android:paddingEnd="5dp"
+            android:paddingStart="20dp"
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColor="#000"
             android:textSize="16sp"
-            android:layout_toEndOf="@+id/icon"
-            android:layout_toStartOf="@+id/more"
-            android:layout_alignTop="@+id/icon"
-            android:gravity="top" />
+            android:transitionName="transitionTitle"
+            tools:text="Title"/>
 
         <TextView
             android:id="@+id/subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/icon"
+            android:layout_marginBottom="2dp"
+            android:layout_toEndOf="@+id/icon"
+            android:layout_toStartOf="@+id/more"
             android:ellipsize="marquee"
             android:focusable="false"
+            android:gravity="bottom"
             android:marqueeRepeatLimit="marquee_forever"
             android:maxLines="1"
-            android:paddingStart="20dp"
             android:paddingEnd="5dp"
+            android:paddingStart="20dp"
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColor="#666"
             android:textSize="15sp"
-            android:layout_alignBottom="@+id/icon"
-            android:gravity="bottom"
-            android:layout_marginBottom="2dp"
-            android:layout_toEndOf="@+id/icon"
-            android:layout_toStartOf="@+id/more" />
+            tools:text="Subtitle"/>
 
         <mercandalli.com.filespace.ui.views.CircularImageView
             android:id="@+id/icon"
@@ -64,19 +67,19 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="20dp"
             android:contentDescription="@string/image_description"
-            android:transitionName="transitionIcon"
-            android:src="@drawable/file_default" />
+            android:src="@drawable/file_default"
+            android:transitionName="transitionIcon"/>
 
         <ImageButton
             android:id="@+id/more"
             android:layout_width="55dp"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
             android:padding="18dp"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"/>
 
     </RelativeLayout>
 

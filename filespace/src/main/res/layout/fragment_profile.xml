@@ -4,11 +4,11 @@
 		MERCANDALLI Jonathan
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="top"
-    android:orientation="vertical" >
+                xmlns:fab="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="top"
+                android:orientation="vertical">
 
     <ImageView
         android:id="@+id/icon_back"
@@ -18,7 +18,7 @@
         android:src="@drawable/ic_user"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"/>
 
     <ImageView
         android:id="@+id/gradient_back"
@@ -28,7 +28,7 @@
         android:src="@drawable/linear_gradient"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/username"
@@ -42,7 +42,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginStart="38dp"
         android:layout_marginBottom="26dp"
-        android:textIsSelectable="false" />
+        android:textIsSelectable="false"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_recycler_view"
@@ -51,13 +51,13 @@
         android:clickable="true"
         android:focusable="true"
         android:scrollbars="vertical"
-        android:layout_below="@+id/icon_back" />
+        android:layout_below="@+id/icon_back"/>
 
     <ProgressBar
         android:id="@+id/circularProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"/>
 
 </RelativeLayout>

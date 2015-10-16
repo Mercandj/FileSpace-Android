@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -50,24 +50,24 @@ public class Resource {
 
         try {
             JSONObject json = new JSONObject(text);
-            if(json.has("qa")) {
+            if (json.has("qa")) {
                 JSONArray qa_array = json.getJSONArray("qa");
                 int qa_array_length = qa_array.length();
-                for(int i=0; i<qa_array_length; i++) {
+                for (int i = 0; i < qa_array_length; i++) {
                     JSONObject qa = qa_array.getJSONObject(i);
                     QA real_qa = new QA(app, qa);
-                    if(real_qa.isValid())
+                    if (real_qa.isValid())
                         qas.add(real_qa);
                 }
             }
 
-            if(json.has("sentences")) {
+            if (json.has("sentences")) {
                 JSONArray sentences_array = json.getJSONArray("sentences");
                 int sentences_array_length = sentences_array.length();
-                for(int i=0; i<sentences_array_length; i++) {
+                for (int i = 0; i < sentences_array_length; i++) {
                     JSONObject sentence = sentences_array.getJSONObject(i);
                     Sentence real_sentence = new Sentence(app, sentence);
-                    if(real_sentence.isValid())
+                    if (real_sentence.isValid())
                         sentences.add(real_sentence);
                 }
             }
@@ -83,36 +83,36 @@ public class Resource {
 
     public String getSentence(String title) {
         String result = null;
-        if(title == null)
+        if (title == null)
             return result;
-        for(Sentence sent : this.sentences)
-            if(sent.getTitle().equals(title))
+        for (Sentence sent : this.sentences)
+            if (sent.getTitle().equals(title))
                 return sent.getSentence().get(MathUtils.random(0, sent.getSentence().size() - 1));
         return null;
     }
 
     public boolean equalsSentenece(String title, String sentence) {
-        if(title == null || sentence == null)
+        if (title == null || sentence == null)
             return false;
-        for(Sentence sent : this.sentences)
-            if(sent.getTitle().equals(title))
-                for(String str : sent.getSentence())
-                    if(str.equals(sentence))
+        for (Sentence sent : this.sentences)
+            if (sent.getTitle().equals(title))
+                for (String str : sent.getSentence())
+                    if (str.equals(sentence))
                         return true;
         return false;
     }
 
     public String startsWithSentenece(String title, String sentence) {
         String result = null;
-        if(title == null || sentence == null)
+        if (title == null || sentence == null)
             return result;
-        for(Sentence sent : this.sentences)
-            if(sent.getTitle().equals(title))
-                for(String str : sent.getSentence())
-                    if(sentence.startsWith(str)) {
-                        if(result == null)
+        for (Sentence sent : this.sentences)
+            if (sent.getTitle().equals(title))
+                for (String str : sent.getSentence())
+                    if (sentence.startsWith(str)) {
+                        if (result == null)
                             result = str;
-                        else if(str.length() > result.length())
+                        else if (str.length() > result.length())
                             result = str;
                     }
 
@@ -120,12 +120,12 @@ public class Resource {
     }
 
     public String containsSentenece(String title, String sentence) {
-        if(title == null || sentence == null)
+        if (title == null || sentence == null)
             return null;
-        for(Sentence sent : this.sentences)
-            if(sent.getTitle().equals(title))
-                for(String str : sent.getSentence())
-                    if(str.contains(sentence))
+        for (Sentence sent : this.sentences)
+            if (sent.getTitle().equals(title))
+                for (String str : sent.getSentence())
+                    if (str.contains(sentence))
                         return str;
         return null;
     }

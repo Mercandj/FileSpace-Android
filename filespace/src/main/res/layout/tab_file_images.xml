@@ -4,10 +4,10 @@
 		MERCANDALLI Jonathan
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:transitionName="transitionRoot"
-    android:id="@+id/item">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:transitionName="transitionRoot"
+                android:id="@+id/item">
 
     <mercandalli.com.filespace.ui.views.SquareImageView
         android:id="@+id/icon"
@@ -49,7 +49,6 @@
         android:visibility="gone">
 
 
-
         <TextView
             android:id="@+id/subtitle"
             android:layout_width="wrap_content"
@@ -65,7 +64,7 @@
             android:textColor="#666"
             android:textSize="12sp"
             android:gravity="bottom"
-            android:layout_marginBottom="2dp" />
+            android:layout_marginBottom="2dp"/>
 
         <ImageView
             android:id="@+id/more"
@@ -74,10 +73,9 @@
             android:layout_alignParentRight="true"
             android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
             android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignParentBottom="true"/>
 
     </RelativeLayout>
-
 
 
 </RelativeLayout>

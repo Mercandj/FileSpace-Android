@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -49,7 +49,7 @@ public class FileUtils {
         int unit = si ? 1000 : 1024;
         if (bytes < unit) return bytes + " B";
         int exp = (int) (Math.log(bytes) / Math.log(unit));
-        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
@@ -57,29 +57,33 @@ public class FileUtils {
         try {
             FileOutputStream output = context.openFileOutput(file, Context.MODE_PRIVATE);
             output.write((txt).getBytes());
-            if(output != null) output.close();
+            if (output != null) output.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        catch (FileNotFoundException e) {e.printStackTrace();}
-        catch (IOException e) {e.printStackTrace();}
     }
 
     public static String readStringFile(Context context, String file) {
-        String res="";
+        String res = "";
         try {
             FileInputStream input = context.openFileInput(file);
             int value;
             StringBuffer lu = new StringBuffer();
-            while((value = input.read()) != -1)
-                lu.append((char)value);
-            if(input != null) {
+            while ((value = input.read()) != -1)
+                lu.append((char) value);
+            if (input != null) {
                 input.close();
-                if(lu.toString()!=null)
-                    res=lu.toString();
+                if (lu.toString() != null)
+                    res = lu.toString();
             }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        catch (FileNotFoundException e) {e.printStackTrace();}
-        catch (IOException e) {e.printStackTrace();}
-        if(res==null) return "";
+        if (res == null) return "";
         return res;
     }
 
@@ -106,7 +110,7 @@ public class FileUtils {
     /**
      * Deletes a directory recursively.
      *
-     * @param directory  directory to delete
+     * @param directory directory to delete
      * @throws IOException in case deletion is unsuccessful
      */
     public static boolean deleteDirectory(File directory) {
@@ -125,7 +129,7 @@ public class FileUtils {
     }
 
     public static String getExtensionFromPath(String path) {
-        if(!path.contains("."))
+        if (!path.contains("."))
             return "";
         return path.substring(path.lastIndexOf(".") + 1);
     }
@@ -133,8 +137,8 @@ public class FileUtils {
     public static String getRealPathFromURI(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, null);
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             return cursor.getString(column_index);

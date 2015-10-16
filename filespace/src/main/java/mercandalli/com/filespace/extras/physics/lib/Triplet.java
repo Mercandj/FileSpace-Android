@@ -1,6 +1,6 @@
 /**
  * ESIEE OpenSource Project : OpenGL
- *
+ * <p/>
  * MARTEL Andy
  * MERCANDALLI Jonathan
  */
@@ -13,5 +13,5 @@ package mercandalli.com.filespace.extras.physics.lib;
  *
  */
 public class Triplet {
-	public float x, y, z;
+    public float x, y, z;
 }

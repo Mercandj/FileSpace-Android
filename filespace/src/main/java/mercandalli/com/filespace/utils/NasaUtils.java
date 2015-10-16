@@ -38,11 +38,11 @@ public class NasaUtils {
         // https://api.nasa.gov/api.html#apod
         // https://api.nasa.gov/planetary/apod?concept_tags=True&api_key=DEMO_KEY
         String key = "AS0opJ2hMYHltKt8Mx3TP6l21AlJrDGMNUTyDwTW"; // "DEMO_KEY"
-        return "https://api.nasa.gov/planetary/apod?concept_tags=True&api_key="+key+"&date="+date;
+        return "https://api.nasa.gov/planetary/apod?concept_tags=True&api_key=" + key + "&date=" + date;
     }
 
     public static void getNasaRandomPicture(final ApplicationActivity app, final IModelNasaImageListener modelNasaImageListener) {
-        if(isInternetConnection(app)) {
+        if (isInternetConnection(app)) {
             final String date = getRandomDate();
             new TaskGet(
                     app,
@@ -51,11 +51,11 @@ public class NasaUtils {
                     new IPostExecuteListener() {
                         @Override
                         public void execute(JSONObject json, String body) {
-                            if(json == null)
+                            if (json == null)
                                 return;
                             final ModelNasaImage modelNasaImage = new ModelNasaImage(json, date);
-                            if(modelNasaImage.media_type != null)
-                                if(modelNasaImage.media_type.equals("image"))
+                            if (modelNasaImage.media_type != null)
+                                if (modelNasaImage.media_type.equals("image"))
                                     new TaskGetDownloadImage(
                                             app,
                                             modelNasaImage.url,

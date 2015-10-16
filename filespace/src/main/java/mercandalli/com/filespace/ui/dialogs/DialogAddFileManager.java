@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -57,17 +57,17 @@ import mercandalli.com.filespace.utils.StringPair;
 
 public class DialogAddFileManager extends Dialog {
 
-	ApplicationActivity app;
-	File file;
+    ApplicationActivity app;
+    File file;
     IListener dismissListener;
 
-	public DialogAddFileManager(final ApplicationActivity app, final int id_file_parent, final IPostExecuteListener listener, final IListener dismissListener) {
-		super(app, android.R.style.Theme_Translucent_NoTitleBar);
-		this.app = app;
+    public DialogAddFileManager(final ApplicationActivity app, final int id_file_parent, final IPostExecuteListener listener, final IListener dismissListener) {
+        super(app, android.R.style.Theme_Translucent_NoTitleBar);
+        this.app = app;
         this.dismissListener = dismissListener;
-		
-		this.setContentView(R.layout.dialog_add_file);
-		this.setCancelable(true);
+
+        this.setContentView(R.layout.dialog_add_file);
+        this.setCancelable(true);
 
         Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.dialog_add_file_open);
         (this.findViewById(R.id.relativeLayout)).startAnimation(animOpen);
@@ -98,10 +98,10 @@ public class DialogAddFileManager extends Dialog {
                         folder.directory = true;
                         folder.id_file_parent = id_file_parent;
                         List<StringPair> parameters = folder.getForUpload();
-                        (new TaskPost(app, app.getConfig().getUrlServer()+app.getConfig().routeFile, new IPostExecuteListener() {
+                        (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
                             @Override
                             public void execute(JSONObject json, String body) {
-                                if(listener!=null)
+                                if (listener != null)
                                     listener.execute(json, body);
                             }
                         }, parameters, file)).execute();
@@ -140,7 +140,7 @@ public class DialogAddFileManager extends Dialog {
                     }
                     // Continue only if the File was successfully created
                     if (app.photoFile != null) {
-                        if(listener!=null)
+                        if (listener != null)
                             app.photoFileListener = listener;
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(app.photoFile.getFile()));
                         app.startActivityForResult(takePictureIntent, app.REQUEST_TAKE_PHOTO);
@@ -184,19 +184,19 @@ public class DialogAddFileManager extends Dialog {
                                     nowAsISO = dateFormatGmtTZ.format(new Date());
 
                                     List<StringPair> parameters = new ArrayList<>();
-                                    parameters.add(new StringPair("content",json.toString()));
-                                    parameters.add(new StringPair("name","TIMER_"+nowAsISO));
-                                    parameters.add(new StringPair("id_file_parent",""+id_file_parent));
+                                    parameters.add(new StringPair("content", json.toString()));
+                                    parameters.add(new StringPair("name", "TIMER_" + nowAsISO));
+                                    parameters.add(new StringPair("id_file_parent", "" + id_file_parent));
                                     new TaskPost(DialogAddFileManager.this.app,
-                                            app.getConfig().getUrlServer()+app.getConfig().routeFile,
+                                            app.getConfig().getUrlServer() + app.getConfig().routeFile,
                                             new IPostExecuteListener() {
                                                 @Override
                                                 public void execute(JSONObject json, String body) {
-                                                    if(listener!=null)
+                                                    if (listener != null)
                                                         listener.execute(json, body);
                                                 }
                                             }
-                                            ,parameters).execute();
+                                            , parameters).execute();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 } catch (ParseException e) {
@@ -223,9 +223,9 @@ public class DialogAddFileManager extends Dialog {
                 DialogAddFileManager.this.dismiss();
             }
         });
-        
+
         DialogAddFileManager.this.show();
-	}
+    }
 
     @Override
     public void dismiss() {

@@ -1,6 +1,6 @@
 /**
  * ESIEE OpenSource Project : OpenGL
- *
+ * <p/>
  * MARTEL Andy
  * MERCANDALLI Jonathan
  */
@@ -9,8 +9,8 @@ package mercandalli.com.filespace.extras.physics.implementation;
 
 import android.content.Context;
 
-import mercandalli.com.filespace.extras.physics.GLFragment;
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.extras.physics.GLFragment;
 import mercandalli.com.filespace.extras.physics.lib.IndicesVertices;
 import mercandalli.com.filespace.extras.physics.lib.lib;
 
@@ -21,22 +21,21 @@ import mercandalli.com.filespace.extras.physics.lib.lib;
  */
 public enum ENUM_Obj {
 
-	SPHERE		(R.raw.obj_sphere),
-	APPLE		(R.raw.obj_apple),
-	;
-	
-	private int id;
-	private IndicesVertices object;
-	
-	private ENUM_Obj(int id) {
-		this.id = id;
-	}
-	
-	public IndicesVertices getIndicesVertices(Context context) {
-		if(object==null) {
-			object = lib.readMeshLocalNomalizedOpti(context, id);
-			GLFragment.progress = GLFragment.progress+1;
-		}
-		return new IndicesVertices(object);
-	}
+    SPHERE(R.raw.obj_sphere),
+    APPLE(R.raw.obj_apple),;
+
+    private int id;
+    private IndicesVertices object;
+
+    private ENUM_Obj(int id) {
+        this.id = id;
+    }
+
+    public IndicesVertices getIndicesVertices(Context context) {
+        if (object == null) {
+            object = lib.readMeshLocalNomalizedOpti(context, id);
+            GLFragment.progress = GLFragment.progress + 1;
+        }
+        return new IndicesVertices(object);
+    }
 }

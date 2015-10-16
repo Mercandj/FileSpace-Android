@@ -4,31 +4,31 @@
 		MERCANDALLI Jonathan
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+                xmlns:custom="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/rl_top"
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:background="@color/actionbar"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:text="@string/app_name"
-                android:id="@+id/title"
-                android:singleLine="true"
-                android:textColor="#fff"
-                android:textSize="42sp"
-                android:gravity="center_vertical"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="20dp"
-                android:layout_alignParentBottom="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:text="@string/app_name"
+            android:id="@+id/title"
+            android:singleLine="true"
+            android:textColor="#fff"
+            android:textSize="42sp"
+            android:gravity="center_vertical"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="20dp"
+            android:layout_alignParentBottom="true"/>
 
         <ImageView
             android:id="@+id/signin"
@@ -39,7 +39,7 @@
             android:layout_marginRight="15dp"
             android:layout_marginTop="25dp"
             android:contentDescription="@string/image_description"
-            android:src="@drawable/ic_circle_button" />
+            android:src="@drawable/ic_circle_button"/>
 
         <ImageView
             android:id="@+id/circle_ic"
@@ -52,7 +52,7 @@
             android:contentDescription="@string/image_description"
             android:paddingLeft="19dp"
             android:paddingRight="16dp"
-            android:src="@drawable/ic_menu_send" />
+            android:src="@drawable/ic_menu_send"/>
 
     </RelativeLayout>
 
@@ -62,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/rl_top"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <mercandalli.com.filespace.ui.views.PagerSlidingTabStrip
             android:id="@+id/tabs"
@@ -74,10 +74,10 @@
             android:elevation="4dp"/>
 
         <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/tabs">
+                                           android:id="@+id/pager"
+                                           android:layout_width="match_parent"
+                                           android:layout_height="match_parent"
+                                           android:layout_below="@+id/tabs">
 
 
         </android.support.v4.view.ViewPager>
@@ -97,10 +97,9 @@
             android:id="@+id/app_description"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="15dp" />
+            android:layout_marginBottom="15dp"/>
 
     </RelativeLayout>
-
 
 
 </RelativeLayout>

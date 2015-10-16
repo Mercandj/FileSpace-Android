@@ -34,8 +34,8 @@ import mercandalli.com.filespace.ui.views.MyWebViewClient;
 
 /**
  * Fragment show web page
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class WebFragment extends BackFragment {
 
@@ -78,7 +78,7 @@ public class WebFragment extends BackFragment {
             webView.getSettings().setDisplayZoomControls(false);
             webView.getSettings().setBuiltInZoomControls(true);
             /*
-			String ua = "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0";
+            String ua = "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.4) Gecko/20100101 Firefox/4.0";
 			webView.getSettings().setUserAgentString(ua);
  			*/
             webView.getSettings().setLoadWithOverviewMode(true);

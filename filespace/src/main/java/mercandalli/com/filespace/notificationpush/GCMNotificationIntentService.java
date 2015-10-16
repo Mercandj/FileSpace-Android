@@ -36,8 +36,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.ui.activities.ConversationActivity;
 import mercandalli.com.filespace.models.ModelServerMessage;
+import mercandalli.com.filespace.ui.activities.ConversationActivity;
 
 import static mercandalli.com.filespace.utils.FileUtils.readStringFile;
 import static mercandalli.com.filespace.utils.FileUtils.writeStringFile;

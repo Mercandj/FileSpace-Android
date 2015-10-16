@@ -36,12 +36,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        x_move = (int)event.getX(0);
-        y_move = (int)event.getY(0);
+        x_move = (int) event.getX(0);
+        y_move = (int) event.getY(0);
 
 
         // Remet les variables du tactile a zero
-        x_down=0; y_down=0; x_move=0; y_move=0; x_up=0; y_up=0;
+        x_down = 0;
+        y_down = 0;
+        x_move = 0;
+        y_move = 0;
+        x_up = 0;
+        y_up = 0;
 
         // Appel ondraw
         thread.repaint();
@@ -58,7 +63,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
-        if (thread.getState() == Thread.State.TERMINATED) thread = new GameThread(getHolder(), getContext(), getHandler());
+        if (thread.getState() == Thread.State.TERMINATED)
+            thread = new GameThread(getHolder(), getContext(), getHandler());
         thread.setRunning(true);
         thread.start();
     }

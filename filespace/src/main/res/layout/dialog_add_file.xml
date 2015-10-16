@@ -4,10 +4,10 @@
 		MERCANDALLI Jonathan
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/relativeLayout">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/relativeLayout">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -40,7 +40,7 @@
                 android:paddingLeft="20dp"
                 android:background="#fff"
                 android:layout_marginBottom="0.5dp"
-                android:textColor="#666" />
+                android:textColor="#666"/>
         </RelativeLayout>
 
         <RelativeLayout
@@ -81,7 +81,7 @@
                     android:textColor="#666"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="true"
-                    android:gravity="center_vertical|center_horizontal" />
+                    android:gravity="center_vertical|center_horizontal"/>
 
             </RelativeLayout>
 
@@ -114,7 +114,7 @@
                     android:textColor="#666"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="true"
-                    android:gravity="center_vertical|center_horizontal" />
+                    android:gravity="center_vertical|center_horizontal"/>
 
             </RelativeLayout>
 
@@ -148,14 +148,12 @@
                     android:textColor="#666"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
-                    android:gravity="center_vertical|center_horizontal" />
+                    android:gravity="center_vertical|center_horizontal"/>
 
             </RelativeLayout>
 
 
         </RelativeLayout>
-
-
 
 
         <RelativeLayout
@@ -195,7 +193,7 @@
                     android:textColor="#666"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="true"
-                    android:gravity="center_vertical|center_horizontal" />
+                    android:gravity="center_vertical|center_horizontal"/>
 
             </RelativeLayout>
 
@@ -229,7 +227,7 @@
                     android:textColor="#666"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="true"
-                    android:gravity="center_vertical|center_horizontal" />
+                    android:gravity="center_vertical|center_horizontal"/>
 
                 <ProgressBar
                     android:layout_width="17dp"
@@ -237,7 +235,7 @@
                     android:id="@+id/progressBar"
                     android:layout_alignBottom="@+id/ic_timer"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="7dp" />
+                    android:layout_marginBottom="7dp"/>
 
             </RelativeLayout>
 
@@ -271,7 +269,7 @@
                     android:textColor="#666"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="true"
-                    android:gravity="center_vertical|center_horizontal" />
+                    android:gravity="center_vertical|center_horizontal"/>
 
             </RelativeLayout>
 

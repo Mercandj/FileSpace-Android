@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -49,43 +49,43 @@ public class Config {
 
     private ApplicationActivity app;
     private List<ModelServerMessage> listServerMessage_1;
-    public String currentToken					= null;
+    public String currentToken = null;
 
     // Local routes
-    private static  final String localFolderNameDefault  = "FileSpace";
-    private static final String fileName        = "settings_json_1.txt";
+    private static final String localFolderNameDefault = "FileSpace";
+    private static final String fileName = "settings_json_1.txt";
 
     // Server routes
-    public final String aboutURL 				= "http://mercandalli.com/";
-    public final String webApplication			= "http://mercandalli.com/FileSpace";
-    public final String routeFile	 			= "file";
-    public final String routeFileDelete			= "file_delete";
-    public final String routeInformation		= "information";
-    public final String routeRobotics       	= "robotics";
-    public final String routeGenealogy       	= "genealogy";
-    public final String routeGenealogyDelete   	= "genealogy_delete";
-    public final String routeGenealogyPut       = "genealogy_put";
-    public final String routeGenealogyChildren  = "genealogy_children";
-    public final String routeGenealogyStatistics= "genealogy_statistics";
-    public final String routeUser 		        = "user";
-    public final String routeUserDelete 		= "user_delete";
-    public final String routeUserPut	        = "user_put";
-    public final String routeUserMessage        = "user_message";
-    public final String routeUserConversation   = "user_conversation";
-    public final String routeUserConnection     = "user_connection";
+    public final String aboutURL = "http://mercandalli.com/";
+    public final String webApplication = "http://mercandalli.com/FileSpace";
+    public final String routeFile = "file";
+    public final String routeFileDelete = "file_delete";
+    public final String routeInformation = "information";
+    public final String routeRobotics = "robotics";
+    public final String routeGenealogy = "genealogy";
+    public final String routeGenealogyDelete = "genealogy_delete";
+    public final String routeGenealogyPut = "genealogy_put";
+    public final String routeGenealogyChildren = "genealogy_children";
+    public final String routeGenealogyStatistics = "genealogy_statistics";
+    public final String routeUser = "user";
+    public final String routeUserDelete = "user_delete";
+    public final String routeUserPut = "user_put";
+    public final String routeUserMessage = "user_message";
+    public final String routeUserConversation = "user_conversation";
+    public final String routeUserConnection = "user_connection";
 
     /**
      * Static int to save/load
      */
     private enum ENUM_Int {
-        INTEGER_LAST_TAB				        (0, 	"int_last_tab_1"			            ),
-        INTEGER_USER_ID     	                (-1, 	"int_user_id_1"     		            ),
-        INTEGER_USER_ID_FILE_PROFILE_PICTURE    (-1, 	"int_user_id_file_profile_picture_1"   	),
-        INTEGER_USER_FILE_MODE_VIEW             (-1, 	"int_user_file_mode_view_1"             ),
-        ;
+        INTEGER_LAST_TAB(0, "int_last_tab_1"),
+        INTEGER_USER_ID(-1, "int_user_id_1"),
+        INTEGER_USER_ID_FILE_PROFILE_PICTURE(-1, "int_user_id_file_profile_picture_1"),
+        INTEGER_USER_FILE_MODE_VIEW(-1, "int_user_file_mode_view_1"),;
 
         int value;
         String key;
+
         ENUM_Int(int init, String key) {
             this.value = init;
             this.key = key;
@@ -96,13 +96,13 @@ public class Config {
      * Static boolean to save/load
      */
     private enum ENUM_Boolean {
-        BOOLEAN_AUTO_CONNECTION	        (true, 		"boolean_auto_connection_1"		),
-        BOOLEAN_USER_ADMIN  	        (false,		"boolean_user_admin_1"  		),
-        BOOLEAN_HOME_WELCOME_MESSAGE  	(true,		"boolean_home_welcome_message_1"),
-        ;
+        BOOLEAN_AUTO_CONNECTION(true, "boolean_auto_connection_1"),
+        BOOLEAN_USER_ADMIN(false, "boolean_user_admin_1"),
+        BOOLEAN_HOME_WELCOME_MESSAGE(true, "boolean_home_welcome_message_1"),;
 
         boolean value;
         String key;
+
         ENUM_Boolean(boolean init, String key) {
             this.value = init;
             this.key = key;
@@ -113,16 +113,16 @@ public class Config {
      * Static Sctring to save/load
      */
     private enum ENUM_String {
-        STRING_URL_SERVER		("http://mercandalli.com/FileSpace-API/", 	"string_url_server_1"		    ),
-        STRING_USER_USERNAME	("",                                        "string_user_username_1"		),
-        STRING_USER_PASSWORD	("", 			                            "string_user_password_1"		),
-        STRING_USER_REGID	    ("", 			                            "string_user_regid_1"   		),
-        STRING_USER_NOTE_WORKSPACE_1  ("",		                            "string_user_note_workspace_1"  ),
-        STRING_LOCAL_FOLDER_NAME_1  (""+localFolderNameDefault,             "string_local_folder_name_1"    ),
-        ;
+        STRING_URL_SERVER("http://mercandalli.com/FileSpace-API/", "string_url_server_1"),
+        STRING_USER_USERNAME("", "string_user_username_1"),
+        STRING_USER_PASSWORD("", "string_user_password_1"),
+        STRING_USER_REGID("", "string_user_regid_1"),
+        STRING_USER_NOTE_WORKSPACE_1("", "string_user_note_workspace_1"),
+        STRING_LOCAL_FOLDER_NAME_1("" + localFolderNameDefault, "string_local_folder_name_1"),;
 
         String value;
         String key;
+
         ENUM_String(String init, String key) {
             this.value = init;
             this.key = key;
@@ -164,22 +164,22 @@ public class Config {
         this.listServerMessage_1 = new ArrayList<>();
         try {
             JSONObject tmp_json = new JSONObject(readStringFile(app, fileName));
-            if(tmp_json.has("settings_1")) {
+            if (tmp_json.has("settings_1")) {
                 JSONObject tmp_settings_1 = tmp_json.getJSONObject("settings_1");
-                for(ENUM_Int enum_int : ENUM_Int.values())
-                    if(tmp_settings_1.has(enum_int.key))
+                for (ENUM_Int enum_int : ENUM_Int.values())
+                    if (tmp_settings_1.has(enum_int.key))
                         enum_int.value = tmp_settings_1.getInt(enum_int.key);
-                for(ENUM_Boolean enum_boolean : ENUM_Boolean.values())
-                    if(tmp_settings_1.has(enum_boolean.key))
+                for (ENUM_Boolean enum_boolean : ENUM_Boolean.values())
+                    if (tmp_settings_1.has(enum_boolean.key))
                         enum_boolean.value = tmp_settings_1.getBoolean(enum_boolean.key);
-                for(ENUM_String enum_string : ENUM_String.values())
-                    if(tmp_settings_1.has(enum_string.key))
+                for (ENUM_String enum_string : ENUM_String.values())
+                    if (tmp_settings_1.has(enum_string.key))
                         enum_string.value = tmp_settings_1.getString(enum_string.key);
 
-                if(tmp_settings_1.has("listServerMessage_1")) {
+                if (tmp_settings_1.has("listServerMessage_1")) {
                     JSONArray array_listServerMessage_1 = tmp_settings_1.getJSONArray("listServerMessage_1");
-                    for(int i=0; i<array_listServerMessage_1.length(); i++)
-                        this.listServerMessage_1.add(new ModelServerMessage(app,array_listServerMessage_1.getJSONObject(i)));
+                    for (int i = 0; i < array_listServerMessage_1.length(); i++)
+                        this.listServerMessage_1.add(new ModelServerMessage(app, array_listServerMessage_1.getJSONObject(i)));
                 }
             }
         } catch (JSONException e) {
@@ -192,19 +192,22 @@ public class Config {
     }
 
     public void setDisplayPosition(int value) {
-        if (ENUM_Int.INTEGER_LAST_TAB.value!=value) {
+        if (ENUM_Int.INTEGER_LAST_TAB.value != value) {
             ENUM_Int.INTEGER_LAST_TAB.value = value;
             save();
         }
     }
 
-    public boolean isLogged() { return  getUserId()>-1; }
+    public boolean isLogged() {
+        return getUserId() > -1;
+    }
+
     public int getUserId() {
         return ENUM_Int.INTEGER_USER_ID.value;
     }
 
     public void setUserId(int value) {
-        if(ENUM_Int.INTEGER_USER_ID.value!=value) {
+        if (ENUM_Int.INTEGER_USER_ID.value != value) {
             ENUM_Int.INTEGER_USER_ID.value = value;
             save();
         }
@@ -215,7 +218,7 @@ public class Config {
     }
 
     public void setUrlServer(String value) {
-        if(!ENUM_String.STRING_URL_SERVER.value.equals(value)) {
+        if (!ENUM_String.STRING_URL_SERVER.value.equals(value)) {
             ENUM_String.STRING_URL_SERVER.value = value;
             save();
         }
@@ -270,21 +273,20 @@ public class Config {
     }
 
     public void setUserRegId(String value) {
-        if(!ENUM_String.STRING_USER_REGID.value.equals(value)) {
+        if (!ENUM_String.STRING_USER_REGID.value.equals(value)) {
             ENUM_String.STRING_USER_REGID.value = value;
             save();
         }
     }
 
     public Bitmap getUserProfilePicture() {
-        File file = new File(this.app.getFilesDir()+"/file_"+this.getUserIdFileProfilePicture());
+        File file = new File(this.app.getFilesDir() + "/file_" + this.getUserIdFileProfilePicture());
         if (file.exists()) {
             return BitmapFactory.decodeFile(file.getPath());
-        }
-        else if (isInternetConnection(app)) {
+        } else if (isInternetConnection(app)) {
             ModelFile modelFile = new ModelFile(app);
             modelFile.id = this.getUserIdFileProfilePicture();
-            modelFile.onlineUrl = this.app.getConfig().getUrlServer()+this.app.getConfig().routeFile+"/"+this.getUserIdFileProfilePicture();
+            modelFile.onlineUrl = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + this.getUserIdFileProfilePicture();
             new TaskGetDownloadImage(app, this.app.getConfig().getUser(), modelFile, 100000, new IBitmapListener() {
                 @Override
                 public void execute(Bitmap bitmap) {
@@ -300,7 +302,7 @@ public class Config {
     }
 
     public void setUserIdFileProfilePicture(int value) {
-        if (ENUM_Int.INTEGER_USER_ID_FILE_PROFILE_PICTURE.value!=value) {
+        if (ENUM_Int.INTEGER_USER_ID_FILE_PROFILE_PICTURE.value != value) {
             ENUM_Int.INTEGER_USER_ID_FILE_PROFILE_PICTURE.value = value;
             save();
         }
@@ -311,7 +313,7 @@ public class Config {
     }
 
     public void setUserFileModeView(int value) {
-        if (ENUM_Int.INTEGER_USER_FILE_MODE_VIEW.value!=value) {
+        if (ENUM_Int.INTEGER_USER_FILE_MODE_VIEW.value != value) {
             ENUM_Int.INTEGER_USER_FILE_MODE_VIEW.value = value;
             save();
         }
@@ -322,7 +324,7 @@ public class Config {
     }
 
     public void setUserAdmin(boolean value) {
-        if (ENUM_Boolean.BOOLEAN_USER_ADMIN.value!=value) {
+        if (ENUM_Boolean.BOOLEAN_USER_ADMIN.value != value) {
             ENUM_Boolean.BOOLEAN_USER_ADMIN.value = value;
             save();
         }
@@ -333,7 +335,7 @@ public class Config {
     }
 
     public void setHomeWelcomeMessage(boolean value) {
-        if (ENUM_Boolean.BOOLEAN_HOME_WELCOME_MESSAGE.value!=value) {
+        if (ENUM_Boolean.BOOLEAN_HOME_WELCOME_MESSAGE.value != value) {
             ENUM_Boolean.BOOLEAN_HOME_WELCOME_MESSAGE.value = value;
             save();
         }
@@ -344,7 +346,7 @@ public class Config {
     }
 
     public void setAutoConnection(boolean value) {
-        if (ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value!=value) {
+        if (ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value != value) {
             ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value = value;
             save();
         }
@@ -360,7 +362,7 @@ public class Config {
         if (serverMessage == null)
             return;
         boolean add = true;
-        for (ModelServerMessage s:listServerMessage_1)
+        for (ModelServerMessage s : listServerMessage_1)
             if (serverMessage.equals(s))
                 add = false;
         if (add)
@@ -369,14 +371,14 @@ public class Config {
     }
 
     public void removeServerMessage(ModelServerMessage serverMessage) {
-        if(listServerMessage_1 == null) {
+        if (listServerMessage_1 == null) {
             listServerMessage_1 = new ArrayList<>();
             return;
         }
         if (serverMessage == null)
             return;
-        for (int i=0; i<listServerMessage_1.size();i++) {
-            if(listServerMessage_1.get(i).equals(serverMessage)) {
+        for (int i = 0; i < listServerMessage_1.size(); i++) {
+            if (listServerMessage_1.get(i).equals(serverMessage)) {
                 listServerMessage_1.remove(i);
                 save();
                 return;

@@ -24,7 +24,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/actionbar_robotics"
             app:titleTextAppearance="@style/ToolbarTitle"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     </android.support.design.widget.AppBarLayout>
 

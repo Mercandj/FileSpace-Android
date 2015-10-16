@@ -1,6 +1,6 @@
 /**
  * ESIEE OpenSource Project : OpenGL
- *
+ * <p/>
  * MARTEL Andy
  * MERCANDALLI Jonathan
  */
@@ -17,15 +17,14 @@ import mercandalli.com.filespace.extras.physics.physics.Force;
  */
 public enum ENUM_Forces {
 
-	GRAVITY			(new Force(0, -1.0f, 0, 0.000003f, true)),
-	GRAVITY_UP		(new Force(0, 1.0f, 0, 0.000006f, true)),
-	FORCE_MZ		(new Force(0, 0, -1.0f, 0.0000005f, true)),
-	FORCE_MX		(new Force(-1.0f, 0, 0, 0.0000005f, true)),
-	;
-	
-	public Force force;
-	
-	private ENUM_Forces(Force force) {
-		this.force = force;
-	}
+    GRAVITY(new Force(0, -1.0f, 0, 0.000003f, true)),
+    GRAVITY_UP(new Force(0, 1.0f, 0, 0.000006f, true)),
+    FORCE_MZ(new Force(0, 0, -1.0f, 0.0000005f, true)),
+    FORCE_MX(new Force(-1.0f, 0, 0, 0.0000005f, true)),;
+
+    public Force force;
+
+    private ENUM_Forces(Force force) {
+        this.force = force;
+    }
 }

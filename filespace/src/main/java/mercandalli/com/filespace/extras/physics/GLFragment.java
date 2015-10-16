@@ -26,8 +26,8 @@ import mercandalli.com.filespace.R;
 
 /**
  * OpenGL Fragment : display GLSurfaceView
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class GLFragment extends Fragment implements SensorEventListener {
 
@@ -123,7 +123,7 @@ public class GLFragment extends Fragment implements SensorEventListener {
         //((MyGLSurfaceView)mGLView).mRenderer.myobj.color[0]= lux;
         if ((((MyGLSurfaceView) mGLView).mRenderer).camera.mEye != null) {
             /*(((MyGLSurfaceView)mGLView).mRenderer.mEye.dX) += (event.values[0]/1000.0);
-			(((MyGLSurfaceView)mGLView).mRenderer.mEye.dY) += (event.values[1]/1000.0);
+            (((MyGLSurfaceView)mGLView).mRenderer.mEye.dY) += (event.values[1]/1000.0);
 			(((MyGLSurfaceView)mGLView).mRenderer.mEye.dZ) += (event.values[2]/1000.0);*/
             //(((MyGLSurfaceView)mGLView).mRenderer.myobj).translateM((float)(event.values[0]/10.0), 0, (float)(event.values[2]/10.0));
 

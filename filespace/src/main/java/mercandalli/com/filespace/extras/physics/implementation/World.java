@@ -1,6 +1,6 @@
 /**
  * ESIEE OpenSource Project : OpenGL
- *
+ * <p/>
  * MARTEL Andy
  * MERCANDALLI Jonathan
  */
@@ -27,30 +27,31 @@ import mercandalli.com.filespace.extras.physics.physics.ForceToEntity;
  *
  */
 public class World extends EntityGroup {
-	
-	Camera camera;
-	public static int carId;
 
-	public World(Context context, Camera camera) {
-		super(context);
-		this.camera = camera;
-	}
+    Camera camera;
+    public static int carId;
+
+    public World(Context context, Camera camera) {
+        super(context);
+        this.camera = camera;
+    }
 
     public class Planet {
         public myVector3D position;
         public float vZ;
         public int resourceId;
+
         public Planet(myVector3D position, float vZ, int resourceId) {
             this.position = position;
             this.vZ = vZ;
             this.resourceId = resourceId;
         }
     }
-	
-	@Override
-	public void init() {		
-		
-		/********* INIT OBJECTS *********/
+
+    @Override
+    public void init() {
+
+        /********* INIT OBJECTS *********/
 
         /*
         List<Integer> objVerticalGravityId = new ArrayList<>();
@@ -85,17 +86,16 @@ public class World extends EntityGroup {
         List<Integer> objSunGravityId = new ArrayList<>();
 
 
-
-		myObject3D sun = new myObject3D(context);
-		sun.readMeshLocal(ENUM_Obj.SPHERE.getIndicesVertices(context));
-		sun.scale(10.0f);
-		sun.computeNormals();
-		sun.computeSphereTexture();
+        myObject3D sun = new myObject3D(context);
+        sun.readMeshLocal(ENUM_Obj.SPHERE.getIndicesVertices(context));
+        sun.scale(10.0f);
+        sun.computeNormals();
+        sun.computeSphereTexture();
         sun.createBuffers();
-		sun.translate(0.0f, 30.0f, -30.0f);
-		sun.texture = new myTexture(context, R.drawable.color_yellow);
-		sun.physic.mass = 0f;
-		this.addEntity(sun);
+        sun.translate(0.0f, 30.0f, -30.0f);
+        sun.texture = new myTexture(context, R.drawable.color_yellow);
+        sun.physic.mass = 0f;
+        this.addEntity(sun);
 
 
         List<Planet> planets = new ArrayList<>();
@@ -106,7 +106,7 @@ public class World extends EntityGroup {
         planets.add(new Planet(new myVector3D(34.0f, 30.0f, 28.0f), -0.01f, R.drawable.color_yellow));
         planets.add(new Planet(new myVector3D(33.0f, 30.0f, 0.0f), -0.007f, R.drawable.color_purple));
 
-        for(Planet planet : planets) {
+        for (Planet planet : planets) {
             myObject3D earth = new myObject3D(context);
             earth.readMeshLocal(ENUM_Obj.SPHERE.getIndicesVertices(context));
             earth.scale(1.5f);
@@ -147,18 +147,18 @@ public class World extends EntityGroup {
 		apple.repetedWayPosition.initCubeWabHorizontal(0,2.0f,0, 20.0f, 0.4f, false);
         this.addEntity(apple);
         */
-		
-		myObject3D floor = new myObject3D(context);
-		floor.generateGrid(100,100);
-		floor.scale(50f);
-		floor.computeNormals();
-		floor.computePlaneTexture();
-		floor.createBuffers();
-		floor.rotate(-90, 1,0,0);
-		floor.texture = new myTexture(context, R.drawable.color_white);
+
+        myObject3D floor = new myObject3D(context);
+        floor.generateGrid(100, 100);
+        floor.scale(50f);
+        floor.computeNormals();
+        floor.computePlaneTexture();
+        floor.createBuffers();
+        floor.rotate(-90, 1, 0, 0);
+        floor.texture = new myTexture(context, R.drawable.color_white);
         this.addEntity(floor);
-        
-        
+
+
         /********* INIT FORCES *********/
 
         //this.addForce(new Force(ENUM_Forces.GRAVITY.force, objVerticalGravityId));
@@ -167,5 +167,5 @@ public class World extends EntityGroup {
 
         this.addForce(new ForceToEntity(new Force(0, 0, -1.0f, 0.000008f, true), objSunGravityId, sun.id));
 
-	}
+    }
 }

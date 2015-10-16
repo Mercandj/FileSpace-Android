@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -32,26 +32,26 @@ import static mercandalli.com.filespace.utils.StringUtils.getWords;
 public class AlarmUtils {
 
     public static void setAlarm(Context context, int hours, int minutes) {
-        if(hours!=-1 && minutes!=-1) {
+        if (hours != -1 && minutes != -1) {
             Intent i = new Intent(AlarmClock.ACTION_SET_ALARM);
             i.putExtra(AlarmClock.EXTRA_HOUR, hours);
             i.putExtra(AlarmClock.EXTRA_MINUTES, minutes);
             context.startActivity(i);
-        }
-        else
+        } else
             launchPackage(context, "com.android.deskclock");
     }
 
     public static void setAlarmFromString(Context context, String sentence) {
         String[] message = getWords(sentence);
-        int hours=-1, minutes=0;
+        int hours = -1, minutes = 0;
 
-        label1:for(String var : message ) {
+        label1:
+        for (String var : message) {
             int var_int = -1;
-            try{
-                var_int=Integer.parseInt(var);
-            } catch(Exception e) {
-                if(var!=null) {
+            try {
+                var_int = Integer.parseInt(var);
+            } catch (Exception e) {
+                if (var != null) {
                     if (var.length() >= 2) {
                         for (int i = 1; i < var.length(); i++) {
                             if (var.charAt(i) == 'h' || var.charAt(i) == 'H') {
@@ -91,11 +91,11 @@ public class AlarmUtils {
                         var_int = -1;
                 }
             }
-            if(var_int!=-1) {
-                if(hours==-1 && var_int<=24)
-                    hours=var_int;
+            if (var_int != -1) {
+                if (hours == -1 && var_int <= 24)
+                    hours = var_int;
                 else
-                    minutes=var_int;
+                    minutes = var_int;
             }
         }
         setAlarm(context, hours, minutes);

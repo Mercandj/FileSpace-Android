@@ -10,7 +10,8 @@ import static mercandalli.com.filespace.ui.views.slider.AnimatorProxy.NEEDS_PROX
 import static mercandalli.com.filespace.ui.views.slider.AnimatorProxy.wrap;
 
 public final class ViewHelper {
-    private ViewHelper() {}
+    private ViewHelper() {
+    }
 
     public static float getAlpha(View view) {
         return NEEDS_PROXY ? wrap(view).getAlpha() : Honeycomb.getAlpha(view);

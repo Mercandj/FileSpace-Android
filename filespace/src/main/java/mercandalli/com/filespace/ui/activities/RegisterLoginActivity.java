@@ -304,7 +304,7 @@ public class RegisterLoginActivity extends ApplicationActivity {
     }
 
     /****************************************
-     *      Login via Google+
+     * Login via Google+
      ****************************************/
 
     @Override
@@ -339,7 +339,7 @@ public class RegisterLoginActivity extends ApplicationActivity {
 
     /**
      * Sign-in into google
-     * */
+     */
     private void signInWithGplus() {
         if (!mGoogleApiClient.isConnecting()) {
             mSignInClicked = true;
@@ -349,7 +349,7 @@ public class RegisterLoginActivity extends ApplicationActivity {
 
     /**
      * Method to resolve any signin errors
-     * */
+     */
     private void resolveSignInError() {
         if (mConnectionResult == null) {
             mIntentInProgress = false;

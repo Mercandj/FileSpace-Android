@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -50,9 +50,9 @@ import mercandalli.com.filespace.utils.TimeUtils;
 
 public class SettingsFragment extends BackFragment {
 
-	private View rootView;
-	
-	private RecyclerView recyclerView;
+    private View rootView;
+
+    private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<ModelSetting> list;
     private int click_version;
@@ -65,31 +65,31 @@ public class SettingsFragment extends BackFragment {
         return fragment;
     }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		rootView = inflater.inflate(R.layout.fragment_settings, container, false);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
         app.setTitle(R.string.tab_settings);
         Toolbar mToolbar = (Toolbar) rootView.findViewById(R.id.my_toolbar);
         app.setToolbar(mToolbar);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             app.getWindow().setStatusBarColor(ContextCompat.getColor(app, R.color.notifications_bar));
-		
-		recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
-		recyclerView.setHasFixedSize(true);
+
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
+        recyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
-		click_version = 0;
-        
+        click_version = 0;
+
         refreshList();
-		
+
         return rootView;
-	}
-	
-	public void refreshList() {
-		list = new ArrayList<>();
-		list.add(new ModelSetting(app, "Settings", Const.TAB_VIEW_TYPE_SECTION));
-        if(app.getConfig().isLogged()) {
+    }
+
+    public void refreshList() {
+        list = new ArrayList<>();
+        list.add(new ModelSetting(app, "Settings", Const.TAB_VIEW_TYPE_SECTION));
+        if (app.getConfig().isLogged()) {
             list.add(new ModelSetting(app, "Auto connection", new OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -110,7 +110,7 @@ public class SettingsFragment extends BackFragment {
                 app.getConfig().setHomeWelcomeMessage(true);
             }
         }));
-        if(app.getConfig().isLogged()) {
+        if (app.getConfig().isLogged()) {
             list.add(new ModelSetting(app, "Change password", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -119,7 +119,7 @@ public class SettingsFragment extends BackFragment {
                 }
             }));
         }
-        if(isDevelopper) {
+        if (isDevelopper) {
             list.add(new ModelSetting(app, "Login / Sign in", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -138,8 +138,8 @@ public class SettingsFragment extends BackFragment {
             }
         }));
 
-		try {
-			PackageInfo pInfo = app.getPackageManager().getPackageInfo(app.getPackageName(), 0);
+        try {
+            PackageInfo pInfo = app.getPackageManager().getPackageInfo(app.getPackageName(), 0);
             list.add(new ModelSetting(app, "Last update date GMT", TimeUtils.getGMTDate(pInfo.lastUpdateTime)));
             list.add(new ModelSetting(app, "Version", pInfo.versionName, new View.OnClickListener() {
                 @Override
@@ -164,21 +164,21 @@ public class SettingsFragment extends BackFragment {
                     }
                 }
             }));
-		} catch (PackageManager.NameNotFoundException e) {
-			e.printStackTrace();
-		}
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
-		updateAdapter();		
-	}
-	
-	public void updateAdapter() {
-		if(recyclerView!=null && list!=null) {
+        updateAdapter();
+    }
+
+    public void updateAdapter() {
+        if (recyclerView != null && list != null) {
             AdapterModelSetting adapter = new AdapterModelSetting(app, list);
             adapter.setOnItemClickListener(new AdapterModelSetting.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     if (position < list.size()) {
-                        if(list.get(position).onClickListener != null)
+                        if (list.get(position).onClickListener != null)
                             list.get(position).onClickListener.onClick(view);
                     }
                 }
