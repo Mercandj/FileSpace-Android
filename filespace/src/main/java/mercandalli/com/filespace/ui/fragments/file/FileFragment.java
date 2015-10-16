@@ -56,7 +56,7 @@ import mercandalli.com.filespace.ui.fragments.EnableSwipeToRefreshCallback;
 
 import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
-public class FileToRefreshCallback extends BackFragment implements ViewPager.OnPageChangeListener, EnableSwipeToRefreshCallback {
+public class FileFragment extends BackFragment implements ViewPager.OnPageChangeListener, EnableSwipeToRefreshCallback {
 	
 	private static final int NB_FRAGMENT = 4;
     private static final int INIT_FRAGMENT = 1;
@@ -75,9 +75,9 @@ public class FileToRefreshCallback extends BackFragment implements ViewPager.OnP
 
     private boolean mSwipeEnabled = true;
 
-    public static FileToRefreshCallback newInstance() {
+    public static FileFragment newInstance() {
         Bundle args = new Bundle();
-        FileToRefreshCallback fragment = new FileToRefreshCallback();
+        FileFragment fragment = new FileFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -225,7 +225,7 @@ public class FileToRefreshCallback extends BackFragment implements ViewPager.OnP
 
     @Override
     public void onPageSelected(int position) {
-        FileToRefreshCallback.this.app.invalidateOptionsMenu();
+        FileFragment.this.app.invalidateOptionsMenu();
         mAppBarLayout.setExpanded(true);
         if (app.isLogged()) {
             switch (position) {
@@ -260,11 +260,11 @@ public class FileToRefreshCallback extends BackFragment implements ViewPager.OnP
 
 			FabFragment fragment;
 			switch (i) {
-                case 0:		fragment = FileCloudToRefreshCallback.newInstance();  	break;
-                case 1:		fragment = FileMyCloudToRefreshCallback.newInstance(); 	break;
-                case 2:		fragment = FileLocalToRefreshCallback.newInstance();	    break;
-                case 3:		fragment = FileLocalMusicToRefreshCallback.newInstance();	break;
-                default:	fragment = FileLocalToRefreshCallback.newInstance();	    break;
+                case 0:		fragment = FileCloudFragment.newInstance();  	break;
+                case 1:		fragment = FileMyCloudFragment.newInstance(); 	break;
+                case 2:		fragment = FileLocalFragment.newInstance();	    break;
+                case 3:		fragment = FileLocalMusicFragment.newInstance();	break;
+                default:	fragment = FileLocalFragment.newInstance();	    break;
 			}
             fragment.setRefreshFab(new IListener() {
                 @Override
@@ -304,20 +304,20 @@ public class FileToRefreshCallback extends BackFragment implements ViewPager.OnP
 	public void refreshListServer(String search) {
         for (FabFragment fr : listFragment) {
             if (fr != null) {
-                if (fr instanceof FileCloudToRefreshCallback) {
-                    FileCloudToRefreshCallback fragmentFileManagerFragment = (FileCloudToRefreshCallback) fr;
+                if (fr instanceof FileCloudFragment) {
+                    FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fr;
                     fragmentFileManagerFragment.refreshList(search);
                 }
-                else if (fr instanceof FileMyCloudToRefreshCallback) {
-                    FileMyCloudToRefreshCallback fragmentFileManagerFragment = (FileMyCloudToRefreshCallback) fr;
+                else if (fr instanceof FileMyCloudFragment) {
+                    FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fr;
                     fragmentFileManagerFragment.refreshList(search);
                 }
-                else if (fr instanceof FileLocalToRefreshCallback) {
-                    FileLocalToRefreshCallback fragmentFileManagerFragment = (FileLocalToRefreshCallback) fr;
+                else if (fr instanceof FileLocalFragment) {
+                    FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fr;
                     fragmentFileManagerFragment.refreshList(search);
                 }
-                else if (fr instanceof FileLocalMusicToRefreshCallback) {
-                    FileLocalMusicToRefreshCallback fragmentFileManagerFragment = (FileLocalMusicToRefreshCallback) fr;
+                else if (fr instanceof FileLocalMusicFragment) {
+                    FileLocalMusicFragment fragmentFileManagerFragment = (FileLocalMusicFragment) fr;
                     fragmentFileManagerFragment.refreshList(search);
                 }
             }
@@ -327,16 +327,16 @@ public class FileToRefreshCallback extends BackFragment implements ViewPager.OnP
 	public void updateAdapterListServer() {
         for (FabFragment fr : listFragment) {
             if (fr != null) {
-                if (fr instanceof FileCloudToRefreshCallback) {
-                    FileCloudToRefreshCallback fragmentFileManagerFragment = (FileCloudToRefreshCallback) fr;
+                if (fr instanceof FileCloudFragment) {
+                    FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fr;
                     fragmentFileManagerFragment.updateAdapter();
                 }
-                else if (fr instanceof FileMyCloudToRefreshCallback) {
-                    FileMyCloudToRefreshCallback fragmentFileManagerFragment = (FileMyCloudToRefreshCallback) fr;
+                else if (fr instanceof FileMyCloudFragment) {
+                    FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fr;
                     fragmentFileManagerFragment.updateAdapter();
                 }
-                else if (fr instanceof FileLocalToRefreshCallback) {
-                    FileLocalToRefreshCallback fragmentFileManagerFragment = (FileLocalToRefreshCallback) fr;
+                else if (fr instanceof FileLocalFragment) {
+                    FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fr;
                     fragmentFileManagerFragment.updateAdapter();
                 }
             }
@@ -346,16 +346,16 @@ public class FileToRefreshCallback extends BackFragment implements ViewPager.OnP
 	public void refreshAdapterListServer() {
         for (FabFragment fr : listFragment) {
             if (fr != null) {
-                if (fr instanceof FileCloudToRefreshCallback) {
-                    FileCloudToRefreshCallback fragmentFileManagerFragment = (FileCloudToRefreshCallback) fr;
+                if (fr instanceof FileCloudFragment) {
+                    FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fr;
                     fragmentFileManagerFragment.refreshList();
                 }
-                if (fr instanceof FileMyCloudToRefreshCallback) {
-                    FileMyCloudToRefreshCallback fragmentFileManagerFragment = (FileMyCloudToRefreshCallback) fr;
+                if (fr instanceof FileMyCloudFragment) {
+                    FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fr;
                     fragmentFileManagerFragment.refreshList();
                 }
-                if (fr instanceof FileLocalToRefreshCallback) {
-                    FileLocalToRefreshCallback fragmentFileManagerFragment = (FileLocalToRefreshCallback) fr;
+                if (fr instanceof FileLocalFragment) {
+                    FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fr;
                     fragmentFileManagerFragment.refreshList();
                 }
             }
@@ -400,8 +400,8 @@ public class FileToRefreshCallback extends BackFragment implements ViewPager.OnP
     public void goHome() {
         if(listFragment.length>2)
             if(listFragment[2]!=null)
-                if(listFragment[2] instanceof FileLocalToRefreshCallback) {
-                    FileLocalToRefreshCallback fragmentFileManagerFragment = (FileLocalToRefreshCallback) listFragment[2];
+                if(listFragment[2] instanceof FileLocalFragment) {
+                    FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) listFragment[2];
                     fragmentFileManagerFragment.goHome();
                 }
     }

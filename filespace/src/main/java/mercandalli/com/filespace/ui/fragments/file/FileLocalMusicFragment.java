@@ -66,7 +66,7 @@ import mercandalli.com.filespace.ui.fragments.EnableSwipeToRefreshCallback;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.StringPair;
 
-public class FileLocalMusicToRefreshCallback extends FabFragment
+public class FileLocalMusicFragment extends FabFragment
         implements BackFragment.IListViewMode, BackFragment.ISortMode, EnableSwipeToRefreshCallback {
 
     private DynamicListView dynamicListView; // http://nhaarman.github.io/ListViewAnimations/
@@ -79,9 +79,9 @@ public class FileLocalMusicToRefreshCallback extends FabFragment
     private int mSortMode = Const.SORT_DATE_MODIFICATION;
     private int mViewMode = Const.MODE_LIST;
 
-    public static FileLocalMusicToRefreshCallback newInstance() {
+    public static FileLocalMusicFragment newInstance() {
         Bundle args = new Bundle();
-        FileLocalMusicToRefreshCallback fragment = new FileLocalMusicToRefreshCallback();
+        FileLocalMusicFragment fragment = new FileLocalMusicFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -220,7 +220,7 @@ public class FileLocalMusicToRefreshCallback extends FabFragment
             final AdapterDragModelFile adapter = new AdapterDragModelFile(app, files, new IModelFileListener() {
                 @Override
                 public void execute(final ModelFile modelFile) {
-                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalMusicToRefreshCallback.this.app);
+                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalMusicFragment.this.app);
                     String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties)};
                     if (app.isLogged())
                         menuList = new String[]{getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.properties)};
@@ -233,9 +233,9 @@ public class FileLocalMusicToRefreshCallback extends FabFragment
                                     switch (item) {
                                         case 0:
                                             if (modelFile.directory) {
-                                                Toast.makeText(FileLocalMusicToRefreshCallback.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(FileLocalMusicFragment.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                             } else
-                                                FileLocalMusicToRefreshCallback.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
+                                                FileLocalMusicFragment.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
                                                     @Override
                                                     public void execute() {
                                                         if (modelFile.getFile() != null) {
@@ -251,36 +251,36 @@ public class FileLocalMusicToRefreshCallback extends FabFragment
                                                 }, getString(R.string.cancel), null);
                                             break;
                                         case 1:
-                                            modelFile.openLocalAs(FileLocalMusicToRefreshCallback.this.app);
+                                            modelFile.openLocalAs(FileLocalMusicFragment.this.app);
                                             break;
                                         case 2:
-                                            FileLocalMusicToRefreshCallback.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                            FileLocalMusicFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
                                                     modelFile.rename(text, new IPostExecuteListener() {
                                                         @Override
                                                         public void execute(JSONObject json, String body) {
-                                                            FileLocalMusicToRefreshCallback.this.app.refreshAdapters();
+                                                            FileLocalMusicFragment.this.app.refreshAdapters();
                                                         }
                                                     });
                                                 }
                                             }, "Cancel", null, modelFile.getNameExt());
                                             break;
                                         case 3:
-                                            FileLocalMusicToRefreshCallback.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                            FileLocalMusicFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                                 @Override
                                                 public void execute() {
                                                     modelFile.delete(new IPostExecuteListener() {
                                                         @Override
                                                         public void execute(JSONObject json, String body) {
-                                                            FileLocalMusicToRefreshCallback.this.app.refreshAdapters();
+                                                            FileLocalMusicFragment.this.app.refreshAdapters();
                                                         }
                                                     });
                                                 }
                                             }, "No", null);
                                             break;
                                         case 4:
-                                            FileLocalMusicToRefreshCallback.this.app.alert(
+                                            FileLocalMusicFragment.this.app.alert(
                                                     getString(R.string.properties) + " : " + modelFile.name,
                                                     modelFile.toSpanned(),
                                                     "OK",
@@ -335,7 +335,7 @@ public class FileLocalMusicToRefreshCallback extends FabFragment
                             return false;
                         final ModelFile modelFile = files.get(position);
 
-                        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalMusicToRefreshCallback.this.app);
+                        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalMusicFragment.this.app);
                         String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.properties)};
                         if (app.isLogged())
                             menuList = new String[]{getString(R.string.upload), getString(R.string.rename), getString(R.string.delete), getString(R.string.properties)};
@@ -348,9 +348,9 @@ public class FileLocalMusicToRefreshCallback extends FabFragment
                                         switch (item) {
                                             case 0:
                                                 if (modelFile.directory) {
-                                                    Toast.makeText(FileLocalMusicToRefreshCallback.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(FileLocalMusicFragment.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                                 } else
-                                                    FileLocalMusicToRefreshCallback.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
+                                                    FileLocalMusicFragment.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
                                                         @Override
                                                         public void execute() {
                                                             if (modelFile.getFile() != null) {
@@ -366,33 +366,33 @@ public class FileLocalMusicToRefreshCallback extends FabFragment
                                                     }, getString(R.string.cancel), null);
                                                 break;
                                             case 1:
-                                                FileLocalMusicToRefreshCallback.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                                FileLocalMusicFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                                     @Override
                                                     public void execute(String text) {
                                                         modelFile.rename(text, new IPostExecuteListener() {
                                                             @Override
                                                             public void execute(JSONObject json, String body) {
-                                                                FileLocalMusicToRefreshCallback.this.app.refreshAdapters();
+                                                                FileLocalMusicFragment.this.app.refreshAdapters();
                                                             }
                                                         });
                                                     }
                                                 }, "Cancel", null, modelFile.getNameExt());
                                                 break;
                                             case 2:
-                                                FileLocalMusicToRefreshCallback.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                                FileLocalMusicFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                                     @Override
                                                     public void execute() {
                                                         modelFile.delete(new IPostExecuteListener() {
                                                             @Override
                                                             public void execute(JSONObject json, String body) {
-                                                                FileLocalMusicToRefreshCallback.this.app.refreshAdapters();
+                                                                FileLocalMusicFragment.this.app.refreshAdapters();
                                                             }
                                                         });
                                                     }
                                                 }, "No", null);
                                                 break;
                                             case 3:
-                                                FileLocalMusicToRefreshCallback.this.app.alert(
+                                                FileLocalMusicFragment.this.app.alert(
                                                         getString(R.string.properties) + " : " + modelFile.name,
                                                         "Name : " + modelFile.name + "\nExtension : " + modelFile.type + "\nType : " + modelFile.type.getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
                                                         "OK",

@@ -26,7 +26,7 @@ import android.util.Log;
 
 import mercandalli.com.filespace.notificationpush.NotificationPush;
 import mercandalli.com.filespace.ui.fragments.community.CommunityFragment;
-import mercandalli.com.filespace.ui.fragments.file.FileToRefreshCallback;
+import mercandalli.com.filespace.ui.fragments.file.FileFragment;
 
 /**
  * Main {@link Activity} launched by the xml.
@@ -37,8 +37,8 @@ public class MainActivity extends ApplicationDrawerActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (backFragment instanceof FileToRefreshCallback) {
-            FileToRefreshCallback fragmentFileManager = (FileToRefreshCallback) backFragment;
+        if (backFragment instanceof FileFragment) {
+            FileFragment fragmentFileManager = (FileFragment) backFragment;
             fragmentFileManager.refreshListServer();
         }
 
@@ -54,8 +54,8 @@ public class MainActivity extends ApplicationDrawerActivity {
 
     @Override
     public void updateAdapters() {
-        if (backFragment instanceof FileToRefreshCallback) {
-            FileToRefreshCallback fragmentFileManager = (FileToRefreshCallback) backFragment;
+        if (backFragment instanceof FileFragment) {
+            FileFragment fragmentFileManager = (FileFragment) backFragment;
             fragmentFileManager.updateAdapterListServer();
         } else if (backFragment instanceof CommunityFragment) {
             CommunityFragment fragmentTalkManager = (CommunityFragment) backFragment;
@@ -65,8 +65,8 @@ public class MainActivity extends ApplicationDrawerActivity {
 
     @Override
     public void refreshAdapters() {
-        if (backFragment instanceof FileToRefreshCallback) {
-            FileToRefreshCallback fragmentFileManager = (FileToRefreshCallback) backFragment;
+        if (backFragment instanceof FileFragment) {
+            FileFragment fragmentFileManager = (FileFragment) backFragment;
             fragmentFileManager.refreshAdapterListServer();
         }
     }

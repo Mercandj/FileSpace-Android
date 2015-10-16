@@ -69,7 +69,7 @@ import mercandalli.com.filespace.utils.StringPair;
 
 import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
-public class FileMyCloudToRefreshCallback extends FabFragment implements BackFragment.IListViewMode, EnableSwipeToRefreshCallback {
+public class FileMyCloudFragment extends FabFragment implements BackFragment.IListViewMode, EnableSwipeToRefreshCallback {
 
 	private RecyclerView listView;
     private GridView gridView;
@@ -84,9 +84,9 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
 
     private int mViewMode = Const.MODE_LIST;
 
-    public static FileMyCloudToRefreshCallback newInstance() {
+    public static FileMyCloudFragment newInstance() {
         Bundle args = new Bundle();
-        FileMyCloudToRefreshCallback fragment = new FileMyCloudToRefreshCallback();
+        FileMyCloudFragment fragment = new FileMyCloudFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -144,7 +144,7 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
         this.adapter = new AdapterModelFile(app, files, new IModelFileListener() {
             @Override
             public void execute(final ModelFile modelFile) {
-                final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileMyCloudToRefreshCallback.this.app);
+                final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileMyCloudFragment.this.app);
                 String[] menuList = { getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
                 if(!modelFile.directory) {
                     if(modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
@@ -166,13 +166,13 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
                                             @Override
                                             public void execute() {
                                                 Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
-                                                FileMyCloudToRefreshCallback.this.app.refreshAdapters();
+                                                FileMyCloudFragment.this.app.refreshAdapters();
                                             }
                                         });
                                         break;
 
                                     case 1:
-                                        FileMyCloudToRefreshCallback.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                        FileMyCloudFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                             @Override
                                             public void execute(String text) {
                                                 modelFile.rename(text, new IPostExecuteListener() {
@@ -182,7 +182,7 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
                                                             filesToCut.clear();
                                                             refreshFab();
                                                         }
-                                                        FileMyCloudToRefreshCallback.this.app.refreshAdapters();
+                                                        FileMyCloudFragment.this.app.refreshAdapters();
                                                     }
                                                 });
                                             }
@@ -190,7 +190,7 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
                                         break;
 
                                     case 2:
-                                        FileMyCloudToRefreshCallback.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                        FileMyCloudFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                             @Override
                                             public void execute() {
                                                 modelFile.delete(new IPostExecuteListener() {
@@ -200,7 +200,7 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
                                                             filesToCut.clear();
                                                             refreshFab();
                                                         }
-                                                        FileMyCloudToRefreshCallback.this.app.refreshAdapters();
+                                                        FileMyCloudFragment.this.app.refreshAdapters();
                                                     }
                                                 });
                                             }
@@ -208,13 +208,13 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
                                         break;
 
                                     case 3:
-                                        FileMyCloudToRefreshCallback.this.filesToCut.add(modelFile);
+                                        FileMyCloudFragment.this.filesToCut.add(modelFile);
                                         Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                         refreshFab();
                                         break;
 
                                     case 4:
-                                        FileMyCloudToRefreshCallback.this.app.alert(
+                                        FileMyCloudFragment.this.app.alert(
                                                 getString(R.string.properties) + " : " + modelFile.name,
                                                 modelFile.toSpanned(),
                                                 "OK",
@@ -230,7 +230,7 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
                                         modelFile.setPublic(!modelFile._public, new IPostExecuteListener() {
                                             @Override
                                             public void execute(JSONObject json, String body) {
-                                                FileMyCloudToRefreshCallback.this.app.refreshAdapters();
+                                                FileMyCloudFragment.this.app.refreshAdapters();
                                             }
                                         });
                                         break;
@@ -264,7 +264,7 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
                                                         if (json != null)
                                                             if (json.has("succeed"))
                                                                 if (json.getBoolean("succeed"))
-                                                                    FileMyCloudToRefreshCallback.this.app.refreshAdapters();
+                                                                    FileMyCloudFragment.this.app.refreshAdapters();
                                                     } catch (JSONException e) {
                                                         e.printStackTrace();
                                                     }
@@ -291,7 +291,7 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
                     files.get(position).selected = !files.get(position).selected;
                     adapter.notifyItemChanged(position);
                 } else if (files.get(position).directory) {
-                    FileMyCloudToRefreshCallback.this.id_file_path.add(files.get(position).id);
+                    FileMyCloudFragment.this.id_file_path.add(files.get(position).id);
                     refreshList();
                 } else
                     files.get(position).executeOnline(files, view);
@@ -414,7 +414,7 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
                             files.get(position).selected = !files.get(position).selected;
                             adapter.notifyItemChanged(position);
                         } else if (files.get(position).directory) {
-                            FileMyCloudToRefreshCallback.this.id_file_path.add(files.get(position).id);
+                            FileMyCloudFragment.this.id_file_path.add(files.get(position).id);
                             refreshList();
                         } else
                             files.get(position).executeOnline(files, view);
@@ -426,7 +426,7 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
                         if(position>=files.size())
                             return false;
                         final ModelFile modelFile = files.get(position);
-                        final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileMyCloudToRefreshCallback.this.app);
+                        final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileMyCloudFragment.this.app);
                         String[] menuList = { getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties) };
                         if(!modelFile.directory) {
                             if(modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
@@ -448,13 +448,13 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
                                                     @Override
                                                     public void execute() {
                                                         Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
-                                                        FileMyCloudToRefreshCallback.this.app.refreshAdapters();
+                                                        FileMyCloudFragment.this.app.refreshAdapters();
                                                     }
                                                 });
                                                 break;
 
                                             case 1:
-                                                FileMyCloudToRefreshCallback.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                                FileMyCloudFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                                     @Override
                                                     public void execute(String text) {
                                                         modelFile.rename(text, new IPostExecuteListener() {
@@ -464,7 +464,7 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
                                                                     filesToCut.clear();
                                                                     refreshFab();
                                                                 }
-                                                                FileMyCloudToRefreshCallback.this.app.refreshAdapters();
+                                                                FileMyCloudFragment.this.app.refreshAdapters();
                                                             }
                                                         });
                                                     }
@@ -472,7 +472,7 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
                                                 break;
 
                                             case 2:
-                                                FileMyCloudToRefreshCallback.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                                FileMyCloudFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                                     @Override
                                                     public void execute() {
                                                         modelFile.delete(new IPostExecuteListener() {
@@ -482,7 +482,7 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
                                                                     filesToCut.clear();
                                                                     refreshFab();
                                                                 }
-                                                                FileMyCloudToRefreshCallback.this.app.refreshAdapters();
+                                                                FileMyCloudFragment.this.app.refreshAdapters();
                                                             }
                                                         });
                                                     }
@@ -490,13 +490,13 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
                                                 break;
 
                                             case 3:
-                                                FileMyCloudToRefreshCallback.this.filesToCut.add(modelFile);
+                                                FileMyCloudFragment.this.filesToCut.add(modelFile);
                                                 Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                                 refreshFab();
                                                 break;
 
                                             case 4:
-                                                FileMyCloudToRefreshCallback.this.app.alert(
+                                                FileMyCloudFragment.this.app.alert(
                                                         getString(R.string.properties) + " : " + modelFile.name,
                                                         "Name : " + modelFile.name + "\nExtension : " + modelFile.type + "\nType : " + modelFile.type.getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
                                                         "OK",
@@ -509,7 +509,7 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
                                                 modelFile.setPublic(!modelFile._public, new IPostExecuteListener() {
                                                     @Override
                                                     public void execute(JSONObject json, String body) {
-                                                        FileMyCloudToRefreshCallback.this.app.refreshAdapters();
+                                                        FileMyCloudFragment.this.app.refreshAdapters();
                                                     }
                                                 });
                                                 break;
@@ -543,7 +543,7 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
                                                                 if (json != null)
                                                                     if (json.has("succeed"))
                                                                         if (json.getBoolean("succeed"))
-                                                                            FileMyCloudToRefreshCallback.this.app.refreshAdapters();
+                                                                            FileMyCloudFragment.this.app.refreshAdapters();
                                                             } catch (JSONException e) {
                                                                 e.printStackTrace();
                                                             }
@@ -579,8 +579,8 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
             return true;
         }
         else if(this.id_file_path.peek()!=-1) {
-            FileMyCloudToRefreshCallback.this.id_file_path.pop();
-            FileMyCloudToRefreshCallback.this.refreshList();
+            FileMyCloudFragment.this.id_file_path.pop();
+            FileMyCloudFragment.this.refreshList();
             return true;
         }
         else if(filesToCut != null && filesToCut.size() != 0) {
@@ -616,16 +616,16 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
             case 0:
                 if (filesToCut != null && filesToCut.size() != 0) {
                     for (ModelFile file : filesToCut)
-                        file.setId_file_parent(FileMyCloudToRefreshCallback.this.id_file_path.peek(), new IPostExecuteListener() {
+                        file.setId_file_parent(FileMyCloudFragment.this.id_file_path.peek(), new IPostExecuteListener() {
                             @Override
                             public void execute(JSONObject json, String body) {
-                                FileMyCloudToRefreshCallback.this.app.refreshAdapters();
+                                FileMyCloudFragment.this.app.refreshAdapters();
                             }
                         });
                     filesToCut.clear();
                 } else {
                     fab.hide();
-                    FileMyCloudToRefreshCallback.this.app.dialog = new DialogAddFileManager(app, FileMyCloudToRefreshCallback.this.id_file_path.peek(), new IPostExecuteListener() {
+                    FileMyCloudFragment.this.app.dialog = new DialogAddFileManager(app, FileMyCloudFragment.this.id_file_path.peek(), new IPostExecuteListener() {
                         @Override
                         public void execute(JSONObject json, String body) {
                             if (json != null)
@@ -642,8 +642,8 @@ public class FileMyCloudToRefreshCallback extends FabFragment implements BackFra
                 break;
             case 1:
                 if (id_file_path.peek() != -1) {
-                    FileMyCloudToRefreshCallback.this.id_file_path.pop();
-                    FileMyCloudToRefreshCallback.this.refreshList();
+                    FileMyCloudFragment.this.id_file_path.pop();
+                    FileMyCloudFragment.this.refreshList();
                 }
                 break;
         }

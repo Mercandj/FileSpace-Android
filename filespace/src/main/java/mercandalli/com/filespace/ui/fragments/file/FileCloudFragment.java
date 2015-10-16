@@ -68,7 +68,7 @@ import mercandalli.com.filespace.utils.StringPair;
 import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
 
-public class FileCloudToRefreshCallback extends FabFragment implements BackFragment.IListViewMode, EnableSwipeToRefreshCallback {
+public class FileCloudFragment extends FabFragment implements BackFragment.IListViewMode, EnableSwipeToRefreshCallback {
 
 	private RecyclerView listView;
     private GridView gridView;
@@ -87,9 +87,9 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
      */
     private int mViewMode = Const.MODE_LIST;
 
-    public static FileCloudToRefreshCallback newInstance() {
+    public static FileCloudFragment newInstance() {
         Bundle args = new Bundle();
-        FileCloudToRefreshCallback fragment = new FileCloudToRefreshCallback();
+        FileCloudFragment fragment = new FileCloudFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -145,7 +145,7 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
         this.adapter = new AdapterModelFile(app, files, new IModelFileListener() {
             @Override
             public void execute(final ModelFile modelFile) {
-                final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileCloudToRefreshCallback.this.app);
+                final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileCloudFragment.this.app);
                 String[] menuList = { getString(R.string.download) };
                 if(!modelFile.directory && modelFile.isMine()) {
                     if(modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
@@ -164,13 +164,13 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
                                             @Override
                                             public void execute() {
                                                 Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
-                                                FileCloudToRefreshCallback.this.app.refreshAdapters();
+                                                FileCloudFragment.this.app.refreshAdapters();
                                             }
                                         });
                                         break;
 
                                     case 1:
-                                        FileCloudToRefreshCallback.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                        FileCloudFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                             @Override
                                             public void execute(String text) {
                                                 modelFile.rename(text, new IPostExecuteListener() {
@@ -180,7 +180,7 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
                                                             filesToCut.clear();
                                                             refreshFab.execute();
                                                         }
-                                                        FileCloudToRefreshCallback.this.app.refreshAdapters();
+                                                        FileCloudFragment.this.app.refreshAdapters();
                                                     }
                                                 });
                                             }
@@ -188,7 +188,7 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
                                         break;
 
                                     case 2:
-                                        FileCloudToRefreshCallback.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                        FileCloudFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                             @Override
                                             public void execute() {
                                                 modelFile.delete(new IPostExecuteListener() {
@@ -198,7 +198,7 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
                                                             filesToCut.clear();
                                                             refreshFab.execute();
                                                         }
-                                                        FileCloudToRefreshCallback.this.app.refreshAdapters();
+                                                        FileCloudFragment.this.app.refreshAdapters();
                                                     }
                                                 });
                                             }
@@ -206,12 +206,12 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
                                         break;
 
                                     case 3:
-                                        FileCloudToRefreshCallback.this.filesToCut.add(modelFile);
+                                        FileCloudFragment.this.filesToCut.add(modelFile);
                                         Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                         break;
 
                                     case 4:
-                                        FileCloudToRefreshCallback.this.app.alert(
+                                        FileCloudFragment.this.app.alert(
                                                 getString(R.string.properties) + " : " + modelFile.name,
                                                 modelFile.toSpanned(),
                                                 "OK",
@@ -224,7 +224,7 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
                                         modelFile.setPublic(!modelFile._public, new IPostExecuteListener() {
                                             @Override
                                             public void execute(JSONObject json, String body) {
-                                                FileCloudToRefreshCallback.this.app.refreshAdapters();
+                                                FileCloudFragment.this.app.refreshAdapters();
                                             }
                                         });
                                         break;
@@ -267,7 +267,7 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
                     adapter.notifyItemChanged(position);
                 }
                 else if(files.get(position).directory) {
-                    FileCloudToRefreshCallback.this.url = files.get(position).url + "/";
+                    FileCloudFragment.this.url = files.get(position).url + "/";
                     refreshList();
                 }
                 else
@@ -390,7 +390,7 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
                             adapter.notifyItemChanged(position);
                         }
                         else if(files.get(position).directory) {
-                            FileCloudToRefreshCallback.this.url = files.get(position).url + "/";
+                            FileCloudFragment.this.url = files.get(position).url + "/";
                             refreshList();
                         }
                         else
@@ -404,7 +404,7 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
                             return false;
                         final ModelFile modelFile = files.get(position);
 
-                        final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileCloudToRefreshCallback.this.app);
+                        final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileCloudFragment.this.app);
                         String[] menuList = { getString(R.string.download) };
                         if(!modelFile.directory && modelFile.isMine()) {
                             if(modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
@@ -423,13 +423,13 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
                                                     @Override
                                                     public void execute() {
                                                         Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
-                                                        FileCloudToRefreshCallback.this.app.refreshAdapters();
+                                                        FileCloudFragment.this.app.refreshAdapters();
                                                     }
                                                 });
                                                 break;
 
                                             case 1:
-                                                FileCloudToRefreshCallback.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                                FileCloudFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                                     @Override
                                                     public void execute(String text) {
                                                         modelFile.rename(text, new IPostExecuteListener() {
@@ -439,7 +439,7 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
                                                                     filesToCut.clear();
                                                                     refreshFab.execute();
                                                                 }
-                                                                FileCloudToRefreshCallback.this.app.refreshAdapters();
+                                                                FileCloudFragment.this.app.refreshAdapters();
                                                             }
                                                         });
                                                     }
@@ -447,7 +447,7 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
                                                 break;
 
                                             case 2:
-                                                FileCloudToRefreshCallback.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                                FileCloudFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                                     @Override
                                                     public void execute() {
                                                         modelFile.delete(new IPostExecuteListener() {
@@ -457,7 +457,7 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
                                                                     filesToCut.clear();
                                                                     refreshFab.execute();
                                                                 }
-                                                                FileCloudToRefreshCallback.this.app.refreshAdapters();
+                                                                FileCloudFragment.this.app.refreshAdapters();
                                                             }
                                                         });
                                                     }
@@ -465,12 +465,12 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
                                                 break;
 
                                             case 3:
-                                                FileCloudToRefreshCallback.this.filesToCut.add(modelFile);
+                                                FileCloudFragment.this.filesToCut.add(modelFile);
                                                 Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                                 break;
 
                                             case 4:
-                                                FileCloudToRefreshCallback.this.app.alert(
+                                                FileCloudFragment.this.app.alert(
                                                         getString(R.string.properties) + " : " + modelFile.name,
                                                         "Name : " + modelFile.name+"\nExtension : " + modelFile.type+"\nType : " + modelFile.type.getTitle()+"\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
                                                         "OK",
@@ -483,7 +483,7 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
                                                 modelFile.setPublic(!modelFile._public, new IPostExecuteListener() {
                                                     @Override
                                                     public void execute(JSONObject json, String body) {
-                                                        FileCloudToRefreshCallback.this.app.refreshAdapters();
+                                                        FileCloudFragment.this.app.refreshAdapters();
                                                     }
                                                 });
                                                 break;
@@ -565,7 +565,7 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
         switch (fab_id) {
             case 0:
                 fab.hide();
-                FileCloudToRefreshCallback.this.app.dialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
+                FileCloudFragment.this.app.dialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
                     @Override
                     public void execute(JSONObject json, String body) {
                         if (json != null)
@@ -580,8 +580,8 @@ public class FileCloudToRefreshCallback extends FabFragment implements BackFragm
                 break;
 
             case 1:
-                FileCloudToRefreshCallback.this.url = "";
-                FileCloudToRefreshCallback.this.refreshList();
+                FileCloudFragment.this.url = "";
+                FileCloudFragment.this.refreshList();
                 break;
         }
     }

@@ -68,7 +68,7 @@ import mercandalli.com.filespace.ui.views.DividerItemDecoration;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.StringPair;
 
-public class FileLocalToRefreshCallback extends FabFragment
+public class FileLocalFragment extends FabFragment
         implements BackFragment.IListViewMode, BackFragment.ISortMode, EnableSwipeToRefreshCallback {
 	
 	private RecyclerView listView;
@@ -86,9 +86,9 @@ public class FileLocalToRefreshCallback extends FabFragment
     private int sortMode = Const.SORT_DATE_MODIFICATION;
     private int mViewMode = Const.MODE_LIST;
 
-    public static FileLocalToRefreshCallback newInstance() {
+    public static FileLocalFragment newInstance() {
         Bundle args = new Bundle();
-        FileLocalToRefreshCallback fragment = new FileLocalToRefreshCallback();
+        FileLocalFragment fragment = new FileLocalFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -226,7 +226,7 @@ public class FileLocalToRefreshCallback extends FabFragment
             final AdapterModelFile adapter = new AdapterModelFile(app, files, new IModelFileListener() {
 				@Override
 				public void execute(final ModelFile modelFile) {
-					final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalToRefreshCallback.this.app);
+					final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalFragment.this.app);
 					String[] menuList = { getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties) };
                     if(app.isLogged())
                         menuList = new String[]{ getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties) };
@@ -239,10 +239,10 @@ public class FileLocalToRefreshCallback extends FabFragment
 									switch (item) {
                                         case 0:
                                             if(modelFile.directory) {
-                                                Toast.makeText(FileLocalToRefreshCallback.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(FileLocalFragment.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                             }
                                             else
-                                                FileLocalToRefreshCallback.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
+                                                FileLocalFragment.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
                                                     @Override
                                                     public void execute() {
                                                         if(modelFile.getFile()!=null) {
@@ -258,10 +258,10 @@ public class FileLocalToRefreshCallback extends FabFragment
                                                 }, getString(R.string.cancel), null);
                                             break;
                                         case 1:
-                                            modelFile.openLocalAs(FileLocalToRefreshCallback.this.app);
+                                            modelFile.openLocalAs(FileLocalFragment.this.app);
                                             break;
                                         case 2:
-                                            FileLocalToRefreshCallback.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                            FileLocalFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
                                                     modelFile.rename(text, new IPostExecuteListener() {
@@ -275,14 +275,14 @@ public class FileLocalToRefreshCallback extends FabFragment
                                                                 filesToCopy.clear();
                                                                 refreshFab();
                                                             }
-                                                            FileLocalToRefreshCallback.this.app.refreshAdapters();
+                                                            FileLocalFragment.this.app.refreshAdapters();
                                                         }
                                                     });
                                                 }
                                             }, "Cancel", null, modelFile.getNameExt());
                                             break;
                                         case 3:
-                                            FileLocalToRefreshCallback.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                            FileLocalFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                                 @Override
                                                 public void execute() {
                                                     modelFile.delete(new IPostExecuteListener() {
@@ -296,24 +296,24 @@ public class FileLocalToRefreshCallback extends FabFragment
                                                                 filesToCopy.clear();
                                                                 refreshFab();
                                                             }
-                                                            FileLocalToRefreshCallback.this.app.refreshAdapters();
+                                                            FileLocalFragment.this.app.refreshAdapters();
                                                         }
                                                     });
                                                 }
                                             }, "No", null);
                                             break;
                                         case 4:
-                                            FileLocalToRefreshCallback.this.filesToCopy.add(modelFile);
+                                            FileLocalFragment.this.filesToCopy.add(modelFile);
                                             Toast.makeText(app, "File ready to copy.", Toast.LENGTH_SHORT).show();
                                             refreshFab();
                                             break;
                                         case 5:
-                                            FileLocalToRefreshCallback.this.filesToCut.add(modelFile);
+                                            FileLocalFragment.this.filesToCut.add(modelFile);
                                             Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                             refreshFab();
                                             break;
                                         case 6:
-                                            FileLocalToRefreshCallback.this.app.alert(
+                                            FileLocalFragment.this.app.alert(
                                                     getString(R.string.properties) + " : " + modelFile.name,
                                                     modelFile.toSpanned(),
                                                     "OK",
@@ -384,7 +384,7 @@ public class FileLocalToRefreshCallback extends FabFragment
                             return false;
                         final ModelFile modelFile = files.get(position);
 
-                        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalToRefreshCallback.this.app);
+                        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalFragment.this.app);
                         String[] menuList = { getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties) };
                         if(app.isLogged())
                             menuList = new String[]{ getString(R.string.upload), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties) };
@@ -397,10 +397,10 @@ public class FileLocalToRefreshCallback extends FabFragment
                                         switch (item) {
                                             case 0:
                                                 if(modelFile.directory) {
-                                                    Toast.makeText(FileLocalToRefreshCallback.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(FileLocalFragment.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                                 }
                                                 else
-                                                    FileLocalToRefreshCallback.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
+                                                    FileLocalFragment.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
                                                         @Override
                                                         public void execute() {
                                                             if(modelFile.getFile()!=null) {
@@ -416,7 +416,7 @@ public class FileLocalToRefreshCallback extends FabFragment
                                                     }, getString(R.string.cancel), null);
                                                 break;
                                             case 1:
-                                                FileLocalToRefreshCallback.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                                FileLocalFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                                     @Override
                                                     public void execute(String text) {
                                                         modelFile.rename(text, new IPostExecuteListener() {
@@ -426,14 +426,14 @@ public class FileLocalToRefreshCallback extends FabFragment
                                                                     filesToCut.clear();
                                                                     refreshFab();
                                                                 }
-                                                                FileLocalToRefreshCallback.this.app.refreshAdapters();
+                                                                FileLocalFragment.this.app.refreshAdapters();
                                                             }
                                                         });
                                                     }
                                                 }, "Cancel", null, modelFile.getNameExt());
                                                 break;
                                             case 2:
-                                                FileLocalToRefreshCallback.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                                FileLocalFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                                     @Override
                                                     public void execute() {
                                                         modelFile.delete(new IPostExecuteListener() {
@@ -443,24 +443,24 @@ public class FileLocalToRefreshCallback extends FabFragment
                                                                     filesToCut.clear();
                                                                     refreshFab();
                                                                 }
-                                                                FileLocalToRefreshCallback.this.app.refreshAdapters();
+                                                                FileLocalFragment.this.app.refreshAdapters();
                                                             }
                                                         });
                                                     }
                                                 }, "No", null);
                                                 break;
                                             case 3:
-                                                FileLocalToRefreshCallback.this.filesToCopy.add(modelFile);
+                                                FileLocalFragment.this.filesToCopy.add(modelFile);
                                                 Toast.makeText(app, "File ready to copy.", Toast.LENGTH_SHORT).show();
                                                 refreshFab();
                                                 break;
                                             case 4:
-                                                FileLocalToRefreshCallback.this.filesToCut.add(modelFile);
+                                                FileLocalFragment.this.filesToCut.add(modelFile);
                                                 Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                                 refreshFab();
                                                 break;
                                             case 5:
-                                                FileLocalToRefreshCallback.this.app.alert(
+                                                FileLocalFragment.this.app.alert(
                                                         getString(R.string.properties) + " : " + modelFile.name,
                                                         "Name : " + modelFile.name + "\nExtension : " + modelFile.type + "\nType : " + modelFile.type.getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
                                                         "OK",
@@ -519,8 +519,8 @@ public class FileLocalToRefreshCallback extends FabFragment
         }
         else if(!currentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+this.app.getConfig().getLocalFolderName())) {
             if(currentDirectory.getParent() != null) {
-                FileLocalToRefreshCallback.this.currentDirectory = new File(currentDirectory.getParentFile().getPath());
-                FileLocalToRefreshCallback.this.refreshList();
+                FileLocalFragment.this.currentDirectory = new File(currentDirectory.getParentFile().getPath());
+                FileLocalFragment.this.refreshList();
                 return true;
             }
         }
@@ -576,7 +576,7 @@ public class FileLocalToRefreshCallback extends FabFragment
                     }
                     refreshList();
                 } else {
-                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalToRefreshCallback.this.app);
+                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalFragment.this.app);
                     final String[] menuList = {"New Folder or File"};
                     menuAlert.setTitle("Action");
                     menuAlert.setItems(menuList,
@@ -584,7 +584,7 @@ public class FileLocalToRefreshCallback extends FabFragment
                                 public void onClick(DialogInterface dialog, int item) {
                                     switch (item) {
                                         case 0:
-                                            FileLocalToRefreshCallback.this.app.prompt("New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
+                                            FileLocalFragment.this.app.prompt("New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
                                                     createFile(currentDirectory.getPath() + File.separator, text);
@@ -603,9 +603,9 @@ public class FileLocalToRefreshCallback extends FabFragment
 
             case 1:
                 if(currentDirectory.getParent() != null) {
-                    FileLocalToRefreshCallback.this.currentDirectory = new File(currentDirectory.getParentFile().getPath());
+                    FileLocalFragment.this.currentDirectory = new File(currentDirectory.getParentFile().getPath());
                     //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
-                    FileLocalToRefreshCallback.this.refreshList();
+                    FileLocalFragment.this.refreshList();
                 }
                 break;
         }
