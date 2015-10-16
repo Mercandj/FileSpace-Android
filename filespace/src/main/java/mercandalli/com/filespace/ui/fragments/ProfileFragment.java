@@ -75,10 +75,7 @@ public class ProfileFragment extends BackFragment {
     private ImageView icon_back;
 
     public static ProfileFragment newInstance() {
-        Bundle args = new Bundle();
-        ProfileFragment fragment = new ProfileFragment();
-        fragment.setArguments(args);
-        return fragment;
+        return new ProfileFragment();
     }
 
     @Override
