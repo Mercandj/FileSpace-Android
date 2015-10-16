@@ -33,7 +33,7 @@ import java.util.ArrayList;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.FontUtils;
 
@@ -44,10 +44,10 @@ import mercandalli.com.filespace.utils.FontUtils;
  */
 public class NavDrawerListAdapter extends BaseAdapter {
 	
-	private Application app;
+	private ApplicationActivity app;
 	private ArrayList<NavDrawerItem> navDrawerItems;
 	
-	public NavDrawerListAdapter(Application app, ArrayList<NavDrawerItem> navDrawerItems){
+	public NavDrawerListAdapter(ApplicationActivity app, ArrayList<NavDrawerItem> navDrawerItems){
 		this.app = app;
 		this.navDrawerItems = navDrawerItems;
 	}

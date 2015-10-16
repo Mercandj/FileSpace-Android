@@ -34,7 +34,7 @@ import org.json.JSONObject;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 
@@ -129,9 +129,9 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public static class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
-        Application app;
+        ApplicationActivity app;
 
-        public FileManagerFragmentPagerAdapter(FragmentManager fm, Application app) {
+        public FileManagerFragmentPagerAdapter(FragmentManager fm, ApplicationActivity app) {
             super(fm);
             this.app = app;
         }

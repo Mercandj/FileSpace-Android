@@ -35,15 +35,15 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.models.ModelFileTypeENUM;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class AdapterGridModelFile extends BaseAdapter {
 
-	private Application app;
+	private ApplicationActivity app;
 	public List<ModelFile> files;
 	private IModelFileListener moreListener;
 
-    public AdapterGridModelFile(Application app, List<ModelFile> files) {
+    public AdapterGridModelFile(ApplicationActivity app, List<ModelFile> files) {
         this.app = app;
         this.files = files;
     }

@@ -1,1 +1,1 @@
-include ':filespace', ':materialviewpager'
+include ':filespace'

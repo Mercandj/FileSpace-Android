@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -42,7 +42,7 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IModelGenealogyUserListener;
 import mercandalli.com.filespace.models.ModelGenealogyPerson;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.ui.views.NonSwipeableViewPager;
@@ -102,10 +102,10 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public int getCurrentFragmentIndex() {
-        if(mViewPager == null)
+        if (mViewPager == null)
             return -1;
         int result = mViewPager.getCurrentItem();
-        if(result >= listFragment.length)
+        if (result >= listFragment.length)
             return -1;
         return mViewPager.getCurrentItem();
     }
@@ -129,10 +129,10 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     private void refreshFab(int currentFragmentId) {
-        if(listFragment == null || currentFragmentId== -1)
+        if (listFragment == null || currentFragmentId == -1)
             return;
         FabFragment fragment = listFragment[currentFragmentId];
-        if(fragment == null)
+        if (fragment == null)
             return;
         refreshFab(fragment);
     }
@@ -141,7 +141,7 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
         if (currentFragment.isFabVisible(0)) {
             this.circle.show();
             int imageResource = currentFragment.getFabImageResource(0);
-            if(imageResource == -1)
+            if (imageResource == -1)
                 imageResource = android.R.drawable.ic_input_add;
             this.circle.setImageResource(imageResource);
             this.circle.setOnClickListener(new View.OnClickListener() {
@@ -150,8 +150,7 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
                     currentFragment.onFabClick(0, circle);
                 }
             });
-        }
-        else
+        } else
             this.circle.hide();
     }
 
@@ -180,9 +179,9 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
-        Application app;
+        ApplicationActivity app;
 
-        public FileManagerFragmentPagerAdapter(FragmentManager fm, Application app) {
+        public FileManagerFragmentPagerAdapter(FragmentManager fm, ApplicationActivity app) {
             super(fm);
             this.app = app;
         }
@@ -190,13 +189,13 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
         @Override
         public BackFragment getItem(int i) {
             FabFragment fragment;
-            switch(i) {
+            switch (i) {
                 case 0:
                     GenealogyListFragment fr = GenealogyListFragment.newInstance();
                     fr.setOnSelect(new IModelGenealogyUserListener() {
                         @Override
                         public void execute(ModelGenealogyPerson modelPerson) {
-                            for(BackFragment fr : listFragment) {
+                            for (BackFragment fr : listFragment) {
                                 if (fr instanceof GenealogyTreeFragment)
                                     ((GenealogyTreeFragment) fr).select(modelPerson);
                                 else if (fr instanceof GenealogyBigTreeFragment)
@@ -206,10 +205,17 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
                     });
                     fragment = fr;
                     break;
-                case 1:		fragment = GenealogyTreeFragment.newInstance();         break;
-                case 2:		fragment = GenealogyBigTreeFragment.newInstance();      break;
-                case 3:		fragment = GenealogyStatisticsFragment.newInstance();   break;
-                default:    fragment = GenealogyTreeFragment.newInstance();
+                case 1:
+                    fragment = GenealogyTreeFragment.newInstance();
+                    break;
+                case 2:
+                    fragment = GenealogyBigTreeFragment.newInstance();
+                    break;
+                case 3:
+                    fragment = GenealogyStatisticsFragment.newInstance();
+                    break;
+                default:
+                    fragment = GenealogyTreeFragment.newInstance();
             }
             fragment.setRefreshFab(new IListener() {
                 @Override
@@ -229,11 +235,19 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
         @Override
         public CharSequence getPageTitle(int i) {
             String title = "null";
-            switch(i) {
-                case 0:		title = "LIST";         break;
-                case 1:		title = "TREE";	        break;
-                case 2:		title = "BIG TREE";	    break;
-                case 3:		title = "STATISTICS";   break;
+            switch (i) {
+                case 0:
+                    title = "LIST";
+                    break;
+                case 1:
+                    title = "TREE";
+                    break;
+                case 2:
+                    title = "BIG TREE";
+                    break;
+                case 3:
+                    title = "STATISTICS";
+                    break;
             }
             return title;
         }
@@ -244,20 +258,20 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public void refreshListServer(String search) {
-        if(listFragment[0]!=null)
-            if(listFragment[0] instanceof GenealogyListFragment) {
+        if (listFragment[0] != null)
+            if (listFragment[0] instanceof GenealogyListFragment) {
                 GenealogyListFragment fragmentFileManagerFragment = (GenealogyListFragment) listFragment[0];
                 fragmentFileManagerFragment.refreshList(search);
             }
     }
 
     private void updateNoInternet() {
-        if(!isInternetConnection(app)) {
+        if (!isInternetConnection(app)) {
             this.snackbar = Snackbar.make(this.coordinatorLayoutView, getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE)
                     .setAction(getString(R.string.refresh), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(isInternetConnection(app))
+                            if (isInternetConnection(app))
                                 listFragment[getCurrentFragmentIndex()].onFocus();
                             else
                                 updateNoInternet();
@@ -266,10 +280,6 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
             this.snackbar.show();
         }
     }
-
-
-
-
 
 
     @Override
@@ -293,33 +303,33 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if(query == null)
+                if (query == null)
                     return false;
-                if(query.replaceAll(" ", "").equals(""))
+                if (query.replaceAll(" ", "").equals(""))
                     return false;
                 refreshListServer(query);
                 return false;
             }
         };
 
-        if(mSearchView!=null)
+        if (mSearchView != null)
             mSearchView.setOnQueryTextListener(queryTextListener);
 
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_search)	.setVisible(false);
-        menu.findItem(R.id.action_delete)	.setVisible(false);
-        menu.findItem(R.id.action_add)		.setVisible(false);
-        menu.findItem(R.id.action_download)	.setVisible(false);
-        menu.findItem(R.id.action_upload)	.setVisible(false);
-        menu.findItem(R.id.action_home) 	.setVisible(false);
-        menu.findItem(R.id.action_sort)	    .setVisible(false);
+        menu.findItem(R.id.action_search).setVisible(false);
+        menu.findItem(R.id.action_delete).setVisible(false);
+        menu.findItem(R.id.action_add).setVisible(false);
+        menu.findItem(R.id.action_download).setVisible(false);
+        menu.findItem(R.id.action_upload).setVisible(false);
+        menu.findItem(R.id.action_home).setVisible(false);
+        menu.findItem(R.id.action_sort).setVisible(false);
 
-        switch(getCurrentFragmentIndex()) {
+        switch (getCurrentFragmentIndex()) {
             case 0:
-                menu.findItem(R.id.action_search)	.setVisible(true);
+                menu.findItem(R.id.action_search).setVisible(true);
                 break;
         }
     }

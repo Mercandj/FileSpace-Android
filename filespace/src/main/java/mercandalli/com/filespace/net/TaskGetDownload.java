@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -35,7 +35,7 @@ import java.net.URL;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.models.ModelFile;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.FileUtils;
 
 /**
@@ -49,14 +49,14 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
     String url;
     String url_ouput;
     IListener listener;
-    Application app;
+    ApplicationActivity app;
     ModelFile modelFile;
 
     int id = 1;
     NotificationManager mNotifyManager;
     NotificationCompat.Builder mBuilder;
 
-    public TaskGetDownload(Application app, String url, String url_ouput, ModelFile modelFile, IListener listener) {
+    public TaskGetDownload(ApplicationActivity app, String url, String url_ouput, ModelFile modelFile, IListener listener) {
         this.app = app;
         this.url = url;
         this.url_ouput = url_ouput;
@@ -69,7 +69,7 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
         super.onPreExecute();
         mNotifyManager = (NotificationManager) this.app.getSystemService(Context.NOTIFICATION_SERVICE);
         mBuilder = new NotificationCompat.Builder(this.app);
-        mBuilder.setContentTitle(this.modelFile.type.getTitle()+" Download")
+        mBuilder.setContentTitle(this.modelFile.type.getTitle() + " Download")
                 .setContentText("Download in progress : 0 / " + FileUtils.humanReadableByteCount(this.modelFile.size) + " : 0%")
                 .setSmallIcon(R.drawable.ic_notification);
     }
@@ -87,7 +87,7 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
         // When the loop is finished, updates the notification
         mBuilder.setContentText("Download complete")
                 // Removes the progress bar
-                .setProgress(0,0,false);
+                .setProgress(0, 0, false);
         mNotifyManager.notify(id, mBuilder.build());
 
         this.listener.execute();
@@ -116,10 +116,10 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
                 total += count;
 
                 missed_counter++;
-                if(missed_counter>missed_value) {
+                if (missed_counter > missed_value) {
                     // publishing the progress....
                     // After this onProgressUpdate will be called
-                    publishProgress(((total*100)/lengthOfFile), total);
+                    publishProgress(((total * 100) / lengthOfFile), total);
 
                     missed_counter = 0;
                 }
@@ -147,11 +147,11 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
         super.onProgressUpdate(values);
 
         long incr = 0;
-        if(values.length>0)
-            incr=values[0];
+        if (values.length > 0)
+            incr = values[0];
         mBuilder.setProgress(100, (int) incr, false);
         mBuilder.setContentText("Download in progress " + incr + "%");
-        if(values.length>1)
+        if (values.length > 1)
             mBuilder.setContentText("Download in progress : " + FileUtils.humanReadableByteCount(values[1]) + " / " + FileUtils.humanReadableByteCount(this.modelFile.size) + " : " + incr + "%");
 
         mNotifyManager.notify(id, mBuilder.build());

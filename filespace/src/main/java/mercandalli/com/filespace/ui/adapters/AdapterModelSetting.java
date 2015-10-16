@@ -29,7 +29,7 @@ import android.widget.ToggleButton;
 
 import java.util.List;
 
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.FontUtils;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
@@ -38,9 +38,9 @@ import mercandalli.com.filespace.models.ModelSetting;
 public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSetting.ViewHolder> {
 	private List<ModelSetting> itemsData;
 	OnItemClickListener mItemClickListener;
-	Application app;
+	ApplicationActivity app;
 	 
-    public AdapterModelSetting(Application app, List<ModelSetting> itemsData) {
+    public AdapterModelSetting(ApplicationActivity app, List<ModelSetting> itemsData) {
         this.itemsData = itemsData;
         this.app = app;
     }

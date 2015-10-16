@@ -44,7 +44,7 @@ import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelInformation;
 import mercandalli.com.filespace.net.TaskGet;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawer;
+import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterModelInformation;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.utils.StringPair;
@@ -75,7 +75,7 @@ public class GenealogyStatisticsFragment extends FabFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        app = (ApplicationDrawer) activity;
+        app = (ApplicationDrawerActivity) activity;
     }
 
     @Override

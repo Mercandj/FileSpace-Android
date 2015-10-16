@@ -58,12 +58,12 @@ import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.net.TaskGetDownload;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ActivityFileAudio;
-import mercandalli.com.filespace.ui.activities.ActivityFilePicture;
-import mercandalli.com.filespace.ui.activities.ActivityFileText;
-import mercandalli.com.filespace.ui.activities.ActivityFileTimer;
-import mercandalli.com.filespace.ui.activities.ActivityFileVideo;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.FileAudioActivity;
+import mercandalli.com.filespace.ui.activities.FilePictureActivity;
+import mercandalli.com.filespace.ui.activities.FileTextActivity;
+import mercandalli.com.filespace.ui.activities.FileTimerActivity;
+import mercandalli.com.filespace.ui.activities.FileVideoActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.HtmlUtils;
 import mercandalli.com.filespace.utils.ImageUtils;
@@ -148,16 +148,16 @@ public class ModelFile extends Model implements Parcelable {
         return parameters;
     }
 	
-	public ModelFile(Application app) {
+	public ModelFile(ApplicationActivity app) {
 		super(app);
 	}
 
-    public ModelFile(Application app, File file) {
+    public ModelFile(ApplicationActivity app, File file) {
         super(app);
         setFile(file);
     }
 	
-	public ModelFile(Application app, JSONObject json) {
+	public ModelFile(ApplicationActivity app, JSONObject json) {
 		super(app);
 		
 		try {
@@ -222,7 +222,7 @@ public class ModelFile extends Model implements Parcelable {
 
 	public void executeOnline(ArrayList<ModelFile> files, View view) {
 		if(this.type.equals(ModelFileTypeENUM.TEXT.type)) {
-            Intent intent = new Intent(this.app, ActivityFileText.class);
+            Intent intent = new Intent(this.app, FileTextActivity.class);
             intent.putExtra("URL_FILE", ""+this.onlineUrl);
             intent.putExtra("LOGIN", ""+this.app.getConfig().getUser().getAccessLogin());
             intent.putExtra("PASSWORD", ""+this.app.getConfig().getUser().getAccessPassword());
@@ -231,7 +231,7 @@ public class ModelFile extends Model implements Parcelable {
             this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		}
         else if(this.type.equals(ModelFileTypeENUM.PICTURE.type)) {
-            Intent intent = new Intent(this.app, ActivityFilePicture.class);
+            Intent intent = new Intent(this.app, FilePictureActivity.class);
             intent.putExtra("ID", this.id);
             intent.putExtra("TITLE", "" + this.getNameExt());
             intent.putExtra("URL_FILE", "" + this.onlineUrl);
@@ -253,7 +253,7 @@ public class ModelFile extends Model implements Parcelable {
             }
         }
 		else if(this.type.equals(ModelFileTypeENUM.AUDIO.type)) {
-            Intent intent = new Intent(app, ActivityFileAudio.class);
+            Intent intent = new Intent(app, FileAudioActivity.class);
             intent.putExtra("LOGIN", ""+app.getConfig().getUser().getAccessLogin());
             intent.putExtra("PASSWORD", ""+app.getConfig().getUser().getAccessPassword());
             intent.putExtra("ONLINE", true);
@@ -277,7 +277,7 @@ public class ModelFile extends Model implements Parcelable {
         else if(this.type.equals(ModelFileTypeENUM.FILESPACE.type)) {
             if(content != null) {
                 if(content.timer.timer_date != null) {
-                    Intent intent = new Intent(app, ActivityFileTimer.class);
+                    Intent intent = new Intent(app, FileTimerActivity.class);
                     intent.putExtra("URL_FILE", ""+this.onlineUrl);
                     intent.putExtra("LOGIN", ""+this.app.getConfig().getUser().getAccessLogin());
                     intent.putExtra("ONLINE", true);
@@ -287,7 +287,7 @@ public class ModelFile extends Model implements Parcelable {
                     this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                 }
                 else if(!StringUtils.isNullOrEmpty(content.article.article_content_1)) {
-                    Intent intent = new Intent(this.app, ActivityFileText.class);
+                    Intent intent = new Intent(this.app, FileTextActivity.class);
                     intent.putExtra("ARTICLE_CONTENT_1", ""+content.article.article_content_1);
                     intent.putExtra("LOGIN", ""+this.app.getConfig().getUser().getAccessLogin());
                     intent.putExtra("PASSWORD", ""+this.app.getConfig().getUser().getAccessPassword());
@@ -299,15 +299,15 @@ public class ModelFile extends Model implements Parcelable {
         }
 	}
 
-    public void openLocalAs(final Application application) {
-        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(application);
+    public void openLocalAs(final ApplicationActivity applicationActivity) {
+        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(applicationActivity);
         String[] menuList = {
-                application.getString(R.string.text),
-                application.getString(R.string.image),
-                application.getString(R.string.audio),
-                application.getString(R.string.video),
-                application.getString(R.string.other) };
-        menuAlert.setTitle(application.getString(R.string.open_as));
+                applicationActivity.getString(R.string.text),
+                applicationActivity.getString(R.string.image),
+                applicationActivity.getString(R.string.audio),
+                applicationActivity.getString(R.string.video),
+                applicationActivity.getString(R.string.other) };
+        menuAlert.setTitle(applicationActivity.getString(R.string.open_as));
 
         menuAlert.setItems(menuList,
             new DialogInterface.OnClickListener() {
@@ -322,7 +322,7 @@ public class ModelFile extends Model implements Parcelable {
                     Intent i = new Intent();
                     i.setAction(Intent.ACTION_VIEW);
                     i.setDataAndType(Uri.fromFile(file), type_mime);
-                    application.startActivity(i);
+                    applicationActivity.startActivity(i);
                 }
             });
         AlertDialog menuDrop = menuAlert.create();
@@ -360,7 +360,7 @@ public class ModelFile extends Model implements Parcelable {
 			}
 		}
 		else if (this.type.equals(ModelFileTypeENUM.AUDIO.type)) {
-            Intent intent = new Intent(this.app, ActivityFileAudio.class);
+            Intent intent = new Intent(this.app, FileAudioActivity.class);
             intent.putExtra("ONLINE", false);
             intent.putExtra("FILE", this);
             ArrayList<ModelFile> tmpFiles = new ArrayList<>();
@@ -387,7 +387,7 @@ public class ModelFile extends Model implements Parcelable {
             this.app.startActivity(picIntent);
 		}
 		else if(this.type.equals(ModelFileTypeENUM.VIDEO.type)) {
-            Intent intent = new Intent(this.app, ActivityFileVideo.class);
+            Intent intent = new Intent(this.app, FileVideoActivity.class);
             intent.putExtra("ONLINE", false);
             intent.putExtra("FILE", this);
             ArrayList<ModelFile> tmpFiles = new ArrayList<>();

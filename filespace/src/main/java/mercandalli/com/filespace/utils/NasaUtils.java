@@ -15,7 +15,7 @@ import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelNasaImage;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
@@ -41,7 +41,7 @@ public class NasaUtils {
         return "https://api.nasa.gov/planetary/apod?concept_tags=True&api_key="+key+"&date="+date;
     }
 
-    public static void getNasaRandomPicture(final Application app, final IModelNasaImageListener modelNasaImageListener) {
+    public static void getNasaRandomPicture(final ApplicationActivity app, final IModelNasaImageListener modelNasaImageListener) {
         if(isInternetConnection(app)) {
             final String date = getRandomDate();
             new TaskGet(

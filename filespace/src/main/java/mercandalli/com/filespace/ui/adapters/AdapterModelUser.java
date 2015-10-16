@@ -32,19 +32,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.listeners.IModelUserListener;
 import mercandalli.com.filespace.models.ModelUser;
 
 public class AdapterModelUser extends RecyclerView.Adapter<AdapterModelUser.ViewHolder> {
 
-	private Application app;
+	private ApplicationActivity app;
 	private List<ModelUser> users;
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
 	private IModelUserListener moreListener;
 
-	public AdapterModelUser(Application app, List<ModelUser> users, IModelUserListener moreListener) {
+	public AdapterModelUser(ApplicationActivity app, List<ModelUser> users, IModelUserListener moreListener) {
 		this.app = app;
 		this.users = users;
 		this.moreListener = moreListener;

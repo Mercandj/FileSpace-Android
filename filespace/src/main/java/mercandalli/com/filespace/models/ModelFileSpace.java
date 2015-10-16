@@ -29,7 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.PointLong;
 import mercandalli.com.filespace.utils.StringUtils;
 import mercandalli.com.filespace.utils.TimeUtils;
@@ -43,17 +43,17 @@ public class ModelFileSpace {
 
     public FileSpaceTypeENUM type;
     public Date date_creation;
-    private Application app;
+    private ApplicationActivity app;
 
     public Timer timer = new Timer();
     public Article article = new Article();
 
-    public ModelFileSpace(Application app, String type) {
+    public ModelFileSpace(ApplicationActivity app, String type) {
         this.app = app;
         this.type = create(type);
     }
 
-    public ModelFileSpace(Application app, JSONObject json) {
+    public ModelFileSpace(ApplicationActivity app, JSONObject json) {
         this.app = app;
         try {
             if(json.has("type") && !json.isNull("type"))

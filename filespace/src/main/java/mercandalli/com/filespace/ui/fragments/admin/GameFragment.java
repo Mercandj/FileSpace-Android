@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawer;
+import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.views.game.GameView;
 import mercandalli.com.filespace.ui.views.game.Way;
@@ -32,7 +32,7 @@ public class GameFragment extends BackFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        app = (ApplicationDrawer) activity;
+        app = (ApplicationDrawerActivity) activity;
     }
 
     @Override

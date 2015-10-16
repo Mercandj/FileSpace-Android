@@ -36,7 +36,7 @@ import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.models.ModelServerMessage;
 import mercandalli.com.filespace.models.ModelUser;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 import static mercandalli.com.filespace.utils.FileUtils.readStringFile;
 import static mercandalli.com.filespace.utils.FileUtils.writeStringFile;
@@ -47,7 +47,7 @@ import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
  */
 public class Config {
 
-    private Application app;
+    private ApplicationActivity app;
     private List<ModelServerMessage> listServerMessage_1;
     public String currentToken					= null;
 
@@ -129,7 +129,7 @@ public class Config {
         }
     }
 
-    public Config(Application app) {
+    public Config(ApplicationActivity app) {
         this.app = app;
         load();
     }

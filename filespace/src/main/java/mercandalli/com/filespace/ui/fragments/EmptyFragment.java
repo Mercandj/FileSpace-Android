@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -26,7 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawer;
+import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 
 /**
  * Created by Jonathan on 30/06/15.
@@ -45,7 +45,7 @@ public class EmptyFragment extends BackFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        app = (ApplicationDrawer) activity;
+        app = (ApplicationDrawerActivity) activity;
     }
 
     @Override

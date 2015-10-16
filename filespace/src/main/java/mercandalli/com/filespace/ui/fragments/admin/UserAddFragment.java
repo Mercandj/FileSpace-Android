@@ -41,7 +41,7 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelUser;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawer;
+import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.utils.HashUtils;
 import mercandalli.com.filespace.utils.StringPair;
@@ -69,7 +69,7 @@ public class UserAddFragment extends BackFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        app = (ApplicationDrawer) activity;
+        app = (ApplicationDrawerActivity) activity;
     }
 
 	@Override

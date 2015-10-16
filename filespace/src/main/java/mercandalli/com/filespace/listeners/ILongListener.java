@@ -20,5 +20,5 @@
 package mercandalli.com.filespace.listeners;
 
 public interface ILongListener {
-	public void execute(long text);
+	void execute(long text);
 }

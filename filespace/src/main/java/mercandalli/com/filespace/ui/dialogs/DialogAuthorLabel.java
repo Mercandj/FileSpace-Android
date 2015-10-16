@@ -33,16 +33,16 @@ import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.FontUtils;
 import mercandalli.com.filespace.utils.StringUtils;
 
 public class DialogAuthorLabel extends Dialog {
 
-	Application app;
+	ApplicationActivity app;
     ShimmerTextView myShimmerTextView, version_tv;
 
-	public DialogAuthorLabel(final Application app) {
+	public DialogAuthorLabel(final ApplicationActivity app) {
 		super(app, android.R.style.Theme_Material_Dialog);
 		this.app = app;
 		

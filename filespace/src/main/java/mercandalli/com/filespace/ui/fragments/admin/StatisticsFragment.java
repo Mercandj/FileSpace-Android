@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.physics.MyGLSurfaceView;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawer;
+import mercandalli.com.filespace.extras.physics.MyGLSurfaceView;
+import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 
 /**
@@ -43,7 +43,7 @@ public class StatisticsFragment extends BackFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        app = (ApplicationDrawer) activity;
+        app = (ApplicationDrawerActivity) activity;
     }
 
     @Override

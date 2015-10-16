@@ -34,7 +34,7 @@ import java.util.List;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.ui.dialogs.DialogAddGenealogyPerson;
 import mercandalli.com.filespace.utils.HtmlUtils;
 import mercandalli.com.filespace.utils.StringPair;
@@ -63,7 +63,7 @@ public class ModelGenealogyPerson extends Model {
         this.valid = valid;
     }
 
-    public ModelGenealogyPerson(Application app, JSONObject json) {
+    public ModelGenealogyPerson(ApplicationActivity app, JSONObject json) {
         super(app);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {

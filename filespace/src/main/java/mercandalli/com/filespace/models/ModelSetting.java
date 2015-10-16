@@ -24,7 +24,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import org.json.JSONObject;
 
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class ModelSetting extends Model {
 
@@ -33,44 +33,44 @@ public class ModelSetting extends Model {
 	public String title, subtitle;
 	public View.OnClickListener onClickListener;
 	
-	public ModelSetting(Application app, String title) {
+	public ModelSetting(ApplicationActivity app, String title) {
 		super(app);
 		this.title = title;
 	}
 
-    public ModelSetting(Application app, String title, String subtitle) {
+    public ModelSetting(ApplicationActivity app, String title, String subtitle) {
         super(app);
         this.title = title;
         this.subtitle = subtitle;
     }
 	
-	public ModelSetting(Application app, String title, int viewType) {
+	public ModelSetting(ApplicationActivity app, String title, int viewType) {
 		super(app);
 		this.title = title;
 		this.viewType = viewType;
 	}
 
-	public ModelSetting(Application app, String title, String subtitle, int viewType) {
+	public ModelSetting(ApplicationActivity app, String title, String subtitle, int viewType) {
 		super(app);
 		this.title = title;
         this.subtitle = subtitle;
 		this.viewType = viewType;
 	}
 	
-	public ModelSetting(Application app, String title, OnCheckedChangeListener toggleButtonListener, boolean toggleButtonInitValue) {
+	public ModelSetting(ApplicationActivity app, String title, OnCheckedChangeListener toggleButtonListener, boolean toggleButtonInitValue) {
 		super(app);
 		this.title = title;
 		this.toggleButtonListener = toggleButtonListener;
 		this.toggleButtonInitValue = toggleButtonInitValue;
 	}
 
-    public ModelSetting(Application app, String title, View.OnClickListener onClickListener) {
+    public ModelSetting(ApplicationActivity app, String title, View.OnClickListener onClickListener) {
         super(app);
         this.title = title;
         this.onClickListener = onClickListener;
     }
 
-    public ModelSetting(Application app, String title, String subtitle, View.OnClickListener onClickListener) {
+    public ModelSetting(ApplicationActivity app, String title, String subtitle, View.OnClickListener onClickListener) {
         super(app);
         this.title = title;
         this.subtitle = subtitle;

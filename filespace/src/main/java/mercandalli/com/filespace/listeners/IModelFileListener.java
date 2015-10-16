@@ -22,5 +22,5 @@ package mercandalli.com.filespace.listeners;
 import mercandalli.com.filespace.models.ModelFile;
 
 public interface IModelFileListener {
-	public void execute(ModelFile modelFile);
+	void execute(ModelFile modelFile);
 }

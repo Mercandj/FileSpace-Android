@@ -22,5 +22,5 @@ package mercandalli.com.filespace.listeners;
 import mercandalli.com.filespace.models.ModelHome;
 
 public interface IModelHomeListener {
-	public void execute(ModelHome modelHome);
+	void execute(ModelHome modelHome);
 }

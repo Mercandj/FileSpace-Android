@@ -34,7 +34,7 @@ import org.json.JSONObject;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawer;
+import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.dialogs.DialogRequest;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 
@@ -53,7 +53,7 @@ public class RequestFragment extends BackFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		app = (ApplicationDrawer) activity;
+		app = (ApplicationDrawerActivity) activity;
 	}
 
 	@Override

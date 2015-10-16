@@ -36,8 +36,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.ui.activities.Application;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawer;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.EmptyFragment;
 import mercandalli.com.filespace.ui.views.NonSwipeableViewPager;
@@ -58,7 +58,7 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
         return new AdminFragment();
     }
 
-    public void setApp(ApplicationDrawer app) {
+    public void setApp(ApplicationDrawerActivity app) {
         this.app = app;
     }
 
@@ -136,9 +136,9 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
     }
 
     public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
-        Application app;
+        ApplicationActivity app;
 
-        public FileManagerFragmentPagerAdapter(FragmentManager fm, Application app) {
+        public FileManagerFragmentPagerAdapter(FragmentManager fm, ApplicationActivity app) {
             super(fm);
             this.app = app;
         }

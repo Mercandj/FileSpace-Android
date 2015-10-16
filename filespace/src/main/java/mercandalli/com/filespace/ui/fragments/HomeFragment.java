@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -54,15 +54,15 @@ import java.util.Locale;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.ia.Interpreter;
-import mercandalli.com.filespace.ia.InterpreterMain;
-import mercandalli.com.filespace.ia.InterpreterResult;
+import mercandalli.com.filespace.extras.ia.Interpreter;
+import mercandalli.com.filespace.extras.ia.InterpreterMain;
+import mercandalli.com.filespace.extras.ia.InterpreterResult;
 import mercandalli.com.filespace.listeners.IModelHomeListener;
 import mercandalli.com.filespace.listeners.IModelNasaImageListener;
 import mercandalli.com.filespace.models.ModelHome;
 import mercandalli.com.filespace.models.ModelNasaImage;
 import mercandalli.com.filespace.models.ModelServerMessage;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawer;
+import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterModelHome;
 
 import static mercandalli.com.filespace.utils.NasaUtils.getNasaRandomPicture;
@@ -178,24 +178,24 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
         list = new ArrayList<>();
 
         List<ModelServerMessage> serverMessageList = app.getConfig().getListServerMessage_1();
-        for(int i = serverMessageList.size()-1; i>=0; i--) {
+        for (int i = serverMessageList.size() - 1; i >= 0; i--) {
             list.add(new ModelHome(list.size(), "Notification", new IModelHomeListener() {
                 @Override
                 public void execute(ModelHome modelHome) {
                     removeItemList(modelHome);
-                    if(modelHome.serverMessage != null)
+                    if (modelHome.serverMessage != null)
                         app.getConfig().removeServerMessage(modelHome.serverMessage);
                 }
             }, serverMessageList.get(i), Const.TAB_VIEW_TYPE_HOME_INFORMATION));
         }
 
-        if(this.app.getConfig().isHomeWelcomeMessage()) {
+        if (this.app.getConfig().isHomeWelcomeMessage()) {
 
             Spanned htmlMessage = Html.fromHtml("<a>This app give you the control on your local <font color=\"#26AEEE\">files</font>. This app is also a <font color=\"#f57c00\">music</font> player.</a>");
-            if(app.getConfig().isLogged())
+            if (app.getConfig().isLogged())
                 htmlMessage = Html.fromHtml("<a>This app give you the Cloud control from your Android device and your PC thanks to the <font color=\"#26AEEE\">web application</font>. You can share files and talk with your friends.</a>");
 
-            if(this.app.isLogged()) {
+            if (this.app.isLogged()) {
                 list.add(new ModelHome(list.size(), "Welcome", new IModelHomeListener() {
                     @Override
                     public void execute(ModelHome modelHome) {
@@ -203,8 +203,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                         app.getConfig().setHomeWelcomeMessage(false);
                     }
                 }, htmlMessage, Const.TAB_VIEW_TYPE_HOME_INFORMATION));
-            }
-            else {
+            } else {
                 list.add(new ModelHome(list.size(), "Welcome", new IModelHomeListener() {
                     @Override
                     public void execute(ModelHome modelHome) {
@@ -221,8 +220,8 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (app instanceof ApplicationDrawer) {
-                            ((ApplicationDrawer) app).selectItem(3);
+                        if (app instanceof ApplicationDrawerActivity) {
+                            ((ApplicationDrawerActivity) app).selectItem(3);
                         }
                     }
                 },
@@ -230,13 +229,13 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((ApplicationDrawer) app).selectItem(4);
+                        ((ApplicationDrawerActivity) app).selectItem(4);
                     }
                 },
                 Const.TAB_VIEW_TYPE_TWO_BUTTONS));
 
-        if(modelNasaImage != null) {
-            list.add(new ModelHome(list.size(), "NASA Image - "+modelNasaImage.date, new IModelHomeListener() {
+        if (modelNasaImage != null) {
+            list.add(new ModelHome(list.size(), "NASA Image - " + modelNasaImage.date, new IModelHomeListener() {
                 @Override
                 public void execute(ModelHome modelHome) {
                     removeItemList(modelHome);
@@ -283,12 +282,10 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                         intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, noOfMatches);
 
                         HomeFragment.this.startActivityForResult(intent, 1001);
-                    }
-                    catch(ActivityNotFoundException e)
-                    {
+                    } catch (ActivityNotFoundException e) {
                         Toast.makeText(getActivity(), "Google voice recognition not found.", Toast.LENGTH_LONG).show();
                     }
-                    if(myTTS==null)
+                    if (myTTS == null)
                         myTTS = new TextToSpeech(HomeFragment.this.getActivity(), HomeFragment.this);
                 }
 
@@ -318,9 +315,9 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == 1001 && data!=null) {
+        if (requestCode == 1001 && data != null) {
 
-            if(myTTS==null)
+            if (myTTS == null)
                 myTTS = new TextToSpeech(this.getActivity(), this);
 
             ArrayList<String> textMatchList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
@@ -338,13 +335,13 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
 
     // speak the user text
     public void speakWords(String speech) {
-        if(speech==null) return;
-        else if(speech.equals("")||speech.equals(" ")) return;
+        if (speech == null) return;
+        else if (speech.equals("") || speech.equals(" ")) return;
 
-        if(myTTS==null)
+        if (myTTS == null)
             myTTS = new TextToSpeech(this.getActivity(), this);
 
-        HashMap<String,String> ttsParams = new HashMap<>();
+        HashMap<String, String> ttsParams = new HashMap<>();
         ttsParams.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, this.getActivity().getPackageName());
         myTTS.speak(speech, TextToSpeech.QUEUE_FLUSH, ttsParams);
     }
@@ -363,17 +360,17 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(myTTS != null)
+        if (myTTS != null)
             myTTS.shutdown();
     }
 
     public void addItemList(String title, InterpreterResult interpreterResult) {
-        if(title!=null && interpreterResult!=null) {
-            if(interpreterResult.content != null)
+        if (title != null && interpreterResult != null) {
+            if (interpreterResult.content != null)
                 speakWords(interpreterResult.content);
 
             recyclerView.scrollToPosition(0);
-            if(interpreterResult.modelForm!=null)
+            if (interpreterResult.modelForm != null)
                 mAdapter.addItem(
                         new ModelHome(list.size(), title, new IModelHomeListener() {
                             @Override
@@ -385,8 +382,8 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                                 Const.TAB_VIEW_TYPE_HOME_INFORMATION_FORM),
                         0
                 );
-            else if(interpreterResult.content != null)
-                if(!interpreterResult.content.equals(""))
+            else if (interpreterResult.content != null)
+                if (!interpreterResult.content.equals(""))
                     mAdapter.addItem(
                             new ModelHome(list.size(), title, new IModelHomeListener() {
                                 @Override

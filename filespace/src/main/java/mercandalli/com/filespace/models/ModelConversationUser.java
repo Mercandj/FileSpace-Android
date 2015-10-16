@@ -32,8 +32,8 @@ import java.util.Date;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.ui.activities.ActivityConversation;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ConversationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class ModelConversationUser extends Model {
 
@@ -46,7 +46,7 @@ public class ModelConversationUser extends Model {
 
 	}
 
-    public ModelConversationUser(Application app, JSONObject json) {
+    public ModelConversationUser(ApplicationActivity app, JSONObject json) {
         super();
         this.app = app;
         this.users = new ArrayList<>();
@@ -99,7 +99,7 @@ public class ModelConversationUser extends Model {
     }
 
     public void open() {
-        Intent intent = new Intent(this.app, ActivityConversation.class);
+        Intent intent = new Intent(this.app, ConversationActivity.class);
         intent.putExtra("LOGIN", ""+this.app.getConfig().getUser().getAccessLogin());
         intent.putExtra("PASSWORD", ""+this.app.getConfig().getUser().getAccessPassword());
         intent.putExtra("ID_CONVERSATION", ""+this.id_conversation);

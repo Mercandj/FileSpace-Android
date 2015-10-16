@@ -52,16 +52,16 @@ import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.listeners.IStringListener;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.StringPair;
 
 public class DialogAddFileManager extends Dialog {
 
-	Application app;
+	ApplicationActivity app;
 	File file;
     IListener dismissListener;
 
-	public DialogAddFileManager(final Application app, final int id_file_parent, final IPostExecuteListener listener, final IListener dismissListener) {
+	public DialogAddFileManager(final ApplicationActivity app, final int id_file_parent, final IPostExecuteListener listener, final IListener dismissListener) {
 		super(app, android.R.style.Theme_Translucent_NoTitleBar);
 		this.app = app;
         this.dismissListener = dismissListener;

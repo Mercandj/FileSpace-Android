@@ -22,5 +22,5 @@ package mercandalli.com.filespace.listeners;
 import android.location.Location;
 
 public interface ILocationListener {
-	public void execute(Location location);
+	void execute(Location location);
 }

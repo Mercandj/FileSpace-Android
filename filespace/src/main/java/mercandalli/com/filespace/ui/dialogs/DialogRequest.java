@@ -30,7 +30,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
@@ -41,7 +41,7 @@ import mercandalli.com.filespace.net.TaskPost;
 public class DialogRequest extends Dialog {
 	
 	DialogFileChooser dialogFileChooser;
-	private Application app;
+	private ApplicationActivity app;
 	private File file;
 	ModelFile modelFile;
 	
@@ -52,7 +52,7 @@ public class DialogRequest extends Dialog {
 	private final int nbMethod		= 4;
 	private int currentMethod 		= GET;
 	
-	public DialogRequest(final Application app, final IPostExecuteListener listener) {
+	public DialogRequest(final ApplicationActivity app, final IPostExecuteListener listener) {
 		super(app);
 		this.app = app;
 		

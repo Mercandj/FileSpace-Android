@@ -22,5 +22,5 @@ package mercandalli.com.filespace.listeners;
 import mercandalli.com.filespace.models.ModelGenealogyPerson;
 
 public interface IModelGenealogyUserListener {
-	public void execute(ModelGenealogyPerson modelUser);
+	void execute(ModelGenealogyPerson modelUser);
 }

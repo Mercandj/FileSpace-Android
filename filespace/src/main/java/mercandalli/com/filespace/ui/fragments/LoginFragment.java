@@ -1,6 +1,6 @@
 /**
  * Personal Project : Control server
- *
+ * <p/>
  * MERCANDALLI Jonathan
  */
 
@@ -33,8 +33,8 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelUser;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ActivityMain;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.MainActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.GpsUtils;
 import mercandalli.com.filespace.utils.HashUtils;
 import mercandalli.com.filespace.utils.StringPair;
@@ -44,7 +44,7 @@ import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
 public class LoginFragment extends Fragment {
 
-	private Application app;
+    private ApplicationActivity app;
     private boolean requestLaunched = false; // Block the second task if one launch
     private EditText username, password;
 
@@ -55,25 +55,25 @@ public class LoginFragment extends Fragment {
         return fragment;
     }
 
-	@Override
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        this.app = (Application) activity;
+        this.app = (ApplicationActivity) activity;
     }
 
-	@Override
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_inscription, container, false);
         this.username = (EditText) rootView.findViewById(R.id.username);
         this.password = (EditText) rootView.findViewById(R.id.password);
 
-        if(this.app.getConfig().getUserUsername()!=null)
-            if(!this.app.getConfig().getUserUsername().equals("")) {
+        if (this.app.getConfig().getUserUsername() != null)
+            if (!this.app.getConfig().getUserUsername().equals("")) {
                 this.username.setText(this.app.getConfig().getUserUsername());
             }
 
-        if(this.app.getConfig().getUserPassword()!=null)
-            if(!this.app.getConfig().getUserPassword().equals("")) {
+        if (this.app.getConfig().getUserPassword() != null)
+            if (!this.app.getConfig().getUserPassword().equals("")) {
                 this.password.setHint(Html.fromHtml("&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"));
             }
 
@@ -109,7 +109,7 @@ public class LoginFragment extends Fragment {
     }
 
     public void connectionSucceed() {
-        Intent intent = new Intent(getActivity(), ActivityMain.class);
+        Intent intent = new Intent(getActivity(), MainActivity.class);
         this.startActivity(intent);
         getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
         getActivity().finish();
@@ -128,7 +128,7 @@ public class LoginFragment extends Fragment {
     }
 
     public void login(ModelUser user) {
-        Log.d("LoginFragment", "login requestLaunched="+requestLaunched);
+        Log.d("LoginFragment", "login requestLaunched=" + requestLaunched);
         if (requestLaunched)
             return;
         requestLaunched = true;
@@ -153,13 +153,13 @@ public class LoginFragment extends Fragment {
         double latitude = GpsUtils.getLatitude(getActivity()),
                 longitude = GpsUtils.getLongitude(getActivity());
         parameters.add(new StringPair("login", "true"));
-        if(latitude!=0 && longitude!=0) {
+        if (latitude != 0 && longitude != 0) {
             parameters.add(new StringPair("latitude", "" + latitude));
             parameters.add(new StringPair("longitude", "" + longitude));
             parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
         }
-        Log.d("LoginFragment", "login "+app.getConfig().getUserPassword()+app.getConfig().getUserUsername()+" isInternetConnection="+isInternetConnection(app));
-        if(isInternetConnection(app))
+        Log.d("LoginFragment", "login " + app.getConfig().getUserPassword() + app.getConfig().getUserUsername() + " isInternetConnection=" + isInternetConnection(app));
+        if (isInternetConnection(app))
             (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
                 @Override
                 public void execute(JSONObject json, String body) {
@@ -176,9 +176,9 @@ public class LoginFragment extends Fragment {
                                     app.getConfig().setUserId(user.getInt("id"));
                                 if (user.has("admin")) {
                                     Object admin_obj = user.get("admin");
-                                    if(admin_obj instanceof Integer)
+                                    if (admin_obj instanceof Integer)
                                         app.getConfig().setUserAdmin(user.getInt("admin") == 1);
-                                    else if(admin_obj instanceof Boolean)
+                                    else if (admin_obj instanceof Boolean)
                                         app.getConfig().setUserAdmin(user.getBoolean("admin"));
                                 }
                                 if (user.has("id_file_profile_picture"))

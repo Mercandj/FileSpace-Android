@@ -3,7 +3,7 @@ package mercandalli.com.filespace.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 /**
  * Created by Assima on 7/6/15.
@@ -13,10 +13,10 @@ public class ModelUserLocation extends Model {
     public double longitude, latitude, altitude;
     public String title = "";
 
-    public ModelUserLocation(Application app, JSONObject json) {
+    public ModelUserLocation(ApplicationActivity app, JSONObject json) {
         super(app);
         try {
-            if(json.has("username"))
+            if (json.has("username"))
                 this.title = json.getString("username");
 
             if (json.has("longitude") && !json.isNull("longitude"))
@@ -30,7 +30,7 @@ public class ModelUserLocation extends Model {
         }
     }
 
-    public ModelUserLocation(Application app, String title, double longitude, double latitude, double altitude) {
+    public ModelUserLocation(ApplicationActivity app, String title, double longitude, double latitude, double altitude) {
         super(app);
         this.longitude = longitude;
         this.latitude = latitude;

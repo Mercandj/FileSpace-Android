@@ -30,7 +30,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.List;
 
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
@@ -41,12 +41,12 @@ import mercandalli.com.filespace.utils.StringPair;
 public class DialogUpload extends Dialog {
 	
 	DialogFileChooser dialogFileChooser;
-	Application app;
+	ApplicationActivity app;
 	File file;
 	ModelFile modelFile;
     int id_file_parent;
 	
-	public DialogUpload(final Application app, final int id_file_parent, final IPostExecuteListener listener) {
+	public DialogUpload(final ApplicationActivity app, final int id_file_parent, final IPostExecuteListener listener) {
 		super(app);
 		this.app = app;
         this.id_file_parent = id_file_parent;

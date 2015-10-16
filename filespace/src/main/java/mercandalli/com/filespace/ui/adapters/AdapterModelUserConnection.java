@@ -32,15 +32,15 @@ import java.util.List;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.models.ModelUserConnection;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.FontUtils;
 
 public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterModelUserConnection.ViewHolder> {
 	private List<ModelUserConnection> itemsData;
 	OnItemClickListener mItemClickListener;
-	Application app;
+	ApplicationActivity app;
 
-    public AdapterModelUserConnection(Application app, List<ModelUserConnection> itemsData) {
+    public AdapterModelUserConnection(ApplicationActivity app, List<ModelUserConnection> itemsData) {
         this.itemsData = itemsData;
         this.app = app;
     }

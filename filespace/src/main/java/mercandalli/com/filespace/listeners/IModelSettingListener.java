@@ -22,5 +22,5 @@ package mercandalli.com.filespace.listeners;
 import mercandalli.com.filespace.models.ModelSetting;
 
 public interface IModelSettingListener {
-	public void execute(ModelSetting modelFile);
+	void execute(ModelSetting modelFile);
 }

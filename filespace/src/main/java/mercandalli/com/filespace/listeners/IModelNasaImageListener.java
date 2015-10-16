@@ -22,5 +22,5 @@ package mercandalli.com.filespace.listeners;
 import mercandalli.com.filespace.models.ModelNasaImage;
 
 public interface IModelNasaImageListener {
-	public void execute(ModelNasaImage modelNasaImage);
+	void execute(ModelNasaImage modelNasaImage);
 }

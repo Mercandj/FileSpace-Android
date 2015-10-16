@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -61,11 +61,11 @@ import static mercandalli.com.filespace.utils.RoboticsUtils.parseRaspberry;
  */
 public class RoboticsFragment extends BackFragment implements SensorEventListener {
 
-    static final int ID_LED_1		= 1;
-    static final int ID_DISTANCE_1	= 2;
-    static final int ID_DISTANCE_2	= 3;
-    static final int ID_SERVO_1		= 4;
-    static final int ID_SERVO_2		= 5;
+    static final int ID_LED_1 = 1;
+    static final int ID_DISTANCE_1 = 2;
+    static final int ID_DISTANCE_2 = 3;
+    static final int ID_SERVO_1 = 4;
+    static final int ID_SERVO_2 = 5;
 
     ModelHardware LED_1;
     ModelHardware SERVO_1;
@@ -107,7 +107,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
         // Create hardware
         this.SERVO_1 = new ModelHardware();
         this.SERVO_1.id = ID_SERVO_1;
-        this.SERVO_1.value = ""+this.car_direction;
+        this.SERVO_1.value = "" + this.car_direction;
 
         this.SERVO_2 = new ModelHardware();
         this.SERVO_2.id = ID_SERVO_2;
@@ -159,7 +159,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
                 seekBar_dir.setProgress(50);
                 seekBar_speed.setProgress(50);
                 tv_seekBar_dir.setText("Direction : " + valueToStr(50));
-                tv_seekBar_speed.setText("Speed : "+valueToStr(50));
+                tv_seekBar_speed.setText("Speed : " + valueToStr(50));
                 RoboticsFragment.this.car_direction = 0.5f;
                 RoboticsFragment.this.car_speed = 0.5f;
             }
@@ -171,11 +171,12 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
             @Override
             public void onValueChanged(int value) {
                 RoboticsFragment.this.car_direction = Math.round(value) / 100.0;
-                tv_seekBar_dir.setText("Direction : "+valueToStr(value));
+                tv_seekBar_dir.setText("Direction : " + valueToStr(value));
             }
 
             @Override
-            public void onValueChangedUp(int value) { }
+            public void onValueChangedUp(int value) {
+            }
         });
 
         this.seekBar_speed.isNumberIndicator = false;
@@ -183,11 +184,12 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
             @Override
             public void onValueChanged(int value) {
                 RoboticsFragment.this.car_speed = Math.round(value) / 100.0;
-                tv_seekBar_speed.setText("Speed : "+valueToStr(value));
+                tv_seekBar_speed.setText("Speed : " + valueToStr(value));
             }
 
             @Override
-            public void onValueChangedUp(int value) { }
+            public void onValueChangedUp(int value) {
+            }
         });
 
         senSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
@@ -198,16 +200,17 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
     }
 
     private String valueToStr(int value) {
-        if(df == null || value - 50.0 == 0)
+        if (df == null || value - 50.0 == 0)
             return "0.00";
         double res = Math.round(value - 50.0) / 100.0;
         return "" + df.format(res) + (res % 0.1 == 0 || Math.abs(res) == 0.3 || Math.abs(res) == 0.5 ? "0" : "");
     }
 
     private long id_log = 0;
+
     private void log(String log) {
-        times.setText("#"+id_log);
-        output.setText( "#" + id_log + " : " + log + "\n" + output.getText().toString() );
+        times.setText("#" + id_log);
+        output.setText("#" + id_log + " : " + log + "\n" + output.getText().toString());
         id_log++;
     }
 
@@ -222,7 +225,9 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
     }
 
 
-    /******** SENSOR **********/
+    /********
+     * SENSOR
+     **********/
 
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
@@ -245,13 +250,13 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
             if ((curTime - lastUpdate2) > 50) {
                 lastUpdate2 = curTime;
 
-                if(MODE_ACCELERO) {
+                if (MODE_ACCELERO) {
                     double tmp_y = y + 5;
-                    if(tmp_y < 0)
+                    if (tmp_y < 0)
                         tmp_y = 0;
-                    if(tmp_y > 10)
+                    if (tmp_y > 10)
                         tmp_y = 10;
-                    int value = (int)(tmp_y*10);
+                    int value = (int) (tmp_y * 10);
                     RoboticsFragment.this.car_direction = value;
                     this.seekBar_dir.setProgress(value);
                     this.tv_seekBar_dir.setText("Direction : " + valueToStr(value));
@@ -267,13 +272,13 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
                     List<StringPair> parameters = new ArrayList<>();
 
                     SERVO_1.read = false; // write
-                    SERVO_1.value = ""+this.car_direction;
+                    SERVO_1.value = "" + this.car_direction;
 
                     SERVO_2.read = false; // write
-                    SERVO_2.value = ""+this.car_speed;
+                    SERVO_2.value = "" + this.car_speed;
 
                     LED_1.read = false; // write
-                    LED_1.value = ""+(MODE_LED_1?1:0);
+                    LED_1.value = "" + (MODE_LED_1 ? 1 : 0);
 
                     parameters.add(new StringPair("json", "" + createProtocolHardware(SERVO_1, SERVO_2, LED_1).toString()));
 
@@ -304,12 +309,12 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
 
     private void handleResponse(List<ModelHardware> list) {
         for (ModelHardware hardware : list) {
-            switch(hardware.id) {
+            switch (hardware.id) {
                 case ID_DISTANCE_1:
-                    this.distance_left.setText(""+hardware.value);
+                    this.distance_left.setText("" + hardware.value);
                     break;
                 case ID_DISTANCE_2:
-                    this.distance_right.setText(""+hardware.value);
+                    this.distance_right.setText("" + hardware.value);
                     break;
             }
         }

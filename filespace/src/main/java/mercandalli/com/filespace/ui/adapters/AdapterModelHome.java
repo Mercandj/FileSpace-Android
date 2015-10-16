@@ -34,15 +34,15 @@ import java.util.List;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.models.ModelHome;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.FontUtils;
 
 public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.ViewHolder> {
 	private List<ModelHome> itemsData;
 	OnItemClickListener mItemClickListener;
-	Application app;
+	ApplicationActivity app;
 
-    public AdapterModelHome(Application app, List<ModelHome> itemsData) {
+    public AdapterModelHome(ApplicationActivity app, List<ModelHome> itemsData) {
         this.itemsData = itemsData;
         this.app = app;
     }

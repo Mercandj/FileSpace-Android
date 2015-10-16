@@ -20,5 +20,5 @@
 package mercandalli.com.filespace.listeners;
 
 public interface IStringListener {
-	public void execute(String text);
+	void execute(String text);
 }

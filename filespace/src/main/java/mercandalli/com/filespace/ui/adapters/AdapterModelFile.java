@@ -38,17 +38,17 @@ import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.models.ModelFileType;
 import mercandalli.com.filespace.models.ModelFileTypeENUM;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.ViewHolder> {
 
-	private Application app;
+	private ApplicationActivity app;
 	public List<ModelFile> files;
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
 	private IModelFileListener moreListener;
 
-    public AdapterModelFile(Application app, List<ModelFile> files, IModelFileListener moreListener) {
+    public AdapterModelFile(ApplicationActivity app, List<ModelFile> files, IModelFileListener moreListener) {
         this.app = app;
         this.files = files;
         this.moreListener = moreListener;

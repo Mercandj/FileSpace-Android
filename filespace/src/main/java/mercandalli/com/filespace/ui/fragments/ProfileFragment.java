@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -96,7 +96,7 @@ public class ProfileFragment extends BackFragment {
         recyclerView.setLayoutManager(mLayoutManager);
 
         Bitmap icon_profile_online = app.getConfig().getUserProfilePicture();
-        if(icon_profile_online!=null) {
+        if (icon_profile_online != null) {
             icon_back.setImageBitmap(ImageUtils.setBlur(ImageUtils.setBrightness(icon_profile_online, -50), 15));
         }
 
@@ -131,7 +131,7 @@ public class ProfileFragment extends BackFragment {
     }
 
     public void refreshView() {
-        if(isInternetConnection(app) && app.isLogged()) {
+        if (isInternetConnection(app) && app.isLogged()) {
             List<StringPair> parameters = null;
             new TaskGet(
                     app,
@@ -140,7 +140,7 @@ public class ProfileFragment extends BackFragment {
                     new IPostExecuteListener() {
                         @Override
                         public void execute(JSONObject json, String body) {
-                            if(!isAdded())
+                            if (!isAdded())
                                 return;
                             try {
                                 if (json != null) {
@@ -152,10 +152,10 @@ public class ProfileFragment extends BackFragment {
                                         list.add(new ModelSetting(app, "Files count", "" + user.num_files));
                                         list.add(new ModelSetting(app, "Creation date", "" + TimeUtils.getDate(user.date_creation)));
                                         list.add(new ModelSetting(app, "Connection date", "" + TimeUtils.getDate(user.date_last_connection)));
-                                        if(user.isAdmin()) {
+                                        if (user.isAdmin()) {
                                             list.add(new ModelSetting(app, "Admin", "" + user.isAdmin()));
 
-                                            if(user.userLocation != null) {
+                                            if (user.userLocation != null) {
                                                 list.add(new ModelSetting(app, "Longitude", "" + user.userLocation.longitude));
                                                 list.add(new ModelSetting(app, "Latitude", "" + user.userLocation.latitude));
                                                 list.add(new ModelSetting(app, "Altitude", "" + user.userLocation.altitude));
@@ -165,14 +165,14 @@ public class ProfileFragment extends BackFragment {
                                         Location location = GpsUtils.getGpsLocation(app, new ILocationListener() {
                                             @Override
                                             public void execute(Location location) {
-                                                if(location != null) {
+                                                if (location != null) {
                                                     double longitude = location.getLongitude(),
                                                             latitude = location.getLatitude();
 
                                                     list.add(new ModelSetting(app, "Gps Longitude", "" + longitude));
                                                     list.add(new ModelSetting(app, "Gps Latitude", "" + latitude));
 
-                                                    if(isInternetConnection(app) && longitude!=0 && latitude!=0) {
+                                                    if (isInternetConnection(app) && longitude != 0 && latitude != 0) {
                                                         List<StringPair> parameters = new ArrayList<>();
                                                         parameters.add(new StringPair("longitude", "" + longitude));
                                                         parameters.add(new StringPair("latitude", "" + latitude));
@@ -188,14 +188,14 @@ public class ProfileFragment extends BackFragment {
                                             }
                                         });
 
-                                        if(location != null) {
+                                        if (location != null) {
                                             double longitude = location.getLongitude(),
                                                     latitude = location.getLatitude();
 
                                             list.add(new ModelSetting(app, "Gps Longitude", "" + longitude));
                                             list.add(new ModelSetting(app, "Gps Latitude", "" + latitude));
 
-                                            if(isInternetConnection(app) && longitude!=0 && latitude!=0) {
+                                            if (isInternetConnection(app) && longitude != 0 && latitude != 0) {
                                                 List<StringPair> parameters = new ArrayList<>();
                                                 parameters.add(new StringPair("longitude", "" + longitude));
                                                 parameters.add(new StringPair("latitude", "" + latitude));
@@ -209,8 +209,7 @@ public class ProfileFragment extends BackFragment {
                                             }
                                         }
                                     }
-                                }
-                                else
+                                } else
                                     Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -226,7 +225,7 @@ public class ProfileFragment extends BackFragment {
     public void updateView() {
         this.circularProgressBar.setVisibility(View.GONE);
 
-        if(recyclerView!=null && list!=null) {
+        if (recyclerView != null && list != null) {
             AdapterModelSetting adapter = new AdapterModelSetting(app, list);
             adapter.setOnItemClickListener(new AdapterModelSetting.OnItemClickListener() {
                 @Override

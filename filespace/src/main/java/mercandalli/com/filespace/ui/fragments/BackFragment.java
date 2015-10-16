@@ -22,16 +22,16 @@ package mercandalli.com.filespace.ui.fragments;
 import android.app.Fragment;
 
 import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawer;
+import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 
 /**
  * Created by Jonathan on 17/04/2015.
  */
 public abstract class BackFragment extends Fragment {
 
-    protected ApplicationDrawer app;
+    protected ApplicationDrawerActivity app;
 
-    public void setApp(ApplicationDrawer app) {
+    public void setApp(ApplicationDrawerActivity app) {
         this.app = app;
     }
 

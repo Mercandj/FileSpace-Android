@@ -35,7 +35,7 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelGenealogyPerson;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.ui.fragments.genealogy.GenealogyListFragment;
 import mercandalli.com.filespace.utils.StringPair;
 import mercandalli.com.filespace.utils.StringUtils;
@@ -44,7 +44,7 @@ import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
 public class DialogAddGenealogyPerson extends Dialog {
 
-	private Application app;
+	private ApplicationActivity app;
     private EditText et_first_name_1;
     private EditText et_first_name_2;
     private EditText et_first_name_3;
@@ -60,11 +60,11 @@ public class DialogAddGenealogyPerson extends Dialog {
     private ModelGenealogyPerson mother, father;
     private List<ModelGenealogyPerson> marriages;
 
-    public DialogAddGenealogyPerson(final Application app, final IPostExecuteListener listener) {
+    public DialogAddGenealogyPerson(final ApplicationActivity app, final IPostExecuteListener listener) {
         this(app, listener, app.getString(R.string.genealogy_add_person), null);
     }
 
-	public DialogAddGenealogyPerson(final Application app, final IPostExecuteListener listener, String title, final ModelGenealogyPerson genealogyUser) {
+	public DialogAddGenealogyPerson(final ApplicationActivity app, final IPostExecuteListener listener, String title, final ModelGenealogyPerson genealogyUser) {
 		super(app);
 		this.app = app;
 		

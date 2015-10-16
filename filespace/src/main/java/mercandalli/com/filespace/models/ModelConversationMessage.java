@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -27,7 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.TimeUtils;
 
 public class ModelConversationMessage extends Model {
@@ -37,26 +37,22 @@ public class ModelConversationMessage extends Model {
     public String content;
     public ModelUser user;
 
-	public ModelConversationMessage() {
-
-	}
-
-    public ModelConversationMessage(Application app, JSONObject json) {
+    public ModelConversationMessage(ApplicationActivity app, JSONObject json) {
         super();
         this.app = app;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
-            if(json.has("id"))
+            if (json.has("id"))
                 this.id = json.getInt("id");
-            if(json.has("id_conversation"))
+            if (json.has("id_conversation"))
                 this.id_conversation = json.getInt("id_conversation");
-            if(json.has("id_user"))
+            if (json.has("id_user"))
                 this.id_user = json.getInt("id_user");
-            if(json.has("content"))
+            if (json.has("content"))
                 this.content = json.getString("content");
-            if(json.has("user"))
+            if (json.has("user"))
                 this.user = new ModelUser(this.app, json.getJSONObject("user"));
-            if(json.has("date_creation") && !json.isNull("date_creation"))
+            if (json.has("date_creation") && !json.isNull("date_creation"))
                 this.date_creation = dateFormat.parse(json.getString("date_creation"));
         } catch (JSONException e) {
             e.printStackTrace();
@@ -66,9 +62,9 @@ public class ModelConversationMessage extends Model {
     }
 
     public String getUsername() {
-        if(this.user==null)
+        if (this.user == null)
             return "";
-        return (this.user.username==null)?"":this.user.username;
+        return (this.user.username == null) ? "" : this.user.username;
     }
 
     public String getAdapterTitle() {
@@ -85,7 +81,7 @@ public class ModelConversationMessage extends Model {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return getUsername()+"  "+date + " ago";
+        return getUsername() + "  " + date + " ago";
     }
 
     @Override

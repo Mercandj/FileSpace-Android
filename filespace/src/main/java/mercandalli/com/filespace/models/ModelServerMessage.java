@@ -24,7 +24,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class ModelServerMessage extends Model {
 
@@ -34,7 +34,7 @@ public class ModelServerMessage extends Model {
 		super();
 	}
 
-    public ModelServerMessage(Application app, JSONObject json) {
+    public ModelServerMessage(ApplicationActivity app, JSONObject json) {
         super(app);
 
         try {

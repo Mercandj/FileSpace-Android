@@ -15,8 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.ia.crypt.Crypt;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawer;
+import mercandalli.com.filespace.extras.ia.crypt.Crypt;
+import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 
 /**
@@ -34,7 +34,7 @@ public class CryptFragment extends BackFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        app = (ApplicationDrawer) activity;
+        app = (ApplicationDrawerActivity) activity;
     }
 
     public CryptFragment() {

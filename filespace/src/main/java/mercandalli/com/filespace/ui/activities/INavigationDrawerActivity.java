@@ -1,10 +1,9 @@
 package mercandalli.com.filespace.ui.activities;
 
-
 import android.support.v7.widget.Toolbar;
 
 /**
- * Created by Jonathan on 11/10/2015.
+ * Interface used to set the {@link Toolbar} inside {@link android.app.Fragment}.
  */
 public interface INavigationDrawerActivity {
     void setToolbar(Toolbar toolbar);

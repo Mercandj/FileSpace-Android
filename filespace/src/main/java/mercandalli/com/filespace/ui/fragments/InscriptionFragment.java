@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -43,8 +43,8 @@ import java.util.List;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.utils.GpsUtils;
 import mercandalli.com.filespace.utils.HashUtils;
-import mercandalli.com.filespace.ui.activities.ActivityMain;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.MainActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelUser;
 import mercandalli.com.filespace.net.TaskPost;
@@ -55,7 +55,7 @@ import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
 public class InscriptionFragment extends Fragment {
 
-	private Application app;
+    private ApplicationActivity app;
 
     private boolean requestLaunched = false; // Block the second task if one launch
 
@@ -68,17 +68,17 @@ public class InscriptionFragment extends Fragment {
         return fragment;
     }
 
-	@Override
+    @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        this.app = (Application) activity;
+        this.app = (ApplicationActivity) activity;
     }
 
-	public InscriptionFragment() {
-		super();
-	}
+    public InscriptionFragment() {
+        super();
+    }
 
-	@Override
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_inscription, container, false);
         this.username = (EditText) rootView.findViewById(R.id.username);
@@ -116,7 +116,7 @@ public class InscriptionFragment extends Fragment {
     }
 
     public void connectionSucceed() {
-        Intent intent = new Intent(getActivity(), ActivityMain.class);
+        Intent intent = new Intent(getActivity(), MainActivity.class);
         this.startActivity(intent);
         getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
         getActivity().finish();
@@ -162,7 +162,7 @@ public class InscriptionFragment extends Fragment {
         parameters.add(new StringPair("longitude", "" + GpsUtils.getLongitude(getActivity())));
         parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
 
-        if(isInternetConnection(app))
+        if (isInternetConnection(app))
             (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
                 @Override
                 public void execute(JSONObject json, String body) {

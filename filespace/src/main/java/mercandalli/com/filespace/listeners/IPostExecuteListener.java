@@ -27,5 +27,5 @@ import org.json.JSONObject;
  *
  */
 public interface IPostExecuteListener {
-	public void execute(JSONObject json, String body);
+	void execute(JSONObject json, String body);
 }

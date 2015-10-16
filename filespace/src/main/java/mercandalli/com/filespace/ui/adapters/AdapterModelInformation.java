@@ -28,7 +28,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.FontUtils;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
@@ -37,9 +37,9 @@ import mercandalli.com.filespace.models.ModelInformation;
 public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelInformation.ViewHolder> {
 	private List<ModelInformation> itemsData;
 	OnItemClickListener mItemClickListener;
-	Application app;
+	ApplicationActivity app;
 	 
-    public AdapterModelInformation(Application app, List<ModelInformation> itemsData) {
+    public AdapterModelInformation(ApplicationActivity app, List<ModelInformation> itemsData) {
         this.itemsData = itemsData;
         this.app = app;
     }

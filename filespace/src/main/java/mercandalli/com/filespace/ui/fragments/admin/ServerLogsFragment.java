@@ -49,7 +49,7 @@ import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelUserConnection;
 import mercandalli.com.filespace.net.TaskGet;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawer;
+import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterModelUserConnection;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 
@@ -78,7 +78,7 @@ public class ServerLogsFragment extends BackFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        app = (ApplicationDrawer) activity;
+        app = (ApplicationDrawerActivity) activity;
     }
 
 	@Override

@@ -48,8 +48,7 @@ import mercandalli.com.filespace.listeners.IModelGenealogyUserListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelGenealogyPerson;
 import mercandalli.com.filespace.net.TaskGet;
-import mercandalli.com.filespace.ui.activities.Application;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawer;
+import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterModelGenealogyUser;
 import mercandalli.com.filespace.ui.dialogs.DialogAddGenealogyPerson;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
@@ -97,7 +96,7 @@ public class GenealogyListFragment extends FabFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        app = (ApplicationDrawer) activity;
+        app = (ApplicationDrawerActivity) activity;
     }
 
     public void setOnSelect(IModelGenealogyUserListener onSelect) {

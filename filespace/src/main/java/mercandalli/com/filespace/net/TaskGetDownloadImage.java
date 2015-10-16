@@ -1,14 +1,14 @@
 /**
  * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
- *
+ * <p/>
  * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
- *
+ * <p/>
  * LICENSE:
- *
+ * <p/>
  * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- *
+ * <p/>
  * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -34,7 +34,7 @@ import mercandalli.com.filespace.listeners.IBitmapListener;
 import mercandalli.com.filespace.listeners.ILongListener;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.models.ModelUser;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 import static mercandalli.com.filespace.utils.ImageUtils.is_image;
 import static mercandalli.com.filespace.utils.ImageUtils.load_image;
@@ -51,7 +51,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
     String url;
     Bitmap bitmap;
     IBitmapListener listener;
-    Application app;
+    ApplicationActivity app;
     private String login, password;
     int idFile;
     long sizeLimit, sizeFile;
@@ -59,7 +59,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
     private boolean isAuthentication = true;
     private boolean isModelFile = true;
 
-    public TaskGetDownloadImage(Application app, String url, long sizeLimit, IBitmapListener listener, boolean isAuthentication, boolean isModelFile) {
+    public TaskGetDownloadImage(ApplicationActivity app, String url, long sizeLimit, IBitmapListener listener, boolean isAuthentication, boolean isModelFile) {
         this.app = app;
         this.url = url;
         this.listener = listener;
@@ -68,7 +68,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         this.isModelFile = isModelFile;
     }
 
-    public TaskGetDownloadImage(Application app, ModelUser user, ModelFile fileModel, long sizeLimit, IBitmapListener listener) {
+    public TaskGetDownloadImage(ApplicationActivity app, ModelUser user, ModelFile fileModel, long sizeLimit, IBitmapListener listener) {
         this.app = app;
         this.login = user.getAccessLogin();
         this.password = user.getAccessPassword();
@@ -79,7 +79,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         this.sizeLimit = sizeLimit;
     }
 
-    public TaskGetDownloadImage(Application app, String login, String password, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener) {
+    public TaskGetDownloadImage(ApplicationActivity app, String login, String password, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener) {
         this.app = app;
         this.login = login;
         this.password = password;
@@ -90,7 +90,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         this.sizeLimit = sizeLimit;
     }
 
-    public TaskGetDownloadImage(Application app, String login, String password, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener, ILongListener progressListener) {
+    public TaskGetDownloadImage(ApplicationActivity app, String login, String password, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener, ILongListener progressListener) {
         this.app = app;
         this.login = login;
         this.password = password;
@@ -114,13 +114,13 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
     }
 
     public Bitmap drawable_from_url_Authorization() {
-        Log.d("TaskGetDownloadImage", "id:" + idFile + "  url:"+url);
+        Log.d("TaskGetDownloadImage", "id:" + idFile + "  url:" + url);
 
-        if(isModelFile)
-            if(is_image(this.app, this.idFile))
+        if (isModelFile)
+            if (is_image(this.app, this.idFile))
                 return load_image(this.app, this.idFile);
-        if(this.sizeLimit > 0)
-            if(this.sizeLimit < this.sizeFile)
+        if (this.sizeLimit > 0)
+            if (this.sizeLimit < this.sizeFile)
                 return null;
 
         Bitmap x = null;
@@ -129,14 +129,14 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
             String result = Base64.encodeBytes(authentication.toString().getBytes());
 
             HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
-            if(isAuthentication)
+            if (isAuthentication)
                 conn.setRequestProperty("Authorization", "Basic " + result);
             conn.setRequestMethod("GET");
 
             InputStream inputStream = conn.getInputStream();
 
             String contentLength = conn.getHeaderField("Content-Length");
-            if(contentLength == null)
+            if (contentLength == null)
                 return x;
 
             long lengthOfFile = Long.parseLong(contentLength);
@@ -147,11 +147,11 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
             options.inJustDecodeBounds = false;
             options.inDither = false;
             options.inScaled = false;
-            if(this.sizeFile>3000000)
+            if (this.sizeFile > 3000000)
                 options.inSampleSize = 16;
-            else if(this.sizeFile>2000000)
+            else if (this.sizeFile > 2000000)
                 options.inSampleSize = 8;
-            else if(this.sizeFile>500000)
+            else if (this.sizeFile > 500000)
                 options.inSampleSize = 4;
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
@@ -159,7 +159,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
 
             conn.disconnect();
 
-            if(isModelFile)
+            if (isModelFile)
                 save_image(this.app, this.idFile, x);
         } catch (IOException e) {
             e.printStackTrace();
@@ -202,8 +202,8 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         public int read(byte[] buffer, int offset, int count) throws IOException {
             int result = super.read(buffer, offset, count);
             counter += result;
-            if(progressListener != null)
-                publishProgress((long)(((counter * 1.0)/lenghtOfFile)*100));
+            if (progressListener != null)
+                publishProgress((long) (((counter * 1.0) / lenghtOfFile) * 100));
             return result;
         }
     }
@@ -211,7 +211,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
     @Override
     protected void onProgressUpdate(Long... values) {
         super.onProgressUpdate(values);
-        if(progressListener != null && values.length>0)
+        if (progressListener != null && values.length > 0)
             progressListener.execute(values[0]);
     }
 }

@@ -35,18 +35,18 @@ import java.util.List;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IModelGenealogyUserListener;
 import mercandalli.com.filespace.models.ModelGenealogyPerson;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModelGenealogyUser.ViewHolder> {
 
-	private Application app;
+	private ApplicationActivity app;
     public List<ModelGenealogyPerson> users;
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
 	private IModelGenealogyUserListener moreListener;
     private boolean isTree;
 
-	public AdapterModelGenealogyUser(Application app, List<ModelGenealogyPerson> users, IModelGenealogyUserListener moreListener, boolean isTree) {
+	public AdapterModelGenealogyUser(ApplicationActivity app, List<ModelGenealogyPerson> users, IModelGenealogyUserListener moreListener, boolean isTree) {
 		this.app = app;
 		this.users = users;
 		this.moreListener = moreListener;

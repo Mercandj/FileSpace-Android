@@ -36,16 +36,16 @@ import java.util.TimeZone;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.StringPair;
 
 public class DialogCreateArticle extends Dialog {
 
-	Application app;
+	ApplicationActivity app;
 
     EditText article_title_1, article_content_1;
 
-	public DialogCreateArticle(final Application app, final IPostExecuteListener listener) {
+	public DialogCreateArticle(final ApplicationActivity app, final IPostExecuteListener listener) {
 		super(app);
 		this.app = app;
 		

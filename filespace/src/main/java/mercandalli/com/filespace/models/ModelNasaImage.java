@@ -20,24 +20,23 @@ public class ModelNasaImage extends Model {
 
     public ModelNasaImage(JSONObject json, String date) {
         this.date = date;
-        if(json == null)
+        if (json == null)
             return;
         try {
-            if(json.has("url"))
+            if (json.has("url"))
                 this.url = json.getString("url");
-            if(json.has("media_type"))
+            if (json.has("media_type"))
                 this.media_type = json.getString("media_type");
-            if(json.has("explanation"))
+            if (json.has("explanation"))
                 this.explanation = json.getString("explanation");
-            if(json.has("concepts")) {
+            if (json.has("concepts")) {
                 JSONArray explanation_jr = json.getJSONArray("concepts");
                 this.concepts = new String[explanation_jr.length()];
-                for(int i=0; i<explanation_jr.length();i++) {
+                for (int i = 0; i < explanation_jr.length(); i++) {
                     this.concepts[i] = explanation_jr.getString(i);
                 }
             }
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }

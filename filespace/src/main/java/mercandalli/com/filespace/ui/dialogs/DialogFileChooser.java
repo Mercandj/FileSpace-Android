@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
 import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.models.ModelFile;
@@ -39,14 +39,14 @@ import mercandalli.com.filespace.models.ModelFileType;
 
 public class DialogFileChooser extends Dialog {
 	
-	private Application app;
+	private ApplicationActivity app;
 	private RecyclerView files;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<ModelFile> listModelFile;
 	private File currentFolder;
 	private IModelFileListener listener;
 	
-	public DialogFileChooser(final Application app, IModelFileListener listener) {
+	public DialogFileChooser(final ApplicationActivity app, IModelFileListener listener) {
 		super(app);
 		
 		this.app = app;

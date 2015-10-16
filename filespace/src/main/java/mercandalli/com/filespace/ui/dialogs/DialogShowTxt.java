@@ -25,17 +25,17 @@ import android.widget.EditText;
 import java.io.File;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.ui.activities.Application;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.models.ModelFile;
 
 public class DialogShowTxt extends Dialog {
 	
 	DialogFileChooser dialogFileChooser;
-	Application app;
+	ApplicationActivity app;
 	File file;
 	ModelFile modelFile;
 	
-	public DialogShowTxt(final Application app, String txt) {
+	public DialogShowTxt(final ApplicationActivity app, String txt) {
 		super(app);
 		this.app = app;
 		

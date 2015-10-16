@@ -14,7 +14,7 @@ import java.io.UnsupportedEncodingException;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.models.ModelFileSpace;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawer;
+import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.utils.FontUtils;
 import mercandalli.com.filespace.utils.StringUtils;
@@ -32,7 +32,7 @@ public class NoteFragment extends BackFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        app = (ApplicationDrawer) activity;
+        app = (ApplicationDrawerActivity) activity;
     }
 
     public NoteFragment() {

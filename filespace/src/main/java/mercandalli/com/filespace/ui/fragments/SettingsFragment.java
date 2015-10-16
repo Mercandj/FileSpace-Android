@@ -41,9 +41,9 @@ import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.ia.action.ENUM_Action;
+import mercandalli.com.filespace.extras.ia.action.ENUM_Action;
 import mercandalli.com.filespace.models.ModelSetting;
-import mercandalli.com.filespace.ui.activities.ActivityRegisterLogin;
+import mercandalli.com.filespace.ui.activities.RegisterLoginActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterModelSetting;
 import mercandalli.com.filespace.ui.dialogs.DialogAuthorLabel;
 import mercandalli.com.filespace.utils.TimeUtils;
@@ -123,7 +123,7 @@ public class SettingsFragment extends BackFragment {
             list.add(new ModelSetting(app, "Login / Sign in", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(app, ActivityRegisterLogin.class);
+                    Intent intent = new Intent(app, RegisterLoginActivity.class);
                     app.startActivity(intent);
                     app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                     app.finish();
