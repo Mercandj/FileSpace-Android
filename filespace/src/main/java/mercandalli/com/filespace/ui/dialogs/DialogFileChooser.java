@@ -26,17 +26,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 
-import mercandalli.com.filespace.listeners.IModelFileListener;
-import mercandalli.com.filespace.models.ModelFile;
-import mercandalli.com.filespace.models.ModelFileType;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listeners.IModelFileListener;
+import mercandalli.com.filespace.models.ModelFile;
+import mercandalli.com.filespace.models.ModelFileType;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
 
 public class DialogFileChooser extends Dialog {
 
@@ -92,7 +91,7 @@ public class DialogFileChooser extends Dialog {
                         currentFolder = file.getFile();
                         updateAdapter();
                     } else {
-                        DialogFileChooser.this.listener.execute(file);
+                        DialogFileChooser.this.listener.executeModelFile(file);
                         DialogFileChooser.this.dismiss();
                     }
                 }

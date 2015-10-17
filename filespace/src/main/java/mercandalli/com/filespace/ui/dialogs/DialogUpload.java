@@ -25,19 +25,18 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import mercandalli.com.filespace.listeners.IModelFileListener;
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.models.ModelFile;
-import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.StringPair;
-
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listeners.IModelFileListener;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.models.ModelFile;
+import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.utils.StringPair;
 
 public class DialogUpload extends Dialog {
 
@@ -82,7 +81,7 @@ public class DialogUpload extends Dialog {
             public void onClick(View v) {
                 dialogFileChooser = new DialogFileChooser(DialogUpload.this.app, new IModelFileListener() {
                     @Override
-                    public void execute(ModelFile modelFile) {
+                    public void executeModelFile(ModelFile modelFile) {
                         modelFile.id_file_parent = DialogUpload.this.id_file_parent;
                         ((TextView) DialogUpload.this.findViewById(R.id.label)).setText("" + modelFile.url);
                         DialogUpload.this.file = new File(modelFile.url);

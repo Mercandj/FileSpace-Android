@@ -190,7 +190,7 @@ public class FileLocalFragment extends FabFragment
 
             final AdapterModelFile adapter = new AdapterModelFile(app, files, new IModelFileListener() {
                 @Override
-                public void execute(final ModelFile modelFile) {
+                public void executeModelFile(final ModelFile modelFile) {
                     final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalFragment.this.app);
                     String[] menuList = {getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties)};
                     if (app.isLogged())

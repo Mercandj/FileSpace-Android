@@ -29,24 +29,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.json.JSONObject;
+
+import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 
-import org.json.JSONObject;
-
-import mercandalli.com.filespace.R;
-
 public class CommunityFragment extends BackFragment implements ViewPager.OnPageChangeListener {
 
     private static final int NB_FRAGMENT = 3;
     private static final int INIT_FRAGMENT = 1;
-    public static BackFragment listBackFragment[] = new BackFragment[NB_FRAGMENT];
+    public static BackFragment mBackFragmentArray[] = new BackFragment[NB_FRAGMENT];
     private ViewPager mViewPager;
     private FileManagerFragmentPagerAdapter mPagerAdapter;
-    private TabLayout tabs;
+    private TabLayout mTabLayout;
     private Toolbar mToolbar;
 
     public static CommunityFragment newInstance() {
@@ -72,7 +71,7 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
 
         mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
 
-        tabs = (TabLayout) rootView.findViewById(R.id.tabs);
+        mTabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
         mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
@@ -81,7 +80,7 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
         mViewPager.setOffscreenPageLimit(this.NB_FRAGMENT - 1);
         mViewPager.setCurrentItem(this.INIT_FRAGMENT);
 
-        tabs.setupWithViewPager(mViewPager);
+        mTabLayout.setupWithViewPager(mViewPager);
 
         return rootView;
     }
@@ -90,7 +89,7 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
         if (mViewPager == null)
             return -1;
         int result = mViewPager.getCurrentItem();
-        if (result >= listBackFragment.length)
+        if (result >= mBackFragmentArray.length)
             return -1;
         return mViewPager.getCurrentItem();
     }
@@ -98,9 +97,9 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     @Override
     public boolean back() {
         int currentFragmentId = getCurrentFragmentIndex();
-        if (listBackFragment == null || currentFragmentId == -1)
+        if (mBackFragmentArray == null || currentFragmentId == -1)
             return false;
-        BackFragment backFragment = listBackFragment[currentFragmentId];
+        BackFragment backFragment = mBackFragmentArray[currentFragmentId];
         if (backFragment == null)
             return false;
         return backFragment.back();
@@ -120,8 +119,8 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     public void onPageSelected(int position) {
         CommunityFragment.this.app.invalidateOptionsMenu();
         if (position < NB_FRAGMENT)
-            if (listBackFragment[position] != null)
-                listBackFragment[position].onFocus();
+            if (mBackFragmentArray[position] != null)
+                mBackFragmentArray[position].onFocus();
     }
 
     @Override
@@ -154,7 +153,7 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
                     backFragment = UserFragment.newInstance();
                     break;
             }
-            listBackFragment[i] = backFragment;
+            mBackFragmentArray[i] = backFragment;
             return backFragment;
         }
 
@@ -190,42 +189,42 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public void refreshListServer(String search) {
-        if (listBackFragment[0] != null)
-            if (listBackFragment[0] instanceof UserFragment) {
-                UserFragment fragmentFileManagerFragment = (UserFragment) listBackFragment[0];
+        if (mBackFragmentArray[0] != null)
+            if (mBackFragmentArray[0] instanceof UserFragment) {
+                UserFragment fragmentFileManagerFragment = (UserFragment) mBackFragmentArray[0];
                 fragmentFileManagerFragment.refreshList(search);
             }
-        if (listBackFragment[1] != null)
-            if (listBackFragment[1] instanceof TalkFragment) {
-                TalkFragment fragmentFileManagerFragment = (TalkFragment) listBackFragment[1];
+        if (mBackFragmentArray[1] != null)
+            if (mBackFragmentArray[1] instanceof TalkFragment) {
+                TalkFragment fragmentFileManagerFragment = (TalkFragment) mBackFragmentArray[1];
                 fragmentFileManagerFragment.refreshList(search);
             }
     }
 
     public void updateAdapterListServer() {
-        if (listBackFragment[0] != null)
-            if (listBackFragment[0] instanceof UserFragment) {
-                UserFragment fragmentFileManagerFragment = (UserFragment) listBackFragment[0];
+        if (mBackFragmentArray[0] != null)
+            if (mBackFragmentArray[0] instanceof UserFragment) {
+                UserFragment fragmentFileManagerFragment = (UserFragment) mBackFragmentArray[0];
                 fragmentFileManagerFragment.updateAdapter();
             }
-        if (listBackFragment.length > 1)
-            if (listBackFragment[1] != null)
-                if (listBackFragment[1] instanceof TalkFragment) {
-                    TalkFragment fragmentFileManagerFragment = (TalkFragment) listBackFragment[1];
+        if (mBackFragmentArray.length > 1)
+            if (mBackFragmentArray[1] != null)
+                if (mBackFragmentArray[1] instanceof TalkFragment) {
+                    TalkFragment fragmentFileManagerFragment = (TalkFragment) mBackFragmentArray[1];
                     fragmentFileManagerFragment.updateAdapter();
                 }
     }
 
     public void refreshAdapterListServer() {
-        if (listBackFragment[0] != null)
-            if (listBackFragment[0] instanceof UserFragment) {
-                UserFragment fragmentFileManagerFragment = (UserFragment) listBackFragment[0];
+        if (mBackFragmentArray[0] != null)
+            if (mBackFragmentArray[0] instanceof UserFragment) {
+                UserFragment fragmentFileManagerFragment = (UserFragment) mBackFragmentArray[0];
                 fragmentFileManagerFragment.refreshList();
             }
-        if (listBackFragment.length > 1)
-            if (listBackFragment[1] != null)
-                if (listBackFragment[1] instanceof TalkFragment) {
-                    TalkFragment fragmentFileManagerFragment = (TalkFragment) listBackFragment[1];
+        if (mBackFragmentArray.length > 1)
+            if (mBackFragmentArray[1] != null)
+                if (mBackFragmentArray[1] instanceof TalkFragment) {
+                    TalkFragment fragmentFileManagerFragment = (TalkFragment) mBackFragmentArray[1];
                     fragmentFileManagerFragment.refreshList();
                 }
     }

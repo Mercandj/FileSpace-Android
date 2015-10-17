@@ -26,18 +26,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
+import java.io.File;
+
+import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-
-import org.json.JSONObject;
-
-import java.io.File;
-
-import mercandalli.com.filespace.R;
 
 public class DialogRequest extends Dialog {
 
@@ -107,7 +106,7 @@ public class DialogRequest extends Dialog {
             public void onClick(View v) {
                 dialogFileChooser = new DialogFileChooser(DialogRequest.this.app, new IModelFileListener() {
                     @Override
-                    public void execute(ModelFile modelFile) {
+                    public void executeModelFile(ModelFile modelFile) {
                         ((TextView) DialogRequest.this.findViewById(R.id.label)).setText("" + modelFile.url);
                         DialogRequest.this.file = new File(modelFile.url);
                         DialogRequest.this.modelFile = modelFile;

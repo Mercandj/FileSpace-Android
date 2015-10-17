@@ -29,14 +29,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
+import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.models.ModelFileTypeENUM;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-
-import java.util.List;
-
-import mercandalli.com.filespace.R;
 
 public class AdapterGridModelFile extends BaseAdapter {
 
@@ -106,7 +105,7 @@ public class AdapterGridModelFile extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     if (moreListener != null)
-                        moreListener.execute(file);
+                        moreListener.executeModelFile(file);
                 }
             });
 

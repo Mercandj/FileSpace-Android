@@ -67,8 +67,8 @@ import mercandalli.com.filespace.utils.StringPair;
 public class FileLocalMusicFragment extends FabFragment
         implements BackFragment.IListViewMode, BackFragment.ISortMode {
 
-    private DynamicListView dynamicListView; // http://nhaarman.github.io/ListViewAnimations/
-    private GridView gridView;
+    private DynamicListView mDynamicListView; // http://nhaarman.github.io/ListViewAnimations/
+    private GridView mGridView;
     private ArrayList<ModelFile> files;
     private ProgressBar circularProgressBar;
     private TextView message;
@@ -96,10 +96,10 @@ public class FileLocalMusicFragment extends FabFragment
         this.circularProgressBar.setVisibility(View.INVISIBLE);
         this.message = (TextView) rootView.findViewById(R.id.message);
 
-        this.dynamicListView = (DynamicListView) rootView.findViewById(R.id.listView);
+        this.mDynamicListView = (DynamicListView) rootView.findViewById(R.id.listView);
 
-        this.gridView = (GridView) rootView.findViewById(R.id.gridView);
-        this.gridView.setVisibility(View.GONE);
+        this.mGridView = (GridView) rootView.findViewById(R.id.gridView);
+        this.mGridView.setVisibility(View.GONE);
 
         refreshList();
 
@@ -190,7 +190,7 @@ public class FileLocalMusicFragment extends FabFragment
     }
 
     public void updateAdapter() {
-        if (dynamicListView != null && files != null && isAdded()) {
+        if (mDynamicListView != null && files != null && isAdded()) {
 
             refreshFab();
 
@@ -202,7 +202,7 @@ public class FileLocalMusicFragment extends FabFragment
 
             final AdapterDragModelFile adapter = new AdapterDragModelFile(app, files, new IModelFileListener() {
                 @Override
-                public void execute(final ModelFile modelFile) {
+                public void executeModelFile(final ModelFile modelFile) {
                     final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalMusicFragment.this.app);
                     String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties)};
                     if (app.isLogged())
@@ -285,32 +285,32 @@ public class FileLocalMusicFragment extends FabFragment
                 }
             });
 
-            dynamicListView.setAdapter(adapter);
+            mDynamicListView.setAdapter(adapter);
 
-            dynamicListView.enableDragAndDrop();
-            dynamicListView.setOnItemLongClickListener(
+            mDynamicListView.enableDragAndDrop();
+            mDynamicListView.setOnItemLongClickListener(
                     new AdapterView.OnItemLongClickListener() {
                         @Override
                         public boolean onItemLongClick(final AdapterView<?> parent, final View view,
                                                        final int position, final long id) {
-                            dynamicListView.startDragging(position);
+                            mDynamicListView.startDragging(position);
                             return true;
                         }
                     }
             );
 
             if (mViewMode == Const.MODE_GRID) {
-                this.gridView.setVisibility(View.VISIBLE);
-                this.dynamicListView.setVisibility(View.GONE);
+                this.mGridView.setVisibility(View.VISIBLE);
+                this.mDynamicListView.setVisibility(View.GONE);
 
-                this.gridView.setAdapter(new AdapterGridModelFile(app, files));
-                this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                this.mGridView.setAdapter(new AdapterGridModelFile(app, files));
+                this.mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         files.get(position).executeLocal(files, view);
                     }
                 });
-                this.gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                this.mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                         if (position >= files.size())
@@ -391,8 +391,8 @@ public class FileLocalMusicFragment extends FabFragment
                     }
                 });
             } else {
-                this.gridView.setVisibility(View.GONE);
-                this.dynamicListView.setVisibility(View.VISIBLE);
+                this.mGridView.setVisibility(View.GONE);
+                this.mDynamicListView.setVisibility(View.VISIBLE);
             }
         }
     }

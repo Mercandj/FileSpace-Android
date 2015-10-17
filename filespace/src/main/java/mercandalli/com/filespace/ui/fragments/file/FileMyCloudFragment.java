@@ -69,7 +69,7 @@ import mercandalli.com.filespace.utils.StringPair;
 public class FileMyCloudFragment extends FabFragment implements BackFragment.IListViewMode {
 
     private RecyclerView mRecyclerView;
-    private GridView gridView;
+    private GridView mGridView;
     private AdapterModelFile mAdapterModelFile;
     private ArrayList<ModelFile> files = new ArrayList<>();
     private ProgressBar circularProgressBar;
@@ -102,14 +102,14 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
         this.mRecyclerView.setHasFixedSize(true);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        this.gridView = (GridView) rootView.findViewById(R.id.gridView);
-        this.gridView.setVisibility(View.GONE);
+        this.mGridView = (GridView) rootView.findViewById(R.id.gridView);
+        this.mGridView.setVisibility(View.GONE);
 
         resetPath();
 
         this.mAdapterModelFile = new AdapterModelFile(app, files, new IModelFileListener() {
             @Override
-            public void execute(final ModelFile modelFile) {
+            public void executeModelFile(final ModelFile modelFile) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileMyCloudFragment.this.app);
                 String[] menuList = {getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties)};
                 if (!modelFile.directory) {
@@ -337,8 +337,8 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
     private void setListVisibility(boolean visible) {
         if (this.mRecyclerView != null)
             this.mRecyclerView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
-        if (this.gridView != null)
-            this.gridView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        if (this.mGridView != null)
+            this.mGridView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 
     public void updateAdapter() {
@@ -360,11 +360,11 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
             refreshFab();
 
             if (mViewMode == Const.MODE_GRID) {
-                this.gridView.setVisibility(View.VISIBLE);
+                this.mGridView.setVisibility(View.VISIBLE);
                 this.mRecyclerView.setVisibility(View.GONE);
 
-                this.gridView.setAdapter(new AdapterGridModelFile(app, files));
-                this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                this.mGridView.setAdapter(new AdapterGridModelFile(app, files));
+                this.mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         if (hasItemSelected()) {
@@ -377,7 +377,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                             files.get(position).executeOnline(files, view);
                     }
                 });
-                this.gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                this.mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                         if (position >= files.size())
@@ -514,7 +514,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                     }
                 });
             } else {
-                this.gridView.setVisibility(View.GONE);
+                this.mGridView.setVisibility(View.GONE);
                 this.mRecyclerView.setVisibility(View.VISIBLE);
             }
         }

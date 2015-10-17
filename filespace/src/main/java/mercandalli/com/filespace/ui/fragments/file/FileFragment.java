@@ -62,7 +62,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
     private FloatingActionButton circle, circle2;
     private View coordinatorLayoutView;
-    private Snackbar snackbar;
+    private Snackbar mSnackbar;
 
     private AppBarLayout mAppBarLayout;
 
@@ -221,8 +221,8 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                     updateNoInternet();
                     break;
                 default:
-                    if (snackbar != null)
-                        snackbar.dismiss();
+                    if (mSnackbar != null)
+                        mSnackbar.dismiss();
             }
             refreshFab(position);
         } else {
@@ -457,7 +457,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
     private void updateNoInternet() {
         if (!NetUtils.isInternetConnection(app)) {
-            this.snackbar = Snackbar.make(this.coordinatorLayoutView, getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE)
+            this.mSnackbar = Snackbar.make(this.coordinatorLayoutView, getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE)
                     .setAction(getString(R.string.refresh), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -467,7 +467,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                                 updateNoInternet();
                         }
                     });
-            this.snackbar.show();
+            this.mSnackbar.show();
         }
     }
 
