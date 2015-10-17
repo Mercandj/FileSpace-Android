@@ -1,0 +1,50 @@
+
+
+
+Minimalist and beautiful Material file manager
+
+
+Simple file manager and audio player.
+Explore your files with a beautiful user interface.
+<br />
+<b>Highlights of FileSpace</b>
+★ <b>Multimedia Explorer</b>: Click to play music/videos, check image(s) and document(s)
+★ <b>File Manager Operations</b>: Multiple select, Copy, Cut, Move, Create, Delete and Rename, Search
+★ <b>Integrated audio player</b>
+★ <b>File Manager</b>: Click to install applications
+<br />
+<b>Supported files</b>
+► <b>Audio</b>: mp3, wav, m4a, caf, flac...
+► <b>Video</b>: mp4, avi, mkv, mpeg, m4v, flv...
+► <b>Picture</b>: jpeg, jpg, png, gif, bmp...
+► <b>Microsoft Office</b>: Word, Excel, PowerPoint...
+► <b>Archive</b>: zip, rar, tar...
+► <b>Pdf</b>
+► <b>Apk</b>
+<br />
+• And much more soon....
+
+
+
+
+
+Gestionnaire de fichiers minimaliste et Material Design
+
+Avec la nouvelle application FileSpace manipulez vos fichiers encore plus rapidement et plus facilement. Lancez, supprimez et déplacez vos photos, musiques, vidéos, pdf, word ou n'importe quel fichier. Écoutez vos musiques simplement avec le lecteur audio intégré.
+<br />
+<b>Caractéristiques de FileSpace</b>
+★ <b>Explorateur Multimédia</b>: Cliquez pour lancer des musiques, des vidéos, des images ou documents
+★ <b>Organisez vos Fichiers</b>: Multiple select, Copy, Cut, Move, Create, Delete and Rename, Search
+★ <b>Lecteur de musiques</b>: Enfin un lecteur facile d'utilisation
+★ <b>Installez des apps</b>: Cliquez pour installer des applications
+<br />
+<b>Fichiers supportés</b>
+► <b>Audio</b>: mp3, wav, m4a, caf, flac...
+► <b>Vidéo</b>: mp4, avi, mkv, mpeg, m4v, flv...
+► <b>Photo</b>: jpeg, jpg, png, gif, bmp...
+► <b>Microsoft Office</b>: Word, Excel, PowerPoint...
+► <b>Archive</b>: zip, rar, tar...
+► <b>Pdf</b>
+► <b>Apk</b>
+<br />
+• Et bien plus encore prochainement....
