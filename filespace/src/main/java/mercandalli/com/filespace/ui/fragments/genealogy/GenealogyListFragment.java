@@ -35,14 +35,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IModelGenealogyUserListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
@@ -53,10 +45,18 @@ import mercandalli.com.filespace.ui.adapters.AdapterModelGenealogyUser;
 import mercandalli.com.filespace.ui.dialogs.DialogAddGenealogyPerson;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
+import mercandalli.com.filespace.utils.NetUtils;
 import mercandalli.com.filespace.utils.StringPair;
 import mercandalli.com.filespace.utils.StringUtils;
 
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import mercandalli.com.filespace.R;
 
 /**
  * Created by Jonathan on 28/08/2015.
@@ -145,7 +145,7 @@ public class GenealogyListFragment extends FabFragment {
         List<StringPair> parameters = new ArrayList<>();
         if (!StringUtils.isNullOrEmpty(search))
             parameters.add(new StringPair("search", search));
-        if (isInternetConnection(app) && app.isLogged())
+        if (NetUtils.isInternetConnection(app) && app.isLogged())
             new TaskGet(
                     app,
                     this.app.getConfig().getUser(),
@@ -179,7 +179,7 @@ public class GenealogyListFragment extends FabFragment {
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
 
-            if (!isInternetConnection(app)) {
+            if (!NetUtils.isInternetConnection(app)) {
                 this.setListVisibility(false);
                 this.refreshFab.execute();
             }

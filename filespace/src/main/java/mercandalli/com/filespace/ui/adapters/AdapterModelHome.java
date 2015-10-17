@@ -29,13 +29,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.List;
-
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.models.ModelHome;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.FontUtils;
+
+import java.util.List;
+
+import mercandalli.com.filespace.R;
 
 public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.ViewHolder> {
     private List<ModelHome> itemsData;

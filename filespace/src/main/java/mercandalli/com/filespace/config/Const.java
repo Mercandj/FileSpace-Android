@@ -20,8 +20,6 @@
 package mercandalli.com.filespace.config;
 
 public class Const {
-    public static final String APP_NAME = "Jarvis";
-
     public static final int TAB_VIEW_TYPE_NORMAL = 0;
     public static final int TAB_VIEW_TYPE_SECTION = 1;
     public static final int TAB_VIEW_TYPE_SECTION_TITLE = 2;

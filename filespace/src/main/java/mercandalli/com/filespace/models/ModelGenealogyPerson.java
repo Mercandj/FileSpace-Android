@@ -21,6 +21,14 @@ package mercandalli.com.filespace.models;
 
 import android.text.Spanned;
 
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.dialogs.DialogAddGenealogyPerson;
+import mercandalli.com.filespace.utils.HtmlUtils;
+import mercandalli.com.filespace.utils.StringPair;
+import mercandalli.com.filespace.utils.StringUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,13 +40,6 @@ import java.util.Date;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.ui.dialogs.DialogAddGenealogyPerson;
-import mercandalli.com.filespace.utils.HtmlUtils;
-import mercandalli.com.filespace.utils.StringPair;
-import mercandalli.com.filespace.utils.StringUtils;
 
 public class ModelGenealogyPerson extends Model {
 

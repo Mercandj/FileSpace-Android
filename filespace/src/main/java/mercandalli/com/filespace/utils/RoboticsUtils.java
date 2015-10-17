@@ -19,16 +19,14 @@
  */
 package mercandalli.com.filespace.utils;
 
+import mercandalli.com.filespace.models.ModelHardware;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import mercandalli.com.filespace.models.ModelHardware;
-
-import static mercandalli.com.filespace.utils.TimeUtils.getCurrentDate;
 
 /**
  * Created by Jonathan on 31/05/2015.
@@ -133,7 +131,7 @@ public class RoboticsUtils {
 
         JSONObject content = createContent(
                 user, // user
-                getCurrentDate(), // date_request
+                TimeUtils.getCurrentDate(), // date_request
                 hardware, // hardware
                 false, // init_hardware
                 -1, // state
@@ -194,7 +192,7 @@ public class RoboticsUtils {
 
         JSONObject content = createContent(
                 user, // user
-                getCurrentDate(), // date_request
+                TimeUtils.getCurrentDate(), // date_request
                 hardware, // hardware
                 false, // init_hardware
                 -1, // state

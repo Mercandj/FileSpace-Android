@@ -33,14 +33,14 @@ import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.listeners.IBitmapListener;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Map;
 import java.util.WeakHashMap;
-
-import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.listeners.IBitmapListener;
 
 /**
  * Created by Jonathan on 29/05/2015.

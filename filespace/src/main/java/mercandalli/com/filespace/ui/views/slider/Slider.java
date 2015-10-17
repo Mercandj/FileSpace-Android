@@ -306,7 +306,7 @@ public class Slider extends SliderCustomView {
         ball = new Ball(getContext());
         RelativeLayout.LayoutParams params = new LayoutParams(SliderUtils.dpToPx(20,
                 getResources()), SliderUtils.dpToPx(20, getResources()));
-        params.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
+        params.addRule(CENTER_VERTICAL, TRUE);
         ball.setLayoutParams(params);
         addView(ball);
 

@@ -22,11 +22,12 @@ package mercandalli.com.filespace.ui.dialogs;
 import android.app.Dialog;
 import android.widget.EditText;
 
+import mercandalli.com.filespace.models.ModelFile;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+
 import java.io.File;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.models.ModelFile;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class DialogShowTxt extends Dialog {
 

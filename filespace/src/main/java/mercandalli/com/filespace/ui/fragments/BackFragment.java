@@ -37,6 +37,7 @@ public abstract class BackFragment extends Fragment {
 
     /**
      * Activity follow back to fragment.
+     *
      * @return true if action
      */
     public abstract boolean back();
@@ -50,6 +51,7 @@ public abstract class BackFragment extends Fragment {
     public interface IListViewMode {
         /**
          * Define if the list or grid.
+         *
          * @param viewMode {@link Const#MODE_LIST} or {@link Const#MODE_GRID}
          */
         void setViewMode(int viewMode);
@@ -58,6 +60,7 @@ public abstract class BackFragment extends Fragment {
     public interface ISortMode {
         /**
          * Define the list sort.
+         *
          * @param sortMode {@link Const#SORT_ABC}, {@link Const#SORT_SIZE} or {@link Const#SORT_DATE_MODIFICATION}
          */
         void setSortMode(int sortMode);

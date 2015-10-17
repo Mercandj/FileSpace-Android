@@ -12,10 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.extras.physics.MyGLSurfaceView;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
+
+import mercandalli.com.filespace.R;
 
 /**
  * Created by Jonathan on 02/09/2015.

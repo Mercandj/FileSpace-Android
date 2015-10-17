@@ -35,14 +35,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.ILocationListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
@@ -55,7 +47,16 @@ import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.utils.GpsUtils;
 import mercandalli.com.filespace.utils.StringPair;
 
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import mercandalli.com.filespace.R;
+
+import mercandalli.com.filespace.utils.NetUtils;
 
 
 public class UserLocationFragment extends BackFragment {
@@ -132,7 +133,7 @@ public class UserLocationFragment extends BackFragment {
                                             double longitude = location.getLongitude(),
                                                     latitude = location.getLatitude();
 
-                                            if (isInternetConnection(app) && longitude != 0 && latitude != 0) {
+                                            if (NetUtils.isInternetConnection(app) && longitude != 0 && latitude != 0) {
                                                 List<StringPair> parameters = new ArrayList<>();
                                                 parameters.add(new StringPair("longitude", "" + longitude));
                                                 parameters.add(new StringPair("latitude", "" + latitude));
@@ -152,7 +153,7 @@ public class UserLocationFragment extends BackFragment {
                                     double longitude = location.getLongitude(),
                                             latitude = location.getLatitude();
 
-                                    if (isInternetConnection(app) && longitude != 0 && latitude != 0) {
+                                    if (NetUtils.isInternetConnection(app) && longitude != 0 && latitude != 0) {
                                         List<StringPair> parameters = new ArrayList<>();
                                         parameters.add(new StringPair("longitude", "" + longitude));
                                         parameters.add(new StringPair("latitude", "" + latitude));
@@ -178,7 +179,7 @@ public class UserLocationFragment extends BackFragment {
 
     public void refreshMap() {
         List<StringPair> parameters = null;
-        if (isInternetConnection(app) && app.isLogged())
+        if (NetUtils.isInternetConnection(app) && app.isLogged())
             new TaskGet(
                     app,
                     this.app.getConfig().getUser(),

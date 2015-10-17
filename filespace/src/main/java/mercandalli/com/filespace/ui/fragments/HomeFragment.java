@@ -47,12 +47,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.extras.ia.Interpreter;
 import mercandalli.com.filespace.extras.ia.InterpreterMain;
@@ -64,8 +58,14 @@ import mercandalli.com.filespace.models.ModelNasaImage;
 import mercandalli.com.filespace.models.ModelServerMessage;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterModelHome;
+import mercandalli.com.filespace.utils.NasaUtils;
 
-import static mercandalli.com.filespace.utils.NasaUtils.getNasaRandomPicture;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
+import mercandalli.com.filespace.R;
 
 /**
  * Created by Jonathan on 03/01/2015.
@@ -148,7 +148,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getNasaRandomPicture(app, new IModelNasaImageListener() {
+                NasaUtils.getNasaRandomPicture(app, new IModelNasaImageListener() {
                     @Override
                     public void execute(ModelNasaImage modelNasaImage) {
                         refreshList(modelNasaImage);
@@ -160,7 +160,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
 
         refreshList();
 
-        getNasaRandomPicture(app, new IModelNasaImageListener() {
+        NasaUtils.getNasaRandomPicture(app, new IModelNasaImageListener() {
             @Override
             public void execute(ModelNasaImage modelNasaImage) {
                 refreshList(modelNasaImage);

@@ -9,8 +9,8 @@ package mercandalli.com.filespace.extras.physics.physics;
 
 /**
  * Physic stats : all entity is define with that
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class PhysicsObjStats {
     public float mass = 0;

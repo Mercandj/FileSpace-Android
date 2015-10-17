@@ -34,10 +34,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.io.File;
-import java.util.Date;
-
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IBitmapListener;
 import mercandalli.com.filespace.listeners.ILongListener;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
@@ -45,8 +41,10 @@ import mercandalli.com.filespace.utils.ColorUtils;
 import mercandalli.com.filespace.utils.FontUtils;
 import mercandalli.com.filespace.utils.ImageUtils;
 
-import static mercandalli.com.filespace.utils.ImageUtils.is_image;
-import static mercandalli.com.filespace.utils.ImageUtils.load_image;
+import java.io.File;
+import java.util.Date;
+
+import mercandalli.com.filespace.R;
 
 /**
  * Created by Jonathan on 29/05/2015.
@@ -106,8 +104,8 @@ public class FilePictureActivity extends ApplicationActivity {
                 FontUtils.applyFont(this, title_tv, "fonts/Roboto-Regular.ttf");
             }
 
-            if (is_image(this, this.id)) {
-                bitmap = load_image(this, this.id);
+            if (ImageUtils.is_image(this, this.id)) {
+                bitmap = ImageUtils.load_image(this, this.id);
                 ((ImageView) this.findViewById(R.id.icon)).setImageBitmap(bitmap);
                 int bgColor = ColorUtils.getMutedColor(bitmap);
                 if (bgColor != 0) {

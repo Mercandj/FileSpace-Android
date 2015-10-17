@@ -21,6 +21,11 @@ package mercandalli.com.filespace.models;
 
 import android.util.Log;
 
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.utils.PointLong;
+import mercandalli.com.filespace.utils.StringUtils;
+import mercandalli.com.filespace.utils.TimeUtils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,11 +33,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.PointLong;
-import mercandalli.com.filespace.utils.StringUtils;
-import mercandalli.com.filespace.utils.TimeUtils;
 
 import static mercandalli.com.filespace.models.ModelFileSpace.FileSpaceTypeENUM.create;
 

@@ -21,15 +21,15 @@ package mercandalli.com.filespace.extras.ia;
 
 import android.util.Log;
 
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.utils.MathUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.MathUtils;
 
 /**
  * Created by Jonathan on 21/04/2015.

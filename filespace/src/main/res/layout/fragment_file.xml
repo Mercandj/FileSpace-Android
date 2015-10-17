@@ -3,10 +3,11 @@
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
+
 <android.support.design.widget.CoordinatorLayout
     android:id="@+id/fragment_file_coordinator_layout"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -22,21 +23,21 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:titleTextAppearance="@style/ToolbarTitle"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:layout_scrollFlags="scroll|enterAlways"/>
+            app:titleTextAppearance="@style/ToolbarTitle"/>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/fragment_file_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="42dip"
+            android:layout_alignParentTop="false"
             android:background="@color/actionbar"
-            app:tabTextAppearance="@style/TextAppearanceTabLayout"
-            app:tabTextColor="@color/white"
-            app:tabSelectedTextColor="@color/white"
-            app:tabIndicatorHeight="2dp"
             app:tabIndicatorColor="@color/white"
-            android:layout_alignParentTop="false"/>
+            app:tabIndicatorHeight="2dp"
+            app:tabSelectedTextColor="@color/white"
+            app:tabTextAppearance="@style/TextAppearanceTabLayout"
+            app:tabTextColor="@color/white"/>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -46,9 +47,9 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/circle"
-        android:transitionName="transitionFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
@@ -58,6 +59,7 @@
         android:src="@drawable/add"
         android:stateListAnimator="@anim/circle_button_elevation"
         android:tint="@android:color/white"
+        android:transitionName="transitionFab"
         app:layout_anchor="@id/fragment_file_coordinator_layout"
         app:layout_anchorGravity="bottom|right|end"/>
 
@@ -65,17 +67,17 @@
         android:id="@+id/circle2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="106dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:elevation="@dimen/circle_button_elevation_high"
         android:scaleType="fitXY"
         android:src="@drawable/arrow_up"
-        android:layout_gravity="bottom|right"
         android:stateListAnimator="@anim/circle_button_elevation"
         android:tint="@android:color/white"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="106dp"
         app:layout_anchor="@id/fragment_file_coordinator_layout"
         app:layout_anchorGravity="bottom|right|end"/>
 

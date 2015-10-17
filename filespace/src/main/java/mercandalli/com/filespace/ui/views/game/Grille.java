@@ -1,9 +1,9 @@
 package mercandalli.com.filespace.ui.views.game;
 
+import mercandalli.com.filespace.utils.MathUtils;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import mercandalli.com.filespace.utils.MathUtils;
 
 /**
  * Created by Jonathan on 02/09/2015.

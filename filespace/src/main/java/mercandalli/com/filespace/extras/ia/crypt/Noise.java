@@ -46,7 +46,7 @@ public class Noise extends CryptMethod {
             j++;
         }
         /*for(int i=0;i<2*input.length(); i++) {
-			if(predicat.isValid(i))
+            if(predicat.isValid(i))
 				retour += input.charAt(i/2);
 			else //BRUIT
 				retour += Character.toChars((random(BORNE_INF, BORNE_SUP)-BORNE_INF)%(DOMAINE)+BORNE_INF)[0];

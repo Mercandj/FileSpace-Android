@@ -7,18 +7,18 @@
 
 package mercandalli.com.filespace.extras.physics.physics;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import mercandalli.com.filespace.extras.physics.lib.Predicat;
 import mercandalli.com.filespace.extras.physics.lib.myVector3D;
 import mercandalli.com.filespace.extras.physics.objects.Entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Force like gravity
  * Physics force : One direction, non specific application point (use ForcePoint if you want)
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class Force {
 

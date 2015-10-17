@@ -35,14 +35,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IModelGenealogyUserListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelGenealogyPerson;
@@ -51,10 +43,18 @@ import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterModelGenealogyUser;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
+import mercandalli.com.filespace.utils.NetUtils;
 import mercandalli.com.filespace.utils.StringPair;
 import mercandalli.com.filespace.utils.StringUtils;
 
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import mercandalli.com.filespace.R;
 
 /**
  * Created by Jonathan on 28/08/2015.
@@ -131,7 +131,7 @@ public class GenealogyTreeFragment extends FabFragment {
 
     public void getChildren(int id_user) {
         List<StringPair> parameters = null;
-        if (isInternetConnection(app) && app.isLogged()) {
+        if (NetUtils.isInternetConnection(app) && app.isLogged()) {
             if (requestReady) {
                 requestReady = false;
                 new TaskGet(
@@ -177,7 +177,7 @@ public class GenealogyTreeFragment extends FabFragment {
     public void changeUser(int id_user) {
 
         List<StringPair> parameters = null;
-        if (isInternetConnection(app) && app.isLogged()) {
+        if (NetUtils.isInternetConnection(app) && app.isLogged()) {
             if (requestReady) {
                 requestReady = false;
                 new TaskGet(

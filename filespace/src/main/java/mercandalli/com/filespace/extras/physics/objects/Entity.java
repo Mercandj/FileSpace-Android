@@ -7,18 +7,18 @@
 
 package mercandalli.com.filespace.extras.physics.objects;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import mercandalli.com.filespace.extras.physics.lib.WayPosition;
 import mercandalli.com.filespace.extras.physics.lib.myVector3D;
 import mercandalli.com.filespace.extras.physics.physics.Force;
 import mercandalli.com.filespace.extras.physics.physics.PhysicsObjStats;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Define the object's attributes
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public abstract class Entity {
 

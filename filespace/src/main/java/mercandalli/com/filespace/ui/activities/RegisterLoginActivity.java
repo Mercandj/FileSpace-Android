@@ -38,12 +38,6 @@ import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelUser;
@@ -52,10 +46,15 @@ import mercandalli.com.filespace.ui.fragments.InscriptionFragment;
 import mercandalli.com.filespace.ui.fragments.LoginFragment;
 import mercandalli.com.filespace.ui.views.PagerSlidingTabStrip;
 import mercandalli.com.filespace.utils.HashUtils;
+import mercandalli.com.filespace.utils.NetUtils;
 import mercandalli.com.filespace.utils.StringPair;
 import mercandalli.com.filespace.utils.StringUtils;
 
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegisterLoginActivity extends ApplicationActivity {
 
@@ -260,7 +259,7 @@ public class RegisterLoginActivity extends ApplicationActivity {
         parameters.add(new StringPair("google_plus", "true"));
         parameters.add(new StringPair("username", "" + user.username));
         parameters.add(new StringPair("password", "" + user.password));
-        if (isInternetConnection(this))
+        if (NetUtils.isInternetConnection(this))
             (new TaskPost(this, this.getConfig().getUrlServer() + this.getConfig().routeUser, new IPostExecuteListener() {
                 @Override
                 public void execute(JSONObject json, String body) {

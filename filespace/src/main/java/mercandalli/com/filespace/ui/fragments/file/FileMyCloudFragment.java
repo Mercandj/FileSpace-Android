@@ -24,7 +24,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -48,7 +47,6 @@ import java.util.Stack;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.listeners.IEnableSwipeToRefreshCallback;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
@@ -65,19 +63,17 @@ import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
 import mercandalli.com.filespace.utils.FileUtils;
+import mercandalli.com.filespace.utils.NetUtils;
 import mercandalli.com.filespace.utils.StringPair;
 
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
+public class FileMyCloudFragment extends FabFragment implements BackFragment.IListViewMode {
 
-public class FileMyCloudFragment extends FabFragment implements BackFragment.IListViewMode, IEnableSwipeToRefreshCallback {
-
-    private RecyclerView listView;
+    private RecyclerView mRecyclerView;
     private GridView gridView;
-    private AdapterModelFile adapter;
+    private AdapterModelFile mAdapterModelFile;
     private ArrayList<ModelFile> files = new ArrayList<>();
     private ProgressBar circularProgressBar;
     private TextView message;
-    private SwipeRefreshLayout mSwipeRefreshLayout, mSwipeRefreshLayoutGrid;
 
     private Stack<Integer> id_file_path = new Stack<>();
     private List<ModelFile> filesToCut = new ArrayList<>();
@@ -85,10 +81,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
     private int mViewMode = Const.MODE_LIST;
 
     public static FileMyCloudFragment newInstance() {
-        Bundle args = new Bundle();
-        FileMyCloudFragment fragment = new FileMyCloudFragment();
-        fragment.setArguments(args);
-        return fragment;
+        return new FileMyCloudFragment();
     }
 
     @Override
@@ -100,48 +93,21 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_file_files, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_file_files, container, false);
+
         this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         this.message = (TextView) rootView.findViewById(R.id.message);
 
-        this.listView = (RecyclerView) rootView.findViewById(R.id.listView);
-        this.listView.setHasFixedSize(true);
-        this.listView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        this.mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
+        this.mRecyclerView.setHasFixedSize(true);
+        this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         this.gridView = (GridView) rootView.findViewById(R.id.gridView);
         this.gridView.setVisibility(View.GONE);
 
         resetPath();
 
-        this.mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
-        this.mSwipeRefreshLayout.setColorSchemeResources(
-                android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-        this.mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshList();
-            }
-        });
-
-        this.mSwipeRefreshLayoutGrid = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayoutGrid);
-        this.mSwipeRefreshLayoutGrid.setColorSchemeResources(
-                android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-        this.mSwipeRefreshLayoutGrid.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshList();
-            }
-        });
-
-        this.adapter = new AdapterModelFile(app, files, new IModelFileListener() {
+        this.mAdapterModelFile = new AdapterModelFile(app, files, new IModelFileListener() {
             @Override
             public void execute(final ModelFile modelFile) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileMyCloudFragment.this.app);
@@ -277,16 +243,16 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
             }
         });
 
-        this.listView.setAdapter(adapter);
-        this.listView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
-        this.listView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+        this.mRecyclerView.setAdapter(mAdapterModelFile);
+        this.mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
+        this.mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
-        this.adapter.setOnItemClickListener(new AdapterModelFile.OnItemClickListener() {
+        this.mAdapterModelFile.setOnItemClickListener(new AdapterModelFile.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 if (hasItemSelected()) {
                     files.get(position).selected = !files.get(position).selected;
-                    adapter.notifyItemChanged(position);
+                    mAdapterModelFile.notifyItemChanged(position);
                 } else if (files.get(position).directory) {
                     FileMyCloudFragment.this.id_file_path.add(files.get(position).id);
                     refreshList();
@@ -295,11 +261,11 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
             }
         });
 
-        this.adapter.setOnItemLongClickListener(new AdapterModelFile.OnItemLongClickListener() {
+        this.mAdapterModelFile.setOnItemLongClickListener(new AdapterModelFile.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(View view, int position) {
                 files.get(position).selected = !files.get(position).selected;
-                adapter.notifyItemChanged(position);
+                mAdapterModelFile.notifyItemChanged(position);
                 return true;
             }
         });
@@ -325,7 +291,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
         parameters.add(new StringPair("id_file_parent", "" + this.id_file_path.peek()));
         parameters.add(new StringPair("mine", "" + true));
 
-        if (isInternetConnection(app) && app.isLogged()) {
+        if (NetUtils.isInternetConnection(app) && app.isLogged()) {
             new TaskGet(
                     app,
                     this.app.getConfig().getUser(),
@@ -360,10 +326,8 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
             if (this.isAdded())
                 this.message.setText(app.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
-            this.mSwipeRefreshLayout.setRefreshing(false);
-            this.mSwipeRefreshLayoutGrid.setRefreshing(false);
 
-            if (!isInternetConnection(app)) {
+            if (!NetUtils.isInternetConnection(app)) {
                 this.setListVisibility(false);
                 refreshFab();
             }
@@ -371,14 +335,14 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
     }
 
     private void setListVisibility(boolean visible) {
-        if (this.listView != null)
-            this.listView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        if (this.mRecyclerView != null)
+            this.mRecyclerView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
         if (this.gridView != null)
             this.gridView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 
     public void updateAdapter() {
-        if (this.listView != null && this.files != null && this.isAdded()) {
+        if (this.mRecyclerView != null && this.files != null && this.isAdded()) {
 
             this.circularProgressBar.setVisibility(View.GONE);
 
@@ -391,15 +355,13 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
             } else
                 this.message.setVisibility(View.GONE);
 
-            this.adapter.remplaceList(this.files);
+            this.mAdapterModelFile.remplaceList(this.files);
 
             refreshFab();
 
             if (mViewMode == Const.MODE_GRID) {
                 this.gridView.setVisibility(View.VISIBLE);
-                this.mSwipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
-                this.listView.setVisibility(View.GONE);
-                this.mSwipeRefreshLayout.setVisibility(View.GONE);
+                this.mRecyclerView.setVisibility(View.GONE);
 
                 this.gridView.setAdapter(new AdapterGridModelFile(app, files));
                 this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -407,7 +369,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         if (hasItemSelected()) {
                             files.get(position).selected = !files.get(position).selected;
-                            adapter.notifyItemChanged(position);
+                            mAdapterModelFile.notifyItemChanged(position);
                         } else if (files.get(position).directory) {
                             FileMyCloudFragment.this.id_file_path.add(files.get(position).id);
                             refreshList();
@@ -553,13 +515,8 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                 });
             } else {
                 this.gridView.setVisibility(View.GONE);
-                this.mSwipeRefreshLayoutGrid.setVisibility(View.GONE);
-                this.listView.setVisibility(View.VISIBLE);
-                this.mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                this.mRecyclerView.setVisibility(View.VISIBLE);
             }
-
-            this.mSwipeRefreshLayout.setRefreshing(false);
-            this.mSwipeRefreshLayoutGrid.setRefreshing(false);
         }
     }
 
@@ -639,7 +596,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
 
     @Override
     public boolean isFabVisible(int fab_id) {
-        if (!isInternetConnection(app) || !app.isLogged())
+        if (!NetUtils.isInternetConnection(app) || !app.isLogged())
             return false;
         switch (fab_id) {
             case 0:
@@ -670,13 +627,5 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
             mViewMode = viewMode;
             updateAdapter();
         }
-    }
-
-    @Override
-    public void setSwipeEnabled(boolean enabled) {
-        if (mSwipeRefreshLayout != null)
-            mSwipeRefreshLayout.setEnabled(enabled);
-        if (mSwipeRefreshLayoutGrid != null)
-            mSwipeRefreshLayoutGrid.setEnabled(enabled);
     }
 }

@@ -28,9 +28,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelGenealogyPerson;
@@ -40,7 +37,10 @@ import mercandalli.com.filespace.ui.fragments.genealogy.GenealogyListFragment;
 import mercandalli.com.filespace.utils.StringPair;
 import mercandalli.com.filespace.utils.StringUtils;
 
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
+import java.util.ArrayList;
+import java.util.List;
+
+import mercandalli.com.filespace.utils.NetUtils;
 
 public class DialogAddGenealogyPerson extends Dialog {
 
@@ -101,7 +101,7 @@ public class DialogAddGenealogyPerson extends Dialog {
                         StringUtils.isNullOrEmpty(et_first_name_2.getText().toString()) &&
                         StringUtils.isNullOrEmpty(et_first_name_3.getText().toString());
 
-                if (isInternetConnection(app) && !isFormEmpty) {
+                if (NetUtils.isInternetConnection(app) && !isFormEmpty) {
                     List<StringPair> parameters = new ArrayList<>();
 
                     if (!StringUtils.isNullOrEmpty(et_first_name_1.getText().toString()))

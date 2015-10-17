@@ -27,7 +27,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +50,6 @@ import java.util.Map;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.listeners.IEnableSwipeToRefreshCallback;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
@@ -67,14 +65,13 @@ import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.StringPair;
 
 public class FileLocalMusicFragment extends FabFragment
-        implements BackFragment.IListViewMode, BackFragment.ISortMode, IEnableSwipeToRefreshCallback {
+        implements BackFragment.IListViewMode, BackFragment.ISortMode {
 
     private DynamicListView dynamicListView; // http://nhaarman.github.io/ListViewAnimations/
     private GridView gridView;
     private ArrayList<ModelFile> files;
     private ProgressBar circularProgressBar;
     private TextView message;
-    private SwipeRefreshLayout mSwipeRefreshLayoutGrid;
 
     private int mSortMode = Const.SORT_DATE_MODIFICATION;
     private int mViewMode = Const.MODE_LIST;
@@ -103,20 +100,6 @@ public class FileLocalMusicFragment extends FabFragment
 
         this.gridView = (GridView) rootView.findViewById(R.id.gridView);
         this.gridView.setVisibility(View.GONE);
-
-        this.mSwipeRefreshLayoutGrid = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayoutGrid);
-        this.mSwipeRefreshLayoutGrid.setColorSchemeResources(
-                android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-        this.mSwipeRefreshLayoutGrid.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshList();
-            }
-        });
 
         refreshList();
 
@@ -318,7 +301,6 @@ public class FileLocalMusicFragment extends FabFragment
 
             if (mViewMode == Const.MODE_GRID) {
                 this.gridView.setVisibility(View.VISIBLE);
-                this.mSwipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
                 this.dynamicListView.setVisibility(View.GONE);
 
                 this.gridView.setAdapter(new AdapterGridModelFile(app, files));
@@ -410,11 +392,8 @@ public class FileLocalMusicFragment extends FabFragment
                 });
             } else {
                 this.gridView.setVisibility(View.GONE);
-                this.mSwipeRefreshLayoutGrid.setVisibility(View.GONE);
                 this.dynamicListView.setVisibility(View.VISIBLE);
             }
-
-            mSwipeRefreshLayoutGrid.setRefreshing(false);
         }
     }
 
@@ -458,11 +437,5 @@ public class FileLocalMusicFragment extends FabFragment
             mViewMode = viewMode;
             updateAdapter();
         }
-    }
-
-    @Override
-    public void setSwipeEnabled(boolean enabled) {
-        if (mSwipeRefreshLayoutGrid != null)
-            mSwipeRefreshLayoutGrid.setEnabled(enabled);
     }
 }

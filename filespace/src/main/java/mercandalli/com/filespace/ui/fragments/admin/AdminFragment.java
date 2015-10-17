@@ -35,12 +35,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.EmptyFragment;
 import mercandalli.com.filespace.ui.views.NonSwipeableViewPager;
+
+import mercandalli.com.filespace.R;
 
 
 public class AdminFragment extends BackFragment implements ViewPager.OnPageChangeListener {

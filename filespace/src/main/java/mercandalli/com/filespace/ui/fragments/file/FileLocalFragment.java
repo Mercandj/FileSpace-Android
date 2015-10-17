@@ -25,7 +25,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,7 +51,6 @@ import java.util.Map;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.listeners.IEnableSwipeToRefreshCallback;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
@@ -69,16 +67,14 @@ import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.StringPair;
 
 public class FileLocalFragment extends FabFragment
-        implements BackFragment.IListViewMode, BackFragment.ISortMode, IEnableSwipeToRefreshCallback {
+        implements BackFragment.IListViewMode, BackFragment.ISortMode {
 
-    private RecyclerView listView;
-    private GridView gridView;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerView mRecyclerView;
+    private GridView mGridView;
     private ArrayList<ModelFile> files;
     private ProgressBar circularProgressBar;
     private File currentDirectory;
     private TextView message;
-    private SwipeRefreshLayout mSwipeRefreshLayout, mSwipeRefreshLayoutGrid;
 
     private List<ModelFile> filesToCut = new ArrayList<>();
     private List<ModelFile> filesToCopy = new ArrayList<>();
@@ -101,51 +97,23 @@ public class FileLocalFragment extends FabFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_file_files, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_file_files, container, false);
+
         this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         this.circularProgressBar.setVisibility(View.INVISIBLE);
         this.message = (TextView) rootView.findViewById(R.id.message);
 
-        this.listView = (RecyclerView) rootView.findViewById(R.id.listView);
-        this.listView.setHasFixedSize(true);
-        this.mLayoutManager = new LinearLayoutManager(getActivity());
-        this.listView.setLayoutManager(mLayoutManager);
-        this.listView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+        this.mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
+        this.mRecyclerView.setHasFixedSize(true);
+        this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        this.mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
-        this.gridView = (GridView) rootView.findViewById(R.id.gridView);
-        this.gridView.setVisibility(View.GONE);
+        this.mGridView = (GridView) rootView.findViewById(R.id.gridView);
+        this.mGridView.setVisibility(View.GONE);
 
         this.currentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + this.app.getConfig().getLocalFolderName());
         if (!currentDirectory.exists())
             currentDirectory.mkdir();
-
-        this.mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
-        this.mSwipeRefreshLayout.setColorSchemeResources(
-                android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-        this.mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshList();
-            }
-        });
-
-        this.mSwipeRefreshLayoutGrid = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayoutGrid);
-        this.mSwipeRefreshLayoutGrid.setColorSchemeResources(
-                android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-        this.mSwipeRefreshLayoutGrid.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshList();
-            }
-        });
 
         refreshList();
 
@@ -210,7 +178,7 @@ public class FileLocalFragment extends FabFragment
     }
 
     public void updateAdapter() {
-        if (listView != null && files != null && isAdded()) {
+        if (mRecyclerView != null && files != null && isAdded()) {
 
             refreshFab();
 
@@ -325,7 +293,7 @@ public class FileLocalFragment extends FabFragment
                 }
             });
 
-            listView.setAdapter(adapter);
+            mRecyclerView.setAdapter(adapter);
 
             adapter.setOnItemClickListener(new AdapterModelFile.OnItemClickListener() {
                 @Override
@@ -352,13 +320,11 @@ public class FileLocalFragment extends FabFragment
 
 
             if (mViewMode == Const.MODE_GRID) {
-                this.gridView.setVisibility(View.VISIBLE);
-                this.mSwipeRefreshLayoutGrid.setVisibility(View.VISIBLE);
-                this.listView.setVisibility(View.GONE);
-                this.mSwipeRefreshLayout.setVisibility(View.GONE);
+                this.mGridView.setVisibility(View.VISIBLE);
+                this.mRecyclerView.setVisibility(View.GONE);
 
-                this.gridView.setAdapter(new AdapterGridModelFile(app, files));
-                this.gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                this.mGridView.setAdapter(new AdapterGridModelFile(app, files));
+                this.mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         if (hasItemSelected()) {
@@ -371,7 +337,7 @@ public class FileLocalFragment extends FabFragment
                             files.get(position).executeLocal(files, view);
                     }
                 });
-                this.gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                this.mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                         if (position >= files.size())
@@ -470,14 +436,9 @@ public class FileLocalFragment extends FabFragment
                     }
                 });
             } else {
-                this.gridView.setVisibility(View.GONE);
-                this.mSwipeRefreshLayoutGrid.setVisibility(View.GONE);
-                this.listView.setVisibility(View.VISIBLE);
-                this.mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+                this.mGridView.setVisibility(View.GONE);
+                this.mRecyclerView.setVisibility(View.VISIBLE);
             }
-
-            mSwipeRefreshLayout.setRefreshing(false);
-            mSwipeRefreshLayoutGrid.setRefreshing(false);
         }
     }
 
@@ -644,13 +605,5 @@ public class FileLocalFragment extends FabFragment
             mViewMode = viewMode;
             updateAdapter();
         }
-    }
-
-    @Override
-    public void setSwipeEnabled(boolean enabled) {
-        if (mSwipeRefreshLayout != null)
-            mSwipeRefreshLayout.setEnabled(enabled);
-        if (mSwipeRefreshLayoutGrid != null)
-            mSwipeRefreshLayoutGrid.setEnabled(enabled);
     }
 }

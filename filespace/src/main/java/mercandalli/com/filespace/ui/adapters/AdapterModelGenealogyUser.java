@@ -29,13 +29,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import mercandalli.com.filespace.listeners.IModelGenealogyUserListener;
+import mercandalli.com.filespace.models.ModelGenealogyPerson;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.listeners.IModelGenealogyUserListener;
-import mercandalli.com.filespace.models.ModelGenealogyPerson;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModelGenealogyUser.ViewHolder> {
 

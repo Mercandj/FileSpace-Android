@@ -12,8 +12,8 @@ import mercandalli.com.filespace.extras.physics.physics.Force;
 /**
  * Define the forces you want (maybe) use (only World.class apply to the scene the forces you use)
  * For instance you have : Force (=ForceField), ForcePoint (=ForceField+Point)
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public enum ENUM_Forces {
 

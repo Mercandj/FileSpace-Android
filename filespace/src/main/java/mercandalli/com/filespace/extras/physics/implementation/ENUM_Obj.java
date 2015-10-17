@@ -9,15 +9,16 @@ package mercandalli.com.filespace.extras.physics.implementation;
 
 import android.content.Context;
 
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.extras.physics.GLFragment;
 import mercandalli.com.filespace.extras.physics.lib.IndicesVertices;
 import mercandalli.com.filespace.extras.physics.lib.lib;
 
+import mercandalli.com.filespace.R;
+
 /**
  * Define the non trivial objects you want (maybe) use (only World.class  apply to the scene the object you use)
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public enum ENUM_Obj {
 

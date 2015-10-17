@@ -23,8 +23,8 @@ import java.util.ArrayList;
 
 /**
  * Sliding Menu stuff
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class NavDrawerItemList {
 

@@ -32,9 +32,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import mercandalli.com.filespace.R;
+
 import java.util.Stack;
 
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.ISetToolbar;

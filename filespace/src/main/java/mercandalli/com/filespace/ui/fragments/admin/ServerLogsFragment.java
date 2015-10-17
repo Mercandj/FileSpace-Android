@@ -37,14 +37,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelUserConnection;
@@ -53,7 +45,16 @@ import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterModelUserConnection;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import mercandalli.com.filespace.R;
+
+import mercandalli.com.filespace.utils.NetUtils;
 
 
 public class ServerLogsFragment extends BackFragment {
@@ -115,7 +116,7 @@ public class ServerLogsFragment extends BackFragment {
 
 
     public void refreshList() {
-        if (isInternetConnection(app))
+        if (NetUtils.isInternetConnection(app))
             new TaskGet(
                     app,
                     this.app.getConfig().getUser(),

@@ -19,6 +19,8 @@
  */
 package mercandalli.com.filespace.extras.ia.language;
 
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +28,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.utils.LogUtils;
 
 import static mercandalli.com.filespace.utils.LogUtils.LOGE;
 import static mercandalli.com.filespace.utils.LogUtils.makeLogTag;
@@ -35,7 +37,7 @@ import static mercandalli.com.filespace.utils.LogUtils.makeLogTag;
  * Created by Jonathan on 24/04/2015.
  */
 public class Sentence {
-    private static final String TAG = makeLogTag(Sentence.class);
+    private static final String TAG = LogUtils.makeLogTag(Sentence.class);
 
     private ApplicationActivity app;
     private List<String> sentence;
@@ -61,7 +63,7 @@ public class Sentence {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            LOGE(TAG, "Constructor: Parsing JSON");
+            LogUtils.LOGE(TAG, "Constructor: Parsing JSON");
         }
     }
 

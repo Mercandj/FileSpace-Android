@@ -9,9 +9,6 @@ package mercandalli.com.filespace.extras.physics.implementation;
 
 import android.content.Context;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.extras.physics.lib.myVector3D;
 import mercandalli.com.filespace.extras.physics.objects.Camera;
@@ -21,10 +18,13 @@ import mercandalli.com.filespace.extras.physics.objects.myTexture;
 import mercandalli.com.filespace.extras.physics.physics.Force;
 import mercandalli.com.filespace.extras.physics.physics.ForceToEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * SPECIFIC world : Place and define all objects
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class World extends EntityGroup {
 

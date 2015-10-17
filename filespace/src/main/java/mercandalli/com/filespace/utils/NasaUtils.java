@@ -3,12 +3,6 @@ package mercandalli.com.filespace.utils;
 import android.graphics.Bitmap;
 import android.text.format.DateFormat;
 
-import org.json.JSONObject;
-
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-
 import mercandalli.com.filespace.listeners.IBitmapListener;
 import mercandalli.com.filespace.listeners.IModelNasaImageListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
@@ -17,7 +11,11 @@ import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
+import org.json.JSONObject;
+
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Jonathan on 29/09/2015.
@@ -42,7 +40,7 @@ public class NasaUtils {
     }
 
     public static void getNasaRandomPicture(final ApplicationActivity app, final IModelNasaImageListener modelNasaImageListener) {
-        if (isInternetConnection(app)) {
+        if (NetUtils.isInternetConnection(app)) {
             final String date = getRandomDate();
             new TaskGet(
                     app,

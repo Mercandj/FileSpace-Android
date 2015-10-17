@@ -15,8 +15,8 @@ import mercandalli.com.filespace.extras.physics.lib.myVector3D;
 
 /**
  * Define the physic's thread behavior
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class PhysicsEngine {
 

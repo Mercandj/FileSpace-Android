@@ -8,11 +8,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.views.game.GameView;
 import mercandalli.com.filespace.ui.views.game.Way;
+
+import mercandalli.com.filespace.R;
 
 /**
  * Created by Jonathan on 02/09/2015.

@@ -9,16 +9,16 @@ package mercandalli.com.filespace.extras.physics.objects;
 
 import android.content.Context;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import mercandalli.com.filespace.extras.physics.physics.Force;
 import mercandalli.com.filespace.extras.physics.physics.PhysicsConst;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Use to apply transformations : all in one
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class EntityGroup extends Entity {
 

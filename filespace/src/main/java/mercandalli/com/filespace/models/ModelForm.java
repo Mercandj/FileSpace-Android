@@ -19,9 +19,9 @@
  */
 package mercandalli.com.filespace.models;
 
-import org.json.JSONObject;
-
 import mercandalli.com.filespace.listeners.IModelFormListener;
+
+import org.json.JSONObject;
 
 public class ModelForm extends Model {
 

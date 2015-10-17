@@ -9,11 +9,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import mercandalli.com.filespace.models.ModelGenealogyPerson;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.models.ModelGenealogyPerson;
 
 public class GenealogyBigTreeView extends View {
 

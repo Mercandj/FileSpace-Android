@@ -30,13 +30,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import org.json.JSONObject;
-
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.dialogs.DialogRequest;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
+
+import org.json.JSONObject;
+
+import mercandalli.com.filespace.R;
 
 
 public class RequestFragment extends BackFragment {

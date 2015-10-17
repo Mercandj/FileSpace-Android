@@ -34,13 +34,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelUser;
 import mercandalli.com.filespace.net.TaskPost;
@@ -51,7 +44,15 @@ import mercandalli.com.filespace.utils.HashUtils;
 import mercandalli.com.filespace.utils.StringPair;
 import mercandalli.com.filespace.utils.StringUtils;
 
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import mercandalli.com.filespace.R;
+
+import mercandalli.com.filespace.utils.NetUtils;
 
 public class InscriptionFragment extends Fragment {
 
@@ -162,7 +163,7 @@ public class InscriptionFragment extends Fragment {
         parameters.add(new StringPair("longitude", "" + GpsUtils.getLongitude(getActivity())));
         parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
 
-        if (isInternetConnection(app))
+        if (NetUtils.isInternetConnection(app))
             (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
                 @Override
                 public void execute(JSONObject json, String body) {

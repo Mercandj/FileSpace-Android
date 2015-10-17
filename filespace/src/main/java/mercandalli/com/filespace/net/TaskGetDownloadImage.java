@@ -24,21 +24,18 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.FilterInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import mercandalli.com.filespace.listeners.IBitmapListener;
 import mercandalli.com.filespace.listeners.ILongListener;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.models.ModelUser;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.utils.ImageUtils;
 
-import static mercandalli.com.filespace.utils.ImageUtils.is_image;
-import static mercandalli.com.filespace.utils.ImageUtils.load_image;
-import static mercandalli.com.filespace.utils.ImageUtils.save_image;
+import java.io.FilterInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Global behavior : DDL Image
@@ -116,8 +113,8 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         Log.d("TaskGetDownloadImage", "id:" + idFile + "  url:" + url);
 
         if (isModelFile)
-            if (is_image(this.app, this.idFile))
-                return load_image(this.app, this.idFile);
+            if (ImageUtils.is_image(this.app, this.idFile))
+                return ImageUtils.load_image(this.app, this.idFile);
         if (this.sizeLimit > 0)
             if (this.sizeLimit < this.sizeFile)
                 return null;
@@ -159,7 +156,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
             conn.disconnect();
 
             if (isModelFile)
-                save_image(this.app, this.idFile, x);
+                ImageUtils.save_image(this.app, this.idFile, x);
         } catch (IOException e) {
             e.printStackTrace();
         }

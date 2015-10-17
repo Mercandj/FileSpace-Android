@@ -27,16 +27,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import mercandalli.com.filespace.listeners.IModelFileListener;
+import mercandalli.com.filespace.models.ModelFile;
+import mercandalli.com.filespace.models.ModelFileTypeENUM;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+
 import com.nhaarman.listviewanimations.util.Swappable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.listeners.IModelFileListener;
-import mercandalli.com.filespace.models.ModelFile;
-import mercandalli.com.filespace.models.ModelFileTypeENUM;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class AdapterDragModelFile extends BaseAdapter implements Swappable {
 

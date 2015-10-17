@@ -22,8 +22,7 @@ package mercandalli.com.filespace.extras.ia;
 import android.util.Log;
 
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-
-import static mercandalli.com.filespace.utils.StringUtils.nomalizeString;
+import mercandalli.com.filespace.utils.StringUtils;
 
 /**
  * Created by Jonathan on 19/04/2015.
@@ -47,7 +46,7 @@ public class InterpreterMain extends Interpreter {
     public InterpreterResult interpret(String input) {
         Log.d("InterpreterMain", "input : " + input);
 
-        input = nomalizeString(input);
+        input = StringUtils.nomalizeString(input);
 
         InterpreterResult outputActionEquals = interpreterActionEquals.interpret(input);
         if (outputActionEquals != null)

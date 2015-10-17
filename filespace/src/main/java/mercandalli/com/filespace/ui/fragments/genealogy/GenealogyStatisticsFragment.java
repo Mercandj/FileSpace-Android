@@ -32,6 +32,16 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.models.ModelInformation;
+import mercandalli.com.filespace.net.TaskGet;
+import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
+import mercandalli.com.filespace.ui.adapters.AdapterModelInformation;
+import mercandalli.com.filespace.ui.fragments.FabFragment;
+import mercandalli.com.filespace.utils.NetUtils;
+import mercandalli.com.filespace.utils.StringPair;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,16 +50,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.models.ModelInformation;
-import mercandalli.com.filespace.net.TaskGet;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
-import mercandalli.com.filespace.ui.adapters.AdapterModelInformation;
-import mercandalli.com.filespace.ui.fragments.FabFragment;
-import mercandalli.com.filespace.utils.StringPair;
-
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
 
 /**
  * Created by Jonathan on 28/08/2015.
@@ -124,7 +124,7 @@ public class GenealogyStatisticsFragment extends FabFragment {
 
     public void refreshList() {
         List<StringPair> parameters = null;
-        if (isInternetConnection(app))
+        if (NetUtils.isInternetConnection(app))
             new TaskGet(
                     app,
                     this.app.getConfig().getUser(),

@@ -22,9 +22,9 @@ package mercandalli.com.filespace.models;
 import android.view.View;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import org.json.JSONObject;
-
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+
+import org.json.JSONObject;
 
 public class ModelSetting extends Model {
 

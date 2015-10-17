@@ -25,6 +25,11 @@ import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import mercandalli.com.filespace.listeners.IListener;
+import mercandalli.com.filespace.models.ModelFile;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.utils.FileUtils;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,10 +38,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.listeners.IListener;
-import mercandalli.com.filespace.models.ModelFile;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.FileUtils;
 
 /**
  * Global behavior : DDL file

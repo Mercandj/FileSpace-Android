@@ -27,13 +27,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.List;
-
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.models.ModelUserConnection;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.FontUtils;
+
+import java.util.List;
 
 public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterModelUserConnection.ViewHolder> {
     private List<ModelUserConnection> itemsData;

@@ -38,7 +38,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IModelGenealogyUserListener;
 import mercandalli.com.filespace.models.ModelGenealogyPerson;
@@ -47,7 +46,9 @@ import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.ui.views.NonSwipeableViewPager;
 
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
+import mercandalli.com.filespace.R;
+
+import mercandalli.com.filespace.utils.NetUtils;
 
 public class GenealogyFragment extends BackFragment implements ViewPager.OnPageChangeListener {
 
@@ -266,12 +267,12 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     private void updateNoInternet() {
-        if (!isInternetConnection(app)) {
+        if (!NetUtils.isInternetConnection(app)) {
             this.snackbar = Snackbar.make(this.coordinatorLayoutView, getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE)
                     .setAction(getString(R.string.refresh), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (isInternetConnection(app))
+                            if (NetUtils.isInternetConnection(app))
                                 listFragment[getCurrentFragmentIndex()].onFocus();
                             else
                                 updateNoInternet();

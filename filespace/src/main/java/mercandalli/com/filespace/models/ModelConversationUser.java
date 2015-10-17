@@ -21,6 +21,9 @@ package mercandalli.com.filespace.models;
 
 import android.content.Intent;
 
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ConversationActivity;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,8 +35,6 @@ import java.util.Date;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.ui.activities.ConversationActivity;
 
 public class ModelConversationUser extends Model {
 

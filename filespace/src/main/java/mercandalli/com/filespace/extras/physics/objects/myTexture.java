@@ -20,8 +20,8 @@ import java.nio.ByteBuffer;
 
 /**
  * Object's Texture use with myObject3D
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class myTexture {
     int[] texName = new int[1];

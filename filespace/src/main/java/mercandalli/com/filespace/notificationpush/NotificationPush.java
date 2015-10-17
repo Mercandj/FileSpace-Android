@@ -29,9 +29,9 @@ import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import java.io.IOException;
-
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+
+import java.io.IOException;
 
 public class NotificationPush {
     public static GoogleCloudMessaging gcm;

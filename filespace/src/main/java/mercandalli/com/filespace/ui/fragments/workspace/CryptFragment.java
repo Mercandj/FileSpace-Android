@@ -14,10 +14,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.extras.ia.crypt.Crypt;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
+
+import mercandalli.com.filespace.R;
 
 /**
  * Created by Jonathan on 21/07/2015.

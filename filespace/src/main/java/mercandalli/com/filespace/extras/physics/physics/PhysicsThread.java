@@ -9,8 +9,8 @@ package mercandalli.com.filespace.extras.physics.physics;
 
 /**
  * Define thread behavior with time regulation
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class PhysicsThread extends Thread {
 

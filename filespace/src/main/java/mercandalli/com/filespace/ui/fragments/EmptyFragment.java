@@ -25,8 +25,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
+
+import mercandalli.com.filespace.R;
 
 /**
  * Created by Jonathan on 30/06/15.

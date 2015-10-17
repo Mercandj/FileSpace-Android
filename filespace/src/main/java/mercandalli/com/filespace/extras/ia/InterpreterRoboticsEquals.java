@@ -19,22 +19,21 @@
  */
 package mercandalli.com.filespace.extras.ia;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.fragments.HomeFragment;
+import mercandalli.com.filespace.utils.NetUtils;
 import mercandalli.com.filespace.utils.StringPair;
 
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Jonathan on 19/04/2015.
@@ -50,7 +49,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
         String output = null;
 
         if (this.res.equalsSentenece("raspberry êtat", input))
-            if (isInternetConnection(app)) {
+            if (NetUtils.isInternetConnection(app)) {
                 new TaskGet(
                         this.app,
                         this.app.getConfig().getUser(),
@@ -79,7 +78,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
             }
 
         if (this.res.equalsSentenece("raspberry led on", input))
-            if (isInternetConnection(app)) {
+            if (NetUtils.isInternetConnection(app)) {
                 List<StringPair> parameters = new ArrayList<>();
                 parameters.add(new StringPair("value", "1"));
                 new TaskPost(
@@ -97,7 +96,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
             }
 
         if (this.res.equalsSentenece("raspberry led off", input))
-            if (isInternetConnection(app)) {
+            if (NetUtils.isInternetConnection(app)) {
                 List<StringPair> parameters = new ArrayList<>();
                 parameters.add(new StringPair("value", "0"));
                 new TaskPost(
@@ -119,6 +118,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
 
     /**
      * Use the HomeFragment to speak
+     *
      * @param input
      */
     public void speak(String input) {

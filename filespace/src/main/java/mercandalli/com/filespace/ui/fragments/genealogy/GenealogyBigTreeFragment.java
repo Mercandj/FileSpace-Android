@@ -29,10 +29,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelGenealogyPerson;
 import mercandalli.com.filespace.net.TaskGet;
@@ -40,7 +36,12 @@ import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.ui.views.GenealogyBigTreeView;
 
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import mercandalli.com.filespace.R;
+
+import mercandalli.com.filespace.utils.NetUtils;
 
 /**
  * Created by Jonathan on 28/08/2015.
@@ -103,7 +104,7 @@ public class GenealogyBigTreeFragment extends FabFragment {
     public void select(final ModelGenealogyPerson genealogyUser) {
         this.genealogyPerson = genealogyUser;
 
-        if (isInternetConnection(app)) {
+        if (NetUtils.isInternetConnection(app)) {
             new TaskGet(
                     app,
                     this.app.getConfig().getUser(),

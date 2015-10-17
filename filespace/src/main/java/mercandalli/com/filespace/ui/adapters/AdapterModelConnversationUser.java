@@ -28,13 +28,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import mercandalli.com.filespace.listeners.IModelUserListener;
+import mercandalli.com.filespace.models.ModelConversationUser;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.listeners.IModelUserListener;
-import mercandalli.com.filespace.models.ModelConversationUser;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class AdapterModelConnversationUser extends RecyclerView.Adapter<AdapterModelConnversationUser.ViewHolder> {
 

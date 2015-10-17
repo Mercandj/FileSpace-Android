@@ -10,9 +10,9 @@ package mercandalli.com.filespace.extras.physics.physics;
 import java.util.List;
 
 /**
- * Force "ponctuelle" : Physics Force 
- * @author Jonathan
+ * Force "ponctuelle" : Physics Force
  *
+ * @author Jonathan
  */
 public class ForceToEntity extends Force {
 

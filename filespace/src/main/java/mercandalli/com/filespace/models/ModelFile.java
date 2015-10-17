@@ -63,16 +63,12 @@ import mercandalli.com.filespace.ui.activities.FileAudioActivity;
 import mercandalli.com.filespace.ui.activities.FilePictureActivity;
 import mercandalli.com.filespace.ui.activities.FileTextActivity;
 import mercandalli.com.filespace.ui.activities.FileTimerActivity;
-import mercandalli.com.filespace.ui.activities.FileVideoActivity;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.HtmlUtils;
 import mercandalli.com.filespace.utils.ImageUtils;
 import mercandalli.com.filespace.utils.StringPair;
 import mercandalli.com.filespace.utils.StringUtils;
 import mercandalli.com.filespace.utils.TimeUtils;
-
-import static mercandalli.com.filespace.utils.ImageUtils.is_image;
-import static mercandalli.com.filespace.utils.ImageUtils.load_image;
 
 public class ModelFile extends Model implements Parcelable {
 
@@ -202,8 +198,8 @@ public class ModelFile extends Model implements Parcelable {
         }
 
         if (this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0) {
-            if (is_image(this.app, this.id)) {
-                ModelFile.this.bitmap = load_image(this.app, this.id);
+            if (ImageUtils.is_image(this.app, this.id)) {
+                ModelFile.this.bitmap = ImageUtils.load_image(this.app, this.id);
                 ModelFile.this.app.updateAdapters();
             } else
                 new TaskGetDownloadImage(app, this.app.getConfig().getUser(), this, Const.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
@@ -381,23 +377,13 @@ public class ModelFile extends Model implements Parcelable {
             picIntent.setDataAndType(Uri.fromFile(file), "image/*");
             this.app.startActivity(picIntent);
         } else if (this.type.equals(ModelFileTypeENUM.VIDEO.type)) {
-            Intent intent = new Intent(this.app, FileVideoActivity.class);
-            intent.putExtra("ONLINE", false);
-            intent.putExtra("FILE", this);
-            ArrayList<ModelFile> tmpFiles = new ArrayList<>();
-            for (ModelFile f : files)
-                if (f.type != null)
-                    if (f.type.equals(ModelFileTypeENUM.AUDIO.type))
-                        tmpFiles.add(f);
-            intent.putParcelableArrayListExtra("FILES", tmpFiles);
-            if (view == null) {
-                this.app.startActivity(intent);
-                this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-            } else {
-                Pair<View, String> p1 = Pair.create(view.findViewById(R.id.icon), "transitionIcon");
-                ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(this.app, p1);
-                this.app.startActivity(intent, options.toBundle());
+            Intent videoIntent = new Intent();
+            videoIntent.setAction(Intent.ACTION_VIEW);
+            videoIntent.setDataAndType(Uri.fromFile(file), "video/*");
+            try {
+                app.startActivity(videoIntent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(app, "ERREUR", Toast.LENGTH_SHORT).show();
             }
         } else if (this.type.equals(ModelFileTypeENUM.PDF.type)) {
             Intent pdfIntent = new Intent();

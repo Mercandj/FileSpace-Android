@@ -11,8 +11,8 @@ import java.text.DecimalFormat;
 
 /**
  * Triplet with vector functions
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class myVector3D {
 

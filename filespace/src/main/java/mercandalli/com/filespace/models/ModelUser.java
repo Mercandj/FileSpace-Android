@@ -21,6 +21,16 @@ package mercandalli.com.filespace.models;
 
 import android.graphics.Bitmap;
 
+import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.listeners.IBitmapListener;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.net.TaskGetDownloadImage;
+import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.utils.FileUtils;
+import mercandalli.com.filespace.utils.HashUtils;
+import mercandalli.com.filespace.utils.ImageUtils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,18 +40,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-
-import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.listeners.IBitmapListener;
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.net.TaskGetDownloadImage;
-import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.FileUtils;
-import mercandalli.com.filespace.utils.HashUtils;
-
-import static mercandalli.com.filespace.utils.ImageUtils.is_image;
-import static mercandalli.com.filespace.utils.ImageUtils.load_image;
 
 public class ModelUser extends Model {
 
@@ -112,8 +110,8 @@ public class ModelUser extends Model {
         }
 
         if (hasPicture()) {
-            if (is_image(this.app, this.id_file_profile_picture)) {
-                ModelUser.this.bitmap = load_image(this.app, this.id_file_profile_picture);
+            if (ImageUtils.is_image(this.app, this.id_file_profile_picture)) {
+                ModelUser.this.bitmap = ImageUtils.load_image(this.app, this.id_file_profile_picture);
                 ModelUser.this.app.updateAdapters();
             } else {
                 ModelFile picture = new ModelFile(app);

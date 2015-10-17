@@ -36,10 +36,6 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.extras.ia.action.ENUM_Action;
 import mercandalli.com.filespace.models.ModelSetting;
@@ -47,6 +43,11 @@ import mercandalli.com.filespace.ui.activities.RegisterLoginActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterModelSetting;
 import mercandalli.com.filespace.ui.dialogs.DialogAuthorLabel;
 import mercandalli.com.filespace.utils.TimeUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import mercandalli.com.filespace.R;
 
 public class SettingsFragment extends BackFragment {
 

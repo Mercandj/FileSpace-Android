@@ -22,12 +22,12 @@ package mercandalli.com.filespace.models;
 import android.graphics.Bitmap;
 import android.view.View;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listeners.IModelHomeListener;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ModelHome extends Model {
 

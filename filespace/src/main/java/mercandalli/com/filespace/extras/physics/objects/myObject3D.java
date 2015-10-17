@@ -12,6 +12,13 @@ import android.opengl.GLES30;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import mercandalli.com.filespace.extras.physics.lib.IFunctionEntity;
+import mercandalli.com.filespace.extras.physics.lib.IndicesVertices;
+import mercandalli.com.filespace.extras.physics.lib.myVector3D;
+import mercandalli.com.filespace.extras.physics.physics.Force;
+import mercandalli.com.filespace.extras.physics.physics.ForceToEntity;
+import mercandalli.com.filespace.extras.physics.physics.PhysicsConst;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,17 +31,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.extras.physics.lib.IFunctionEntity;
-import mercandalli.com.filespace.extras.physics.lib.IndicesVertices;
-import mercandalli.com.filespace.extras.physics.lib.myVector3D;
-import mercandalli.com.filespace.extras.physics.physics.Force;
-import mercandalli.com.filespace.extras.physics.physics.ForceToEntity;
-import mercandalli.com.filespace.extras.physics.physics.PhysicsConst;
 
 /**
  * "Real" object
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class myObject3D extends Entity {
     private final String TAG = "myObject3D";
@@ -642,7 +643,7 @@ public class myObject3D extends Entity {
 
                     //this.velocity.dY = entityContact.velocity.dY * 1.0f; // Cheat
                     /*
-					this.velocity.dY = 0;
+                    this.velocity.dY = 0;
 					for(Entity ent : entitiesContact)
 						this.velocity.dY += ent.velocity.dY*ent.velocity.dY ;
 					*/

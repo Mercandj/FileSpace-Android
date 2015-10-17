@@ -22,7 +22,6 @@ package mercandalli.com.filespace.ui.activities;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.media.AudioManager;
@@ -54,8 +53,7 @@ import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.net.Base64;
 import mercandalli.com.filespace.ui.views.PlayPauseView;
 import mercandalli.com.filespace.ui.views.slider.Slider;
-
-import static mercandalli.com.filespace.utils.FileUtils.getRealPathFromURI;
+import mercandalli.com.filespace.utils.FileUtils;
 
 /**
  * Created by Jonathan on 14/12/2014.
@@ -167,7 +165,7 @@ public class FileAudioActivity extends ApplicationActivity {
                     } else if (audioUri != null) {
                         this.files = new ArrayList<>();
                         this.online = false;
-                        this.file = new ModelFile(this, new File("file".equals(audioUri.getScheme()) ? audioUri.getPath() : getRealPathFromURI(this, audioUri)));
+                        this.file = new ModelFile(this, new File("file".equals(audioUri.getScheme()) ? audioUri.getPath() : FileUtils.getRealPathFromURI(this, audioUri)));
                         this.files.add(this.file);
                         start();
                         return;
@@ -393,11 +391,11 @@ public class FileAudioActivity extends ApplicationActivity {
                     .build();
             foregroundNote.bigContentView = remoteViews;
             if (player.isPlaying()) {
-                NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+                NotificationManager notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
                 notificationManager.notify(0, foregroundNote);
             }
         } else {
-            NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
             notificationManager.cancel(0);
         }
     }

@@ -31,16 +31,15 @@ import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import mercandalli.com.filespace.models.ModelServerMessage;
+import mercandalli.com.filespace.ui.activities.ConversationActivity;
+import mercandalli.com.filespace.utils.FileUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.models.ModelServerMessage;
-import mercandalli.com.filespace.ui.activities.ConversationActivity;
-
-import static mercandalli.com.filespace.utils.FileUtils.readStringFile;
-import static mercandalli.com.filespace.utils.FileUtils.writeStringFile;
 
 public class GCMNotificationIntentService extends IntentService {
     private static final String TAG = "GCMNotificationIntentS";
@@ -87,7 +86,7 @@ public class GCMNotificationIntentService extends IntentService {
         } else {
             i = new Intent(Intent.ACTION_MAIN);
             PackageManager manager = this.getPackageManager();
-            i = manager.getLaunchIntentForPackage("mercandalli.com.jarvis");
+            i = manager.getLaunchIntentForPackage("mercandalli.com.filespace");
             i.addCategory(Intent.CATEGORY_LAUNCHER);
         }
 
@@ -110,7 +109,7 @@ public class GCMNotificationIntentService extends IntentService {
         if (serverMessage == null)
             return;
         try {
-            JSONObject tmp_json = new JSONObject(readStringFile(this.getApplicationContext(), mercandalli.com.filespace.config.Config.getFileName()));
+            JSONObject tmp_json = new JSONObject(FileUtils.readStringFile(this.getApplicationContext(), mercandalli.com.filespace.config.Config.getFileName()));
             if (tmp_json.has("settings_1")) {
                 JSONObject tmp_settings_1 = tmp_json.getJSONObject("settings_1");
 
@@ -129,7 +128,7 @@ public class GCMNotificationIntentService extends IntentService {
                 }
                 tmp_json.remove("settings_1");
                 tmp_json.put("settings_1", tmp_settings_1);
-                writeStringFile(this.getApplicationContext(), mercandalli.com.filespace.config.Config.getFileName(), tmp_json.toString());
+                FileUtils.writeStringFile(this.getApplicationContext(), mercandalli.com.filespace.config.Config.getFileName(), tmp_json.toString());
             }
         } catch (JSONException e) {
             e.printStackTrace();

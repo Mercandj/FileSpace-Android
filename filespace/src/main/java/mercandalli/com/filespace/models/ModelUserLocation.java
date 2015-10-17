@@ -1,9 +1,9 @@
 package mercandalli.com.filespace.models;
 
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 /**
  * Created by Assima on 7/6/15.

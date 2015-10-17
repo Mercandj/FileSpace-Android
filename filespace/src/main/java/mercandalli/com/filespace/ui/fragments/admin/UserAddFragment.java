@@ -31,13 +31,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelUser;
 import mercandalli.com.filespace.net.TaskPost;
@@ -47,7 +40,15 @@ import mercandalli.com.filespace.utils.HashUtils;
 import mercandalli.com.filespace.utils.StringPair;
 import mercandalli.com.filespace.utils.StringUtils;
 
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import mercandalli.com.filespace.R;
+
+import mercandalli.com.filespace.utils.NetUtils;
 
 
 public class UserAddFragment extends BackFragment {
@@ -131,7 +132,7 @@ public class UserAddFragment extends BackFragment {
                 parameters.add(new StringPair("username", "" + newUser.username));
                 parameters.add(new StringPair("password", "" + newUser.password));
 
-                if (isInternetConnection(app) && !StringUtils.isNullOrEmpty(newUser.username) && !StringUtils.isNullOrEmpty(newUser.password)) {
+                if (NetUtils.isInternetConnection(app) && !StringUtils.isNullOrEmpty(newUser.username) && !StringUtils.isNullOrEmpty(newUser.password)) {
                     requestLaunched = true;
                     (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
                         @Override

@@ -22,14 +22,6 @@ package mercandalli.com.filespace.config;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import mercandalli.com.filespace.listeners.IBitmapListener;
 import mercandalli.com.filespace.models.Model;
 import mercandalli.com.filespace.models.ModelFile;
@@ -37,10 +29,16 @@ import mercandalli.com.filespace.models.ModelServerMessage;
 import mercandalli.com.filespace.models.ModelUser;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.utils.FileUtils;
+import mercandalli.com.filespace.utils.NetUtils;
 
-import static mercandalli.com.filespace.utils.FileUtils.readStringFile;
-import static mercandalli.com.filespace.utils.FileUtils.writeStringFile;
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Jonathan on 10/12/2014.
@@ -153,7 +151,7 @@ public class Config {
             }
 
             tmp_json.put("settings_1", tmp_settings_1);
-            writeStringFile(app, fileName, tmp_json.toString());
+            FileUtils.writeStringFile(app, fileName, tmp_json.toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -163,7 +161,7 @@ public class Config {
     private void load() {
         this.listServerMessage_1 = new ArrayList<>();
         try {
-            JSONObject tmp_json = new JSONObject(readStringFile(app, fileName));
+            JSONObject tmp_json = new JSONObject(FileUtils.readStringFile(app, fileName));
             if (tmp_json.has("settings_1")) {
                 JSONObject tmp_settings_1 = tmp_json.getJSONObject("settings_1");
                 for (ENUM_Int enum_int : ENUM_Int.values())
@@ -283,7 +281,7 @@ public class Config {
         File file = new File(this.app.getFilesDir() + "/file_" + this.getUserIdFileProfilePicture());
         if (file.exists()) {
             return BitmapFactory.decodeFile(file.getPath());
-        } else if (isInternetConnection(app)) {
+        } else if (NetUtils.isInternetConnection(app)) {
             ModelFile modelFile = new ModelFile(app);
             modelFile.id = this.getUserIdFileProfilePicture();
             modelFile.onlineUrl = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + this.getUserIdFileProfilePicture();

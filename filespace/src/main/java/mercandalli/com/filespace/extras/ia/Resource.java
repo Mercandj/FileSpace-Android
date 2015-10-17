@@ -19,18 +19,17 @@
  */
 package mercandalli.com.filespace.extras.ia;
 
+import mercandalli.com.filespace.extras.ia.language.Sentence;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.utils.FileUtils;
+import mercandalli.com.filespace.utils.MathUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import mercandalli.com.filespace.extras.ia.language.Sentence;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.MathUtils;
-
-import static mercandalli.com.filespace.utils.FileUtils.readStringAssets;
 
 /**
  * Created by Jonathan on 24/04/2015.
@@ -46,7 +45,7 @@ public class Resource {
         this.qas = new ArrayList<>();
         this.sentences = new ArrayList<>();
 
-        String text = readStringAssets(app, file_name);
+        String text = FileUtils.readStringAssets(app, file_name);
 
         try {
             JSONObject json = new JSONObject(text);

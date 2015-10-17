@@ -9,8 +9,8 @@ package mercandalli.com.filespace.extras.physics.physics;
 
 /**
  * Global world physic constants
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class PhysicsConst {
 

@@ -33,6 +33,14 @@ import android.widget.DatePicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import mercandalli.com.filespace.listeners.IListener;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.listeners.IStringListener;
+import mercandalli.com.filespace.models.ModelFile;
+import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.utils.StringPair;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,13 +55,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.listeners.IListener;
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.listeners.IStringListener;
-import mercandalli.com.filespace.models.ModelFile;
-import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.StringPair;
 
 public class DialogAddFileManager extends Dialog {
 

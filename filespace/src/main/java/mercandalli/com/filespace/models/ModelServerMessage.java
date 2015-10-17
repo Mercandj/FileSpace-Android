@@ -21,10 +21,10 @@ package mercandalli.com.filespace.models;
 
 import android.util.Log;
 
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class ModelServerMessage extends Model {
 

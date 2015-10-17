@@ -34,14 +34,6 @@ import android.text.Spanned;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.listeners.IListener;
@@ -50,6 +42,14 @@ import mercandalli.com.filespace.listeners.IStringListener;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.utils.StringPair;
+
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Mother class of the {@link Activity} MainActivity.

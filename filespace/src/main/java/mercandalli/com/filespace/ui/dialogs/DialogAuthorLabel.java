@@ -29,13 +29,14 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.TextView;
 
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.utils.FontUtils;
+import mercandalli.com.filespace.utils.StringUtils;
+
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.FontUtils;
-import mercandalli.com.filespace.utils.StringUtils;
 
 public class DialogAuthorLabel extends Dialog {
 

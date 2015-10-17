@@ -29,18 +29,19 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.FontUtils;
 
+import java.util.ArrayList;
+
+import mercandalli.com.filespace.R;
+
 /**
  * Sliding Menu stuff
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class NavDrawerListAdapter extends BaseAdapter {
 

@@ -13,18 +13,18 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.Handler;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
 import mercandalli.com.filespace.extras.physics.implementation.World;
 import mercandalli.com.filespace.extras.physics.objects.Camera;
 import mercandalli.com.filespace.extras.physics.physics.PhysicsEngine;
 
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * OpenGL Renderer : instantiate the camera and the world
  * Define what is draw
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class myRenderer implements GLSurfaceView.Renderer {
 

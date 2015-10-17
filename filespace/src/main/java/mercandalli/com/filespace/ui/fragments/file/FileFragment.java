@@ -33,7 +33,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,17 +45,15 @@ import org.json.JSONObject;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.listeners.IEnableSwipeToRefreshCallback;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
+import mercandalli.com.filespace.utils.NetUtils;
 
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
-
-public class FileFragment extends BackFragment implements ViewPager.OnPageChangeListener, IEnableSwipeToRefreshCallback {
+public class FileFragment extends BackFragment implements ViewPager.OnPageChangeListener {
 
     private static final int NB_FRAGMENT = 4;
     private static final int INIT_FRAGMENT = 1;
@@ -72,8 +69,6 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     protected Toolbar mToolbar;
 
     protected int mViewMode = Const.MODE_LIST;
-
-    private boolean mSwipeEnabled = true;
 
     public static FileFragment newInstance() {
         Bundle args = new Bundle();
@@ -94,17 +89,6 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         setHasOptionsMenu(true);
 
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.fragment_file_app_bar_layout);
-        mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-                if (i == 0 && !mSwipeEnabled) {
-                    setSwipeEnabled(true);
-                } else if (mSwipeEnabled) {
-                    setSwipeEnabled(false);
-                }
-                Log.d("", "" + i);
-            }
-        });
         coordinatorLayoutView = rootView.findViewById(R.id.fragment_file_coordinator_layout);
 
         FileManagerFragmentPagerAdapter mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
@@ -117,7 +101,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         mViewPager.addOnPageChangeListener(this);
 
         if (app.isLogged()) {
-            if (isInternetConnection(app)) {
+            if (NetUtils.isInternetConnection(app)) {
                 mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
                 mViewPager.setCurrentItem(INIT_FRAGMENT);
             } else {
@@ -472,12 +456,12 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     }
 
     private void updateNoInternet() {
-        if (!isInternetConnection(app)) {
+        if (!NetUtils.isInternetConnection(app)) {
             this.snackbar = Snackbar.make(this.coordinatorLayoutView, getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE)
                     .setAction(getString(R.string.refresh), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (isInternetConnection(app))
+                            if (NetUtils.isInternetConnection(app))
                                 listFragment[getCurrentFragmentIndex()].onFocus();
                             else
                                 updateNoInternet();
@@ -565,18 +549,5 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void setSwipeEnabled(boolean enabled) {
-        mSwipeEnabled = enabled;
-        for (FabFragment fr : listFragment) {
-            if (fr != null) {
-                if (fr instanceof IEnableSwipeToRefreshCallback) {
-                    IEnableSwipeToRefreshCallback fragmentFileManagerFragment = (IEnableSwipeToRefreshCallback) fr;
-                    fragmentFileManagerFragment.setSwipeEnabled(enabled);
-                }
-            }
-        }
     }
 }

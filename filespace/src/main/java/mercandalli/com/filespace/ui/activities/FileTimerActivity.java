@@ -29,13 +29,14 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import mercandalli.com.filespace.models.ModelFileSpace;
+import mercandalli.com.filespace.utils.PointLong;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.models.ModelFileSpace;
-import mercandalli.com.filespace.utils.PointLong;
 
 /**
  * Created by Jonathan on 09/05/2015.

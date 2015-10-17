@@ -37,14 +37,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IModelUserListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
@@ -56,9 +48,17 @@ import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterModelUser;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
+import mercandalli.com.filespace.utils.NetUtils;
 import mercandalli.com.filespace.utils.StringPair;
 
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import mercandalli.com.filespace.R;
 
 /**
  * Created by Jonathan on 30/03/2015.
@@ -132,7 +132,7 @@ public class UserFragment extends BackFragment {
 
     public void refreshList(String search) {
         List<StringPair> parameters = null;
-        if (isInternetConnection(app) && app.isLogged())
+        if (NetUtils.isInternetConnection(app) && app.isLogged())
             new TaskGet(
                     app,
                     this.app.getConfig().getUser(),

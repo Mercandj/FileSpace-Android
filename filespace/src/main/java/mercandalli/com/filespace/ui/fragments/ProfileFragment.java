@@ -34,12 +34,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.ILocationListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
@@ -52,11 +46,16 @@ import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.FontUtils;
 import mercandalli.com.filespace.utils.GpsUtils;
 import mercandalli.com.filespace.utils.ImageUtils;
+import mercandalli.com.filespace.utils.NetUtils;
 import mercandalli.com.filespace.utils.StringPair;
 import mercandalli.com.filespace.utils.StringUtils;
 import mercandalli.com.filespace.utils.TimeUtils;
 
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Jonathan on 03/01/2015.
@@ -128,7 +127,7 @@ public class ProfileFragment extends BackFragment {
     }
 
     public void refreshView() {
-        if (isInternetConnection(app) && app.isLogged()) {
+        if (NetUtils.isInternetConnection(app) && app.isLogged()) {
             List<StringPair> parameters = null;
             new TaskGet(
                     app,
@@ -169,7 +168,7 @@ public class ProfileFragment extends BackFragment {
                                                     list.add(new ModelSetting(app, "Gps Longitude", "" + longitude));
                                                     list.add(new ModelSetting(app, "Gps Latitude", "" + latitude));
 
-                                                    if (isInternetConnection(app) && longitude != 0 && latitude != 0) {
+                                                    if (NetUtils.isInternetConnection(app) && longitude != 0 && latitude != 0) {
                                                         List<StringPair> parameters = new ArrayList<>();
                                                         parameters.add(new StringPair("longitude", "" + longitude));
                                                         parameters.add(new StringPair("latitude", "" + latitude));
@@ -192,7 +191,7 @@ public class ProfileFragment extends BackFragment {
                                             list.add(new ModelSetting(app, "Gps Longitude", "" + longitude));
                                             list.add(new ModelSetting(app, "Gps Latitude", "" + latitude));
 
-                                            if (isInternetConnection(app) && longitude != 0 && latitude != 0) {
+                                            if (NetUtils.isInternetConnection(app) && longitude != 0 && latitude != 0) {
                                                 List<StringPair> parameters = new ArrayList<>();
                                                 parameters.add(new StringPair("longitude", "" + longitude));
                                                 parameters.add(new StringPair("latitude", "" + latitude));

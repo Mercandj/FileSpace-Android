@@ -39,6 +39,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.models.ModelHardware;
+import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.views.slider.Slider;
+import mercandalli.com.filespace.utils.NetUtils;
+import mercandalli.com.filespace.utils.RoboticsUtils;
+import mercandalli.com.filespace.utils.StringPair;
+
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
@@ -46,15 +54,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.models.ModelHardware;
-import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.views.slider.Slider;
-import mercandalli.com.filespace.utils.StringPair;
-
-import static mercandalli.com.filespace.utils.NetUtils.isInternetConnection;
-import static mercandalli.com.filespace.utils.RoboticsUtils.createProtocolHardware;
-import static mercandalli.com.filespace.utils.RoboticsUtils.parseRaspberry;
 
 /**
  * Created by Jonathan on 03/01/2015.
@@ -268,7 +267,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
 
                 //log("x = " + x + "    y = " + y + "    z = " + z);
 
-                if (isInternetConnection(app) && request_ready && MODE_CONNECTION) {
+                if (NetUtils.isInternetConnection(app) && request_ready && MODE_CONNECTION) {
                     List<StringPair> parameters = new ArrayList<>();
 
                     SERVO_1.read = false; // write
@@ -280,7 +279,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
                     LED_1.read = false; // write
                     LED_1.value = "" + (MODE_LED_1 ? 1 : 0);
 
-                    parameters.add(new StringPair("json", "" + createProtocolHardware(SERVO_1, SERVO_2, LED_1).toString()));
+                    parameters.add(new StringPair("json", "" + RoboticsUtils.createProtocolHardware(SERVO_1, SERVO_2, LED_1).toString()));
 
                     request_ready = false;
 
@@ -291,7 +290,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
                                 @Override
                                 public void execute(JSONObject json, String body) {
                                     log(body);
-                                    handleResponse(parseRaspberry(json));
+                                    handleResponse(RoboticsUtils.parseRaspberry(json));
                                     request_ready = true;
                                 }
                             },

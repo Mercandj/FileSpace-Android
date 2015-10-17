@@ -29,8 +29,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.ui.views.MyWebViewClient;
+
+import mercandalli.com.filespace.R;
 
 /**
  * Fragment show web page

@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.provider.AlarmClock;
 
-import static mercandalli.com.filespace.utils.AppUtils.launchPackage;
 import static mercandalli.com.filespace.utils.StringUtils.getWords;
 
 /**
@@ -38,7 +37,7 @@ public class AlarmUtils {
             i.putExtra(AlarmClock.EXTRA_MINUTES, minutes);
             context.startActivity(i);
         } else
-            launchPackage(context, "com.android.deskclock");
+            AppUtils.launchPackage(context, "com.android.deskclock");
     }
 
     public static void setAlarmFromString(Context context, String sentence) {

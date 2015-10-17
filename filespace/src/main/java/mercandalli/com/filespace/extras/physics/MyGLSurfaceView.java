@@ -21,8 +21,8 @@ import android.view.ScaleGestureDetector;
 /**
  * Android View use with GLFragment
  * Instantiate renderer and catch touch gesture
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class MyGLSurfaceView extends GLSurfaceView implements SensorEventListener {
 
@@ -142,7 +142,9 @@ public class MyGLSurfaceView extends GLSurfaceView implements SensorEventListene
     }
 
 
-    /******** SHAKE **********/
+    /********
+     * SHAKE
+     **********/
 
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;

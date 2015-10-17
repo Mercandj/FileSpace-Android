@@ -27,13 +27,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import java.util.List;
-
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.models.ModelSetting;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.FontUtils;
+
+import java.util.List;
+
+import mercandalli.com.filespace.R;
 
 public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSetting.ViewHolder> {
     private List<ModelSetting> itemsData;

@@ -23,8 +23,8 @@ import mercandalli.com.filespace.listeners.IListener;
 
 /**
  * Sliding Menu stuff
- * @author Jonathan
  *
+ * @author Jonathan
  */
 public class NavDrawerItem {
 
