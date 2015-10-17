@@ -37,8 +37,8 @@ public class MainActivity extends ApplicationDrawerActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (backFragment instanceof FileFragment) {
-            FileFragment fragmentFileManager = (FileFragment) backFragment;
+        if (mBackFragment instanceof FileFragment) {
+            FileFragment fragmentFileManager = (FileFragment) mBackFragment;
             fragmentFileManager.refreshListServer();
         }
 
@@ -54,19 +54,19 @@ public class MainActivity extends ApplicationDrawerActivity {
 
     @Override
     public void updateAdapters() {
-        if (backFragment instanceof FileFragment) {
-            FileFragment fragmentFileManager = (FileFragment) backFragment;
+        if (mBackFragment instanceof FileFragment) {
+            FileFragment fragmentFileManager = (FileFragment) mBackFragment;
             fragmentFileManager.updateAdapterListServer();
-        } else if (backFragment instanceof CommunityFragment) {
-            CommunityFragment fragmentTalkManager = (CommunityFragment) backFragment;
+        } else if (mBackFragment instanceof CommunityFragment) {
+            CommunityFragment fragmentTalkManager = (CommunityFragment) mBackFragment;
             fragmentTalkManager.updateAdapterListServer();
         }
     }
 
     @Override
     public void refreshAdapters() {
-        if (backFragment instanceof FileFragment) {
-            FileFragment fragmentFileManager = (FileFragment) backFragment;
+        if (mBackFragment instanceof FileFragment) {
+            FileFragment fragmentFileManager = (FileFragment) mBackFragment;
             fragmentFileManager.refreshAdapterListServer();
         }
     }

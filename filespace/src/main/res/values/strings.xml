@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name" translate="false">FileSpace</string>
-    <string name="app_name_uppercase" translate="false">FILESPACE</string>
+    <string name="app_name" translate="false">Space</string>
+    <string name="app_name_uppercase" translate="false">SPACE</string>
     <string name="app_name_full" translate="false">Control your files</string>
     <string name="author_full_name" translate="false">Jonathan Mercandalli</string>
     <string name="author_full_name_by" translate="false">By Jonathan Mercandalli</string>

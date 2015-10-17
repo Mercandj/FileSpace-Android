@@ -32,10 +32,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import mercandalli.com.filespace.R;
-
 import java.util.Stack;
 
+import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.ISetToolbar;
@@ -58,7 +57,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
 
     public static final int[] noSelectable = new int[]{Const.TAB_VIEW_TYPE_SECTION, Const.TAB_VIEW_TYPE_SECTION_TITLE, Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE};
 
-    public BackFragment backFragment;
+    protected BackFragment mBackFragment;
     private final int INIT_FRAGMENT_ID = 3;
     private final int INIT_FRAGMENT_LOGGED_ID = 3;
     private Stack<Integer> ID_FRAGMENT_VISITED = new Stack<>();
@@ -81,14 +80,14 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
 
         // Tab 0
         navDrawerItems.add(
-                new NavDrawerItem(this.getConfig().getUserUsername(), "Edit your profile", new IListener() {
+                new NavDrawerItem(getConfig().getUserUsername(), "Edit your profile", new IListener() {
                     @Override
                     public void execute() {
                         if (isLogged()) {
-                            backFragment = ProfileFragment.newInstance();
-                            backFragment.setApp(ApplicationDrawerActivity.this);
+                            mBackFragment = ProfileFragment.newInstance();
+                            mBackFragment.setApp(ApplicationDrawerActivity.this);
                             FragmentManager fragmentManager = getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_frame, backFragment).commit();
+                            fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                         }
                     }
                 }, R.drawable.ic_user, R.color.notifications_bar, Const.TAB_VIEW_TYPE_PROFILE)
@@ -104,10 +103,10 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                 new NavDrawerItem(getString(R.string.tab_home), new IListener() {
                     @Override
                     public void execute() {
-                        backFragment = HomeFragment.newInstance();
-                        backFragment.setApp(ApplicationDrawerActivity.this);
+                        mBackFragment = HomeFragment.newInstance();
+                        mBackFragment.setApp(ApplicationDrawerActivity.this);
                         FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.content_frame, backFragment).commit();
+                        fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                     }
                 }, R.drawable.q_ic_drawer_home, R.drawable.q_ic_drawer_home_pressed, Const.TAB_VIEW_TYPE_NORMAL)
         );
@@ -117,10 +116,10 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                 new NavDrawerItem(getString(R.string.tab_files), new IListener() {
                     @Override
                     public void execute() {
-                        backFragment = FileFragment.newInstance();
-                        backFragment.setApp(ApplicationDrawerActivity.this);
+                        mBackFragment = FileFragment.newInstance();
+                        mBackFragment.setApp(ApplicationDrawerActivity.this);
                         FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.content_frame, backFragment).commit();
+                        fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                     }
                 }, R.drawable.q_ic_drawer_files, R.drawable.q_ic_drawer_files_pressed, Const.TAB_VIEW_TYPE_NORMAL)
         );
@@ -130,41 +129,41 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                 new NavDrawerItem(getString(R.string.tab_workspace), new IListener() {
                     @Override
                     public void execute() {
-                        backFragment = new WorkspaceFragment();
-                        backFragment.setApp(ApplicationDrawerActivity.this);
+                        mBackFragment = new WorkspaceFragment();
+                        mBackFragment.setApp(ApplicationDrawerActivity.this);
                         FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.content_frame, backFragment).commit();
+                        fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                     }
                 }, R.drawable.q_ic_drawer_workspace, R.drawable.q_ic_drawer_workspace_pressed, Const.TAB_VIEW_TYPE_NORMAL)
         );
 
         // User logged Tabs
-        if (this.getConfig().isLogged()) {
+        if (getConfig().isLogged()) {
             // Tab 5
             navDrawerItems.add(
                     new NavDrawerItem(getString(R.string.tab_community), new IListener() {
                         @Override
                         public void execute() {
-                            backFragment = CommunityFragment.newInstance();
-                            backFragment.setApp(ApplicationDrawerActivity.this);
+                            mBackFragment = CommunityFragment.newInstance();
+                            mBackFragment.setApp(ApplicationDrawerActivity.this);
                             FragmentManager fragmentManager = getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_frame, backFragment).commit();
+                            fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                         }
                     }, R.drawable.q_ic_drawer_community, R.drawable.q_ic_drawer_community_pressed, Const.TAB_VIEW_TYPE_NORMAL)
             );
         }
 
         // Admin Tabs
-        if (this.getConfig().getUser().isAdmin()) {
+        if (getConfig().getUser().isAdmin()) {
             // Tab 6
             navDrawerItems.add(
                     new NavDrawerItem(getString(R.string.tab_robotics), new IListener() {
                         @Override
                         public void execute() {
-                            backFragment = RoboticsFragment.newInstance();
-                            backFragment.setApp(ApplicationDrawerActivity.this);
+                            mBackFragment = RoboticsFragment.newInstance();
+                            mBackFragment.setApp(ApplicationDrawerActivity.this);
                             FragmentManager fragmentManager = getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_frame, backFragment).commit();
+                            fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                         }
                     }, R.drawable.q_ic_drawer_robotics, R.drawable.q_ic_drawer_robotics_pressed, Const.TAB_VIEW_TYPE_NORMAL)
             );
@@ -174,10 +173,10 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                     new NavDrawerItem(getString(R.string.tab_genealogy), new IListener() {
                         @Override
                         public void execute() {
-                            backFragment = GenealogyFragment.newInstance();
-                            backFragment.setApp(ApplicationDrawerActivity.this);
+                            mBackFragment = GenealogyFragment.newInstance();
+                            mBackFragment.setApp(ApplicationDrawerActivity.this);
                             FragmentManager fragmentManager = getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_frame, backFragment).commit();
+                            fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                         }
                     }, R.drawable.q_ic_drawer_robotics, R.drawable.q_ic_drawer_robotics_pressed, Const.TAB_VIEW_TYPE_NORMAL)
             );
@@ -187,10 +186,10 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                     new NavDrawerItem(getString(R.string.tab_admin), new IListener() {
                         @Override
                         public void execute() {
-                            backFragment = AdminFragment.newInstance();
-                            backFragment.setApp(ApplicationDrawerActivity.this);
+                            mBackFragment = AdminFragment.newInstance();
+                            mBackFragment.setApp(ApplicationDrawerActivity.this);
                             FragmentManager fragmentManager = getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_frame, backFragment).commit();
+                            fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                         }
                     }, R.drawable.q_ic_drawer_data, R.drawable.q_ic_drawer_data_pressed, Const.TAB_VIEW_TYPE_NORMAL)
             );
@@ -213,10 +212,10 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                         new IListener() {
                             @Override
                             public void execute() {
-                                backFragment = SettingsFragment.newInstance();
-                                backFragment.setApp(ApplicationDrawerActivity.this);
+                                mBackFragment = SettingsFragment.newInstance();
+                                mBackFragment.setApp(ApplicationDrawerActivity.this);
                                 FragmentManager fragmentManager = getFragmentManager();
-                                fragmentManager.beginTransaction().replace(R.id.content_frame, backFragment).commit();
+                                fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                             }
                         },
                         R.drawable.ic_settings_grey,
@@ -224,7 +223,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
         );
 
         // Tab 12
-        if (this.getConfig().isLogged()) {
+        if (getConfig().isLogged()) {
             navDrawerItems.add(
                     new NavDrawerItem(
                             getString(R.string.tab_log_out),
@@ -255,9 +254,9 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                                 WebFragment fr = WebFragment.newInstance();
                                 fr.setApp(ApplicationDrawerActivity.this);
                                 fr.setInitURL(ApplicationDrawerActivity.this.getConfig().aboutURL);
-                                backFragment = fr;
+                                mBackFragment = fr;
                                 FragmentManager fragmentManager = getFragmentManager();
-                                fragmentManager.beginTransaction().replace(R.id.content_frame, backFragment).commit();
+                                fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                             }
                         },
                         R.drawable.ic_help_grey,
@@ -349,21 +348,20 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
             mDrawerLayout.closeDrawer(mDrawerList);
             return true;
         }
-        if (this.backFragment != null) {
-            if (this.backFragment.back())
-                return true;
+        if (mBackFragment != null && mBackFragment.back()) {
+            return true;
         }
-        if (this.ID_FRAGMENT_VISITED == null) {
-            Log.e("ApplicationDrawer", "backPressed() this.ID_FRAGMENT_VISITED==null");
+        if (ID_FRAGMENT_VISITED == null) {
+            Log.e("ApplicationDrawer", "backPressed() ID_FRAGMENT_VISITED==null");
             return false;
         }
-        if (this.ID_FRAGMENT_VISITED.empty()) {
-            Log.e("ApplicationDrawer", "backPressed() this.ID_FRAGMENT_VISITED.empty()");
+        if (ID_FRAGMENT_VISITED.empty()) {
+            Log.e("ApplicationDrawer", "backPressed() ID_FRAGMENT_VISITED.empty()");
             return false;
         }
-        if (this.ID_FRAGMENT_VISITED.pop() == getInitFragmentId())
+        if (ID_FRAGMENT_VISITED.pop() == getInitFragmentId())
             return false;
-        this.selectItem(this.ID_FRAGMENT_VISITED.pop());
+        selectItem(ID_FRAGMENT_VISITED.pop());
         return true;
     }
 
@@ -378,5 +376,9 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                 this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.setDrawerListener(toggle);
         toggle.syncState();
+    }
+
+    public BackFragment getBackFragment() {
+        return mBackFragment;
     }
 }

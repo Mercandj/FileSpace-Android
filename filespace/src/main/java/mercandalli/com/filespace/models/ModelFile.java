@@ -110,9 +110,11 @@ public class ModelFile extends Model implements Parcelable {
             return "Directory: " + StringUtils.intToShortString(this.count) + " file" + (this.count > 1 ? "s" : "");
         if (this.directory)
             return "Directory";
-        if (this.type.equals(ModelFileTypeENUM.FILESPACE.type) && this.content != null)
+        if (ModelFileTypeENUM.FILESPACE.type.equals(this.type) && this.content != null)
             return type.getTitle() + " " + StringUtils.capitalize(this.content.type.type.toString());
-        return type.getTitle();
+        if (type != null)
+            return type.getTitle();
+        return "";
     }
 
     public String getNameExt() {

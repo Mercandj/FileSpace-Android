@@ -34,6 +34,14 @@ import android.text.Spanned;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.listeners.IListener;
@@ -42,14 +50,6 @@ import mercandalli.com.filespace.listeners.IStringListener;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.utils.StringPair;
-
-import org.json.JSONObject;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Mother class of the {@link Activity} MainActivity.
@@ -172,8 +172,9 @@ public abstract class ApplicationActivity extends AppCompatActivity {
         alert.setPositiveButton(positive,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        if (positiveListener != null)
+                        if (positiveListener != null) {
                             positiveListener.execute(input.getText().toString());
+                        }
                     }
                 }
         );
@@ -181,8 +182,9 @@ public abstract class ApplicationActivity extends AppCompatActivity {
         alert.setNegativeButton(negative,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        if (negativeListener != null)
+                        if (negativeListener != null) {
                             negativeListener.execute();
+                        }
                     }
                 }
         );
@@ -210,9 +212,7 @@ public abstract class ApplicationActivity extends AppCompatActivity {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             if (photoFile != null) {
                 if (photoFile.getFile() != null) {
-                    List<StringPair> parameters = null;
-                    if (photoFile != null)
-                        parameters = photoFile.getForUpload();
+                    List<StringPair> parameters = photoFile.getForUpload();
                     (new TaskPost(this, getConfig().getUrlServer() + getConfig().routeFile, new IPostExecuteListener() {
                         @Override
                         public void execute(JSONObject json, String body) {
@@ -245,9 +245,7 @@ public abstract class ApplicationActivity extends AppCompatActivity {
     }
 
     public boolean isLogged() {
-        if (config != null)
-            return config.isLogged();
-        return false;
+        return config != null && config.isLogged();
     }
 
 }
