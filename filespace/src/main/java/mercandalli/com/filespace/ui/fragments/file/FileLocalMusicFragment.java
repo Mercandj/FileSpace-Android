@@ -27,6 +27,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +39,6 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 
 import org.json.JSONObject;
 
@@ -67,10 +69,10 @@ import mercandalli.com.filespace.utils.StringPair;
 public class FileLocalMusicFragment extends FabFragment
         implements BackFragment.IListViewMode, BackFragment.ISortMode {
 
-    private DynamicListView mDynamicListView; // http://nhaarman.github.io/ListViewAnimations/
+    private RecyclerView mRecyclerView; // http://nhaarman.github.io/ListViewAnimations/
     private GridView mGridView;
     private ArrayList<ModelFile> files;
-    private ProgressBar circularProgressBar;
+    private ProgressBar mProgressBar;
     private TextView message;
 
     private int mSortMode = Const.SORT_DATE_MODIFICATION;
@@ -92,18 +94,24 @@ public class FileLocalMusicFragment extends FabFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_file_drag_drop, container, false);
-        this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
-        this.circularProgressBar.setVisibility(View.INVISIBLE);
-        this.message = (TextView) rootView.findViewById(R.id.message);
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
+        mProgressBar.setVisibility(View.INVISIBLE);
+        message = (TextView) rootView.findViewById(R.id.message);
 
-        this.mDynamicListView = (DynamicListView) rootView.findViewById(R.id.listView);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
+        mRecyclerView.setHasFixedSize(true);
+        if (getResources().getBoolean(R.bool.is_tablet)) {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        } else {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        }
 
-        this.mGridView = (GridView) rootView.findViewById(R.id.gridView);
-        this.mGridView.setVisibility(View.GONE);
+        mGridView = (GridView) rootView.findViewById(R.id.gridView);
+        mGridView.setVisibility(View.GONE);
 
         refreshList();
 
-        this.app.invalidateOptionsMenu();
+        app.invalidateOptionsMenu();
 
         return rootView;
     }
@@ -190,7 +198,7 @@ public class FileLocalMusicFragment extends FabFragment
     }
 
     public void updateAdapter() {
-        if (mDynamicListView != null && files != null && isAdded()) {
+        if (mRecyclerView != null && files != null && isAdded()) {
 
             refreshFab();
 
@@ -285,23 +293,40 @@ public class FileLocalMusicFragment extends FabFragment
                 }
             });
 
-            mDynamicListView.setAdapter(adapter);
+            mRecyclerView.setAdapter(adapter);
 
-            mDynamicListView.enableDragAndDrop();
-            mDynamicListView.setOnItemLongClickListener(
-                    new AdapterView.OnItemLongClickListener() {
-                        @Override
-                        public boolean onItemLongClick(final AdapterView<?> parent, final View view,
-                                                       final int position, final long id) {
-                            mDynamicListView.startDragging(position);
-                            return true;
-                        }
-                    }
-            );
+
+            // Extend the Callback class
+            ItemTouchHelper.Callback _ithCallback = new ItemTouchHelper.Callback() {
+                //and in your imlpementaion of
+                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                    // get the viewHolder's and target's positions in your adapter data, swap them
+                    Collections.swap(files, viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                    // and notify the adapter that its dataset has changed
+                    adapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                    return true;
+                }
+
+                @Override
+                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                    //TODO
+                }
+
+                //defines the enabled move directions in each state (idle, swiping, dragging).
+                @Override
+                public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                    return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
+                            ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
+                }
+            };
+
+            // Create an `ItemTouchHelper` and attach it to the `RecyclerView`
+            ItemTouchHelper ith = new ItemTouchHelper(_ithCallback);
+            ith.attachToRecyclerView(mRecyclerView);
 
             if (mViewMode == Const.MODE_GRID) {
                 this.mGridView.setVisibility(View.VISIBLE);
-                this.mDynamicListView.setVisibility(View.GONE);
+                this.mRecyclerView.setVisibility(View.GONE);
 
                 this.mGridView.setAdapter(new AdapterGridModelFile(app, files));
                 this.mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -392,7 +417,7 @@ public class FileLocalMusicFragment extends FabFragment
                 });
             } else {
                 this.mGridView.setVisibility(View.GONE);
-                this.mDynamicListView.setVisibility(View.VISIBLE);
+                this.mRecyclerView.setVisibility(View.VISIBLE);
             }
         }
     }

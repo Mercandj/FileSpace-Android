@@ -47,9 +47,8 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/circle"
+        android:id="@+id/fragment_file_fab_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
@@ -64,7 +63,7 @@
         app:layout_anchorGravity="bottom|right|end"/>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/circle2"
+        android:id="@+id/fragment_file_fab_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

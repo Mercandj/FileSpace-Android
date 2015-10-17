@@ -71,12 +71,12 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
     private RecyclerView mRecyclerView;
     private GridView mGridView;
     private AdapterModelFile mAdapterModelFile;
-    private ArrayList<ModelFile> files = new ArrayList<>();
-    private ProgressBar circularProgressBar;
-    private TextView message;
+    private ArrayList<ModelFile> mFilesList = new ArrayList<>();
+    private ProgressBar mProgressBar;
+    private TextView mMessageTextView;
 
-    private Stack<Integer> id_file_path = new Stack<>();
-    private List<ModelFile> filesToCut = new ArrayList<>();
+    private Stack<Integer> mIdFileDirectoryStack = new Stack<>();
+    private List<ModelFile> mFilesToCutList = new ArrayList<>();
 
     private int mViewMode = Const.MODE_LIST;
 
@@ -95,19 +95,19 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_file_files, container, false);
 
-        this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
-        this.message = (TextView) rootView.findViewById(R.id.message);
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
+        mMessageTextView = (TextView) rootView.findViewById(R.id.message);
 
-        this.mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
-        this.mRecyclerView.setHasFixedSize(true);
-        this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        this.mGridView = (GridView) rootView.findViewById(R.id.gridView);
-        this.mGridView.setVisibility(View.GONE);
+        mGridView = (GridView) rootView.findViewById(R.id.gridView);
+        mGridView.setVisibility(View.GONE);
 
         resetPath();
 
-        this.mAdapterModelFile = new AdapterModelFile(app, files, new IModelFileListener() {
+        mAdapterModelFile = new AdapterModelFile(app, mFilesList, new IModelFileListener() {
             @Override
             public void executeModelFile(final ModelFile modelFile) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileMyCloudFragment.this.app);
@@ -142,8 +142,8 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                                 modelFile.rename(text, new IPostExecuteListener() {
                                                     @Override
                                                     public void execute(JSONObject json, String body) {
-                                                        if (filesToCut != null && filesToCut.size() != 0) {
-                                                            filesToCut.clear();
+                                                        if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
+                                                            mFilesToCutList.clear();
                                                             refreshFab();
                                                         }
                                                         FileMyCloudFragment.this.app.refreshAdapters();
@@ -160,8 +160,8 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                                 modelFile.delete(new IPostExecuteListener() {
                                                     @Override
                                                     public void execute(JSONObject json, String body) {
-                                                        if (filesToCut != null && filesToCut.size() != 0) {
-                                                            filesToCut.clear();
+                                                        if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
+                                                            mFilesToCutList.clear();
                                                             refreshFab();
                                                         }
                                                         FileMyCloudFragment.this.app.refreshAdapters();
@@ -172,7 +172,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                         break;
 
                                     case 3:
-                                        FileMyCloudFragment.this.filesToCut.add(modelFile);
+                                        FileMyCloudFragment.this.mFilesToCutList.add(modelFile);
                                         Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                         refreshFab();
                                         break;
@@ -243,28 +243,28 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
             }
         });
 
-        this.mRecyclerView.setAdapter(mAdapterModelFile);
-        this.mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
-        this.mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+        mRecyclerView.setAdapter(mAdapterModelFile);
+        mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
-        this.mAdapterModelFile.setOnItemClickListener(new AdapterModelFile.OnItemClickListener() {
+        mAdapterModelFile.setOnItemClickListener(new AdapterModelFile.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 if (hasItemSelected()) {
-                    files.get(position).selected = !files.get(position).selected;
+                    mFilesList.get(position).selected = !mFilesList.get(position).selected;
                     mAdapterModelFile.notifyItemChanged(position);
-                } else if (files.get(position).directory) {
-                    FileMyCloudFragment.this.id_file_path.add(files.get(position).id);
+                } else if (mFilesList.get(position).directory) {
+                    FileMyCloudFragment.this.mIdFileDirectoryStack.add(mFilesList.get(position).id);
                     refreshList();
                 } else
-                    files.get(position).executeOnline(files, view);
+                    mFilesList.get(position).executeOnline(mFilesList, view);
             }
         });
 
-        this.mAdapterModelFile.setOnItemLongClickListener(new AdapterModelFile.OnItemLongClickListener() {
+        mAdapterModelFile.setOnItemLongClickListener(new AdapterModelFile.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(View view, int position) {
-                files.get(position).selected = !files.get(position).selected;
+                mFilesList.get(position).selected = !mFilesList.get(position).selected;
                 mAdapterModelFile.notifyItemChanged(position);
                 return true;
             }
@@ -276,8 +276,8 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
     }
 
     public void resetPath() {
-        this.id_file_path = new Stack<>();
-        this.id_file_path.add(-1);
+        this.mIdFileDirectoryStack = new Stack<>();
+        this.mIdFileDirectoryStack.add(-1);
     }
 
     public void refreshList() {
@@ -288,7 +288,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
         List<StringPair> parameters = new ArrayList<>();
         if (search != null)
             parameters.add(new StringPair("search", "" + search));
-        parameters.add(new StringPair("id_file_parent", "" + this.id_file_path.peek()));
+        parameters.add(new StringPair("id_file_parent", "" + this.mIdFileDirectoryStack.peek()));
         parameters.add(new StringPair("mine", "" + true));
 
         if (NetUtils.isInternetConnection(app) && app.isLogged()) {
@@ -301,14 +301,14 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                         public void execute(JSONObject json, String body) {
                             if (!isAdded())
                                 return;
-                            files = new ArrayList<>();
+                            mFilesList = new ArrayList<>();
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
                                             ModelFile modelFile = new ModelFile(app, array.getJSONObject(i));
-                                            files.add(modelFile);
+                                            mFilesList.add(modelFile);
                                         }
                                     }
                                 } else
@@ -322,10 +322,10 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                     parameters
             ).execute();
         } else {
-            this.circularProgressBar.setVisibility(View.GONE);
+            this.mProgressBar.setVisibility(View.GONE);
             if (this.isAdded())
-                this.message.setText(app.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
-            this.message.setVisibility(View.VISIBLE);
+                this.mMessageTextView.setText(app.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+            this.mMessageTextView.setVisibility(View.VISIBLE);
 
             if (!NetUtils.isInternetConnection(app)) {
                 this.setListVisibility(false);
@@ -342,20 +342,20 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
     }
 
     public void updateAdapter() {
-        if (this.mRecyclerView != null && this.files != null && this.isAdded()) {
+        if (this.mRecyclerView != null && mFilesList != null && this.isAdded()) {
 
-            this.circularProgressBar.setVisibility(View.GONE);
+            this.mProgressBar.setVisibility(View.GONE);
 
-            if (this.files.size() == 0) {
-                if (this.id_file_path.peek() == -1)
-                    this.message.setText(getString(R.string.no_file_server));
+            if (mFilesList.size() == 0) {
+                if (this.mIdFileDirectoryStack.peek() == -1)
+                    this.mMessageTextView.setText(getString(R.string.no_file_server));
                 else
-                    this.message.setText(getString(R.string.no_file_directory));
-                this.message.setVisibility(View.VISIBLE);
+                    this.mMessageTextView.setText(getString(R.string.no_file_directory));
+                this.mMessageTextView.setVisibility(View.VISIBLE);
             } else
-                this.message.setVisibility(View.GONE);
+                this.mMessageTextView.setVisibility(View.GONE);
 
-            this.mAdapterModelFile.remplaceList(this.files);
+            this.mAdapterModelFile.remplaceList(mFilesList);
 
             refreshFab();
 
@@ -363,26 +363,26 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                 this.mGridView.setVisibility(View.VISIBLE);
                 this.mRecyclerView.setVisibility(View.GONE);
 
-                this.mGridView.setAdapter(new AdapterGridModelFile(app, files));
+                this.mGridView.setAdapter(new AdapterGridModelFile(app, mFilesList));
                 this.mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         if (hasItemSelected()) {
-                            files.get(position).selected = !files.get(position).selected;
+                            mFilesList.get(position).selected = !mFilesList.get(position).selected;
                             mAdapterModelFile.notifyItemChanged(position);
-                        } else if (files.get(position).directory) {
-                            FileMyCloudFragment.this.id_file_path.add(files.get(position).id);
+                        } else if (mFilesList.get(position).directory) {
+                            FileMyCloudFragment.this.mIdFileDirectoryStack.add(mFilesList.get(position).id);
                             refreshList();
                         } else
-                            files.get(position).executeOnline(files, view);
+                            mFilesList.get(position).executeOnline(mFilesList, view);
                     }
                 });
                 this.mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                        if (position >= files.size())
+                        if (position >= mFilesList.size())
                             return false;
-                        final ModelFile modelFile = files.get(position);
+                        final ModelFile modelFile = mFilesList.get(position);
                         final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileMyCloudFragment.this.app);
                         String[] menuList = {getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties)};
                         if (!modelFile.directory) {
@@ -415,8 +415,8 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                                         modelFile.rename(text, new IPostExecuteListener() {
                                                             @Override
                                                             public void execute(JSONObject json, String body) {
-                                                                if (filesToCut != null && filesToCut.size() != 0) {
-                                                                    filesToCut.clear();
+                                                                if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
+                                                                    mFilesToCutList.clear();
                                                                     refreshFab();
                                                                 }
                                                                 FileMyCloudFragment.this.app.refreshAdapters();
@@ -433,8 +433,8 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                                         modelFile.delete(new IPostExecuteListener() {
                                                             @Override
                                                             public void execute(JSONObject json, String body) {
-                                                                if (filesToCut != null && filesToCut.size() != 0) {
-                                                                    filesToCut.clear();
+                                                                if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
+                                                                    mFilesToCutList.clear();
                                                                     refreshFab();
                                                                 }
                                                                 FileMyCloudFragment.this.app.refreshAdapters();
@@ -445,7 +445,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                                 break;
 
                                             case 3:
-                                                FileMyCloudFragment.this.filesToCut.add(modelFile);
+                                                FileMyCloudFragment.this.mFilesToCutList.add(modelFile);
                                                 Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                                 refreshFab();
                                                 break;
@@ -525,12 +525,12 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
         if (hasItemSelected()) {
             deselectAll();
             return true;
-        } else if (this.id_file_path.peek() != -1) {
-            FileMyCloudFragment.this.id_file_path.pop();
+        } else if (this.mIdFileDirectoryStack.peek() != -1) {
+            FileMyCloudFragment.this.mIdFileDirectoryStack.pop();
             FileMyCloudFragment.this.refreshList();
             return true;
-        } else if (filesToCut != null && filesToCut.size() != 0) {
-            filesToCut.clear();
+        } else if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
+            mFilesToCutList.clear();
             refreshFab();
             return true;
         } else
@@ -538,14 +538,14 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
     }
 
     public boolean hasItemSelected() {
-        for (ModelFile file : files)
+        for (ModelFile file : mFilesList)
             if (file.selected)
                 return true;
         return false;
     }
 
     public void deselectAll() {
-        for (ModelFile file : files)
+        for (ModelFile file : mFilesList)
             file.selected = false;
         updateAdapter();
     }
@@ -559,18 +559,18 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
     public void onFabClick(int fab_id, final FloatingActionButton fab) {
         switch (fab_id) {
             case 0:
-                if (filesToCut != null && filesToCut.size() != 0) {
-                    for (ModelFile file : filesToCut)
-                        file.setId_file_parent(FileMyCloudFragment.this.id_file_path.peek(), new IPostExecuteListener() {
+                if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
+                    for (ModelFile file : mFilesToCutList)
+                        file.setId_file_parent(FileMyCloudFragment.this.mIdFileDirectoryStack.peek(), new IPostExecuteListener() {
                             @Override
                             public void execute(JSONObject json, String body) {
                                 FileMyCloudFragment.this.app.refreshAdapters();
                             }
                         });
-                    filesToCut.clear();
+                    mFilesToCutList.clear();
                 } else {
                     fab.hide();
-                    FileMyCloudFragment.this.app.dialog = new DialogAddFileManager(app, FileMyCloudFragment.this.id_file_path.peek(), new IPostExecuteListener() {
+                    FileMyCloudFragment.this.app.dialog = new DialogAddFileManager(app, FileMyCloudFragment.this.mIdFileDirectoryStack.peek(), new IPostExecuteListener() {
                         @Override
                         public void execute(JSONObject json, String body) {
                             if (json != null)
@@ -586,8 +586,8 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                 refreshFab();
                 break;
             case 1:
-                if (id_file_path.peek() != -1) {
-                    FileMyCloudFragment.this.id_file_path.pop();
+                if (mIdFileDirectoryStack.peek() != -1) {
+                    FileMyCloudFragment.this.mIdFileDirectoryStack.pop();
                     FileMyCloudFragment.this.refreshList();
                 }
                 break;
@@ -602,7 +602,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
             case 0:
                 return true;
             case 1:
-                return this.id_file_path.peek() != -1;
+                return this.mIdFileDirectoryStack.peek() != -1;
         }
         return false;
     }
@@ -611,7 +611,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
     public int getFabImageResource(int fab_id) {
         switch (fab_id) {
             case 0:
-                if (filesToCut != null && filesToCut.size() != 0)
+                if (mFilesToCutList != null && mFilesToCutList.size() != 0)
                     return R.drawable.ic_menu_paste_holo_dark;
                 else
                     return R.drawable.add;

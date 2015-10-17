@@ -19,15 +19,13 @@
  */
 package mercandalli.com.filespace.ui.adapters;
 
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.nhaarman.listviewanimations.util.Swappable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +33,11 @@ import java.util.List;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.models.ModelFile;
+import mercandalli.com.filespace.models.ModelFileType;
 import mercandalli.com.filespace.models.ModelFileTypeENUM;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
-public class AdapterDragModelFile extends BaseAdapter implements Swappable {
+public class AdapterDragModelFile extends RecyclerView.Adapter<AdapterDragModelFile.ViewHolder> {
 
     private ApplicationActivity app;
     public List<ModelFile> files;
@@ -53,57 +52,86 @@ public class AdapterDragModelFile extends BaseAdapter implements Swappable {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater = app.getLayoutInflater();
-        convertView = inflater.inflate(R.layout.tab_file_drag, parent, false);
+    public AdapterDragModelFile.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_drag, parent, false), viewType);
+    }
 
+    @Override
+    public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         if (position < files.size()) {
             final ModelFile file = files.get(position);
 
-            ((TextView) convertView.findViewById(R.id.title)).setText(file.getAdapterTitle());
-            ((TextView) convertView.findViewById(R.id.subtitle)).setText(file.getAdapterSubtitle());
+            viewHolder.title.setText(file.getAdapterTitle());
+            viewHolder.subtitle.setText(file.getAdapterSubtitle());
 
             if (file.directory)
-                ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.directory);
+                viewHolder.icon.setImageResource(R.drawable.directory);
             else if (file.type != null) {
-                if (file.type.equals(ModelFileTypeENUM.AUDIO.type))
-                    ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.file_audio);
-                else if (file.type.equals(ModelFileTypeENUM.PDF.type))
-                    ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.file_pdf);
-                else if (file.type.equals(ModelFileTypeENUM.APK.type))
-                    ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.file_apk);
-                else if (file.type.equals(ModelFileTypeENUM.ARCHIVE.type))
-                    ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.file_archive);
-                else if (file.type.equals(ModelFileTypeENUM.FILESPACE.type))
-                    ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.file_jarvis);
+                ModelFileType type = file.type;
+                if (type.equals(ModelFileTypeENUM.AUDIO.type))
+                    viewHolder.icon.setImageResource(R.drawable.file_audio);
+                else if (type.equals(ModelFileTypeENUM.PDF.type))
+                    viewHolder.icon.setImageResource(R.drawable.file_pdf);
+                else if (type.equals(ModelFileTypeENUM.APK.type))
+                    viewHolder.icon.setImageResource(R.drawable.file_apk);
+                else if (type.equals(ModelFileTypeENUM.ARCHIVE.type))
+                    viewHolder.icon.setImageResource(R.drawable.file_archive);
+                else if (type.equals(ModelFileTypeENUM.FILESPACE.type))
+                    viewHolder.icon.setImageResource(R.drawable.file_jarvis);
                 else
-                    ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.file_default);
+                    viewHolder.icon.setImageResource(R.drawable.file_default);
             } else
-                ((ImageView) convertView.findViewById(R.id.icon)).setImageResource(R.drawable.file_default);
+                viewHolder.icon.setImageResource(R.drawable.file_default);
 
             if (file.bitmap != null)
-                ((ImageView) convertView.findViewById(R.id.icon)).setImageBitmap(file.bitmap);
+                viewHolder.icon.setImageBitmap(file.bitmap);
 
             if (moreListener == null)
-                convertView.findViewById(R.id.more).setVisibility(View.GONE);
-            convertView.findViewById(R.id.more).setOnClickListener(new OnClickListener() {
+                viewHolder.more.setVisibility(View.GONE);
+            viewHolder.more.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (moreListener != null)
                         moreListener.executeModelFile(file);
                 }
             });
-
-            convertView.findViewById(R.id.item).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mItemClickListener != null)
-                        mItemClickListener.onItemClick(v, position);
-                }
-            });
         }
-        return convertView;
     }
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+        public TextView title, subtitle;
+        public ImageView icon;
+        public View item;
+        public View more;
+
+        public ViewHolder(View itemLayoutView, int viewType) {
+            super(itemLayoutView);
+            item = itemLayoutView.findViewById(R.id.item);
+            title = (TextView) itemLayoutView.findViewById(R.id.title);
+            subtitle = (TextView) itemLayoutView.findViewById(R.id.subtitle);
+            icon = (ImageView) itemLayoutView.findViewById(R.id.icon);
+            more = itemLayoutView.findViewById(R.id.more);
+            itemLayoutView.setOnClickListener(this);
+            itemLayoutView.setOnLongClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (mItemClickListener != null)
+                mItemClickListener.onItemClick(v, getAdapterPosition());
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            return mItemLongClickListener != null && mItemLongClickListener.onItemLongClick(v, getAdapterPosition());
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return files.size();
+    }
+
 
     public void remplaceList(ArrayList<ModelFile> list) {
         files.clear();
@@ -111,20 +139,27 @@ public class AdapterDragModelFile extends BaseAdapter implements Swappable {
         notifyDataSetChanged();
     }
 
-
-    @Override
-    public int getCount() {
-        return files.size();
+    public void addFirst(ArrayList<ModelFile> list) {
+        files.addAll(0, list);
+        notifyDataSetChanged();
     }
 
-    @Override
-    public Object getItem(int position) {
-        return files.get(position);
+    public void addLast(ArrayList<ModelFile> list) {
+        files.addAll(files.size(), list);
+        notifyDataSetChanged();
     }
 
-    @Override
-    public long getItemId(int position) {
-        return files.get(position).id;
+    public void addItem(ModelFile name, int position) {
+        this.files.add(position, name);
+        this.notifyItemInserted(position);
+    }
+
+    public void removeAll() {
+        int size = files.size();
+        if (size > 0) {
+            files = new ArrayList<>();
+            this.notifyItemRangeInserted(0, size - 1);
+        }
     }
 
     @Override
@@ -134,16 +169,8 @@ public class AdapterDragModelFile extends BaseAdapter implements Swappable {
         return 0;
     }
 
-    @Override
-    public void swapItems(int i, int i1) {
-        ModelFile tmp = files.get(i);
-        files.set(i, files.get(i1));
-        files.set(i1, tmp);
-
-    }
-
     public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
+        void onItemClick(View view, int position);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -151,17 +178,10 @@ public class AdapterDragModelFile extends BaseAdapter implements Swappable {
     }
 
     public interface OnItemLongClickListener {
-        public boolean onItemLongClick(View view, int position);
+        boolean onItemLongClick(View view, int position);
     }
 
     public void setOnItemLongClickListener(final OnItemLongClickListener mItemLongClickListener) {
         this.mItemLongClickListener = mItemLongClickListener;
     }
-
-    @Override
-    public boolean hasStableIds() {
-        return true;
-    }
-
-
 }

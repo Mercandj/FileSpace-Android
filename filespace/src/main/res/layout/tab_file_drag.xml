@@ -3,105 +3,117 @@
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:transitionName="transitionRoot"
-                android:background="@color/tab_file">
-
-    <RelativeLayout
-        android:layout_width="60dp"
-        android:layout_height="match_parent"
-        android:id="@+id/rl_left">
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_menu_drag"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="12dp"/>
-
-
-    </RelativeLayout>
-
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:layout_marginTop="@dimen/default_4"
+    android:layout_marginBottom="@dimen/default_4"
+    android:layout_marginLeft="@dimen/default_8"
+    android:layout_marginRight="@dimen/default_8"
+    android:background="@color/tab_file"
+    android:transitionName="transitionRoot"
+    app:cardCornerRadius="4dp"
+    android:stateListAnimator="@anim/tab_music_elevation">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:attr/selectableItemBackground"
-        android:id="@+id/item"
-        android:layout_toEndOf="@+id/rl_left">
+        android:background="?android:attr/selectableItemBackground">
 
-        <TextView
-            android:id="@+id/title"
-            android:transitionName="transitionTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:focusable="false"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxLines="1"
-            android:paddingLeft="20dp"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textColor="#000"
-            android:textSize="16sp"
-            android:layout_toEndOf="@+id/icon"
-            android:layout_toStartOf="@+id/more"
-            android:layout_alignTop="@+id/icon"
-            android:gravity="top"
-            />
+        <FrameLayout
+            android:id="@+id/rl_left"
+            android:layout_width="60dp"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/subtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:focusable="false"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxLines="1"
-            android:paddingLeft="20dp"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textColor="#666"
-            android:textSize="15sp"
-            android:layout_alignBottom="@+id/icon"
-            android:gravity="bottom"
-            android:layout_marginBottom="2dp"
-            android:layout_toEndOf="@+id/icon"
-            android:layout_toStartOf="@+id/more"
-            />
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_margin="12dp"
+                android:src="@drawable/ic_menu_drag"/>
+
+        </FrameLayout>
 
         <mercandalli.com.filespace.ui.views.CircularImageView
             android:id="@+id/icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/rl_left"
             android:contentDescription="@string/image_description"
-            android:transitionName="transitionIcon"
-            android:src="@drawable/file_default"/>
+            android:src="@drawable/file_default"
+            android:transitionName="transitionIcon"/>
 
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/item"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/more"
+            android:layout_toRightOf="@+id/icon"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/icon"
+                android:layout_toEndOf="@+id/icon"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="4dp"
+                android:ellipsize="marquee"
+                android:focusable="false"
+                android:gravity="top"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxLines="1"
+                android:paddingLeft="20dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textColor="#000"
+                android:textSize="16sp"
+                android:transitionName="transitionTitle"
+                tools:text="Title"/>
+
+            <TextView
+                android:id="@+id/subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/icon"
+                android:layout_marginBottom="2dp"
+                android:layout_toEndOf="@+id/icon"
+                android:layout_toStartOf="@+id/more"
+                android:ellipsize="marquee"
+                android:focusable="false"
+                android:gravity="bottom"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxLines="1"
+                android:paddingLeft="20dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textColor="#666"
+                android:textSize="15sp"
+                tools:text="Subtitle"/>
+
+        </LinearLayout>
+
+        <FrameLayout
             android:id="@+id/more"
             android:layout_width="55dp"
             android:layout_height="match_parent"
-            android:paddingRight="10dp"
-            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:paddingLeft="10dp">
+            android:layout_alignParentTop="true"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="?android:attr/selectableItemBackground">
 
             <ImageView
                 android:layout_width="35dp"
                 android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentBottom="true"/>
-        </RelativeLayout>
+                android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"/>
+        </FrameLayout>
 
     </RelativeLayout>
 
 
-</RelativeLayout>
+</android.support.v7.widget.CardView>

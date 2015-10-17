@@ -10,6 +10,7 @@
     <dimen name="notification_bar_height">25dp</dimen>
 
     <!-- Default values -->
+    <dimen name="default_4">4dp</dimen>
     <dimen name="default_8">8dp</dimen>
     <dimen name="default_16">16dp</dimen>
     <dimen name="default_24">24dp</dimen>

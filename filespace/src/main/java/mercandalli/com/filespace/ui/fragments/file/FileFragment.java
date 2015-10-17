@@ -60,7 +60,8 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     public static FabFragment listFragment[] = new FabFragment[NB_FRAGMENT];
     private ViewPager mViewPager;
 
-    private FloatingActionButton circle, circle2;
+    private FloatingActionButton mFab1;
+    private FloatingActionButton mFab2;
     private View coordinatorLayoutView;
     private Snackbar mSnackbar;
 
@@ -91,11 +92,11 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.fragment_file_app_bar_layout);
         coordinatorLayoutView = rootView.findViewById(R.id.fragment_file_coordinator_layout);
 
-        FileManagerFragmentPagerAdapter mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
+        final FileManagerFragmentPagerAdapter mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
 
         mViewMode = ((app.getConfig().getUserFileModeView() > -1) ? app.getConfig().getUserFileModeView() : Const.MODE_LIST);
 
-        TabLayout tabs = (TabLayout) rootView.findViewById(R.id.fragment_file_tab_layout);
+        final TabLayout tabs = (TabLayout) rootView.findViewById(R.id.fragment_file_tab_layout);
         mViewPager = (ViewPager) rootView.findViewById(R.id.fragment_file_view_pager);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
@@ -115,10 +116,10 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
         tabs.setupWithViewPager(mViewPager);
 
-        this.circle = ((FloatingActionButton) rootView.findViewById(R.id.circle));
-        this.circle.setVisibility(View.GONE);
-        this.circle2 = ((FloatingActionButton) rootView.findViewById(R.id.circle2));
-        this.circle2.setVisibility(View.GONE);
+        mFab1 = ((FloatingActionButton) rootView.findViewById(R.id.fragment_file_fab_1));
+        mFab1.setVisibility(View.GONE);
+        mFab2 = ((FloatingActionButton) rootView.findViewById(R.id.fragment_file_fab_2));
+        mFab2.setVisibility(View.GONE);
 
         return rootView;
     }
@@ -127,19 +128,22 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         if (mViewPager == null)
             return -1;
         int result = mViewPager.getCurrentItem();
-        if (result >= listFragment.length)
+        if (result >= listFragment.length) {
             return -1;
-        return mViewPager.getCurrentItem() + (app.isLogged() ? 0 : 2);
+        }
+        return result + (app.isLogged() ? 0 : 2);
     }
 
     @Override
     public boolean back() {
         int currentFragmentId = getCurrentFragmentIndex();
-        if (listFragment == null || currentFragmentId == -1)
+        if (listFragment == null || currentFragmentId == -1) {
             return false;
+        }
         FabFragment fragment = listFragment[currentFragmentId];
-        if (fragment == null)
+        if (fragment == null) {
             return false;
+        }
         refreshFab(fragment);
         return fragment.back();
     }
@@ -158,42 +162,42 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     }
 
     private void refreshFab(final FabFragment currentFragment) {
-        if (circle == null) {
+        if (mFab1 == null) {
             return;
         }
         int imageResource;
         if (currentFragment.isFabVisible(0)) {
-            circle.show();
+            mFab1.show();
             imageResource = currentFragment.getFabImageResource(0);
             if (imageResource == -1)
                 imageResource = android.R.drawable.ic_input_add;
-            circle.setImageResource(imageResource);
-            circle.setOnClickListener(new View.OnClickListener() {
+            mFab1.setImageResource(imageResource);
+            mFab1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    currentFragment.onFabClick(0, circle);
+                    currentFragment.onFabClick(0, mFab1);
                 }
             });
         } else
-            circle.hide();
+            mFab1.hide();
 
-        if (circle2 == null) {
+        if (mFab2 == null) {
             return;
         }
         if (currentFragment.isFabVisible(1)) {
-            circle2.show();
+            mFab2.show();
             imageResource = currentFragment.getFabImageResource(1);
             if (imageResource == -1)
                 imageResource = android.R.drawable.ic_input_add;
-            circle2.setImageResource(imageResource);
-            circle2.setOnClickListener(new View.OnClickListener() {
+            mFab2.setImageResource(imageResource);
+            mFab2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    currentFragment.onFabClick(1, circle2);
+                    currentFragment.onFabClick(1, mFab2);
                 }
             });
         } else
-            circle2.hide();
+            mFab2.hide();
     }
 
     @Override
@@ -233,15 +237,16 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
         ApplicationActivity app;
 
-        public FileManagerFragmentPagerAdapter(FragmentManager fm, ApplicationActivity app) {
+        public FileManagerFragmentPagerAdapter(FragmentManager fm, ApplicationActivity applicationActivity) {
             super(fm);
-            this.app = app;
+            app = applicationActivity;
         }
 
         @Override
         public BackFragment getItem(int i) {
-            if (!app.isLogged())
+            if (!app.isLogged()) {
                 i += 2;
+            }
 
             FabFragment fragment;
             switch (i) {
@@ -298,7 +303,6 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
             return title;
         }
     }
-
 
     public void refreshListServer() {
         refreshListServer(null);
@@ -413,7 +417,6 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                     public void onClick(DialogInterface dialog, int item) {
 
                         switch (item) {
-
                             case 0:
                             case 1:
                             case 2:

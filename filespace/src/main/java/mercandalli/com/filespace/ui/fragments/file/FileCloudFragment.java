@@ -67,16 +67,18 @@ import mercandalli.com.filespace.utils.StringPair;
 /**
  * A {@link FabFragment} used by {@link FileFragment} to display the public cloud {@link ModelFile}.
  */
-public class FileCloudFragment extends FabFragment
-        implements BackFragment.IListViewMode, AdapterModelFile.OnItemClickListener,
-        AdapterModelFile.OnItemLongClickListener, IModelFileListener {
+public class FileCloudFragment extends FabFragment implements
+        BackFragment.IListViewMode,
+        AdapterModelFile.OnItemClickListener,
+        AdapterModelFile.OnItemLongClickListener,
+        IModelFileListener {
 
     private RecyclerView mRecyclerView;
     private GridView mGridView;
     private AdapterModelFile mAdapterModelFile;
-    private ArrayList<ModelFile> files = new ArrayList<>();
-    private ProgressBar circularProgressBar;
-    private TextView message;
+    private ArrayList<ModelFile> mFilesList = new ArrayList<>();
+    private ProgressBar mProgressBar;
+    private TextView mMessageTextView;
 
     private String url = "";
     private List<ModelFile> filesToCut = new ArrayList<>();
@@ -100,23 +102,23 @@ public class FileCloudFragment extends FabFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_file_files, container, false);
-        this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
-        this.message = (TextView) rootView.findViewById(R.id.message);
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
+        mMessageTextView = (TextView) rootView.findViewById(R.id.message);
 
-        this.mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
-        this.mRecyclerView.setHasFixedSize(true);
-        this.mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        this.mGridView = (GridView) rootView.findViewById(R.id.gridView);
-        this.mGridView.setVisibility(View.GONE);
+        mGridView = (GridView) rootView.findViewById(R.id.gridView);
+        mGridView.setVisibility(View.GONE);
 
-        this.mAdapterModelFile = new AdapterModelFile(app, files, this);
-        this.mRecyclerView.setAdapter(mAdapterModelFile);
-        this.mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
-        this.mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+        mAdapterModelFile = new AdapterModelFile(app, mFilesList, this);
+        mRecyclerView.setAdapter(mAdapterModelFile);
+        mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
-        this.mAdapterModelFile.setOnItemClickListener(this);
-        this.mAdapterModelFile.setOnItemLongClickListener(this);
+        mAdapterModelFile.setOnItemClickListener(this);
+        mAdapterModelFile.setOnItemLongClickListener(this);
 
         refreshList();
 
@@ -144,14 +146,14 @@ public class FileCloudFragment extends FabFragment
                         public void execute(JSONObject json, String body) {
                             if (!isAdded())
                                 return;
-                            files = new ArrayList<>();
+                            mFilesList = new ArrayList<>();
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
                                             ModelFile modelFile = new ModelFile(app, array.getJSONObject(i));
-                                            files.add(modelFile);
+                                            mFilesList.add(modelFile);
                                         }
                                     }
                                 } else
@@ -165,10 +167,10 @@ public class FileCloudFragment extends FabFragment
                     parameters
             ).execute();
         else {
-            this.circularProgressBar.setVisibility(View.GONE);
+            this.mProgressBar.setVisibility(View.GONE);
             if (isAdded())
-                this.message.setText(app.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
-            this.message.setVisibility(View.VISIBLE);
+                this.mMessageTextView.setText(app.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+            this.mMessageTextView.setVisibility(View.VISIBLE);
 
             if (!NetUtils.isInternetConnection(app)) {
                 this.setListVisibility(false);
@@ -185,24 +187,24 @@ public class FileCloudFragment extends FabFragment
     }
 
     public void updateAdapter() {
-        if (this.mRecyclerView != null && this.files != null && this.isAdded()) {
+        if (mRecyclerView != null && mFilesList != null && this.isAdded()) {
 
-            this.circularProgressBar.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.GONE);
 
             if (!NetUtils.isInternetConnection(app))
-                this.message.setText(getString(R.string.no_internet_connection));
-            else if (this.files.size() == 0) {
+                mMessageTextView.setText(getString(R.string.no_internet_connection));
+            else if (mFilesList.size() == 0) {
                 if (this.url == null)
-                    this.message.setText(getString(R.string.no_file_server));
+                    this.mMessageTextView.setText(getString(R.string.no_file_server));
                 else if (this.url.equals(""))
-                    this.message.setText(getString(R.string.no_file_server));
+                    this.mMessageTextView.setText(getString(R.string.no_file_server));
                 else
-                    this.message.setText(getString(R.string.no_file_directory));
-                this.message.setVisibility(View.VISIBLE);
+                    this.mMessageTextView.setText(getString(R.string.no_file_directory));
+                this.mMessageTextView.setVisibility(View.VISIBLE);
             } else
-                this.message.setVisibility(View.GONE);
+                this.mMessageTextView.setVisibility(View.GONE);
 
-            this.mAdapterModelFile.remplaceList(this.files);
+            this.mAdapterModelFile.remplaceList(mFilesList);
 
             this.refreshFab.execute();
 
@@ -210,26 +212,26 @@ public class FileCloudFragment extends FabFragment
                 this.mGridView.setVisibility(View.VISIBLE);
                 this.mRecyclerView.setVisibility(View.GONE);
 
-                this.mGridView.setAdapter(new AdapterGridModelFile(app, files));
+                this.mGridView.setAdapter(new AdapterGridModelFile(app, mFilesList));
                 this.mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         if (hasItemSelected()) {
-                            files.get(position).selected = !files.get(position).selected;
+                            mFilesList.get(position).selected = !mFilesList.get(position).selected;
                             mAdapterModelFile.notifyItemChanged(position);
-                        } else if (files.get(position).directory) {
-                            FileCloudFragment.this.url = files.get(position).url + "/";
+                        } else if (mFilesList.get(position).directory) {
+                            FileCloudFragment.this.url = mFilesList.get(position).url + "/";
                             refreshList();
                         } else
-                            files.get(position).executeOnline(files, view);
+                            mFilesList.get(position).executeOnline(mFilesList, view);
                     }
                 });
                 this.mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                        if (position >= files.size())
+                        if (position >= mFilesList.size())
                             return false;
-                        final ModelFile modelFile = files.get(position);
+                        final ModelFile modelFile = mFilesList.get(position);
 
                         final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileCloudFragment.this.app);
                         String[] menuList = {getString(R.string.download)};
@@ -366,14 +368,14 @@ public class FileCloudFragment extends FabFragment
     }
 
     public boolean hasItemSelected() {
-        for (ModelFile file : files)
+        for (ModelFile file : mFilesList)
             if (file.selected)
                 return true;
         return false;
     }
 
     public void deselectAll() {
-        for (ModelFile file : files)
+        for (ModelFile file : mFilesList)
             file.selected = false;
         updateAdapter();
     }
@@ -442,18 +444,18 @@ public class FileCloudFragment extends FabFragment
     @Override
     public void onItemClick(View view, int position) {
         if (hasItemSelected()) {
-            files.get(position).selected = !files.get(position).selected;
+            mFilesList.get(position).selected = !mFilesList.get(position).selected;
             mAdapterModelFile.notifyItemChanged(position);
-        } else if (files.get(position).directory) {
-            FileCloudFragment.this.url = files.get(position).url + "/";
+        } else if (mFilesList.get(position).directory) {
+            FileCloudFragment.this.url = mFilesList.get(position).url + "/";
             refreshList();
         } else
-            files.get(position).executeOnline(files, view);
+            mFilesList.get(position).executeOnline(mFilesList, view);
     }
 
     @Override
     public boolean onItemLongClick(View view, int position) {
-        files.get(position).selected = !files.get(position).selected;
+        mFilesList.get(position).selected = !mFilesList.get(position).selected;
         mAdapterModelFile.notifyItemChanged(position);
         return true;
     }

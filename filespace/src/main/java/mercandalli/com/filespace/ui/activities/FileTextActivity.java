@@ -28,18 +28,21 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import org.json.JSONObject;
+
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.net.TaskGet;
-
-import org.json.JSONObject;
 
 /**
  * Created by Jonathan on 14/12/2014.
  */
 public class FileTextActivity extends ApplicationActivity {
 
-    private String initate, url, login, password;
+    private String mInitate;
+    private String mUrl;
+    private String login;
+    private String password;
     private boolean online;
 
     @Override
@@ -54,33 +57,33 @@ public class FileTextActivity extends ApplicationActivity {
         }
 
         // Visibility
-        ((EditText) this.findViewById(R.id.txt)).setVisibility(View.GONE);
-        ((ProgressBar) this.findViewById(R.id.circularProgressBar)).setVisibility(View.VISIBLE);
+        ((EditText) findViewById(R.id.txt)).setVisibility(View.GONE);
+        ((ProgressBar) findViewById(R.id.circularProgressBar)).setVisibility(View.VISIBLE);
 
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
             Log.e("" + getClass().getName(), "extras == null");
-            this.finish();
-            this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            finish();
+            overridePendingTransition(R.anim.right_in, R.anim.right_out);
             return;
         } else if (extras.containsKey("ARTICLE_CONTENT_1")) {
-            initate = extras.getString("ARTICLE_CONTENT_1");
-            ((EditText) FileTextActivity.this.findViewById(R.id.txt)).setText("" + initate);
-            ((EditText) FileTextActivity.this.findViewById(R.id.txt)).setVisibility(View.VISIBLE);
-            ((ProgressBar) FileTextActivity.this.findViewById(R.id.circularProgressBar)).setVisibility(View.GONE);
+            mInitate = extras.getString("ARTICLE_CONTENT_1");
+            ((EditText) findViewById(R.id.txt)).setText("" + mInitate);
+            findViewById(R.id.txt).setVisibility(View.VISIBLE);
+            findViewById(R.id.circularProgressBar).setVisibility(View.GONE);
         } else {
-            this.url = extras.getString("URL_FILE");
+            this.mUrl = extras.getString("URL_FILE");
             this.login = extras.getString("LOGIN");
             this.password = extras.getString("PASSWORD");
             this.online = extras.getBoolean("ONLINE");
 
-            new TaskGet(this, this.getConfig().getUser(), this.url, new IPostExecuteListener() {
+            new TaskGet(this, this.getConfig().getUser(), this.mUrl, new IPostExecuteListener() {
                 @Override
                 public void execute(JSONObject json, String body) {
-                    initate = body;
-                    ((EditText) FileTextActivity.this.findViewById(R.id.txt)).setText("" + initate);
-                    ((EditText) FileTextActivity.this.findViewById(R.id.txt)).setVisibility(View.VISIBLE);
-                    ((ProgressBar) FileTextActivity.this.findViewById(R.id.circularProgressBar)).setVisibility(View.GONE);
+                    mInitate = body;
+                    ((EditText) FileTextActivity.this.findViewById(R.id.txt)).setText("" + mInitate);
+                    FileTextActivity.this.findViewById(R.id.txt).setVisibility(View.VISIBLE);
+                    FileTextActivity.this.findViewById(R.id.circularProgressBar).setVisibility(View.GONE);
                 }
             }).execute();
         }
