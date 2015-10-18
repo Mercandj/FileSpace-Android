@@ -56,6 +56,8 @@ import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.listeners.IStringListener;
 import mercandalli.com.filespace.models.ModelFile;
+import mercandalli.com.filespace.models.ModelFileTypeENUM;
+import mercandalli.com.filespace.models.MusicModelFile;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
@@ -301,8 +303,13 @@ public class FileLocalFragment extends FabFragment
                     } else if (mFilesList.get(position).directory) {
                         mCurrentDirectory = new File(mFilesList.get(position).url);
                         refreshList();
-                    } else
-                        mFilesList.get(position).executeLocal(mFilesList, view);
+                    } else {
+                        List<MusicModelFile> tmpFiles = new ArrayList<>();
+                        for (ModelFile f : mFilesList)
+                            if (f.type != null && f.type.equals(ModelFileTypeENUM.AUDIO.type))
+                                tmpFiles.add(new MusicModelFile(app, f));
+                        mFilesList.get(position).executeLocal(tmpFiles, view);
+                    }
                 }
             });
 
@@ -331,7 +338,11 @@ public class FileLocalFragment extends FabFragment
                             mCurrentDirectory = new File(mFilesList.get(position).url);
                             refreshList();
                         } else {
-                            mFilesList.get(position).executeLocal(mFilesList, view);
+                            List<MusicModelFile> tmpFiles = new ArrayList<>();
+                            for (ModelFile f : mFilesList)
+                                if (f.type != null && f.type.equals(ModelFileTypeENUM.AUDIO.type))
+                                    tmpFiles.add(new MusicModelFile(app, f));
+                            mFilesList.get(position).executeLocal(tmpFiles, view);
                         }
                     }
                 });

@@ -81,6 +81,7 @@ public class ModelFile extends Model implements Parcelable {
     public boolean directory = false;
     public boolean _public = false;
     public boolean is_apk_update = false;
+    private long mLastModified;
     public Date date_creation;
     public Bitmap bitmap;
     private File file;
@@ -327,7 +328,7 @@ public class ModelFile extends Model implements Parcelable {
         menuDrop.show();
     }
 
-    public void executeLocal(ArrayList<ModelFile> files, View view) {
+    public void executeLocal(List<MusicModelFile> files, View view) {
         if (!file.exists())
             return;
         if (this.type.equals(ModelFileTypeENUM.APK.type)) {
@@ -595,6 +596,7 @@ public class ModelFile extends Model implements Parcelable {
                 this.name = (id == -1) ? file.getName() : file.getName().substring(0, id);
                 this.type = new ModelFileType(FileUtils.getExtensionFromPath(this.url));
                 this.date_creation = new Date(file.lastModified());
+                this.mLastModified = file.lastModified();
 
                 if (this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0) {
                     (new ImageUtils.LocalBitmapTask(file, new IBitmapListener() {
@@ -638,5 +640,17 @@ public class ModelFile extends Model implements Parcelable {
         if (this.isOnline())
             spl.add(new StringPair("Visibility", _public ? "Public" : "Private"));
         return HtmlUtils.createListItem(spl);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public long length() {
+        return size;
+    }
+
+    public long lastModified() {
+        return mLastModified;
     }
 }

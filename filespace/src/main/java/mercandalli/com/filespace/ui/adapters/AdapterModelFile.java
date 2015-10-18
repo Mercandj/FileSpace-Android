@@ -78,7 +78,7 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
                 else if (type.equals(ModelFileTypeENUM.ARCHIVE.type))
                     viewHolder.icon.setImageResource(R.drawable.file_archive);
                 else if (type.equals(ModelFileTypeENUM.FILESPACE.type))
-                    viewHolder.icon.setImageResource(R.drawable.file_jarvis);
+                    viewHolder.icon.setImageResource(R.drawable.file_space);
                 else
                     viewHolder.icon.setImageResource(R.drawable.file_default);
             } else

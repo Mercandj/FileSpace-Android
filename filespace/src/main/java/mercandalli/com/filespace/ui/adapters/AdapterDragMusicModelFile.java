@@ -32,34 +32,34 @@ import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IModelFileListener;
-import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.models.ModelFileType;
 import mercandalli.com.filespace.models.ModelFileTypeENUM;
+import mercandalli.com.filespace.models.MusicModelFile;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
-public class AdapterDragModelFile extends RecyclerView.Adapter<AdapterDragModelFile.ViewHolder> {
+public class AdapterDragMusicModelFile extends RecyclerView.Adapter<AdapterDragMusicModelFile.ViewHolder> {
 
     private ApplicationActivity app;
-    public List<ModelFile> files;
+    public List<MusicModelFile> files;
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
     private IModelFileListener moreListener;
 
-    public AdapterDragModelFile(ApplicationActivity app, List<ModelFile> files, IModelFileListener moreListener) {
+    public AdapterDragMusicModelFile(ApplicationActivity app, List<MusicModelFile> files, IModelFileListener moreListener) {
         this.app = app;
         this.files = files;
         this.moreListener = moreListener;
     }
 
     @Override
-    public AdapterDragModelFile.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AdapterDragMusicModelFile.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_drag, parent, false), viewType);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         if (position < files.size()) {
-            final ModelFile file = files.get(position);
+            final MusicModelFile file = files.get(position);
 
             viewHolder.title.setText(file.getAdapterTitle());
             viewHolder.subtitle.setText(file.getAdapterSubtitle());
@@ -77,7 +77,7 @@ public class AdapterDragModelFile extends RecyclerView.Adapter<AdapterDragModelF
                 else if (type.equals(ModelFileTypeENUM.ARCHIVE.type))
                     viewHolder.icon.setImageResource(R.drawable.file_archive);
                 else if (type.equals(ModelFileTypeENUM.FILESPACE.type))
-                    viewHolder.icon.setImageResource(R.drawable.file_jarvis);
+                    viewHolder.icon.setImageResource(R.drawable.file_space);
                 else
                     viewHolder.icon.setImageResource(R.drawable.file_default);
             } else
@@ -133,23 +133,23 @@ public class AdapterDragModelFile extends RecyclerView.Adapter<AdapterDragModelF
     }
 
 
-    public void remplaceList(ArrayList<ModelFile> list) {
+    public void remplaceList(ArrayList<MusicModelFile> list) {
         files.clear();
         files.addAll(0, list);
         notifyDataSetChanged();
     }
 
-    public void addFirst(ArrayList<ModelFile> list) {
+    public void addFirst(ArrayList<MusicModelFile> list) {
         files.addAll(0, list);
         notifyDataSetChanged();
     }
 
-    public void addLast(ArrayList<ModelFile> list) {
+    public void addLast(ArrayList<MusicModelFile> list) {
         files.addAll(files.size(), list);
         notifyDataSetChanged();
     }
 
-    public void addItem(ModelFile name, int position) {
+    public void addItem(MusicModelFile name, int position) {
         this.files.add(position, name);
         this.notifyItemInserted(position);
     }

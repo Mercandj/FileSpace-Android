@@ -23,28 +23,15 @@
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground">
 
-        <FrameLayout
-            android:id="@+id/rl_left"
-            android:layout_width="60dp"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="match_parent"
-                android:layout_margin="12dp"
-                android:src="@drawable/ic_menu_drag"/>
-
-        </FrameLayout>
-
         <mercandalli.com.filespace.ui.views.CircularImageView
             android:id="@+id/icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/rl_left"
             android:contentDescription="@string/image_description"
             android:src="@drawable/file_default"
-            android:transitionName="transitionIcon"/>
+            android:transitionName="transitionIcon"
+            android:layout_marginLeft="20dp"/>
 
         <LinearLayout
             android:id="@+id/item"
@@ -60,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/icon"
                 android:layout_toEndOf="@+id/icon"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginBottom="4dp"
                 android:ellipsize="marquee"
                 android:focusable="false"

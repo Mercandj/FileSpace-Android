@@ -57,9 +57,10 @@ import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.listeners.IStringListener;
 import mercandalli.com.filespace.models.ModelFile;
+import mercandalli.com.filespace.models.MusicModelFile;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
-import mercandalli.com.filespace.ui.adapters.AdapterDragModelFile;
+import mercandalli.com.filespace.ui.adapters.AdapterDragMusicModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
@@ -71,7 +72,7 @@ public class FileLocalMusicFragment extends FabFragment
 
     private RecyclerView mRecyclerView; // http://nhaarman.github.io/ListViewAnimations/
     private GridView mGridView;
-    private ArrayList<ModelFile> files;
+    private ArrayList<MusicModelFile> files;
     private ProgressBar mProgressBar;
     private TextView message;
 
@@ -121,7 +122,11 @@ public class FileLocalMusicFragment extends FabFragment
     }
 
     public void refreshList(final String search) {
-        List<File> fs = new ArrayList<>();
+        if (files == null) {
+            files = new ArrayList<>();
+        } else {
+            files.clear();
+        }
 
         String[] STAR = {"*"};
 
@@ -151,7 +156,12 @@ public class FileLocalMusicFragment extends FabFragment
                     String artist_name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
                     int artist_id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
 
-                    fs.add(new File(fullpath));
+                    MusicModelFile modelFile = new MusicModelFile(app, new File(fullpath));
+                    modelFile.setAlbum(album_name);
+                    modelFile.setArtist(artist_name);
+                    if (mSortMode == Const.SORT_SIZE)
+                        modelFile.adapterTitleStart = FileUtils.humanReadableByteCount(modelFile.size) + " - ";
+                    files.add(modelFile);
 
                 } while (cursor.moveToNext());
 
@@ -160,38 +170,30 @@ public class FileLocalMusicFragment extends FabFragment
         }
 
         if (mSortMode == Const.SORT_ABC) {
-            Collections.sort(fs, new Comparator<File>() {
+            Collections.sort(files, new Comparator<ModelFile>() {
                 @Override
-                public int compare(final File f1, final File f2) {
+                public int compare(final ModelFile f1, final ModelFile f2) {
                     return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
                 }
             });
         } else if (mSortMode == Const.SORT_SIZE) {
-            Collections.sort(fs, new Comparator<File>() {
+            Collections.sort(files, new Comparator<ModelFile>() {
                 @Override
-                public int compare(final File f1, final File f2) {
+                public int compare(final ModelFile f1, final ModelFile f2) {
                     return (new Long(f2.length())).compareTo(f1.length());
                 }
             });
         } else {
-            final Map<File, Long> staticLastModifiedTimes = new HashMap<>();
-            for (File f : fs) {
+            final Map<ModelFile, Long> staticLastModifiedTimes = new HashMap<>();
+            for (ModelFile f : files) {
                 staticLastModifiedTimes.put(f, f.lastModified());
             }
-            Collections.sort(fs, new Comparator<File>() {
+            Collections.sort(files, new Comparator<ModelFile>() {
                 @Override
-                public int compare(final File f1, final File f2) {
+                public int compare(final ModelFile f1, final ModelFile f2) {
                     return staticLastModifiedTimes.get(f2).compareTo(staticLastModifiedTimes.get(f1));
                 }
             });
-        }
-
-        files = new ArrayList<>();
-        for (File file : fs) {
-            ModelFile tmpModelFile = new ModelFile(app, file);
-            if (mSortMode == Const.SORT_SIZE)
-                tmpModelFile.adapterTitleStart = FileUtils.humanReadableByteCount(tmpModelFile.size) + " - ";
-            files.add(tmpModelFile);
         }
 
         updateAdapter();
@@ -208,7 +210,7 @@ public class FileLocalMusicFragment extends FabFragment
             } else
                 message.setVisibility(View.GONE);
 
-            final AdapterDragModelFile adapter = new AdapterDragModelFile(app, files, new IModelFileListener() {
+            final AdapterDragMusicModelFile adapter = new AdapterDragMusicModelFile(app, files, new IModelFileListener() {
                 @Override
                 public void executeModelFile(final ModelFile modelFile) {
                     final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalMusicFragment.this.app);
@@ -286,7 +288,7 @@ public class FileLocalMusicFragment extends FabFragment
                     menuDrop.show();
                 }
             });
-            adapter.setOnItemClickListener(new AdapterDragModelFile.OnItemClickListener() {
+            adapter.setOnItemClickListener(new AdapterDragMusicModelFile.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     files.get(position).executeLocal(files, view);
@@ -328,7 +330,10 @@ public class FileLocalMusicFragment extends FabFragment
                 this.mGridView.setVisibility(View.VISIBLE);
                 this.mRecyclerView.setVisibility(View.GONE);
 
-                this.mGridView.setAdapter(new AdapterGridModelFile(app, files));
+                List<ModelFile> tmp = new ArrayList<>();
+                tmp.addAll(files);
+
+                this.mGridView.setAdapter(new AdapterGridModelFile(app, tmp));
                 this.mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

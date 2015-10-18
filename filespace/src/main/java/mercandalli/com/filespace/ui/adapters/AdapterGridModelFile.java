@@ -92,7 +92,7 @@ public class AdapterGridModelFile extends BaseAdapter {
                 else if (file.type.equals(ModelFileTypeENUM.ARCHIVE.type))
                     icon.setImageResource(R.drawable.file_archive);
                 else if (file.type.equals(ModelFileTypeENUM.FILESPACE.type))
-                    icon.setImageResource(R.drawable.file_jarvis);
+                    icon.setImageResource(R.drawable.file_space);
                 else
                     icon.setImageResource(R.drawable.file_default);
             } else
