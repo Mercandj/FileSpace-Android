@@ -40,9 +40,9 @@ import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 public class AdapterDragMusicModelFile extends RecyclerView.Adapter<AdapterDragMusicModelFile.ViewHolder> {
 
     private ApplicationActivity app;
-    public List<MusicModelFile> files;
-    OnItemClickListener mItemClickListener;
-    OnItemLongClickListener mItemLongClickListener;
+    private List<MusicModelFile> files;
+    private OnItemClickListener mItemClickListener;
+    private OnItemLongClickListener mItemLongClickListener;
     private IModelFileListener moreListener;
 
     public AdapterDragMusicModelFile(ApplicationActivity app, List<MusicModelFile> files, IModelFileListener moreListener) {

@@ -9,14 +9,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="70dp"
-    android:layout_marginTop="@dimen/default_4"
     android:layout_marginBottom="@dimen/default_4"
     android:layout_marginLeft="@dimen/default_8"
     android:layout_marginRight="@dimen/default_8"
+    android:layout_marginTop="@dimen/default_4"
     android:background="@color/tab_file"
+    android:stateListAnimator="@anim/tab_music_elevation"
     android:transitionName="transitionRoot"
-    app:cardCornerRadius="4dp"
-    android:stateListAnimator="@anim/tab_music_elevation">
+    app:cardCornerRadius="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -28,10 +28,10 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
             android:contentDescription="@string/image_description"
             android:src="@drawable/file_default"
-            android:transitionName="transitionIcon"
-            android:layout_marginLeft="20dp"/>
+            android:transitionName="transitionIcon"/>
 
         <LinearLayout
             android:id="@+id/item"
@@ -39,16 +39,14 @@
             android:layout_height="match_parent"
             android:layout_toLeftOf="@+id/more"
             android:layout_toRightOf="@+id/icon"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/icon"
-                android:layout_toEndOf="@+id/icon"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="4dp"
                 android:ellipsize="marquee"
                 android:focusable="false"
                 android:gravity="top"
@@ -60,7 +58,8 @@
                 android:textColor="#000"
                 android:textSize="16sp"
                 android:transitionName="transitionTitle"
-                tools:text="Title"/>
+                tools:text="Title"
+                android:layout_marginBottom="4dp"/>
 
             <TextView
                 android:id="@+id/subtitle"
@@ -68,8 +67,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/icon"
                 android:layout_marginBottom="2dp"
-                android:layout_toEndOf="@+id/icon"
-                android:layout_toStartOf="@+id/more"
                 android:ellipsize="marquee"
                 android:focusable="false"
                 android:gravity="bottom"
@@ -90,9 +87,9 @@
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
+            android:background="?android:attr/selectableItemBackground"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:background="?android:attr/selectableItemBackground">
+            android:paddingRight="10dp">
 
             <ImageView
                 android:layout_width="35dp"

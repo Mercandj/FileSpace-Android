@@ -33,14 +33,6 @@ import android.widget.DatePicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import mercandalli.com.filespace.listeners.IListener;
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.listeners.IStringListener;
-import mercandalli.com.filespace.models.ModelFile;
-import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.StringPair;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -55,12 +47,19 @@ import java.util.List;
 import java.util.TimeZone;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listeners.IListener;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.listeners.IStringListener;
+import mercandalli.com.filespace.models.ModelFile;
+import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.utils.StringPair;
 
 public class DialogAddFileManager extends Dialog {
 
-    ApplicationActivity app;
-    File file;
-    IListener dismissListener;
+    private ApplicationActivity app;
+    private File file;
+    private IListener dismissListener;
 
     public DialogAddFileManager(final ApplicationActivity app, final int id_file_parent, final IPostExecuteListener listener, final IListener dismissListener) {
         super(app, android.R.style.Theme_Translucent_NoTitleBar);
@@ -71,9 +70,9 @@ public class DialogAddFileManager extends Dialog {
         this.setCancelable(true);
 
         Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.dialog_add_file_open);
-        (this.findViewById(R.id.relativeLayout)).startAnimation(animOpen);
+        (this.findViewById(R.id.root)).startAnimation(animOpen);
 
-        (this.findViewById(R.id.relativeLayout)).setOnClickListener(new View.OnClickListener() {
+        (this.findViewById(R.id.root)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogAddFileManager.this.dismiss();

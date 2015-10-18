@@ -3,152 +3,148 @@
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:id="@+id/relativeLayout">
+<FrameLayout
+    android:id="@+id/root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:orientation="vertical"
-        android:layout_alignParentStart="true"
         android:background="#fff"
+        android:orientation="vertical"
         android:translationZ="16dp"
-        android:layout_alignParentBottom="true">
+        android:layout_gravity="center_horizontal|bottom">
 
         <RelativeLayout
+            android:id="@+id/rl_title"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:orientation="vertical"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:id="@+id/rl_title"
-            android:background="#ddd">
+            android:background="#ddd"
+            android:orientation="vertical">
 
             <TextView
+                android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New"
-                android:id="@+id/textView"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="0.5dp"
+                android:background="#fff"
                 android:gravity="center_vertical"
                 android:paddingLeft="20dp"
-                android:background="#fff"
-                android:layout_marginBottom="0.5dp"
+                android:text="New"
                 android:textColor="#666"/>
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/relativeLayout2"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:orientation="vertical"
-            android:layout_below="@+id/rl_title"
-            android:layout_alignParentStart="true"
-            android:id="@+id/relativeLayout2">
+            android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/addDirectory"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:orientation="vertical"
-                android:id="@+id/addDirectory"
-                android:layout_marginStart="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:padding="2dp"
+                android:layout_marginStart="40dp"
                 android:background="@drawable/list_button_ripple"
-                android:clickable="true">
+                android:clickable="true"
+                android:orientation="vertical"
+                android:padding="2dp">
 
                 <ImageView
+                    android:id="@+id/ic_addDirectory"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/ic_createpanel_folder"
-                    android:id="@+id/ic_addDirectory"
+                    android:layout_centerHorizontal="true"
                     android:scaleType="fitXY"
-                    android:layout_centerHorizontal="true"/>
+                    android:src="@drawable/ic_createpanel_folder"/>
 
                 <TextView
+                    android:id="@+id/txt_addDirectory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Folder"
-                    android:id="@+id/txt_addDirectory"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="3dp"
-                    android:textColor="#666"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="true"
-                    android:gravity="center_vertical|center_horizontal"/>
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Folder"
+                    android:textColor="#666"/>
 
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/uploadFile"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:orientation="vertical"
-                android:id="@+id/uploadFile"
                 android:layout_alignTop="@+id/addDirectory"
                 android:layout_centerHorizontal="true"
-                android:padding="2dp"
                 android:background="@drawable/list_button_ripple"
-                android:clickable="true">
+                android:clickable="true"
+                android:orientation="vertical"
+                android:padding="2dp">
 
                 <ImageView
+                    android:id="@+id/ic_uploadFile"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:id="@+id/ic_uploadFile"
-                    android:src="@drawable/ic_createpanel_upload"
+                    android:layout_centerHorizontal="true"
                     android:scaleType="fitXY"
-                    android:layout_centerHorizontal="true"/>
+                    android:src="@drawable/ic_createpanel_upload"/>
 
                 <TextView
+                    android:id="@+id/txt_uploadFile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Upload"
-                    android:id="@+id/txt_uploadFile"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="3dp"
-                    android:textColor="#666"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="true"
-                    android:gravity="center_vertical|center_horizontal"/>
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Upload"
+                    android:textColor="#666"/>
 
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/scan"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:orientation="vertical"
-                android:id="@+id/scan"
-                android:layout_alignTop="@+id/addDirectory"
                 android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/addDirectory"
                 android:layout_marginEnd="40dp"
-                android:padding="2dp"
                 android:background="@drawable/list_button_ripple"
-                android:clickable="true">
+                android:clickable="true"
+                android:orientation="vertical"
+                android:padding="2dp">
 
                 <ImageView
+                    android:id="@+id/ic_scan"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:id="@+id/ic_scan"
-                    android:src="@drawable/ic_createpanel_scan"
+                    android:layout_centerHorizontal="true"
                     android:scaleType="fitXY"
-                    android:layout_centerHorizontal="true"/>
+                    android:src="@drawable/ic_createpanel_scan"/>
 
                 <TextView
+                    android:id="@+id/txt_scan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Scan"
-                    android:id="@+id/txt_scan"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="3dp"
-                    android:textColor="#666"
-                    android:layout_alignParentStart="true"
                     android:layout_alignParentEnd="true"
-                    android:gravity="center_vertical|center_horizontal"/>
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Scan"
+                    android:textColor="#666"/>
 
             </RelativeLayout>
 
@@ -159,80 +155,78 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:orientation="vertical"
-            android:layout_below="@+id/relativeLayout2"
-            android:layout_alignParentStart="true">
+            android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/txtFile"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:orientation="vertical"
-                android:id="@+id/txtFile"
-                android:layout_marginStart="40dp"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:padding="2dp"
+                android:layout_marginStart="40dp"
                 android:background="@drawable/list_button_ripple"
-                android:clickable="true">
+                android:clickable="true"
+                android:orientation="vertical"
+                android:padding="2dp">
 
                 <ImageView
+                    android:id="@+id/ic_txtFile"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/ic_createpanel_doc"
-                    android:id="@+id/ic_txtFile"
+                    android:layout_centerHorizontal="true"
                     android:scaleType="fitXY"
-                    android:layout_centerHorizontal="true"/>
+                    android:src="@drawable/ic_createpanel_doc"/>
 
                 <TextView
+                    android:id="@+id/txt_txtFile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Text"
-                    android:id="@+id/txt_txtFile"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="3dp"
-                    android:textColor="#666"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="true"
-                    android:gravity="center_vertical|center_horizontal"/>
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Text"
+                    android:textColor="#666"/>
 
             </RelativeLayout>
 
 
             <RelativeLayout
+                android:id="@+id/addTimer"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:orientation="vertical"
-                android:id="@+id/addTimer"
                 android:layout_alignTop="@+id/txtFile"
                 android:layout_centerHorizontal="true"
-                android:padding="2dp"
                 android:background="@drawable/list_button_ripple"
-                android:clickable="true">
+                android:clickable="true"
+                android:orientation="vertical"
+                android:padding="2dp">
 
                 <ImageView
+                    android:id="@+id/ic_timer"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:id="@+id/ic_timer"
-                    android:src="@drawable/ic_createpanel"
+                    android:layout_centerHorizontal="true"
                     android:scaleType="fitXY"
-                    android:layout_centerHorizontal="true"/>
+                    android:src="@drawable/ic_createpanel"/>
 
                 <TextView
+                    android:id="@+id/txt_timer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Timer"
-                    android:id="@+id/txt_timer"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="3dp"
-                    android:textColor="#666"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="true"
-                    android:gravity="center_vertical|center_horizontal"/>
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Timer"
+                    android:textColor="#666"/>
 
                 <ProgressBar
+                    android:id="@+id/progressBar"
                     android:layout_width="17dp"
                     android:layout_height="17dp"
-                    android:id="@+id/progressBar"
                     android:layout_alignBottom="@+id/ic_timer"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="7dp"/>
@@ -240,41 +234,41 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/addArticle"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:orientation="vertical"
-                android:id="@+id/addArticle"
-                android:padding="2dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/addTimer"
+                android:layout_marginRight="40dp"
                 android:background="@drawable/list_button_ripple"
                 android:clickable="true"
-                android:layout_alignTop="@+id/addTimer"
-                android:layout_alignParentEnd="true"
-                android:layout_marginRight="40dp">
+                android:orientation="vertical"
+                android:padding="2dp">
 
                 <ImageView
+                    android:id="@+id/ic_article"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:id="@+id/ic_article"
-                    android:src="@drawable/ic_createpanel"
+                    android:layout_centerHorizontal="true"
                     android:scaleType="fitXY"
-                    android:layout_centerHorizontal="true"/>
+                    android:src="@drawable/ic_createpanel"/>
 
                 <TextView
+                    android:id="@+id/txt_arcticle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Article"
-                    android:id="@+id/txt_arcticle"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="3dp"
-                    android:textColor="#666"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="true"
-                    android:gravity="center_vertical|center_horizontal"/>
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="Article"
+                    android:textColor="#666"/>
 
             </RelativeLayout>
 
         </RelativeLayout>
 
 
-    </RelativeLayout>
-</RelativeLayout>
+    </LinearLayout>
+</FrameLayout>
