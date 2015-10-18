@@ -147,7 +147,7 @@ public class DialogAddGenealogyPerson extends Dialog {
                 Toast.makeText(app, "Select the mother", Toast.LENGTH_SHORT).show();
                 GenealogyListFragment.resetMode();
                 GenealogyListFragment.MODE_SELECTION_MOTHER = true;
-                app.dialog.hide();
+                app.mDialog.hide();
             }
         });
 
@@ -158,7 +158,7 @@ public class DialogAddGenealogyPerson extends Dialog {
                 Toast.makeText(app, "Select the father", Toast.LENGTH_SHORT).show();
                 GenealogyListFragment.resetMode();
                 GenealogyListFragment.MODE_SELECTION_FATHER = true;
-                app.dialog.hide();
+                app.mDialog.hide();
             }
         });
 
@@ -168,7 +168,7 @@ public class DialogAddGenealogyPerson extends Dialog {
                 Toast.makeText(app, "Select a partner", Toast.LENGTH_SHORT).show();
                 GenealogyListFragment.resetMode();
                 GenealogyListFragment.MODE_SELECTION_PARTNER = true;
-                app.dialog.hide();
+                app.mDialog.hide();
             }
         });
 

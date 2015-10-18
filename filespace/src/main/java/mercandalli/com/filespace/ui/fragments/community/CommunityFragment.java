@@ -230,7 +230,7 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public void add() {
-        app.dialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
+        app.mDialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
             @Override
             public void execute(JSONObject json, String body) {
                 if (json != null)

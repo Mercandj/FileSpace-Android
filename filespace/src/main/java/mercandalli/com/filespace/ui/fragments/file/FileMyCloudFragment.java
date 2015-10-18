@@ -570,7 +570,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                     mFilesToCutList.clear();
                 } else {
                     fab.hide();
-                    FileMyCloudFragment.this.app.dialog = new DialogAddFileManager(app, FileMyCloudFragment.this.mIdFileDirectoryStack.peek(), new IPostExecuteListener() {
+                    FileMyCloudFragment.this.app.mDialog = new DialogAddFileManager(app, FileMyCloudFragment.this.mIdFileDirectoryStack.peek(), new IPostExecuteListener() {
                         @Override
                         public void execute(JSONObject json, String body) {
                             if (json != null)

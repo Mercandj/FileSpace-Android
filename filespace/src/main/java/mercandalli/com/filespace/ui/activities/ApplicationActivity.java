@@ -56,8 +56,8 @@ import mercandalli.com.filespace.utils.StringPair;
  */
 public abstract class ApplicationActivity extends AppCompatActivity {
 
-    private Config config;
-    public Dialog dialog;
+    private Config mConfig;
+    public Dialog mDialog;
 
     /* OnResult code */
     public final int REQUEST_TAKE_PHOTO = 1;
@@ -65,7 +65,7 @@ public abstract class ApplicationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        config = new Config(this);
+        mConfig = new Config(this);
 
         //region Handle NFC
         Intent intent = getIntent();
@@ -91,16 +91,17 @@ public abstract class ApplicationActivity extends AppCompatActivity {
     }
 
     public Config getConfig() {
-        if (config == null)
-            config = new Config(this);
-        return config;
+        if (mConfig == null) {
+            mConfig = new Config(this);
+        }
+        return mConfig;
     }
 
     public void alert(String title, String message, String positive, final IListener positiveListener, String negative, final IListener negativeListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
         builder.setMessage(message);
-        if (positive != null)
+        if (positive != null) {
             builder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     if (positiveListener != null)
@@ -108,7 +109,8 @@ public abstract class ApplicationActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }
             });
-        if (negative != null)
+        }
+        if (negative != null) {
             builder.setNegativeButton(negative, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -117,6 +119,7 @@ public abstract class ApplicationActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }
             });
+        }
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -125,7 +128,7 @@ public abstract class ApplicationActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
         builder.setMessage(message);
-        if (positive != null)
+        if (positive != null) {
             builder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     if (positiveListener != null)
@@ -133,7 +136,8 @@ public abstract class ApplicationActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }
             });
-        if (negative != null)
+        }
+        if (negative != null) {
             builder.setNegativeButton(negative, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -142,6 +146,7 @@ public abstract class ApplicationActivity extends AppCompatActivity {
                     dialog.dismiss();
                 }
             });
+        }
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -158,8 +163,9 @@ public abstract class ApplicationActivity extends AppCompatActivity {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
         alert.setTitle(title);
-        if (message != null)
+        if (message != null) {
             alert.setMessage(message);
+        }
 
         // Set an EditText view to get user input
         final EditText input = new EditText(this);
@@ -210,24 +216,23 @@ public abstract class ApplicationActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            if (photoFile != null) {
-                if (photoFile.getFile() != null) {
-                    List<StringPair> parameters = photoFile.getForUpload();
-                    (new TaskPost(this, getConfig().getUrlServer() + getConfig().routeFile, new IPostExecuteListener() {
-                        @Override
-                        public void execute(JSONObject json, String body) {
-                            if (photoFileListener != null)
-                                photoFileListener.execute(json, body);
-                        }
-                    }, parameters, photoFile.getFile())).execute();
-                }
-            } else
+            if (mPhotoFile != null && mPhotoFile.getFile() != null) {
+                List<StringPair> parameters = mPhotoFile.getForUpload();
+                (new TaskPost(this, getConfig().getUrlServer() + getConfig().routeFile, new IPostExecuteListener() {
+                    @Override
+                    public void execute(JSONObject json, String body) {
+                        if (mPhotoFileListener != null)
+                            mPhotoFileListener.execute(json, body);
+                    }
+                }, parameters, mPhotoFile.getFile())).execute();
+            } else {
                 Toast.makeText(this, this.getString(R.string.no_file), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
-    public ModelFile photoFile = null;
-    public IPostExecuteListener photoFileListener = null;
+    public ModelFile mPhotoFile = null;
+    public IPostExecuteListener mPhotoFileListener = null;
 
     public ModelFile createImageFile() throws IOException {
         // Create an image file name
@@ -245,7 +250,7 @@ public abstract class ApplicationActivity extends AppCompatActivity {
     }
 
     public boolean isLogged() {
-        return config != null && config.isLogged();
+        return mConfig != null && mConfig.isLogged();
     }
 
 }

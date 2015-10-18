@@ -385,7 +385,7 @@ public class FileCloudFragment extends FabFragment implements
         switch (fab_id) {
             case 0:
                 fab.hide();
-                FileCloudFragment.this.app.dialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
+                FileCloudFragment.this.app.mDialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
                     @Override
                     public void execute(JSONObject json, String body) {
                         if (json != null)

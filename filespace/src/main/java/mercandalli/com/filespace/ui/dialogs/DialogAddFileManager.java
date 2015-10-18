@@ -82,7 +82,7 @@ public class DialogAddFileManager extends Dialog {
         (this.findViewById(R.id.uploadFile)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.dialog = new DialogUpload(app, id_file_parent, listener);
+                app.mDialog = new DialogUpload(app, id_file_parent, listener);
                 DialogAddFileManager.this.dismiss();
             }
         });
@@ -132,17 +132,17 @@ public class DialogAddFileManager extends Dialog {
                 // Ensure that there's a camera activity to handle the intent
                 if (takePictureIntent.resolveActivity(app.getPackageManager()) != null) {
                     // Create the File where the photo should go
-                    app.photoFile = new ModelFile(app);
+                    app.mPhotoFile = new ModelFile(app);
                     try {
-                        app.photoFile = app.createImageFile();
+                        app.mPhotoFile = app.createImageFile();
                     } catch (IOException ex) {
                         // Error occurred while creating the File
                     }
                     // Continue only if the File was successfully created
-                    if (app.photoFile != null) {
+                    if (app.mPhotoFile != null) {
                         if (listener != null)
-                            app.photoFileListener = listener;
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(app.photoFile.getFile()));
+                            app.mPhotoFileListener = listener;
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(app.mPhotoFile.getFile()));
                         app.startActivityForResult(takePictureIntent, app.REQUEST_TAKE_PHOTO);
                     }
                 }

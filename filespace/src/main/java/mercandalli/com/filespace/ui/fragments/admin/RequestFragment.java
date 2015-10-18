@@ -67,7 +67,7 @@ public class RequestFragment extends BackFragment {
         ((ImageButton) rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.dialog = new DialogRequest(app, new IPostExecuteListener() {
+                app.mDialog = new DialogRequest(app, new IPostExecuteListener() {
                     @Override
                     public void execute(JSONObject json, String body) {
                         if (json != null)

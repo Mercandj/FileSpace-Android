@@ -132,7 +132,7 @@ public class ModelGenealogyPerson extends Model {
     public void modify(IPostExecuteListener listener) {
         if (this.app != null) {
             if (this.app.getConfig().isUserAdmin() && this.id != this.app.getConfig().getUserId()) {
-                app.dialog = new DialogAddGenealogyPerson(app, listener, app.getString(R.string.modify), this);
+                app.mDialog = new DialogAddGenealogyPerson(app, listener, app.getString(R.string.modify), this);
                 return;
             }
         }

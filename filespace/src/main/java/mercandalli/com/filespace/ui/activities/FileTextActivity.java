@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.ui.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -32,6 +33,8 @@ import org.json.JSONObject;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.models.ModelFile;
+import mercandalli.com.filespace.models.ModelFileTypeENUM;
 import mercandalli.com.filespace.net.TaskGet;
 
 /**
@@ -39,18 +42,30 @@ import mercandalli.com.filespace.net.TaskGet;
  */
 public class FileTextActivity extends ApplicationActivity {
 
+    private static final String EXTRA_MODEL_FILE_URL = "FileTextActivity.Extra.EXTRA_MODEL_FILE_URL";
+    private static final String EXTRA_MODEL_FILE_ONLINE = "FileTextActivity.Extra.EXTRA_MODEL_FILE_ONLINE";
+    private static final String EXTRA_MODEL_FILE_ARTICLE_CONTENT_1 = "FileTextActivity.Extra.EXTRA_MODEL_FILE_ARTICLE_CONTENT_1";
+
     private String mInitate;
     private String mUrl;
-    private String login;
-    private String password;
     private boolean online;
+
+    public static void startForSelection(ApplicationActivity app, final ModelFile modelFile, boolean isOnline) {
+        final Intent intent = new Intent(app, FileTextActivity.class);
+        intent.putExtra(EXTRA_MODEL_FILE_URL, "" + modelFile.onlineUrl);
+        if (modelFile.type.equals(ModelFileTypeENUM.FILESPACE.type))
+            intent.putExtra(EXTRA_MODEL_FILE_ARTICLE_CONTENT_1, "" + modelFile.content.article.article_content_1);
+        intent.putExtra(EXTRA_MODEL_FILE_ONLINE, isOnline);
+        app.startActivity(intent);
+        app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_text);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -66,16 +81,14 @@ public class FileTextActivity extends ApplicationActivity {
             finish();
             overridePendingTransition(R.anim.right_in, R.anim.right_out);
             return;
-        } else if (extras.containsKey("ARTICLE_CONTENT_1")) {
-            mInitate = extras.getString("ARTICLE_CONTENT_1");
+        } else if (extras.containsKey(EXTRA_MODEL_FILE_ARTICLE_CONTENT_1)) {
+            mInitate = extras.getString(EXTRA_MODEL_FILE_ARTICLE_CONTENT_1);
             ((EditText) findViewById(R.id.txt)).setText("" + mInitate);
             findViewById(R.id.txt).setVisibility(View.VISIBLE);
             findViewById(R.id.circularProgressBar).setVisibility(View.GONE);
         } else {
-            this.mUrl = extras.getString("URL_FILE");
-            this.login = extras.getString("LOGIN");
-            this.password = extras.getString("PASSWORD");
-            this.online = extras.getBoolean("ONLINE");
+            this.mUrl = extras.getString(EXTRA_MODEL_FILE_URL);
+            this.online = extras.getBoolean(EXTRA_MODEL_FILE_ONLINE);
 
             new TaskGet(this, this.getConfig().getUser(), this.mUrl, new IPostExecuteListener() {
                 @Override

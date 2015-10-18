@@ -219,13 +219,7 @@ public class ModelFile extends Model implements Parcelable {
 
     public void executeOnline(ArrayList<ModelFile> files, View view) {
         if (this.type.equals(ModelFileTypeENUM.TEXT.type)) {
-            Intent intent = new Intent(this.app, FileTextActivity.class);
-            intent.putExtra("URL_FILE", "" + this.onlineUrl);
-            intent.putExtra("LOGIN", "" + this.app.getConfig().getUser().getAccessLogin());
-            intent.putExtra("PASSWORD", "" + this.app.getConfig().getUser().getAccessPassword());
-            intent.putExtra("ONLINE", true);
-            this.app.startActivity(intent);
-            this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+            FileTextActivity.startForSelection(app, this, true);
         } else if (this.type.equals(ModelFileTypeENUM.PICTURE.type)) {
             Intent intent = new Intent(this.app, FilePictureActivity.class);
             intent.putExtra("ID", this.id);
@@ -278,13 +272,7 @@ public class ModelFile extends Model implements Parcelable {
                     this.app.startActivity(intent);
                     this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                 } else if (!StringUtils.isNullOrEmpty(content.article.article_content_1)) {
-                    Intent intent = new Intent(this.app, FileTextActivity.class);
-                    intent.putExtra("ARTICLE_CONTENT_1", "" + content.article.article_content_1);
-                    intent.putExtra("LOGIN", "" + this.app.getConfig().getUser().getAccessLogin());
-                    intent.putExtra("PASSWORD", "" + this.app.getConfig().getUser().getAccessPassword());
-                    intent.putExtra("ONLINE", true);
-                    this.app.startActivity(intent);
-                    this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                    FileTextActivity.startForSelection(app, this, true);
                 }
             }
         }

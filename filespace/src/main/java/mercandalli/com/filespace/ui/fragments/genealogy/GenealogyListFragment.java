@@ -255,25 +255,25 @@ public class GenealogyListFragment extends FabFragment {
                 @Override
                 public void onItemClick(View view, int position) {
                     if (MODE_SELECTION_FATHER) {
-                        if (app.dialog != null) {
-                            if (app.dialog instanceof DialogAddGenealogyPerson) {
-                                ((DialogAddGenealogyPerson) app.dialog).setFather(list.get(position));
-                                app.dialog.show();
+                        if (app.mDialog != null) {
+                            if (app.mDialog instanceof DialogAddGenealogyPerson) {
+                                ((DialogAddGenealogyPerson) app.mDialog).setFather(list.get(position));
+                                app.mDialog.show();
                             }
                         }
 
                     } else if (MODE_SELECTION_MOTHER) {
-                        if (app.dialog != null) {
-                            if (app.dialog instanceof DialogAddGenealogyPerson) {
-                                ((DialogAddGenealogyPerson) app.dialog).setMother(list.get(position));
-                                app.dialog.show();
+                        if (app.mDialog != null) {
+                            if (app.mDialog instanceof DialogAddGenealogyPerson) {
+                                ((DialogAddGenealogyPerson) app.mDialog).setMother(list.get(position));
+                                app.mDialog.show();
                             }
                         }
                     } else if (MODE_SELECTION_PARTNER) {
-                        if (app.dialog != null) {
-                            if (app.dialog instanceof DialogAddGenealogyPerson) {
-                                ((DialogAddGenealogyPerson) app.dialog).addPartner(list.get(position));
-                                app.dialog.show();
+                        if (app.mDialog != null) {
+                            if (app.mDialog instanceof DialogAddGenealogyPerson) {
+                                ((DialogAddGenealogyPerson) app.mDialog).addPartner(list.get(position));
+                                app.mDialog.show();
                             }
                         }
                     } else {
@@ -334,7 +334,7 @@ public class GenealogyListFragment extends FabFragment {
     }
 
     public void add() {
-        app.dialog = new DialogAddGenealogyPerson(app, new IPostExecuteListener() {
+        app.mDialog = new DialogAddGenealogyPerson(app, new IPostExecuteListener() {
             @Override
             public void execute(JSONObject json, String body) {
                 refreshList();
