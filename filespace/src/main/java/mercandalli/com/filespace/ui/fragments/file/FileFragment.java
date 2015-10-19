@@ -92,7 +92,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.fragment_file_app_bar_layout);
         coordinatorLayoutView = rootView.findViewById(R.id.fragment_file_coordinator_layout);
 
-        final FileManagerFragmentPagerAdapter mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
+        final FileManagerFragmentPagerAdapter mPagerAdapter = new FileManagerFragmentPagerAdapter(getChildFragmentManager(), app);
 
         mViewMode = ((app.getConfig().getUserFileModeView() > -1) ? app.getConfig().getUserFileModeView() : Const.MODE_LIST);
 
@@ -231,6 +231,9 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
             refreshFab(position);
         } else {
             refreshFab(position + 2);
+        }
+        if (listFragment[position] instanceof FileLocalMusicFragment) {
+
         }
     }
 
