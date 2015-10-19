@@ -48,7 +48,7 @@ public class NasaUtils {
                     getNasaPhoto(date),
                     new IPostExecuteListener() {
                         @Override
-                        public void execute(JSONObject json, String body) {
+                        public void onPostExecute(JSONObject json, String body) {
                             if (json == null)
                                 return;
                             final ModelNasaImage modelNasaImage = new ModelNasaImage(json, date);

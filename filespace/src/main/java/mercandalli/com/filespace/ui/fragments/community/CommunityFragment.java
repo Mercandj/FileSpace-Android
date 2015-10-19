@@ -232,7 +232,7 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     public void add() {
         app.mDialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
             @Override
-            public void execute(JSONObject json, String body) {
+            public void onPostExecute(JSONObject json, String body) {
                 if (json != null)
                     refreshListServer();
             }

@@ -220,9 +220,9 @@ public abstract class ApplicationActivity extends AppCompatActivity {
                 List<StringPair> parameters = mPhotoFile.getForUpload();
                 (new TaskPost(this, getConfig().getUrlServer() + getConfig().routeFile, new IPostExecuteListener() {
                     @Override
-                    public void execute(JSONObject json, String body) {
+                    public void onPostExecute(JSONObject json, String body) {
                         if (mPhotoFileListener != null)
-                            mPhotoFileListener.execute(json, body);
+                            mPhotoFileListener.onPostExecute(json, body);
                     }
                 }, parameters, mPhotoFile.getFile())).execute();
             } else {

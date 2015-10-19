@@ -56,7 +56,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
                         this.app.getConfig().getUrlServer() + app.getConfig().routeRobotics + "/18",
                         new IPostExecuteListener() {
                             @Override
-                            public void execute(JSONObject json, String body) {
+                            public void onPostExecute(JSONObject json, String body) {
                                 try {
                                     if (json.has("result")) {
                                         JSONArray result = json.getJSONArray("result");
@@ -86,7 +86,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
                         this.app.getConfig().getUrlServer() + this.app.getConfig().routeRobotics + "/18",
                         new IPostExecuteListener() {
                             @Override
-                            public void execute(JSONObject json, String body) {
+                            public void onPostExecute(JSONObject json, String body) {
                                 speak("Je viens d'allumer la LED. Je reste à votre disposition.");
                             }
                         },
@@ -104,7 +104,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
                         this.app.getConfig().getUrlServer() + this.app.getConfig().routeRobotics + "/18",
                         new IPostExecuteListener() {
                             @Override
-                            public void execute(JSONObject json, String body) {
+                            public void onPostExecute(JSONObject json, String body) {
                                 speak("Je viens d'éteindre la LED. Je reste à votre disposition.");
                             }
                         },

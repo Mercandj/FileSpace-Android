@@ -146,7 +146,7 @@ public class ConversationActivity extends ApplicationActivity {
 
                     new TaskPost(ConversationActivity.this, url, new IPostExecuteListener() {
                         @Override
-                        public void execute(JSONObject json, String body) {
+                        public void onPostExecute(JSONObject json, String body) {
                             refreshList();
                         }
                     }, parameters).execute();
@@ -206,7 +206,7 @@ public class ConversationActivity extends ApplicationActivity {
                     this.url,
                     new IPostExecuteListener() {
                         @Override
-                        public void execute(JSONObject json, String body) {
+                        public void onPostExecute(JSONObject json, String body) {
                             list = new ArrayList<>();
                             try {
                                 if (json != null) {

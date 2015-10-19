@@ -111,7 +111,7 @@ public class GenealogyBigTreeFragment extends FabFragment {
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeGenealogy + "/" + genealogyPerson.id,
                     new IPostExecuteListener() {
                         @Override
-                        public void execute(JSONObject json, String body) {
+                        public void onPostExecute(JSONObject json, String body) {
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {

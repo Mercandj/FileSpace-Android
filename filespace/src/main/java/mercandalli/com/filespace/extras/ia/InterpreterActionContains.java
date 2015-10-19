@@ -75,7 +75,7 @@ public class InterpreterActionContains extends Interpreter {
 
                         new TaskPost(app, url, new IPostExecuteListener() {
                             @Override
-                            public void execute(JSONObject json, String body) {
+                            public void onPostExecute(JSONObject json, String body) {
 
                             }
                         }, parameters).execute();

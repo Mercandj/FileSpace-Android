@@ -166,7 +166,7 @@ public class InscriptionFragment extends Fragment {
         if (NetUtils.isInternetConnection(app))
             (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
                 @Override
-                public void execute(JSONObject json, String body) {
+                public void onPostExecute(JSONObject json, String body) {
                     try {
                         if (json != null) {
                             if (json.has("succeed")) {

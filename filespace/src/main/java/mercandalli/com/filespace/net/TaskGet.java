@@ -150,14 +150,13 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String response) {
         Log.d("onPostExecute", "" + response);
-        if (response == null) {
-            if (this.listener != null)
-                this.listener.execute(null, null);
+        if (response == null && this.listener != null) {
+            this.listener.onPostExecute(null, null);
         } else {
             try {
                 JSONObject json = new JSONObject(response);
                 if (this.listener != null)
-                    this.listener.execute(json, response);
+                    this.listener.onPostExecute(json, response);
                 if (json.has("toast"))
                     if (!json.getString("toast").equals(""))
                         Toast.makeText(app, json.getString("toast"), Toast.LENGTH_SHORT).show();
@@ -177,7 +176,7 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
             } catch (JSONException e) {
                 e.printStackTrace();
                 if (this.listener != null)
-                    this.listener.execute(null, response);
+                    this.listener.onPostExecute(null, response);
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             }

@@ -135,7 +135,7 @@ public class ProfileFragment extends BackFragment {
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeUser + "/" + this.app.getConfig().getUserId(),
                     new IPostExecuteListener() {
                         @Override
-                        public void execute(JSONObject json, String body) {
+                        public void onPostExecute(JSONObject json, String body) {
                             if (!isAdded())
                                 return;
                             try {
@@ -175,7 +175,7 @@ public class ProfileFragment extends BackFragment {
 
                                                         (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
                                                             @Override
-                                                            public void execute(JSONObject json, String body) {
+                                                            public void onPostExecute(JSONObject json, String body) {
 
                                                             }
                                                         }, parameters)).execute();
@@ -198,7 +198,7 @@ public class ProfileFragment extends BackFragment {
 
                                                 (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
                                                     @Override
-                                                    public void execute(JSONObject json, String body) {
+                                                    public void onPostExecute(JSONObject json, String body) {
 
                                                     }
                                                 }, parameters)).execute();

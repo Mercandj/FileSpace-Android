@@ -83,9 +83,9 @@ public class DialogCreateArticle extends Dialog {
                             app.getConfig().getUrlServer() + app.getConfig().routeFile,
                             new IPostExecuteListener() {
                                 @Override
-                                public void execute(JSONObject json, String body) {
+                                public void onPostExecute(JSONObject json, String body) {
                                     if (listener != null)
-                                        listener.execute(json, body);
+                                        listener.onPostExecute(json, body);
                                 }
                             }
                             , parameters, "text/html; charset=utf-8").execute();

@@ -69,7 +69,7 @@ public class RequestFragment extends BackFragment {
             public void onClick(View v) {
                 app.mDialog = new DialogRequest(app, new IPostExecuteListener() {
                     @Override
-                    public void execute(JSONObject json, String body) {
+                    public void onPostExecute(JSONObject json, String body) {
                         if (json != null)
                             ((EditText) rootView.findViewById(R.id.console)).setText(((EditText) rootView.findViewById(R.id.console)).getText().toString() + "JSON : " + json + "\n\n");
                         else

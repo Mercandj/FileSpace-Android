@@ -288,7 +288,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
                             app.getConfig().getUrlServer() + RoboticsFragment.this.app.getConfig().routeRobotics,
                             new IPostExecuteListener() {
                                 @Override
-                                public void execute(JSONObject json, String body) {
+                                public void onPostExecute(JSONObject json, String body) {
                                     log(body);
                                     handleResponse(RoboticsUtils.parseRaspberry(json));
                                     request_ready = true;
