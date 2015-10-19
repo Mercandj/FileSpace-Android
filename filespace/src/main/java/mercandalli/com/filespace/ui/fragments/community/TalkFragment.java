@@ -134,7 +134,7 @@ public class TalkFragment extends BackFragment {
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeUserConversation,
                     new IPostExecuteListener() {
                         @Override
-                        public void execute(JSONObject json, String body) {
+                        public void onPostExecute(JSONObject json, String body) {
                             list = new ArrayList<>();
                             try {
                                 if (json != null) {
@@ -188,7 +188,7 @@ public class TalkFragment extends BackFragment {
 
                             new TaskPost(app, url, new IPostExecuteListener() {
                                 @Override
-                                public void execute(JSONObject json, String body) {
+                                public void onPostExecute(JSONObject json, String body) {
 
                                 }
                             }, parameters).execute();

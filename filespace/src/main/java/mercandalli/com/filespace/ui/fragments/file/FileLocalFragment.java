@@ -212,7 +212,7 @@ public class FileLocalFragment extends FabFragment
                                                             List<StringPair> parameters = modelFile.getForUpload();
                                                             (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
                                                                 @Override
-                                                                public void execute(JSONObject json, String body) {
+                                                                public void onPostExecute(JSONObject json, String body) {
 
                                                                 }
                                                             }, parameters, modelFile.getFile())).execute();
@@ -229,7 +229,7 @@ public class FileLocalFragment extends FabFragment
                                                 public void execute(String text) {
                                                     modelFile.rename(text, new IPostExecuteListener() {
                                                         @Override
-                                                        public void execute(JSONObject json, String body) {
+                                                        public void onPostExecute(JSONObject json, String body) {
                                                             if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
                                                                 mFilesToCutList.clear();
                                                                 refreshFab();
@@ -250,7 +250,7 @@ public class FileLocalFragment extends FabFragment
                                                 public void execute() {
                                                     modelFile.delete(new IPostExecuteListener() {
                                                         @Override
-                                                        public void execute(JSONObject json, String body) {
+                                                        public void onPostExecute(JSONObject json, String body) {
                                                             if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
                                                                 mFilesToCutList.clear();
                                                                 refreshFab();
@@ -377,7 +377,7 @@ public class FileLocalFragment extends FabFragment
                                                                 List<StringPair> parameters = modelFile.getForUpload();
                                                                 (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
                                                                     @Override
-                                                                    public void execute(JSONObject json, String body) {
+                                                                    public void onPostExecute(JSONObject json, String body) {
 
                                                                     }
                                                                 }, parameters, modelFile.getFile())).execute();
@@ -391,7 +391,7 @@ public class FileLocalFragment extends FabFragment
                                                     public void execute(String text) {
                                                         modelFile.rename(text, new IPostExecuteListener() {
                                                             @Override
-                                                            public void execute(JSONObject json, String body) {
+                                                            public void onPostExecute(JSONObject json, String body) {
                                                                 if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
                                                                     mFilesToCutList.clear();
                                                                     refreshFab();
@@ -408,7 +408,7 @@ public class FileLocalFragment extends FabFragment
                                                     public void execute() {
                                                         modelFile.delete(new IPostExecuteListener() {
                                                             @Override
-                                                            public void execute(JSONObject json, String body) {
+                                                            public void onPostExecute(JSONObject json, String body) {
                                                                 if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
                                                                     mFilesToCutList.clear();
                                                                     refreshFab();

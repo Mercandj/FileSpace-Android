@@ -140,7 +140,7 @@ public class UserLocationFragment extends BackFragment {
 
                                                 (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
                                                     @Override
-                                                    public void execute(JSONObject json, String body) {
+                                                    public void onPostExecute(JSONObject json, String body) {
 
                                                     }
                                                 }, parameters)).execute();
@@ -160,7 +160,7 @@ public class UserLocationFragment extends BackFragment {
 
                                         (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
                                             @Override
-                                            public void execute(JSONObject json, String body) {
+                                            public void onPostExecute(JSONObject json, String body) {
                                                 refreshMap();
                                             }
                                         }, parameters)).execute();
@@ -186,7 +186,7 @@ public class UserLocationFragment extends BackFragment {
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeUser,
                     new IPostExecuteListener() {
                         @Override
-                        public void execute(JSONObject json, String body) {
+                        public void onPostExecute(JSONObject json, String body) {
                             List<ModelUserLocation> locations = new ArrayList<>();
                             try {
                                 if (json != null) {

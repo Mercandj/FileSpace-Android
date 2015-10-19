@@ -123,7 +123,7 @@ public class ServerLogsFragment extends BackFragment {
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeUserConnection,
                     new IPostExecuteListener() {
                         @Override
-                        public void execute(JSONObject json, String body) {
+                        public void onPostExecute(JSONObject json, String body) {
                             list = new ArrayList<ModelUserConnection>();
 
                             try {

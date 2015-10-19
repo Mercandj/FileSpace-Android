@@ -412,7 +412,7 @@ public class ModelFile extends Model implements Parcelable {
             else
                 file.delete();
             if (listener != null)
-                listener.execute(null, null);
+                listener.onPostExecute(null, null);
         }
     }
 
@@ -445,7 +445,7 @@ public class ModelFile extends Model implements Parcelable {
             if (parent != null) {
                 file.renameTo(new File(parent.getAbsolutePath(), this.name));
             }
-            listener.execute(null, null);
+            listener.onPostExecute(null, null);
         }
     }
 
@@ -500,7 +500,7 @@ public class ModelFile extends Model implements Parcelable {
             }
         }
         if (listener != null)
-            listener.execute(null, null);
+            listener.onPostExecute(null, null);
     }
 
     public boolean isMine() {

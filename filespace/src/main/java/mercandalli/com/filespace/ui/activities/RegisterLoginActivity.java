@@ -262,7 +262,7 @@ public class RegisterLoginActivity extends ApplicationActivity {
         if (NetUtils.isInternetConnection(this))
             (new TaskPost(this, this.getConfig().getUrlServer() + this.getConfig().routeUser, new IPostExecuteListener() {
                 @Override
-                public void execute(JSONObject json, String body) {
+                public void onPostExecute(JSONObject json, String body) {
                     try {
                         if (json != null) {
                             if (json.has("succeed"))

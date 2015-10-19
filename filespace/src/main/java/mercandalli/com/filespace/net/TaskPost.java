@@ -174,12 +174,12 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
         Log.d("onPostExecute POST", "" + response);
         if (response == null) {
             if (this.listener != null)
-                this.listener.execute(null, null);
+                this.listener.onPostExecute(null, null);
         } else {
             try {
                 JSONObject json = new JSONObject(response);
                 if (this.listener != null)
-                    this.listener.execute(json, response);
+                    this.listener.onPostExecute(json, response);
                 if (json.has("toast"))
                     if (!json.getString("toast").equals(""))
                         Toast.makeText(app, json.getString("toast"), Toast.LENGTH_SHORT).show();
@@ -187,7 +187,7 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
                 e.printStackTrace();
                 Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                 if (this.listener != null)
-                    this.listener.execute(null, response);
+                    this.listener.onPostExecute(null, response);
             }
         }
     }

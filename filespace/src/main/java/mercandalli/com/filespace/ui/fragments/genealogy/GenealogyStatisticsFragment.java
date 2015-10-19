@@ -131,7 +131,7 @@ public class GenealogyStatisticsFragment extends FabFragment {
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeGenealogyStatistics,
                     new IPostExecuteListener() {
                         @Override
-                        public void execute(JSONObject json, String body) {
+                        public void onPostExecute(JSONObject json, String body) {
                             list = new ArrayList<ModelInformation>();
                             list.add(new ModelInformation("Genealogy Statistics", Const.TAB_VIEW_TYPE_SECTION));
                             try {

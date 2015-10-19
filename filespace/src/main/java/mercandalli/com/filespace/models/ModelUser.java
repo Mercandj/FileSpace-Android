@@ -177,6 +177,6 @@ public class ModelUser extends Model {
             }
         }
         if (listener != null)
-            listener.execute(null, null);
+            listener.onPostExecute(null, null);
     }
 }

@@ -143,7 +143,7 @@ public class FileCloudFragment extends FabFragment implements
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile,
                     new IPostExecuteListener() {
                         @Override
-                        public void execute(JSONObject json, String body) {
+                        public void onPostExecute(JSONObject json, String body) {
                             if (!isAdded())
                                 return;
                             mFilesList = new ArrayList<>();
@@ -262,7 +262,7 @@ public class FileCloudFragment extends FabFragment implements
                                                     public void execute(String text) {
                                                         modelFile.rename(text, new IPostExecuteListener() {
                                                             @Override
-                                                            public void execute(JSONObject json, String body) {
+                                                            public void onPostExecute(JSONObject json, String body) {
                                                                 if (filesToCut != null && filesToCut.size() != 0) {
                                                                     filesToCut.clear();
                                                                     refreshFab.execute();
@@ -280,7 +280,7 @@ public class FileCloudFragment extends FabFragment implements
                                                     public void execute() {
                                                         modelFile.delete(new IPostExecuteListener() {
                                                             @Override
-                                                            public void execute(JSONObject json, String body) {
+                                                            public void onPostExecute(JSONObject json, String body) {
                                                                 if (filesToCut != null && filesToCut.size() != 0) {
                                                                     filesToCut.clear();
                                                                     refreshFab.execute();
@@ -310,7 +310,7 @@ public class FileCloudFragment extends FabFragment implements
                                             case 5:
                                                 modelFile.setPublic(!modelFile._public, new IPostExecuteListener() {
                                                     @Override
-                                                    public void execute(JSONObject json, String body) {
+                                                    public void onPostExecute(JSONObject json, String body) {
                                                         FileCloudFragment.this.app.refreshAdapters();
                                                     }
                                                 });
@@ -322,7 +322,7 @@ public class FileCloudFragment extends FabFragment implements
                                                 parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
                                                 (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
                                                     @Override
-                                                    public void execute(JSONObject json, String body) {
+                                                    public void onPostExecute(JSONObject json, String body) {
                                                         try {
                                                             if (json != null)
                                                                 if (json.has("succeed"))
@@ -387,7 +387,7 @@ public class FileCloudFragment extends FabFragment implements
                 fab.hide();
                 FileCloudFragment.this.app.mDialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
                     @Override
-                    public void execute(JSONObject json, String body) {
+                    public void onPostExecute(JSONObject json, String body) {
                         if (json != null)
                             refreshList();
                     }
@@ -491,7 +491,7 @@ public class FileCloudFragment extends FabFragment implements
                                     public void execute(String text) {
                                         modelFile.rename(text, new IPostExecuteListener() {
                                             @Override
-                                            public void execute(JSONObject json, String body) {
+                                            public void onPostExecute(JSONObject json, String body) {
                                                 if (filesToCut != null && filesToCut.size() != 0) {
                                                     filesToCut.clear();
                                                     refreshFab.execute();
@@ -509,7 +509,7 @@ public class FileCloudFragment extends FabFragment implements
                                     public void execute() {
                                         modelFile.delete(new IPostExecuteListener() {
                                             @Override
-                                            public void execute(JSONObject json, String body) {
+                                            public void onPostExecute(JSONObject json, String body) {
                                                 if (filesToCut != null && filesToCut.size() != 0) {
                                                     filesToCut.clear();
                                                     refreshFab.execute();
@@ -539,7 +539,7 @@ public class FileCloudFragment extends FabFragment implements
                             case 5:
                                 modelFile.setPublic(!modelFile._public, new IPostExecuteListener() {
                                     @Override
-                                    public void execute(JSONObject json, String body) {
+                                    public void onPostExecute(JSONObject json, String body) {
                                         FileCloudFragment.this.app.refreshAdapters();
                                     }
                                 });
@@ -551,7 +551,7 @@ public class FileCloudFragment extends FabFragment implements
                                 parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
                                 (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
                                     @Override
-                                    public void execute(JSONObject json, String body) {
+                                    public void onPostExecute(JSONObject json, String body) {
                                         try {
                                             if (json != null)
                                                 if (json.has("succeed"))

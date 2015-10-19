@@ -139,7 +139,7 @@ public class UserFragment extends BackFragment {
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeUser,
                     new IPostExecuteListener() {
                         @Override
-                        public void execute(JSONObject json, String body) {
+                        public void onPostExecute(JSONObject json, String body) {
                             list = new ArrayList<>();
                             try {
                                 if (json != null) {
@@ -202,7 +202,7 @@ public class UserFragment extends BackFragment {
 
                                                     new TaskPost(app, url, new IPostExecuteListener() {
                                                         @Override
-                                                        public void execute(JSONObject json, String body) {
+                                                        public void onPostExecute(JSONObject json, String body) {
 
                                                         }
                                                     }, parameters).execute();
@@ -216,7 +216,7 @@ public class UserFragment extends BackFragment {
                                                     if (app.getConfig().isUserAdmin())
                                                         modelUser.delete(new IPostExecuteListener() {
                                                             @Override
-                                                            public void execute(JSONObject json, String body) {
+                                                            public void onPostExecute(JSONObject json, String body) {
                                                                 UserFragment.this.refreshList();
                                                             }
                                                         });

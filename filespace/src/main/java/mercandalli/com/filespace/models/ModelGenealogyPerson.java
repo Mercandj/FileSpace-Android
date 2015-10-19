@@ -126,7 +126,7 @@ public class ModelGenealogyPerson extends Model {
             }
         }
         if (listener != null)
-            listener.execute(null, null);
+            listener.onPostExecute(null, null);
     }
 
     public void modify(IPostExecuteListener listener) {
@@ -137,7 +137,7 @@ public class ModelGenealogyPerson extends Model {
             }
         }
         if (listener != null)
-            listener.execute(null, null);
+            listener.onPostExecute(null, null);
     }
 
     public String getAllFirstName() {

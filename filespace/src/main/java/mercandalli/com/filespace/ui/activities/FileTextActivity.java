@@ -22,7 +22,6 @@ package mercandalli.com.filespace.ui.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,21 +39,27 @@ import mercandalli.com.filespace.net.TaskGet;
 /**
  * Created by Jonathan on 14/12/2014.
  */
-public class FileTextActivity extends ApplicationActivity {
+public class FileTextActivity extends ApplicationActivity implements IPostExecuteListener {
 
     private static final String EXTRA_MODEL_FILE_URL = "FileTextActivity.Extra.EXTRA_MODEL_FILE_URL";
     private static final String EXTRA_MODEL_FILE_ONLINE = "FileTextActivity.Extra.EXTRA_MODEL_FILE_ONLINE";
     private static final String EXTRA_MODEL_FILE_ARTICLE_CONTENT_1 = "FileTextActivity.Extra.EXTRA_MODEL_FILE_ARTICLE_CONTENT_1";
 
-    private String mInitate;
+    private static final String KEY_SAVED_TEXT = "FileTextActivity.Saved.mInitialText";
+
+    private String mInitialText;
     private String mUrl;
-    private boolean online;
+    private boolean mIsOnline;
+
+    private EditText mEditText;
+    private ProgressBar mProgressBar;
 
     public static void startForSelection(ApplicationActivity app, final ModelFile modelFile, boolean isOnline) {
         final Intent intent = new Intent(app, FileTextActivity.class);
         intent.putExtra(EXTRA_MODEL_FILE_URL, "" + modelFile.onlineUrl);
-        if (modelFile.type.equals(ModelFileTypeENUM.FILESPACE.type))
+        if (modelFile.type.equals(ModelFileTypeENUM.FILESPACE.type)) {
             intent.putExtra(EXTRA_MODEL_FILE_ARTICLE_CONTENT_1, "" + modelFile.content.article.article_content_1);
+        }
         intent.putExtra(EXTRA_MODEL_FILE_ONLINE, isOnline);
         app.startActivity(intent);
         app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
@@ -71,35 +76,44 @@ public class FileTextActivity extends ApplicationActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        mEditText = (EditText) findViewById(R.id.txt);
+        mProgressBar = (ProgressBar) findViewById(R.id.circularProgressBar);
+
         // Visibility
-        ((EditText) findViewById(R.id.txt)).setVisibility(View.GONE);
-        ((ProgressBar) findViewById(R.id.circularProgressBar)).setVisibility(View.VISIBLE);
+        mEditText.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
 
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
-            Log.e("" + getClass().getName(), "extras == null");
             finish();
             overridePendingTransition(R.anim.right_in, R.anim.right_out);
             return;
         } else if (extras.containsKey(EXTRA_MODEL_FILE_ARTICLE_CONTENT_1)) {
-            mInitate = extras.getString(EXTRA_MODEL_FILE_ARTICLE_CONTENT_1);
-            ((EditText) findViewById(R.id.txt)).setText("" + mInitate);
-            findViewById(R.id.txt).setVisibility(View.VISIBLE);
-            findViewById(R.id.circularProgressBar).setVisibility(View.GONE);
+            mInitialText = extras.getString(EXTRA_MODEL_FILE_ARTICLE_CONTENT_1);
+            mEditText.setText(mInitialText);
+            mEditText.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.GONE);
         } else {
-            this.mUrl = extras.getString(EXTRA_MODEL_FILE_URL);
-            this.online = extras.getBoolean(EXTRA_MODEL_FILE_ONLINE);
+            mUrl = extras.getString(EXTRA_MODEL_FILE_URL);
+            mIsOnline = extras.getBoolean(EXTRA_MODEL_FILE_ONLINE);
 
-            new TaskGet(this, this.getConfig().getUser(), this.mUrl, new IPostExecuteListener() {
-                @Override
-                public void execute(JSONObject json, String body) {
-                    mInitate = body;
-                    ((EditText) FileTextActivity.this.findViewById(R.id.txt)).setText("" + mInitate);
-                    FileTextActivity.this.findViewById(R.id.txt).setVisibility(View.VISIBLE);
-                    FileTextActivity.this.findViewById(R.id.circularProgressBar).setVisibility(View.GONE);
-                }
-            }).execute();
+            if (savedInstanceState == null) {
+                new TaskGet(this, this.getConfig().getUser(), this.mUrl, this).execute();
+            } else {
+                mProgressBar.setVisibility(View.GONE);
+            }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putString(KEY_SAVED_TEXT, mInitialText);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        mInitialText = savedInstanceState.getString(KEY_SAVED_TEXT);
     }
 
     @Override
@@ -130,5 +144,13 @@ public class FileTextActivity extends ApplicationActivity {
             this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onPostExecute(JSONObject json, String body) {
+        mInitialText = body;
+        mEditText.setText(mInitialText);
+        mEditText.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.GONE);
     }
 }

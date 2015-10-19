@@ -120,7 +120,7 @@ public class ServerDataFragment extends BackFragment {
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeInformation,
                     new IPostExecuteListener() {
                         @Override
-                        public void execute(JSONObject json, String body) {
+                        public void onPostExecute(JSONObject json, String body) {
                             list = new ArrayList<ModelInformation>();
                             list.add(new ModelInformation("Server Data", Const.TAB_VIEW_TYPE_SECTION));
                             try {

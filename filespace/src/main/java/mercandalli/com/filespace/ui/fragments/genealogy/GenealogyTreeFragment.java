@@ -140,7 +140,7 @@ public class GenealogyTreeFragment extends FabFragment {
                         this.app.getConfig().getUrlServer() + this.app.getConfig().routeGenealogyChildren + "/" + id_user,
                         new IPostExecuteListener() {
                             @Override
-                            public void execute(JSONObject json, String body) {
+                            public void onPostExecute(JSONObject json, String body) {
                                 requestReady = true;
                                 List<ModelGenealogyPerson> listChildren = new ArrayList<>();
                                 try {
@@ -186,7 +186,7 @@ public class GenealogyTreeFragment extends FabFragment {
                         this.app.getConfig().getUrlServer() + this.app.getConfig().routeGenealogy + "/" + id_user,
                         new IPostExecuteListener() {
                             @Override
-                            public void execute(JSONObject json, String body) {
+                            public void onPostExecute(JSONObject json, String body) {
                                 requestReady = true;
                                 try {
                                     if (json != null) {
@@ -229,7 +229,7 @@ public class GenealogyTreeFragment extends FabFragment {
                         if (genealogyPerson != null) {
                             genealogyPerson.modify(new IPostExecuteListener() {
                                 @Override
-                                public void execute(JSONObject json, String body) {
+                                public void onPostExecute(JSONObject json, String body) {
                                     update();
                                 }
                             });
@@ -257,7 +257,7 @@ public class GenealogyTreeFragment extends FabFragment {
                             if (genealogyPerson.father != null) {
                                 genealogyPerson.father.modify(new IPostExecuteListener() {
                                     @Override
-                                    public void execute(JSONObject json, String body) {
+                                    public void onPostExecute(JSONObject json, String body) {
                                         update();
                                     }
                                 });
@@ -283,7 +283,7 @@ public class GenealogyTreeFragment extends FabFragment {
                             if (genealogyPerson.mother != null) {
                                 genealogyPerson.mother.modify(new IPostExecuteListener() {
                                     @Override
-                                    public void execute(JSONObject json, String body) {
+                                    public void onPostExecute(JSONObject json, String body) {
                                         update();
                                     }
                                 });

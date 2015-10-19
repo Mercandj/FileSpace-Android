@@ -162,7 +162,7 @@ public class LoginFragment extends Fragment {
         if (NetUtils.isInternetConnection(app))
             (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
                 @Override
-                public void execute(JSONObject json, String body) {
+                public void onPostExecute(JSONObject json, String body) {
                     requestLaunched = false;
                     try {
                         if (json != null) {

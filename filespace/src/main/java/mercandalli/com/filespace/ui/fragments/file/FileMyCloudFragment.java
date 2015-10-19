@@ -141,7 +141,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                             public void execute(String text) {
                                                 modelFile.rename(text, new IPostExecuteListener() {
                                                     @Override
-                                                    public void execute(JSONObject json, String body) {
+                                                    public void onPostExecute(JSONObject json, String body) {
                                                         if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
                                                             mFilesToCutList.clear();
                                                             refreshFab();
@@ -159,7 +159,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                             public void execute() {
                                                 modelFile.delete(new IPostExecuteListener() {
                                                     @Override
-                                                    public void execute(JSONObject json, String body) {
+                                                    public void onPostExecute(JSONObject json, String body) {
                                                         if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
                                                             mFilesToCutList.clear();
                                                             refreshFab();
@@ -193,7 +193,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                     case 5:
                                         modelFile.setPublic(!modelFile._public, new IPostExecuteListener() {
                                             @Override
-                                            public void execute(JSONObject json, String body) {
+                                            public void onPostExecute(JSONObject json, String body) {
                                                 FileMyCloudFragment.this.app.refreshAdapters();
                                             }
                                         });
@@ -206,7 +206,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                             parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
                                             (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
                                                 @Override
-                                                public void execute(JSONObject json, String body) {
+                                                public void onPostExecute(JSONObject json, String body) {
                                                     try {
                                                         if (json != null)
                                                             if (json.has("succeed"))
@@ -222,7 +222,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                             parameters.add(new StringPair("is_apk_update", "" + !modelFile.is_apk_update));
                                             (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeFile + "/" + modelFile.id, new IPostExecuteListener() {
                                                 @Override
-                                                public void execute(JSONObject json, String body) {
+                                                public void onPostExecute(JSONObject json, String body) {
                                                     try {
                                                         if (json != null)
                                                             if (json.has("succeed"))
@@ -298,7 +298,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile,
                     new IPostExecuteListener() {
                         @Override
-                        public void execute(JSONObject json, String body) {
+                        public void onPostExecute(JSONObject json, String body) {
                             if (!isAdded())
                                 return;
                             mFilesList = new ArrayList<>();
@@ -414,7 +414,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                                     public void execute(String text) {
                                                         modelFile.rename(text, new IPostExecuteListener() {
                                                             @Override
-                                                            public void execute(JSONObject json, String body) {
+                                                            public void onPostExecute(JSONObject json, String body) {
                                                                 if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
                                                                     mFilesToCutList.clear();
                                                                     refreshFab();
@@ -432,7 +432,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                                     public void execute() {
                                                         modelFile.delete(new IPostExecuteListener() {
                                                             @Override
-                                                            public void execute(JSONObject json, String body) {
+                                                            public void onPostExecute(JSONObject json, String body) {
                                                                 if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
                                                                     mFilesToCutList.clear();
                                                                     refreshFab();
@@ -463,7 +463,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                             case 5:
                                                 modelFile.setPublic(!modelFile._public, new IPostExecuteListener() {
                                                     @Override
-                                                    public void execute(JSONObject json, String body) {
+                                                    public void onPostExecute(JSONObject json, String body) {
                                                         FileMyCloudFragment.this.app.refreshAdapters();
                                                     }
                                                 });
@@ -476,7 +476,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                                     parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
                                                     (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
                                                         @Override
-                                                        public void execute(JSONObject json, String body) {
+                                                        public void onPostExecute(JSONObject json, String body) {
                                                             try {
                                                                 if (json != null)
                                                                     if (json.has("succeed"))
@@ -492,7 +492,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                                     parameters.add(new StringPair("is_apk_update", "" + !modelFile.is_apk_update));
                                                     (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeFile + "/" + modelFile.id, new IPostExecuteListener() {
                                                         @Override
-                                                        public void execute(JSONObject json, String body) {
+                                                        public void onPostExecute(JSONObject json, String body) {
                                                             try {
                                                                 if (json != null)
                                                                     if (json.has("succeed"))
@@ -563,7 +563,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                     for (ModelFile file : mFilesToCutList)
                         file.setId_file_parent(FileMyCloudFragment.this.mIdFileDirectoryStack.peek(), new IPostExecuteListener() {
                             @Override
-                            public void execute(JSONObject json, String body) {
+                            public void onPostExecute(JSONObject json, String body) {
                                 FileMyCloudFragment.this.app.refreshAdapters();
                             }
                         });
@@ -572,7 +572,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                     fab.hide();
                     FileMyCloudFragment.this.app.mDialog = new DialogAddFileManager(app, FileMyCloudFragment.this.mIdFileDirectoryStack.peek(), new IPostExecuteListener() {
                         @Override
-                        public void execute(JSONObject json, String body) {
+                        public void onPostExecute(JSONObject json, String body) {
                             if (json != null)
                                 refreshList();
                         }
