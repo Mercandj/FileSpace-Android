@@ -75,9 +75,9 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
 
     private View rootView;
 
-    private RecyclerView recyclerView;
+    private RecyclerView mRecyclerView;
     private AdapterModelHome mAdapter;
-    List<ModelHome> list;
+    List<ModelHome> mModelHomeList;
     private ProgressBar circularProgressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -151,9 +151,9 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
 
         circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         (rootView.findViewById(R.id.circle)).setVisibility(View.GONE);
 
@@ -223,11 +223,11 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
     }
 
     public void refreshList(ModelNasaImage modelNasaImage) {
-        list = new ArrayList<>();
+        mModelHomeList = new ArrayList<>();
 
         List<ModelServerMessage> serverMessageList = mApplicationCallback.getConfig().getListServerMessage_1();
         for (int i = serverMessageList.size() - 1; i >= 0; i--) {
-            list.add(new ModelHome(list.size(), "Notification", new IModelHomeListener() {
+            mModelHomeList.add(new ModelHome(mModelHomeList.size(), "Notification", new IModelHomeListener() {
                 @Override
                 public void execute(ModelHome modelHome) {
                     removeItemList(modelHome);
@@ -244,7 +244,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                 htmlMessage = Html.fromHtml("<a>This app give you the Cloud control from your Android device and your PC thanks to the <font color=\"#26AEEE\">web application</font>. You can share files and talk with your friends.</a>");
 
             if (mApplicationCallback.isLogged()) {
-                list.add(new ModelHome(list.size(), "Welcome", new IModelHomeListener() {
+                mModelHomeList.add(new ModelHome(mModelHomeList.size(), "Welcome", new IModelHomeListener() {
                     @Override
                     public void execute(ModelHome modelHome) {
                         removeItemList(modelHome);
@@ -252,7 +252,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                     }
                 }, htmlMessage, Const.TAB_VIEW_TYPE_HOME_INFORMATION));
             } else {
-                list.add(new ModelHome(list.size(), "Welcome", new IModelHomeListener() {
+                mModelHomeList.add(new ModelHome(mModelHomeList.size(), "Welcome", new IModelHomeListener() {
                     @Override
                     public void execute(ModelHome modelHome) {
                         removeItemList(modelHome);
@@ -262,8 +262,8 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
             }
         }
 
-        list.add(new ModelHome(list.size(), "Tabs", Const.TAB_VIEW_TYPE_SECTION));
-        list.add(new ModelHome(list.size(),
+        mModelHomeList.add(new ModelHome(mModelHomeList.size(), "Tabs", Const.TAB_VIEW_TYPE_SECTION));
+        mModelHomeList.add(new ModelHome(mModelHomeList.size(),
                 "Files",
                 new View.OnClickListener() {
                     @Override
@@ -283,7 +283,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                 Const.TAB_VIEW_TYPE_TWO_BUTTONS));
 
         if (modelNasaImage != null) {
-            list.add(new ModelHome(list.size(), "NASA Image - " + modelNasaImage.date, new IModelHomeListener() {
+            mModelHomeList.add(new ModelHome(mModelHomeList.size(), "NASA Image - " + modelNasaImage.date, new IModelHomeListener() {
                 @Override
                 public void execute(ModelHome modelHome) {
                     removeItemList(modelHome);
@@ -295,16 +295,16 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
     }
 
     public void updateAdapter() {
-        if (this.recyclerView != null && this.list != null && this.isAdded()) {
-            this.circularProgressBar.setVisibility(View.GONE);
+        if (mRecyclerView != null && mModelHomeList != null && isAdded()) {
+            circularProgressBar.setVisibility(View.GONE);
 
-            this.mAdapter = new AdapterModelHome(app, list);
-            this.recyclerView.setAdapter(mAdapter);
-            this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
+            mAdapter = new AdapterModelHome(app, mModelHomeList);
+            mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
 
             if ((rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
                 (rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
-                Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
+                Animation animOpen = AnimationUtils.loadAnimation(mContext, R.anim.circle_button_bottom_open);
                 (rootView.findViewById(R.id.circle)).startAnimation(animOpen);
             }
 
@@ -417,10 +417,10 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
             if (interpreterResult.content != null)
                 speakWords(interpreterResult.content);
 
-            recyclerView.scrollToPosition(0);
+            mRecyclerView.scrollToPosition(0);
             if (interpreterResult.modelForm != null)
                 mAdapter.addItem(
-                        new ModelHome(list.size(), title, new IModelHomeListener() {
+                        new ModelHome(mModelHomeList.size(), title, new IModelHomeListener() {
                             @Override
                             public void execute(ModelHome modelHome) {
                                 removeItemList(modelHome);
@@ -433,7 +433,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
             else if (interpreterResult.content != null)
                 if (!interpreterResult.content.equals(""))
                     mAdapter.addItem(
-                            new ModelHome(list.size(), title, new IModelHomeListener() {
+                            new ModelHome(mModelHomeList.size(), title, new IModelHomeListener() {
                                 @Override
                                 public void execute(ModelHome modelHome) {
                                     removeItemList(modelHome);
