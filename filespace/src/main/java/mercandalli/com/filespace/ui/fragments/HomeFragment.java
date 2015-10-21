@@ -77,11 +77,11 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
 
     private RecyclerView mRecyclerView;
     private AdapterModelHome mAdapter;
-    List<ModelHome> mModelHomeList;
+    private List<ModelHome> mModelHomeList;
     private ProgressBar circularProgressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    public TextToSpeech myTTS;
+    private TextToSpeech myTTS;
 
     private EditText input;
 
