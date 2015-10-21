@@ -91,6 +91,11 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
     }
 
     @Override
+    public void invalidateMenu() {
+        invalidateOptionsMenu();
+    }
+
+    @Override
     public Config getConfig() {
         if (mConfig == null) {
             mConfig = new Config(this);

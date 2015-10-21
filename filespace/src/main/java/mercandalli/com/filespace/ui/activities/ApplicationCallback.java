@@ -8,4 +8,5 @@ import mercandalli.com.filespace.config.Config;
 public interface ApplicationCallback {
     Config getConfig();
     boolean isLogged();
+    void invalidateMenu();
 }

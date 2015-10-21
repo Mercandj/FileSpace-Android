@@ -259,7 +259,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
     @Override
     public void onPageSelected(int position) {
-        FileFragment.this.app.invalidateOptionsMenu();
+        mApplicationCallback.invalidateMenu();
         mAppBarLayout.setExpanded(true);
         if (mApplicationCallback.isLogged()) {
             switch (position) {
@@ -276,9 +276,6 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
             refreshFab(position);
         } else {
             refreshFab(position + 2);
-        }
-        if (listFragment[position] instanceof FileLocalMusicFragment) {
-
         }
     }
 
