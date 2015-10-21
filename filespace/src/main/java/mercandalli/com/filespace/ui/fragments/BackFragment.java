@@ -19,7 +19,16 @@
  */
 package mercandalli.com.filespace.ui.fragments;
 
-import android.app.Fragment;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
+import android.os.Build;
+import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.view.Window;
+import android.view.WindowManager;
 
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
@@ -64,5 +73,73 @@ public abstract class BackFragment extends Fragment {
          * @param sortMode {@link Const#SORT_ABC}, {@link Const#SORT_SIZE} or {@link Const#SORT_DATE_MODIFICATION}
          */
         void setSortMode(int sortMode);
+    }
+
+
+    /**
+     * Set the status bar transparency.
+     *
+     * @param context     current context
+     * @param translucent if true the status bar will be transparent else
+     *                    the status bar will be opaque
+     */
+    public void setStatusBarTranslucent(@NonNull Context context, boolean translucent) {
+        setStatusBarTranslucent(((Activity) context).getWindow(), translucent);
+    }
+
+    /**
+     * Set the status bar transparency.
+     *
+     * @param window      current window
+     * @param translucent if true the status bar will be transparent else
+     *                    the status bar will be opaque
+     */
+    @SuppressLint("NewApi")
+    public void setStatusBarTranslucent(@NonNull final Window window, boolean translucent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (translucent) {
+                window.setFlags(
+                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                        WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            } else {
+                // Remove transparent status bar
+                WindowManager.LayoutParams attrs = window
+                        .getAttributes();
+                attrs.flags &= (~WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.setAttributes(attrs);
+                window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            }
+        }
+    }
+
+    /**
+     * Change the status bar color if {@link Build.VERSION#SDK_INT} >= {@link Build.VERSION_CODES#LOLLIPOP}.
+     * Remove the translucent flag.
+     *
+     * @param context       current context
+     * @param colorResource a color resource
+     */
+    public void setStatusBarColor(@NonNull Context context, @ColorRes int colorResource) {
+        setStatusBarColor((Activity) context, colorResource);
+    }
+
+    /**
+     * Change the status bar color if {@link Build.VERSION#SDK_INT} >= {@link Build.VERSION_CODES#LOLLIPOP}.
+     * Remove the translucent flag.
+     *
+     * @param activity      current activity
+     * @param colorResource a color resource
+     */
+    @SuppressLint("NewApi")
+    public void setStatusBarColor(@NonNull Activity activity, @ColorRes int colorResource) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Window window = activity.getWindow();
+
+            // Opaque status bar
+            setStatusBarTranslucent(window, false);
+
+            // Add status bar color
+            window.setStatusBarColor(ContextCompat.getColor(activity, colorResource));
+        }
     }
 }

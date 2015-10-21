@@ -296,14 +296,6 @@ public class FileLocalMusicFragment extends FabFragment
             });
 
             mRecyclerView.setAdapter(adapter);
-            /*
-            CardScaleAnimationAdapter scaleInAnimationAdapter = new CardScaleAnimationAdapter(adapter,
-                getResources().getBoolean(R.bool.is_tablet) ? 2: 1);
-            scaleInAnimationAdapter.setRecyclerView(mRecyclerView);
-            scaleInAnimationAdapter.setDuration(500);
-            scaleInAnimationAdapter.setInterpolator(new AccelerateDecelerateInterpolator());
-            mRecyclerView.setAdapter(scaleInAnimationAdapter);
-             */
 
             // Extend the Callback class
             ItemTouchHelper.Callback _ithCallback = new ItemTouchHelper.Callback() {

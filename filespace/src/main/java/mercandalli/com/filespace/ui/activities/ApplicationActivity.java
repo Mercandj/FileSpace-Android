@@ -54,7 +54,7 @@ import mercandalli.com.filespace.utils.StringPair;
 /**
  * Mother class of the {@link Activity} MainActivity.
  */
-public abstract class ApplicationActivity extends AppCompatActivity {
+public abstract class ApplicationActivity extends AppCompatActivity implements ApplicationCallback {
 
     private Config mConfig;
     public Dialog mDialog;
@@ -90,6 +90,7 @@ public abstract class ApplicationActivity extends AppCompatActivity {
         //endregion
     }
 
+    @Override
     public Config getConfig() {
         if (mConfig == null) {
             mConfig = new Config(this);
@@ -249,6 +250,7 @@ public abstract class ApplicationActivity extends AppCompatActivity {
         return result;
     }
 
+    @Override
     public boolean isLogged() {
         return mConfig != null && mConfig.isLogged();
     }

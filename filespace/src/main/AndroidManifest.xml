@@ -56,7 +56,6 @@
 
         <activity
             android:name="mercandalli.com.filespace.ui.activities.MainActivity"
-            android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize">
@@ -72,7 +71,6 @@
         </activity>
         <activity
             android:name="mercandalli.com.filespace.ui.activities.RegisterLoginActivity"
-            android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
@@ -85,7 +83,6 @@
         </activity>
         <activity
             android:name="mercandalli.com.filespace.ui.activities.FilePictureActivity"
-            android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeImage"
@@ -93,7 +90,6 @@
         </activity>
         <activity
             android:name="mercandalli.com.filespace.ui.activities.FileAudioActivity"
-            android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme"
@@ -120,14 +116,12 @@
         </activity>
         <activity
             android:name="mercandalli.com.filespace.ui.activities.FileTimerActivity"
-            android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize">
         </activity>
         <activity
             android:name="mercandalli.com.filespace.ui.activities.ConversationActivity"
-            android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme"

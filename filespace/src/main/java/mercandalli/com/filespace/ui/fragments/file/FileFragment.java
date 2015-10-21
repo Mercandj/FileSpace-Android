@@ -20,16 +20,16 @@
 package mercandalli.com.filespace.ui.fragments.file;
 
 import android.app.AlertDialog;
-import android.app.FragmentManager;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v13.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -47,13 +47,16 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.listeners.SetToolbarCallback;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.utils.NetUtils;
 
 public class FileFragment extends BackFragment implements ViewPager.OnPageChangeListener {
+
+    private static final String BUNDLE_ARG_TITLE = "FileFragment.Args.BUNDLE_ARG_TITLE";
 
     private static final int NB_FRAGMENT = 4;
     private static final int INIT_FRAGMENT = 1;
@@ -71,38 +74,77 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
     protected int mViewMode = Const.MODE_LIST;
 
-    public static FileFragment newInstance() {
-        Bundle args = new Bundle();
-        FileFragment fragment = new FileFragment();
+    private Context mContext;
+
+    private String mTitle;
+
+    private ApplicationCallback mApplicationCallback;
+
+    private SetToolbarCallback mSetToolbarCallback;
+
+    public static FileFragment newInstance(String title) {
+        final FileFragment fragment = new FileFragment();
+        final Bundle args = new Bundle();
+        args.putString(BUNDLE_ARG_TITLE, title);
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof SetToolbarCallback) {
+            mSetToolbarCallback = (SetToolbarCallback) context;
+        } else if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+            mViewMode = ((mApplicationCallback.getConfig().getUserFileModeView() > -1) ? mApplicationCallback.getConfig().getUserFileModeView() : Const.MODE_LIST);
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mSetToolbarCallback = null;
+        mApplicationCallback = null;
+        app = null;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final Bundle args = getArguments();
+        if (!args.containsKey(BUNDLE_ARG_TITLE)) {
+            throw new IllegalStateException("Missing args. Please use newInstance()");
+        }
+        mContext = getContext();
+        mTitle = args.getString(BUNDLE_ARG_TITLE);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_file, container, false);
 
-        app.setTitle(R.string.tab_files);
         mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_file_toolbar);
-        app.setToolbar(mToolbar);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            app.getWindow().setStatusBarColor(ContextCompat.getColor(app, R.color.notifications_bar));
+        mToolbar.setTitle(mTitle);
+        mSetToolbarCallback.setToolbar(mToolbar);
+        setStatusBarColor(mContext, R.color.notifications_bar);
         setHasOptionsMenu(true);
 
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.fragment_file_app_bar_layout);
         coordinatorLayoutView = rootView.findViewById(R.id.fragment_file_coordinator_layout);
 
-        final FileManagerFragmentPagerAdapter mPagerAdapter = new FileManagerFragmentPagerAdapter(getChildFragmentManager(), app);
-
-        mViewMode = ((app.getConfig().getUserFileModeView() > -1) ? app.getConfig().getUserFileModeView() : Const.MODE_LIST);
+        final FileManagerFragmentPagerAdapter mPagerAdapter = new FileManagerFragmentPagerAdapter(getChildFragmentManager(), mApplicationCallback);
 
         final TabLayout tabs = (TabLayout) rootView.findViewById(R.id.fragment_file_tab_layout);
         mViewPager = (ViewPager) rootView.findViewById(R.id.fragment_file_view_pager);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
 
-        if (app.isLogged()) {
-            if (NetUtils.isInternetConnection(app)) {
+        if (mApplicationCallback.isLogged()) {
+            if (NetUtils.isInternetConnection(mContext)) {
                 mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
                 mViewPager.setCurrentItem(INIT_FRAGMENT);
             } else {
@@ -131,7 +173,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         if (result >= listFragment.length) {
             return -1;
         }
-        return result + (app.isLogged() ? 0 : 2);
+        return result + (mApplicationCallback.isLogged() ? 0 : 2);
     }
 
     @Override
@@ -216,7 +258,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     public void onPageSelected(int position) {
         FileFragment.this.app.invalidateOptionsMenu();
         mAppBarLayout.setExpanded(true);
-        if (app.isLogged()) {
+        if (mApplicationCallback.isLogged()) {
             switch (position) {
                 case 0:
                     updateNoInternet();
@@ -238,16 +280,16 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     }
 
     public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
-        ApplicationActivity app;
+        ApplicationCallback mApplicationCallback;
 
-        public FileManagerFragmentPagerAdapter(FragmentManager fm, ApplicationActivity applicationActivity) {
+        public FileManagerFragmentPagerAdapter(FragmentManager fm, ApplicationCallback applicationCallback) {
             super(fm);
-            app = applicationActivity;
+            mApplicationCallback = applicationCallback;
         }
 
         @Override
         public BackFragment getItem(int i) {
-            if (!app.isLogged()) {
+            if (!mApplicationCallback.isLogged()) {
                 i += 2;
             }
 
@@ -281,12 +323,12 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
         @Override
         public int getCount() {
-            return NB_FRAGMENT - (app.isLogged() ? 0 : 2);
+            return NB_FRAGMENT - (mApplicationCallback.isLogged() ? 0 : 2);
         }
 
         @Override
         public CharSequence getPageTitle(int i) {
-            if (!app.isLogged())
+            if (!mApplicationCallback.isLogged())
                 i += 2;
             String title = "null";
             switch (i) {
@@ -413,7 +455,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
     public void sort() {
         final AlertDialog.Builder menuAlert = new AlertDialog.Builder(app);
-        String[] menuList = {"Sort by name (A-Z)", "Sort by size", "Sort by date", app.getConfig().getUserFileModeView() == Const.MODE_LIST ? "Grid View" : "List View"};
+        String[] menuList = {"Sort by name (A-Z)", "Sort by size", "Sort by date", mApplicationCallback.getConfig().getUserFileModeView() == Const.MODE_LIST ? "Grid View" : "List View"};
         menuAlert.setTitle(getString(R.string.view));
         menuAlert.setItems(menuList,
                 new DialogInterface.OnClickListener() {
@@ -441,7 +483,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                                     mViewMode = Const.MODE_GRID;
                                 else
                                     mViewMode = Const.MODE_LIST;
-                                app.getConfig().setUserFileModeView(mViewMode);
+                                mApplicationCallback.getConfig().setUserFileModeView(mViewMode);
                                 for (BackFragment fr : listFragment) {
                                     if (fr != null) {
                                         if (fr instanceof IListViewMode) {

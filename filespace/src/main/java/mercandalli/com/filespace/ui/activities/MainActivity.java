@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import mercandalli.com.filespace.listeners.SetToolbarCallback;
 import mercandalli.com.filespace.notificationpush.NotificationPush;
 import mercandalli.com.filespace.ui.fragments.community.CommunityFragment;
 import mercandalli.com.filespace.ui.fragments.file.FileFragment;
@@ -31,7 +32,7 @@ import mercandalli.com.filespace.ui.fragments.file.FileFragment;
 /**
  * Main {@link Activity} launched by the xml.
  */
-public class MainActivity extends ApplicationDrawerActivity {
+public class MainActivity extends ApplicationDrawerActivity implements SetToolbarCallback {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

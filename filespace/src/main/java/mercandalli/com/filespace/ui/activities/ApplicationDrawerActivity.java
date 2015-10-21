@@ -19,7 +19,6 @@
  */
 package mercandalli.com.filespace.ui.activities;
 
-import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -37,7 +36,7 @@ import java.util.Stack;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.listeners.IListener;
-import mercandalli.com.filespace.listeners.ISetToolbar;
+import mercandalli.com.filespace.listeners.SetToolbarCallback;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.HomeFragment;
 import mercandalli.com.filespace.ui.fragments.ProfileFragment;
@@ -53,7 +52,7 @@ import mercandalli.com.filespace.ui.navdrawer.NavDrawerItem;
 import mercandalli.com.filespace.ui.navdrawer.NavDrawerItemList;
 import mercandalli.com.filespace.ui.navdrawer.NavDrawerListAdapter;
 
-public abstract class ApplicationDrawerActivity extends ApplicationActivity implements ISetToolbar {
+public abstract class ApplicationDrawerActivity extends ApplicationActivity implements SetToolbarCallback {
 
     public static final int[] noSelectable = new int[]{Const.TAB_VIEW_TYPE_SECTION, Const.TAB_VIEW_TYPE_SECTION_TITLE, Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE};
 
@@ -86,8 +85,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                         if (isLogged()) {
                             mBackFragment = ProfileFragment.newInstance();
                             mBackFragment.setApp(ApplicationDrawerActivity.this);
-                            FragmentManager fragmentManager = getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                         }
                     }
                 }, R.drawable.ic_user, R.color.notifications_bar, Const.TAB_VIEW_TYPE_PROFILE)
@@ -105,8 +103,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                     public void execute() {
                         mBackFragment = HomeFragment.newInstance();
                         mBackFragment.setApp(ApplicationDrawerActivity.this);
-                        FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                     }
                 }, R.drawable.q_ic_drawer_home, R.drawable.q_ic_drawer_home_pressed, Const.TAB_VIEW_TYPE_NORMAL)
         );
@@ -116,10 +113,9 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                 new NavDrawerItem(getString(R.string.tab_files), new IListener() {
                     @Override
                     public void execute() {
-                        mBackFragment = FileFragment.newInstance();
+                        mBackFragment = FileFragment.newInstance(getString(R.string.tab_files));
                         mBackFragment.setApp(ApplicationDrawerActivity.this);
-                        FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                     }
                 }, R.drawable.q_ic_drawer_files, R.drawable.q_ic_drawer_files_pressed, Const.TAB_VIEW_TYPE_NORMAL)
         );
@@ -131,8 +127,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                     public void execute() {
                         mBackFragment = new WorkspaceFragment();
                         mBackFragment.setApp(ApplicationDrawerActivity.this);
-                        FragmentManager fragmentManager = getFragmentManager();
-                        fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                     }
                 }, R.drawable.q_ic_drawer_workspace, R.drawable.q_ic_drawer_workspace_pressed, Const.TAB_VIEW_TYPE_NORMAL)
         );
@@ -146,8 +141,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                         public void execute() {
                             mBackFragment = CommunityFragment.newInstance();
                             mBackFragment.setApp(ApplicationDrawerActivity.this);
-                            FragmentManager fragmentManager = getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                         }
                     }, R.drawable.q_ic_drawer_community, R.drawable.q_ic_drawer_community_pressed, Const.TAB_VIEW_TYPE_NORMAL)
             );
@@ -162,8 +156,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                         public void execute() {
                             mBackFragment = RoboticsFragment.newInstance();
                             mBackFragment.setApp(ApplicationDrawerActivity.this);
-                            FragmentManager fragmentManager = getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                         }
                     }, R.drawable.q_ic_drawer_robotics, R.drawable.q_ic_drawer_robotics_pressed, Const.TAB_VIEW_TYPE_NORMAL)
             );
@@ -175,8 +168,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                         public void execute() {
                             mBackFragment = GenealogyFragment.newInstance();
                             mBackFragment.setApp(ApplicationDrawerActivity.this);
-                            FragmentManager fragmentManager = getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                         }
                     }, R.drawable.q_ic_drawer_robotics, R.drawable.q_ic_drawer_robotics_pressed, Const.TAB_VIEW_TYPE_NORMAL)
             );
@@ -188,8 +180,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                         public void execute() {
                             mBackFragment = AdminFragment.newInstance();
                             mBackFragment.setApp(ApplicationDrawerActivity.this);
-                            FragmentManager fragmentManager = getFragmentManager();
-                            fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                         }
                     }, R.drawable.q_ic_drawer_data, R.drawable.q_ic_drawer_data_pressed, Const.TAB_VIEW_TYPE_NORMAL)
             );
@@ -214,8 +205,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                             public void execute() {
                                 mBackFragment = SettingsFragment.newInstance();
                                 mBackFragment.setApp(ApplicationDrawerActivity.this);
-                                FragmentManager fragmentManager = getFragmentManager();
-                                fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                             }
                         },
                         R.drawable.ic_settings_grey,
@@ -255,8 +245,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                                 fr.setApp(ApplicationDrawerActivity.this);
                                 fr.setInitURL(ApplicationDrawerActivity.this.getConfig().aboutURL);
                                 mBackFragment = fr;
-                                FragmentManager fragmentManager = getFragmentManager();
-                                fragmentManager.beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                             }
                         },
                         R.drawable.ic_help_grey,
