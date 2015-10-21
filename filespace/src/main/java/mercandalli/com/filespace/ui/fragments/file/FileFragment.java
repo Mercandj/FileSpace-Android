@@ -95,7 +95,10 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         super.onAttach(context);
         if (context instanceof SetToolbarCallback) {
             mSetToolbarCallback = (SetToolbarCallback) context;
-        } else if (context instanceof ApplicationCallback) {
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+        if (context instanceof ApplicationCallback) {
             mApplicationCallback = (ApplicationCallback) context;
             mViewMode = ((mApplicationCallback.getConfig().getUserFileModeView() > -1) ? mApplicationCallback.getConfig().getUserFileModeView() : Const.MODE_LIST);
         } else {
