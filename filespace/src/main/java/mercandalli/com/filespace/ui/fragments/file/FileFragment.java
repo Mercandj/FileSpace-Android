@@ -75,11 +75,8 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     protected int mViewMode = Const.MODE_LIST;
 
     private Context mContext;
-
     private String mTitle;
-
     private ApplicationCallback mApplicationCallback;
-
     private SetToolbarCallback mSetToolbarCallback;
 
     public static FileFragment newInstance(String title) {
@@ -504,12 +501,12 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     }
 
     private void updateNoInternet() {
-        if (!NetUtils.isInternetConnection(app)) {
+        if (!NetUtils.isInternetConnection(mContext)) {
             this.mSnackbar = Snackbar.make(this.coordinatorLayoutView, getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE)
                     .setAction(getString(R.string.refresh), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (NetUtils.isInternetConnection(app))
+                            if (NetUtils.isInternetConnection(mContext))
                                 listFragment[getCurrentFragmentIndex()].onFocus();
                             else
                                 updateNoInternet();

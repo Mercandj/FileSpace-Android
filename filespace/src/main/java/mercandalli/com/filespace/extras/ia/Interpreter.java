@@ -19,24 +19,24 @@
  */
 package mercandalli.com.filespace.extras.ia;
 
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import android.content.Context;
 
 /**
  * Created by Jonathan on 19/04/2015.
  */
 public abstract class Interpreter {
 
-    protected ApplicationActivity app;
-    protected Resource res;
+    protected Context mContext;
+    protected Resource mResource;
 
-    public Interpreter(ApplicationActivity app) {
-        this.app = app;
-        this.res = new Resource(this.app, "filespace_resources_fr.json");
+    public Interpreter(Context context) {
+        mContext = context;
+        mResource = new Resource(mContext, "filespace_resources_fr.json");
     }
 
-    public Interpreter(ApplicationActivity app, Resource res) {
-        this.app = app;
-        this.res = res;
+    public Interpreter(Context context, Resource resource) {
+        mContext = context;
+        mResource = resource;
     }
 
     public abstract InterpreterResult interpret(String input);

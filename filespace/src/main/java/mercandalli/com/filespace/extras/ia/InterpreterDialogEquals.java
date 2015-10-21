@@ -19,7 +19,7 @@
  */
 package mercandalli.com.filespace.extras.ia;
 
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import android.content.Context;
 
 /**
  * Created by Jonathan on 19/04/2015.
@@ -27,14 +27,14 @@ import mercandalli.com.filespace.ui.activities.ApplicationActivity;
  */
 public class InterpreterDialogEquals extends Interpreter {
 
-    public InterpreterDialogEquals(ApplicationActivity app, Resource res) {
-        super(app, res);
+    public InterpreterDialogEquals(Context context, Resource resource) {
+        super(context, resource);
     }
 
     @Override
     public InterpreterResult interpret(String input) {
         String output = null;
-        for (QA qa : this.res.getQas()) {
+        for (QA qa : mResource.getQas()) {
             String answer = qa.getAnswer(input);
             if (answer != null)
                 return new InterpreterResult(answer);

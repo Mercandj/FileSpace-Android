@@ -101,7 +101,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                 new NavDrawerItem(getString(R.string.tab_home), new IListener() {
                     @Override
                     public void execute() {
-                        mBackFragment = HomeFragment.newInstance();
+                        mBackFragment = HomeFragment.newInstance(getString(R.string.tab_home));
                         mBackFragment.setApp(ApplicationDrawerActivity.this);
                         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                     }

@@ -19,8 +19,8 @@
  */
 package mercandalli.com.filespace.extras.ia.action;
 
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import android.content.Context;
 
 public interface Action {
-    public abstract String action(ApplicationActivity app, String input);
+    String action(Context context, String input);
 }

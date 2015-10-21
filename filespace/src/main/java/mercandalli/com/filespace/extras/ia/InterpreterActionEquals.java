@@ -19,16 +19,17 @@
  */
 package mercandalli.com.filespace.extras.ia;
 
+import android.content.Context;
+
 import mercandalli.com.filespace.extras.ia.action.ENUM_Action;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 /**
  * Created by Jonathan on 19/04/2015.
  */
 public class InterpreterActionEquals extends Interpreter {
 
-    public InterpreterActionEquals(ApplicationActivity app, Resource res) {
-        super(app, res);
+    public InterpreterActionEquals(Context context, Resource resource) {
+        super(context, resource);
     }
 
     @Override
@@ -36,7 +37,7 @@ public class InterpreterActionEquals extends Interpreter {
         String output = null;
 
         if (input.equals("recherche") || input.equals("recherche google") || input.equals("google") || input.equals("ouvre google"))
-            output = ENUM_Action.WEB_SEARCH.action.action(this.app, "http://www.google.com/");
+            output = ENUM_Action.WEB_SEARCH.action.action(mContext, "http://www.google.com/");
 
         return new InterpreterResult(output);
     }

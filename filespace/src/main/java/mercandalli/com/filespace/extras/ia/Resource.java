@@ -19,10 +19,7 @@
  */
 package mercandalli.com.filespace.extras.ia;
 
-import mercandalli.com.filespace.extras.ia.language.Sentence;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.FileUtils;
-import mercandalli.com.filespace.utils.MathUtils;
+import android.content.Context;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,21 +28,23 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import mercandalli.com.filespace.extras.ia.language.Sentence;
+import mercandalli.com.filespace.utils.FileUtils;
+import mercandalli.com.filespace.utils.MathUtils;
+
 /**
  * Created by Jonathan on 24/04/2015.
  */
 public class Resource {
 
-    private ApplicationActivity app;
     protected List<QA> qas;
     protected List<Sentence> sentences;
 
-    public Resource(ApplicationActivity app, String file_name) {
-        this.app = app;
+    public Resource(Context context, String file_name) {
         this.qas = new ArrayList<>();
         this.sentences = new ArrayList<>();
 
-        String text = FileUtils.readStringAssets(app, file_name);
+        String text = FileUtils.readStringAssets(context, file_name);
 
         try {
             JSONObject json = new JSONObject(text);
@@ -54,7 +53,7 @@ public class Resource {
                 int qa_array_length = qa_array.length();
                 for (int i = 0; i < qa_array_length; i++) {
                     JSONObject qa = qa_array.getJSONObject(i);
-                    QA real_qa = new QA(app, qa);
+                    QA real_qa = new QA(qa);
                     if (real_qa.isValid())
                         qas.add(real_qa);
                 }
@@ -65,7 +64,7 @@ public class Resource {
                 int sentences_array_length = sentences_array.length();
                 for (int i = 0; i < sentences_array_length; i++) {
                     JSONObject sentence = sentences_array.getJSONObject(i);
-                    Sentence real_sentence = new Sentence(app, sentence);
+                    Sentence real_sentence = new Sentence(sentence);
                     if (real_sentence.isValid())
                         sentences.add(real_sentence);
                 }

@@ -19,8 +19,6 @@
  */
 package mercandalli.com.filespace.extras.ia.language;
 
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,22 +28,17 @@ import java.util.List;
 
 import mercandalli.com.filespace.utils.LogUtils;
 
-import static mercandalli.com.filespace.utils.LogUtils.LOGE;
-import static mercandalli.com.filespace.utils.LogUtils.makeLogTag;
-
 /**
  * Created by Jonathan on 24/04/2015.
  */
 public class Sentence {
     private static final String TAG = LogUtils.makeLogTag(Sentence.class);
 
-    private ApplicationActivity app;
     private List<String> sentence;
     private int id;
     private String title;
 
-    public Sentence(ApplicationActivity app, JSONObject json) {
-        this.app = app;
+    public Sentence(JSONObject json) {
         this.sentence = new ArrayList<>();
         this.id = -1;
 

@@ -19,21 +19,7 @@
  */
 package mercandalli.com.filespace.extras.ia;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.net.TaskGet;
-import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
-import mercandalli.com.filespace.ui.fragments.HomeFragment;
-import mercandalli.com.filespace.utils.NetUtils;
-import mercandalli.com.filespace.utils.StringPair;
 
 /**
  * Created by Jonathan on 19/04/2015.
@@ -48,6 +34,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
     public InterpreterResult interpret(String input) {
         String output = null;
 
+        /*
         if (this.res.equalsSentenece("raspberry êtat", input))
             if (NetUtils.isInternetConnection(app)) {
                 new TaskGet(
@@ -113,6 +100,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
                 return new InterpreterResult("");
             }
 
+*/
         return new InterpreterResult(output);
     }
 
@@ -122,6 +110,7 @@ public class InterpreterRoboticsEquals extends Interpreter {
      * @param input
      */
     public void speak(String input) {
+        /*
         if (app instanceof ApplicationDrawerActivity) {
             ApplicationDrawerActivity tmpApp = (ApplicationDrawerActivity) app;
             if (tmpApp.getBackFragment() != null)
@@ -129,5 +118,6 @@ public class InterpreterRoboticsEquals extends Interpreter {
                     ((HomeFragment) tmpApp.getBackFragment()).addItemList("Jarvis", new InterpreterResult(input));
                 }
         }
+        */
     }
 }

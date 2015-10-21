@@ -21,9 +21,6 @@ package mercandalli.com.filespace.extras.ia;
 
 import android.util.Log;
 
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.MathUtils;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,17 +28,17 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import mercandalli.com.filespace.utils.MathUtils;
+
 /**
  * Created by Jonathan on 21/04/2015.
  */
 public class QA {
 
-    private ApplicationActivity app;
     private JSONObject qa_json;
     private List<String> q, a;
 
-    public QA(ApplicationActivity app, JSONObject qa_json) {
-        this.app = app;
+    public QA(JSONObject qa_json) {
         this.qa_json = qa_json;
         this.q = new ArrayList<>();
         this.a = new ArrayList<>();
@@ -61,8 +58,7 @@ public class QA {
         }
     }
 
-    public QA(ApplicationActivity app, JSONObject qa_json, List<String> q, List<String> a) {
-        this.app = app;
+    public QA(JSONObject qa_json, List<String> q, List<String> a) {
         this.qa_json = qa_json;
         this.q = q;
         this.a = a;

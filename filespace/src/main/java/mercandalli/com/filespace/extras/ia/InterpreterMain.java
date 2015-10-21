@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.extras.ia;
 
+import android.content.Context;
 import android.util.Log;
 
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
@@ -33,13 +34,15 @@ public class InterpreterMain extends Interpreter {
             interpreterActionContains,
             interpreterRoboticsEquals,
             interpreterDialogEquals;
+    private boolean mIsAdmin = false;
 
-    public InterpreterMain(ApplicationActivity app) {
-        super(app);
-        interpreterActionEquals = new InterpreterActionEquals(app, this.res);
-        interpreterActionContains = new InterpreterActionContains(app, this.res);
-        interpreterRoboticsEquals = new InterpreterRoboticsEquals(app, this.res);
-        interpreterDialogEquals = new InterpreterDialogEquals(app, this.res);
+    public InterpreterMain(Context context, boolean isAdmin) {
+        super(context);
+        mIsAdmin = isAdmin;
+        interpreterActionEquals = new InterpreterActionEquals(context, mResource);
+        interpreterActionContains = new InterpreterActionContains(context, mResource);
+        //interpreterRoboticsEquals = new InterpreterRoboticsEquals(context, mResource);
+        interpreterDialogEquals = new InterpreterDialogEquals(context, mResource);
     }
 
     @Override
@@ -53,7 +56,7 @@ public class InterpreterMain extends Interpreter {
             if (!outputActionEquals.isEmpty())
                 return outputActionEquals;
 
-        if (this.app.getConfig().getUser().isAdmin()) {
+        if (mIsAdmin) {
             InterpreterResult outputRoboticsEquals = interpreterRoboticsEquals.interpret(input);
             if (outputRoboticsEquals != null)
                 if (!outputRoboticsEquals.isEmpty())

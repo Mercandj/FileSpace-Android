@@ -22,11 +22,9 @@ package mercandalli.com.filespace.ui.fragments;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,30 +45,33 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.extras.ia.Interpreter;
-import mercandalli.com.filespace.extras.ia.InterpreterMain;
-import mercandalli.com.filespace.extras.ia.InterpreterResult;
-import mercandalli.com.filespace.listeners.IModelHomeListener;
-import mercandalli.com.filespace.listeners.IModelNasaImageListener;
-import mercandalli.com.filespace.models.ModelHome;
-import mercandalli.com.filespace.models.ModelNasaImage;
-import mercandalli.com.filespace.models.ModelServerMessage;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
-import mercandalli.com.filespace.ui.adapters.AdapterModelHome;
-import mercandalli.com.filespace.utils.NasaUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.extras.ia.Interpreter;
+import mercandalli.com.filespace.extras.ia.InterpreterMain;
+import mercandalli.com.filespace.extras.ia.InterpreterResult;
+import mercandalli.com.filespace.listeners.IModelHomeListener;
+import mercandalli.com.filespace.listeners.IModelNasaImageListener;
+import mercandalli.com.filespace.listeners.SetToolbarCallback;
+import mercandalli.com.filespace.models.ModelHome;
+import mercandalli.com.filespace.models.ModelNasaImage;
+import mercandalli.com.filespace.models.ModelServerMessage;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
+import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
+import mercandalli.com.filespace.ui.adapters.AdapterModelHome;
+import mercandalli.com.filespace.utils.NasaUtils;
 
 /**
  * Created by Jonathan on 03/01/2015.
  */
 public class HomeFragment extends BackFragment implements TextToSpeech.OnInitListener {
+
+    private static final String BUNDLE_ARG_TITLE = "HomeFragment.Args.BUNDLE_ARG_TITLE";
 
     private View rootView;
 
@@ -84,6 +85,12 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
 
     private EditText input;
 
+    private Toolbar mToolbar;
+    private Context mContext;
+    private String mTitle;
+    private ApplicationCallback mApplicationCallback;
+    private SetToolbarCallback mSetToolbarCallback;
+
     public static HomeFragment newInstance() {
         Bundle args = new Bundle();
         HomeFragment fragment = new HomeFragment();
@@ -91,15 +98,56 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
         return fragment;
     }
 
+    public static HomeFragment newInstance(String title) {
+        final HomeFragment fragment = new HomeFragment();
+        final Bundle args = new Bundle();
+        args.putString(BUNDLE_ARG_TITLE, title);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof SetToolbarCallback) {
+            mSetToolbarCallback = (SetToolbarCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mSetToolbarCallback = null;
+        mApplicationCallback = null;
+        app = null;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final Bundle args = getArguments();
+        if (!args.containsKey(BUNDLE_ARG_TITLE)) {
+            throw new IllegalStateException("Missing args. Please use newInstance()");
+        }
+        mContext = getContext();
+        mTitle = args.getString(BUNDLE_ARG_TITLE);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        app.setTitle(R.string.tab_home);
-        Toolbar mToolbar = (Toolbar) rootView.findViewById(R.id.my_toolbar);
-        app.setToolbar(mToolbar);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            app.getWindow().setStatusBarColor(ContextCompat.getColor(app, R.color.notifications_bar));
+        mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_file_toolbar);
+        mToolbar.setTitle(mTitle);
+        mSetToolbarCallback.setToolbar(mToolbar);
+        setStatusBarColor(mContext, R.color.notifications_bar);
 
         circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
 
@@ -114,7 +162,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
         this.input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    Interpreter interpreter = new InterpreterMain(app);
+                    Interpreter interpreter = new InterpreterMain(mContext, mApplicationCallback.getConfig().getUser().isAdmin());
                     addItemList("FileSpace", interpreter.interpret(input.getText().toString()));
                     input.setText("");
                     return true;
@@ -324,7 +372,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
 
             if (textMatchList != null)
                 if (!textMatchList.isEmpty()) {
-                    Interpreter interpreter = new InterpreterMain(this.app);
+                    Interpreter interpreter = new InterpreterMain(mContext, mApplicationCallback.getConfig().isUserAdmin());
                     String input = textMatchList.get(0);
                     addItemList("FileSpace", interpreter.interpret(input));
                 }
