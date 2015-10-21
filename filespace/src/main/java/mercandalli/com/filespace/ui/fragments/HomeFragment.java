@@ -144,7 +144,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_file_toolbar);
+        mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_home_toolbar);
         mToolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(mToolbar);
         setStatusBarColor(mContext, R.color.notifications_bar);
