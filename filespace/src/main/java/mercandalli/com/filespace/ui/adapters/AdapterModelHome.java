@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.ui.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,23 +30,21 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.models.ModelHome;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.FontUtils;
-
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.models.ModelHome;
+import mercandalli.com.filespace.utils.FontUtils;
 
 public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.ViewHolder> {
-    private List<ModelHome> itemsData;
-    OnItemClickListener mItemClickListener;
-    ApplicationActivity app;
+    private List<ModelHome> mModelHomeList;
+    private OnItemClickListener mItemClickListener;
+    private Context mContext;
 
-    public AdapterModelHome(ApplicationActivity app, List<ModelHome> itemsData) {
-        this.itemsData = itemsData;
-        this.app = app;
+    public AdapterModelHome(Context context, List<ModelHome> modelHomeList) {
+        mModelHomeList = modelHomeList;
+        mContext = context;
     }
 
     @Override
@@ -65,7 +64,7 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
-        final ModelHome model = itemsData.get(position);
+        final ModelHome model = mModelHomeList.get(position);
         switch (model.viewType) {
             case Const.TAB_VIEW_TYPE_NORMAL:
                 viewHolder.title1.setText("" + model.getTitle1());
@@ -73,7 +72,7 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
                 break;
             case Const.TAB_VIEW_TYPE_SECTION:
                 viewHolder.title1.setText("" + model.getTitle1());
-                FontUtils.applyFont(app, viewHolder.title1, "fonts/Roboto-Medium.ttf");
+                FontUtils.applyFont(mContext, viewHolder.title1, "fonts/Roboto-Medium.ttf");
                 break;
             case Const.TAB_VIEW_TYPE_TWO_BUTTONS:
                 viewHolder.button1.setText("" + model.getTitle1());
@@ -82,16 +81,16 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
                     viewHolder.button1.setOnClickListener(model.listener1);
                 if (model.listener2 != null)
                     viewHolder.button2.setOnClickListener(model.listener2);
-                FontUtils.applyFont(app, viewHolder.button1, "fonts/Roboto-Medium.ttf");
-                FontUtils.applyFont(app, viewHolder.button2, "fonts/Roboto-Medium.ttf");
+                FontUtils.applyFont(mContext, viewHolder.button1, "fonts/Roboto-Medium.ttf");
+                FontUtils.applyFont(mContext, viewHolder.button2, "fonts/Roboto-Medium.ttf");
                 break;
             case Const.TAB_VIEW_TYPE_HOME_INFORMATION:
                 viewHolder.title1.setText("" + model.getTitle1());
                 viewHolder.title2.setText(model.getTitle2());
-                FontUtils.applyFont(app, viewHolder.title1, "fonts/Roboto-Medium.ttf");
-                FontUtils.applyFont(app, viewHolder.title2, "fonts/Roboto-Regular.ttf");
-                FontUtils.applyFont(app, viewHolder.button1, "fonts/Roboto-Medium.ttf");
-                FontUtils.applyFont(app, viewHolder.button2, "fonts/Roboto-Medium.ttf");
+                FontUtils.applyFont(mContext, viewHolder.title1, "fonts/Roboto-Medium.ttf");
+                FontUtils.applyFont(mContext, viewHolder.title2, "fonts/Roboto-Regular.ttf");
+                FontUtils.applyFont(mContext, viewHolder.button1, "fonts/Roboto-Medium.ttf");
+                FontUtils.applyFont(mContext, viewHolder.button2, "fonts/Roboto-Medium.ttf");
                 if (model.listenerHome1 != null)
                     viewHolder.button1.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -110,9 +109,9 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
                 break;
             case Const.TAB_VIEW_TYPE_HOME_INFORMATION_FORM:
                 viewHolder.title1.setText("" + model.getTitle1());
-                FontUtils.applyFont(app, viewHolder.title1, "fonts/Roboto-Medium.ttf");
-                FontUtils.applyFont(app, viewHolder.button1, "fonts/Roboto-Medium.ttf");
-                FontUtils.applyFont(app, viewHolder.button2, "fonts/Roboto-Medium.ttf");
+                FontUtils.applyFont(mContext, viewHolder.title1, "fonts/Roboto-Medium.ttf");
+                FontUtils.applyFont(mContext, viewHolder.button1, "fonts/Roboto-Medium.ttf");
+                FontUtils.applyFont(mContext, viewHolder.button2, "fonts/Roboto-Medium.ttf");
                 if (model.listenerHome1 != null)
                     viewHolder.button1.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -156,10 +155,10 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
                 viewHolder.title1.setText("" + model.getTitle1());
                 viewHolder.title2.setText(model.getTitle2());
                 viewHolder.image.setImageBitmap(model.image);
-                FontUtils.applyFont(app, viewHolder.title1, "fonts/Roboto-Medium.ttf");
-                FontUtils.applyFont(app, viewHolder.title2, "fonts/Roboto-Regular.ttf");
-                FontUtils.applyFont(app, viewHolder.button1, "fonts/Roboto-Medium.ttf");
-                FontUtils.applyFont(app, viewHolder.button2, "fonts/Roboto-Medium.ttf");
+                FontUtils.applyFont(mContext, viewHolder.title1, "fonts/Roboto-Medium.ttf");
+                FontUtils.applyFont(mContext, viewHolder.title2, "fonts/Roboto-Regular.ttf");
+                FontUtils.applyFont(mContext, viewHolder.button1, "fonts/Roboto-Medium.ttf");
+                FontUtils.applyFont(mContext, viewHolder.button2, "fonts/Roboto-Medium.ttf");
                 if (model.listenerHome1 != null) {
                     viewHolder.button1.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -245,27 +244,27 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
 
     @Override
     public int getItemCount() {
-        return itemsData.size();
+        return mModelHomeList.size();
     }
 
     public void addItem(ModelHome name, int position) {
-        itemsData.add(position, name);
+        mModelHomeList.add(position, name);
         notifyItemInserted(position);
     }
 
     public void removeItem(int position) {
-        if (itemsData.size() <= 0)
+        if (mModelHomeList.size() <= 0)
             return;
-        itemsData.remove(position);
+        mModelHomeList.remove(position);
         notifyItemRemoved(position);
     }
 
     public void removeItem(ModelHome model) {
         if (model == null)
             return;
-        for (int i = 0; i < itemsData.size(); i++)
-            if (itemsData.get(i).equals(model)) {
-                itemsData.remove(i);
+        for (int i = 0; i < mModelHomeList.size(); i++)
+            if (mModelHomeList.get(i).equals(model)) {
+                mModelHomeList.remove(i);
                 notifyItemRemoved(i);
             }
     }
@@ -280,18 +279,18 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
 
     @Override
     public int getItemViewType(int position) {
-        if (position < itemsData.size())
-            return itemsData.get(position).viewType;
+        if (position < mModelHomeList.size())
+            return mModelHomeList.get(position).viewType;
         return 0;
     }
 
     public int size() {
-        return itemsData.size();
+        return mModelHomeList.size();
     }
 
     public ModelHome get(int i) {
         if (i < this.size())
-            return itemsData.get(i);
+            return mModelHomeList.get(i);
         return null;
     }
 }

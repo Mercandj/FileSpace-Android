@@ -225,7 +225,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
     public void refreshList(ModelNasaImage modelNasaImage) {
         list = new ArrayList<>();
 
-        List<ModelServerMessage> serverMessageList = app.getConfig().getListServerMessage_1();
+        List<ModelServerMessage> serverMessageList = mApplicationCallback.getConfig().getListServerMessage_1();
         for (int i = serverMessageList.size() - 1; i >= 0; i--) {
             list.add(new ModelHome(list.size(), "Notification", new IModelHomeListener() {
                 @Override
@@ -237,18 +237,18 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
             }, serverMessageList.get(i), Const.TAB_VIEW_TYPE_HOME_INFORMATION));
         }
 
-        if (this.app.getConfig().isHomeWelcomeMessage()) {
+        if (mApplicationCallback.getConfig().isHomeWelcomeMessage()) {
 
             Spanned htmlMessage = Html.fromHtml("<a>This app give you the control on your local <font color=\"#26AEEE\">files</font>. This app is also a <font color=\"#f57c00\">music</font> player.</a>");
-            if (app.getConfig().isLogged())
+            if (mApplicationCallback.getConfig().isLogged())
                 htmlMessage = Html.fromHtml("<a>This app give you the Cloud control from your Android device and your PC thanks to the <font color=\"#26AEEE\">web application</font>. You can share files and talk with your friends.</a>");
 
-            if (this.app.isLogged()) {
+            if (mApplicationCallback.isLogged()) {
                 list.add(new ModelHome(list.size(), "Welcome", new IModelHomeListener() {
                     @Override
                     public void execute(ModelHome modelHome) {
                         removeItemList(modelHome);
-                        app.getConfig().setHomeWelcomeMessage(false);
+                        mApplicationCallback.getConfig().setHomeWelcomeMessage(false);
                     }
                 }, htmlMessage, Const.TAB_VIEW_TYPE_HOME_INFORMATION));
             } else {
@@ -256,7 +256,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                     @Override
                     public void execute(ModelHome modelHome) {
                         removeItemList(modelHome);
-                        app.getConfig().setHomeWelcomeMessage(false);
+                        mApplicationCallback.getConfig().setHomeWelcomeMessage(false);
                     }
                 }, htmlMessage, Const.TAB_VIEW_TYPE_HOME_INFORMATION));
             }
