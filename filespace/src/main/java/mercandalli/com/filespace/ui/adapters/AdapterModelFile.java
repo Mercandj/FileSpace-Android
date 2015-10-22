@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.ui.adapters;
 
+import android.app.Activity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -40,14 +41,14 @@ import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.ViewHolder> {
 
-    private ApplicationActivity app;
+    private Activity mActivity;
     public List<ModelFile> files;
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
     private IModelFileListener moreListener;
 
-    public AdapterModelFile(ApplicationActivity app, List<ModelFile> files, IModelFileListener moreListener) {
-        this.app = app;
+    public AdapterModelFile(Activity app, List<ModelFile> files, IModelFileListener moreListener) {
+        this.mActivity = app;
         this.files = files;
         this.moreListener = moreListener;
     }
@@ -98,9 +99,9 @@ public class AdapterModelFile extends RecyclerView.Adapter<AdapterModelFile.View
             });
 
             if (file.selected)
-                viewHolder.item.setBackgroundColor(ContextCompat.getColor(app, R.color.tab_selected));
+                viewHolder.item.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.tab_selected));
             else
-                viewHolder.item.setBackgroundColor(ContextCompat.getColor(app, R.color.tab_file));
+                viewHolder.item.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.tab_file));
         }
     }
 

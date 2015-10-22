@@ -130,7 +130,7 @@ public class FileCloudFragment extends FabFragment implements
         mGridView = (GridView) rootView.findViewById(R.id.gridView);
         mGridView.setVisibility(View.GONE);
 
-        mAdapterModelFile = new AdapterModelFile(app, mFilesList, this);
+        mAdapterModelFile = new AdapterModelFile(mActivity, mFilesList, this);
         mRecyclerView.setAdapter(mAdapterModelFile);
         mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
@@ -154,12 +154,12 @@ public class FileCloudFragment extends FabFragment implements
         parameters.add(new StringPair("url", "" + this.url));
         parameters.add(new StringPair("all-public", "" + true));
 
-        if (NetUtils.isInternetConnection(app) && app.isLogged())
+        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged())
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
-                    this.app.getConfig().getUser(),
-                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile,
+                    this.mApplicationCallback.getConfig().getUser(),
+                    this.mApplicationCallback.getConfig().getUrlServer() + this.mApplicationCallback.getConfig().routeFile,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -176,7 +176,7 @@ public class FileCloudFragment extends FabFragment implements
                                         }
                                     }
                                 } else
-                                    Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -210,7 +210,7 @@ public class FileCloudFragment extends FabFragment implements
 
             mProgressBar.setVisibility(View.GONE);
 
-            if (!NetUtils.isInternetConnection(app))
+            if (!NetUtils.isInternetConnection(mActivity))
                 mMessageTextView.setText(getString(R.string.no_internet_connection));
             else if (mFilesList.size() == 0) {
                 if (this.url == null)
@@ -231,7 +231,7 @@ public class FileCloudFragment extends FabFragment implements
                 this.mGridView.setVisibility(View.VISIBLE);
                 this.mRecyclerView.setVisibility(View.GONE);
 
-                this.mGridView.setAdapter(new AdapterGridModelFile(app, mFilesList));
+                this.mGridView.setAdapter(new AdapterGridModelFile(mActivity, mFilesList));
                 this.mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -427,7 +427,7 @@ public class FileCloudFragment extends FabFragment implements
 
     @Override
     public boolean isFabVisible(int fab_id) {
-        if (!NetUtils.isInternetConnection(app) || !app.isLogged())
+        if (!NetUtils.isInternetConnection(mActivity) || !mApplicationCallback.isLogged())
             return false;
         switch (fab_id) {
             case 0:

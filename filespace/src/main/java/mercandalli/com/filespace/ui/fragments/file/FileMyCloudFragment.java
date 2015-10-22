@@ -123,7 +123,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
 
         resetPath();
 
-        mAdapterModelFile = new AdapterModelFile(app, mFilesList, new IModelFileListener() {
+        mAdapterModelFile = new AdapterModelFile(mActivity, mFilesList, new IModelFileListener() {
             @Override
             public void executeModelFile(final ModelFile modelFile) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileMyCloudFragment.this.app);
@@ -131,7 +131,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                 if (!modelFile.directory) {
                     if (modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
                         menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public", "Set as profile"};
-                    } else if (modelFile.type.equals(ModelFileTypeENUM.APK.type) && app.getConfig().isUserAdmin()) {
+                    } else if (modelFile.type.equals(ModelFileTypeENUM.APK.type) && mApplicationCallback.getConfig().isUserAdmin()) {
                         menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public", (modelFile.is_apk_update) ? "Remove the update" : "Set as update"};
                     } else
                         menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public"};
@@ -220,23 +220,23 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                         if (modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
                                             List<StringPair> parameters = new ArrayList<>();
                                             parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
-                                            (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                            (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserPut, new IPostExecuteListener() {
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
                                                     try {
                                                         if (json != null)
                                                             if (json.has("succeed"))
                                                                 if (json.getBoolean("succeed"))
-                                                                    app.getConfig().setUserIdFileProfilePicture(modelFile.id);
+                                                                    mApplicationCallback.getConfig().setUserIdFileProfilePicture(modelFile.id);
                                                     } catch (JSONException e) {
                                                         e.printStackTrace();
                                                     }
                                                 }
                                             }, parameters)).execute();
-                                        } else if (modelFile.type.equals(ModelFileTypeENUM.APK.type) && app.getConfig().isUserAdmin()) {
+                                        } else if (modelFile.type.equals(ModelFileTypeENUM.APK.type) && mApplicationCallback.getConfig().isUserAdmin()) {
                                             List<StringPair> parameters = new ArrayList<>();
                                             parameters.add(new StringPair("is_apk_update", "" + !modelFile.is_apk_update));
-                                            (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeFile + "/" + modelFile.id, new IPostExecuteListener() {
+                                            (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeFile + "/" + modelFile.id, new IPostExecuteListener() {
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
                                                     try {
@@ -307,12 +307,12 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
         parameters.add(new StringPair("id_file_parent", "" + this.mIdFileDirectoryStack.peek()));
         parameters.add(new StringPair("mine", "" + true));
 
-        if (NetUtils.isInternetConnection(app) && app.isLogged()) {
+        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
-                    this.app.getConfig().getUser(),
-                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile,
+                    this.mApplicationCallback.getConfig().getUser(),
+                    this.mApplicationCallback.getConfig().getUrlServer() + this.mApplicationCallback.getConfig().routeFile,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -329,7 +329,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                         }
                                     }
                                 } else
-                                    Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -341,10 +341,10 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
         } else {
             this.mProgressBar.setVisibility(View.GONE);
             if (this.isAdded())
-                this.mMessageTextView.setText(app.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+                this.mMessageTextView.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             this.mMessageTextView.setVisibility(View.VISIBLE);
 
-            if (!NetUtils.isInternetConnection(app)) {
+            if (!NetUtils.isInternetConnection(mActivity)) {
                 this.setListVisibility(false);
                 refreshFab();
             }
@@ -405,7 +405,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                         if (!modelFile.directory) {
                             if (modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
                                 menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public", "Set as profile"};
-                            } else if (modelFile.type.equals(ModelFileTypeENUM.APK.type) && app.getConfig().isUserAdmin()) {
+                            } else if (modelFile.type.equals(ModelFileTypeENUM.APK.type) && mApplicationCallback.getConfig().isUserAdmin()) {
                                 menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public", (modelFile.is_apk_update) ? "Remove the update" : "Set as update"};
                             } else
                                 menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public"};
@@ -491,23 +491,23 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                                 if (modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
                                                     List<StringPair> parameters = new ArrayList<>();
                                                     parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
-                                                    (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                    (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserPut, new IPostExecuteListener() {
                                                         @Override
                                                         public void onPostExecute(JSONObject json, String body) {
                                                             try {
                                                                 if (json != null)
                                                                     if (json.has("succeed"))
                                                                         if (json.getBoolean("succeed"))
-                                                                            app.getConfig().setUserIdFileProfilePicture(modelFile.id);
+                                                                            mApplicationCallback.getConfig().setUserIdFileProfilePicture(modelFile.id);
                                                             } catch (JSONException e) {
                                                                 e.printStackTrace();
                                                             }
                                                         }
                                                     }, parameters)).execute();
-                                                } else if (modelFile.type.equals(ModelFileTypeENUM.APK.type) && app.getConfig().isUserAdmin()) {
+                                                } else if (modelFile.type.equals(ModelFileTypeENUM.APK.type) && mApplicationCallback.getConfig().isUserAdmin()) {
                                                     List<StringPair> parameters = new ArrayList<>();
                                                     parameters.add(new StringPair("is_apk_update", "" + !modelFile.is_apk_update));
-                                                    (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeFile + "/" + modelFile.id, new IPostExecuteListener() {
+                                                    (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeFile + "/" + modelFile.id, new IPostExecuteListener() {
                                                         @Override
                                                         public void onPostExecute(JSONObject json, String body) {
                                                             try {
@@ -613,7 +613,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
 
     @Override
     public boolean isFabVisible(int fab_id) {
-        if (!NetUtils.isInternetConnection(app) || !app.isLogged())
+        if (!NetUtils.isInternetConnection(mActivity) || !mApplicationCallback.isLogged())
             return false;
         switch (fab_id) {
             case 0:

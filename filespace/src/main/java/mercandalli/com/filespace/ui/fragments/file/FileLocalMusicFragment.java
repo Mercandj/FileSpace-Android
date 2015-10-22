@@ -129,7 +129,7 @@ public class FileLocalMusicFragment extends FabFragment
 
         refreshList();
 
-        app.invalidateOptionsMenu();
+        mApplicationCallback.invalidateMenu();
 
         return rootView;
     }
@@ -156,7 +156,7 @@ public class FileLocalMusicFragment extends FabFragment
             selection += " AND " + MediaStore.Audio.Media.DISPLAY_NAME + " LIKE ?";
         }
 
-        Cursor cursor = app.getContentResolver().query(allsongsuri, STAR, selection, searchArray, null);
+        Cursor cursor = mActivity.getContentResolver().query(allsongsuri, STAR, selection, searchArray, null);
 
         if (cursor != null) {
             if (cursor.moveToFirst()) {
@@ -227,7 +227,7 @@ public class FileLocalMusicFragment extends FabFragment
             } else
                 message.setVisibility(View.GONE);
 
-            final AdapterDragMusicModelFile adapter = new AdapterDragMusicModelFile(app, files, new IModelFileListener() {
+            final AdapterDragMusicModelFile adapter = new AdapterDragMusicModelFile(mActivity, files, new IModelFileListener() {
                 @Override
                 public void executeModelFile(final ModelFile modelFile) {
                     final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalMusicFragment.this.app);
@@ -238,7 +238,7 @@ public class FileLocalMusicFragment extends FabFragment
                     menuAlert.setItems(menuList,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int item) {
-                                    if (!app.isLogged())
+                                    if (!mApplicationCallback.isLogged())
                                         item += 2;
                                     switch (item) {
                                         case 0:

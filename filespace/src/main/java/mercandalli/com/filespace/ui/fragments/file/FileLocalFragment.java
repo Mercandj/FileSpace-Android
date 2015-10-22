@@ -127,14 +127,14 @@ public class FileLocalFragment extends FabFragment
         mGridView = (GridView) rootView.findViewById(R.id.gridView);
         mGridView.setVisibility(View.GONE);
 
-        mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + this.app.getConfig().getLocalFolderName());
+        mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + this.mApplicationCallback.getConfig().getLocalFolderName());
         if (!mCurrentDirectory.exists()) {
             mCurrentDirectory.mkdir();
         }
 
         refreshList();
 
-        app.invalidateOptionsMenu();
+        mApplicationCallback.invalidateMenu();
 
         return rootView;
     }
@@ -204,7 +204,7 @@ public class FileLocalFragment extends FabFragment
             } else
                 mMessageTextView.setVisibility(View.GONE);
 
-            final AdapterModelFile adapter = new AdapterModelFile(app, mFilesList, new IModelFileListener() {
+            final AdapterModelFile adapter = new AdapterModelFile(mActivity, mFilesList, new IModelFileListener() {
                 @Override
                 public void executeModelFile(final ModelFile modelFile) {
                     final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalFragment.this.app);
@@ -215,7 +215,7 @@ public class FileLocalFragment extends FabFragment
                     menuAlert.setItems(menuList,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int item) {
-                                    if (!app.isLogged())
+                                    if (!mApplicationCallback.isLogged())
                                         item += 1;
                                     switch (item) {
                                         case 0:

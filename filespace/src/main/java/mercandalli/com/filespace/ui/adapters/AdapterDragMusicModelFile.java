@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.ui.adapters;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,14 +40,14 @@ import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class AdapterDragMusicModelFile extends RecyclerView.Adapter<AdapterDragMusicModelFile.ViewHolder> {
 
-    private ApplicationActivity app;
+    private Activity mActivity;
     private List<MusicModelFile> files;
     private OnItemClickListener mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
     private IModelFileListener moreListener;
 
-    public AdapterDragMusicModelFile(ApplicationActivity app, List<MusicModelFile> files, IModelFileListener moreListener) {
-        this.app = app;
+    public AdapterDragMusicModelFile(Activity activity, List<MusicModelFile> files, IModelFileListener moreListener) {
+        this.mActivity = activity;
         this.files = files;
         this.moreListener = moreListener;
     }

@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.ui.adapters;
 
+import android.app.Activity;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,12 +40,12 @@ import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 public class AdapterGridModelFile extends BaseAdapter {
 
-    private ApplicationActivity app;
+    private Activity mActivity;
     public List<ModelFile> files;
     private IModelFileListener moreListener;
 
-    public AdapterGridModelFile(ApplicationActivity app, List<ModelFile> files) {
-        this.app = app;
+    public AdapterGridModelFile(Activity activity, List<ModelFile> files) {
+        this.mActivity = activity;
         this.files = files;
     }
 
@@ -65,7 +66,7 @@ public class AdapterGridModelFile extends BaseAdapter {
 
     @Override
     public View getView(int position, View itemLayoutView, ViewGroup parent) {
-        LayoutInflater inflater = app.getLayoutInflater();
+        LayoutInflater inflater = mActivity.getLayoutInflater();
         itemLayoutView = inflater.inflate(R.layout.tab_file_images, parent, false);
 
         RelativeLayout item = (RelativeLayout) itemLayoutView.findViewById(R.id.item);
@@ -110,7 +111,7 @@ public class AdapterGridModelFile extends BaseAdapter {
             });
 
             if (file.selected) {
-                item.setBackgroundColor(ContextCompat.getColor(app, R.color.tab_selected));
+                item.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.tab_selected));
             } else {
                 item.setBackground(null);
             }
