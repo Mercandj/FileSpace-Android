@@ -62,7 +62,7 @@ public class DialogUpload extends Dialog {
                     List<StringPair> parameters = null;
                     if (DialogUpload.this.modelFile != null)
                         parameters = DialogUpload.this.modelFile.getForUpload();
-                    (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
+                    (new TaskPost(app, app, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
                             if (listener != null)

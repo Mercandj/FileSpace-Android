@@ -19,9 +19,11 @@
  */
 package mercandalli.com.filespace.models;
 
+import android.app.Activity;
 import android.content.Intent;
 
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.activities.ConversationActivity;
 
 import org.json.JSONArray;
@@ -47,9 +49,8 @@ public class ModelConversationUser extends Model {
 
     }
 
-    public ModelConversationUser(ApplicationActivity app, JSONObject json) {
-        super();
-        this.app = app;
+    public ModelConversationUser(Activity activity, ApplicationCallback app, JSONObject json) {
+        super(activity, app);
         this.users = new ArrayList<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
@@ -64,7 +65,7 @@ public class ModelConversationUser extends Model {
             if (json.has("users")) {
                 JSONArray users_json = json.getJSONArray("users");
                 for (int i = 0; i < users_json.length(); i++) {
-                    this.users.add(new ModelUser(app, users_json.getJSONObject(i)));
+                    this.users.add(new ModelUser(mActivity, app, users_json.getJSONObject(i)));
                 }
             }
             if (json.has("to_all"))
@@ -98,12 +99,12 @@ public class ModelConversationUser extends Model {
     }
 
     public void open() {
-        Intent intent = new Intent(this.app, ConversationActivity.class);
+        Intent intent = new Intent(mActivity, ConversationActivity.class);
         intent.putExtra("LOGIN", "" + this.app.getConfig().getUser().getAccessLogin());
         intent.putExtra("PASSWORD", "" + this.app.getConfig().getUser().getAccessPassword());
         intent.putExtra("ID_CONVERSATION", "" + this.id_conversation);
-        this.app.startActivity(intent);
-        this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        mActivity.startActivity(intent);
+        mActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 
     @Override

@@ -21,6 +21,7 @@ package mercandalli.com.filespace.ui.fragments.genealogy;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -35,20 +36,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import mercandalli.com.filespace.listeners.IListener;
-import mercandalli.com.filespace.listeners.IModelGenealogyUserListener;
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.models.ModelGenealogyPerson;
-import mercandalli.com.filespace.net.TaskGet;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
-import mercandalli.com.filespace.ui.adapters.AdapterModelGenealogyUser;
-import mercandalli.com.filespace.ui.dialogs.DialogAddGenealogyPerson;
-import mercandalli.com.filespace.ui.fragments.FabFragment;
-import mercandalli.com.filespace.ui.views.DividerItemDecoration;
-import mercandalli.com.filespace.utils.NetUtils;
-import mercandalli.com.filespace.utils.StringPair;
-import mercandalli.com.filespace.utils.StringUtils;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,6 +44,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listeners.IListener;
+import mercandalli.com.filespace.listeners.IModelGenealogyUserListener;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.models.ModelGenealogyPerson;
+import mercandalli.com.filespace.net.TaskGet;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
+import mercandalli.com.filespace.ui.adapters.AdapterModelGenealogyUser;
+import mercandalli.com.filespace.ui.dialogs.DialogAddGenealogyPerson;
+import mercandalli.com.filespace.ui.fragments.FabFragment;
+import mercandalli.com.filespace.ui.views.DividerItemDecoration;
+import mercandalli.com.filespace.utils.NetUtils;
+import mercandalli.com.filespace.utils.StringPair;
+import mercandalli.com.filespace.utils.StringUtils;
 
 /**
  * Created by Jonathan on 28/08/2015.
@@ -81,6 +81,9 @@ public class GenealogyListFragment extends FabFragment {
     public static boolean MODE_SELECTION_MOTHER = false;
     public static boolean MODE_SELECTION_PARTNER = false;
 
+    private Activity mActivity;
+    private ApplicationCallback mApplicationCallback;
+
     public static void resetMode() {
         MODE_SELECTION_FATHER = false;
         MODE_SELECTION_MOTHER = false;
@@ -95,9 +98,21 @@ public class GenealogyListFragment extends FabFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (ApplicationDrawerActivity) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (Activity) context;
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mApplicationCallback = null;
+        app = null;
     }
 
     public void setOnSelect(IModelGenealogyUserListener onSelect) {
@@ -147,7 +162,8 @@ public class GenealogyListFragment extends FabFragment {
             parameters.add(new StringPair("search", search));
         if (NetUtils.isInternetConnection(app) && app.isLogged())
             new TaskGet(
-                    app,
+                    mActivity,
+                    mApplicationCallback,
                     this.app.getConfig().getUser(),
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeGenealogy,
                     new IPostExecuteListener() {
@@ -159,7 +175,7 @@ public class GenealogyListFragment extends FabFragment {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ModelGenealogyPerson modelUser = new ModelGenealogyPerson(app, array.getJSONObject(i));
+                                            ModelGenealogyPerson modelUser = new ModelGenealogyPerson(mActivity, mApplicationCallback, array.getJSONObject(i));
                                             list.add(modelUser);
                                         }
                                     }
@@ -334,7 +350,7 @@ public class GenealogyListFragment extends FabFragment {
     }
 
     public void add() {
-        app.mDialog = new DialogAddGenealogyPerson(app, new IPostExecuteListener() {
+        app.mDialog = new DialogAddGenealogyPerson(mActivity, mApplicationCallback, new IPostExecuteListener() {
             @Override
             public void onPostExecute(JSONObject json, String body) {
                 refreshList();

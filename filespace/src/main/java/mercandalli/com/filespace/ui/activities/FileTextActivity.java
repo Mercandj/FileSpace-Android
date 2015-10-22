@@ -19,6 +19,8 @@
  */
 package mercandalli.com.filespace.ui.activities;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -54,15 +56,15 @@ public class FileTextActivity extends ApplicationActivity implements IPostExecut
     private EditText mEditText;
     private ProgressBar mProgressBar;
 
-    public static void startForSelection(ApplicationActivity app, final ModelFile modelFile, boolean isOnline) {
-        final Intent intent = new Intent(app, FileTextActivity.class);
+    public static void startForSelection(Activity activity, final ModelFile modelFile, boolean isOnline) {
+        final Intent intent = new Intent(activity, FileTextActivity.class);
         intent.putExtra(EXTRA_MODEL_FILE_URL, "" + modelFile.onlineUrl);
         if (modelFile.type.equals(ModelFileTypeENUM.FILESPACE.type)) {
             intent.putExtra(EXTRA_MODEL_FILE_ARTICLE_CONTENT_1, "" + modelFile.content.article.article_content_1);
         }
         intent.putExtra(EXTRA_MODEL_FILE_ONLINE, isOnline);
-        app.startActivity(intent);
-        app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 
     @Override
@@ -98,7 +100,7 @@ public class FileTextActivity extends ApplicationActivity implements IPostExecut
             mIsOnline = extras.getBoolean(EXTRA_MODEL_FILE_ONLINE);
 
             if (savedInstanceState == null) {
-                new TaskGet(this, this.getConfig().getUser(), this.mUrl, this).execute();
+                new TaskGet(this, this, this.getConfig().getUser(), this.mUrl, this).execute();
             } else {
                 mProgressBar.setVisibility(View.GONE);
             }

@@ -20,6 +20,7 @@
 package mercandalli.com.filespace.ui.fragments.genealogy;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -32,16 +33,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.models.ModelInformation;
-import mercandalli.com.filespace.net.TaskGet;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
-import mercandalli.com.filespace.ui.adapters.AdapterModelInformation;
-import mercandalli.com.filespace.ui.fragments.FabFragment;
-import mercandalli.com.filespace.utils.NetUtils;
-import mercandalli.com.filespace.utils.StringPair;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,6 +41,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.models.ModelInformation;
+import mercandalli.com.filespace.net.TaskGet;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
+import mercandalli.com.filespace.ui.adapters.AdapterModelInformation;
+import mercandalli.com.filespace.ui.fragments.FabFragment;
+import mercandalli.com.filespace.utils.NetUtils;
+import mercandalli.com.filespace.utils.StringPair;
 
 /**
  * Created by Jonathan on 28/08/2015.
@@ -65,6 +65,9 @@ public class GenealogyStatisticsFragment extends FabFragment {
     private ProgressBar circularProgressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    private Activity mActivity;
+    private ApplicationCallback mApplicationCallback;
+
     public static GenealogyStatisticsFragment newInstance() {
         Bundle args = new Bundle();
         GenealogyStatisticsFragment fragment = new GenealogyStatisticsFragment();
@@ -73,9 +76,21 @@ public class GenealogyStatisticsFragment extends FabFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (ApplicationDrawerActivity) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (Activity) context;
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mApplicationCallback = null;
+        app = null;
     }
 
     @Override
@@ -126,7 +141,8 @@ public class GenealogyStatisticsFragment extends FabFragment {
         List<StringPair> parameters = null;
         if (NetUtils.isInternetConnection(app))
             new TaskGet(
-                    app,
+                    mActivity,
+                    mApplicationCallback,
                     this.app.getConfig().getUser(),
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeGenealogyStatistics,
                     new IPostExecuteListener() {

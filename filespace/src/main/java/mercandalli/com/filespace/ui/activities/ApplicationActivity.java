@@ -54,7 +54,7 @@ import mercandalli.com.filespace.utils.StringPair;
 /**
  * Mother class of the {@link Activity} MainActivity.
  */
-public abstract class ApplicationActivity extends AppCompatActivity implements ApplicationCallback {
+public abstract class ApplicationActivity extends AppCompatActivity implements ApplicationCallback, ConfigCallback {
 
     private Config mConfig;
     public Dialog mDialog;
@@ -65,7 +65,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mConfig = new Config(this);
+        mConfig = new Config(this, this);
 
         //region Handle NFC
         Intent intent = getIntent();
@@ -98,7 +98,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
     @Override
     public Config getConfig() {
         if (mConfig == null) {
-            mConfig = new Config(this);
+            mConfig = new Config(this, this);
         }
         return mConfig;
     }
@@ -224,7 +224,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             if (mPhotoFile != null && mPhotoFile.getFile() != null) {
                 List<StringPair> parameters = mPhotoFile.getForUpload();
-                (new TaskPost(this, getConfig().getUrlServer() + getConfig().routeFile, new IPostExecuteListener() {
+                (new TaskPost(this, this, getConfig().getUrlServer() + getConfig().routeFile, new IPostExecuteListener() {
                     @Override
                     public void onPostExecute(JSONObject json, String body) {
                         if (mPhotoFileListener != null)
@@ -245,7 +245,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_FileSpace_";
         File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + this.getConfig().getLocalFolderName());
-        ModelFile result = new ModelFile(this);
+        ModelFile result = new ModelFile(this, this);
         result.name = imageFileName + ".jpg";
         result.setFile(File.createTempFile(
                 imageFileName,  /* prefix */

@@ -21,6 +21,7 @@ package mercandalli.com.filespace.ui.fragments.file;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
@@ -59,6 +60,7 @@ import mercandalli.com.filespace.listeners.IStringListener;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.models.MusicModelFile;
 import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterDragMusicModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
@@ -79,6 +81,9 @@ public class FileLocalMusicFragment extends FabFragment
     private int mSortMode = Const.SORT_DATE_MODIFICATION;
     private int mViewMode = Const.MODE_LIST;
 
+    private Activity mActivity;
+    private ApplicationCallback mApplicationCallback;
+
     public static FileLocalMusicFragment newInstance() {
         Bundle args = new Bundle();
         FileLocalMusicFragment fragment = new FileLocalMusicFragment();
@@ -87,9 +92,21 @@ public class FileLocalMusicFragment extends FabFragment
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.app = (ApplicationDrawerActivity) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (Activity) context;
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mApplicationCallback = null;
+        app = null;
     }
 
     @Override
@@ -156,7 +173,7 @@ public class FileLocalMusicFragment extends FabFragment
                     String artist_name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
                     int artist_id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
 
-                    MusicModelFile modelFile = new MusicModelFile(app, new File(fullpath));
+                    MusicModelFile modelFile = new MusicModelFile(mActivity, mApplicationCallback, new File(fullpath));
                     modelFile.setAlbum(album_name);
                     modelFile.setArtist(artist_name);
                     if (mSortMode == Const.SORT_SIZE)
@@ -233,7 +250,7 @@ public class FileLocalMusicFragment extends FabFragment
                                                     public void execute() {
                                                         if (modelFile.getFile() != null) {
                                                             List<StringPair> parameters = modelFile.getForUpload();
-                                                            (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
+                                                            (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
                                                                 @Override
                                                                 public void onPostExecute(JSONObject json, String body) {
 
@@ -366,7 +383,7 @@ public class FileLocalMusicFragment extends FabFragment
                                                         public void execute() {
                                                             if (modelFile.getFile() != null) {
                                                                 List<StringPair> parameters = modelFile.getForUpload();
-                                                                (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
+                                                                (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
                                                                     @Override
                                                                     public void onPostExecute(JSONObject json, String body) {
 

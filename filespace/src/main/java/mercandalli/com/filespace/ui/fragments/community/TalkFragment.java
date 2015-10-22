@@ -20,6 +20,7 @@
 package mercandalli.com.filespace.ui.fragments.community;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -35,19 +36,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import mercandalli.com.filespace.listeners.IModelUserListener;
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.listeners.IStringListener;
-import mercandalli.com.filespace.models.ModelConversationUser;
-import mercandalli.com.filespace.models.ModelUser;
-import mercandalli.com.filespace.net.TaskGet;
-import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
-import mercandalli.com.filespace.ui.adapters.AdapterModelConnversationUser;
-import mercandalli.com.filespace.ui.fragments.BackFragment;
-import mercandalli.com.filespace.ui.views.DividerItemDecoration;
-import mercandalli.com.filespace.utils.StringPair;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,13 +44,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-
+import mercandalli.com.filespace.listeners.IModelUserListener;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.listeners.IStringListener;
+import mercandalli.com.filespace.models.ModelConversationUser;
+import mercandalli.com.filespace.models.ModelUser;
+import mercandalli.com.filespace.net.TaskGet;
+import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
+import mercandalli.com.filespace.ui.adapters.AdapterModelConnversationUser;
+import mercandalli.com.filespace.ui.fragments.BackFragment;
+import mercandalli.com.filespace.ui.views.DividerItemDecoration;
 import mercandalli.com.filespace.utils.NetUtils;
+import mercandalli.com.filespace.utils.StringPair;
 
 /**
  * Created by Jonathan on 30/03/2015.
  */
 public class TalkFragment extends BackFragment {
+
+    private static final String BUNDLE_ARG_TITLE = "TalkFragment.Args.BUNDLE_ARG_TITLE";
 
     private View rootView;
 
@@ -74,17 +75,29 @@ public class TalkFragment extends BackFragment {
     private TextView message;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    public static TalkFragment newInstance() {
-        Bundle args = new Bundle();
-        TalkFragment fragment = new TalkFragment();
-        fragment.setArguments(args);
-        return fragment;
+    private Activity mActivity;
+    private ApplicationCallback mApplicationCallback;
+
+    public static UserFragment newInstance() {
+        return new UserFragment();
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (ApplicationDrawerActivity) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (Activity) context;
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mApplicationCallback = null;
+        app = null;
     }
 
     @Override
@@ -129,7 +142,8 @@ public class TalkFragment extends BackFragment {
         List<StringPair> parameters = null;
         if (NetUtils.isInternetConnection(app) && app.isLogged())
             new TaskGet(
-                    app,
+                    mActivity,
+                    mApplicationCallback,
                     this.app.getConfig().getUser(),
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeUserConversation,
                     new IPostExecuteListener() {
@@ -141,7 +155,7 @@ public class TalkFragment extends BackFragment {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ModelConversationUser modelUser = new ModelConversationUser(app, array.getJSONObject(i));
+                                            ModelConversationUser modelUser = new ModelConversationUser(mActivity, mApplicationCallback, array.getJSONObject(i));
                                             list.add(modelUser);
                                         }
                                     }
@@ -186,7 +200,7 @@ public class TalkFragment extends BackFragment {
                             List<StringPair> parameters = new ArrayList<>();
                             parameters.add(new StringPair("message", "" + text));
 
-                            new TaskPost(app, url, new IPostExecuteListener() {
+                            new TaskPost(mActivity, mApplicationCallback, url, new IPostExecuteListener() {
                                 @Override
                                 public void onPostExecute(JSONObject json, String body) {
 
@@ -198,13 +212,13 @@ public class TalkFragment extends BackFragment {
             });
             this.recyclerView.setAdapter(mAdapter);
 
-            if (((ImageButton) rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
-                ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
+            if (rootView.findViewById(R.id.circle).getVisibility() == View.GONE) {
+                rootView.findViewById(R.id.circle).setVisibility(View.VISIBLE);
                 Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
-                ((ImageButton) rootView.findViewById(R.id.circle)).startAnimation(animOpen);
+                rootView.findViewById(R.id.circle).startAnimation(animOpen);
             }
 
-            ((ImageButton) rootView.findViewById(R.id.circle)).setOnClickListener(new View.OnClickListener() {
+            rootView.findViewById(R.id.circle).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // TODO Fab TalkFragment

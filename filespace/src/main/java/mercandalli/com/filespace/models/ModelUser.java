@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.models;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 
 import mercandalli.com.filespace.config.Const;
@@ -27,6 +28,7 @@ import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.HashUtils;
 import mercandalli.com.filespace.utils.ImageUtils;
@@ -57,8 +59,8 @@ public class ModelUser extends Model {
 
     }
 
-    public ModelUser(ApplicationActivity app, int id, String username, String password, String regId, boolean admin) {
-        super(app);
+    public ModelUser(Activity activity, ApplicationCallback app, int id, String username, String password, String regId, boolean admin) {
+        super(activity, app);
         this.id = id;
         this.username = username;
         this.password = password;
@@ -66,8 +68,8 @@ public class ModelUser extends Model {
         this.admin = admin;
     }
 
-    public ModelUser(ApplicationActivity app, JSONObject json) {
-        super(app);
+    public ModelUser(Activity activity, ApplicationCallback app, JSONObject json) {
+        super(activity, app);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
             if (json.has("id"))
@@ -101,7 +103,7 @@ public class ModelUser extends Model {
             if (json.has("num_files") && !json.isNull("num_files"))
                 this.num_files = json.getLong("num_files");
 
-            userLocation = new ModelUserLocation(app, json);
+            userLocation = new ModelUserLocation(mActivity, app, json);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -110,16 +112,16 @@ public class ModelUser extends Model {
         }
 
         if (hasPicture()) {
-            if (ImageUtils.is_image(this.app, this.id_file_profile_picture)) {
-                ModelUser.this.bitmap = ImageUtils.load_image(this.app, this.id_file_profile_picture);
+            if (ImageUtils.is_image(mActivity, this.id_file_profile_picture)) {
+                ModelUser.this.bitmap = ImageUtils.load_image(mActivity, this.id_file_profile_picture);
                 ModelUser.this.app.updateAdapters();
             } else {
-                ModelFile picture = new ModelFile(app);
+                ModelFile picture = new ModelFile(mActivity, app);
                 picture.id = this.id_file_profile_picture;
                 picture.size = this.file_profile_picture_size;
                 picture.onlineUrl = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + id_file_profile_picture;
 
-                new TaskGetDownloadImage(app, this.app.getConfig().getUser(), picture, Const.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
+                new TaskGetDownloadImage(mActivity, app, this.app.getConfig().getUser(), picture, Const.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
                     @Override
                     public void execute(Bitmap bitmap) {
                         if (bitmap != null) {
@@ -172,7 +174,7 @@ public class ModelUser extends Model {
         if (this.app != null) {
             if (this.app.getConfig().isUserAdmin() && this.id != this.app.getConfig().getUserId()) {
                 String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeUserDelete + "/" + this.id;
-                new TaskPost(this.app, url, listener).execute();
+                new TaskPost(mActivity, this.app, url, listener).execute();
                 return;
             }
         }

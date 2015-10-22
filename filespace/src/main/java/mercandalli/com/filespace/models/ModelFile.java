@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.models;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -59,6 +60,7 @@ import mercandalli.com.filespace.net.TaskGetDownload;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.activities.FileAudioActivity;
 import mercandalli.com.filespace.ui.activities.FilePictureActivity;
 import mercandalli.com.filespace.ui.activities.FileTextActivity;
@@ -146,17 +148,17 @@ public class ModelFile extends Model implements Parcelable {
         return parameters;
     }
 
-    public ModelFile(ApplicationActivity app) {
-        super(app);
+    public ModelFile(Activity activity, ApplicationCallback app) {
+        super(activity, app);
     }
 
-    public ModelFile(ApplicationActivity app, File file) {
-        super(app);
+    public ModelFile(Activity activity, ApplicationCallback app, File file) {
+        super(activity, app);
         setFile(file);
     }
 
-    public ModelFile(ApplicationActivity app, JSONObject json) {
-        super(app);
+    public ModelFile(Activity activity, ApplicationCallback app, JSONObject json) {
+        super(activity, app);
 
         try {
             if (json.has("id") && !json.isNull("id")) {
@@ -182,7 +184,7 @@ public class ModelFile extends Model implements Parcelable {
             if (json.has("directory") && !json.isNull("directory"))
                 this.directory = json.getInt("directory") == 1;
             if (json.has("content") && !json.isNull("content"))
-                this.content = new ModelFileSpace(app, new JSONObject(json.getString("content")));
+                this.content = new ModelFileSpace(mActivity, app, new JSONObject(json.getString("content")));
             if (json.has("public") && !json.isNull("public"))
                 this._public = json.getInt("public") == 1;
             if (json.has("is_apk_update") && !json.isNull("is_apk_update"))
@@ -201,11 +203,11 @@ public class ModelFile extends Model implements Parcelable {
         }
 
         if (this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0) {
-            if (ImageUtils.is_image(this.app, this.id)) {
-                ModelFile.this.bitmap = ImageUtils.load_image(this.app, this.id);
+            if (ImageUtils.is_image(mActivity, this.id)) {
+                ModelFile.this.bitmap = ImageUtils.load_image(mActivity, this.id);
                 ModelFile.this.app.updateAdapters();
             } else
-                new TaskGetDownloadImage(app, this.app.getConfig().getUser(), this, Const.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
+                new TaskGetDownloadImage(mActivity, app, this.app.getConfig().getUser(), this, Const.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
                     @Override
                     public void execute(Bitmap bitmap) {
                         if (bitmap != null) {
@@ -219,9 +221,9 @@ public class ModelFile extends Model implements Parcelable {
 
     public void executeOnline(ArrayList<ModelFile> files, View view) {
         if (this.type.equals(ModelFileTypeENUM.TEXT.type)) {
-            FileTextActivity.startForSelection(app, this, true);
+            FileTextActivity.startForSelection(mActivity, this, true);
         } else if (this.type.equals(ModelFileTypeENUM.PICTURE.type)) {
-            Intent intent = new Intent(this.app, FilePictureActivity.class);
+            Intent intent = new Intent(mActivity, FilePictureActivity.class);
             intent.putExtra("ID", this.id);
             intent.putExtra("TITLE", "" + this.getNameExt());
             intent.putExtra("URL_FILE", "" + this.onlineUrl);
@@ -231,17 +233,17 @@ public class ModelFile extends Model implements Parcelable {
             intent.putExtra("SIZE_FILE", size);
             intent.putExtra("DATE_FILE", date_creation);
             if (view == null) {
-                this.app.startActivity(intent);
-                this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                this.mActivity.startActivity(intent);
+                this.mActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
             } else {
                 Pair<View, String> p1 = Pair.create(view.findViewById(R.id.icon), "transitionIcon");
                 Pair<View, String> p2 = Pair.create(view.findViewById(R.id.title), "transitionTitle");
                 ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(this.app, p1, p2);
-                this.app.startActivity(intent, options.toBundle());
+                        makeSceneTransitionAnimation(mActivity, p1, p2);
+                this.mActivity.startActivity(intent, options.toBundle());
             }
         } else if (this.type.equals(ModelFileTypeENUM.AUDIO.type)) {
-            Intent intent = new Intent(app, FileAudioActivity.class);
+            Intent intent = new Intent(mActivity, FileAudioActivity.class);
             intent.putExtra("LOGIN", "" + app.getConfig().getUser().getAccessLogin());
             intent.putExtra("PASSWORD", "" + app.getConfig().getUser().getAccessPassword());
             intent.putExtra("ONLINE", true);
@@ -252,27 +254,27 @@ public class ModelFile extends Model implements Parcelable {
                     tmpFiles.add(f);
             intent.putParcelableArrayListExtra("FILES", tmpFiles);
             if (view == null) {
-                this.app.startActivity(intent);
-                this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                mActivity.startActivity(intent);
+                mActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
             } else {
                 Pair<View, String> p1 = Pair.create(view.findViewById(R.id.icon), "transitionIcon");
                 ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(this.app, p1);
-                this.app.startActivity(intent, options.toBundle());
+                        makeSceneTransitionAnimation(mActivity, p1);
+                mActivity.startActivity(intent, options.toBundle());
             }
         } else if (this.type.equals(ModelFileTypeENUM.FILESPACE.type)) {
             if (content != null) {
                 if (content.timer.timer_date != null) {
-                    Intent intent = new Intent(app, FileTimerActivity.class);
+                    Intent intent = new Intent(mActivity, FileTimerActivity.class);
                     intent.putExtra("URL_FILE", "" + this.onlineUrl);
                     intent.putExtra("LOGIN", "" + this.app.getConfig().getUser().getAccessLogin());
                     intent.putExtra("ONLINE", true);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     intent.putExtra("TIMER_DATE", "" + dateFormat.format(content.timer.timer_date));
-                    this.app.startActivity(intent);
-                    this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                    mActivity.startActivity(intent);
+                    mActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                 } else if (!StringUtils.isNullOrEmpty(content.article.article_content_1)) {
-                    FileTextActivity.startForSelection(app, this, true);
+                    FileTextActivity.startForSelection(mActivity, this, true);
                 }
             }
         }
@@ -323,28 +325,28 @@ public class ModelFile extends Model implements Parcelable {
             Intent apkIntent = new Intent();
             apkIntent.setAction(Intent.ACTION_VIEW);
             apkIntent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-            this.app.startActivity(apkIntent);
+            mActivity.startActivity(apkIntent);
         } else if (this.type.equals(ModelFileTypeENUM.TEXT.type)) {
             Intent txtIntent = new Intent();
             txtIntent.setAction(Intent.ACTION_VIEW);
             txtIntent.setDataAndType(Uri.fromFile(file), "text/plain");
             try {
-                this.app.startActivity(txtIntent);
+                mActivity.startActivity(txtIntent);
             } catch (ActivityNotFoundException e) {
                 txtIntent.setType("text/*");
-                this.app.startActivity(txtIntent);
+                mActivity.startActivity(txtIntent);
             }
         } else if (this.type.equals(ModelFileTypeENUM.HTML.type)) {
             Intent htmlIntent = new Intent();
             htmlIntent.setAction(Intent.ACTION_VIEW);
             htmlIntent.setDataAndType(Uri.fromFile(file), "text/html");
             try {
-                this.app.startActivity(htmlIntent);
+                this.mActivity.startActivity(htmlIntent);
             } catch (ActivityNotFoundException e) {
-                Toast.makeText(this.app, "ERREUR", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this.mActivity, "ERREUR", Toast.LENGTH_SHORT).show();
             }
         } else if (this.type.equals(ModelFileTypeENUM.AUDIO.type)) {
-            Intent intent = new Intent(this.app, FileAudioActivity.class);
+            Intent intent = new Intent(this.mActivity, FileAudioActivity.class);
             intent.putExtra("ONLINE", false);
             intent.putExtra("FILE", this);
             ArrayList<ModelFile> tmpFiles = new ArrayList<>();
@@ -354,48 +356,48 @@ public class ModelFile extends Model implements Parcelable {
                         tmpFiles.add(f);
             intent.putParcelableArrayListExtra("FILES", tmpFiles);
             if (view == null) {
-                this.app.startActivity(intent);
-                this.app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                this.mActivity.startActivity(intent);
+                this.mActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
             } else {
                 Pair<View, String> p1 = Pair.create(view.findViewById(R.id.icon), "transitionIcon");
                 ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(this.app, p1);
-                this.app.startActivity(intent, options.toBundle());
+                        makeSceneTransitionAnimation(this.mActivity, p1);
+                this.mActivity.startActivity(intent, options.toBundle());
             }
         } else if (this.type.equals(ModelFileTypeENUM.PICTURE.type)) {
             Intent picIntent = new Intent();
             picIntent.setAction(Intent.ACTION_VIEW);
             picIntent.setDataAndType(Uri.fromFile(file), "image/*");
-            this.app.startActivity(picIntent);
+            this.mActivity.startActivity(picIntent);
         } else if (this.type.equals(ModelFileTypeENUM.VIDEO.type)) {
             Intent videoIntent = new Intent();
             videoIntent.setAction(Intent.ACTION_VIEW);
             videoIntent.setDataAndType(Uri.fromFile(file), "video/*");
             try {
-                app.startActivity(videoIntent);
+                mActivity.startActivity(videoIntent);
             } catch (ActivityNotFoundException e) {
-                Toast.makeText(app, "ERREUR", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, "ERREUR", Toast.LENGTH_SHORT).show();
             }
         } else if (this.type.equals(ModelFileTypeENUM.PDF.type)) {
             Intent pdfIntent = new Intent();
             pdfIntent.setAction(Intent.ACTION_VIEW);
             pdfIntent.setDataAndType(Uri.fromFile(file), "application/pdf");
             try {
-                app.startActivity(pdfIntent);
+                mActivity.startActivity(pdfIntent);
             } catch (ActivityNotFoundException e) {
-                Toast.makeText(app, "ERREUR", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, "ERREUR", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     public void download(IListener listener) {
         if (this.directory) {
-            Toast.makeText(app, "Directory download not supported yet.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, "Directory download not supported yet.", Toast.LENGTH_SHORT).show();
             return;
         }
         String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + id;
         String url_ouput = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + app.getConfig().getLocalFolderName() + File.separator + this.getNameExt();
-        new TaskGetDownload(this.app, url, url_ouput, this, listener).execute();
+        new TaskGetDownload(mActivity, this.app, url, url_ouput, this, listener).execute();
     }
 
     public boolean isOnline() {
@@ -405,7 +407,7 @@ public class ModelFile extends Model implements Parcelable {
     public void delete(IPostExecuteListener listener) {
         if (this.isOnline()) {
             String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFileDelete + "/" + id;
-            new TaskPost(app, url, listener).execute();
+            new TaskPost(mActivity, app, url, listener).execute();
         } else {
             if (file.isDirectory())
                 FileUtils.deleteDirectory(file);
@@ -422,7 +424,7 @@ public class ModelFile extends Model implements Parcelable {
         List<StringPair> parameters = new ArrayList<>();
         parameters.add(new StringPair("public", "" + this._public));
         String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + this.id;
-        (new TaskPost(this.app, url, listener, parameters)).execute();
+        (new TaskPost(mActivity, this.app, url, listener, parameters)).execute();
     }
 
     public void setId_file_parent(int id_file_parent, IPostExecuteListener listener) {
@@ -431,7 +433,7 @@ public class ModelFile extends Model implements Parcelable {
         List<StringPair> parameters = new ArrayList<>();
         parameters.add(new StringPair("id_file_parent", "" + this.id_file_parent));
         String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + this.id;
-        (new TaskPost(this.app, url, listener, parameters)).execute();
+        (new TaskPost(mActivity, this.app, url, listener, parameters)).execute();
     }
 
     public void rename(String new_name, IPostExecuteListener listener) {
@@ -439,7 +441,7 @@ public class ModelFile extends Model implements Parcelable {
         if (isOnline()) {
             this.url = new_name;
             String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + id;
-            new TaskPost(app, url, listener, getForRename()).execute();
+            new TaskPost(mActivity, app, url, listener, getForRename()).execute();
         } else {
             File parent = file.getParentFile();
             if (parent != null) {
@@ -461,7 +463,7 @@ public class ModelFile extends Model implements Parcelable {
     public void copyFile(String outputPath, IPostExecuteListener listener) {
         if (this.isOnline()) {
             //TODO copy online
-            Toast.makeText(app, app.getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, mActivity.getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
         } else {
             InputStream in;
             OutputStream out;
@@ -480,7 +482,7 @@ public class ModelFile extends Model implements Parcelable {
                     copy.mkdirs();
                     File[] children = file.listFiles();
                     for (int i = 0; i < children.length; i++) {
-                        (new ModelFile(app, children[i])).copyFile(copy.getAbsolutePath() + File.separator);
+                        (new ModelFile(mActivity, app, children[i])).copyFile(copy.getAbsolutePath() + File.separator);
                     }
                 } else {
                     in = new FileInputStream(this.file.getAbsoluteFile());

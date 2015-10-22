@@ -19,7 +19,10 @@
  */
 package mercandalli.com.filespace.models;
 
+import android.app.Activity;
+
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.utils.TimeUtils;
 
 import org.json.JSONException;
@@ -37,9 +40,8 @@ public class ModelConversationMessage extends Model {
     public String content;
     public ModelUser user;
 
-    public ModelConversationMessage(ApplicationActivity app, JSONObject json) {
-        super();
-        this.app = app;
+    public ModelConversationMessage(Activity activity, ApplicationCallback app, JSONObject json) {
+        super(activity, app);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
             if (json.has("id"))
@@ -51,7 +53,7 @@ public class ModelConversationMessage extends Model {
             if (json.has("content"))
                 this.content = json.getString("content");
             if (json.has("user"))
-                this.user = new ModelUser(this.app, json.getJSONObject("user"));
+                this.user = new ModelUser(activity, app, json.getJSONObject("user"));
             if (json.has("date_creation") && !json.isNull("date_creation"))
                 this.date_creation = dateFormat.parse(json.getString("date_creation"));
         } catch (JSONException e) {

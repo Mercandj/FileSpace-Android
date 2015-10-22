@@ -1,6 +1,7 @@
 package mercandalli.com.filespace.ui.fragments.workspace;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.models.ModelFileSpace;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.utils.FontUtils;
@@ -30,10 +32,25 @@ public class NoteFragment extends BackFragment {
 
     private ModelFileSpace article;
 
+    private Activity mActivity;
+    private ApplicationCallback mApplicationCallback;
+
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (ApplicationDrawerActivity) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (Activity) context;
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mApplicationCallback = null;
+        app = null;
     }
 
     public NoteFragment() {
@@ -44,7 +61,7 @@ public class NoteFragment extends BackFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_workspace_note, container, false);
 
-        this.article = new ModelFileSpace(app, "article");
+        this.article = new ModelFileSpace(mActivity, mApplicationCallback, "article");
 
         this.input = (TextView) this.rootView.findViewById(R.id.input);
         FontUtils.applyFont(app, this.input, "fonts/Roboto-Light.ttf");

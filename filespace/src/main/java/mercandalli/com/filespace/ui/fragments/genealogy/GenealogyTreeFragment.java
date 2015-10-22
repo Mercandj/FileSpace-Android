@@ -20,6 +20,7 @@
 package mercandalli.com.filespace.ui.fragments.genealogy;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -39,6 +40,7 @@ import mercandalli.com.filespace.listeners.IModelGenealogyUserListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelGenealogyPerson;
 import mercandalli.com.filespace.net.TaskGet;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterModelGenealogyUser;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
@@ -75,17 +77,29 @@ public class GenealogyTreeFragment extends FabFragment {
     private AdapterModelGenealogyUser mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    private Activity mActivity;
+    private ApplicationCallback mApplicationCallback;
+
     public static GenealogyTreeFragment newInstance() {
-        Bundle args = new Bundle();
-        GenealogyTreeFragment fragment = new GenealogyTreeFragment();
-        fragment.setArguments(args);
-        return fragment;
+        return new GenealogyTreeFragment();
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (ApplicationDrawerActivity) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (Activity) context;
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mApplicationCallback = null;
+        app = null;
     }
 
     @Override
@@ -135,7 +149,8 @@ public class GenealogyTreeFragment extends FabFragment {
             if (requestReady) {
                 requestReady = false;
                 new TaskGet(
-                        app,
+                        mActivity,
+                        mApplicationCallback,
                         this.app.getConfig().getUser(),
                         this.app.getConfig().getUrlServer() + this.app.getConfig().routeGenealogyChildren + "/" + id_user,
                         new IPostExecuteListener() {
@@ -148,7 +163,7 @@ public class GenealogyTreeFragment extends FabFragment {
                                         if (json.has("result")) {
                                             JSONArray array = json.getJSONArray("result");
                                             for (int i = 0; i < array.length(); i++) {
-                                                listChildren.add(new ModelGenealogyPerson(app, array.getJSONObject(i)));
+                                                listChildren.add(new ModelGenealogyPerson(mActivity, mApplicationCallback, array.getJSONObject(i)));
                                             }
                                         }
                                     } else
@@ -181,7 +196,8 @@ public class GenealogyTreeFragment extends FabFragment {
             if (requestReady) {
                 requestReady = false;
                 new TaskGet(
-                        app,
+                        mActivity,
+                        mApplicationCallback,
                         this.app.getConfig().getUser(),
                         this.app.getConfig().getUrlServer() + this.app.getConfig().routeGenealogy + "/" + id_user,
                         new IPostExecuteListener() {
@@ -191,7 +207,7 @@ public class GenealogyTreeFragment extends FabFragment {
                                 try {
                                     if (json != null) {
                                         if (json.has("result")) {
-                                            GenealogyTreeFragment.this.genealogyPerson = new ModelGenealogyPerson(app, json.getJSONObject("result"));
+                                            GenealogyTreeFragment.this.genealogyPerson = new ModelGenealogyPerson(mActivity, mApplicationCallback, json.getJSONObject("result"));
                                             GenealogyTreeFragment.this.genealogyPerson.selected = true;
                                         }
                                     } else

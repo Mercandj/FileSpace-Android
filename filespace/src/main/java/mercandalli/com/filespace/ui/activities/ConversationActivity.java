@@ -144,7 +144,7 @@ public class ConversationActivity extends ApplicationActivity {
                     parameters.add(new StringPair("message", "" + input.getText().toString()));
                     input.setText("");
 
-                    new TaskPost(ConversationActivity.this, url, new IPostExecuteListener() {
+                    new TaskPost(ConversationActivity.this, ConversationActivity.this, url, new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
                             refreshList();
@@ -202,6 +202,7 @@ public class ConversationActivity extends ApplicationActivity {
         if (NetUtils.isInternetConnection(this)) {
             new TaskGet(
                     this,
+                    this,
                     this.getConfig().getUser(),
                     this.url,
                     new IPostExecuteListener() {
@@ -213,7 +214,7 @@ public class ConversationActivity extends ApplicationActivity {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ModelConversationMessage modelFile = new ModelConversationMessage(ConversationActivity.this, array.getJSONObject(i));
+                                            ModelConversationMessage modelFile = new ModelConversationMessage(ConversationActivity.this, ConversationActivity.this, array.getJSONObject(i));
                                             list.add(modelFile);
                                         }
                                     }

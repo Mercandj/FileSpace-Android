@@ -21,6 +21,7 @@ package mercandalli.com.filespace.ui.fragments.file;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -53,12 +54,14 @@ import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.models.ModelFileTypeENUM;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
 import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
+import mercandalli.com.filespace.ui.fragments.community.UserFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.NetUtils;
@@ -83,6 +86,9 @@ public class FileCloudFragment extends FabFragment implements
     private String url = "";
     private List<ModelFile> filesToCut = new ArrayList<>();
 
+    private Activity mActivity;
+    private ApplicationCallback mApplicationCallback;
+
     /**
      * {@link Const#MODE_LIST} or {@link Const#MODE_GRID}
      */
@@ -93,9 +99,21 @@ public class FileCloudFragment extends FabFragment implements
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (ApplicationDrawerActivity) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (Activity) context;
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mApplicationCallback = null;
+        app = null;
     }
 
     @Override
@@ -138,7 +156,8 @@ public class FileCloudFragment extends FabFragment implements
 
         if (NetUtils.isInternetConnection(app) && app.isLogged())
             new TaskGet(
-                    app,
+                    mActivity,
+                    mApplicationCallback,
                     this.app.getConfig().getUser(),
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile,
                     new IPostExecuteListener() {
@@ -152,7 +171,7 @@ public class FileCloudFragment extends FabFragment implements
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ModelFile modelFile = new ModelFile(app, array.getJSONObject(i));
+                                            ModelFile modelFile = new ModelFile(mActivity, mApplicationCallback, array.getJSONObject(i));
                                             mFilesList.add(modelFile);
                                         }
                                     }
@@ -320,7 +339,7 @@ public class FileCloudFragment extends FabFragment implements
                                             case 6:
                                                 List<StringPair> parameters = new ArrayList<>();
                                                 parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
-                                                (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
                                                     @Override
                                                     public void onPostExecute(JSONObject json, String body) {
                                                         try {
@@ -549,7 +568,7 @@ public class FileCloudFragment extends FabFragment implements
                             case 6:
                                 List<StringPair> parameters = new ArrayList<>();
                                 parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
-                                (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
                                     @Override
                                     public void onPostExecute(JSONObject json, String body) {
                                         try {

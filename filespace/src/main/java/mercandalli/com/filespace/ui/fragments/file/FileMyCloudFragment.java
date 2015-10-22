@@ -21,6 +21,7 @@ package mercandalli.com.filespace.ui.fragments.file;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -55,6 +56,7 @@ import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.models.ModelFileTypeENUM;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
@@ -80,15 +82,29 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
 
     private int mViewMode = Const.MODE_LIST;
 
+    private Activity mActivity;
+    private ApplicationCallback mApplicationCallback;
+
     public static FileMyCloudFragment newInstance() {
         return new FileMyCloudFragment();
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (ApplicationDrawerActivity) activity;
-        resetPath();
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (Activity) context;
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mApplicationCallback = null;
+        app = null;
     }
 
     @Override
@@ -204,7 +220,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                         if (modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
                                             List<StringPair> parameters = new ArrayList<>();
                                             parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
-                                            (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                            (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
                                                     try {
@@ -220,7 +236,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                         } else if (modelFile.type.equals(ModelFileTypeENUM.APK.type) && app.getConfig().isUserAdmin()) {
                                             List<StringPair> parameters = new ArrayList<>();
                                             parameters.add(new StringPair("is_apk_update", "" + !modelFile.is_apk_update));
-                                            (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeFile + "/" + modelFile.id, new IPostExecuteListener() {
+                                            (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeFile + "/" + modelFile.id, new IPostExecuteListener() {
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
                                                     try {
@@ -293,7 +309,8 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
 
         if (NetUtils.isInternetConnection(app) && app.isLogged()) {
             new TaskGet(
-                    app,
+                    mActivity,
+                    mApplicationCallback,
                     this.app.getConfig().getUser(),
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile,
                     new IPostExecuteListener() {
@@ -307,7 +324,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ModelFile modelFile = new ModelFile(app, array.getJSONObject(i));
+                                            ModelFile modelFile = new ModelFile(mActivity, mApplicationCallback, array.getJSONObject(i));
                                             mFilesList.add(modelFile);
                                         }
                                     }
@@ -474,7 +491,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                                 if (modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
                                                     List<StringPair> parameters = new ArrayList<>();
                                                     parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
-                                                    (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                    (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
                                                         @Override
                                                         public void onPostExecute(JSONObject json, String body) {
                                                             try {
@@ -490,7 +507,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                                 } else if (modelFile.type.equals(ModelFileTypeENUM.APK.type) && app.getConfig().isUserAdmin()) {
                                                     List<StringPair> parameters = new ArrayList<>();
                                                     parameters.add(new StringPair("is_apk_update", "" + !modelFile.is_apk_update));
-                                                    (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeFile + "/" + modelFile.id, new IPostExecuteListener() {
+                                                    (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeFile + "/" + modelFile.id, new IPostExecuteListener() {
                                                         @Override
                                                         public void onPostExecute(JSONObject json, String body) {
                                                             try {

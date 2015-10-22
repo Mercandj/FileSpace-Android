@@ -81,7 +81,7 @@ public class FileTimerActivity extends ApplicationActivity {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {
                 this.timer_date = dateFormat.parse("" + extras.getString("TIMER_DATE"));
-                modelFileContent = new ModelFileSpace(this, "timer");
+                modelFileContent = new ModelFileSpace(this, this, "timer");
                 modelFileContent.timer.timer_date = timer_date;
             } catch (ParseException e) {
                 e.printStackTrace();

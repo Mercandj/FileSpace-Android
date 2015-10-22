@@ -20,6 +20,7 @@
 package mercandalli.com.filespace.ui.dialogs;
 
 import android.animation.Animator;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -30,6 +31,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.utils.FontUtils;
 import mercandalli.com.filespace.utils.StringUtils;
 
@@ -40,11 +42,13 @@ import mercandalli.com.filespace.R;
 
 public class DialogAuthorLabel extends Dialog {
 
-    ApplicationActivity app;
+    private Activity mActivity;
+    ApplicationCallback app;
     ShimmerTextView myShimmerTextView, version_tv;
 
-    public DialogAuthorLabel(final ApplicationActivity app) {
-        super(app, android.R.style.Theme_Material_Dialog);
+    public DialogAuthorLabel(final Activity activity, final ApplicationCallback app) {
+        super(activity, android.R.style.Theme_Material_Dialog);
+        mActivity = activity;
         this.app = app;
 
         this.setContentView(R.layout.dialog_author_label);
@@ -55,7 +59,7 @@ public class DialogAuthorLabel extends Dialog {
         countDown(version_tv, 5);
 
         myShimmerTextView = (ShimmerTextView) this.findViewById(R.id.shimmer_tv);
-        FontUtils.applyFont(app, myShimmerTextView, "fonts/Roboto-Light.ttf");
+        FontUtils.applyFont(activity, myShimmerTextView, "fonts/Roboto-Light.ttf");
 
         getShimmer(myShimmerTextView).start(myShimmerTextView);
 
@@ -87,9 +91,9 @@ public class DialogAuthorLabel extends Dialog {
                 countDown(tv, count - 1);
                 if (count == 1) {
                     try {
-                        FontUtils.applyFont(app, tv, "fonts/Roboto-Light.ttf");
+                        FontUtils.applyFont(mActivity, tv, "fonts/Roboto-Light.ttf");
                         getShimmer(tv).start(tv);
-                        PackageInfo pInfo = app.getPackageManager().getPackageInfo(app.getPackageName(), 0);
+                        PackageInfo pInfo = mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0);
                         version(tv, "Version: " + pInfo.versionName, 0);
                     } catch (PackageManager.NameNotFoundException e) {
                         e.printStackTrace();

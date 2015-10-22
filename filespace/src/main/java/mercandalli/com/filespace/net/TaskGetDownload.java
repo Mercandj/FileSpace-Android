@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.net;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -28,6 +29,7 @@ import android.util.Log;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.utils.FileUtils;
 
 import java.io.FileOutputStream;
@@ -49,14 +51,16 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
     String url;
     String url_ouput;
     IListener listener;
-    ApplicationActivity app;
+    ApplicationCallback app;
     ModelFile modelFile;
+    Activity mActivity;
 
     int id = 1;
     NotificationManager mNotifyManager;
     NotificationCompat.Builder mBuilder;
 
-    public TaskGetDownload(ApplicationActivity app, String url, String url_ouput, ModelFile modelFile, IListener listener) {
+    public TaskGetDownload(Activity activity, ApplicationCallback app, String url, String url_ouput, ModelFile modelFile, IListener listener) {
+        mActivity = activity;
         this.app = app;
         this.url = url;
         this.url_ouput = url_ouput;
@@ -67,8 +71,8 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        mNotifyManager = (NotificationManager) this.app.getSystemService(Context.NOTIFICATION_SERVICE);
-        mBuilder = new NotificationCompat.Builder(this.app);
+        mNotifyManager = (NotificationManager) this.mActivity.getSystemService(Context.NOTIFICATION_SERVICE);
+        mBuilder = new NotificationCompat.Builder(this.mActivity);
         mBuilder.setContentTitle(this.modelFile.type.getTitle() + " Download")
                 .setContentText("Download in progress : 0 / " + FileUtils.humanReadableByteCount(this.modelFile.size) + " : 0%")
                 .setSmallIcon(R.drawable.ic_notification);

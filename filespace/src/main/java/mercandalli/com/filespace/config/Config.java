@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.config;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -45,6 +46,7 @@ import java.util.List;
  */
 public class Config {
 
+    private Activity mActivity;
     private ApplicationActivity app;
     private List<ModelServerMessage> listServerMessage_1;
     public String currentToken = null;
@@ -127,7 +129,8 @@ public class Config {
         }
     }
 
-    public Config(ApplicationActivity app) {
+    public Config(Activity activity, ApplicationActivity app) {
+        mActivity = activity;
         this.app = app;
         load();
     }
@@ -177,7 +180,7 @@ public class Config {
                 if (tmp_settings_1.has("listServerMessage_1")) {
                     JSONArray array_listServerMessage_1 = tmp_settings_1.getJSONArray("listServerMessage_1");
                     for (int i = 0; i < array_listServerMessage_1.length(); i++)
-                        this.listServerMessage_1.add(new ModelServerMessage(app, array_listServerMessage_1.getJSONObject(i)));
+                        this.listServerMessage_1.add(new ModelServerMessage(app, app, array_listServerMessage_1.getJSONObject(i)));
                 }
             }
         } catch (JSONException e) {
@@ -282,10 +285,10 @@ public class Config {
         if (file.exists()) {
             return BitmapFactory.decodeFile(file.getPath());
         } else if (NetUtils.isInternetConnection(app)) {
-            ModelFile modelFile = new ModelFile(app);
+            ModelFile modelFile = new ModelFile(app, app);
             modelFile.id = this.getUserIdFileProfilePicture();
             modelFile.onlineUrl = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + this.getUserIdFileProfilePicture();
-            new TaskGetDownloadImage(app, this.app.getConfig().getUser(), modelFile, 100000, new IBitmapListener() {
+            new TaskGetDownloadImage(app, app, this.app.getConfig().getUser(), modelFile, 100000, new IBitmapListener() {
                 @Override
                 public void execute(Bitmap bitmap) {
                     //TODO photo profile
@@ -351,7 +354,7 @@ public class Config {
     }
 
     public ModelUser getUser() {
-        return new ModelUser(app, getUserId(), getUserUsername(), getUserPassword(), getUserRegId(), isUserAdmin());
+        return new ModelUser(mActivity, app, getUserId(), getUserUsername(), getUserPassword(), getUserRegId(), isUserAdmin());
     }
 
     public void addServerMessage(ModelServerMessage serverMessage) {

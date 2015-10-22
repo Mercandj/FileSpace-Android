@@ -19,6 +19,8 @@
  */
 package mercandalli.com.filespace.ui.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -38,7 +40,9 @@ import android.widget.Toast;
 
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.extras.ia.action.ENUM_Action;
+import mercandalli.com.filespace.listeners.SetToolbarCallback;
 import mercandalli.com.filespace.models.ModelSetting;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.activities.RegisterLoginActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterModelSetting;
 import mercandalli.com.filespace.ui.dialogs.DialogAuthorLabel;
@@ -51,6 +55,8 @@ import mercandalli.com.filespace.R;
 
 public class SettingsFragment extends BackFragment {
 
+    private static final String BUNDLE_ARG_TITLE = "HomeFragment.Args.BUNDLE_ARG_TITLE";
+
     private View rootView;
 
     private RecyclerView recyclerView;
@@ -58,23 +64,62 @@ public class SettingsFragment extends BackFragment {
     private List<ModelSetting> list;
     private int click_version;
     private boolean isDevelopper = false;
+    private Activity mActivity;
+    private ApplicationCallback mApplicationCallback;
+    private SetToolbarCallback mSetToolbarCallback;
+    private String mTitle;
+    private Toolbar mToolbar;
 
-    public static SettingsFragment newInstance() {
-        Bundle args = new Bundle();
-        SettingsFragment fragment = new SettingsFragment();
+    public static HomeFragment newInstance(String title) {
+        final HomeFragment fragment = new HomeFragment();
+        final Bundle args = new Bundle();
+        args.putString(BUNDLE_ARG_TITLE, title);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof SetToolbarCallback) {
+            mSetToolbarCallback = (SetToolbarCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mSetToolbarCallback = null;
+        mApplicationCallback = null;
+        app = null;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final Bundle args = getArguments();
+        if (!args.containsKey(BUNDLE_ARG_TITLE)) {
+            throw new IllegalStateException("Missing args. Please use newInstance()");
+        }
+        mActivity = getActivity();
+        mTitle = args.getString(BUNDLE_ARG_TITLE);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        app.setTitle(R.string.tab_settings);
-        Toolbar mToolbar = (Toolbar) rootView.findViewById(R.id.my_toolbar);
-        app.setToolbar(mToolbar);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            app.getWindow().setStatusBarColor(ContextCompat.getColor(app, R.color.notifications_bar));
+        mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_home_toolbar);
+        mToolbar.setTitle(mTitle);
+        mSetToolbarCallback.setToolbar(mToolbar);
+        setStatusBarColor(mActivity, R.color.notifications_bar);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -89,22 +134,22 @@ public class SettingsFragment extends BackFragment {
 
     public void refreshList() {
         list = new ArrayList<>();
-        list.add(new ModelSetting(app, "Settings", Const.TAB_VIEW_TYPE_SECTION));
+        list.add(new ModelSetting(mActivity, mApplicationCallback, "Settings", Const.TAB_VIEW_TYPE_SECTION));
         if (app.getConfig().isLogged()) {
-            list.add(new ModelSetting(app, "Auto connection", new OnCheckedChangeListener() {
+            list.add(new ModelSetting(mActivity, mApplicationCallback, "Auto connection", new OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     app.getConfig().setAutoConnection(isChecked);
                 }
             }, app.getConfig().isAutoConncetion()));
-            list.add(new ModelSetting(app, "Web application", new View.OnClickListener() {
+            list.add(new ModelSetting(mActivity, mApplicationCallback, "Web application", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     ENUM_Action.WEB_SEARCH.action.action(app, app.getConfig().webApplication);
                 }
             }));
         }
-        list.add(new ModelSetting(app, "Welcome on home screen", new View.OnClickListener() {
+        list.add(new ModelSetting(mActivity, mApplicationCallback, "Welcome on home screen", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(app, "Welcome message enabled.", Toast.LENGTH_SHORT).show();
@@ -112,37 +157,37 @@ public class SettingsFragment extends BackFragment {
             }
         }));
         if (app.getConfig().isLogged()) {
-            list.add(new ModelSetting(app, "Change password", new View.OnClickListener() {
+            list.add(new ModelSetting(mActivity, mApplicationCallback, "Change password", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //TODO Change password
-                    Toast.makeText(app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                 }
             }));
         }
         if (isDevelopper) {
-            list.add(new ModelSetting(app, "Login / Sign in", new View.OnClickListener() {
+            list.add(new ModelSetting(mActivity, mApplicationCallback, "Login / Sign in", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(app, RegisterLoginActivity.class);
-                    app.startActivity(intent);
-                    app.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                    app.finish();
+                    Intent intent = new Intent(mActivity, RegisterLoginActivity.class);
+                    mActivity.startActivity(intent);
+                    mActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                    mActivity.finish();
                 }
             }));
         }
 
-        list.add(new ModelSetting(app, app.getString(R.string.about), new View.OnClickListener() {
+        list.add(new ModelSetting(mActivity, mApplicationCallback, app.getString(R.string.about), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DialogAuthorLabel(app);
+                new DialogAuthorLabel(mActivity, mApplicationCallback);
             }
         }));
 
         try {
             PackageInfo pInfo = app.getPackageManager().getPackageInfo(app.getPackageName(), 0);
-            list.add(new ModelSetting(app, "Last update date GMT", TimeUtils.getGMTDate(pInfo.lastUpdateTime)));
-            list.add(new ModelSetting(app, "Version", pInfo.versionName, new View.OnClickListener() {
+            list.add(new ModelSetting(mActivity, mApplicationCallback, "Last update date GMT", TimeUtils.getGMTDate(pInfo.lastUpdateTime)));
+            list.add(new ModelSetting(mActivity, mApplicationCallback, "Version", pInfo.versionName, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (click_version == 11) {

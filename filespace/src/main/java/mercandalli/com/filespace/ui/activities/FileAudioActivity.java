@@ -155,17 +155,17 @@ public class FileAudioActivity extends ApplicationActivity {
                         this.files = new ArrayList<>();
                         this.online = false;
                         for (Uri uri : audioUris) {
-                            this.files.add(new ModelFile(this, new File(uri.getPath())));
+                            this.files.add(new ModelFile(this, this, new File(uri.getPath())));
                         }
                         if (audioUris.size() != 0) {
-                            this.file = new ModelFile(this, new File(audioUris.get(0).getPath()));
+                            this.file = new ModelFile(this, this, new File(audioUris.get(0).getPath()));
                             start();
                             return;
                         }
                     } else if (audioUri != null) {
                         this.files = new ArrayList<>();
                         this.online = false;
-                        this.file = new ModelFile(this, new File("file".equals(audioUri.getScheme()) ? audioUri.getPath() : FileUtils.getRealPathFromURI(this, audioUri)));
+                        this.file = new ModelFile(this, this, new File("file".equals(audioUri.getScheme()) ? audioUri.getPath() : FileUtils.getRealPathFromURI(this, audioUri)));
                         this.files.add(this.file);
                         start();
                         return;

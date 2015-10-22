@@ -19,9 +19,11 @@
  */
 package mercandalli.com.filespace.models;
 
+import android.app.Activity;
 import android.util.Log;
 
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.utils.PointLong;
 import mercandalli.com.filespace.utils.StringUtils;
 import mercandalli.com.filespace.utils.TimeUtils;
@@ -43,17 +45,20 @@ public class ModelFileSpace {
 
     public FileSpaceTypeENUM type;
     public Date date_creation;
-    private ApplicationActivity app;
+    private ApplicationCallback app;
+    private Activity mActivity;
 
     public Timer timer = new Timer();
     public Article article = new Article();
 
-    public ModelFileSpace(ApplicationActivity app, String type) {
+    public ModelFileSpace(Activity activity, ApplicationCallback app, String type) {
+        mActivity = activity;
         this.app = app;
         this.type = create(type);
     }
 
-    public ModelFileSpace(ApplicationActivity app, JSONObject json) {
+    public ModelFileSpace(Activity activity, ApplicationCallback app, JSONObject json) {
+        mActivity = activity;
         this.app = app;
         try {
             if (json.has("type") && !json.isNull("type"))

@@ -119,7 +119,7 @@ public class FilePictureActivity extends ApplicationActivity {
             } else if (this.id != 0) {
                 this.progressBar.setVisibility(View.VISIBLE);
                 this.progress_tv.setVisibility(View.VISIBLE);
-                (new TaskGetDownloadImage(this, login, password, url, id, sizeFile, -1, new IBitmapListener() {
+                (new TaskGetDownloadImage(this, this, login, password, url, id, sizeFile, -1, new IBitmapListener() {
                     @Override
                     public void execute(Bitmap bitmap) {
                         ((ImageView) findViewById(R.id.icon)).setImageBitmap(bitmap);

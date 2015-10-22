@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.ui.dialogs;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.view.View;
 import android.widget.Button;
@@ -28,23 +29,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelGenealogyPerson;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.fragments.genealogy.GenealogyListFragment;
+import mercandalli.com.filespace.utils.NetUtils;
 import mercandalli.com.filespace.utils.StringPair;
 import mercandalli.com.filespace.utils.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import mercandalli.com.filespace.utils.NetUtils;
-
 public class DialogAddGenealogyPerson extends Dialog {
 
-    private ApplicationActivity app;
+    private Activity mActivity;
+    private ApplicationCallback app;
     private EditText et_first_name_1;
     private EditText et_first_name_2;
     private EditText et_first_name_3;
@@ -60,12 +61,13 @@ public class DialogAddGenealogyPerson extends Dialog {
     private ModelGenealogyPerson mother, father;
     private List<ModelGenealogyPerson> marriages;
 
-    public DialogAddGenealogyPerson(final ApplicationActivity app, final IPostExecuteListener listener) {
-        this(app, listener, app.getString(R.string.genealogy_add_person), null);
+    public DialogAddGenealogyPerson(Activity activity, final ApplicationCallback app, final IPostExecuteListener listener) {
+        this(activity, app, listener, activity.getString(R.string.genealogy_add_person), null);
     }
 
-    public DialogAddGenealogyPerson(final ApplicationActivity app, final IPostExecuteListener listener, String title, final ModelGenealogyPerson genealogyUser) {
-        super(app);
+    public DialogAddGenealogyPerson(Activity activity, final ApplicationCallback app, final IPostExecuteListener listener, String title, final ModelGenealogyPerson genealogyUser) {
+        super(activity);
+        mActivity = activity;
         this.app = app;
 
         this.setContentView(R.layout.dialog_add_genealogy_person);
@@ -101,7 +103,7 @@ public class DialogAddGenealogyPerson extends Dialog {
                         StringUtils.isNullOrEmpty(et_first_name_2.getText().toString()) &&
                         StringUtils.isNullOrEmpty(et_first_name_3.getText().toString());
 
-                if (NetUtils.isInternetConnection(app) && !isFormEmpty) {
+                if (NetUtils.isInternetConnection(mActivity) && !isFormEmpty) {
                     List<StringPair> parameters = new ArrayList<>();
 
                     if (!StringUtils.isNullOrEmpty(et_first_name_1.getText().toString()))
@@ -128,15 +130,15 @@ public class DialogAddGenealogyPerson extends Dialog {
                     parameters.add(new StringPair("is_man", "" + sex.isChecked()));
 
                     if (genealogyUser == null)
-                        (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeGenealogy, listener, parameters)).execute();
+                        (new TaskPost(mActivity, app, app.getConfig().getUrlServer() + app.getConfig().routeGenealogy, listener, parameters)).execute();
                     else
-                        (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeGenealogyPut + "/" + genealogyUser.id, listener, parameters)).execute();
+                        (new TaskPost(mActivity, app, app.getConfig().getUrlServer() + app.getConfig().routeGenealogyPut + "/" + genealogyUser.id, listener, parameters)).execute();
 
                     DialogAddGenealogyPerson.this.dismiss();
                 } else if (isFormEmpty)
-                    Toast.makeText(app, "No name or first name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, "No name or first name", Toast.LENGTH_SHORT).show();
                 else
-                    Toast.makeText(app, app.getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, mActivity.getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -144,10 +146,10 @@ public class DialogAddGenealogyPerson extends Dialog {
         this.bt_mother.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(app, "Select the mother", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, "Select the mother", Toast.LENGTH_SHORT).show();
                 GenealogyListFragment.resetMode();
                 GenealogyListFragment.MODE_SELECTION_MOTHER = true;
-                app.mDialog.hide();
+                hide();
             }
         });
 
@@ -155,20 +157,20 @@ public class DialogAddGenealogyPerson extends Dialog {
         this.bt_father.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(app, "Select the father", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, "Select the father", Toast.LENGTH_SHORT).show();
                 GenealogyListFragment.resetMode();
                 GenealogyListFragment.MODE_SELECTION_FATHER = true;
-                app.mDialog.hide();
+                hide();
             }
         });
 
         this.bt_marriage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(app, "Select a partner", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, "Select a partner", Toast.LENGTH_SHORT).show();
                 GenealogyListFragment.resetMode();
                 GenealogyListFragment.MODE_SELECTION_PARTNER = true;
-                app.mDialog.hide();
+                hide();
             }
         });
 

@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.models;
 
+import android.app.Activity;
 import android.util.Log;
 
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
@@ -34,8 +35,8 @@ public class ModelServerMessage extends Model {
         super();
     }
 
-    public ModelServerMessage(ApplicationActivity app, JSONObject json) {
-        super(app);
+    public ModelServerMessage(Activity activity, ApplicationActivity app, JSONObject json) {
+        super(activity, app);
 
         try {
             if (json.has("content"))

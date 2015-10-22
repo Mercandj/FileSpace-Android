@@ -24,12 +24,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.StringPair;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,6 +32,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+
+import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.utils.StringPair;
 
 public class DialogCreateArticle extends Dialog {
 
@@ -80,6 +80,7 @@ public class DialogCreateArticle extends Dialog {
                     parameters.add(new StringPair("content", json.toString()));
                     parameters.add(new StringPair("name", "ARTICLE_" + nowAsISO));
                     new TaskPost(DialogCreateArticle.this.app,
+                            DialogCreateArticle.this.app,
                             app.getConfig().getUrlServer() + app.getConfig().routeFile,
                             new IPostExecuteListener() {
                                 @Override

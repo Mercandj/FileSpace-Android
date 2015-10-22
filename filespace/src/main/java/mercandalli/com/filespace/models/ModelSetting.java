@@ -19,10 +19,12 @@
  */
 package mercandalli.com.filespace.models;
 
+import android.app.Activity;
 import android.view.View;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 
 import org.json.JSONObject;
 
@@ -33,45 +35,45 @@ public class ModelSetting extends Model {
     public String title, subtitle;
     public View.OnClickListener onClickListener;
 
-    public ModelSetting(ApplicationActivity app, String title) {
-        super(app);
+    public ModelSetting(Activity activity, ApplicationCallback app, String title) {
+        super(activity, app);
         this.title = title;
     }
 
-    public ModelSetting(ApplicationActivity app, String title, String subtitle) {
-        super(app);
+    public ModelSetting(Activity activity, ApplicationCallback app, String title, String subtitle) {
+        super(activity, app);
         this.title = title;
         this.subtitle = subtitle;
     }
 
-    public ModelSetting(ApplicationActivity app, String title, int viewType) {
-        super(app);
+    public ModelSetting(Activity activity, ApplicationCallback app, String title, int viewType) {
+        super(activity, app);
         this.title = title;
         this.viewType = viewType;
     }
 
-    public ModelSetting(ApplicationActivity app, String title, String subtitle, int viewType) {
-        super(app);
+    public ModelSetting(Activity activity, ApplicationCallback app, String title, String subtitle, int viewType) {
+        super(activity, app);
         this.title = title;
         this.subtitle = subtitle;
         this.viewType = viewType;
     }
 
-    public ModelSetting(ApplicationActivity app, String title, OnCheckedChangeListener toggleButtonListener, boolean toggleButtonInitValue) {
-        super(app);
+    public ModelSetting(Activity activity, ApplicationCallback app, String title, OnCheckedChangeListener toggleButtonListener, boolean toggleButtonInitValue) {
+        super(activity, app);
         this.title = title;
         this.toggleButtonListener = toggleButtonListener;
         this.toggleButtonInitValue = toggleButtonInitValue;
     }
 
-    public ModelSetting(ApplicationActivity app, String title, View.OnClickListener onClickListener) {
-        super(app);
+    public ModelSetting(Activity activity, ApplicationCallback app, String title, View.OnClickListener onClickListener) {
+        super(activity, app);
         this.title = title;
         this.onClickListener = onClickListener;
     }
 
-    public ModelSetting(ApplicationActivity app, String title, String subtitle, View.OnClickListener onClickListener) {
-        super(app);
+    public ModelSetting(Activity activity, ApplicationCallback app, String title, String subtitle, View.OnClickListener onClickListener) {
+        super(activity, app);
         this.title = title;
         this.subtitle = subtitle;
         this.onClickListener = onClickListener;

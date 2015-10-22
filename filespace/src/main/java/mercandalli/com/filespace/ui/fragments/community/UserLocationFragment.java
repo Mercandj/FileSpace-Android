@@ -20,6 +20,7 @@
 package mercandalli.com.filespace.ui.fragments.community;
 
 import android.app.Activity;
+import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -42,6 +43,7 @@ import mercandalli.com.filespace.models.ModelUser;
 import mercandalli.com.filespace.models.ModelUserLocation;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.utils.GpsUtils;
@@ -71,17 +73,29 @@ public class UserLocationFragment extends BackFragment {
     // Google Map
     private GoogleMap map;
 
+    private Activity mActivity;
+    private ApplicationCallback mApplicationCallback;
+
     public static UserLocationFragment newInstance() {
-        Bundle args = new Bundle();
-        UserLocationFragment fragment = new UserLocationFragment();
-        fragment.setArguments(args);
-        return fragment;
+        return new UserLocationFragment();
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (ApplicationDrawerActivity) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (Activity) context;
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mApplicationCallback = null;
+        app = null;
     }
 
     @Override
@@ -115,7 +129,7 @@ public class UserLocationFragment extends BackFragment {
                 */
             }
 
-            addLocation(new ModelUserLocation(app, "Zero Zero", 0, 0, 0));
+            addLocation(new ModelUserLocation(mActivity, mApplicationCallback, "Zero Zero", 0, 0, 0));
         }
 
 
@@ -138,7 +152,7 @@ public class UserLocationFragment extends BackFragment {
                                                 parameters.add(new StringPair("longitude", "" + longitude));
                                                 parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
                                                     @Override
                                                     public void onPostExecute(JSONObject json, String body) {
 
@@ -158,7 +172,7 @@ public class UserLocationFragment extends BackFragment {
                                         parameters.add(new StringPair("longitude", "" + longitude));
                                         parameters.add(new StringPair("latitude", "" + latitude));
 
-                                        (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                        (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
                                             @Override
                                             public void onPostExecute(JSONObject json, String body) {
                                                 refreshMap();
@@ -181,7 +195,8 @@ public class UserLocationFragment extends BackFragment {
         List<StringPair> parameters = null;
         if (NetUtils.isInternetConnection(app) && app.isLogged())
             new TaskGet(
-                    app,
+                    mActivity,
+                    mApplicationCallback,
                     this.app.getConfig().getUser(),
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeUser,
                     new IPostExecuteListener() {
@@ -193,7 +208,7 @@ public class UserLocationFragment extends BackFragment {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ModelUser modelUser = new ModelUser(app, array.getJSONObject(i));
+                                            ModelUser modelUser = new ModelUser(mActivity, mApplicationCallback, array.getJSONObject(i));
                                             locations.add(modelUser.userLocation);
                                         }
                                     }

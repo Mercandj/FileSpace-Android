@@ -131,6 +131,7 @@ public class ProfileFragment extends BackFragment {
             List<StringPair> parameters = null;
             new TaskGet(
                     app,
+                    app,
                     this.app.getConfig().getUser(),
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeUser + "/" + this.app.getConfig().getUserId(),
                     new IPostExecuteListener() {
@@ -141,20 +142,20 @@ public class ProfileFragment extends BackFragment {
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
-                                        user = new ModelUser(app, json.getJSONObject("result"));
+                                        user = new ModelUser(app, app, json.getJSONObject("result"));
                                         list.clear();
-                                        list.add(new ModelSetting(app, "Username", "" + user.username));
-                                        list.add(new ModelSetting(app, "Files size", FileUtils.humanReadableByteCount(user.size_files) + " / " + FileUtils.humanReadableByteCount(user.server_max_size_end_user)));
-                                        list.add(new ModelSetting(app, "Files count", "" + user.num_files));
-                                        list.add(new ModelSetting(app, "Creation date", "" + TimeUtils.getDate(user.date_creation)));
-                                        list.add(new ModelSetting(app, "Connection date", "" + TimeUtils.getDate(user.date_last_connection)));
+                                        list.add(new ModelSetting(app, app, "Username", "" + user.username));
+                                        list.add(new ModelSetting(app, app, "Files size", FileUtils.humanReadableByteCount(user.size_files) + " / " + FileUtils.humanReadableByteCount(user.server_max_size_end_user)));
+                                        list.add(new ModelSetting(app, app, "Files count", "" + user.num_files));
+                                        list.add(new ModelSetting(app, app, "Creation date", "" + TimeUtils.getDate(user.date_creation)));
+                                        list.add(new ModelSetting(app, app, "Connection date", "" + TimeUtils.getDate(user.date_last_connection)));
                                         if (user.isAdmin()) {
-                                            list.add(new ModelSetting(app, "Admin", "" + user.isAdmin()));
+                                            list.add(new ModelSetting(app, app, "Admin", "" + user.isAdmin()));
 
                                             if (user.userLocation != null) {
-                                                list.add(new ModelSetting(app, "Longitude", "" + user.userLocation.longitude));
-                                                list.add(new ModelSetting(app, "Latitude", "" + user.userLocation.latitude));
-                                                list.add(new ModelSetting(app, "Altitude", "" + user.userLocation.altitude));
+                                                list.add(new ModelSetting(app, app, "Longitude", "" + user.userLocation.longitude));
+                                                list.add(new ModelSetting(app, app, "Latitude", "" + user.userLocation.latitude));
+                                                list.add(new ModelSetting(app, app, "Altitude", "" + user.userLocation.altitude));
                                             }
                                         }
 
@@ -165,15 +166,15 @@ public class ProfileFragment extends BackFragment {
                                                     double longitude = location.getLongitude(),
                                                             latitude = location.getLatitude();
 
-                                                    list.add(new ModelSetting(app, "Gps Longitude", "" + longitude));
-                                                    list.add(new ModelSetting(app, "Gps Latitude", "" + latitude));
+                                                    list.add(new ModelSetting(app, app, "Gps Longitude", "" + longitude));
+                                                    list.add(new ModelSetting(app, app, "Gps Latitude", "" + latitude));
 
                                                     if (NetUtils.isInternetConnection(app) && longitude != 0 && latitude != 0) {
                                                         List<StringPair> parameters = new ArrayList<>();
                                                         parameters.add(new StringPair("longitude", "" + longitude));
                                                         parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                        (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                        (new TaskPost(app, app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
                                                             @Override
                                                             public void onPostExecute(JSONObject json, String body) {
 
@@ -188,15 +189,15 @@ public class ProfileFragment extends BackFragment {
                                             double longitude = location.getLongitude(),
                                                     latitude = location.getLatitude();
 
-                                            list.add(new ModelSetting(app, "Gps Longitude", "" + longitude));
-                                            list.add(new ModelSetting(app, "Gps Latitude", "" + latitude));
+                                            list.add(new ModelSetting(app, app, "Gps Longitude", "" + longitude));
+                                            list.add(new ModelSetting(app, app, "Gps Latitude", "" + latitude));
 
                                             if (NetUtils.isInternetConnection(app) && longitude != 0 && latitude != 0) {
                                                 List<StringPair> parameters = new ArrayList<>();
                                                 parameters.add(new StringPair("longitude", "" + longitude));
                                                 parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                (new TaskPost(app, app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
                                                     @Override
                                                     public void onPostExecute(JSONObject json, String body) {
 

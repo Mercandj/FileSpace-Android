@@ -260,7 +260,7 @@ public class RegisterLoginActivity extends ApplicationActivity {
         parameters.add(new StringPair("username", "" + user.username));
         parameters.add(new StringPair("password", "" + user.password));
         if (NetUtils.isInternetConnection(this))
-            (new TaskPost(this, this.getConfig().getUrlServer() + this.getConfig().routeUser, new IPostExecuteListener() {
+            (new TaskPost(this, this, this.getConfig().getUrlServer() + this.getConfig().routeUser, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     try {

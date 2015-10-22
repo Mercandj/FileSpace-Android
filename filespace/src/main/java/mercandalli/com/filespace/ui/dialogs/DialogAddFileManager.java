@@ -93,12 +93,12 @@ public class DialogAddFileManager extends Dialog {
                 app.prompt(app.getString(R.string.dialog_file_create_folder), app.getString(R.string.dialog_file_name_interrogation), app.getString(R.string.dialog_file_create), new IStringListener() {
                     @Override
                     public void execute(String text) {
-                        ModelFile folder = new ModelFile(DialogAddFileManager.this.app);
+                        ModelFile folder = new ModelFile(DialogAddFileManager.this.app, DialogAddFileManager.this.app);
                         folder.name = text;
                         folder.directory = true;
                         folder.id_file_parent = id_file_parent;
                         List<StringPair> parameters = folder.getForUpload();
-                        (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
+                        (new TaskPost(app, app, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
                             @Override
                             public void onPostExecute(JSONObject json, String body) {
                                 if (listener != null)
@@ -132,7 +132,7 @@ public class DialogAddFileManager extends Dialog {
                 // Ensure that there's a camera activity to handle the intent
                 if (takePictureIntent.resolveActivity(app.getPackageManager()) != null) {
                     // Create the File where the photo should go
-                    app.mPhotoFile = new ModelFile(app);
+                    app.mPhotoFile = new ModelFile(app, app);
                     try {
                         app.mPhotoFile = app.createImageFile();
                     } catch (IOException ex) {
@@ -187,7 +187,7 @@ public class DialogAddFileManager extends Dialog {
                                     parameters.add(new StringPair("content", json.toString()));
                                     parameters.add(new StringPair("name", "TIMER_" + nowAsISO));
                                     parameters.add(new StringPair("id_file_parent", "" + id_file_parent));
-                                    new TaskPost(DialogAddFileManager.this.app,
+                                    new TaskPost(DialogAddFileManager.this.app, DialogAddFileManager.this.app,
                                             app.getConfig().getUrlServer() + app.getConfig().routeFile,
                                             new IPostExecuteListener() {
                                                 @Override

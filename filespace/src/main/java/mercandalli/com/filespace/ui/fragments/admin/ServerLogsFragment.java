@@ -119,6 +119,7 @@ public class ServerLogsFragment extends BackFragment {
         if (NetUtils.isInternetConnection(app))
             new TaskGet(
                     app,
+                    app,
                     this.app.getConfig().getUser(),
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeUserConnection,
                     new IPostExecuteListener() {

@@ -19,13 +19,10 @@
  */
 package mercandalli.com.filespace.net;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
-
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.StringPair;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -48,6 +45,10 @@ import java.nio.charset.Charset;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
+import mercandalli.com.filespace.utils.StringPair;
 
 /**
  * Global behavior : http Post
@@ -60,22 +61,26 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
     List<StringPair> parameters;
     IPostExecuteListener listener;
     File file;
-    ApplicationActivity app;
+    ApplicationCallback app;
+    Activity mActivity;
 
-    public TaskPost(ApplicationActivity app, String url, IPostExecuteListener listener) {
+    public TaskPost(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener) {
+        mActivity = activity;
         this.app = app;
         this.url = url;
         this.listener = listener;
     }
 
-    public TaskPost(ApplicationActivity app, String url, IPostExecuteListener listener, List<StringPair> parameters) {
+    public TaskPost(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener, List<StringPair> parameters) {
+        mActivity = activity;
         this.app = app;
         this.url = url;
         this.parameters = parameters;
         this.listener = listener;
     }
 
-    public TaskPost(ApplicationActivity app, String url, IPostExecuteListener listener, List<StringPair> parameters, String contentType) {
+    public TaskPost(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener, List<StringPair> parameters, String contentType) {
+        mActivity = activity;
         this.app = app;
         this.url = url;
         this.parameters = parameters;
@@ -83,7 +88,8 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
         this.listener = listener;
     }
 
-    public TaskPost(ApplicationActivity app, String url, IPostExecuteListener listener, List<StringPair> parameters, File file) {
+    public TaskPost(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener, List<StringPair> parameters, File file) {
+        mActivity = activity;
         this.app = app;
         this.url = url;
         this.parameters = parameters;
@@ -91,7 +97,8 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
         this.file = file;
     }
 
-    public TaskPost(ApplicationActivity app, String url, IPostExecuteListener listener, File file) {
+    public TaskPost(Activity activity, ApplicationActivity app, String url, IPostExecuteListener listener, File file) {
+        mActivity = activity;
         this.app = app;
         this.url = url;
         this.listener = listener;
@@ -182,10 +189,10 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
                     this.listener.onPostExecute(json, response);
                 if (json.has("toast"))
                     if (!json.getString("toast").equals(""))
-                        Toast.makeText(app, json.getString("toast"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, json.getString("toast"), Toast.LENGTH_SHORT).show();
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                 if (this.listener != null)
                     this.listener.onPostExecute(null, response);
             }

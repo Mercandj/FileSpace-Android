@@ -164,7 +164,7 @@ public class InscriptionFragment extends Fragment {
         parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
 
         if (NetUtils.isInternetConnection(app))
-            (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
+            (new TaskPost(app, app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     try {

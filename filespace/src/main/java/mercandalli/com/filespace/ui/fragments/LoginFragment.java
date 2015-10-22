@@ -160,7 +160,7 @@ public class LoginFragment extends Fragment {
         }
         Log.d("LoginFragment", "login " + app.getConfig().getUserPassword() + app.getConfig().getUserUsername() + " isInternetConnection=" + NetUtils.isInternetConnection(app));
         if (NetUtils.isInternetConnection(app))
-            (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
+            (new TaskPost(app, app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     requestLaunched = false;

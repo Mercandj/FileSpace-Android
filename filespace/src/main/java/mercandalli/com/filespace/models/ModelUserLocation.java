@@ -1,6 +1,9 @@
 package mercandalli.com.filespace.models;
 
+import android.app.Activity;
+
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,8 +16,8 @@ public class ModelUserLocation extends Model {
     public double longitude, latitude, altitude;
     public String title = "";
 
-    public ModelUserLocation(ApplicationActivity app, JSONObject json) {
-        super(app);
+    public ModelUserLocation(Activity activity, ApplicationCallback app, JSONObject json) {
+        super(activity, app);
         try {
             if (json.has("username"))
                 this.title = json.getString("username");
@@ -30,8 +33,8 @@ public class ModelUserLocation extends Model {
         }
     }
 
-    public ModelUserLocation(ApplicationActivity app, String title, double longitude, double latitude, double altitude) {
-        super(app);
+    public ModelUserLocation(Activity activity, ApplicationCallback app, String title, double longitude, double latitude, double altitude) {
+        super(activity, app);
         this.longitude = longitude;
         this.latitude = latitude;
         this.altitude = altitude;

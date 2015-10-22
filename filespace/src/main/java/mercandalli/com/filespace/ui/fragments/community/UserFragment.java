@@ -21,6 +21,7 @@ package mercandalli.com.filespace.ui.fragments.community;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -44,6 +45,7 @@ import mercandalli.com.filespace.listeners.IStringListener;
 import mercandalli.com.filespace.models.ModelUser;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterModelUser;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
@@ -75,17 +77,29 @@ public class UserFragment extends BackFragment {
     private TextView message;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    private Activity mActivity;
+    private ApplicationCallback mApplicationCallback;
+
     public static UserFragment newInstance() {
-        Bundle args = new Bundle();
-        UserFragment fragment = new UserFragment();
-        fragment.setArguments(args);
-        return fragment;
+        return new UserFragment();
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (ApplicationDrawerActivity) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (Activity) context;
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mApplicationCallback = null;
+        app = null;
     }
 
     public UserFragment() {
@@ -134,7 +148,8 @@ public class UserFragment extends BackFragment {
         List<StringPair> parameters = null;
         if (NetUtils.isInternetConnection(app) && app.isLogged())
             new TaskGet(
-                    app,
+                    mActivity,
+                    mApplicationCallback,
                     this.app.getConfig().getUser(),
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeUser,
                     new IPostExecuteListener() {
@@ -146,7 +161,7 @@ public class UserFragment extends BackFragment {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ModelUser modelUser = new ModelUser(app, array.getJSONObject(i));
+                                            ModelUser modelUser = new ModelUser(mActivity, mApplicationCallback, array.getJSONObject(i));
                                             list.add(modelUser);
                                         }
                                     }
@@ -200,7 +215,7 @@ public class UserFragment extends BackFragment {
                                                     List<StringPair> parameters = new ArrayList<>();
                                                     parameters.add(new StringPair("message", "" + text));
 
-                                                    new TaskPost(app, url, new IPostExecuteListener() {
+                                                    new TaskPost(mActivity, mApplicationCallback, url, new IPostExecuteListener() {
                                                         @Override
                                                         public void onPostExecute(JSONObject json, String body) {
 

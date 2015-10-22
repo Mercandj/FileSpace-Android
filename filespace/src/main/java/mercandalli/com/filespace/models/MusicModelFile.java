@@ -1,8 +1,11 @@
 package mercandalli.com.filespace.models;
 
+import android.app.Activity;
+
 import java.io.File;
 
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.utils.StringUtils;
 
 /**
@@ -13,12 +16,12 @@ public class MusicModelFile extends ModelFile {
     private String mAlbum;
     private String mArtist;
 
-    public MusicModelFile(ApplicationActivity app, File file) {
-        super(app, file);
+    public MusicModelFile(Activity activity, ApplicationCallback app, File file) {
+        super(activity, app, file);
     }
 
-    public MusicModelFile(ApplicationActivity app, ModelFile file) {
-        super(app, file.getFile());
+    public MusicModelFile(Activity activity, ApplicationCallback app, ModelFile file) {
+        super(activity, app, file.getFile());
     }
 
     @Override

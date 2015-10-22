@@ -20,6 +20,7 @@
 package mercandalli.com.filespace.ui.fragments.genealogy;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
@@ -30,8 +31,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.listeners.SetToolbarCallback;
 import mercandalli.com.filespace.models.ModelGenealogyPerson;
 import mercandalli.com.filespace.net.TaskGet;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.ui.views.GenealogyBigTreeView;
@@ -55,6 +58,9 @@ public class GenealogyBigTreeFragment extends FabFragment {
 
     private static ModelGenealogyPerson genealogyUser = null;
 
+    private Activity mActivity;
+    private ApplicationCallback mApplicationCallback;
+
     public static GenealogyBigTreeFragment newInstance() {
         Bundle args = new Bundle();
         GenealogyBigTreeFragment fragment = new GenealogyBigTreeFragment();
@@ -63,9 +69,21 @@ public class GenealogyBigTreeFragment extends FabFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (ApplicationDrawerActivity) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (Activity) context;
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mApplicationCallback = null;
+        app = null;
     }
 
     @Override
@@ -106,7 +124,8 @@ public class GenealogyBigTreeFragment extends FabFragment {
 
         if (NetUtils.isInternetConnection(app)) {
             new TaskGet(
-                    app,
+                    mActivity,
+                    mApplicationCallback,
                     this.app.getConfig().getUser(),
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeGenealogy + "/" + genealogyPerson.id,
                     new IPostExecuteListener() {
@@ -115,7 +134,7 @@ public class GenealogyBigTreeFragment extends FabFragment {
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
-                                        genealogyPerson = new ModelGenealogyPerson(app, json.getJSONObject("result"));
+                                        genealogyPerson = new ModelGenealogyPerson(mActivity, mApplicationCallback, json.getJSONObject("result"));
                                         bigTreeView.select(genealogyPerson);
                                     }
                                 } else

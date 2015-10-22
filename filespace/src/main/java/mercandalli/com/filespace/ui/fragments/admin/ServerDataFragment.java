@@ -32,19 +32,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.models.ModelInformation;
-import mercandalli.com.filespace.net.TaskGet;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
-import mercandalli.com.filespace.ui.adapters.AdapterModelInformation;
-import mercandalli.com.filespace.ui.fragments.BackFragment;
-import mercandalli.com.filespace.utils.NetUtils;
-import mercandalli.com.filespace.utils.StringPair;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,7 +43,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-
+import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.models.ModelInformation;
+import mercandalli.com.filespace.net.TaskGet;
+import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
+import mercandalli.com.filespace.ui.adapters.AdapterModelInformation;
+import mercandalli.com.filespace.ui.fragments.BackFragment;
+import mercandalli.com.filespace.utils.NetUtils;
+import mercandalli.com.filespace.utils.StringPair;
 
 public class ServerDataFragment extends BackFragment {
 
@@ -90,7 +87,7 @@ public class ServerDataFragment extends BackFragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
 
-        ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.GONE);
+        rootView.findViewById(R.id.circle).setVisibility(View.GONE);
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(
@@ -115,6 +112,7 @@ public class ServerDataFragment extends BackFragment {
         List<StringPair> parameters = null;
         if (NetUtils.isInternetConnection(app))
             new TaskGet(
+                    app,
                     app,
                     this.app.getConfig().getUser(),
                     this.app.getConfig().getUrlServer() + this.app.getConfig().routeInformation,
@@ -154,13 +152,13 @@ public class ServerDataFragment extends BackFragment {
             this.recyclerView.setAdapter(mAdapter);
             this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
 
-            if (((ImageButton) rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
-                ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
+            if (rootView.findViewById(R.id.circle).getVisibility() == View.GONE) {
+                rootView.findViewById(R.id.circle).setVisibility(View.VISIBLE);
                 Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
-                ((ImageButton) rootView.findViewById(R.id.circle)).startAnimation(animOpen);
+                rootView.findViewById(R.id.circle).startAnimation(animOpen);
             }
 
-            ((ImageButton) rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {
+            rootView.findViewById(R.id.circle).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mAdapter.addItem(new ModelInformation("Number", "" + i), 0);

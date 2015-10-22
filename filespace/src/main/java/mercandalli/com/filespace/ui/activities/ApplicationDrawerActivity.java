@@ -203,7 +203,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                         new IListener() {
                             @Override
                             public void execute() {
-                                mBackFragment = SettingsFragment.newInstance();
+                                mBackFragment = SettingsFragment.newInstance(getString(R.string.tab_settings));
                                 mBackFragment.setApp(ApplicationDrawerActivity.this);
                                 getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                             }

@@ -19,11 +19,13 @@
  */
 package mercandalli.com.filespace.models;
 
+import android.app.Activity;
 import android.text.Spanned;
 
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.dialogs.DialogAddGenealogyPerson;
 import mercandalli.com.filespace.utils.HtmlUtils;
 import mercandalli.com.filespace.utils.StringPair;
@@ -64,8 +66,8 @@ public class ModelGenealogyPerson extends Model {
         this.valid = valid;
     }
 
-    public ModelGenealogyPerson(ApplicationActivity app, JSONObject json) {
-        super(app);
+    public ModelGenealogyPerson(Activity activity, ApplicationCallback app, JSONObject json) {
+        super(activity, app);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
             if (json.has("id"))
@@ -93,21 +95,21 @@ public class ModelGenealogyPerson extends Model {
             if (json.has("is_man"))
                 this.is_man = json.getInt("is_man") != 0;
             if (json.has("father"))
-                this.father = new ModelGenealogyPerson(app, json.getJSONObject("father"));
+                this.father = new ModelGenealogyPerson(activity, app, json.getJSONObject("father"));
             if (json.has("mother"))
-                this.mother = new ModelGenealogyPerson(app, json.getJSONObject("mother"));
+                this.mother = new ModelGenealogyPerson(activity, app, json.getJSONObject("mother"));
             if (json.has("brothers_sisters_from_mother")) {
                 this.brothers_sisters_from_mother = new ArrayList<>();
                 JSONArray json_b_s = json.getJSONArray("brothers_sisters_from_mother");
                 for (int i = 0; i < json_b_s.length(); i++) {
-                    this.brothers_sisters_from_mother.add(new ModelGenealogyPerson(app, json_b_s.getJSONObject(i)));
+                    this.brothers_sisters_from_mother.add(new ModelGenealogyPerson(activity, app, json_b_s.getJSONObject(i)));
                 }
             }
             if (json.has("brothers_sisters_from_father")) {
                 this.brothers_sisters_from_father = new ArrayList<>();
                 JSONArray json_b_s = json.getJSONArray("brothers_sisters_from_father");
                 for (int i = 0; i < json_b_s.length(); i++) {
-                    this.brothers_sisters_from_father.add(new ModelGenealogyPerson(app, json_b_s.getJSONObject(i)));
+                    this.brothers_sisters_from_father.add(new ModelGenealogyPerson(activity, app, json_b_s.getJSONObject(i)));
                 }
             }
         } catch (JSONException e) {
@@ -121,7 +123,7 @@ public class ModelGenealogyPerson extends Model {
         if (this.app != null) {
             if (this.app.getConfig().isUserAdmin() && this.id != this.app.getConfig().getUserId()) {
                 String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeGenealogyDelete + "/" + this.id;
-                new TaskPost(this.app, url, listener).execute();
+                new TaskPost(mActivity, this.app, url, listener).execute();
                 return;
             }
         }
@@ -132,7 +134,7 @@ public class ModelGenealogyPerson extends Model {
     public void modify(IPostExecuteListener listener) {
         if (this.app != null) {
             if (this.app.getConfig().isUserAdmin() && this.id != this.app.getConfig().getUserId()) {
-                app.mDialog = new DialogAddGenealogyPerson(app, listener, app.getString(R.string.modify), this);
+                new DialogAddGenealogyPerson(mActivity, app, listener, mActivity.getString(R.string.modify), this);
                 return;
             }
         }

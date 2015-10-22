@@ -19,23 +19,24 @@
  */
 package mercandalli.com.filespace.net;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
-
-import mercandalli.com.filespace.listeners.IBitmapListener;
-import mercandalli.com.filespace.listeners.ILongListener;
-import mercandalli.com.filespace.models.ModelFile;
-import mercandalli.com.filespace.models.ModelUser;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.ImageUtils;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import mercandalli.com.filespace.listeners.IBitmapListener;
+import mercandalli.com.filespace.listeners.ILongListener;
+import mercandalli.com.filespace.models.ModelFile;
+import mercandalli.com.filespace.models.ModelUser;
+import mercandalli.com.filespace.ui.activities.ConfigCallback;
+import mercandalli.com.filespace.utils.ImageUtils;
 
 /**
  * Global behavior : DDL Image
@@ -47,7 +48,8 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
     String url;
     Bitmap bitmap;
     IBitmapListener listener;
-    ApplicationActivity app;
+    ConfigCallback app;
+    Activity mActivity;
     private String login, password;
     int idFile;
     long sizeLimit, sizeFile;
@@ -55,7 +57,8 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
     private boolean isAuthentication = true;
     private boolean isModelFile = true;
 
-    public TaskGetDownloadImage(ApplicationActivity app, String url, long sizeLimit, IBitmapListener listener, boolean isAuthentication, boolean isModelFile) {
+    public TaskGetDownloadImage(Activity activity, ConfigCallback app, String url, long sizeLimit, IBitmapListener listener, boolean isAuthentication, boolean isModelFile) {
+        mActivity = activity;
         this.app = app;
         this.url = url;
         this.listener = listener;
@@ -64,7 +67,8 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         this.isModelFile = isModelFile;
     }
 
-    public TaskGetDownloadImage(ApplicationActivity app, ModelUser user, ModelFile fileModel, long sizeLimit, IBitmapListener listener) {
+    public TaskGetDownloadImage(Activity activity, ConfigCallback app, ModelUser user, ModelFile fileModel, long sizeLimit, IBitmapListener listener) {
+        mActivity = activity;
         this.app = app;
         this.login = user.getAccessLogin();
         this.password = user.getAccessPassword();
@@ -75,7 +79,8 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         this.sizeLimit = sizeLimit;
     }
 
-    public TaskGetDownloadImage(ApplicationActivity app, String login, String password, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener) {
+    public TaskGetDownloadImage(Activity activity, ConfigCallback app, String login, String password, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener) {
+        mActivity = activity;
         this.app = app;
         this.login = login;
         this.password = password;
@@ -86,7 +91,8 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         this.sizeLimit = sizeLimit;
     }
 
-    public TaskGetDownloadImage(ApplicationActivity app, String login, String password, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener, ILongListener progressListener) {
+    public TaskGetDownloadImage(Activity activity, ConfigCallback app, String login, String password, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener, ILongListener progressListener) {
+        mActivity = activity;
         this.app = app;
         this.login = login;
         this.password = password;
@@ -113,8 +119,8 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         Log.d("TaskGetDownloadImage", "id:" + idFile + "  url:" + url);
 
         if (isModelFile)
-            if (ImageUtils.is_image(this.app, this.idFile))
-                return ImageUtils.load_image(this.app, this.idFile);
+            if (ImageUtils.is_image(mActivity, this.idFile))
+                return ImageUtils.load_image(mActivity, this.idFile);
         if (this.sizeLimit > 0)
             if (this.sizeLimit < this.sizeFile)
                 return null;
@@ -156,7 +162,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
             conn.disconnect();
 
             if (isModelFile)
-                ImageUtils.save_image(this.app, this.idFile, x);
+                ImageUtils.save_image(mActivity, this.idFile, x);
         } catch (IOException e) {
             e.printStackTrace();
         }

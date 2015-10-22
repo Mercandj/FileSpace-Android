@@ -1,5 +1,7 @@
 package mercandalli.com.filespace.utils;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.format.DateFormat;
 
@@ -10,6 +12,8 @@ import mercandalli.com.filespace.models.ModelNasaImage;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
+import mercandalli.com.filespace.ui.activities.ConfigCallback;
 
 import org.json.JSONObject;
 
@@ -39,12 +43,13 @@ public class NasaUtils {
         return "https://api.nasa.gov/planetary/apod?concept_tags=True&api_key=" + key + "&date=" + date;
     }
 
-    public static void getNasaRandomPicture(final ApplicationActivity app, final IModelNasaImageListener modelNasaImageListener) {
-        if (NetUtils.isInternetConnection(app)) {
+    public static void getNasaRandomPicture(final Context context, final ApplicationCallback applicationCallback, final IModelNasaImageListener modelNasaImageListener) {
+        if (NetUtils.isInternetConnection(context)) {
             final String date = getRandomDate();
             new TaskGet(
-                    app,
-                    app.getConfig().getUser(),
+                    (Activity) context,
+                    applicationCallback,
+                    applicationCallback.getConfig().getUser(),
                     getNasaPhoto(date),
                     new IPostExecuteListener() {
                         @Override
@@ -55,7 +60,8 @@ public class NasaUtils {
                             if (modelNasaImage.media_type != null)
                                 if (modelNasaImage.media_type.equals("image"))
                                     new TaskGetDownloadImage(
-                                            app,
+                                            (Activity) context,
+                                            applicationCallback,
                                             modelNasaImage.url,
                                             2000000,
                                             new IBitmapListener() {

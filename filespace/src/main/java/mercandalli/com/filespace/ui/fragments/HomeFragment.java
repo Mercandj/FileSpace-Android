@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.Locale;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.config.Const;
 import mercandalli.com.filespace.extras.ia.Interpreter;
 import mercandalli.com.filespace.extras.ia.InterpreterMain;
@@ -91,13 +92,6 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
     private ApplicationCallback mApplicationCallback;
     private SetToolbarCallback mSetToolbarCallback;
 
-    public static HomeFragment newInstance() {
-        Bundle args = new Bundle();
-        HomeFragment fragment = new HomeFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public static HomeFragment newInstance(String title) {
         final HomeFragment fragment = new HomeFragment();
         final Bundle args = new Bundle();
@@ -109,6 +103,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mContext = context;
         if (context instanceof SetToolbarCallback) {
             mSetToolbarCallback = (SetToolbarCallback) context;
         } else {
@@ -196,7 +191,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                NasaUtils.getNasaRandomPicture(app, new IModelNasaImageListener() {
+                NasaUtils.getNasaRandomPicture(mContext, app, new IModelNasaImageListener() {
                     @Override
                     public void execute(ModelNasaImage modelNasaImage) {
                         refreshList(modelNasaImage);
@@ -208,7 +203,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
 
         refreshList();
 
-        NasaUtils.getNasaRandomPicture(app, new IModelNasaImageListener() {
+        NasaUtils.getNasaRandomPicture(mContext, app, new IModelNasaImageListener() {
             @Override
             public void execute(ModelNasaImage modelNasaImage) {
                 refreshList(modelNasaImage);

@@ -21,6 +21,7 @@ package mercandalli.com.filespace.ui.fragments.file;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
@@ -59,6 +60,7 @@ import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.models.ModelFileTypeENUM;
 import mercandalli.com.filespace.models.MusicModelFile;
 import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
@@ -84,14 +86,29 @@ public class FileLocalFragment extends FabFragment
     private int mSortMode = Const.SORT_DATE_MODIFICATION;
     private int mViewMode = Const.MODE_LIST;
 
+    private Activity mActivity;
+    private ApplicationCallback mApplicationCallback;
+
     public static FileLocalFragment newInstance() {
         return new FileLocalFragment();
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.app = (ApplicationDrawerActivity) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (Activity) context;
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mApplicationCallback = null;
+        app = null;
     }
 
     @Override
@@ -167,7 +184,7 @@ public class FileLocalFragment extends FabFragment
 
         mFilesList = new ArrayList<>();
         for (File file : fs) {
-            ModelFile tmpModelFile = new ModelFile(app, file);
+            ModelFile tmpModelFile = new ModelFile(mActivity, mApplicationCallback, file);
             if (mSortMode == Const.SORT_SIZE)
                 tmpModelFile.adapterTitleStart = FileUtils.humanReadableByteCount(tmpModelFile.size) + " - ";
             mFilesList.add(tmpModelFile);
@@ -210,7 +227,7 @@ public class FileLocalFragment extends FabFragment
                                                     public void execute() {
                                                         if (modelFile.getFile() != null) {
                                                             List<StringPair> parameters = modelFile.getForUpload();
-                                                            (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
+                                                            (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
                                                                 @Override
                                                                 public void onPostExecute(JSONObject json, String body) {
 
@@ -307,7 +324,7 @@ public class FileLocalFragment extends FabFragment
                         List<MusicModelFile> tmpFiles = new ArrayList<>();
                         for (ModelFile f : mFilesList)
                             if (f.type != null && f.type.equals(ModelFileTypeENUM.AUDIO.type))
-                                tmpFiles.add(new MusicModelFile(app, f));
+                                tmpFiles.add(new MusicModelFile(mActivity, mApplicationCallback, f));
                         mFilesList.get(position).executeLocal(tmpFiles, view);
                     }
                 }
@@ -341,7 +358,7 @@ public class FileLocalFragment extends FabFragment
                             List<MusicModelFile> tmpFiles = new ArrayList<>();
                             for (ModelFile f : mFilesList)
                                 if (f.type != null && f.type.equals(ModelFileTypeENUM.AUDIO.type))
-                                    tmpFiles.add(new MusicModelFile(app, f));
+                                    tmpFiles.add(new MusicModelFile(mActivity, mApplicationCallback, f));
                             mFilesList.get(position).executeLocal(tmpFiles, view);
                         }
                     }
@@ -375,7 +392,7 @@ public class FileLocalFragment extends FabFragment
                                                         public void execute() {
                                                             if (modelFile.getFile() != null) {
                                                                 List<StringPair> parameters = modelFile.getForUpload();
-                                                                (new TaskPost(app, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
+                                                                (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
                                                                     @Override
                                                                     public void onPostExecute(JSONObject json, String body) {
 
