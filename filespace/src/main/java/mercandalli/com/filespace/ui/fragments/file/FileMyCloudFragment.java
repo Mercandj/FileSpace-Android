@@ -125,7 +125,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
         mAdapterModelFile = new AdapterModelFile(mActivity, mFilesList, new IModelFileListener() {
             @Override
             public void executeModelFile(final ModelFile modelFile) {
-                final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileMyCloudFragment.this.app);
+                final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
                 String[] menuList = {getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties)};
                 if (!modelFile.directory) {
                     if (modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {

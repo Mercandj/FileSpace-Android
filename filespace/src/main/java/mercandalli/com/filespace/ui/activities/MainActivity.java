@@ -24,6 +24,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import javax.inject.Inject;
+
 import mercandalli.com.filespace.config.MyApp;
 import mercandalli.com.filespace.listeners.SetToolbarCallback;
 import mercandalli.com.filespace.manager.file.FileManager;
@@ -32,8 +34,6 @@ import mercandalli.com.filespace.notificationpush.NotificationPush;
 import mercandalli.com.filespace.ui.fragments.community.CommunityFragment;
 import mercandalli.com.filespace.ui.fragments.file.FileFragment;
 import mercandalli.com.filespace.utils.RetrofitUtils;
-
-import javax.inject.Inject;
 
 /**
  * Main {@link Activity} launched by the xml.
@@ -48,7 +48,7 @@ public class MainActivity extends ApplicationDrawerActivity implements SetToolba
         super.onCreate(savedInstanceState);
 
         // Dagger
-        (MyApp.get(this)).getAppComponent().inject(this);
+        MyApp.get(this).getAppComponent().inject(this);
 
         //TEST
         RetrofitUtils.getAuthorizedRestAdapter(this).create(FileApiService.class);

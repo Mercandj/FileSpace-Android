@@ -3,8 +3,6 @@ package mercandalli.com.filespace.config;
 import android.app.Application;
 import android.content.Context;
 
-import javax.inject.Inject;
-
 public class MyApp extends Application {
 
     private MyAppComponent mMyAppComponent;

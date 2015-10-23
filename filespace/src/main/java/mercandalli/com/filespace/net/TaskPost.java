@@ -24,14 +24,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,8 +32,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
@@ -107,15 +97,15 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... urls) {
-        try {
+        //try {
 
             // http://stackoverflow.com/questions/9767952/how-to-add-parameters-to-httpurlconnection-using-post
 
-            HttpPost httppost = new HttpPost(url);
+            //HttpPost httppost = new HttpPost(url);
 
-            MultipartEntity mpEntity = new MultipartEntity();
-            if (this.file != null) mpEntity.addPart("file", new FileBody(file, "*/*"));
-
+            //MultipartEntity mpEntity = new MultipartEntity();
+            //if (this.file != null) mpEntity.addPart("file", new FileBody(file, "*/*"));
+/*
             String log_parameters = "";
             if (this.parameters != null)
                 for (StringPair b : parameters) {
@@ -124,8 +114,8 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
                 }
             Log.d("TaskPost", "url = " + url + " " + log_parameters);
 
-            httppost.setEntity(mpEntity);
-
+            httppost.setEntity(mpEntity);*/
+/*
             StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
             String result = Base64.encodeBytes(authentication.toString().getBytes());
             httppost.setHeader("Authorization", "Basic " + result);
@@ -154,7 +144,7 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
         return null;
     }
 

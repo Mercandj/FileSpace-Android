@@ -20,9 +20,9 @@
 package mercandalli.com.filespace.ui.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,16 +34,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.models.ModelUser;
-import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.ui.activities.MainActivity;
-import mercandalli.com.filespace.utils.GpsUtils;
-import mercandalli.com.filespace.utils.HashUtils;
-import mercandalli.com.filespace.utils.StringPair;
-import mercandalli.com.filespace.utils.StringUtils;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,8 +41,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.models.ModelUser;
+import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.MainActivity;
+import mercandalli.com.filespace.utils.GpsUtils;
+import mercandalli.com.filespace.utils.HashUtils;
 import mercandalli.com.filespace.utils.NetUtils;
+import mercandalli.com.filespace.utils.StringPair;
+import mercandalli.com.filespace.utils.StringUtils;
 
 public class InscriptionFragment extends Fragment {
 

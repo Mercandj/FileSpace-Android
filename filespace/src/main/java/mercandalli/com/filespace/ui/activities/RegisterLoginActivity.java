@@ -19,12 +19,12 @@
  */
 package mercandalli.com.filespace.ui.activities;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
-import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Toast;
@@ -38,6 +38,12 @@ import com.google.android.gms.plus.People;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelUser;
@@ -49,12 +55,6 @@ import mercandalli.com.filespace.utils.HashUtils;
 import mercandalli.com.filespace.utils.NetUtils;
 import mercandalli.com.filespace.utils.StringPair;
 import mercandalli.com.filespace.utils.StringUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class RegisterLoginActivity extends ApplicationActivity {
 
@@ -68,7 +68,7 @@ public class RegisterLoginActivity extends ApplicationActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_login);
 
-        RegisterLoginPagerAdapter mPagerAdapter = new RegisterLoginPagerAdapter(this.getFragmentManager(), this);
+        RegisterLoginPagerAdapter mPagerAdapter = new RegisterLoginPagerAdapter(getSupportFragmentManager(), this);
 
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) this.findViewById(R.id.tabs);
         mViewPager = (ViewPager) this.findViewById(R.id.pager);
