@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Stack;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
@@ -57,7 +57,6 @@ import mercandalli.com.filespace.models.ModelFileTypeENUM;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activities.ApplicationCallback;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
 import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
@@ -80,7 +79,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
     private Stack<Integer> mIdFileDirectoryStack = new Stack<>();
     private List<ModelFile> mFilesToCutList = new ArrayList<>();
 
-    private int mViewMode = Const.MODE_LIST;
+    private int mViewMode = Constants.MODE_LIST;
 
     private Activity mActivity;
     private ApplicationCallback mApplicationCallback;
@@ -301,6 +300,9 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
     }
 
     public void refreshList(String search) {
+        if(!isAdded()) {
+            return;
+        }
         List<StringPair> parameters = new ArrayList<>();
         if (search != null)
             parameters.add(new StringPair("search", "" + search));
@@ -376,7 +378,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
 
             refreshFab();
 
-            if (mViewMode == Const.MODE_GRID) {
+            if (mViewMode == Constants.MODE_GRID) {
                 this.mGridView.setVisibility(View.VISIBLE);
                 this.mRecyclerView.setVisibility(View.GONE);
 
@@ -613,7 +615,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
 
     @Override
     public boolean isFabVisible(int fab_id) {
-        if (!NetUtils.isInternetConnection(mActivity) || !mApplicationCallback.isLogged())
+        if (mActivity != null && mApplicationCallback != null && (!NetUtils.isInternetConnection(mActivity) || !mApplicationCallback.isLogged()))
             return false;
         switch (fab_id) {
             case 0:

@@ -51,7 +51,7 @@ import java.util.List;
 import java.util.Map;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
@@ -61,7 +61,6 @@ import mercandalli.com.filespace.models.ModelFileTypeENUM;
 import mercandalli.com.filespace.models.MusicModelFile;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activities.ApplicationCallback;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
@@ -83,8 +82,8 @@ public class FileLocalFragment extends FabFragment
     private List<ModelFile> mFilesToCutList = new ArrayList<>();
     private List<ModelFile> mFilesToCopyList = new ArrayList<>();
 
-    private int mSortMode = Const.SORT_DATE_MODIFICATION;
-    private int mViewMode = Const.MODE_LIST;
+    private int mSortMode = Constants.SORT_DATE_MODIFICATION;
+    private int mViewMode = Constants.MODE_LIST;
 
     private Activity mActivity;
     private ApplicationCallback mApplicationCallback;
@@ -155,14 +154,14 @@ public class FileLocalFragment extends FabFragment
                 }
         ));
 
-        if (mSortMode == Const.SORT_ABC) {
+        if (mSortMode == Constants.SORT_ABC) {
             Collections.sort(fs, new Comparator<File>() {
                 @Override
                 public int compare(final File f1, final File f2) {
                     return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
                 }
             });
-        } else if (mSortMode == Const.SORT_SIZE) {
+        } else if (mSortMode == Constants.SORT_SIZE) {
             Collections.sort(fs, new Comparator<File>() {
                 @Override
                 public int compare(final File f1, final File f2) {
@@ -185,7 +184,7 @@ public class FileLocalFragment extends FabFragment
         mFilesList = new ArrayList<>();
         for (File file : fs) {
             ModelFile tmpModelFile = new ModelFile(mActivity, mApplicationCallback, file);
-            if (mSortMode == Const.SORT_SIZE)
+            if (mSortMode == Constants.SORT_SIZE)
                 tmpModelFile.adapterTitleStart = FileUtils.humanReadableByteCount(tmpModelFile.size) + " - ";
             mFilesList.add(tmpModelFile);
         }
@@ -340,7 +339,7 @@ public class FileLocalFragment extends FabFragment
             });
 
 
-            if (mViewMode == Const.MODE_GRID) {
+            if (mViewMode == Constants.MODE_GRID) {
                 mGridView.setVisibility(View.VISIBLE);
                 mRecyclerView.setVisibility(View.GONE);
 
@@ -618,9 +617,9 @@ public class FileLocalFragment extends FabFragment
 
     @Override
     public void setSortMode(int mSortMode) {
-        if (mSortMode == Const.SORT_ABC ||
-                mSortMode == Const.SORT_DATE_MODIFICATION ||
-                mSortMode == Const.SORT_SIZE) {
+        if (mSortMode == Constants.SORT_ABC ||
+                mSortMode == Constants.SORT_DATE_MODIFICATION ||
+                mSortMode == Constants.SORT_SIZE) {
             this.mSortMode = mSortMode;
             refreshList();
         }

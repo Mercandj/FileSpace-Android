@@ -19,7 +19,7 @@
  */
 package mercandalli.com.filespace.models;
 
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 import org.json.JSONException;
@@ -28,7 +28,7 @@ import org.json.JSONObject;
 public class ModelUserConnection extends Model {
 
     public String title, date_creation, url, username;
-    public int viewType = Const.TAB_VIEW_TYPE_NORMAL;
+    public int viewType = Constants.TAB_VIEW_TYPE_NORMAL;
     public int id_user;
 
     public ModelUserConnection() {
@@ -65,7 +65,7 @@ public class ModelUserConnection extends Model {
     }
 
     public String getAdapterTitle() {
-        if (viewType != Const.TAB_VIEW_TYPE_NORMAL)
+        if (viewType != Constants.TAB_VIEW_TYPE_NORMAL)
             return title;
         return ((this.username == null) ? "#" + this.id_user : this.username) + " : " + this.date_creation;
     }

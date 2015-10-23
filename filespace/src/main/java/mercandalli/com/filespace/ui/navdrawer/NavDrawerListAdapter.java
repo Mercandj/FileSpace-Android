@@ -29,7 +29,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.FontUtils;
@@ -75,7 +75,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
         NavDrawerItem item = navDrawerItems.get(position);
 
         switch (navDrawerItems.get(position).viewType) {
-            case Const.TAB_VIEW_TYPE_PROFILE:
+            case Constants.TAB_VIEW_TYPE_PROFILE:
                 convertView = inflater.inflate(R.layout.tab_navdrawer_profil, parent, false);
 
                 ((TextView) convertView.findViewById(R.id.title)).setText(item.title);
@@ -110,7 +110,7 @@ public class NavDrawerListAdapter extends BaseAdapter {
 
                 break;
 
-            case Const.TAB_VIEW_TYPE_NORMAL:
+            case Constants.TAB_VIEW_TYPE_NORMAL:
                 convertView = inflater.inflate(R.layout.tab_navdrawer, parent, false);
 
                 ((TextView) convertView.findViewById(R.id.title)).setText(item.title);
@@ -129,18 +129,18 @@ public class NavDrawerListAdapter extends BaseAdapter {
 
                 break;
 
-            case Const.TAB_VIEW_TYPE_SECTION:
+            case Constants.TAB_VIEW_TYPE_SECTION:
                 convertView = inflater.inflate(R.layout.tab_navdrawer_section, parent, false);
                 break;
 
-            case Const.TAB_VIEW_TYPE_SECTION_TITLE:
+            case Constants.TAB_VIEW_TYPE_SECTION_TITLE:
                 convertView = inflater.inflate(R.layout.tab_navdrawer_section_title, parent, false);
                 ((TextView) convertView.findViewById(R.id.title)).setText(item.title);
                 FontUtils.applyFont(app, ((TextView) convertView.findViewById(R.id.title)), "fonts/Roboto-Regular.ttf");
                 break;
 
-            case Const.TAB_VIEW_TYPE_SETTING:
-            case Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE:
+            case Constants.TAB_VIEW_TYPE_SETTING:
+            case Constants.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE:
                 convertView = inflater.inflate(R.layout.tab_navdrawer_setting, parent, false);
 
                 ((TextView) convertView.findViewById(R.id.title)).setText(item.title);

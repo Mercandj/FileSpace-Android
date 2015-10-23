@@ -52,7 +52,7 @@ import java.util.List;
 import java.util.Map;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
@@ -61,7 +61,6 @@ import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.models.MusicModelFile;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activities.ApplicationCallback;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterDragMusicModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
@@ -78,8 +77,8 @@ public class FileLocalMusicFragment extends FabFragment
     private ProgressBar mProgressBar;
     private TextView message;
 
-    private int mSortMode = Const.SORT_DATE_MODIFICATION;
-    private int mViewMode = Const.MODE_LIST;
+    private int mSortMode = Constants.SORT_DATE_MODIFICATION;
+    private int mViewMode = Constants.MODE_LIST;
 
     private Activity mActivity;
     private ApplicationCallback mApplicationCallback;
@@ -176,7 +175,7 @@ public class FileLocalMusicFragment extends FabFragment
                     MusicModelFile modelFile = new MusicModelFile(mActivity, mApplicationCallback, new File(fullpath));
                     modelFile.setAlbum(album_name);
                     modelFile.setArtist(artist_name);
-                    if (mSortMode == Const.SORT_SIZE)
+                    if (mSortMode == Constants.SORT_SIZE)
                         modelFile.adapterTitleStart = FileUtils.humanReadableByteCount(modelFile.size) + " - ";
                     files.add(modelFile);
 
@@ -186,14 +185,14 @@ public class FileLocalMusicFragment extends FabFragment
             cursor.close();
         }
 
-        if (mSortMode == Const.SORT_ABC) {
+        if (mSortMode == Constants.SORT_ABC) {
             Collections.sort(files, new Comparator<ModelFile>() {
                 @Override
                 public int compare(final ModelFile f1, final ModelFile f2) {
                     return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
                 }
             });
-        } else if (mSortMode == Const.SORT_SIZE) {
+        } else if (mSortMode == Constants.SORT_SIZE) {
             Collections.sort(files, new Comparator<ModelFile>() {
                 @Override
                 public int compare(final ModelFile f1, final ModelFile f2) {
@@ -342,7 +341,7 @@ public class FileLocalMusicFragment extends FabFragment
             ItemTouchHelper ith = new ItemTouchHelper(_ithCallback);
             ith.attachToRecyclerView(mRecyclerView);
 
-            if (mViewMode == Const.MODE_GRID) {
+            if (mViewMode == Constants.MODE_GRID) {
                 this.mGridView.setVisibility(View.VISIBLE);
                 this.mRecyclerView.setVisibility(View.GONE);
 
@@ -469,9 +468,9 @@ public class FileLocalMusicFragment extends FabFragment
 
     @Override
     public void setSortMode(int sortMode) {
-        if (sortMode == Const.SORT_ABC ||
-                sortMode == Const.SORT_DATE_MODIFICATION ||
-                sortMode == Const.SORT_SIZE) {
+        if (sortMode == Constants.SORT_ABC ||
+                sortMode == Constants.SORT_DATE_MODIFICATION ||
+                sortMode == Constants.SORT_SIZE) {
             mSortMode = sortMode;
             refreshList();
         }

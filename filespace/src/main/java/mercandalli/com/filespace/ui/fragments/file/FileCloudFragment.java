@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
@@ -55,13 +55,11 @@ import mercandalli.com.filespace.models.ModelFileTypeENUM;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activities.ApplicationCallback;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
 import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
-import mercandalli.com.filespace.ui.fragments.community.UserFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.NetUtils;
@@ -90,9 +88,9 @@ public class FileCloudFragment extends FabFragment implements
     private ApplicationCallback mApplicationCallback;
 
     /**
-     * {@link Const#MODE_LIST} or {@link Const#MODE_GRID}
+     * {@link Constants#MODE_LIST} or {@link Constants#MODE_GRID}
      */
-    private int mViewMode = Const.MODE_LIST;
+    private int mViewMode = Constants.MODE_LIST;
 
     public static FileCloudFragment newInstance() {
         return new FileCloudFragment();
@@ -148,6 +146,9 @@ public class FileCloudFragment extends FabFragment implements
     }
 
     public void refreshList(String search) {
+        if(!isAdded()) {
+            return;
+        }
         List<StringPair> parameters = new ArrayList<>();
         if (search != null)
             parameters.add(new StringPair("search", "" + search));
@@ -227,7 +228,7 @@ public class FileCloudFragment extends FabFragment implements
 
             this.refreshFab.execute();
 
-            if (mViewMode == Const.MODE_GRID) {
+            if (mViewMode == Constants.MODE_GRID) {
                 this.mGridView.setVisibility(View.VISIBLE);
                 this.mRecyclerView.setVisibility(View.GONE);
 
@@ -427,7 +428,7 @@ public class FileCloudFragment extends FabFragment implements
 
     @Override
     public boolean isFabVisible(int fab_id) {
-        if (!NetUtils.isInternetConnection(mActivity) || !mApplicationCallback.isLogged())
+        if (mActivity != null && mApplicationCallback != null && (!NetUtils.isInternetConnection(mActivity) || !mApplicationCallback.isLogged()))
             return false;
         switch (fab_id) {
             case 0:

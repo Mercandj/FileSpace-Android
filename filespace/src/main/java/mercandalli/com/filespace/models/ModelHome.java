@@ -22,7 +22,7 @@ package mercandalli.com.filespace.models;
 import android.graphics.Bitmap;
 import android.view.View;
 
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listeners.IModelHomeListener;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
@@ -32,7 +32,7 @@ import org.json.JSONObject;
 public class ModelHome extends Model {
 
     private CharSequence title1, title2;
-    public int id, viewType = Const.TAB_VIEW_TYPE_NORMAL;
+    public int id, viewType = Constants.TAB_VIEW_TYPE_NORMAL;
     public ModelServerMessage serverMessage;
     public ModelForm modelForm;
 

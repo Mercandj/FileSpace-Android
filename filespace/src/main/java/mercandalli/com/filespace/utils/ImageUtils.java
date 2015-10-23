@@ -33,7 +33,7 @@ import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listeners.IBitmapListener;
 
 import java.io.File;
@@ -90,7 +90,7 @@ public class ImageUtils {
         if (file != null) {
             if (file.exists()) {
 
-                int desiredWidth = Const.WIDTH_MAX_ONLINE_PICTURE_BITMAP;
+                int desiredWidth = Constants.WIDTH_MAX_ONLINE_PICTURE_BITMAP;
 
                 // Get the source image's dimensions
                 BitmapFactory.Options options = new BitmapFactory.Options();

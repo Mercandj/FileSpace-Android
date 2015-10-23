@@ -51,8 +51,7 @@ import java.util.List;
 import java.util.Locale;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.Config;
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.extras.ia.Interpreter;
 import mercandalli.com.filespace.extras.ia.InterpreterMain;
 import mercandalli.com.filespace.extras.ia.InterpreterResult;
@@ -218,6 +217,9 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
     }
 
     public void refreshList(ModelNasaImage modelNasaImage) {
+        if(!isAdded()) {
+            return;
+        }
         mModelHomeList = new ArrayList<>();
 
         List<ModelServerMessage> serverMessageList = mApplicationCallback.getConfig().getListServerMessage_1();
@@ -229,7 +231,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                     if (modelHome.serverMessage != null)
                         app.getConfig().removeServerMessage(modelHome.serverMessage);
                 }
-            }, serverMessageList.get(i), Const.TAB_VIEW_TYPE_HOME_INFORMATION));
+            }, serverMessageList.get(i), Constants.TAB_VIEW_TYPE_HOME_INFORMATION));
         }
 
         if (mApplicationCallback.getConfig().isHomeWelcomeMessage()) {
@@ -245,7 +247,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                         removeItemList(modelHome);
                         mApplicationCallback.getConfig().setHomeWelcomeMessage(false);
                     }
-                }, htmlMessage, Const.TAB_VIEW_TYPE_HOME_INFORMATION));
+                }, htmlMessage, Constants.TAB_VIEW_TYPE_HOME_INFORMATION));
             } else {
                 mModelHomeList.add(new ModelHome(mModelHomeList.size(), "Welcome", new IModelHomeListener() {
                     @Override
@@ -253,11 +255,11 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                         removeItemList(modelHome);
                         mApplicationCallback.getConfig().setHomeWelcomeMessage(false);
                     }
-                }, htmlMessage, Const.TAB_VIEW_TYPE_HOME_INFORMATION));
+                }, htmlMessage, Constants.TAB_VIEW_TYPE_HOME_INFORMATION));
             }
         }
 
-        mModelHomeList.add(new ModelHome(mModelHomeList.size(), "Tabs", Const.TAB_VIEW_TYPE_SECTION));
+        mModelHomeList.add(new ModelHome(mModelHomeList.size(), "Tabs", Constants.TAB_VIEW_TYPE_SECTION));
         mModelHomeList.add(new ModelHome(mModelHomeList.size(),
                 "Files",
                 new View.OnClickListener() {
@@ -275,7 +277,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                         ((ApplicationDrawerActivity) app).selectItem(4);
                     }
                 },
-                Const.TAB_VIEW_TYPE_TWO_BUTTONS));
+                Constants.TAB_VIEW_TYPE_TWO_BUTTONS));
 
         if (modelNasaImage != null) {
             mModelHomeList.add(new ModelHome(mModelHomeList.size(), "NASA Image - " + modelNasaImage.date, new IModelHomeListener() {
@@ -283,7 +285,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                 public void execute(ModelHome modelHome) {
                     removeItemList(modelHome);
                 }
-            }, modelNasaImage.explanation, modelNasaImage.bitmap, Const.TAB_VIEW_TYPE_HOME_IMAGE));
+            }, modelNasaImage.explanation, modelNasaImage.bitmap, Constants.TAB_VIEW_TYPE_HOME_IMAGE));
         }
 
         updateAdapter();
@@ -422,7 +424,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                             }
                         },
                                 interpreterResult.modelForm,
-                                Const.TAB_VIEW_TYPE_HOME_INFORMATION_FORM),
+                                Constants.TAB_VIEW_TYPE_HOME_INFORMATION_FORM),
                         0
                 );
             else if (interpreterResult.content != null)
@@ -435,7 +437,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                                 }
                             },
                                     interpreterResult.content,
-                                    Const.TAB_VIEW_TYPE_HOME_INFORMATION),
+                                    Constants.TAB_VIEW_TYPE_HOME_INFORMATION),
                             0
                     );
         }

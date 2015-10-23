@@ -22,12 +22,11 @@ package mercandalli.com.filespace.models;
 import android.app.Activity;
 import android.graphics.Bitmap;
 
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listeners.IBitmapListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.HashUtils;
@@ -121,7 +120,7 @@ public class ModelUser extends Model {
                 picture.size = this.file_profile_picture_size;
                 picture.onlineUrl = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + id_file_profile_picture;
 
-                new TaskGetDownloadImage(mActivity, app, this.app.getConfig().getUser(), picture, Const.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
+                new TaskGetDownloadImage(mActivity, app, this.app.getConfig().getUser(), picture, Constants.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
                     @Override
                     public void execute(Bitmap bitmap) {
                         if (bitmap != null) {

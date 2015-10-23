@@ -24,24 +24,36 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import mercandalli.com.filespace.config.MyApp;
 import mercandalli.com.filespace.listeners.SetToolbarCallback;
+import mercandalli.com.filespace.manager.file.FileManager;
+import mercandalli.com.filespace.net.FileApiService;
 import mercandalli.com.filespace.notificationpush.NotificationPush;
 import mercandalli.com.filespace.ui.fragments.community.CommunityFragment;
 import mercandalli.com.filespace.ui.fragments.file.FileFragment;
+import mercandalli.com.filespace.utils.RetrofitUtils;
+
+import javax.inject.Inject;
 
 /**
  * Main {@link Activity} launched by the xml.
  */
 public class MainActivity extends ApplicationDrawerActivity implements SetToolbarCallback {
 
+    @Inject
+    FileManager mFileManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (mBackFragment instanceof FileFragment) {
-            FileFragment fragmentFileManager = (FileFragment) mBackFragment;
-            fragmentFileManager.refreshListServer();
-        }
+        // Dagger
+        (MyApp.get(this)).getAppComponent().inject(this);
+
+        //TEST
+        RetrofitUtils.getAuthorizedRestAdapter(this).create(FileApiService.class);
+
+
 
         // Notif
         if (TextUtils.isEmpty(NotificationPush.regId)) {

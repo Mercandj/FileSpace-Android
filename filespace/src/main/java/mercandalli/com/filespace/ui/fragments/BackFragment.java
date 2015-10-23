@@ -30,7 +30,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.Window;
 import android.view.WindowManager;
 
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 
 /**
@@ -61,7 +61,7 @@ public abstract class BackFragment extends Fragment {
         /**
          * Define if the list or grid.
          *
-         * @param viewMode {@link Const#MODE_LIST} or {@link Const#MODE_GRID}
+         * @param viewMode {@link Constants#MODE_LIST} or {@link Constants#MODE_GRID}
          */
         void setViewMode(int viewMode);
     }
@@ -70,7 +70,7 @@ public abstract class BackFragment extends Fragment {
         /**
          * Define the list sort.
          *
-         * @param sortMode {@link Const#SORT_ABC}, {@link Const#SORT_SIZE} or {@link Const#SORT_DATE_MODIFICATION}
+         * @param sortMode {@link Constants#SORT_ABC}, {@link Constants#SORT_SIZE} or {@link Constants#SORT_DATE_MODIFICATION}
          */
         void setSortMode(int sortMode);
     }

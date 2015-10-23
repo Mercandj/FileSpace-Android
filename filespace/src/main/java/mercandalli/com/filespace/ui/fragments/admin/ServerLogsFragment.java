@@ -37,7 +37,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelUserConnection;
 import mercandalli.com.filespace.net.TaskGet;
@@ -130,9 +130,9 @@ public class ServerLogsFragment extends BackFragment {
                             try {
                                 if (json != null) {
                                     if (json.has("result_count_all"))
-                                        list.add(new ModelUserConnection("Server Logs (" + json.getInt("result_count_all") + ")", Const.TAB_VIEW_TYPE_SECTION));
+                                        list.add(new ModelUserConnection("Server Logs (" + json.getInt("result_count_all") + ")", Constants.TAB_VIEW_TYPE_SECTION));
                                     else
-                                        list.add(new ModelUserConnection("Server Logs", Const.TAB_VIEW_TYPE_SECTION));
+                                        list.add(new ModelUserConnection("Server Logs", Constants.TAB_VIEW_TYPE_SECTION));
 
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");

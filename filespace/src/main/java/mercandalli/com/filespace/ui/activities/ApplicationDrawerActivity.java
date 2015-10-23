@@ -34,7 +34,7 @@ import android.widget.ListView;
 import java.util.Stack;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.SetToolbarCallback;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
@@ -54,7 +54,7 @@ import mercandalli.com.filespace.ui.navdrawer.NavDrawerListAdapter;
 
 public abstract class ApplicationDrawerActivity extends ApplicationActivity implements SetToolbarCallback {
 
-    public static final int[] noSelectable = new int[]{Const.TAB_VIEW_TYPE_SECTION, Const.TAB_VIEW_TYPE_SECTION_TITLE, Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE};
+    public static final int[] noSelectable = new int[]{Constants.TAB_VIEW_TYPE_SECTION, Constants.TAB_VIEW_TYPE_SECTION_TITLE, Constants.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE};
 
     protected BackFragment mBackFragment;
     private final int INIT_FRAGMENT_ID = 3;
@@ -88,12 +88,12 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                             getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                         }
                     }
-                }, R.drawable.ic_user, R.color.notifications_bar, Const.TAB_VIEW_TYPE_PROFILE)
+                }, R.drawable.ic_user, R.color.notifications_bar, Constants.TAB_VIEW_TYPE_PROFILE)
         );
 
         // Tab 1
         navDrawerItems.add(
-                new NavDrawerItem("", R.drawable.ic_launcher, Const.TAB_VIEW_TYPE_SECTION)
+                new NavDrawerItem("", R.drawable.ic_launcher, Constants.TAB_VIEW_TYPE_SECTION)
         );
 
         // Tab 2
@@ -105,7 +105,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                         mBackFragment.setApp(ApplicationDrawerActivity.this);
                         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                     }
-                }, R.drawable.q_ic_drawer_home, R.drawable.q_ic_drawer_home_pressed, Const.TAB_VIEW_TYPE_NORMAL)
+                }, R.drawable.q_ic_drawer_home, R.drawable.q_ic_drawer_home_pressed, Constants.TAB_VIEW_TYPE_NORMAL)
         );
 
         // Tab 3
@@ -117,7 +117,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                         mBackFragment.setApp(ApplicationDrawerActivity.this);
                         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                     }
-                }, R.drawable.q_ic_drawer_files, R.drawable.q_ic_drawer_files_pressed, Const.TAB_VIEW_TYPE_NORMAL)
+                }, R.drawable.q_ic_drawer_files, R.drawable.q_ic_drawer_files_pressed, Constants.TAB_VIEW_TYPE_NORMAL)
         );
 
         // Tab 4
@@ -129,7 +129,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                         mBackFragment.setApp(ApplicationDrawerActivity.this);
                         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                     }
-                }, R.drawable.q_ic_drawer_workspace, R.drawable.q_ic_drawer_workspace_pressed, Const.TAB_VIEW_TYPE_NORMAL)
+                }, R.drawable.q_ic_drawer_workspace, R.drawable.q_ic_drawer_workspace_pressed, Constants.TAB_VIEW_TYPE_NORMAL)
         );
 
         // User logged Tabs
@@ -143,7 +143,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                             mBackFragment.setApp(ApplicationDrawerActivity.this);
                             getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                         }
-                    }, R.drawable.q_ic_drawer_community, R.drawable.q_ic_drawer_community_pressed, Const.TAB_VIEW_TYPE_NORMAL)
+                    }, R.drawable.q_ic_drawer_community, R.drawable.q_ic_drawer_community_pressed, Constants.TAB_VIEW_TYPE_NORMAL)
             );
         }
 
@@ -158,7 +158,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                             mBackFragment.setApp(ApplicationDrawerActivity.this);
                             getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                         }
-                    }, R.drawable.q_ic_drawer_robotics, R.drawable.q_ic_drawer_robotics_pressed, Const.TAB_VIEW_TYPE_NORMAL)
+                    }, R.drawable.q_ic_drawer_robotics, R.drawable.q_ic_drawer_robotics_pressed, Constants.TAB_VIEW_TYPE_NORMAL)
             );
 
             // Tab 7
@@ -170,7 +170,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                             mBackFragment.setApp(ApplicationDrawerActivity.this);
                             getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                         }
-                    }, R.drawable.q_ic_drawer_robotics, R.drawable.q_ic_drawer_robotics_pressed, Const.TAB_VIEW_TYPE_NORMAL)
+                    }, R.drawable.q_ic_drawer_robotics, R.drawable.q_ic_drawer_robotics_pressed, Constants.TAB_VIEW_TYPE_NORMAL)
             );
 
             // Tab 8
@@ -182,18 +182,18 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                             mBackFragment.setApp(ApplicationDrawerActivity.this);
                             getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                         }
-                    }, R.drawable.q_ic_drawer_data, R.drawable.q_ic_drawer_data_pressed, Const.TAB_VIEW_TYPE_NORMAL)
+                    }, R.drawable.q_ic_drawer_data, R.drawable.q_ic_drawer_data_pressed, Constants.TAB_VIEW_TYPE_NORMAL)
             );
         }
 
         // Tab 9
         navDrawerItems.add(
-                new NavDrawerItem("", R.drawable.ic_launcher, Const.TAB_VIEW_TYPE_SECTION)
+                new NavDrawerItem("", R.drawable.ic_launcher, Constants.TAB_VIEW_TYPE_SECTION)
         );
 
         // Tab 10
         navDrawerItems.add(
-                new NavDrawerItem("Other", R.drawable.ic_launcher, Const.TAB_VIEW_TYPE_SECTION_TITLE)
+                new NavDrawerItem("Other", R.drawable.ic_launcher, Constants.TAB_VIEW_TYPE_SECTION_TITLE)
         );
 
         // Tab 11
@@ -209,7 +209,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                             }
                         },
                         R.drawable.ic_settings_grey,
-                        Const.TAB_VIEW_TYPE_SETTING)
+                        Constants.TAB_VIEW_TYPE_SETTING)
         );
 
         // Tab 12
@@ -230,7 +230,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                                 }
                             },
                             R.drawable.ic_log_out,
-                            Const.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE)
+                            Constants.TAB_VIEW_TYPE_SETTING_NO_SELECTABLE)
             );
         }
 
@@ -249,7 +249,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                             }
                         },
                         R.drawable.ic_help_grey,
-                        Const.TAB_VIEW_TYPE_SETTING)
+                        Constants.TAB_VIEW_TYPE_SETTING)
         );
 
         // Initial Fragment

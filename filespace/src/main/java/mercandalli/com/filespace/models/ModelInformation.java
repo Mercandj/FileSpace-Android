@@ -19,7 +19,7 @@
  */
 package mercandalli.com.filespace.models;
 
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 
 import org.json.JSONException;
@@ -29,7 +29,7 @@ public class ModelInformation extends Model {
 
     public String title;
     public String value;
-    public int viewType = Const.TAB_VIEW_TYPE_NORMAL;
+    public int viewType = Constants.TAB_VIEW_TYPE_NORMAL;
 
     public ModelInformation() {
         super();

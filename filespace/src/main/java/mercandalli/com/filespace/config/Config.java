@@ -28,9 +28,11 @@ import mercandalli.com.filespace.models.Model;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.models.ModelServerMessage;
 import mercandalli.com.filespace.models.ModelUser;
+import mercandalli.com.filespace.net.Base64;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.FileUtils;
+import mercandalli.com.filespace.utils.HashUtils;
 import mercandalli.com.filespace.utils.NetUtils;
 
 import org.json.JSONArray;
@@ -38,8 +40,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by Jonathan on 10/12/2014.
@@ -56,23 +61,23 @@ public class Config {
     private static final String fileName = "settings_json_1.txt";
 
     // Server routes
-    public final String aboutURL = "http://mercandalli.com/";
-    public final String webApplication = "http://mercandalli.com/FileSpace";
-    public final String routeFile = "file";
-    public final String routeFileDelete = "file_delete";
-    public final String routeInformation = "information";
-    public final String routeRobotics = "robotics";
-    public final String routeGenealogy = "genealogy";
-    public final String routeGenealogyDelete = "genealogy_delete";
-    public final String routeGenealogyPut = "genealogy_put";
-    public final String routeGenealogyChildren = "genealogy_children";
-    public final String routeGenealogyStatistics = "genealogy_statistics";
-    public final String routeUser = "user";
-    public final String routeUserDelete = "user_delete";
-    public final String routeUserPut = "user_put";
-    public final String routeUserMessage = "user_message";
-    public final String routeUserConversation = "user_conversation";
-    public final String routeUserConnection = "user_connection";
+    public static final String aboutURL = "http://mercandalli.com/";
+    public static final String webApplication = "http://mercandalli.com/FileSpace";
+    public static final String routeFile = "file";
+    public static final String routeFileDelete = "file_delete";
+    public static final String routeInformation = "information";
+    public static final String routeRobotics = "robotics";
+    public static final String routeGenealogy = "genealogy";
+    public static final String routeGenealogyDelete = "genealogy_delete";
+    public static final String routeGenealogyPut = "genealogy_put";
+    public static final String routeGenealogyChildren = "genealogy_children";
+    public static final String routeGenealogyStatistics = "genealogy_statistics";
+    public static final String routeUser = "user";
+    public static final String routeUserDelete = "user_delete";
+    public static final String routeUserPut = "user_put";
+    public static final String routeUserMessage = "user_message";
+    public static final String routeUserConversation = "user_conversation";
+    public static final String routeUserConnection = "user_connection";
 
     /**
      * Static int to save/load
@@ -238,6 +243,20 @@ public class Config {
 
     public String getUserUsername() {
         return ENUM_String.STRING_USER_USERNAME.value;
+    }
+
+    public static String getUserToken() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String currentDate = dateFormatGmt.format(calendar.getTime());
+
+        String log = ENUM_String.STRING_USER_USERNAME.value;
+        String pass = HashUtils.sha1(HashUtils.sha1(ENUM_String.STRING_USER_PASSWORD.value) + currentDate);
+
+        String authentication = log + ":" + pass;
+        return Base64.encodeBytes(authentication.getBytes());
     }
 
     public void setUserUsername(String value) {

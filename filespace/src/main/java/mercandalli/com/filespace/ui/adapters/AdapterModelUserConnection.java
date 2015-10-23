@@ -28,7 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.models.ModelUserConnection;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.FontUtils;
@@ -47,7 +47,7 @@ public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterMode
 
     @Override
     public AdapterModelUserConnection.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == Const.TAB_VIEW_TYPE_SECTION)
+        if (viewType == Constants.TAB_VIEW_TYPE_SECTION)
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_information_section, parent, false), viewType);
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_user_connection, parent, false), viewType);
     }
@@ -56,11 +56,11 @@ public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterMode
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         ModelUserConnection model = itemsData.get(position);
         switch (model.viewType) {
-            case Const.TAB_VIEW_TYPE_NORMAL:
+            case Constants.TAB_VIEW_TYPE_NORMAL:
                 viewHolder.title.setText(model.getAdapterTitle());
                 viewHolder.value.setText(model.getAdapterSubtitle());
                 break;
-            case Const.TAB_VIEW_TYPE_SECTION:
+            case Constants.TAB_VIEW_TYPE_SECTION:
                 viewHolder.title.setText("" + model.title);
                 FontUtils.applyFont(app, viewHolder.title, "fonts/MYRIADAB.TTF");
                 break;
@@ -75,13 +75,13 @@ public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterMode
         public ViewHolder(View itemLayoutView, int viewType) {
             super(itemLayoutView);
             switch (viewType) {
-                case Const.TAB_VIEW_TYPE_NORMAL:
+                case Constants.TAB_VIEW_TYPE_NORMAL:
                     item = (RelativeLayout) itemLayoutView.findViewById(R.id.item);
                     title = (TextView) itemLayoutView.findViewById(R.id.title);
                     value = (TextView) itemLayoutView.findViewById(R.id.value);
                     icon = (ImageView) itemLayoutView.findViewById(R.id.icon);
                     break;
-                case Const.TAB_VIEW_TYPE_SECTION:
+                case Constants.TAB_VIEW_TYPE_SECTION:
                     title = (TextView) itemLayoutView.findViewById(R.id.title);
                     break;
             }

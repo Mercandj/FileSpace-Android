@@ -44,7 +44,7 @@ import android.widget.Toast;
 import org.json.JSONObject;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.listeners.SetToolbarCallback;
@@ -72,7 +72,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
     protected Toolbar mToolbar;
 
-    protected int mViewMode = Const.MODE_LIST;
+    protected int mViewMode = Constants.MODE_LIST;
 
     private Context mContext;
     private String mTitle;
@@ -97,7 +97,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         }
         if (context instanceof ApplicationCallback) {
             mApplicationCallback = (ApplicationCallback) context;
-            mViewMode = ((mApplicationCallback.getConfig().getUserFileModeView() > -1) ? mApplicationCallback.getConfig().getUserFileModeView() : Const.MODE_LIST);
+            mViewMode = ((mApplicationCallback.getConfig().getUserFileModeView() > -1) ? mApplicationCallback.getConfig().getUserFileModeView() : Constants.MODE_LIST);
         } else {
             throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
         }
@@ -452,7 +452,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
     public void sort() {
         final AlertDialog.Builder menuAlert = new AlertDialog.Builder(app);
-        String[] menuList = {"Sort by name (A-Z)", "Sort by size", "Sort by date", mApplicationCallback.getConfig().getUserFileModeView() == Const.MODE_LIST ? "Grid View" : "List View"};
+        String[] menuList = {"Sort by name (A-Z)", "Sort by size", "Sort by date", mApplicationCallback.getConfig().getUserFileModeView() == Constants.MODE_LIST ? "Grid View" : "List View"};
         menuAlert.setTitle(getString(R.string.view));
         menuAlert.setItems(menuList,
                 new DialogInterface.OnClickListener() {
@@ -468,7 +468,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                                     for (BackFragment fr : listFragment) {
                                         if (fr != null) {
                                             if (fr instanceof ISortMode) {
-                                                ((ISortMode) fr).setSortMode(item == 0 ? Const.SORT_ABC : (item == 1 ? Const.SORT_SIZE : Const.SORT_DATE_MODIFICATION));
+                                                ((ISortMode) fr).setSortMode(item == 0 ? Constants.SORT_ABC : (item == 1 ? Constants.SORT_SIZE : Constants.SORT_DATE_MODIFICATION));
                                             }
                                         }
                                     }
@@ -476,10 +476,10 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                                 break;
 
                             case 3:
-                                if (mViewMode == Const.MODE_LIST)
-                                    mViewMode = Const.MODE_GRID;
+                                if (mViewMode == Constants.MODE_LIST)
+                                    mViewMode = Constants.MODE_GRID;
                                 else
-                                    mViewMode = Const.MODE_LIST;
+                                    mViewMode = Constants.MODE_LIST;
                                 mApplicationCallback.getConfig().setUserFileModeView(mViewMode);
                                 for (BackFragment fr : listFragment) {
                                     if (fr != null) {

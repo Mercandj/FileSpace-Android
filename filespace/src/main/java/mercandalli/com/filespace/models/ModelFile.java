@@ -52,7 +52,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listeners.IBitmapListener;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
@@ -207,7 +207,7 @@ public class ModelFile extends Model implements Parcelable {
                 ModelFile.this.bitmap = ImageUtils.load_image(mActivity, this.id);
                 ModelFile.this.app.updateAdapters();
             } else
-                new TaskGetDownloadImage(mActivity, app, this.app.getConfig().getUser(), this, Const.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
+                new TaskGetDownloadImage(mActivity, app, this.app.getConfig().getUser(), this, Constants.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
                     @Override
                     public void execute(Bitmap bitmap) {
                         if (bitmap != null) {

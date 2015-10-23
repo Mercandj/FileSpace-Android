@@ -21,8 +21,7 @@ package mercandalli.com.filespace.models;
 
 import android.app.Activity;
 
-import mercandalli.com.filespace.config.Const;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 
 import org.json.JSONObject;
@@ -31,7 +30,7 @@ public abstract class Model {
 
     Activity mActivity;
     protected ApplicationCallback app;
-    public int viewType = Const.TAB_VIEW_TYPE_NORMAL;
+    public int viewType = Constants.TAB_VIEW_TYPE_NORMAL;
 
     public Model(Activity activity, ApplicationCallback app) {
         mActivity = activity;

@@ -24,10 +24,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -38,7 +36,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Toast;
 
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.extras.ia.action.ENUM_Action;
 import mercandalli.com.filespace.listeners.SetToolbarCallback;
 import mercandalli.com.filespace.models.ModelSetting;
@@ -134,7 +132,7 @@ public class SettingsFragment extends BackFragment {
 
     public void refreshList() {
         list = new ArrayList<>();
-        list.add(new ModelSetting(mActivity, mApplicationCallback, "Settings", Const.TAB_VIEW_TYPE_SECTION));
+        list.add(new ModelSetting(mActivity, mApplicationCallback, "Settings", Constants.TAB_VIEW_TYPE_SECTION));
         if (app.getConfig().isLogged()) {
             list.add(new ModelSetting(mActivity, mApplicationCallback, "Auto connection", new OnCheckedChangeListener() {
                 @Override

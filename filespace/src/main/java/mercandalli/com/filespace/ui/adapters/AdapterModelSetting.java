@@ -27,7 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.models.ModelSetting;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.FontUtils;
@@ -48,7 +48,7 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
 
     @Override
     public AdapterModelSetting.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == Const.TAB_VIEW_TYPE_SECTION)
+        if (viewType == Constants.TAB_VIEW_TYPE_SECTION)
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_setting_section, parent, false), viewType);
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_setting, parent, false), viewType);
     }
@@ -57,7 +57,7 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         ModelSetting model = itemsData.get(position);
         switch (model.viewType) {
-            case Const.TAB_VIEW_TYPE_NORMAL:
+            case Constants.TAB_VIEW_TYPE_NORMAL:
                 viewHolder.title.setText("" + model.title);
                 if (model.toggleButtonListener == null)
                     viewHolder.toggleButton.setVisibility(View.GONE);
@@ -72,7 +72,7 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
                 } else
                     viewHolder.subtitle.setVisibility(View.GONE);
                 break;
-            case Const.TAB_VIEW_TYPE_SECTION:
+            case Constants.TAB_VIEW_TYPE_SECTION:
                 viewHolder.title.setText("" + model.title);
                 FontUtils.applyFont(app, viewHolder.title, "fonts/MYRIADAB.TTF");
                 break;
@@ -87,13 +87,13 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
         public ViewHolder(View itemLayoutView, int viewType) {
             super(itemLayoutView);
             switch (viewType) {
-                case Const.TAB_VIEW_TYPE_NORMAL:
+                case Constants.TAB_VIEW_TYPE_NORMAL:
                     title = (TextView) itemLayoutView.findViewById(R.id.title);
                     subtitle = (TextView) itemLayoutView.findViewById(R.id.subtitle);
                     item = (RelativeLayout) itemLayoutView.findViewById(R.id.item);
                     toggleButton = (ToggleButton) itemLayoutView.findViewById(R.id.toggleButton);
                     break;
-                case Const.TAB_VIEW_TYPE_SECTION:
+                case Constants.TAB_VIEW_TYPE_SECTION:
                     title = (TextView) itemLayoutView.findViewById(R.id.title);
                     break;
             }

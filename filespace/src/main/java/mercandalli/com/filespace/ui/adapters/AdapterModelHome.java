@@ -33,7 +33,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.Const;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.models.ModelHome;
 import mercandalli.com.filespace.utils.FontUtils;
 
@@ -49,15 +49,15 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
 
     @Override
     public AdapterModelHome.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == Const.TAB_VIEW_TYPE_SECTION)
+        if (viewType == Constants.TAB_VIEW_TYPE_SECTION)
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_information_section, parent, false), viewType);
-        if (viewType == Const.TAB_VIEW_TYPE_TWO_BUTTONS)
+        if (viewType == Constants.TAB_VIEW_TYPE_TWO_BUTTONS)
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_two_buttons, parent, false), viewType);
-        if (viewType == Const.TAB_VIEW_TYPE_HOME_INFORMATION)
+        if (viewType == Constants.TAB_VIEW_TYPE_HOME_INFORMATION)
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_home_information, parent, false), viewType);
-        if (viewType == Const.TAB_VIEW_TYPE_HOME_INFORMATION_FORM)
+        if (viewType == Constants.TAB_VIEW_TYPE_HOME_INFORMATION_FORM)
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_home_information_form, parent, false), viewType);
-        if (viewType == Const.TAB_VIEW_TYPE_HOME_IMAGE)
+        if (viewType == Constants.TAB_VIEW_TYPE_HOME_IMAGE)
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_home_image, parent, false), viewType);
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_information, parent, false), viewType);
     }
@@ -66,15 +66,15 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         final ModelHome model = mModelHomeList.get(position);
         switch (model.viewType) {
-            case Const.TAB_VIEW_TYPE_NORMAL:
+            case Constants.TAB_VIEW_TYPE_NORMAL:
                 viewHolder.title1.setText("" + model.getTitle1());
                 viewHolder.title2.setText("" + model.getTitle2());
                 break;
-            case Const.TAB_VIEW_TYPE_SECTION:
+            case Constants.TAB_VIEW_TYPE_SECTION:
                 viewHolder.title1.setText("" + model.getTitle1());
                 FontUtils.applyFont(mContext, viewHolder.title1, "fonts/Roboto-Medium.ttf");
                 break;
-            case Const.TAB_VIEW_TYPE_TWO_BUTTONS:
+            case Constants.TAB_VIEW_TYPE_TWO_BUTTONS:
                 viewHolder.button1.setText("" + model.getTitle1());
                 viewHolder.button2.setText("" + model.getTitle2());
                 if (model.listener1 != null)
@@ -84,7 +84,7 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
                 FontUtils.applyFont(mContext, viewHolder.button1, "fonts/Roboto-Medium.ttf");
                 FontUtils.applyFont(mContext, viewHolder.button2, "fonts/Roboto-Medium.ttf");
                 break;
-            case Const.TAB_VIEW_TYPE_HOME_INFORMATION:
+            case Constants.TAB_VIEW_TYPE_HOME_INFORMATION:
                 viewHolder.title1.setText("" + model.getTitle1());
                 viewHolder.title2.setText(model.getTitle2());
                 FontUtils.applyFont(mContext, viewHolder.title1, "fonts/Roboto-Medium.ttf");
@@ -107,7 +107,7 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
                     }
                 });
                 break;
-            case Const.TAB_VIEW_TYPE_HOME_INFORMATION_FORM:
+            case Constants.TAB_VIEW_TYPE_HOME_INFORMATION_FORM:
                 viewHolder.title1.setText("" + model.getTitle1());
                 FontUtils.applyFont(mContext, viewHolder.title1, "fonts/Roboto-Medium.ttf");
                 FontUtils.applyFont(mContext, viewHolder.button1, "fonts/Roboto-Medium.ttf");
@@ -151,7 +151,7 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
                         }
                     });
                 break;
-            case Const.TAB_VIEW_TYPE_HOME_IMAGE:
+            case Constants.TAB_VIEW_TYPE_HOME_IMAGE:
                 viewHolder.title1.setText("" + model.getTitle1());
                 viewHolder.title2.setText(model.getTitle2());
                 viewHolder.image.setImageBitmap(model.image);
@@ -192,25 +192,25 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
         public ViewHolder(View itemLayoutView, int viewType) {
             super(itemLayoutView);
             switch (viewType) {
-                case Const.TAB_VIEW_TYPE_NORMAL:
+                case Constants.TAB_VIEW_TYPE_NORMAL:
                     item = (RelativeLayout) itemLayoutView.findViewById(R.id.item);
                     title1 = (TextView) itemLayoutView.findViewById(R.id.title);
                     title2 = (TextView) itemLayoutView.findViewById(R.id.value);
                     break;
-                case Const.TAB_VIEW_TYPE_SECTION:
+                case Constants.TAB_VIEW_TYPE_SECTION:
                     title1 = (TextView) itemLayoutView.findViewById(R.id.title);
                     break;
-                case Const.TAB_VIEW_TYPE_TWO_BUTTONS:
+                case Constants.TAB_VIEW_TYPE_TWO_BUTTONS:
                     button1 = (Button) itemLayoutView.findViewById(R.id.button1);
                     button2 = (Button) itemLayoutView.findViewById(R.id.button2);
                     break;
-                case Const.TAB_VIEW_TYPE_HOME_INFORMATION:
+                case Constants.TAB_VIEW_TYPE_HOME_INFORMATION:
                     title1 = (TextView) itemLayoutView.findViewById(R.id.title);
                     title2 = (TextView) itemLayoutView.findViewById(R.id.content);
                     button1 = (Button) itemLayoutView.findViewById(R.id.button1);
                     button2 = (Button) itemLayoutView.findViewById(R.id.button2);
                     break;
-                case Const.TAB_VIEW_TYPE_HOME_INFORMATION_FORM:
+                case Constants.TAB_VIEW_TYPE_HOME_INFORMATION_FORM:
                     title1 = (TextView) itemLayoutView.findViewById(R.id.title);
                     button1 = (Button) itemLayoutView.findViewById(R.id.button);
                     button2 = (Button) itemLayoutView.findViewById(R.id.buttonSend);
@@ -224,7 +224,7 @@ public class AdapterModelHome extends RecyclerView.Adapter<AdapterModelHome.View
                     input2EditText = (EditText) itemLayoutView.findViewById(R.id.input2EditText);
                     input3EditText = (EditText) itemLayoutView.findViewById(R.id.input3EditText);
                     break;
-                case Const.TAB_VIEW_TYPE_HOME_IMAGE:
+                case Constants.TAB_VIEW_TYPE_HOME_IMAGE:
                     title1 = (TextView) itemLayoutView.findViewById(R.id.title);
                     title2 = (TextView) itemLayoutView.findViewById(R.id.content);
                     image = (ImageView) itemLayoutView.findViewById(R.id.image);
