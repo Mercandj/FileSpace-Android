@@ -38,21 +38,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import mercandalli.com.filespace.listeners.IListener;
-import mercandalli.com.filespace.listeners.IModelUserListener;
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.listeners.IStringListener;
-import mercandalli.com.filespace.models.ModelUser;
-import mercandalli.com.filespace.net.TaskGet;
-import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationCallback;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
-import mercandalli.com.filespace.ui.adapters.AdapterModelUser;
-import mercandalli.com.filespace.ui.fragments.BackFragment;
-import mercandalli.com.filespace.ui.views.DividerItemDecoration;
-import mercandalli.com.filespace.utils.NetUtils;
-import mercandalli.com.filespace.utils.StringPair;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,6 +46,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listeners.IListener;
+import mercandalli.com.filespace.listeners.IModelUserListener;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.listeners.IStringListener;
+import mercandalli.com.filespace.models.ModelUser;
+import mercandalli.com.filespace.net.TaskGet;
+import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
+import mercandalli.com.filespace.ui.adapters.AdapterModelUser;
+import mercandalli.com.filespace.ui.fragments.BackFragment;
+import mercandalli.com.filespace.ui.views.DividerItemDecoration;
+import mercandalli.com.filespace.utils.DialogUtils;
+import mercandalli.com.filespace.utils.NetUtils;
+import mercandalli.com.filespace.utils.StringPair;
 
 /**
  * Created by Jonathan on 30/03/2015.
@@ -208,7 +207,7 @@ public class UserFragment extends BackFragment {
                                 public void onClick(DialogInterface dialog, int item) {
                                     switch (item) {
                                         case 0:
-                                            app.prompt("Send Message", "Write your message", "Send", new IStringListener() {
+                                            DialogUtils.prompt(mActivity, "Send Message", "Write your message", "Send", new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
                                                     String url = app.getConfig().getUrlServer() + app.getConfig().routeUserConversation + "/" + modelUser.id;
@@ -225,7 +224,7 @@ public class UserFragment extends BackFragment {
                                             }, getString(R.string.cancel), null);
                                             break;
                                         case 1:
-                                            app.alert("Delete " + modelUser.username + "?", "This process cannot be undone.", getString(R.string.delete), new IListener() {
+                                            DialogUtils.alert(mActivity, "Delete " + modelUser.username + "?", "This process cannot be undone.", getString(R.string.delete), new IListener() {
                                                 @Override
                                                 public void execute() {
                                                     if (app.getConfig().isUserAdmin())

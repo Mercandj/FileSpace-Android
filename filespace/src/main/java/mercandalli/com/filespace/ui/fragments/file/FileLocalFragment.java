@@ -66,6 +66,7 @@ import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
+import mercandalli.com.filespace.utils.DialogUtils;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.StringPair;
 
@@ -221,7 +222,7 @@ public class FileLocalFragment extends FabFragment
                                             if (modelFile.directory) {
                                                 Toast.makeText(FileLocalFragment.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                             } else
-                                                FileLocalFragment.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
+                                                DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
                                                     @Override
                                                     public void execute() {
                                                         if (modelFile.getFile() != null) {
@@ -240,7 +241,7 @@ public class FileLocalFragment extends FabFragment
                                             modelFile.openLocalAs(FileLocalFragment.this.app);
                                             break;
                                         case 2:
-                                            FileLocalFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                            DialogUtils.prompt(mActivity, "Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
                                                     modelFile.rename(text, new IPostExecuteListener() {
@@ -261,7 +262,7 @@ public class FileLocalFragment extends FabFragment
                                             }, "Cancel", null, modelFile.getNameExt());
                                             break;
                                         case 3:
-                                            FileLocalFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                            DialogUtils.alert(mActivity, "Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                                 @Override
                                                 public void execute() {
                                                     modelFile.delete(new IPostExecuteListener() {
@@ -292,7 +293,7 @@ public class FileLocalFragment extends FabFragment
                                             refreshFab();
                                             break;
                                         case 6:
-                                            FileLocalFragment.this.app.alert(
+                                            DialogUtils.alert(mActivity,
                                                     getString(R.string.properties) + " : " + modelFile.name,
                                                     modelFile.toSpanned(),
                                                     "OK",
@@ -386,7 +387,7 @@ public class FileLocalFragment extends FabFragment
                                                 if (modelFile.directory) {
                                                     Toast.makeText(FileLocalFragment.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                                 } else
-                                                    FileLocalFragment.this.app.alert(getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
+                                                    DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
                                                         @Override
                                                         public void execute() {
                                                             if (modelFile.getFile() != null) {
@@ -402,7 +403,7 @@ public class FileLocalFragment extends FabFragment
                                                     }, getString(R.string.cancel), null);
                                                 break;
                                             case 1:
-                                                FileLocalFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                                DialogUtils.prompt(mActivity, "Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                                     @Override
                                                     public void execute(String text) {
                                                         modelFile.rename(text, new IPostExecuteListener() {
@@ -419,7 +420,7 @@ public class FileLocalFragment extends FabFragment
                                                 }, "Cancel", null, modelFile.getNameExt());
                                                 break;
                                             case 2:
-                                                FileLocalFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                                DialogUtils.alert(mActivity, "Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                                     @Override
                                                     public void execute() {
                                                         modelFile.delete(new IPostExecuteListener() {
@@ -446,7 +447,7 @@ public class FileLocalFragment extends FabFragment
                                                 refreshFab();
                                                 break;
                                             case 5:
-                                                FileLocalFragment.this.app.alert(
+                                                DialogUtils.alert(mActivity,
                                                         getString(R.string.properties) + " : " + modelFile.name,
                                                         "Name : " + modelFile.name + "\nExtension : " + modelFile.type + "\nType : " + modelFile.type.getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
                                                         "OK",
@@ -561,7 +562,7 @@ public class FileLocalFragment extends FabFragment
                                 public void onClick(DialogInterface dialog, int item) {
                                     switch (item) {
                                         case 0:
-                                            FileLocalFragment.this.app.prompt("New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
+                                            DialogUtils.prompt(mActivity, "New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
                                                     createFile(mCurrentDirectory.getPath() + File.separator, text);

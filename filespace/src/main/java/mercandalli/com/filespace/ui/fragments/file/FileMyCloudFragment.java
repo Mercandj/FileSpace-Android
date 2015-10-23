@@ -63,6 +63,7 @@ import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
+import mercandalli.com.filespace.utils.DialogUtils;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.NetUtils;
 import mercandalli.com.filespace.utils.StringPair;
@@ -151,7 +152,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                         break;
 
                                     case 1:
-                                        FileMyCloudFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                        DialogUtils.prompt(mActivity, "Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                             @Override
                                             public void execute(String text) {
                                                 modelFile.rename(text, new IPostExecuteListener() {
@@ -169,7 +170,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                         break;
 
                                     case 2:
-                                        FileMyCloudFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                        DialogUtils.alert(mActivity, "Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                             @Override
                                             public void execute() {
                                                 modelFile.delete(new IPostExecuteListener() {
@@ -193,7 +194,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                         break;
 
                                     case 4:
-                                        FileMyCloudFragment.this.app.alert(
+                                        DialogUtils.alert(mActivity,
                                                 getString(R.string.properties) + " : " + modelFile.name,
                                                 modelFile.toSpanned(),
                                                 "OK",
@@ -300,7 +301,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
     }
 
     public void refreshList(String search) {
-        if(!isAdded()) {
+        if (!isAdded()) {
             return;
         }
         List<StringPair> parameters = new ArrayList<>();
@@ -428,7 +429,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                                 break;
 
                                             case 1:
-                                                FileMyCloudFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                                DialogUtils.prompt(mActivity, "Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                                     @Override
                                                     public void execute(String text) {
                                                         modelFile.rename(text, new IPostExecuteListener() {
@@ -446,7 +447,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                                 break;
 
                                             case 2:
-                                                FileMyCloudFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                                DialogUtils.alert(mActivity, "Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                                     @Override
                                                     public void execute() {
                                                         modelFile.delete(new IPostExecuteListener() {
@@ -470,7 +471,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                                                 break;
 
                                             case 4:
-                                                FileMyCloudFragment.this.app.alert(
+                                                DialogUtils.alert(mActivity,
                                                         getString(R.string.properties) + " : " + modelFile.name,
                                                         "Name : " + modelFile.name + "\nExtension : " + modelFile.type + "\nType : " + modelFile.type.getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
                                                         "OK",
@@ -589,7 +590,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
                     mFilesToCutList.clear();
                 } else {
                     fab.hide();
-                    FileMyCloudFragment.this.app.mDialog = new DialogAddFileManager(app, FileMyCloudFragment.this.mIdFileDirectoryStack.peek(), new IPostExecuteListener() {
+                    FileMyCloudFragment.this.app.mDialog = new DialogAddFileManager(mActivity, mApplicationCallback, FileMyCloudFragment.this.mIdFileDirectoryStack.peek(), new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
                             if (json != null)

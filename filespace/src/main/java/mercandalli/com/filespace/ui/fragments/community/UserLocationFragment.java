@@ -36,19 +36,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import mercandalli.com.filespace.listeners.IListener;
-import mercandalli.com.filespace.listeners.ILocationListener;
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.models.ModelUser;
-import mercandalli.com.filespace.models.ModelUserLocation;
-import mercandalli.com.filespace.net.TaskGet;
-import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationCallback;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
-import mercandalli.com.filespace.ui.fragments.BackFragment;
-import mercandalli.com.filespace.utils.GpsUtils;
-import mercandalli.com.filespace.utils.StringPair;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,8 +44,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-
+import mercandalli.com.filespace.listeners.IListener;
+import mercandalli.com.filespace.listeners.ILocationListener;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.models.ModelUser;
+import mercandalli.com.filespace.models.ModelUserLocation;
+import mercandalli.com.filespace.net.TaskGet;
+import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
+import mercandalli.com.filespace.ui.fragments.BackFragment;
+import mercandalli.com.filespace.utils.DialogUtils;
+import mercandalli.com.filespace.utils.GpsUtils;
 import mercandalli.com.filespace.utils.NetUtils;
+import mercandalli.com.filespace.utils.StringPair;
 
 
 public class UserLocationFragment extends BackFragment {
@@ -136,7 +134,7 @@ public class UserLocationFragment extends BackFragment {
         this.circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.alert("Share your location", "If you share your location you will see all the positions of every users", getString(R.string.yes),
+                DialogUtils.alert(mActivity, "Share your location", "If you share your location you will see all the positions of every users", getString(R.string.yes),
                         new IListener() {
                             @Override
                             public void execute() {

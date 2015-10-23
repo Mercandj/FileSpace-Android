@@ -51,6 +51,7 @@ import mercandalli.com.filespace.ui.fragments.workspace.WorkspaceFragment;
 import mercandalli.com.filespace.ui.navdrawer.NavDrawerItem;
 import mercandalli.com.filespace.ui.navdrawer.NavDrawerItemList;
 import mercandalli.com.filespace.ui.navdrawer.NavDrawerListAdapter;
+import mercandalli.com.filespace.utils.DialogUtils;
 
 public abstract class ApplicationDrawerActivity extends ApplicationActivity implements SetToolbarCallback {
 
@@ -220,7 +221,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                             new IListener() {
                                 @Override
                                 public void execute() {
-                                    ApplicationDrawerActivity.this.alert("Log out", "Do you want to log out?", "Yes", new IListener() {
+                                    DialogUtils.alert(ApplicationDrawerActivity.this, "Log out", "Do you want to log out?", "Yes", new IListener() {
                                         @Override
                                         public void execute() {
                                             ApplicationDrawerActivity.this.getConfig().reset();

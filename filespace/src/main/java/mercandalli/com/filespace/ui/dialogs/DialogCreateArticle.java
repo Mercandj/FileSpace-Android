@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.ui.dialogs;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.view.View;
 import android.widget.Button;
@@ -36,18 +37,20 @@ import java.util.TimeZone;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.utils.StringPair;
 
 public class DialogCreateArticle extends Dialog {
 
-    ApplicationActivity app;
+    private Activity mActivity;
+    private ApplicationCallback mApplicationCallback;
 
     EditText article_title_1, article_content_1;
 
-    public DialogCreateArticle(final ApplicationActivity app, final IPostExecuteListener listener) {
-        super(app);
-        this.app = app;
+    public DialogCreateArticle(final Activity activity, final ApplicationCallback applicationCallback, final IPostExecuteListener listener) {
+        super(activity);
+        this.mActivity = activity;
+        this.mApplicationCallback = applicationCallback;
 
         this.setContentView(R.layout.dialog_create_article);
         this.setTitle("Create Article");
@@ -79,9 +82,9 @@ public class DialogCreateArticle extends Dialog {
                     List<StringPair> parameters = new ArrayList<>();
                     parameters.add(new StringPair("content", json.toString()));
                     parameters.add(new StringPair("name", "ARTICLE_" + nowAsISO));
-                    new TaskPost(DialogCreateArticle.this.app,
-                            DialogCreateArticle.this.app,
-                            app.getConfig().getUrlServer() + app.getConfig().routeFile,
+                    new TaskPost(mActivity,
+                            applicationCallback,
+                            applicationCallback.getConfig().getUrlServer() + applicationCallback.getConfig().routeFile,
                             new IPostExecuteListener() {
                                 @Override
                                 public void onPostExecute(JSONObject json, String body) {

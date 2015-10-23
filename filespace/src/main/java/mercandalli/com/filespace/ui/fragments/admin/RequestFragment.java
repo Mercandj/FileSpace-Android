@@ -20,6 +20,7 @@
 package mercandalli.com.filespace.ui.fragments.admin;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,19 +31,21 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
-import mercandalli.com.filespace.ui.dialogs.DialogRequest;
-import mercandalli.com.filespace.ui.fragments.BackFragment;
-
 import org.json.JSONObject;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
+import mercandalli.com.filespace.ui.dialogs.DialogRequest;
+import mercandalli.com.filespace.ui.fragments.BackFragment;
 
 
 public class RequestFragment extends BackFragment {
 
     private View rootView;
+
+    private Activity mActivity;
+    private ApplicationCallback mApplicationCallback;
 
     public static RequestFragment newInstance() {
         Bundle args = new Bundle();
@@ -52,9 +55,21 @@ public class RequestFragment extends BackFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (ApplicationDrawerActivity) activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (Activity) context;
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mApplicationCallback = null;
+        app = null;
     }
 
     @Override
@@ -67,7 +82,7 @@ public class RequestFragment extends BackFragment {
         ((ImageButton) rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.mDialog = new DialogRequest(app, new IPostExecuteListener() {
+                app.mDialog = new DialogRequest(mActivity, mApplicationCallback, new IPostExecuteListener() {
                     @Override
                     public void onPostExecute(JSONObject json, String body) {
                         if (json != null)

@@ -20,9 +20,7 @@
 package mercandalli.com.filespace.ui.activities;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
@@ -30,8 +28,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Spanned;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -44,9 +40,7 @@ import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Config;
-import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.listeners.IStringListener;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.utils.StringPair;
@@ -60,7 +54,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
     public Dialog mDialog;
 
     /* OnResult code */
-    public final int REQUEST_TAKE_PHOTO = 1;
+    public static final int REQUEST_TAKE_PHOTO = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,109 +97,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
         return mConfig;
     }
 
-    public void alert(String title, String message, String positive, final IListener positiveListener, String negative, final IListener negativeListener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(title);
-        builder.setMessage(message);
-        if (positive != null) {
-            builder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    if (positiveListener != null)
-                        positiveListener.execute();
-                    dialog.dismiss();
-                }
-            });
-        }
-        if (negative != null) {
-            builder.setNegativeButton(negative, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (negativeListener != null)
-                        negativeListener.execute();
-                    dialog.dismiss();
-                }
-            });
-        }
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
 
-    public void alert(String title, Spanned message, String positive, final IListener positiveListener, String negative, final IListener negativeListener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(title);
-        builder.setMessage(message);
-        if (positive != null) {
-            builder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    if (positiveListener != null)
-                        positiveListener.execute();
-                    dialog.dismiss();
-                }
-            });
-        }
-        if (negative != null) {
-            builder.setNegativeButton(negative, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (negativeListener != null)
-                        negativeListener.execute();
-                    dialog.dismiss();
-                }
-            });
-        }
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    public void prompt(String title, String message, String positive, final IStringListener positiveListener, String negative, final IListener negativeListener) {
-        prompt(title, message, positive, positiveListener, negative, negativeListener, null);
-    }
-
-    public void prompt(String title, String message, String positive, final IStringListener positiveListener, String negative, final IListener negativeListener, String preTex) {
-        prompt(title, message, positive, positiveListener, negative, negativeListener, preTex, null);
-    }
-
-    public void prompt(String title, String message, String positive, final IStringListener positiveListener, String negative, final IListener negativeListener, String preText, String hint) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-        alert.setTitle(title);
-        if (message != null) {
-            alert.setMessage(message);
-        }
-
-        // Set an EditText view to get user input
-        final EditText input = new EditText(this);
-
-        if (preText != null)
-            input.setText(preText);
-        if (hint != null)
-            input.setHint(hint);
-
-        alert.setPositiveButton(positive,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        if (positiveListener != null) {
-                            positiveListener.execute(input.getText().toString());
-                        }
-                    }
-                }
-        );
-
-        alert.setNegativeButton(negative,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        if (negativeListener != null) {
-                            negativeListener.execute();
-                        }
-                    }
-                }
-        );
-
-        //alert.show();
-        AlertDialog alertDialog = alert.create();
-        alertDialog.setView(input, 38, 20, 38, 0);
-        alertDialog.show();
-    }
 
     public abstract void refreshAdapters();
 
@@ -237,21 +129,26 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
         }
     }
 
-    public ModelFile mPhotoFile = null;
-    public IPostExecuteListener mPhotoFileListener = null;
+    public static ModelFile mPhotoFile = null;
+    public static IPostExecuteListener mPhotoFileListener = null;
 
-    public ModelFile createImageFile() throws IOException {
+    @Override
+    public ModelFile createImageFile() {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_FileSpace_";
         File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + this.getConfig().getLocalFolderName());
         ModelFile result = new ModelFile(this, this);
         result.name = imageFileName + ".jpg";
-        result.setFile(File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        ));
+        try {
+            result.setFile(File.createTempFile(
+                    imageFileName,  /* prefix */
+                    ".jpg",         /* suffix */
+                    storageDir      /* directory */
+            ));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 

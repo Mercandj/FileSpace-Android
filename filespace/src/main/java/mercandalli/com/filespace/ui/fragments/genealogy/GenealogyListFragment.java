@@ -54,6 +54,7 @@ import mercandalli.com.filespace.ui.adapters.AdapterModelGenealogyUser;
 import mercandalli.com.filespace.ui.dialogs.DialogAddGenealogyPerson;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
+import mercandalli.com.filespace.utils.DialogUtils;
 import mercandalli.com.filespace.utils.NetUtils;
 import mercandalli.com.filespace.utils.StringPair;
 import mercandalli.com.filespace.utils.StringUtils;
@@ -235,7 +236,7 @@ public class GenealogyListFragment extends FabFragment {
                                             });
                                             break;
                                         case 1:
-                                            GenealogyListFragment.this.app.alert("Delete", "Delete " + (modelGenealogyUser.first_name_1) + " ?", "Yes", new IListener() {
+                                            DialogUtils.alert(mActivity, "Delete", "Delete " + (modelGenealogyUser.first_name_1) + " ?", "Yes", new IListener() {
                                                 @Override
                                                 public void execute() {
                                                     modelGenealogyUser.delete(new IPostExecuteListener() {
@@ -248,7 +249,7 @@ public class GenealogyListFragment extends FabFragment {
                                             }, "No", null);
                                             break;
                                         case 2:
-                                            GenealogyListFragment.this.app.alert(
+                                            DialogUtils.alert(mActivity,
                                                     getString(R.string.data) + " : " + modelGenealogyUser.first_name_1,
                                                     modelGenealogyUser.toSpanned(),
                                                     "OK",
@@ -293,7 +294,7 @@ public class GenealogyListFragment extends FabFragment {
                             }
                         }
                     } else {
-                        GenealogyListFragment.this.app.alert(
+                        DialogUtils.alert(mActivity,
                                 getString(R.string.data) + " : " + list.get(position).first_name_1,
                                 list.get(position).toSpanned(),
                                 "OK",

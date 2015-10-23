@@ -36,7 +36,6 @@ import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.utils.StringPair;
 
@@ -51,19 +50,19 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
     List<StringPair> parameters;
     IPostExecuteListener listener;
     File file;
-    ApplicationCallback app;
+    ApplicationCallback mApplicationCallback;
     Activity mActivity;
 
     public TaskPost(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener) {
         mActivity = activity;
-        this.app = app;
+        this.mApplicationCallback = app;
         this.url = url;
         this.listener = listener;
     }
 
     public TaskPost(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener, List<StringPair> parameters) {
         mActivity = activity;
-        this.app = app;
+        this.mApplicationCallback = app;
         this.url = url;
         this.parameters = parameters;
         this.listener = listener;
@@ -71,7 +70,7 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
 
     public TaskPost(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener, List<StringPair> parameters, String contentType) {
         mActivity = activity;
-        this.app = app;
+        this.mApplicationCallback = app;
         this.url = url;
         this.parameters = parameters;
         this.contentType = contentType;
@@ -80,16 +79,16 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
 
     public TaskPost(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener, List<StringPair> parameters, File file) {
         mActivity = activity;
-        this.app = app;
+        this.mApplicationCallback = app;
         this.url = url;
         this.parameters = parameters;
         this.listener = listener;
         this.file = file;
     }
 
-    public TaskPost(Activity activity, ApplicationActivity app, String url, IPostExecuteListener listener, File file) {
+    public TaskPost(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener, File file) {
         mActivity = activity;
-        this.app = app;
+        this.mApplicationCallback = app;
         this.url = url;
         this.listener = listener;
         this.file = file;

@@ -61,6 +61,7 @@ import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
+import mercandalli.com.filespace.utils.DialogUtils;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.NetUtils;
 import mercandalli.com.filespace.utils.StringPair;
@@ -146,7 +147,7 @@ public class FileCloudFragment extends FabFragment implements
     }
 
     public void refreshList(String search) {
-        if(!isAdded()) {
+        if (!isAdded()) {
             return;
         }
         List<StringPair> parameters = new ArrayList<>();
@@ -277,7 +278,7 @@ public class FileCloudFragment extends FabFragment implements
                                                 break;
 
                                             case 1:
-                                                FileCloudFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                                DialogUtils.prompt(mActivity, "Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                                     @Override
                                                     public void execute(String text) {
                                                         modelFile.rename(text, new IPostExecuteListener() {
@@ -295,7 +296,7 @@ public class FileCloudFragment extends FabFragment implements
                                                 break;
 
                                             case 2:
-                                                FileCloudFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                                DialogUtils.alert(mActivity, "Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                                     @Override
                                                     public void execute() {
                                                         modelFile.delete(new IPostExecuteListener() {
@@ -318,7 +319,7 @@ public class FileCloudFragment extends FabFragment implements
                                                 break;
 
                                             case 4:
-                                                FileCloudFragment.this.app.alert(
+                                                DialogUtils.alert(mActivity,
                                                         getString(R.string.properties) + " : " + modelFile.name,
                                                         "Name : " + modelFile.name + "\nExtension : " + modelFile.type + "\nType : " + modelFile.type.getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
                                                         "OK",
@@ -405,7 +406,7 @@ public class FileCloudFragment extends FabFragment implements
         switch (fab_id) {
             case 0:
                 fab.hide();
-                FileCloudFragment.this.app.mDialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
+                new DialogAddFileManager(mActivity, mApplicationCallback, -1, new IPostExecuteListener() {
                     @Override
                     public void onPostExecute(JSONObject json, String body) {
                         if (json != null)
@@ -506,7 +507,7 @@ public class FileCloudFragment extends FabFragment implements
                                 break;
 
                             case 1:
-                                FileCloudFragment.this.app.prompt("Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                DialogUtils.prompt(mActivity, "Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
                                     @Override
                                     public void execute(String text) {
                                         modelFile.rename(text, new IPostExecuteListener() {
@@ -524,7 +525,7 @@ public class FileCloudFragment extends FabFragment implements
                                 break;
 
                             case 2:
-                                FileCloudFragment.this.app.alert("Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                DialogUtils.alert(mActivity, "Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
                                     @Override
                                     public void execute() {
                                         modelFile.delete(new IPostExecuteListener() {
@@ -547,7 +548,7 @@ public class FileCloudFragment extends FabFragment implements
                                 break;
 
                             case 4:
-                                FileCloudFragment.this.app.alert(
+                                DialogUtils.alert(mActivity,
                                         getString(R.string.properties) + " : " + modelFile.name,
                                         modelFile.toSpanned(),
                                         "OK",

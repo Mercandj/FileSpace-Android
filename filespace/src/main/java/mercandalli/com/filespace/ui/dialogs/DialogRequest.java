@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.ui.dialogs;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.view.View;
 import android.widget.Button;
@@ -36,12 +37,13 @@ import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 
 public class DialogRequest extends Dialog {
 
     DialogFileChooser dialogFileChooser;
-    private ApplicationActivity app;
+    private final Activity mActivity;
+    private final ApplicationCallback mApplicationCallback;
     private File file;
     ModelFile modelFile;
 
@@ -52,9 +54,10 @@ public class DialogRequest extends Dialog {
     private final int nbMethod = 4;
     private int currentMethod = GET;
 
-    public DialogRequest(final ApplicationActivity app, final IPostExecuteListener listener) {
-        super(app);
-        this.app = app;
+    public DialogRequest(final Activity activity, final ApplicationCallback applicationCallback, final IPostExecuteListener listener) {
+        super(activity);
+        this.mActivity = activity;
+        this.mApplicationCallback = applicationCallback;
 
         this.setContentView(R.layout.dialog_request);
         this.setTitle(R.string.app_name);
@@ -68,7 +71,7 @@ public class DialogRequest extends Dialog {
 
                     case POST:
                         if (!((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString().equals(""))
-                            (new TaskPost(app, app, app.getConfig().getUrlServer() + ((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString(), new IPostExecuteListener() {
+                            (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + ((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString(), new IPostExecuteListener() {
                                 @Override
                                 public void onPostExecute(JSONObject json, String body) {
                                     if (listener != null)
@@ -89,7 +92,7 @@ public class DialogRequest extends Dialog {
 
                     default: //GET
                         if (!((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString().equals(""))
-                            (new TaskGet(app, app, app.getConfig().getUser(), app.getConfig().getUrlServer() + ((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString(), new IPostExecuteListener() {
+                            (new TaskGet(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUser(), mApplicationCallback.getConfig().getUrlServer() + ((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString(), new IPostExecuteListener() {
                                 @Override
                                 public void onPostExecute(JSONObject json, String body) {
                                     if (listener != null)
@@ -104,7 +107,7 @@ public class DialogRequest extends Dialog {
         ((Button) this.findViewById(R.id.fileButton)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogFileChooser = new DialogFileChooser(DialogRequest.this.app, new IModelFileListener() {
+                dialogFileChooser = new DialogFileChooser(mActivity, mApplicationCallback, new IModelFileListener() {
                     @Override
                     public void executeModelFile(ModelFile modelFile) {
                         ((TextView) DialogRequest.this.findViewById(R.id.label)).setText("" + modelFile.url);

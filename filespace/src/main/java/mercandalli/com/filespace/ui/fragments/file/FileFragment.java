@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.ui.fragments.file;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -52,6 +53,7 @@ import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
+import mercandalli.com.filespace.utils.DialogUtils;
 import mercandalli.com.filespace.utils.NetUtils;
 
 public class FileFragment extends BackFragment implements ViewPager.OnPageChangeListener {
@@ -74,7 +76,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
     protected int mViewMode = Constants.MODE_LIST;
 
-    private Context mContext;
+    private Activity mActivity;
     private String mTitle;
     private ApplicationCallback mApplicationCallback;
     private SetToolbarCallback mSetToolbarCallback;
@@ -90,6 +92,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mActivity = (Activity) context;
         if (context instanceof SetToolbarCallback) {
             mSetToolbarCallback = (SetToolbarCallback) context;
         } else {
@@ -118,7 +121,6 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         if (!args.containsKey(BUNDLE_ARG_TITLE)) {
             throw new IllegalStateException("Missing args. Please use newInstance()");
         }
-        mContext = getContext();
         mTitle = args.getString(BUNDLE_ARG_TITLE);
     }
 
@@ -130,7 +132,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_file_toolbar);
         mToolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(mToolbar);
-        setStatusBarColor(mContext, R.color.notifications_bar);
+        setStatusBarColor(mActivity, R.color.notifications_bar);
         setHasOptionsMenu(true);
 
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.fragment_file_app_bar_layout);
@@ -144,7 +146,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         mViewPager.addOnPageChangeListener(this);
 
         if (mApplicationCallback.isLogged()) {
-            if (NetUtils.isInternetConnection(mContext)) {
+            if (NetUtils.isInternetConnection(mActivity)) {
                 mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
                 mViewPager.setCurrentItem(INIT_FRAGMENT);
             } else {
@@ -407,7 +409,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     }
 
     public void add() {
-        app.mDialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
+        new DialogAddFileManager(mActivity, mApplicationCallback, -1, new IPostExecuteListener() {
             @Override
             public void onPostExecute(JSONObject json, String body) {
                 if (json != null)
@@ -422,7 +424,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     }
 
     public void download() {
-        this.app.alert("Download", "Download all files ?", "Yes", new IListener() {
+        DialogUtils.alert(mActivity, "Download", "Download all files ?", "Yes", new IListener() {
             @Override
             public void execute() {
                 // TODO download all
@@ -432,7 +434,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     }
 
     public void upload() {
-        this.app.alert("Upload", "Upload all files ?", "Yes", new IListener() {
+        DialogUtils.alert(mActivity, "Upload", "Upload all files ?", "Yes", new IListener() {
             @Override
             public void execute() {
                 // TODO Upload all
@@ -501,12 +503,12 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     }
 
     private void updateNoInternet() {
-        if (!NetUtils.isInternetConnection(mContext)) {
+        if (!NetUtils.isInternetConnection(mActivity)) {
             this.mSnackbar = Snackbar.make(this.coordinatorLayoutView, getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE)
                     .setAction(getString(R.string.refresh), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (NetUtils.isInternetConnection(mContext))
+                            if (NetUtils.isInternetConnection(mActivity))
                                 listFragment[getCurrentFragmentIndex()].onFocus();
                             else
                                 updateNoInternet();

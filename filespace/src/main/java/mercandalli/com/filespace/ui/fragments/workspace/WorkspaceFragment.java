@@ -19,10 +19,11 @@
  */
 package mercandalli.com.filespace.ui.fragments.workspace;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
@@ -35,15 +36,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import mercandalli.com.filespace.listeners.IListener;
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
-import mercandalli.com.filespace.ui.fragments.BackFragment;
-
 import org.json.JSONObject;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listeners.IListener;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
+import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
+import mercandalli.com.filespace.ui.fragments.BackFragment;
 
 public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageChangeListener {
 
@@ -54,8 +55,29 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     private FileManagerFragmentPagerAdapter mPagerAdapter;
     private TabLayout tabs;
 
+    private Activity mActivity;
+    private ApplicationCallback mApplicationCallback;
+
     public WorkspaceFragment() {
         super();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (Activity) context;
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mApplicationCallback = null;
+        app = null;
     }
 
     @Override
@@ -186,7 +208,7 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public void add() {
-        app.mDialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
+        app.mDialog = new DialogAddFileManager(mActivity, mApplicationCallback, -1, new IPostExecuteListener() {
             @Override
             public void onPostExecute(JSONObject json, String body) {
                 if (json != null)

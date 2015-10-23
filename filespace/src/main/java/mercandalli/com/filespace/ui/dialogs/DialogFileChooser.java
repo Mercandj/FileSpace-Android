@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.ui.dialogs;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,22 +35,24 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.models.ModelFileType;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
 
 public class DialogFileChooser extends Dialog {
 
-    private ApplicationActivity app;
+    private Activity mActivity;
+    private ApplicationCallback mApplicationActivity;
     private RecyclerView files;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<ModelFile> listModelFile;
     private File currentFolder;
     private IModelFileListener listener;
 
-    public DialogFileChooser(final ApplicationActivity app, IModelFileListener listener) {
-        super(app);
+    public DialogFileChooser(final Activity activity, final ApplicationCallback applicationCallback, IModelFileListener listener) {
+        super(activity);
 
-        this.app = app;
+        this.mActivity = activity;
+        this.mApplicationActivity = applicationCallback;
         this.listener = listener;
 
         this.setContentView(R.layout.dialog_filechooser);
@@ -80,7 +83,7 @@ public class DialogFileChooser extends Dialog {
 
     private void updateAdapter() {
         getFiles();
-        AdapterModelFile adapter = new AdapterModelFile(app, listModelFile, null);
+        AdapterModelFile adapter = new AdapterModelFile(mActivity, listModelFile, null);
         files.setAdapter(adapter);
         adapter.setOnItemClickListener(new AdapterModelFile.OnItemClickListener() {
             @Override
@@ -106,7 +109,7 @@ public class DialogFileChooser extends Dialog {
         listModelFile = new ArrayList<ModelFile>();
         if (fs != null)
             for (File file : fs) {
-                ModelFile modelFile = new ModelFile(this.app, app);
+                ModelFile modelFile = new ModelFile(mActivity, mApplicationActivity);
                 modelFile.url = file.getAbsolutePath();
                 modelFile.name = file.getName();
                 modelFile.type = new ModelFileType(file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1));

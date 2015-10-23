@@ -19,9 +19,10 @@
  */
 package mercandalli.com.filespace.ui.fragments.community;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -36,6 +37,7 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 
@@ -49,11 +51,29 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     private TabLayout mTabLayout;
     private Toolbar mToolbar;
 
+    private Activity mActivity;
+    private ApplicationCallback mApplicationCallback;
+
     public static CommunityFragment newInstance() {
-        Bundle args = new Bundle();
-        CommunityFragment fragment = new CommunityFragment();
-        fragment.setArguments(args);
-        return fragment;
+        return new CommunityFragment();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (Activity) context;
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mApplicationCallback = null;
+        app = null;
     }
 
     @Override
@@ -231,7 +251,7 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public void add() {
-        app.mDialog = new DialogAddFileManager(app, -1, new IPostExecuteListener() {
+        new DialogAddFileManager(mActivity, mApplicationCallback, -1, new IPostExecuteListener() {
             @Override
             public void onPostExecute(JSONObject json, String body) {
                 if (json != null)

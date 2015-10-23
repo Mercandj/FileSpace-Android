@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.ui.dialogs;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.view.View;
 import android.widget.Button;
@@ -35,20 +36,22 @@ import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.utils.StringPair;
 
 public class DialogUpload extends Dialog {
 
+    private final Activity mActivity;
+    private final ApplicationCallback mApplicationCallback;
     DialogFileChooser dialogFileChooser;
-    ApplicationActivity app;
     File file;
     ModelFile modelFile;
     int id_file_parent;
 
-    public DialogUpload(final ApplicationActivity app, final int id_file_parent, final IPostExecuteListener listener) {
-        super(app);
-        this.app = app;
+    public DialogUpload(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final IPostExecuteListener listener) {
+        super(activity);
+        mActivity = activity;
+        mApplicationCallback = applicationCallback;
         this.id_file_parent = id_file_parent;
 
         this.setContentView(R.layout.dialog_upload);
@@ -62,7 +65,7 @@ public class DialogUpload extends Dialog {
                     List<StringPair> parameters = null;
                     if (DialogUpload.this.modelFile != null)
                         parameters = DialogUpload.this.modelFile.getForUpload();
-                    (new TaskPost(app, app, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
+                    (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeFile, new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
                             if (listener != null)
@@ -70,7 +73,7 @@ public class DialogUpload extends Dialog {
                         }
                     }, parameters, file)).execute();
                 } else
-                    Toast.makeText(app, app.getString(R.string.no_file), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, mActivity.getString(R.string.no_file), Toast.LENGTH_SHORT).show();
 
                 DialogUpload.this.dismiss();
             }
@@ -79,7 +82,7 @@ public class DialogUpload extends Dialog {
         ((Button) this.findViewById(R.id.fileButton)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogFileChooser = new DialogFileChooser(DialogUpload.this.app, new IModelFileListener() {
+                dialogFileChooser = new DialogFileChooser(mActivity, mApplicationCallback, new IModelFileListener() {
                     @Override
                     public void executeModelFile(ModelFile modelFile) {
                         modelFile.id_file_parent = DialogUpload.this.id_file_parent;

@@ -10,17 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import mercandalli.com.filespace.listeners.IListener;
-import mercandalli.com.filespace.models.ModelFileSpace;
-import mercandalli.com.filespace.ui.activities.ApplicationCallback;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
-import mercandalli.com.filespace.ui.fragments.BackFragment;
-import mercandalli.com.filespace.utils.FontUtils;
-import mercandalli.com.filespace.utils.StringUtils;
-
 import java.io.UnsupportedEncodingException;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listeners.IListener;
+import mercandalli.com.filespace.models.ModelFileSpace;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
+import mercandalli.com.filespace.ui.fragments.BackFragment;
+import mercandalli.com.filespace.utils.DialogUtils;
+import mercandalli.com.filespace.utils.FontUtils;
+import mercandalli.com.filespace.utils.StringUtils;
 
 /**
  * Created by Jonathan on 21/07/2015.
@@ -108,7 +107,7 @@ public class NoteFragment extends BackFragment {
     }
 
     public void delete() {
-        app.alert("Delete note", "Delete the current note?", getString(R.string.yes), new IListener() {
+        DialogUtils.alert(mActivity, "Delete note", "Delete the current note?", getString(R.string.yes), new IListener() {
             @Override
             public void execute() {
                 input.setText("");

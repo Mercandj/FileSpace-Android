@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.ui.dialogs;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -37,7 +38,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,23 +53,28 @@ import mercandalli.com.filespace.listeners.IStringListener;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
+import mercandalli.com.filespace.utils.DialogUtils;
 import mercandalli.com.filespace.utils.StringPair;
 
 public class DialogAddFileManager extends Dialog {
 
-    private ApplicationActivity app;
+    private final Activity mActivity;
+    private final ApplicationCallback mApplicationCallback;
     private File file;
     private IListener dismissListener;
+    private Dialog mDialog;
 
-    public DialogAddFileManager(final ApplicationActivity app, final int id_file_parent, final IPostExecuteListener listener, final IListener dismissListener) {
-        super(app, android.R.style.Theme_Translucent_NoTitleBar);
-        this.app = app;
+    public DialogAddFileManager(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final IPostExecuteListener listener, final IListener dismissListener) {
+        super(activity, android.R.style.Theme_Translucent_NoTitleBar);
+        this.mActivity = activity;
+        this.mApplicationCallback = applicationCallback;
         this.dismissListener = dismissListener;
 
         this.setContentView(R.layout.dialog_add_file);
         this.setCancelable(true);
 
-        Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.dialog_add_file_open);
+        Animation animOpen = AnimationUtils.loadAnimation(mActivity, R.anim.dialog_add_file_open);
         (this.findViewById(R.id.root)).startAnimation(animOpen);
 
         (this.findViewById(R.id.root)).setOnClickListener(new View.OnClickListener() {
@@ -82,7 +87,7 @@ public class DialogAddFileManager extends Dialog {
         (this.findViewById(R.id.uploadFile)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.mDialog = new DialogUpload(app, id_file_parent, listener);
+                mDialog = new DialogUpload(mActivity, mApplicationCallback, id_file_parent, listener);
                 DialogAddFileManager.this.dismiss();
             }
         });
@@ -90,15 +95,15 @@ public class DialogAddFileManager extends Dialog {
         (this.findViewById(R.id.addDirectory)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.prompt(app.getString(R.string.dialog_file_create_folder), app.getString(R.string.dialog_file_name_interrogation), app.getString(R.string.dialog_file_create), new IStringListener() {
+                DialogUtils.prompt(mActivity, mActivity.getString(R.string.dialog_file_create_folder), mActivity.getString(R.string.dialog_file_name_interrogation), mActivity.getString(R.string.dialog_file_create), new IStringListener() {
                     @Override
                     public void execute(String text) {
-                        ModelFile folder = new ModelFile(DialogAddFileManager.this.app, DialogAddFileManager.this.app);
+                        ModelFile folder = new ModelFile(mActivity, mApplicationCallback);
                         folder.name = text;
                         folder.directory = true;
                         folder.id_file_parent = id_file_parent;
                         List<StringPair> parameters = folder.getForUpload();
-                        (new TaskPost(app, app, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
+                        (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeFile, new IPostExecuteListener() {
                             @Override
                             public void onPostExecute(JSONObject json, String body) {
                                 if (listener != null)
@@ -106,7 +111,7 @@ public class DialogAddFileManager extends Dialog {
                             }
                         }, parameters, file)).execute();
                     }
-                }, app.getString(R.string.cancel), null);
+                }, mActivity.getString(R.string.cancel), null);
                 DialogAddFileManager.this.dismiss();
             }
         });
@@ -114,13 +119,13 @@ public class DialogAddFileManager extends Dialog {
         (this.findViewById(R.id.txtFile)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.prompt(app.getString(R.string.dialog_file_create_txt), app.getString(R.string.dialog_file_name_interrogation), app.getString(R.string.dialog_file_create), new IStringListener() {
+                DialogUtils.prompt(mActivity, mActivity.getString(R.string.dialog_file_create_txt), mActivity.getString(R.string.dialog_file_name_interrogation), mActivity.getString(R.string.dialog_file_create), new IStringListener() {
                     @Override
                     public void execute(String text) {
                         //TODO create a online txt with content
                         Toast.makeText(getContext(), getContext().getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                     }
-                }, app.getString(R.string.cancel), null);
+                }, mActivity.getString(R.string.cancel), null);
                 DialogAddFileManager.this.dismiss();
             }
         });
@@ -130,20 +135,15 @@ public class DialogAddFileManager extends Dialog {
             public void onClick(View v) {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 // Ensure that there's a camera activity to handle the intent
-                if (takePictureIntent.resolveActivity(app.getPackageManager()) != null) {
+                if (takePictureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
                     // Create the File where the photo should go
-                    app.mPhotoFile = new ModelFile(app, app);
-                    try {
-                        app.mPhotoFile = app.createImageFile();
-                    } catch (IOException ex) {
-                        // Error occurred while creating the File
-                    }
+                    ApplicationActivity.mPhotoFile = mApplicationCallback.createImageFile();                    
                     // Continue only if the File was successfully created
-                    if (app.mPhotoFile != null) {
+                    if (ApplicationActivity.mPhotoFile != null) {
                         if (listener != null)
-                            app.mPhotoFileListener = listener;
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(app.mPhotoFile.getFile()));
-                        app.startActivityForResult(takePictureIntent, app.REQUEST_TAKE_PHOTO);
+                            ApplicationActivity.mPhotoFileListener = listener;
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(ApplicationActivity.mPhotoFile.getFile()));
+                        mActivity.startActivityForResult(takePictureIntent, ApplicationActivity.REQUEST_TAKE_PHOTO);
                     }
                 }
                 DialogAddFileManager.this.dismiss();
@@ -156,13 +156,13 @@ public class DialogAddFileManager extends Dialog {
 
                 Calendar mCurrentTime = Calendar.getInstance();
 
-                DialogDatePicker dialogDate = new DialogDatePicker(app, new DatePickerDialog.OnDateSetListener() {
+                DialogDatePicker dialogDate = new DialogDatePicker(mActivity, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
 
                         Calendar currentTime = Calendar.getInstance();
 
-                        DialogTimePicker dialogTime = new DialogTimePicker(app, new TimePickerDialog.OnTimeSetListener() {
+                        DialogTimePicker dialogTime = new DialogTimePicker(mActivity, new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 Log.d("TIme Picker", hourOfDay + ":" + minute);
@@ -187,8 +187,8 @@ public class DialogAddFileManager extends Dialog {
                                     parameters.add(new StringPair("content", json.toString()));
                                     parameters.add(new StringPair("name", "TIMER_" + nowAsISO));
                                     parameters.add(new StringPair("id_file_parent", "" + id_file_parent));
-                                    new TaskPost(DialogAddFileManager.this.app, DialogAddFileManager.this.app,
-                                            app.getConfig().getUrlServer() + app.getConfig().routeFile,
+                                    new TaskPost(mActivity, mApplicationCallback,
+                                            mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeFile,
                                             new IPostExecuteListener() {
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
@@ -218,7 +218,7 @@ public class DialogAddFileManager extends Dialog {
         (this.findViewById(R.id.addArticle)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogCreateArticle dialogCreateArticle = new DialogCreateArticle(app, listener);
+                DialogCreateArticle dialogCreateArticle = new DialogCreateArticle(mActivity, mApplicationCallback, listener);
                 dialogCreateArticle.show();
                 DialogAddFileManager.this.dismiss();
             }

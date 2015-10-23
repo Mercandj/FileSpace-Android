@@ -55,6 +55,7 @@ import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.adapters.AdapterModelConnversationUser;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
+import mercandalli.com.filespace.utils.DialogUtils;
 import mercandalli.com.filespace.utils.NetUtils;
 import mercandalli.com.filespace.utils.StringPair;
 
@@ -193,7 +194,7 @@ public class TalkFragment extends BackFragment {
             this.mAdapter = new AdapterModelConnversationUser(app, list, new IModelUserListener() {
                 @Override
                 public void execute(final ModelUser modelUser) {
-                    app.prompt("Send Message", "Write your message", "Send", new IStringListener() {
+                    DialogUtils.prompt(mActivity, "Send Message", "Write your message", "Send", new IStringListener() {
                         @Override
                         public void execute(String text) {
                             String url = app.getConfig().getUrlServer() + app.getConfig().routeUserMessage + "/" + modelUser.id;
