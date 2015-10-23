@@ -21,7 +21,6 @@ package mercandalli.com.filespace.ui.fragments.file;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -95,24 +94,6 @@ public class FileCloudFragment extends FabFragment implements
 
     public static FileCloudFragment newInstance() {
         return new FileCloudFragment();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mActivity = (Activity) context;
-        if (context instanceof ApplicationCallback) {
-            mApplicationCallback = (ApplicationCallback) context;
-        } else {
-            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mApplicationCallback = null;
-        app = null;
     }
 
     @Override
@@ -190,10 +171,10 @@ public class FileCloudFragment extends FabFragment implements
         else {
             this.mProgressBar.setVisibility(View.GONE);
             if (isAdded())
-                this.mMessageTextView.setText(app.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+                this.mMessageTextView.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             this.mMessageTextView.setVisibility(View.VISIBLE);
 
-            if (!NetUtils.isInternetConnection(app)) {
+            if (!NetUtils.isInternetConnection(mActivity)) {
                 this.setListVisibility(false);
                 this.refreshFab.execute();
             }
@@ -254,7 +235,7 @@ public class FileCloudFragment extends FabFragment implements
                             return false;
                         final ModelFile modelFile = mFilesList.get(position);
 
-                        final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileCloudFragment.this.app);
+                        final AlertDialog.Builder menuAleart = new AlertDialog.Builder(mActivity);
                         String[] menuList = {getString(R.string.download)};
                         if (!modelFile.directory && modelFile.isMine()) {
                             if (modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
@@ -271,8 +252,8 @@ public class FileCloudFragment extends FabFragment implements
                                                 modelFile.download(new IListener() {
                                                     @Override
                                                     public void execute() {
-                                                        Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
-                                                        FileCloudFragment.this.app.refreshAdapters();
+                                                        Toast.makeText(mActivity, "Download finished.", Toast.LENGTH_SHORT).show();
+                                                        mApplicationCallback.refreshAdapters();
                                                     }
                                                 });
                                                 break;
@@ -288,7 +269,7 @@ public class FileCloudFragment extends FabFragment implements
                                                                     filesToCut.clear();
                                                                     refreshFab.execute();
                                                                 }
-                                                                FileCloudFragment.this.app.refreshAdapters();
+                                                                mApplicationCallback.refreshAdapters();
                                                             }
                                                         });
                                                     }
@@ -306,7 +287,7 @@ public class FileCloudFragment extends FabFragment implements
                                                                     filesToCut.clear();
                                                                     refreshFab.execute();
                                                                 }
-                                                                FileCloudFragment.this.app.refreshAdapters();
+                                                                mApplicationCallback.refreshAdapters();
                                                             }
                                                         });
                                                     }
@@ -315,7 +296,7 @@ public class FileCloudFragment extends FabFragment implements
 
                                             case 3:
                                                 FileCloudFragment.this.filesToCut.add(modelFile);
-                                                Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(mActivity, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                                 break;
 
                                             case 4:
@@ -332,7 +313,7 @@ public class FileCloudFragment extends FabFragment implements
                                                 modelFile.setPublic(!modelFile._public, new IPostExecuteListener() {
                                                     @Override
                                                     public void onPostExecute(JSONObject json, String body) {
-                                                        FileCloudFragment.this.app.refreshAdapters();
+                                                        mApplicationCallback.refreshAdapters();
                                                     }
                                                 });
                                                 break;
@@ -341,14 +322,14 @@ public class FileCloudFragment extends FabFragment implements
                                             case 6:
                                                 List<StringPair> parameters = new ArrayList<>();
                                                 parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
-                                                (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserPut, new IPostExecuteListener() {
                                                     @Override
                                                     public void onPostExecute(JSONObject json, String body) {
                                                         try {
                                                             if (json != null)
                                                                 if (json.has("succeed"))
                                                                     if (json.getBoolean("succeed"))
-                                                                        app.getConfig().setUserIdFileProfilePicture(modelFile.id);
+                                                                        mApplicationCallback.getConfig().setUserIdFileProfilePicture(modelFile.id);
                                                         } catch (JSONException e) {
                                                             e.printStackTrace();
                                                         }
@@ -483,7 +464,7 @@ public class FileCloudFragment extends FabFragment implements
 
     @Override
     public void executeModelFile(final ModelFile modelFile) {
-        final AlertDialog.Builder menuAleart = new AlertDialog.Builder(FileCloudFragment.this.app);
+        final AlertDialog.Builder menuAleart = new AlertDialog.Builder(mActivity);
         String[] menuList = {getString(R.string.download)};
         if (!modelFile.directory && modelFile.isMine()) {
             if (modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
@@ -500,8 +481,8 @@ public class FileCloudFragment extends FabFragment implements
                                 modelFile.download(new IListener() {
                                     @Override
                                     public void execute() {
-                                        Toast.makeText(app, "Download finished.", Toast.LENGTH_SHORT).show();
-                                        FileCloudFragment.this.app.refreshAdapters();
+                                        Toast.makeText(mActivity, "Download finished.", Toast.LENGTH_SHORT).show();
+                                        mApplicationCallback.refreshAdapters();
                                     }
                                 });
                                 break;
@@ -517,7 +498,7 @@ public class FileCloudFragment extends FabFragment implements
                                                     filesToCut.clear();
                                                     refreshFab.execute();
                                                 }
-                                                FileCloudFragment.this.app.refreshAdapters();
+                                                mApplicationCallback.refreshAdapters();
                                             }
                                         });
                                     }
@@ -535,7 +516,7 @@ public class FileCloudFragment extends FabFragment implements
                                                     filesToCut.clear();
                                                     refreshFab.execute();
                                                 }
-                                                FileCloudFragment.this.app.refreshAdapters();
+                                                mApplicationCallback.refreshAdapters();
                                             }
                                         });
                                     }
@@ -544,7 +525,7 @@ public class FileCloudFragment extends FabFragment implements
 
                             case 3:
                                 FileCloudFragment.this.filesToCut.add(modelFile);
-                                Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mActivity, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                 break;
 
                             case 4:
@@ -561,7 +542,7 @@ public class FileCloudFragment extends FabFragment implements
                                 modelFile.setPublic(!modelFile._public, new IPostExecuteListener() {
                                     @Override
                                     public void onPostExecute(JSONObject json, String body) {
-                                        FileCloudFragment.this.app.refreshAdapters();
+                                        mApplicationCallback.refreshAdapters();
                                     }
                                 });
                                 break;
@@ -570,14 +551,14 @@ public class FileCloudFragment extends FabFragment implements
                             case 6:
                                 List<StringPair> parameters = new ArrayList<>();
                                 parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
-                                (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserPut, new IPostExecuteListener() {
                                     @Override
                                     public void onPostExecute(JSONObject json, String body) {
                                         try {
                                             if (json != null)
                                                 if (json.has("succeed"))
                                                     if (json.getBoolean("succeed"))
-                                                        app.getConfig().setUserIdFileProfilePicture(modelFile.id);
+                                                        mApplicationCallback.getConfig().setUserIdFileProfilePicture(modelFile.id);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }

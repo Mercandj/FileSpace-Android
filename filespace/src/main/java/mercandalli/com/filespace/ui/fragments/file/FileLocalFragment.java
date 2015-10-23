@@ -19,9 +19,7 @@
  */
 package mercandalli.com.filespace.ui.fragments.file;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
@@ -60,7 +58,6 @@ import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.models.ModelFileTypeENUM;
 import mercandalli.com.filespace.models.MusicModelFile;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
@@ -86,29 +83,8 @@ public class FileLocalFragment extends FabFragment
     private int mSortMode = Constants.SORT_DATE_MODIFICATION;
     private int mViewMode = Constants.MODE_LIST;
 
-    private Activity mActivity;
-    private ApplicationCallback mApplicationCallback;
-
     public static FileLocalFragment newInstance() {
         return new FileLocalFragment();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mActivity = (Activity) context;
-        if (context instanceof ApplicationCallback) {
-            mApplicationCallback = (ApplicationCallback) context;
-        } else {
-            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mApplicationCallback = null;
-        app = null;
     }
 
     @Override
@@ -207,9 +183,9 @@ public class FileLocalFragment extends FabFragment
             final AdapterModelFile adapter = new AdapterModelFile(mActivity, mFilesList, new IModelFileListener() {
                 @Override
                 public void executeModelFile(final ModelFile modelFile) {
-                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalFragment.this.app);
+                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
                     String[] menuList = {getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties)};
-                    if (app.isLogged())
+                    if (mApplicationCallback.isLogged())
                         menuList = new String[]{getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties)};
                     menuAlert.setTitle("Action");
                     menuAlert.setItems(menuList,
@@ -220,14 +196,14 @@ public class FileLocalFragment extends FabFragment
                                     switch (item) {
                                         case 0:
                                             if (modelFile.directory) {
-                                                Toast.makeText(FileLocalFragment.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                             } else
                                                 DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
                                                     @Override
                                                     public void execute() {
                                                         if (modelFile.getFile() != null) {
                                                             List<StringPair> parameters = modelFile.getForUpload();
-                                                            (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
+                                                            (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeFile, new IPostExecuteListener() {
                                                                 @Override
                                                                 public void onPostExecute(JSONObject json, String body) {
 
@@ -238,7 +214,7 @@ public class FileLocalFragment extends FabFragment
                                                 }, getString(R.string.cancel), null);
                                             break;
                                         case 1:
-                                            modelFile.openLocalAs(FileLocalFragment.this.app);
+                                            modelFile.openLocalAs();
                                             break;
                                         case 2:
                                             DialogUtils.prompt(mActivity, "Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
@@ -255,7 +231,7 @@ public class FileLocalFragment extends FabFragment
                                                                 mFilesToCopyList.clear();
                                                                 refreshFab();
                                                             }
-                                                            FileLocalFragment.this.app.refreshAdapters();
+                                                            mApplicationCallback.refreshAdapters();
                                                         }
                                                     });
                                                 }
@@ -276,7 +252,7 @@ public class FileLocalFragment extends FabFragment
                                                                 mFilesToCopyList.clear();
                                                                 refreshFab();
                                                             }
-                                                            FileLocalFragment.this.app.refreshAdapters();
+                                                            mApplicationCallback.refreshAdapters();
                                                         }
                                                     });
                                                 }
@@ -284,12 +260,12 @@ public class FileLocalFragment extends FabFragment
                                             break;
                                         case 4:
                                             FileLocalFragment.this.mFilesToCopyList.add(modelFile);
-                                            Toast.makeText(app, "File ready to copy.", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(mActivity, "File ready to copy.", Toast.LENGTH_SHORT).show();
                                             refreshFab();
                                             break;
                                         case 5:
                                             FileLocalFragment.this.mFilesToCutList.add(modelFile);
-                                            Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(mActivity, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                             refreshFab();
                                             break;
                                         case 6:
@@ -344,7 +320,7 @@ public class FileLocalFragment extends FabFragment
                 mGridView.setVisibility(View.VISIBLE);
                 mRecyclerView.setVisibility(View.GONE);
 
-                mGridView.setAdapter(new AdapterGridModelFile(app, mFilesList));
+                mGridView.setAdapter(new AdapterGridModelFile(mActivity, mFilesList));
                 mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -371,28 +347,28 @@ public class FileLocalFragment extends FabFragment
                         }
                         final ModelFile modelFile = mFilesList.get(position);
 
-                        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalFragment.this.app);
+                        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
                         String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties)};
-                        if (app.isLogged()) {
+                        if (mApplicationCallback.isLogged()) {
                             menuList = new String[]{getString(R.string.upload), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties)};
                         }
                         menuAlert.setTitle("Action");
                         menuAlert.setItems(menuList,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int item) {
-                                        if (!app.isLogged())
+                                        if (!mApplicationCallback.isLogged())
                                             item--;
                                         switch (item) {
                                             case 0:
                                                 if (modelFile.directory) {
-                                                    Toast.makeText(FileLocalFragment.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                                 } else
                                                     DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
                                                         @Override
                                                         public void execute() {
                                                             if (modelFile.getFile() != null) {
                                                                 List<StringPair> parameters = modelFile.getForUpload();
-                                                                (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
+                                                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeFile, new IPostExecuteListener() {
                                                                     @Override
                                                                     public void onPostExecute(JSONObject json, String body) {
 
@@ -413,7 +389,7 @@ public class FileLocalFragment extends FabFragment
                                                                     mFilesToCutList.clear();
                                                                     refreshFab();
                                                                 }
-                                                                FileLocalFragment.this.app.refreshAdapters();
+                                                                mApplicationCallback.refreshAdapters();
                                                             }
                                                         });
                                                     }
@@ -430,7 +406,7 @@ public class FileLocalFragment extends FabFragment
                                                                     mFilesToCutList.clear();
                                                                     refreshFab();
                                                                 }
-                                                                FileLocalFragment.this.app.refreshAdapters();
+                                                                mApplicationCallback.refreshAdapters();
                                                             }
                                                         });
                                                     }
@@ -438,12 +414,12 @@ public class FileLocalFragment extends FabFragment
                                                 break;
                                             case 3:
                                                 FileLocalFragment.this.mFilesToCopyList.add(modelFile);
-                                                Toast.makeText(app, "File ready to copy.", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(mActivity, "File ready to copy.", Toast.LENGTH_SHORT).show();
                                                 refreshFab();
                                                 break;
                                             case 4:
                                                 FileLocalFragment.this.mFilesToCutList.add(modelFile);
-                                                Toast.makeText(app, "File ready to cut.", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(mActivity, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                                 refreshFab();
                                                 break;
                                             case 5:
@@ -496,7 +472,7 @@ public class FileLocalFragment extends FabFragment
         if (hasItemSelected()) {
             deselectAll();
             return true;
-        } else if (!mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + this.app.getConfig().getLocalFolderName())) {
+        } else if (!mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + mApplicationCallback.getConfig().getLocalFolderName())) {
             if (mCurrentDirectory.getParent() != null) {
                 FileLocalFragment.this.mCurrentDirectory = new File(mCurrentDirectory.getParentFile().getPath());
                 FileLocalFragment.this.refreshList();
@@ -514,7 +490,7 @@ public class FileLocalFragment extends FabFragment
     }
 
     public void goHome() {
-        this.mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + app.getConfig().getLocalFolderName());
+        this.mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + mApplicationCallback.getConfig().getLocalFolderName());
         this.refreshList();
     }
 
@@ -554,7 +530,7 @@ public class FileLocalFragment extends FabFragment
                     }
                     refreshList();
                 } else {
-                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalFragment.this.app);
+                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
                     final String[] menuList = {"New Folder or File"};
                     menuAlert.setTitle("Action");
                     menuAlert.setItems(menuList,

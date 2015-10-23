@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.ui.adapters;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,23 +27,21 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import mercandalli.com.filespace.config.Constants;
-import mercandalli.com.filespace.models.ModelInformation;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.FontUtils;
-
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Constants;
+import mercandalli.com.filespace.models.ModelInformation;
+import mercandalli.com.filespace.utils.FontUtils;
 
 public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelInformation.ViewHolder> {
     private List<ModelInformation> itemsData;
     OnItemClickListener mItemClickListener;
-    ApplicationActivity app;
+    Activity mActivity;
 
-    public AdapterModelInformation(ApplicationActivity app, List<ModelInformation> itemsData) {
+    public AdapterModelInformation(final Activity activity, List<ModelInformation> itemsData) {
         this.itemsData = itemsData;
-        this.app = app;
+        this.mActivity = activity;
     }
 
     @Override
@@ -62,7 +61,7 @@ public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelIn
                 break;
             case Constants.TAB_VIEW_TYPE_SECTION:
                 viewHolder.title.setText("" + model.title);
-                FontUtils.applyFont(app, viewHolder.title, "fonts/MYRIADAB.TTF");
+                FontUtils.applyFont(mActivity, viewHolder.title, "fonts/MYRIADAB.TTF");
                 break;
         }
     }

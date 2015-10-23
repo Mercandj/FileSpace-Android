@@ -19,7 +19,6 @@
  */
 package mercandalli.com.filespace.ui.fragments.admin;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -31,15 +30,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.models.ModelUser;
-import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
-import mercandalli.com.filespace.ui.fragments.BackFragment;
-import mercandalli.com.filespace.utils.HashUtils;
-import mercandalli.com.filespace.utils.StringPair;
-import mercandalli.com.filespace.utils.StringUtils;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -47,8 +37,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.models.ModelUser;
+import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.fragments.BackFragment;
+import mercandalli.com.filespace.utils.HashUtils;
 import mercandalli.com.filespace.utils.NetUtils;
+import mercandalli.com.filespace.utils.StringPair;
+import mercandalli.com.filespace.utils.StringUtils;
 
 
 public class UserAddFragment extends BackFragment {
@@ -61,16 +57,7 @@ public class UserAddFragment extends BackFragment {
     private boolean requestLaunched = false;
 
     public static UserAddFragment newInstance() {
-        Bundle args = new Bundle();
-        UserAddFragment fragment = new UserAddFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (ApplicationDrawerActivity) activity;
+        return new UserAddFragment();
     }
 
     @Override
@@ -132,9 +119,9 @@ public class UserAddFragment extends BackFragment {
                 parameters.add(new StringPair("username", "" + newUser.username));
                 parameters.add(new StringPair("password", "" + newUser.password));
 
-                if (NetUtils.isInternetConnection(app) && !StringUtils.isNullOrEmpty(newUser.username) && !StringUtils.isNullOrEmpty(newUser.password)) {
+                if (NetUtils.isInternetConnection(mActivity) && !StringUtils.isNullOrEmpty(newUser.username) && !StringUtils.isNullOrEmpty(newUser.password)) {
                     requestLaunched = true;
-                    (new TaskPost(app, app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
+                    (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUser, new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
                             try {
@@ -146,10 +133,10 @@ public class UserAddFragment extends BackFragment {
                                     if (json.has("user")) {
                                         JSONObject user = json.getJSONObject("user");
                                         if (user.has("id"))
-                                            app.getConfig().setUserId(user.getInt("id"));
+                                            mApplicationCallback.getConfig().setUserId(user.getInt("id"));
                                     }
                                 } else
-                                    Toast.makeText(app, app.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mActivity, mActivity.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

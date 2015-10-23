@@ -59,7 +59,6 @@ import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.net.TaskGetDownload;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.activities.FileAudioActivity;
 import mercandalli.com.filespace.ui.activities.FilePictureActivity;
@@ -280,15 +279,15 @@ public class ModelFile extends Model implements Parcelable {
         }
     }
 
-    public void openLocalAs(final ApplicationActivity applicationActivity) {
-        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(applicationActivity);
+    public void openLocalAs() {
+        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
         String[] menuList = {
-                applicationActivity.getString(R.string.text),
-                applicationActivity.getString(R.string.image),
-                applicationActivity.getString(R.string.audio),
-                applicationActivity.getString(R.string.video),
-                applicationActivity.getString(R.string.other)};
-        menuAlert.setTitle(applicationActivity.getString(R.string.open_as));
+                mActivity.getString(R.string.text),
+                mActivity.getString(R.string.image),
+                mActivity.getString(R.string.audio),
+                mActivity.getString(R.string.video),
+                mActivity.getString(R.string.other)};
+        menuAlert.setTitle(mActivity.getString(R.string.open_as));
 
         menuAlert.setItems(menuList,
                 new DialogInterface.OnClickListener() {
@@ -311,7 +310,7 @@ public class ModelFile extends Model implements Parcelable {
                         Intent i = new Intent();
                         i.setAction(Intent.ACTION_VIEW);
                         i.setDataAndType(Uri.fromFile(file), type_mime);
-                        applicationActivity.startActivity(i);
+                        mActivity.startActivity(i);
                     }
                 });
         AlertDialog menuDrop = menuAlert.create();

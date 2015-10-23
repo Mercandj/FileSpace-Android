@@ -19,7 +19,6 @@
  */
 package mercandalli.com.filespace.ui.fragments.admin;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -47,7 +46,6 @@ import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelInformation;
 import mercandalli.com.filespace.net.TaskGet;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterModelInformation;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.utils.NetUtils;
@@ -65,16 +63,7 @@ public class ServerDataFragment extends BackFragment {
     private SwipeRefreshLayout swipeRefreshLayout;
 
     public static ServerDataFragment newInstance() {
-        Bundle args = new Bundle();
-        ServerDataFragment fragment = new ServerDataFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (ApplicationDrawerActivity) activity;
+        return new ServerDataFragment();
     }
 
     @Override
@@ -110,28 +99,28 @@ public class ServerDataFragment extends BackFragment {
 
     public void refreshList() {
         List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(app))
+        if (NetUtils.isInternetConnection(mActivity))
             new TaskGet(
-                    app,
-                    app,
-                    this.app.getConfig().getUser(),
-                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeInformation,
+                    mActivity,
+                    mApplicationCallback,
+                    mApplicationCallback.getConfig().getUser(),
+                    mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeInformation,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
-                            list = new ArrayList<ModelInformation>();
+                            list = new ArrayList<>();
                             list.add(new ModelInformation("Server Data", Constants.TAB_VIEW_TYPE_SECTION));
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ModelInformation modelFile = new ModelInformation(app, array.getJSONObject(i));
+                                            ModelInformation modelFile = new ModelInformation(array.getJSONObject(i));
                                             list.add(modelFile);
                                         }
                                     }
                                 } else
-                                    Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -148,13 +137,13 @@ public class ServerDataFragment extends BackFragment {
         if (this.recyclerView != null && this.list != null && this.isAdded()) {
             this.circularProgressBar.setVisibility(View.GONE);
 
-            this.mAdapter = new AdapterModelInformation(app, list);
+            this.mAdapter = new AdapterModelInformation(mActivity, list);
             this.recyclerView.setAdapter(mAdapter);
             this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
 
             if (rootView.findViewById(R.id.circle).getVisibility() == View.GONE) {
                 rootView.findViewById(R.id.circle).setVisibility(View.VISIBLE);
-                Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
+                Animation animOpen = AnimationUtils.loadAnimation(mActivity, R.anim.circle_button_bottom_open);
                 rootView.findViewById(R.id.circle).startAnimation(animOpen);
             }
 

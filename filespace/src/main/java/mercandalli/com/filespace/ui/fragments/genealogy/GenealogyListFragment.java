@@ -21,7 +21,7 @@ package mercandalli.com.filespace.ui.fragments.genealogy;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -66,6 +66,8 @@ public class GenealogyListFragment extends FabFragment {
 
     private View rootView;
 
+    private Dialog mDialog;
+
     private List<ModelGenealogyPerson> list;
     private RecyclerView recyclerView;
     private AdapterModelGenealogyUser mAdapter;
@@ -92,28 +94,7 @@ public class GenealogyListFragment extends FabFragment {
     }
 
     public static GenealogyListFragment newInstance() {
-        Bundle args = new Bundle();
-        GenealogyListFragment fragment = new GenealogyListFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mActivity = (Activity) context;
-        if (context instanceof ApplicationCallback) {
-            mApplicationCallback = (ApplicationCallback) context;
-        } else {
-            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mApplicationCallback = null;
-        app = null;
+        return new GenealogyListFragment();
     }
 
     public void setOnSelect(IModelGenealogyUserListener onSelect) {
@@ -161,12 +142,12 @@ public class GenealogyListFragment extends FabFragment {
         List<StringPair> parameters = new ArrayList<>();
         if (!StringUtils.isNullOrEmpty(search))
             parameters.add(new StringPair("search", search));
-        if (NetUtils.isInternetConnection(app) && app.isLogged())
+        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged())
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
-                    this.app.getConfig().getUser(),
-                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeGenealogy,
+                    mApplicationCallback.getConfig().getUser(),
+                    mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeGenealogy,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -181,7 +162,7 @@ public class GenealogyListFragment extends FabFragment {
                                         }
                                     }
                                 } else
-                                    Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mActivity, getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -192,11 +173,11 @@ public class GenealogyListFragment extends FabFragment {
             ).execute();
         else {
             this.circularProgressBar.setVisibility(View.GONE);
-            this.message.setText(app.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+            this.message.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
 
-            if (!NetUtils.isInternetConnection(app)) {
+            if (!NetUtils.isInternetConnection(mActivity)) {
                 this.setListVisibility(false);
                 this.refreshFab.execute();
             }
@@ -216,11 +197,11 @@ public class GenealogyListFragment extends FabFragment {
             } else
                 this.message.setVisibility(View.GONE);
 
-            this.mAdapter = new AdapterModelGenealogyUser(app, list, new IModelGenealogyUserListener() {
+            this.mAdapter = new AdapterModelGenealogyUser(mActivity, list, new IModelGenealogyUserListener() {
                 @Override
                 public void execute(final ModelGenealogyPerson modelGenealogyUser) {
 
-                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(app);
+                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
                     String[] menuList = {getString(R.string.modify), getString(R.string.delete), getString(R.string.properties)};
                     menuAlert.setTitle("Action");
                     menuAlert.setItems(menuList,
@@ -272,25 +253,25 @@ public class GenealogyListFragment extends FabFragment {
                 @Override
                 public void onItemClick(View view, int position) {
                     if (MODE_SELECTION_FATHER) {
-                        if (app.mDialog != null) {
-                            if (app.mDialog instanceof DialogAddGenealogyPerson) {
-                                ((DialogAddGenealogyPerson) app.mDialog).setFather(list.get(position));
-                                app.mDialog.show();
+                        if (mDialog != null) {
+                            if (mDialog instanceof DialogAddGenealogyPerson) {
+                                ((DialogAddGenealogyPerson) mDialog).setFather(list.get(position));
+                                mDialog.show();
                             }
                         }
 
                     } else if (MODE_SELECTION_MOTHER) {
-                        if (app.mDialog != null) {
-                            if (app.mDialog instanceof DialogAddGenealogyPerson) {
-                                ((DialogAddGenealogyPerson) app.mDialog).setMother(list.get(position));
-                                app.mDialog.show();
+                        if (mDialog != null) {
+                            if (mDialog instanceof DialogAddGenealogyPerson) {
+                                ((DialogAddGenealogyPerson) mDialog).setMother(list.get(position));
+                                mDialog.show();
                             }
                         }
                     } else if (MODE_SELECTION_PARTNER) {
-                        if (app.mDialog != null) {
-                            if (app.mDialog instanceof DialogAddGenealogyPerson) {
-                                ((DialogAddGenealogyPerson) app.mDialog).addPartner(list.get(position));
-                                app.mDialog.show();
+                        if (mDialog != null) {
+                            if (mDialog instanceof DialogAddGenealogyPerson) {
+                                ((DialogAddGenealogyPerson) mDialog).addPartner(list.get(position));
+                                mDialog.show();
                             }
                         }
                     } else {
@@ -317,7 +298,7 @@ public class GenealogyListFragment extends FabFragment {
                     onSelect.execute(list.get(position));
 
                     if (tmp)
-                        Toast.makeText(app, "Selected for tree", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "Selected for tree", Toast.LENGTH_SHORT).show();
                     return false;
                 }
             });
@@ -351,7 +332,7 @@ public class GenealogyListFragment extends FabFragment {
     }
 
     public void add() {
-        app.mDialog = new DialogAddGenealogyPerson(mActivity, mApplicationCallback, new IPostExecuteListener() {
+        mDialog = new DialogAddGenealogyPerson(mActivity, mApplicationCallback, new IPostExecuteListener() {
             @Override
             public void onPostExecute(JSONObject json, String body) {
                 refreshList();

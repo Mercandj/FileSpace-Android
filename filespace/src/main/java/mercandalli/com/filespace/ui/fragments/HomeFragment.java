@@ -61,7 +61,6 @@ import mercandalli.com.filespace.listeners.SetToolbarCallback;
 import mercandalli.com.filespace.models.ModelHome;
 import mercandalli.com.filespace.models.ModelNasaImage;
 import mercandalli.com.filespace.models.ModelServerMessage;
-import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterModelHome;
 import mercandalli.com.filespace.utils.NasaUtils;
@@ -86,10 +85,9 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
     private EditText input;
 
     private Toolbar mToolbar;
-    private Context mContext;
     private String mTitle;
-    private ApplicationCallback mApplicationCallback;
-    private SetToolbarCallback mSetToolbarCallback;
+
+    protected SetToolbarCallback mSetToolbarCallback;
 
     public static HomeFragment newInstance(String title) {
         final HomeFragment fragment = new HomeFragment();
@@ -102,14 +100,8 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mContext = context;
         if (context instanceof SetToolbarCallback) {
             mSetToolbarCallback = (SetToolbarCallback) context;
-        } else {
-            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
-        }
-        if (context instanceof ApplicationCallback) {
-            mApplicationCallback = (ApplicationCallback) context;
         } else {
             throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
         }
@@ -120,7 +112,6 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
         super.onDetach();
         mSetToolbarCallback = null;
         mApplicationCallback = null;
-        app = null;
     }
 
     @Override
@@ -130,7 +121,6 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
         if (!args.containsKey(BUNDLE_ARG_TITLE)) {
             throw new IllegalStateException("Missing args. Please use newInstance()");
         }
-        mContext = getContext();
         mTitle = args.getString(BUNDLE_ARG_TITLE);
     }
 
@@ -141,7 +131,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
         mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_home_toolbar);
         mToolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(mToolbar);
-        setStatusBarColor(mContext, R.color.notifications_bar);
+        setStatusBarColor(mActivity, R.color.notifications_bar);
 
         circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
 
@@ -156,7 +146,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
         this.input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    Interpreter interpreter = new InterpreterMain(mContext, mApplicationCallback.getConfig().getUser().isAdmin());
+                    Interpreter interpreter = new InterpreterMain(mActivity, mApplicationCallback.getConfig().getUser().isAdmin());
                     addItemList("FileSpace", interpreter.interpret(input.getText().toString()));
                     input.setText("");
                     return true;
@@ -169,10 +159,10 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
             public boolean onLongClick(View v) {
                 if (input.getVisibility() == View.GONE) {
                     input.setVisibility(View.VISIBLE);
-                    InputMethodManager inputMethodManager = (InputMethodManager) app.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager inputMethodManager = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
                     inputMethodManager.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT);
                 } else {
-                    InputMethodManager mgr = (InputMethodManager) app.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager mgr = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
                     mgr.hideSoftInputFromWindow(input.getWindowToken(), 0);
                     input.setVisibility(View.GONE);
                 }
@@ -190,7 +180,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                NasaUtils.getNasaRandomPicture(mContext, app, new IModelNasaImageListener() {
+                NasaUtils.getNasaRandomPicture(mActivity, mApplicationCallback, new IModelNasaImageListener() {
                     @Override
                     public void execute(ModelNasaImage modelNasaImage) {
                         refreshList(modelNasaImage);
@@ -202,7 +192,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
 
         refreshList();
 
-        NasaUtils.getNasaRandomPicture(mContext, app, new IModelNasaImageListener() {
+        NasaUtils.getNasaRandomPicture(mActivity, mApplicationCallback, new IModelNasaImageListener() {
             @Override
             public void execute(ModelNasaImage modelNasaImage) {
                 refreshList(modelNasaImage);
@@ -229,7 +219,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                 public void execute(ModelHome modelHome) {
                     removeItemList(modelHome);
                     if (modelHome.serverMessage != null)
-                        app.getConfig().removeServerMessage(modelHome.serverMessage);
+                        mApplicationCallback.getConfig().removeServerMessage(modelHome.serverMessage);
                 }
             }, serverMessageList.get(i), Constants.TAB_VIEW_TYPE_HOME_INFORMATION));
         }
@@ -265,8 +255,8 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (app instanceof ApplicationDrawerActivity) {
-                            ((ApplicationDrawerActivity) app).selectItem(3);
+                        if (mActivity instanceof ApplicationDrawerActivity) {
+                            ((ApplicationDrawerActivity) mActivity).selectItem(3);
                         }
                     }
                 },
@@ -274,7 +264,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((ApplicationDrawerActivity) app).selectItem(4);
+                        ((ApplicationDrawerActivity) mActivity).selectItem(4);
                     }
                 },
                 Constants.TAB_VIEW_TYPE_TWO_BUTTONS));
@@ -295,13 +285,13 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
         if (mRecyclerView != null && mModelHomeList != null && isAdded()) {
             circularProgressBar.setVisibility(View.GONE);
 
-            mAdapter = new AdapterModelHome(app, mModelHomeList);
+            mAdapter = new AdapterModelHome(mActivity, mModelHomeList);
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
 
             if ((rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
                 (rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
-                Animation animOpen = AnimationUtils.loadAnimation(mContext, R.anim.circle_button_bottom_open);
+                Animation animOpen = AnimationUtils.loadAnimation(mActivity, R.anim.circle_button_bottom_open);
                 (rootView.findViewById(R.id.circle)).startAnimation(animOpen);
             }
 
@@ -369,7 +359,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
 
             if (textMatchList != null)
                 if (!textMatchList.isEmpty()) {
-                    Interpreter interpreter = new InterpreterMain(mContext, mApplicationCallback.getConfig().isUserAdmin());
+                    Interpreter interpreter = new InterpreterMain(mActivity, mApplicationCallback.getConfig().isUserAdmin());
                     String input = textMatchList.get(0);
                     addItemList("FileSpace", interpreter.interpret(input));
                 }

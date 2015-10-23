@@ -19,9 +19,7 @@
  */
 package mercandalli.com.filespace.ui.fragments.file;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.net.Uri;
@@ -60,7 +58,6 @@ import mercandalli.com.filespace.listeners.IStringListener;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.models.MusicModelFile;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.adapters.AdapterDragMusicModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
@@ -81,32 +78,11 @@ public class FileLocalMusicFragment extends FabFragment
     private int mSortMode = Constants.SORT_DATE_MODIFICATION;
     private int mViewMode = Constants.MODE_LIST;
 
-    private Activity mActivity;
-    private ApplicationCallback mApplicationCallback;
-
     public static FileLocalMusicFragment newInstance() {
         Bundle args = new Bundle();
         FileLocalMusicFragment fragment = new FileLocalMusicFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mActivity = (Activity) context;
-        if (context instanceof ApplicationCallback) {
-            mApplicationCallback = (ApplicationCallback) context;
-        } else {
-            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mApplicationCallback = null;
-        app = null;
     }
 
     @Override
@@ -230,9 +206,9 @@ public class FileLocalMusicFragment extends FabFragment
             final AdapterDragMusicModelFile adapter = new AdapterDragMusicModelFile(mActivity, files, new IModelFileListener() {
                 @Override
                 public void executeModelFile(final ModelFile modelFile) {
-                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalMusicFragment.this.app);
+                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
                     String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties)};
-                    if (app.isLogged())
+                    if (mApplicationCallback.isLogged())
                         menuList = new String[]{getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.properties)};
                     menuAlert.setTitle("Action");
                     menuAlert.setItems(menuList,
@@ -243,14 +219,14 @@ public class FileLocalMusicFragment extends FabFragment
                                     switch (item) {
                                         case 0:
                                             if (modelFile.directory) {
-                                                Toast.makeText(FileLocalMusicFragment.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                             } else
                                                 DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
                                                     @Override
                                                     public void execute() {
                                                         if (modelFile.getFile() != null) {
                                                             List<StringPair> parameters = modelFile.getForUpload();
-                                                            (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
+                                                            (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeFile, new IPostExecuteListener() {
                                                                 @Override
                                                                 public void onPostExecute(JSONObject json, String body) {
 
@@ -261,7 +237,7 @@ public class FileLocalMusicFragment extends FabFragment
                                                 }, getString(R.string.cancel), null);
                                             break;
                                         case 1:
-                                            modelFile.openLocalAs(FileLocalMusicFragment.this.app);
+                                            modelFile.openLocalAs();
                                             break;
                                         case 2:
                                             DialogUtils.prompt(mActivity, "Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
@@ -270,7 +246,7 @@ public class FileLocalMusicFragment extends FabFragment
                                                     modelFile.rename(text, new IPostExecuteListener() {
                                                         @Override
                                                         public void onPostExecute(JSONObject json, String body) {
-                                                            FileLocalMusicFragment.this.app.refreshAdapters();
+                                                            mApplicationCallback.refreshAdapters();
                                                         }
                                                     });
                                                 }
@@ -283,7 +259,7 @@ public class FileLocalMusicFragment extends FabFragment
                                                     modelFile.delete(new IPostExecuteListener() {
                                                         @Override
                                                         public void onPostExecute(JSONObject json, String body) {
-                                                            FileLocalMusicFragment.this.app.refreshAdapters();
+                                                            mApplicationCallback.refreshAdapters();
                                                         }
                                                     });
                                                 }
@@ -349,7 +325,7 @@ public class FileLocalMusicFragment extends FabFragment
                 List<ModelFile> tmp = new ArrayList<>();
                 tmp.addAll(files);
 
-                this.mGridView.setAdapter(new AdapterGridModelFile(app, tmp));
+                this.mGridView.setAdapter(new AdapterGridModelFile(mActivity, tmp));
                 this.mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -363,27 +339,27 @@ public class FileLocalMusicFragment extends FabFragment
                             return false;
                         final ModelFile modelFile = files.get(position);
 
-                        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(FileLocalMusicFragment.this.app);
+                        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
                         String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.properties)};
-                        if (app.isLogged())
+                        if (mApplicationCallback.isLogged())
                             menuList = new String[]{getString(R.string.upload), getString(R.string.rename), getString(R.string.delete), getString(R.string.properties)};
                         menuAlert.setTitle("Action");
                         menuAlert.setItems(menuList,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int item) {
-                                        if (!app.isLogged())
+                                        if (!mApplicationCallback.isLogged())
                                             item--;
                                         switch (item) {
                                             case 0:
                                                 if (modelFile.directory) {
-                                                    Toast.makeText(FileLocalMusicFragment.this.app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                                 } else
                                                     DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
                                                         @Override
                                                         public void execute() {
                                                             if (modelFile.getFile() != null) {
                                                                 List<StringPair> parameters = modelFile.getForUpload();
-                                                                (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeFile, new IPostExecuteListener() {
+                                                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeFile, new IPostExecuteListener() {
                                                                     @Override
                                                                     public void onPostExecute(JSONObject json, String body) {
 
@@ -400,7 +376,7 @@ public class FileLocalMusicFragment extends FabFragment
                                                         modelFile.rename(text, new IPostExecuteListener() {
                                                             @Override
                                                             public void onPostExecute(JSONObject json, String body) {
-                                                                FileLocalMusicFragment.this.app.refreshAdapters();
+                                                                mApplicationCallback.refreshAdapters();
                                                             }
                                                         });
                                                     }
@@ -413,7 +389,7 @@ public class FileLocalMusicFragment extends FabFragment
                                                         modelFile.delete(new IPostExecuteListener() {
                                                             @Override
                                                             public void onPostExecute(JSONObject json, String body) {
-                                                                FileLocalMusicFragment.this.app.refreshAdapters();
+                                                                mApplicationCallback.refreshAdapters();
                                                             }
                                                         });
                                                     }

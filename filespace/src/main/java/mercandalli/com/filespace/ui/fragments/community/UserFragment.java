@@ -19,9 +19,7 @@
  */
 package mercandalli.com.filespace.ui.fragments.community;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -53,7 +51,6 @@ import mercandalli.com.filespace.listeners.IStringListener;
 import mercandalli.com.filespace.models.ModelUser;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.adapters.AdapterModelUser;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
@@ -76,29 +73,8 @@ public class UserFragment extends BackFragment {
     private TextView message;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private Activity mActivity;
-    private ApplicationCallback mApplicationCallback;
-
     public static UserFragment newInstance() {
         return new UserFragment();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mActivity = (Activity) context;
-        if (context instanceof ApplicationCallback) {
-            mApplicationCallback = (ApplicationCallback) context;
-        } else {
-            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mApplicationCallback = null;
-        app = null;
     }
 
     public UserFragment() {
@@ -145,12 +121,12 @@ public class UserFragment extends BackFragment {
 
     public void refreshList(String search) {
         List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(app) && app.isLogged())
+        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged())
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
-                    this.app.getConfig().getUser(),
-                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeUser,
+                    mApplicationCallback.getConfig().getUser(),
+                    mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUser,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -165,7 +141,7 @@ public class UserFragment extends BackFragment {
                                         }
                                     }
                                 } else
-                                    Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -176,7 +152,7 @@ public class UserFragment extends BackFragment {
             ).execute();
         else {
             this.circularProgressBar.setVisibility(View.GONE);
-            this.message.setText(app.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+            this.message.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
         }
@@ -194,12 +170,12 @@ public class UserFragment extends BackFragment {
             } else
                 this.message.setVisibility(View.GONE);
 
-            this.mAdapter = new AdapterModelUser(app, list, new IModelUserListener() {
+            this.mAdapter = new AdapterModelUser(list, new IModelUserListener() {
                 @Override
                 public void execute(final ModelUser modelUser) {
-                    final AlertDialog.Builder menuAleart = new AlertDialog.Builder(app);
+                    final AlertDialog.Builder menuAleart = new AlertDialog.Builder(mActivity);
                     String[] menuList = {getString(R.string.talk)};
-                    if (app.getConfig().isUserAdmin())
+                    if (mApplicationCallback.getConfig().isUserAdmin())
                         menuList = new String[]{getString(R.string.talk), getString(R.string.delete)};
                     menuAleart.setTitle(getString(R.string.action));
                     menuAleart.setItems(menuList,
@@ -210,7 +186,7 @@ public class UserFragment extends BackFragment {
                                             DialogUtils.prompt(mActivity, "Send Message", "Write your message", "Send", new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
-                                                    String url = app.getConfig().getUrlServer() + app.getConfig().routeUserConversation + "/" + modelUser.id;
+                                                    String url = mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserConversation + "/" + modelUser.id;
                                                     List<StringPair> parameters = new ArrayList<>();
                                                     parameters.add(new StringPair("message", "" + text));
 
@@ -227,7 +203,7 @@ public class UserFragment extends BackFragment {
                                             DialogUtils.alert(mActivity, "Delete " + modelUser.username + "?", "This process cannot be undone.", getString(R.string.delete), new IListener() {
                                                 @Override
                                                 public void execute() {
-                                                    if (app.getConfig().isUserAdmin())
+                                                    if (mApplicationCallback.getConfig().isUserAdmin())
                                                         modelUser.delete(new IPostExecuteListener() {
                                                             @Override
                                                             public void onPostExecute(JSONObject json, String body) {
@@ -250,7 +226,7 @@ public class UserFragment extends BackFragment {
 
             if (((ImageButton) rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
                 ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
-                Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
+                Animation animOpen = AnimationUtils.loadAnimation(mActivity, R.anim.circle_button_bottom_open);
                 ((ImageButton) rootView.findViewById(R.id.circle)).startAnimation(animOpen);
             }
 

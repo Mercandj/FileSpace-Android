@@ -19,11 +19,10 @@
  */
 package mercandalli.com.filespace.models;
 
-import mercandalli.com.filespace.config.Constants;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import mercandalli.com.filespace.config.Constants;
 
 public class ModelUserConnection extends Model {
 
@@ -47,9 +46,8 @@ public class ModelUserConnection extends Model {
         this.viewType = viewType;
     }
 
-    public ModelUserConnection(ApplicationActivity app, JSONObject json) {
+    public ModelUserConnection(JSONObject json) {
         super();
-        this.app = app;
         try {
             if (json.has("date_creation"))
                 this.date_creation = json.getString("date_creation");

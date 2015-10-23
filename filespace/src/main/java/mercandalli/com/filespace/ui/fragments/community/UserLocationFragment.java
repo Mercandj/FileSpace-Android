@@ -20,7 +20,6 @@
 package mercandalli.com.filespace.ui.fragments.community;
 
 import android.app.Activity;
-import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -79,24 +78,6 @@ public class UserLocationFragment extends BackFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mActivity = (Activity) context;
-        if (context instanceof ApplicationCallback) {
-            mApplicationCallback = (ApplicationCallback) context;
-        } else {
-            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mApplicationCallback = null;
-        app = null;
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_admin_add_user_location, container, false);
 
@@ -105,7 +86,7 @@ public class UserLocationFragment extends BackFragment {
 
         this.circle = (ImageButton) rootView.findViewById(R.id.circle);
 
-        if (map == null && app != null) {
+        if (map == null) {
             mapView = (MapView) rootView.findViewById(R.id.mapView);
 
             mapView.onCreate(savedInstanceState);
@@ -138,19 +119,19 @@ public class UserLocationFragment extends BackFragment {
                         new IListener() {
                             @Override
                             public void execute() {
-                                location = GpsUtils.getGpsLocation(app, new ILocationListener() {
+                                location = GpsUtils.getGpsLocation(mActivity, new ILocationListener() {
                                     @Override
                                     public void execute(Location location) {
                                         if (location != null) {
                                             double longitude = location.getLongitude(),
                                                     latitude = location.getLatitude();
 
-                                            if (NetUtils.isInternetConnection(app) && longitude != 0 && latitude != 0) {
+                                            if (NetUtils.isInternetConnection(mActivity) && longitude != 0 && latitude != 0) {
                                                 List<StringPair> parameters = new ArrayList<>();
                                                 parameters.add(new StringPair("longitude", "" + longitude));
                                                 parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserPut, new IPostExecuteListener() {
                                                     @Override
                                                     public void onPostExecute(JSONObject json, String body) {
 
@@ -165,12 +146,12 @@ public class UserLocationFragment extends BackFragment {
                                     double longitude = location.getLongitude(),
                                             latitude = location.getLatitude();
 
-                                    if (NetUtils.isInternetConnection(app) && longitude != 0 && latitude != 0) {
+                                    if (NetUtils.isInternetConnection(mActivity) && longitude != 0 && latitude != 0) {
                                         List<StringPair> parameters = new ArrayList<>();
                                         parameters.add(new StringPair("longitude", "" + longitude));
                                         parameters.add(new StringPair("latitude", "" + latitude));
 
-                                        (new TaskPost(mActivity, mApplicationCallback, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                        (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserPut, new IPostExecuteListener() {
                                             @Override
                                             public void onPostExecute(JSONObject json, String body) {
                                                 refreshMap();
@@ -191,12 +172,12 @@ public class UserLocationFragment extends BackFragment {
 
     public void refreshMap() {
         List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(app) && app.isLogged())
+        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged())
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
-                    this.app.getConfig().getUser(),
-                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeUser,
+                    mApplicationCallback.getConfig().getUser(),
+                    mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUser,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -211,7 +192,7 @@ public class UserLocationFragment extends BackFragment {
                                         }
                                     }
                                 } else
-                                    Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

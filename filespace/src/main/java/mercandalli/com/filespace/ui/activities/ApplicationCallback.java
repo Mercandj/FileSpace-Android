@@ -10,7 +10,10 @@ public interface ApplicationCallback extends ConfigCallback {
 
     void invalidateMenu();
 
+    ModelFile createImageFile();
+
+    void refreshAdapters();
+
     void updateAdapters();
 
-    ModelFile createImageFile();
 }

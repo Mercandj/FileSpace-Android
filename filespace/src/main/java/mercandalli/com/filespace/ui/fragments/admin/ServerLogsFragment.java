@@ -19,7 +19,6 @@
  */
 package mercandalli.com.filespace.ui.fragments.admin;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -37,14 +36,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import mercandalli.com.filespace.config.Constants;
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.models.ModelUserConnection;
-import mercandalli.com.filespace.net.TaskGet;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
-import mercandalli.com.filespace.ui.adapters.AdapterModelUserConnection;
-import mercandalli.com.filespace.ui.fragments.BackFragment;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,7 +44,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-
+import mercandalli.com.filespace.config.Constants;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.models.ModelUserConnection;
+import mercandalli.com.filespace.net.TaskGet;
+import mercandalli.com.filespace.ui.adapters.AdapterModelUserConnection;
+import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.utils.NetUtils;
 
 
@@ -70,16 +66,7 @@ public class ServerLogsFragment extends BackFragment {
     private SwipeRefreshLayout swipeRefreshLayout;
 
     public static ServerLogsFragment newInstance() {
-        Bundle args = new Bundle();
-        ServerLogsFragment fragment = new ServerLogsFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (ApplicationDrawerActivity) activity;
+        return new ServerLogsFragment();
     }
 
     @Override
@@ -93,7 +80,7 @@ public class ServerLogsFragment extends BackFragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
 
-        ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.GONE);
+        rootView.findViewById(R.id.circle).setVisibility(View.GONE);
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(
@@ -116,12 +103,12 @@ public class ServerLogsFragment extends BackFragment {
 
 
     public void refreshList() {
-        if (NetUtils.isInternetConnection(app))
+        if (NetUtils.isInternetConnection(mActivity))
             new TaskGet(
-                    app,
-                    app,
-                    this.app.getConfig().getUser(),
-                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeUserConnection,
+                    mActivity,
+                    mApplicationCallback,
+                    mApplicationCallback.getConfig().getUser(),
+                    mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserConnection,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -138,12 +125,12 @@ public class ServerLogsFragment extends BackFragment {
                                         JSONArray array = json.getJSONArray("result");
                                         int array_length = array.length();
                                         for (int i = 0; i < array_length; i++) {
-                                            list.add(new ModelUserConnection(app, array.getJSONObject(i)));
+                                            list.add(new ModelUserConnection(array.getJSONObject(i)));
                                         }
                                     }
 
                                 } else
-                                    Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -155,7 +142,7 @@ public class ServerLogsFragment extends BackFragment {
         else {
             this.circularProgressBar.setVisibility(View.GONE);
             if (isAdded())
-                this.message.setText(app.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+                this.message.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
         }
@@ -167,13 +154,13 @@ public class ServerLogsFragment extends BackFragment {
         if (this.recyclerView != null && this.list != null && this.isAdded()) {
             this.circularProgressBar.setVisibility(View.GONE);
 
-            this.mAdapter = new AdapterModelUserConnection(app, list);
+            this.mAdapter = new AdapterModelUserConnection(mActivity, list);
             this.recyclerView.setAdapter(mAdapter);
             this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
 
             if (((ImageButton) rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
                 ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
-                Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
+                Animation animOpen = AnimationUtils.loadAnimation(mActivity, R.anim.circle_button_bottom_open);
                 ((ImageButton) rootView.findViewById(R.id.circle)).startAnimation(animOpen);
             }
 

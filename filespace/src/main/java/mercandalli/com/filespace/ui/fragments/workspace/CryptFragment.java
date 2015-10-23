@@ -1,6 +1,5 @@
 package mercandalli.com.filespace.ui.fragments.workspace;
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.os.Bundle;
@@ -14,11 +13,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import mercandalli.com.filespace.extras.ia.crypt.Crypt;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
-import mercandalli.com.filespace.ui.fragments.BackFragment;
-
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.extras.ia.crypt.Crypt;
+import mercandalli.com.filespace.ui.fragments.BackFragment;
 
 /**
  * Created by Jonathan on 21/07/2015.
@@ -32,14 +29,8 @@ public class CryptFragment extends BackFragment {
 
     private int cryptKey = 50;
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (ApplicationDrawerActivity) activity;
-    }
-
-    public CryptFragment() {
-        super();
+    public static CryptFragment newInstance() {
+        return new CryptFragment();
     }
 
     @Override

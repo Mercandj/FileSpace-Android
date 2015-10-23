@@ -19,8 +19,6 @@
  */
 package mercandalli.com.filespace.ui.fragments.genealogy;
 
-import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -36,19 +34,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import mercandalli.com.filespace.listeners.IModelGenealogyUserListener;
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.models.ModelGenealogyPerson;
-import mercandalli.com.filespace.net.TaskGet;
-import mercandalli.com.filespace.ui.activities.ApplicationCallback;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
-import mercandalli.com.filespace.ui.adapters.AdapterModelGenealogyUser;
-import mercandalli.com.filespace.ui.fragments.FabFragment;
-import mercandalli.com.filespace.ui.views.DividerItemDecoration;
-import mercandalli.com.filespace.utils.NetUtils;
-import mercandalli.com.filespace.utils.StringPair;
-import mercandalli.com.filespace.utils.StringUtils;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,6 +42,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listeners.IModelGenealogyUserListener;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.models.ModelGenealogyPerson;
+import mercandalli.com.filespace.net.TaskGet;
+import mercandalli.com.filespace.ui.adapters.AdapterModelGenealogyUser;
+import mercandalli.com.filespace.ui.fragments.FabFragment;
+import mercandalli.com.filespace.ui.views.DividerItemDecoration;
+import mercandalli.com.filespace.utils.NetUtils;
+import mercandalli.com.filespace.utils.StringPair;
+import mercandalli.com.filespace.utils.StringUtils;
 
 /**
  * Created by Jonathan on 28/08/2015.
@@ -77,29 +72,8 @@ public class GenealogyTreeFragment extends FabFragment {
     private AdapterModelGenealogyUser mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private Activity mActivity;
-    private ApplicationCallback mApplicationCallback;
-
     public static GenealogyTreeFragment newInstance() {
         return new GenealogyTreeFragment();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mActivity = (Activity) context;
-        if (context instanceof ApplicationCallback) {
-            mApplicationCallback = (ApplicationCallback) context;
-        } else {
-            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mApplicationCallback = null;
-        app = null;
     }
 
     @Override
@@ -145,14 +119,14 @@ public class GenealogyTreeFragment extends FabFragment {
 
     public void getChildren(int id_user) {
         List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(app) && app.isLogged()) {
+        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
             if (requestReady) {
                 requestReady = false;
                 new TaskGet(
                         mActivity,
                         mApplicationCallback,
-                        this.app.getConfig().getUser(),
-                        this.app.getConfig().getUrlServer() + this.app.getConfig().routeGenealogyChildren + "/" + id_user,
+                        mApplicationCallback.getConfig().getUser(),
+                        mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeGenealogyChildren + "/" + id_user,
                         new IPostExecuteListener() {
                             @Override
                             public void onPostExecute(JSONObject json, String body) {
@@ -167,7 +141,7 @@ public class GenealogyTreeFragment extends FabFragment {
                                             }
                                         }
                                     } else
-                                        Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(mActivity, getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -175,7 +149,7 @@ public class GenealogyTreeFragment extends FabFragment {
                                     genealogyPerson = listChildren.get(0);
                                     genealogyPerson.selected = true;
                                 } else {
-                                    Toast.makeText(app, "No children", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mActivity, "No children", Toast.LENGTH_SHORT).show();
                                 }
                                 update();
                             }
@@ -183,23 +157,23 @@ public class GenealogyTreeFragment extends FabFragment {
                         parameters
                 ).execute();
             } else
-                Toast.makeText(app, getString(R.string.waiting_for_response), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, getString(R.string.waiting_for_response), Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(app, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
         }
     }
 
     public void changeUser(int id_user) {
 
         List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(app) && app.isLogged()) {
+        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
             if (requestReady) {
                 requestReady = false;
                 new TaskGet(
                         mActivity,
                         mApplicationCallback,
-                        this.app.getConfig().getUser(),
-                        this.app.getConfig().getUrlServer() + this.app.getConfig().routeGenealogy + "/" + id_user,
+                        mApplicationCallback.getConfig().getUser(),
+                        mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeGenealogy + "/" + id_user,
                         new IPostExecuteListener() {
                             @Override
                             public void onPostExecute(JSONObject json, String body) {
@@ -211,7 +185,7 @@ public class GenealogyTreeFragment extends FabFragment {
                                             GenealogyTreeFragment.this.genealogyPerson.selected = true;
                                         }
                                     } else
-                                        Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(mActivity, getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -221,9 +195,9 @@ public class GenealogyTreeFragment extends FabFragment {
                         parameters
                 ).execute();
             } else
-                Toast.makeText(app, getString(R.string.waiting_for_response), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, getString(R.string.waiting_for_response), Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(app, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -334,7 +308,7 @@ public class GenealogyTreeFragment extends FabFragment {
     public void updateAdapter() {
         if (this.recyclerView != null && this.list != null && this.isAdded()) {
 
-            this.mAdapter = new AdapterModelGenealogyUser(app, list, new IModelGenealogyUserListener() {
+            this.mAdapter = new AdapterModelGenealogyUser(mActivity, list, new IModelGenealogyUserListener() {
                 @Override
                 public void execute(final ModelGenealogyPerson modelGenealogyUser) {
 

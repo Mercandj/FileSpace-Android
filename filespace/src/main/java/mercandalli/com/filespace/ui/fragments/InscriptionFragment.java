@@ -19,10 +19,8 @@
  */
 package mercandalli.com.filespace.ui.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +42,6 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelUser;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.ui.activities.MainActivity;
 import mercandalli.com.filespace.utils.GpsUtils;
 import mercandalli.com.filespace.utils.HashUtils;
@@ -52,25 +49,14 @@ import mercandalli.com.filespace.utils.NetUtils;
 import mercandalli.com.filespace.utils.StringPair;
 import mercandalli.com.filespace.utils.StringUtils;
 
-public class InscriptionFragment extends Fragment {
-
-    private ApplicationActivity app;
-
+public class InscriptionFragment extends BackFragment {
+    
     private boolean requestLaunched = false; // Block the second task if one launch
 
     private EditText username, password;
 
     public static InscriptionFragment newInstance() {
-        Bundle args = new Bundle();
-        InscriptionFragment fragment = new InscriptionFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.app = (ApplicationActivity) activity;
+        return new InscriptionFragment();
     }
 
     public InscriptionFragment() {
@@ -83,11 +69,11 @@ public class InscriptionFragment extends Fragment {
         this.username = (EditText) rootView.findViewById(R.id.username);
         this.password = (EditText) rootView.findViewById(R.id.password);
 
-        ((CheckBox) rootView.findViewById(R.id.autoconnection)).setChecked(app.getConfig().isAutoConncetion());
+        ((CheckBox) rootView.findViewById(R.id.autoconnection)).setChecked(mApplicationCallback.getConfig().isAutoConncetion());
         ((CheckBox) rootView.findViewById(R.id.autoconnection)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                app.getConfig().setAutoConnection(isChecked);
+                mApplicationCallback.getConfig().setAutoConnection(isChecked);
             }
         });
 
@@ -139,16 +125,16 @@ public class InscriptionFragment extends Fragment {
         requestLaunched = true;
 
         if (!StringUtils.isNullOrEmpty(user.username))
-            app.getConfig().setUserUsername(user.username);
+            mApplicationCallback.getConfig().setUserUsername(user.username);
         else
-            user.username = app.getConfig().getUserUsername();
+            user.username = mApplicationCallback.getConfig().getUserUsername();
 
         if (!StringUtils.isNullOrEmpty(user.password))
-            app.getConfig().setUserPassword(user.password);
+            mApplicationCallback.getConfig().setUserPassword(user.password);
         else
-            user.password = app.getConfig().getUserPassword();
+            user.password = mApplicationCallback.getConfig().getUserPassword();
 
-        if (StringUtils.isNullOrEmpty(app.getConfig().getUrlServer())) {
+        if (StringUtils.isNullOrEmpty(mApplicationCallback.getConfig().getUrlServer())) {
             requestLaunched = false;
             return;
         }
@@ -161,8 +147,8 @@ public class InscriptionFragment extends Fragment {
         parameters.add(new StringPair("longitude", "" + GpsUtils.getLongitude(getActivity())));
         parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
 
-        if (NetUtils.isInternetConnection(app))
-            (new TaskPost(app, app, app.getConfig().getUrlServer() + app.getConfig().routeUser, new IPostExecuteListener() {
+        if (NetUtils.isInternetConnection(mActivity))
+            (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUser, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     try {
@@ -174,10 +160,10 @@ public class InscriptionFragment extends Fragment {
                             if (json.has("user")) {
                                 JSONObject user = json.getJSONObject("user");
                                 if (user.has("id"))
-                                    app.getConfig().setUserId(user.getInt("id"));
+                                    mApplicationCallback.getConfig().setUserId(user.getInt("id"));
                             }
                         } else
-                            Toast.makeText(app, app.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mActivity, getString(R.string.server_error), Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -186,5 +172,15 @@ public class InscriptionFragment extends Fragment {
             }, parameters)).execute();
         else
             requestLaunched = false;
+    }
+
+    @Override
+    public boolean back() {
+        return false;
+    }
+
+    @Override
+    public void onFocus() {
+
     }
 }

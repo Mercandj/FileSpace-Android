@@ -19,8 +19,6 @@
  */
 package mercandalli.com.filespace.ui.fragments.genealogy;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -45,7 +43,6 @@ import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelInformation;
 import mercandalli.com.filespace.net.TaskGet;
-import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.adapters.AdapterModelInformation;
 import mercandalli.com.filespace.ui.fragments.FabFragment;
 import mercandalli.com.filespace.utils.NetUtils;
@@ -65,32 +62,8 @@ public class GenealogyStatisticsFragment extends FabFragment {
     private ProgressBar circularProgressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private Activity mActivity;
-    private ApplicationCallback mApplicationCallback;
-
     public static GenealogyStatisticsFragment newInstance() {
-        Bundle args = new Bundle();
-        GenealogyStatisticsFragment fragment = new GenealogyStatisticsFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mActivity = (Activity) context;
-        if (context instanceof ApplicationCallback) {
-            mApplicationCallback = (ApplicationCallback) context;
-        } else {
-            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mApplicationCallback = null;
-        app = null;
+        return new GenealogyStatisticsFragment();
     }
 
     @Override
@@ -139,12 +112,12 @@ public class GenealogyStatisticsFragment extends FabFragment {
 
     public void refreshList() {
         List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(app))
+        if (NetUtils.isInternetConnection(mActivity))
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
-                    this.app.getConfig().getUser(),
-                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeGenealogyStatistics,
+                    mApplicationCallback.getConfig().getUser(),
+                    mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeGenealogyStatistics,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -155,12 +128,12 @@ public class GenealogyStatisticsFragment extends FabFragment {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ModelInformation modelFile = new ModelInformation(app, array.getJSONObject(i));
+                                            ModelInformation modelFile = new ModelInformation(array.getJSONObject(i));
                                             list.add(modelFile);
                                         }
                                     }
                                 } else
-                                    Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mActivity, getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -175,7 +148,7 @@ public class GenealogyStatisticsFragment extends FabFragment {
         if (this.recyclerView != null && this.list != null && this.isAdded()) {
             this.circularProgressBar.setVisibility(View.GONE);
 
-            this.mAdapter = new AdapterModelInformation(app, list);
+            this.mAdapter = new AdapterModelInformation(mActivity, list);
             this.recyclerView.setAdapter(mAdapter);
             this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
 

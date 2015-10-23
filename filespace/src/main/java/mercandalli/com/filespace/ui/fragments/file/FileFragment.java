@@ -19,7 +19,6 @@
  */
 package mercandalli.com.filespace.ui.fragments.file;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -72,13 +71,10 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
     private AppBarLayout mAppBarLayout;
 
-    protected Toolbar mToolbar;
-
     protected int mViewMode = Constants.MODE_LIST;
 
-    private Activity mActivity;
     private String mTitle;
-    private ApplicationCallback mApplicationCallback;
+    private Toolbar mToolbar;
     private SetToolbarCallback mSetToolbarCallback;
 
     public static FileFragment newInstance(String title) {
@@ -92,15 +88,8 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mActivity = (Activity) context;
         if (context instanceof SetToolbarCallback) {
             mSetToolbarCallback = (SetToolbarCallback) context;
-        } else {
-            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
-        }
-        if (context instanceof ApplicationCallback) {
-            mApplicationCallback = (ApplicationCallback) context;
-            mViewMode = ((mApplicationCallback.getConfig().getUserFileModeView() > -1) ? mApplicationCallback.getConfig().getUserFileModeView() : Constants.MODE_LIST);
         } else {
             throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
         }
@@ -110,8 +99,6 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     public void onDetach() {
         super.onDetach();
         mSetToolbarCallback = null;
-        mApplicationCallback = null;
-        app = null;
     }
 
     @Override
@@ -453,7 +440,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     }
 
     public void sort() {
-        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(app);
+        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
         String[] menuList = {"Sort by name (A-Z)", "Sort by size", "Sort by date", mApplicationCallback.getConfig().getUserFileModeView() == Constants.MODE_LIST ? "Grid View" : "List View"};
         menuAlert.setTitle(getString(R.string.view));
         menuAlert.setItems(menuList,
@@ -465,7 +452,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                             case 1:
                             case 2:
                                 if (getCurrentFragmentIndex() != 2 && getCurrentFragmentIndex() != 3)
-                                    Toast.makeText(app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                 else {
                                     for (BackFragment fr : listFragment) {
                                         if (fr != null) {
@@ -493,7 +480,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                                 }
                                 break;
                             default:
-                                Toast.makeText(app, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                 break;
                         }
                     }

@@ -19,13 +19,10 @@
  */
 package mercandalli.com.filespace.ui.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
 
 import mercandalli.com.filespace.R;
 
@@ -34,26 +31,13 @@ import mercandalli.com.filespace.R;
  */
 public class EmptyFragment extends BackFragment {
 
-    private View rootView;
-
     public static EmptyFragment newInstance() {
-        Bundle args = new Bundle();
-        EmptyFragment fragment = new EmptyFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (ApplicationDrawerActivity) activity;
+        return new EmptyFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.rootView = inflater.inflate(R.layout.fragment_empty, container, false);
-
-        return this.rootView;
+        return inflater.inflate(R.layout.fragment_empty, container, false);
     }
 
     @Override

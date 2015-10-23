@@ -25,9 +25,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,14 +37,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.models.ModelHardware;
-import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.views.slider.Slider;
-import mercandalli.com.filespace.utils.NetUtils;
-import mercandalli.com.filespace.utils.RoboticsUtils;
-import mercandalli.com.filespace.utils.StringPair;
-
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
@@ -54,11 +44,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.listeners.SetToolbarCallback;
+import mercandalli.com.filespace.models.ModelHardware;
+import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.views.slider.Slider;
+import mercandalli.com.filespace.utils.NetUtils;
+import mercandalli.com.filespace.utils.RoboticsUtils;
+import mercandalli.com.filespace.utils.StringPair;
 
 /**
  * Created by Jonathan on 03/01/2015.
  */
 public class RoboticsFragment extends BackFragment implements SensorEventListener {
+
+    private static final String BUNDLE_ARG_TITLE = "RoboticsFragment.Args.BUNDLE_ARG_TITLE";
 
     static final int ID_LED_1 = 1;
     static final int ID_DISTANCE_1 = 2;
@@ -88,20 +88,52 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
 
     private DecimalFormat df;
 
-    public static RoboticsFragment newInstance() {
-        return new RoboticsFragment();
+    private String mTitle;
+    private SetToolbarCallback mSetToolbarCallback;
+    private Toolbar mToolbar;
+
+    public static RoboticsFragment newInstance(String title) {
+        final RoboticsFragment fragment = new RoboticsFragment();
+        final Bundle args = new Bundle();
+        args.putString(BUNDLE_ARG_TITLE, title);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof SetToolbarCallback) {
+            mSetToolbarCallback = (SetToolbarCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mSetToolbarCallback = null;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final Bundle args = getArguments();
+        if (!args.containsKey(BUNDLE_ARG_TITLE)) {
+            throw new IllegalStateException("Missing args. Please use newInstance()");
+        }
+        mTitle = args.getString(BUNDLE_ARG_TITLE);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_robotics, container, false);
 
-        app.setTitle(R.string.tab_settings);
-
-        Toolbar mToolbar = (Toolbar) rootView.findViewById(R.id.my_toolbar);
-        app.setToolbar(mToolbar);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            app.getWindow().setStatusBarColor(ContextCompat.getColor(app, R.color.notifications_bar_robotics));
+        mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_robotics_toolbar);
+        mToolbar.setTitle(mTitle);
+        mSetToolbarCallback.setToolbar(mToolbar);
+        setStatusBarColor(mActivity, R.color.notifications_bar_robotics);
 
         // Create hardware
         this.SERVO_1 = new ModelHardware();
@@ -267,7 +299,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
 
                 //log("x = " + x + "    y = " + y + "    z = " + z);
 
-                if (NetUtils.isInternetConnection(app) && request_ready && MODE_CONNECTION) {
+                if (NetUtils.isInternetConnection(mActivity) && request_ready && MODE_CONNECTION) {
                     List<StringPair> parameters = new ArrayList<>();
 
                     SERVO_1.read = false; // write
@@ -284,9 +316,9 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
                     request_ready = false;
 
                     new TaskPost(
-                            app,
-                            app,
-                            app.getConfig().getUrlServer() + RoboticsFragment.this.app.getConfig().routeRobotics,
+                            mActivity,
+                            mApplicationCallback,
+                            mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeRobotics,
                             new IPostExecuteListener() {
                                 @Override
                                 public void onPostExecute(JSONObject json, String body) {

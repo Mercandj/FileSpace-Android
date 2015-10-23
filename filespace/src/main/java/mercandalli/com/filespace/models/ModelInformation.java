@@ -19,11 +19,10 @@
  */
 package mercandalli.com.filespace.models;
 
-import mercandalli.com.filespace.config.Constants;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import mercandalli.com.filespace.config.Constants;
 
 public class ModelInformation extends Model {
 
@@ -47,9 +46,8 @@ public class ModelInformation extends Model {
         this.viewType = viewType;
     }
 
-    public ModelInformation(ApplicationActivity app, JSONObject json) {
+    public ModelInformation(JSONObject json) {
         super();
-        this.app = app;
         try {
             if (json.has("title"))
                 this.title = json.getString("title");

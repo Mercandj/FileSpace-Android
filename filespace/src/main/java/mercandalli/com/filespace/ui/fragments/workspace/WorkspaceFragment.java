@@ -19,14 +19,11 @@
  */
 package mercandalli.com.filespace.ui.fragments.workspace;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -41,12 +38,14 @@ import org.json.JSONObject;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.ui.activities.ApplicationCallback;
+import mercandalli.com.filespace.listeners.SetToolbarCallback;
 import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
+import mercandalli.com.filespace.ui.fragments.file.FileFragment;
 
 public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageChangeListener {
+
+    private static final String BUNDLE_ARG_TITLE = "WorkspaceFragment.Args.BUNDLE_ARG_TITLE";
 
     private static final int NB_FRAGMENT = 2;
     private static final int INIT_FRAGMENT = 0;
@@ -55,19 +54,23 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     private FileManagerFragmentPagerAdapter mPagerAdapter;
     private TabLayout tabs;
 
-    private Activity mActivity;
-    private ApplicationCallback mApplicationCallback;
+    private String mTitle;
+    private Toolbar mToolbar;
+    private SetToolbarCallback mSetToolbarCallback;
 
-    public WorkspaceFragment() {
-        super();
+    public static FileFragment newInstance(String title) {
+        final FileFragment fragment = new FileFragment();
+        final Bundle args = new Bundle();
+        args.putString(BUNDLE_ARG_TITLE, title);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mActivity = (Activity) context;
-        if (context instanceof ApplicationCallback) {
-            mApplicationCallback = (ApplicationCallback) context;
+        if (context instanceof SetToolbarCallback) {
+            mSetToolbarCallback = (SetToolbarCallback) context;
         } else {
             throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
         }
@@ -76,22 +79,30 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     @Override
     public void onDetach() {
         super.onDetach();
-        mApplicationCallback = null;
-        app = null;
+        mSetToolbarCallback = null;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final Bundle args = getArguments();
+        if (!args.containsKey(BUNDLE_ARG_TITLE)) {
+            throw new IllegalStateException("Missing args. Please use newInstance()");
+        }
+        mTitle = args.getString(BUNDLE_ARG_TITLE);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_workspace, container, false);
 
-        app.setTitle(R.string.tab_workspace);
-        Toolbar mToolbar = (Toolbar) rootView.findViewById(R.id.my_toolbar);
-        app.setToolbar(mToolbar);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            app.getWindow().setStatusBarColor(ContextCompat.getColor(app, R.color.notifications_bar));
+        mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_workspace_toolbar);
+        mToolbar.setTitle(mTitle);
+        mSetToolbarCallback.setToolbar(mToolbar);
+        setStatusBarColor(mActivity, R.color.notifications_bar);
         setHasOptionsMenu(true);
 
-        mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
+        mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager());
 
         tabs = (TabLayout) rootView.findViewById(R.id.tabs);
         mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
@@ -138,7 +149,7 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
-        WorkspaceFragment.this.app.invalidateOptionsMenu();
+        mApplicationCallback.invalidateMenu();
         if (position < NB_FRAGMENT)
             if (LIST_BACK_FRAGMENT[position] != null)
                 LIST_BACK_FRAGMENT[position].onFocus();
@@ -150,11 +161,9 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public static class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
-        ApplicationActivity app;
 
-        public FileManagerFragmentPagerAdapter(FragmentManager fm, ApplicationActivity app) {
+        public FileManagerFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
-            this.app = app;
         }
 
         @Override
@@ -162,13 +171,13 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
             BackFragment backFragment = null;
             switch (i) {
                 case 0:
-                    backFragment = new NoteFragment();
+                    backFragment = NoteFragment.newInstance();
                     break;
                 case 1:
-                    backFragment = new CryptFragment();
+                    backFragment = CryptFragment.newInstance();
                     break;
                 default:
-                    backFragment = new CryptFragment();
+                    backFragment = CryptFragment.newInstance();
                     break;
             }
             LIST_BACK_FRAGMENT[i] = backFragment;
@@ -208,7 +217,7 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public void add() {
-        app.mDialog = new DialogAddFileManager(mActivity, mApplicationCallback, -1, new IPostExecuteListener() {
+        new DialogAddFileManager(mActivity, mApplicationCallback, -1, new IPostExecuteListener() {
             @Override
             public void onPostExecute(JSONObject json, String body) {
                 if (json != null)

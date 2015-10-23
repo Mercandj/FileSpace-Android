@@ -31,17 +31,31 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import mercandalli.com.filespace.config.Constants;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 
 /**
  * Created by Jonathan on 17/04/2015.
  */
 public abstract class BackFragment extends Fragment {
 
-    protected ApplicationDrawerActivity app;
+    protected Activity mActivity;
+    protected ApplicationCallback mApplicationCallback;
 
-    public void setApp(ApplicationDrawerActivity app) {
-        this.app = app;
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mActivity = (Activity) context;
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        } else {
+            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mApplicationCallback = null;
     }
 
     /**

@@ -1,6 +1,5 @@
 package mercandalli.com.filespace.ui.fragments.admin;
 
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -12,11 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import mercandalli.com.filespace.extras.physics.MyGLSurfaceView;
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
-import mercandalli.com.filespace.ui.fragments.BackFragment;
-
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.extras.physics.MyGLSurfaceView;
+import mercandalli.com.filespace.ui.fragments.BackFragment;
 
 /**
  * Created by Jonathan on 02/09/2015.
@@ -35,16 +32,7 @@ public class StatisticsFragment extends BackFragment {
     public static Button forward, back, left, right;
 
     public static StatisticsFragment newInstance() {
-        Bundle args = new Bundle();
-        StatisticsFragment fragment = new StatisticsFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (ApplicationDrawerActivity) activity;
+        return new StatisticsFragment();
     }
 
     @Override

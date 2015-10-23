@@ -46,10 +46,7 @@ public class WebFragment extends BackFragment {
     private String initURL;
 
     public static WebFragment newInstance() {
-        Bundle args = new Bundle();
-        WebFragment fragment = new WebFragment();
-        fragment.setArguments(args);
-        return fragment;
+        return new WebFragment();
     }
 
     public void setInitURL(String initURL) {

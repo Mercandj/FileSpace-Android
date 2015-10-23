@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.ui.adapters;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,22 +28,21 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.List;
+
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.models.ModelUserConnection;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.FontUtils;
-
-import java.util.List;
 
 public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterModelUserConnection.ViewHolder> {
     private List<ModelUserConnection> itemsData;
     OnItemClickListener mItemClickListener;
-    ApplicationActivity app;
+    private final Activity mActivity;
 
-    public AdapterModelUserConnection(ApplicationActivity app, List<ModelUserConnection> itemsData) {
+    public AdapterModelUserConnection(final Activity activity, List<ModelUserConnection> itemsData) {
         this.itemsData = itemsData;
-        this.app = app;
+        this.mActivity = activity;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterMode
                 break;
             case Constants.TAB_VIEW_TYPE_SECTION:
                 viewHolder.title.setText("" + model.title);
-                FontUtils.applyFont(app, viewHolder.title, "fonts/MYRIADAB.TTF");
+                FontUtils.applyFont(mActivity, viewHolder.title, "fonts/MYRIADAB.TTF");
                 break;
         }
     }

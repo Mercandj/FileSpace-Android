@@ -19,8 +19,6 @@
  */
 package mercandalli.com.filespace.ui.fragments.community;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -51,7 +49,6 @@ import mercandalli.com.filespace.models.ModelConversationUser;
 import mercandalli.com.filespace.models.ModelUser;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.adapters.AdapterModelConnversationUser;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
@@ -76,30 +73,10 @@ public class TalkFragment extends BackFragment {
     private TextView message;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private Activity mActivity;
-    private ApplicationCallback mApplicationCallback;
-
     public static UserFragment newInstance() {
         return new UserFragment();
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mActivity = (Activity) context;
-        if (context instanceof ApplicationCallback) {
-            mApplicationCallback = (ApplicationCallback) context;
-        } else {
-            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mApplicationCallback = null;
-        app = null;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -141,12 +118,12 @@ public class TalkFragment extends BackFragment {
 
     public void refreshList(String search) {
         List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(app) && app.isLogged())
+        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged())
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
-                    this.app.getConfig().getUser(),
-                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeUserConversation,
+                    mApplicationCallback.getConfig().getUser(),
+                    mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserConversation,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -161,7 +138,7 @@ public class TalkFragment extends BackFragment {
                                         }
                                     }
                                 } else
-                                    Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -172,7 +149,7 @@ public class TalkFragment extends BackFragment {
             ).execute();
         else {
             this.circularProgressBar.setVisibility(View.GONE);
-            this.message.setText(app.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+            this.message.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
         }
@@ -191,13 +168,13 @@ public class TalkFragment extends BackFragment {
                 this.message.setVisibility(View.GONE);
 
 
-            this.mAdapter = new AdapterModelConnversationUser(app, list, new IModelUserListener() {
+            this.mAdapter = new AdapterModelConnversationUser(list, new IModelUserListener() {
                 @Override
                 public void execute(final ModelUser modelUser) {
                     DialogUtils.prompt(mActivity, "Send Message", "Write your message", "Send", new IStringListener() {
                         @Override
                         public void execute(String text) {
-                            String url = app.getConfig().getUrlServer() + app.getConfig().routeUserMessage + "/" + modelUser.id;
+                            String url = mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserMessage + "/" + modelUser.id;
                             List<StringPair> parameters = new ArrayList<>();
                             parameters.add(new StringPair("message", "" + text));
 
@@ -215,7 +192,7 @@ public class TalkFragment extends BackFragment {
 
             if (rootView.findViewById(R.id.circle).getVisibility() == View.GONE) {
                 rootView.findViewById(R.id.circle).setVisibility(View.VISIBLE);
-                Animation animOpen = AnimationUtils.loadAnimation(this.app, R.anim.circle_button_bottom_open);
+                Animation animOpen = AnimationUtils.loadAnimation(mActivity, R.anim.circle_button_bottom_open);
                 rootView.findViewById(R.id.circle).startAnimation(animOpen);
             }
 

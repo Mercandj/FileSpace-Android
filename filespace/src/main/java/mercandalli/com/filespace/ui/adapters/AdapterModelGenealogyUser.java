@@ -19,6 +19,8 @@
  */
 package mercandalli.com.filespace.ui.adapters;
 
+import android.app.Activity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,26 +31,24 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import mercandalli.com.filespace.listeners.IModelGenealogyUserListener;
-import mercandalli.com.filespace.models.ModelGenealogyPerson;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listeners.IModelGenealogyUserListener;
+import mercandalli.com.filespace.models.ModelGenealogyPerson;
 
 public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModelGenealogyUser.ViewHolder> {
 
-    private ApplicationActivity app;
+    private final Activity mActivity;
     public List<ModelGenealogyPerson> users;
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
     private IModelGenealogyUserListener moreListener;
     private boolean isTree;
 
-    public AdapterModelGenealogyUser(ApplicationActivity app, List<ModelGenealogyPerson> users, IModelGenealogyUserListener moreListener, boolean isTree) {
-        this.app = app;
+    public AdapterModelGenealogyUser(Activity activity, List<ModelGenealogyPerson> users, IModelGenealogyUserListener moreListener, boolean isTree) {
+        this.mActivity = activity;
         this.users = users;
         this.moreListener = moreListener;
         this.isTree = isTree;
@@ -82,7 +82,7 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
                 viewHolder.icon.setImageResource(R.drawable.file_default);
 
             if (user.selected)
-                viewHolder.item.setBackgroundColor(app.getResources().getColor(R.color.tab_selected));
+                viewHolder.item.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.tab_selected));
             else
                 viewHolder.item.setBackground(null);
         }

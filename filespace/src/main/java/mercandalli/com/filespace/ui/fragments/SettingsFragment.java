@@ -36,6 +36,10 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.extras.ia.action.ENUM_Action;
 import mercandalli.com.filespace.listeners.SetToolbarCallback;
@@ -45,11 +49,6 @@ import mercandalli.com.filespace.ui.activities.RegisterLoginActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterModelSetting;
 import mercandalli.com.filespace.ui.dialogs.DialogAuthorLabel;
 import mercandalli.com.filespace.utils.TimeUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import mercandalli.com.filespace.R;
 
 public class SettingsFragment extends BackFragment {
 
@@ -84,19 +83,12 @@ public class SettingsFragment extends BackFragment {
         } else {
             throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
         }
-        if (context instanceof ApplicationCallback) {
-            mApplicationCallback = (ApplicationCallback) context;
-        } else {
-            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mSetToolbarCallback = null;
-        mApplicationCallback = null;
-        app = null;
     }
 
     @Override
@@ -133,28 +125,28 @@ public class SettingsFragment extends BackFragment {
     public void refreshList() {
         list = new ArrayList<>();
         list.add(new ModelSetting(mActivity, mApplicationCallback, "Settings", Constants.TAB_VIEW_TYPE_SECTION));
-        if (app.getConfig().isLogged()) {
+        if (mApplicationCallback.getConfig().isLogged()) {
             list.add(new ModelSetting(mActivity, mApplicationCallback, "Auto connection", new OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    app.getConfig().setAutoConnection(isChecked);
+                    mApplicationCallback.getConfig().setAutoConnection(isChecked);
                 }
-            }, app.getConfig().isAutoConncetion()));
+            }, mApplicationCallback.getConfig().isAutoConncetion()));
             list.add(new ModelSetting(mActivity, mApplicationCallback, "Web application", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ENUM_Action.WEB_SEARCH.action.action(app, app.getConfig().webApplication);
+                    ENUM_Action.WEB_SEARCH.action.action(mActivity, mApplicationCallback.getConfig().webApplication);
                 }
             }));
         }
         list.add(new ModelSetting(mActivity, mApplicationCallback, "Welcome on home screen", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(app, "Welcome message enabled.", Toast.LENGTH_SHORT).show();
-                app.getConfig().setHomeWelcomeMessage(true);
+                Toast.makeText(mActivity, "Welcome message enabled.", Toast.LENGTH_SHORT).show();
+                mApplicationCallback.getConfig().setHomeWelcomeMessage(true);
             }
         }));
-        if (app.getConfig().isLogged()) {
+        if (mApplicationCallback.getConfig().isLogged()) {
             list.add(new ModelSetting(mActivity, mApplicationCallback, "Change password", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -175,7 +167,7 @@ public class SettingsFragment extends BackFragment {
             }));
         }
 
-        list.add(new ModelSetting(mActivity, mApplicationCallback, app.getString(R.string.about), new View.OnClickListener() {
+        list.add(new ModelSetting(mActivity, mApplicationCallback, mActivity.getString(R.string.about), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new DialogAuthorLabel(mActivity, mApplicationCallback);
@@ -183,18 +175,18 @@ public class SettingsFragment extends BackFragment {
         }));
 
         try {
-            PackageInfo pInfo = app.getPackageManager().getPackageInfo(app.getPackageName(), 0);
+            PackageInfo pInfo = mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0);
             list.add(new ModelSetting(mActivity, mApplicationCallback, "Last update date GMT", TimeUtils.getGMTDate(pInfo.lastUpdateTime)));
             list.add(new ModelSetting(mActivity, mApplicationCallback, "Version", pInfo.versionName, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (click_version == 11) {
-                        Toast.makeText(app, "Development settings activated.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "Development settings activated.", Toast.LENGTH_SHORT).show();
                         isDevelopper = true;
                         refreshList();
                     } else if (click_version < 11) {
                         if (click_version >= 1) {
-                            final Toast t = Toast.makeText(app, "" + (11 - click_version), Toast.LENGTH_SHORT);
+                            final Toast t = Toast.makeText(mActivity, "" + (11 - click_version), Toast.LENGTH_SHORT);
                             t.show();
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
@@ -217,7 +209,7 @@ public class SettingsFragment extends BackFragment {
 
     public void updateAdapter() {
         if (recyclerView != null && list != null) {
-            AdapterModelSetting adapter = new AdapterModelSetting(app, list);
+            AdapterModelSetting adapter = new AdapterModelSetting(mActivity, mApplicationCallback, list);
             adapter.setOnItemClickListener(new AdapterModelSetting.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {

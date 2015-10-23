@@ -19,6 +19,7 @@
  */
 package mercandalli.com.filespace.ui.adapters;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,23 +28,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import mercandalli.com.filespace.config.Constants;
-import mercandalli.com.filespace.models.ModelSetting;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.FontUtils;
-
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Constants;
+import mercandalli.com.filespace.models.ModelSetting;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
+import mercandalli.com.filespace.utils.FontUtils;
 
 public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSetting.ViewHolder> {
     private List<ModelSetting> itemsData;
     OnItemClickListener mItemClickListener;
-    ApplicationActivity app;
+    Activity mActivity;
+    ApplicationCallback mApplicationCallback;
 
-    public AdapterModelSetting(ApplicationActivity app, List<ModelSetting> itemsData) {
+    public AdapterModelSetting(Activity activity, ApplicationCallback applicationCallback, List<ModelSetting> itemsData) {
         this.itemsData = itemsData;
-        this.app = app;
+        this.mActivity = activity;
+        this.mApplicationCallback = applicationCallback;
     }
 
     @Override
@@ -74,7 +76,7 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
                 break;
             case Constants.TAB_VIEW_TYPE_SECTION:
                 viewHolder.title.setText("" + model.title);
-                FontUtils.applyFont(app, viewHolder.title, "fonts/MYRIADAB.TTF");
+                FontUtils.applyFont(mActivity, viewHolder.title, "fonts/MYRIADAB.TTF");
                 break;
         }
     }

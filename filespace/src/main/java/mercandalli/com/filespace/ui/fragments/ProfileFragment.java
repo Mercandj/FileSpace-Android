@@ -34,6 +34,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.ILocationListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
@@ -50,12 +56,6 @@ import mercandalli.com.filespace.utils.NetUtils;
 import mercandalli.com.filespace.utils.StringPair;
 import mercandalli.com.filespace.utils.StringUtils;
 import mercandalli.com.filespace.utils.TimeUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Jonathan on 03/01/2015.
@@ -91,14 +91,14 @@ public class ProfileFragment extends BackFragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
 
-        Bitmap icon_profile_online = app.getConfig().getUserProfilePicture();
+        Bitmap icon_profile_online = mApplicationCallback.getConfig().getUserProfilePicture();
         if (icon_profile_online != null) {
             icon_back.setImageBitmap(ImageUtils.setBlur(ImageUtils.setBrightness(icon_profile_online, -50), 15));
         }
 
         this.username = (TextView) this.rootView.findViewById(R.id.username);
-        this.username.setText(StringUtils.capitalize(app.getConfig().getUserUsername()));
-        FontUtils.applyFont(app, this.username, "fonts/Roboto-Regular.ttf");
+        this.username.setText(StringUtils.capitalize(mApplicationCallback.getConfig().getUserUsername()));
+        FontUtils.applyFont(mActivity, this.username, "fonts/Roboto-Regular.ttf");
 
         refreshView();
 
@@ -127,13 +127,13 @@ public class ProfileFragment extends BackFragment {
     }
 
     public void refreshView() {
-        if (NetUtils.isInternetConnection(app) && app.isLogged()) {
+        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
             List<StringPair> parameters = null;
             new TaskGet(
-                    app,
-                    app,
-                    this.app.getConfig().getUser(),
-                    this.app.getConfig().getUrlServer() + this.app.getConfig().routeUser + "/" + this.app.getConfig().getUserId(),
+                    mActivity,
+                    mApplicationCallback,
+                    mApplicationCallback.getConfig().getUser(),
+                    mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUser + "/" + mApplicationCallback.getConfig().getUserId(),
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -142,39 +142,39 @@ public class ProfileFragment extends BackFragment {
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
-                                        user = new ModelUser(app, app, json.getJSONObject("result"));
+                                        user = new ModelUser(mActivity, mApplicationCallback, json.getJSONObject("result"));
                                         list.clear();
-                                        list.add(new ModelSetting(app, app, "Username", "" + user.username));
-                                        list.add(new ModelSetting(app, app, "Files size", FileUtils.humanReadableByteCount(user.size_files) + " / " + FileUtils.humanReadableByteCount(user.server_max_size_end_user)));
-                                        list.add(new ModelSetting(app, app, "Files count", "" + user.num_files));
-                                        list.add(new ModelSetting(app, app, "Creation date", "" + TimeUtils.getDate(user.date_creation)));
-                                        list.add(new ModelSetting(app, app, "Connection date", "" + TimeUtils.getDate(user.date_last_connection)));
+                                        list.add(new ModelSetting(mActivity, mApplicationCallback, "Username", "" + user.username));
+                                        list.add(new ModelSetting(mActivity, mApplicationCallback, "Files size", FileUtils.humanReadableByteCount(user.size_files) + " / " + FileUtils.humanReadableByteCount(user.server_max_size_end_user)));
+                                        list.add(new ModelSetting(mActivity, mApplicationCallback, "Files count", "" + user.num_files));
+                                        list.add(new ModelSetting(mActivity, mApplicationCallback, "Creation date", "" + TimeUtils.getDate(user.date_creation)));
+                                        list.add(new ModelSetting(mActivity, mApplicationCallback, "Connection date", "" + TimeUtils.getDate(user.date_last_connection)));
                                         if (user.isAdmin()) {
-                                            list.add(new ModelSetting(app, app, "Admin", "" + user.isAdmin()));
+                                            list.add(new ModelSetting(mActivity, mApplicationCallback, "Admin", "" + user.isAdmin()));
 
                                             if (user.userLocation != null) {
-                                                list.add(new ModelSetting(app, app, "Longitude", "" + user.userLocation.longitude));
-                                                list.add(new ModelSetting(app, app, "Latitude", "" + user.userLocation.latitude));
-                                                list.add(new ModelSetting(app, app, "Altitude", "" + user.userLocation.altitude));
+                                                list.add(new ModelSetting(mActivity, mApplicationCallback, "Longitude", "" + user.userLocation.longitude));
+                                                list.add(new ModelSetting(mActivity, mApplicationCallback, "Latitude", "" + user.userLocation.latitude));
+                                                list.add(new ModelSetting(mActivity, mApplicationCallback, "Altitude", "" + user.userLocation.altitude));
                                             }
                                         }
 
-                                        Location location = GpsUtils.getGpsLocation(app, new ILocationListener() {
+                                        Location location = GpsUtils.getGpsLocation(mActivity, new ILocationListener() {
                                             @Override
                                             public void execute(Location location) {
                                                 if (location != null) {
                                                     double longitude = location.getLongitude(),
                                                             latitude = location.getLatitude();
 
-                                                    list.add(new ModelSetting(app, app, "Gps Longitude", "" + longitude));
-                                                    list.add(new ModelSetting(app, app, "Gps Latitude", "" + latitude));
+                                                    list.add(new ModelSetting(mActivity, mApplicationCallback, "Gps Longitude", "" + longitude));
+                                                    list.add(new ModelSetting(mActivity, mApplicationCallback, "Gps Latitude", "" + latitude));
 
-                                                    if (NetUtils.isInternetConnection(app) && longitude != 0 && latitude != 0) {
+                                                    if (NetUtils.isInternetConnection(mActivity) && longitude != 0 && latitude != 0) {
                                                         List<StringPair> parameters = new ArrayList<>();
                                                         parameters.add(new StringPair("longitude", "" + longitude));
                                                         parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                        (new TaskPost(app, app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                        (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserPut, new IPostExecuteListener() {
                                                             @Override
                                                             public void onPostExecute(JSONObject json, String body) {
 
@@ -189,15 +189,15 @@ public class ProfileFragment extends BackFragment {
                                             double longitude = location.getLongitude(),
                                                     latitude = location.getLatitude();
 
-                                            list.add(new ModelSetting(app, app, "Gps Longitude", "" + longitude));
-                                            list.add(new ModelSetting(app, app, "Gps Latitude", "" + latitude));
+                                            list.add(new ModelSetting(mActivity, mApplicationCallback, "Gps Longitude", "" + longitude));
+                                            list.add(new ModelSetting(mActivity, mApplicationCallback, "Gps Latitude", "" + latitude));
 
-                                            if (NetUtils.isInternetConnection(app) && longitude != 0 && latitude != 0) {
+                                            if (NetUtils.isInternetConnection(mActivity) && longitude != 0 && latitude != 0) {
                                                 List<StringPair> parameters = new ArrayList<>();
                                                 parameters.add(new StringPair("longitude", "" + longitude));
                                                 parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                (new TaskPost(app, app, app.getConfig().getUrlServer() + app.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserPut, new IPostExecuteListener() {
                                                     @Override
                                                     public void onPostExecute(JSONObject json, String body) {
 
@@ -207,7 +207,7 @@ public class ProfileFragment extends BackFragment {
                                         }
                                     }
                                 } else
-                                    Toast.makeText(app, app.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -223,7 +223,7 @@ public class ProfileFragment extends BackFragment {
         this.circularProgressBar.setVisibility(View.GONE);
 
         if (recyclerView != null && list != null) {
-            AdapterModelSetting adapter = new AdapterModelSetting(app, list);
+            AdapterModelSetting adapter = new AdapterModelSetting(mActivity, mApplicationCallback, list);
             adapter.setOnItemClickListener(new AdapterModelSetting.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {

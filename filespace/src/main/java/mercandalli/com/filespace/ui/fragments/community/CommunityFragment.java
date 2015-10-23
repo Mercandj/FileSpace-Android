@@ -19,7 +19,6 @@
  */
 package mercandalli.com.filespace.ui.fragments.community;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -36,12 +35,13 @@ import org.json.JSONObject;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.ui.activities.ApplicationCallback;
+import mercandalli.com.filespace.listeners.SetToolbarCallback;
 import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 
 public class CommunityFragment extends BackFragment implements ViewPager.OnPageChangeListener {
+
+    private static final String BUNDLE_ARG_TITLE = "CommunityFragment.Args.BUNDLE_ARG_TITLE";
 
     private static final int NB_FRAGMENT = 3;
     private static final int INIT_FRAGMENT = 1;
@@ -49,21 +49,24 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     private ViewPager mViewPager;
     private FileManagerFragmentPagerAdapter mPagerAdapter;
     private TabLayout mTabLayout;
+
+    private String mTitle;
     private Toolbar mToolbar;
+    private SetToolbarCallback mSetToolbarCallback;
 
-    private Activity mActivity;
-    private ApplicationCallback mApplicationCallback;
-
-    public static CommunityFragment newInstance() {
-        return new CommunityFragment();
+    public static CommunityFragment newInstance(String title) {
+        final CommunityFragment fragment = new CommunityFragment();
+        final Bundle args = new Bundle();
+        args.putString(BUNDLE_ARG_TITLE, title);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mActivity = (Activity) context;
-        if (context instanceof ApplicationCallback) {
-            mApplicationCallback = (ApplicationCallback) context;
+        if (context instanceof SetToolbarCallback) {
+            mSetToolbarCallback = (SetToolbarCallback) context;
         } else {
             throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
         }
@@ -72,25 +75,29 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     @Override
     public void onDetach() {
         super.onDetach();
-        mApplicationCallback = null;
-        app = null;
+        mSetToolbarCallback = null;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final Bundle args = getArguments();
+        if (!args.containsKey(BUNDLE_ARG_TITLE)) {
+            throw new IllegalStateException("Missing args. Please use newInstance()");
+        }
+        mTitle = args.getString(BUNDLE_ARG_TITLE);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_community_manager, container, false);
 
-        app.setTitle(R.string.tab_community);
-
-        mToolbar = (Toolbar) rootView.findViewById(R.id.my_toolbar);
-        if (mToolbar != null) {
-            //mToolbar.setBackgroundColor(getResources().getColor(R.color.actionbar));
-            app.setToolbar(mToolbar);
-            //app.setStatusBarColor(R.color.notifications_bar);
-        }
+        mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_community_toolbar);
+        mToolbar.setTitle(mTitle);
+        mSetToolbarCallback.setToolbar(mToolbar);
+        setStatusBarColor(mActivity, R.color.notifications_bar);
         setHasOptionsMenu(true);
-
-        mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager(), app);
+        mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager());
 
         mTabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
         mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
@@ -138,7 +145,7 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
-        CommunityFragment.this.app.invalidateOptionsMenu();
+        mApplicationCallback.invalidateMenu();
         if (position < NB_FRAGMENT)
             if (mBackFragmentArray[position] != null)
                 mBackFragmentArray[position].onFocus();
@@ -150,11 +157,9 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public static class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
-        ApplicationActivity app;
 
-        public FileManagerFragmentPagerAdapter(FragmentManager fm, ApplicationActivity app) {
+        public FileManagerFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
-            this.app = app;
         }
 
         @Override

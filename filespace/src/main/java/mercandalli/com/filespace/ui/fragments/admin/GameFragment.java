@@ -1,6 +1,5 @@
 package mercandalli.com.filespace.ui.fragments.admin;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,12 +7,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import mercandalli.com.filespace.ui.activities.ApplicationDrawerActivity;
+import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.ui.views.game.GameView;
 import mercandalli.com.filespace.ui.views.game.Way;
-
-import mercandalli.com.filespace.R;
 
 /**
  * Created by Jonathan on 02/09/2015.
@@ -24,16 +21,7 @@ public class GameFragment extends BackFragment {
     private GameView gameView;
 
     public static GameFragment newInstance() {
-        Bundle args = new Bundle();
-        GameFragment fragment = new GameFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        app = (ApplicationDrawerActivity) activity;
+        return new GameFragment();
     }
 
     @Override
