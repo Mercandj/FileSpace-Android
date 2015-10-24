@@ -19,7 +19,6 @@
  */
 package mercandalli.com.filespace.ui.fragments.file;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -53,7 +52,6 @@ import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.models.ModelFileTypeENUM;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
 import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
@@ -83,9 +81,6 @@ public class FileCloudFragment extends FabFragment implements
 
     private String url = "";
     private List<ModelFile> filesToCut = new ArrayList<>();
-
-    private Activity mActivity;
-    private ApplicationCallback mApplicationCallback;
 
     /**
      * {@link Constants#MODE_LIST} or {@link Constants#MODE_GRID}
@@ -189,7 +184,7 @@ public class FileCloudFragment extends FabFragment implements
     }
 
     public void updateAdapter() {
-        if (mRecyclerView != null && mFilesList != null && this.isAdded()) {
+        if (mRecyclerView != null && mFilesList != null && this.isAdded() && mActivity != null) {
 
             mProgressBar.setVisibility(View.GONE);
 

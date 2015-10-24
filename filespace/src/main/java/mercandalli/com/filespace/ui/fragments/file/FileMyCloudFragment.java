@@ -338,7 +338,7 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
     }
 
     public void updateAdapter() {
-        if (this.mRecyclerView != null && mFilesList != null && this.isAdded()) {
+        if (this.mRecyclerView != null && mFilesList != null && this.isAdded() && mActivity != null) {
 
             this.mProgressBar.setVisibility(View.GONE);
 

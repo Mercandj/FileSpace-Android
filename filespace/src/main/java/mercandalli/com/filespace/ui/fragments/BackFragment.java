@@ -23,6 +23,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -42,9 +43,14 @@ public abstract class BackFragment extends Fragment {
     protected ApplicationCallback mApplicationCallback;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mActivity = (Activity) getContext();
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mActivity = (Activity) context;
         if (context instanceof ApplicationCallback) {
             mApplicationCallback = (ApplicationCallback) context;
         } else {
