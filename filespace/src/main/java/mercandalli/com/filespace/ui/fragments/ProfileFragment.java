@@ -132,7 +132,6 @@ public class ProfileFragment extends BackFragment {
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
-                    mApplicationCallback.getConfig().getUser(),
                     mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUser + "/" + mApplicationCallback.getConfig().getUserId(),
                     new IPostExecuteListener() {
                         @Override

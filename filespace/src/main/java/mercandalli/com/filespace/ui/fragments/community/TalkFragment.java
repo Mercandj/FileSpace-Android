@@ -122,7 +122,6 @@ public class TalkFragment extends BackFragment {
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
-                    mApplicationCallback.getConfig().getUser(),
                     mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserConversation,
                     new IPostExecuteListener() {
                         @Override

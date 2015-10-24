@@ -92,13 +92,16 @@ public class DialogRequest extends Dialog {
 
                     default: //GET
                         if (!((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString().equals(""))
-                            (new TaskGet(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUser(), mApplicationCallback.getConfig().getUrlServer() + ((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString(), new IPostExecuteListener() {
-                                @Override
-                                public void onPostExecute(JSONObject json, String body) {
-                                    if (listener != null)
-                                        listener.onPostExecute(json, body);
-                                }
-                            }, null)).execute();
+                            (new TaskGet(mActivity,
+                                    mApplicationCallback,
+                                    mApplicationCallback.getConfig().getUrlServer() + ((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString(),
+                                    new IPostExecuteListener() {
+                                        @Override
+                                        public void onPostExecute(JSONObject json, String body) {
+                                            if (listener != null)
+                                                listener.onPostExecute(json, body);
+                                        }
+                                    }, null)).execute();
                 }
                 DialogRequest.this.dismiss();
             }

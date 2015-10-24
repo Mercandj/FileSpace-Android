@@ -103,7 +103,6 @@ public class ServerDataFragment extends BackFragment {
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
-                    mApplicationCallback.getConfig().getUser(),
                     mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeInformation,
                     new IPostExecuteListener() {
                         @Override

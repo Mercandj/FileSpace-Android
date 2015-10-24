@@ -35,15 +35,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.models.ModelConversationMessage;
-import mercandalli.com.filespace.net.TaskGet;
-import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.adapters.AdapterModelConnversationMessage;
-import mercandalli.com.filespace.ui.views.DividerItemDecoration;
-import mercandalli.com.filespace.utils.NetUtils;
-import mercandalli.com.filespace.utils.StringPair;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,6 +43,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.models.ModelConversationMessage;
+import mercandalli.com.filespace.net.TaskGet;
+import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.adapters.AdapterModelConnversationMessage;
+import mercandalli.com.filespace.ui.views.DividerItemDecoration;
+import mercandalli.com.filespace.utils.NetUtils;
+import mercandalli.com.filespace.utils.StringPair;
 
 /**
  * Created by Jonathan on 14/12/2014.
@@ -203,7 +202,6 @@ public class ConversationActivity extends ApplicationActivity {
             new TaskGet(
                     this,
                     this,
-                    this.getConfig().getUser(),
                     this.url,
                     new IPostExecuteListener() {
                         @Override

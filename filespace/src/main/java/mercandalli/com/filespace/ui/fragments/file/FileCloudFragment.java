@@ -136,7 +136,6 @@ public class FileCloudFragment extends FabFragment implements
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
-                    this.mApplicationCallback.getConfig().getUser(),
                     this.mApplicationCallback.getConfig().getUrlServer() + this.mApplicationCallback.getConfig().routeFile,
                     new IPostExecuteListener() {
                         @Override

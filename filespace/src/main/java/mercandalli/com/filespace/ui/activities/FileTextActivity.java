@@ -20,7 +20,6 @@
 package mercandalli.com.filespace.ui.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -100,7 +99,7 @@ public class FileTextActivity extends ApplicationActivity implements IPostExecut
             mIsOnline = extras.getBoolean(EXTRA_MODEL_FILE_ONLINE);
 
             if (savedInstanceState == null) {
-                new TaskGet(this, this, this.getConfig().getUser(), this.mUrl, this).execute();
+                new TaskGet(this, this, this.mUrl, this).execute();
             } else {
                 mProgressBar.setVisibility(View.GONE);
             }

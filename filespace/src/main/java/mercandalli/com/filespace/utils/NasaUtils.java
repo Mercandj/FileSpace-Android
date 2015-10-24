@@ -5,21 +5,19 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.text.format.DateFormat;
 
+import org.json.JSONObject;
+
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
+
 import mercandalli.com.filespace.listeners.IBitmapListener;
 import mercandalli.com.filespace.listeners.IModelNasaImageListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.models.ModelNasaImage;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.ui.activities.ApplicationCallback;
-import mercandalli.com.filespace.ui.activities.ConfigCallback;
-
-import org.json.JSONObject;
-
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by Jonathan on 29/09/2015.
@@ -49,7 +47,6 @@ public class NasaUtils {
             new TaskGet(
                     (Activity) context,
                     applicationCallback,
-                    applicationCallback.getConfig().getUser(),
                     getNasaPhoto(date),
                     new IPostExecuteListener() {
                         @Override

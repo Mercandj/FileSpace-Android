@@ -107,7 +107,6 @@ public class ServerLogsFragment extends BackFragment {
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
-                    mApplicationCallback.getConfig().getUser(),
                     mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserConnection,
                     new IPostExecuteListener() {
                         @Override

@@ -176,7 +176,6 @@ public class UserLocationFragment extends BackFragment {
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
-                    mApplicationCallback.getConfig().getUser(),
                     mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUser,
                     new IPostExecuteListener() {
                         @Override

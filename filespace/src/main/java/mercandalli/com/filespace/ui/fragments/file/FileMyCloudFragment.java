@@ -290,7 +290,6 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
-                    this.mApplicationCallback.getConfig().getUser(),
                     this.mApplicationCallback.getConfig().getUrlServer() + this.mApplicationCallback.getConfig().routeFile,
                     new IPostExecuteListener() {
                         @Override

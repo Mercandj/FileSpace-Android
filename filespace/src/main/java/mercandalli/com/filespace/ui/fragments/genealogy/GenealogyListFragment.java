@@ -146,7 +146,6 @@ public class GenealogyListFragment extends FabFragment {
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
-                    mApplicationCallback.getConfig().getUser(),
                     mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeGenealogy,
                     new IPostExecuteListener() {
                         @Override

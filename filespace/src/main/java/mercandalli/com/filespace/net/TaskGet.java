@@ -26,16 +26,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.models.ModelFile;
-import mercandalli.com.filespace.models.ModelUser;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.ui.activities.ApplicationCallback;
-import mercandalli.com.filespace.ui.activities.ConfigCallback;
-import mercandalli.com.filespace.utils.NetUtils;
-import mercandalli.com.filespace.utils.StringPair;
-import mercandalli.com.filespace.utils.StringUtils;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,6 +40,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
+import mercandalli.com.filespace.config.Config;
+import mercandalli.com.filespace.listeners.IPostExecuteListener;
+import mercandalli.com.filespace.models.ModelFile;
+import mercandalli.com.filespace.ui.activities.ApplicationCallback;
+import mercandalli.com.filespace.utils.NetUtils;
+import mercandalli.com.filespace.utils.StringPair;
+import mercandalli.com.filespace.utils.StringUtils;
+
 /**
  * Global behavior : http Get
  *
@@ -60,24 +58,22 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
     String url;
     IPostExecuteListener listener;
     File file;
-    ModelUser user;
     List<StringPair> parameters;
     ApplicationCallback mApplicationCallback;
     Activity mActivity;
     boolean isAuthentication = true;
 
-    public TaskGet(Activity activity, ApplicationCallback app, ModelUser user, String url, IPostExecuteListener listener) {
-        this(activity, app, user, url, listener, null, true);
+    public TaskGet(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener) {
+        this(activity, app, url, listener, null, true);
     }
 
-    public TaskGet(Activity activity, ApplicationCallback app, ModelUser user, String url, IPostExecuteListener listener, List<StringPair> parameters) {
-        this(activity, app, user, url, listener, parameters, true);
+    public TaskGet(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener, List<StringPair> parameters) {
+        this(activity, app, url, listener, parameters, true);
     }
 
-    public TaskGet(Activity activity, ApplicationCallback app, ModelUser user, String url, IPostExecuteListener listener, List<StringPair> parameters, boolean isAuthentication) {
+    public TaskGet(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener, List<StringPair> parameters, boolean isAuthentication) {
         mActivity = activity;
         this.mApplicationCallback = app;
-        this.user = user;
         this.url = url;
         this.listener = listener;
         this.parameters = parameters;
@@ -88,8 +84,8 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... urls) {
         try {
             if (this.parameters != null) {
-                if (!StringUtils.isNullOrEmpty(mApplicationCallback.getConfig().getUserRegId()))
-                    parameters.add(new StringPair("android_id", "" + mApplicationCallback.getConfig().getUserRegId()));
+                if (!StringUtils.isNullOrEmpty(Config.getUserRegId()))
+                    parameters.add(new StringPair("android_id", "" + Config.getUserRegId()));
                 url = NetUtils.addUrlParameters(url, parameters);
             }
 
@@ -100,10 +96,8 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
             conn.setReadTimeout(10000);
             conn.setConnectTimeout(15000);
             conn.setRequestMethod("GET");
-            String authentication = user.getAccessLogin() + ":" + user.getAccessPassword();
-            String result = Base64.encodeBytes(authentication.getBytes());
             if (isAuthentication)
-                conn.setRequestProperty("Authorization", "Basic " + result);
+                conn.setRequestProperty("Authorization", "Basic " + Config.getUserToken());
             conn.setUseCaches(false);
             conn.setDoInput(true);
 

@@ -23,6 +23,17 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.TimeZone;
+
 import mercandalli.com.filespace.listeners.IBitmapListener;
 import mercandalli.com.filespace.models.Model;
 import mercandalli.com.filespace.models.ModelFile;
@@ -34,17 +45,6 @@ import mercandalli.com.filespace.ui.activities.ApplicationActivity;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.HashUtils;
 import mercandalli.com.filespace.utils.NetUtils;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.TimeZone;
 
 /**
  * Created by Jonathan on 10/12/2014.
@@ -288,7 +288,7 @@ public class Config {
         }
     }
 
-    public String getUserRegId() {
+    public static String getUserRegId() {
         return ENUM_String.STRING_USER_REGID.value;
     }
 

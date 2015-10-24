@@ -95,7 +95,6 @@ public class GenealogyBigTreeFragment extends FabFragment {
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
-                    mApplicationCallback.getConfig().getUser(),
                     mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeGenealogy + "/" + genealogyPerson.id,
                     new IPostExecuteListener() {
                         @Override
