@@ -16,6 +16,8 @@ import mercandalli.com.filespace.utils.TimeUtils;
  */
 public class FileModelUtils {
 
+
+
     public static Spanned toSpanned(final FileModel fileModel) {
         final FileTypeModel type = fileModel.getType();
         final boolean isDirectory = fileModel.isDirectory();

@@ -20,6 +20,9 @@ public class GetFileResponse {
     @SerializedName("id_user")
     private int mIdUser;
 
+    @SerializedName("id_file_parent")
+    private int mIdFileParent;
+
     @SerializedName("name")
     private String mName;
 
@@ -55,6 +58,7 @@ public class GetFileResponse {
         return new FileModel.FileModelBuilder()
                 .id(mId)
                 .idUser(mIdUser)
+                .idFileParent(mIdFileParent)
                 .name(mName)
                 .url(mUrl)
                 .size(mSize)

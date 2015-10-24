@@ -3,6 +3,8 @@ package mercandalli.com.filespace.models.better;
 import java.io.File;
 import java.util.Date;
 
+import mercandalli.com.filespace.utils.FileUtils;
+
 /**
  * Created by Jonathan on 24/10/2015.
  */
@@ -11,6 +13,7 @@ public class FileModel {
     // Online & Local attrs
     private int mId;
     private int mIdUser;
+    private int mIdFileParent;
     private String mName;
     private String mUrl;
     private long mSize;
@@ -21,12 +24,15 @@ public class FileModel {
 
     // Local attrs
     private File mFile;
+    private long mLastModified;
+    private long mCount;
 
     public static class FileModelBuilder {
 
         // Online & Local attrs
         private int id;
         private int idUser;
+        private int idFileParent;
         private String name;
         private String url;
         private long size;
@@ -35,6 +41,11 @@ public class FileModel {
         private boolean isDirectory;
         private Date dateCreation;
 
+        // Local attrs
+        private File file;
+        private long lastModified;
+        private long count;
+
         public FileModelBuilder id(int id) {
             this.id = id;
             return this;
@@ -42,6 +53,11 @@ public class FileModel {
 
         public FileModelBuilder idUser(int idUser) {
             this.idUser = idUser;
+            return this;
+        }
+
+        public FileModelBuilder idFileParent(int idFileParent) {
+            this.idFileParent = idFileParent;
             return this;
         }
 
@@ -80,10 +96,39 @@ public class FileModel {
             return this;
         }
 
+        public FileModelBuilder file(File file) {
+            if (file != null && file.exists()) {
+                id = file.hashCode();
+                isDirectory = file.isDirectory();
+                size = file.length();
+                url = file.getAbsolutePath();
+                name = (file.getName().lastIndexOf(".") == -1) ? file.getName() : file.getName().substring(0, file.getName().lastIndexOf("."));
+                type = new FileTypeModel(FileUtils.getExtensionFromPath(url));
+                dateCreation = new Date(file.lastModified());
+                lastModified = file.lastModified();
+                if (isDirectory && file.listFiles() != null) {
+                    count = file.listFiles().length;
+                }
+                this.file = file;
+            }
+            return this;
+        }
+
+        public FileModelBuilder lastModified(long lastModified) {
+            this.lastModified = lastModified;
+            return this;
+        }
+
+        public FileModelBuilder count(long count) {
+            this.count = count;
+            return this;
+        }
+
         public FileModel build() {
             FileModel fileModel = new FileModel();
             fileModel.setId(id);
             fileModel.setIdUser(idUser);
+            fileModel.setIdFileParent(idFileParent);
             fileModel.setName(name);
             fileModel.setUrl(url);
             fileModel.setSize(size);
@@ -91,6 +136,9 @@ public class FileModel {
             fileModel.setType(type);
             fileModel.setIsDirectory(isDirectory);
             fileModel.setDateCreation(dateCreation);
+            fileModel.setFile(file);
+            fileModel.setLastModified(lastModified);
+            fileModel.setCount(count);
             return fileModel;
         }
     }
@@ -141,6 +189,14 @@ public class FileModel {
 
     public void setIdUser(int mIdUser) {
         this.mIdUser = mIdUser;
+    }
+
+    public int getIdFileParent() {
+        return mIdFileParent;
+    }
+
+    public void setIdFileParent(int mIdFileParent) {
+        this.mIdFileParent = mIdFileParent;
     }
 
     public String getName() {
@@ -197,5 +253,29 @@ public class FileModel {
 
     public void setDateCreation(Date mDateCreation) {
         this.mDateCreation = mDateCreation;
+    }
+
+    public File getFile() {
+        return mFile;
+    }
+
+    public void setFile(File mFile) {
+        this.mFile = mFile;
+    }
+
+    public long getLastModified() {
+        return mLastModified;
+    }
+
+    public void setLastModified(long mLastModified) {
+        this.mLastModified = mLastModified;
+    }
+
+    public long getCount() {
+        return mCount;
+    }
+
+    public void setCount(long mCount) {
+        this.mCount = mCount;
     }
 }

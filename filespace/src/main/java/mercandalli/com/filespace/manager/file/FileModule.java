@@ -18,10 +18,10 @@ public class FileModule {
 
     @Provides
     @Singleton
-    FileManager provideFileManager(Application app) {
+    FileManager provideFileManager(Application application) {
         FileLocalDataApi fileLocalDataApi = new FileLocalDataApi();
         FileOnlineDataApi fileOnlineDataApi = RetrofitUtils.getAuthorizedRestAdapter().create(FileOnlineDataApi.class);
-        return new FileManager(fileLocalDataApi, fileOnlineDataApi, app);
+        return new FileManager(fileLocalDataApi, fileOnlineDataApi, application);
     }
 
 }
