@@ -44,10 +44,10 @@ public class StringUtils {
     public static String nomalizeString(String message) {
         if (message == null)
             return null;
-        return remplaceAccents(message.toLowerCase());
+        return replaceAccents(message.toLowerCase());
     }
 
-    public static String remplaceAccents(String message) {
+    public static String replaceAccents(String message) {
         if (message == null)
             return null;
         message = Normalizer.normalize(message, Normalizer.Form.NFD);
@@ -56,12 +56,23 @@ public class StringUtils {
     }
 
     public static boolean isNullOrEmpty(String str) {
+        return str == null || str.replaceAll(" ", "").equals("");
+    }
+
+    public static String toEmptyIfNull(String str) {
         if (str == null)
-            return true;
-        return str.replaceAll(" ", "").equals("");
+            return "";
+        return str;
     }
 
     public static String intToShortString(int nb) {
+        if (nb < 1000) return nb + "";
+        int exp = (int) (Math.log(nb) / Math.log(1000));
+        String pre = "" + ("KMGTPE").charAt(exp - 1);
+        return String.format("%.1f %s", nb / Math.pow(1000, exp), pre);
+    }
+
+    public static String longToShortString(long nb) {
         if (nb < 1000) return nb + "";
         int exp = (int) (Math.log(nb) / Math.log(1000));
         String pre = "" + ("KMGTPE").charAt(exp - 1);

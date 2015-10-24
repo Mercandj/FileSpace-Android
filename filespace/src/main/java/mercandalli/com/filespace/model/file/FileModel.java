@@ -171,6 +171,10 @@ public class FileModel {
         return (mFile == null);
     }
 
+    public String getFullName() {
+        return mName + (mIsDirectory ? "" : ("." + mType));
+    }
+
     /*
      * GETTER and SETTER
      */

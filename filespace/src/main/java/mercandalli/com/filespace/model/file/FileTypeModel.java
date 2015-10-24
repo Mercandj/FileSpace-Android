@@ -1,7 +1,6 @@
 package mercandalli.com.filespace.model.file;
 
 import mercandalli.com.filespace.model.ModelFileType;
-import mercandalli.com.filespace.model.ModelFileTypeENUM;
 
 /**
  * Created by Jonathan on 24/10/2015.
@@ -13,7 +12,7 @@ public class FileTypeModel {
 
     public FileTypeModel(String value) {
         mExtensions = new String[]{value};
-        for (ModelFileTypeENUM t : ModelFileTypeENUM.values()) {
+        for (FileTypeModelENUM t : FileTypeModelENUM.values()) {
             for (String ext : t.type.getExtensions()) {
                 if (value.equals(ext)) {
                     mTitle = t.type.getTitle();

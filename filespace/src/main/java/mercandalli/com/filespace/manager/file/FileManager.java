@@ -11,6 +11,7 @@ import mercandalli.com.filespace.net.FileOnlineDataApi;
 import mercandalli.com.filespace.net.response.GetFileResponse;
 import mercandalli.com.filespace.net.response.GetFilesResponse;
 import mercandalli.com.filespace.persistence.file.FileLocalDataApi;
+import mercandalli.com.filespace.util.StringUtils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -44,7 +45,7 @@ public class FileManager {
     }
 
     public void getFiles(final int fileParentId, final boolean mine, final String search, final ResultCallback<List<FileModel>> result) {
-        mFileOnlineDataApi.getFiles(fileParentId, mine, search, new Callback<GetFilesResponse>() {
+        mFileOnlineDataApi.getFiles(fileParentId, mine, StringUtils.toEmptyIfNull(search), new Callback<GetFilesResponse>() {
             @Override
             public void success(GetFilesResponse getFilesResponse, Response response) {
                 List<FileModel> fileModelList = new ArrayList<>();
