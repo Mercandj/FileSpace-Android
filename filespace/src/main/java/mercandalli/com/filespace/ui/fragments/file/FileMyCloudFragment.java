@@ -293,13 +293,13 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
         List<StringPair> parameters = new ArrayList<>();
         if (search != null)
             parameters.add(new StringPair("search", "" + search));
-        parameters.add(new StringPair("id_file_parent", "" + this.mIdFileDirectoryStack.peek()));
+        parameters.add(new StringPair("id_file_parent", "" + mIdFileDirectoryStack.peek()));
         parameters.add(new StringPair("mine", "" + true));
 
         if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
 
 
-            mFileManager.getFiles(-1, true, "", new ResultCallback<List<FileModel>>() {
+            mFileManager.getFiles(mIdFileDirectoryStack.peek(), true, "" + search, new ResultCallback<List<FileModel>>() {
                 @Override
                 public void success(List<FileModel> result) {
                     for (FileModel fileModel : result) {
@@ -343,6 +343,8 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                     },
                     parameters
             ).execute();
+
+
         } else {
             this.mProgressBar.setVisibility(View.GONE);
             if (this.isAdded())

@@ -1,10 +1,14 @@
 package mercandalli.com.filespace.models.better;
 
+import java.io.File;
+import java.util.Date;
+
 /**
  * Created by Jonathan on 24/10/2015.
  */
 public class FileModel {
 
+    // Online & Local attrs
     private int mId;
     private int mIdUser;
     private String mName;
@@ -13,8 +17,14 @@ public class FileModel {
     private boolean mIsPublic;
     private FileTypeModel mType;
     private boolean mIsDirectory;
+    private Date mDateCreation;
+
+    // Local attrs
+    private File mFile;
 
     public static class FileModelBuilder {
+
+        // Online & Local attrs
         private int id;
         private int idUser;
         private String name;
@@ -23,6 +33,7 @@ public class FileModel {
         private boolean isPublic;
         private FileTypeModel type;
         private boolean isDirectory;
+        private Date dateCreation;
 
         public FileModelBuilder id(int id) {
             this.id = id;
@@ -64,6 +75,11 @@ public class FileModel {
             return this;
         }
 
+        public FileModelBuilder dateCreation(Date dateCreation) {
+            this.dateCreation = dateCreation;
+            return this;
+        }
+
         public FileModel build() {
             FileModel fileModel = new FileModel();
             fileModel.setId(id);
@@ -74,6 +90,7 @@ public class FileModel {
             fileModel.setPublic(isPublic);
             fileModel.setType(type);
             fileModel.setIsDirectory(isDirectory);
+            fileModel.setDateCreation(dateCreation);
             return fileModel;
         }
     }
@@ -101,6 +118,14 @@ public class FileModel {
     public int hashCode() {
         return mId;
     }
+
+    public boolean isOnline() {
+        return (mFile == null);
+    }
+
+    /*
+     * GETTER and SETTER
+     */
 
     public int getId() {
         return mId;
@@ -164,5 +189,13 @@ public class FileModel {
 
     public void setIsDirectory(boolean mIsDirectory) {
         this.mIsDirectory = mIsDirectory;
+    }
+
+    public Date getDateCreation() {
+        return mDateCreation;
+    }
+
+    public void setDateCreation(Date mDateCreation) {
+        this.mDateCreation = mDateCreation;
     }
 }

@@ -21,14 +21,14 @@ package mercandalli.com.filespace.models;
 
 import android.app.Activity;
 
+import org.json.JSONObject;
+
 import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 
-import org.json.JSONObject;
-
 public abstract class Model {
 
-    Activity mActivity;
+    protected Activity mActivity;
     protected ApplicationCallback app;
     public int viewType = Constants.TAB_VIEW_TYPE_NORMAL;
 

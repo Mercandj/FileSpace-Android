@@ -2,6 +2,11 @@ package mercandalli.com.filespace.net.response;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 import mercandalli.com.filespace.models.better.FileModel;
 import mercandalli.com.filespace.models.better.FileTypeModel;
 
@@ -33,7 +38,20 @@ public class GetFileResponse {
     @SerializedName("directory")
     private long mDirectory;
 
+    @SerializedName("date_creation")
+    private String mDateCreation;
+
     public FileModel createFileModel() {
+
+        Date dateCreation = null;
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+        try {
+            dateCreation = dateFormatGmt.parse(mDateCreation);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         return new FileModel.FileModelBuilder()
                 .id(mId)
                 .idUser(mIdUser)
@@ -43,6 +61,7 @@ public class GetFileResponse {
                 .isPublic(mPublic == 1)
                 .type(new FileTypeModel(mType))
                 .isDirectory(mDirectory == 1)
+                .dateCreation(dateCreation)
                 .build();
     }
 }

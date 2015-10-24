@@ -1,7 +1,5 @@
 package mercandalli.com.filespace.net;
 
-import java.util.List;
-
 import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.net.response.GetFileResponse;
 import mercandalli.com.filespace.net.response.GetFilesResponse;
@@ -13,7 +11,7 @@ import retrofit.http.Query;
 /**
  * Created by Jonathan on 23/10/2015.
  */
-public interface FileApiService {
+public interface FileOnlineDataApi {
     @GET("/" + Config.routeFile + "/{id}")
     void getFileById(
             @Path("id") int fileId,

@@ -19,7 +19,6 @@
  */
 package mercandalli.com.filespace.ui.fragments.community;
 
-import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -50,7 +49,6 @@ import mercandalli.com.filespace.models.ModelUser;
 import mercandalli.com.filespace.models.ModelUserLocation;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
 import mercandalli.com.filespace.utils.DialogUtils;
 import mercandalli.com.filespace.utils.GpsUtils;
@@ -69,9 +67,6 @@ public class UserLocationFragment extends BackFragment {
 
     // Google Map
     private GoogleMap map;
-
-    private Activity mActivity;
-    private ApplicationCallback mApplicationCallback;
 
     public static UserLocationFragment newInstance() {
         return new UserLocationFragment();

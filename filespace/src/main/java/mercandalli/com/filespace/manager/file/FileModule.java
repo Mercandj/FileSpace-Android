@@ -6,7 +6,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import mercandalli.com.filespace.net.FileApiService;
+import mercandalli.com.filespace.net.FileOnlineDataApi;
+import mercandalli.com.filespace.persistence.FileLocalDataApi;
 import mercandalli.com.filespace.utils.RetrofitUtils;
 
 /**
@@ -18,9 +19,9 @@ public class FileModule {
     @Provides
     @Singleton
     FileManager provideFileManager(Application app) {
-        FileDAO fileDAO = new FileDAO();
-        FileApiService karaokeApiService = RetrofitUtils.getAuthorizedRestAdapter().create(FileApiService.class);
-        return new FileManager(fileDAO, karaokeApiService, app);
+        FileLocalDataApi fileLocalDataApi = new FileLocalDataApi();
+        FileOnlineDataApi fileOnlineDataApi = RetrofitUtils.getAuthorizedRestAdapter().create(FileOnlineDataApi.class);
+        return new FileManager(fileLocalDataApi, fileOnlineDataApi, app);
     }
 
 }

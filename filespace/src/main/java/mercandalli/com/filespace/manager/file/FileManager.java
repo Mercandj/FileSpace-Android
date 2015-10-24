@@ -7,9 +7,10 @@ import java.util.List;
 
 import mercandalli.com.filespace.listeners.ResultCallback;
 import mercandalli.com.filespace.models.better.FileModel;
-import mercandalli.com.filespace.net.FileApiService;
+import mercandalli.com.filespace.net.FileOnlineDataApi;
 import mercandalli.com.filespace.net.response.GetFileResponse;
 import mercandalli.com.filespace.net.response.GetFilesResponse;
+import mercandalli.com.filespace.persistence.FileLocalDataApi;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -18,18 +19,18 @@ import retrofit.client.Response;
  * Created by Jonathan on 23/10/2015.
  */
 public class FileManager {
-    private FileDAO mFileDAO;
-    private FileApiService mFileApiService;
+    private FileLocalDataApi mFileLocalDataApi;
+    private FileOnlineDataApi mFileOnlineDataApi;
     private Context mContext;
 
-    public FileManager(FileDAO fileDAO, FileApiService fileApiService, Context context) {
-        mFileDAO = fileDAO;
-        mFileApiService = fileApiService;
+    public FileManager(FileLocalDataApi fileLocalDataApi, FileOnlineDataApi fileOnlineDataApi, Context context) {
+        mFileLocalDataApi = fileLocalDataApi;
+        mFileOnlineDataApi = fileOnlineDataApi;
         mContext = context;
     }
 
     public void getFileById(final int fileId, final ResultCallback<FileModel> result) {
-        mFileApiService.getFileById(fileId, new Callback<GetFileResponse>() {
+        mFileOnlineDataApi.getFileById(fileId, new Callback<GetFileResponse>() {
             @Override
             public void success(GetFileResponse getFileResponse, Response response) {
                 result.success(getFileResponse.createFileModel());
@@ -43,7 +44,7 @@ public class FileManager {
     }
 
     public void getFiles(final int fileParentId, final boolean mine, final String search, final ResultCallback<List<FileModel>> result) {
-        mFileApiService.getFiles(fileParentId, mine, search, new Callback<GetFilesResponse>() {
+        mFileOnlineDataApi.getFiles(fileParentId, mine, search, new Callback<GetFilesResponse>() {
             @Override
             public void success(GetFilesResponse getFilesResponse, Response response) {
                 List<FileModel> fileModelList = new ArrayList<>();
