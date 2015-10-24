@@ -27,6 +27,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,28 +45,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import javax.inject.Inject;
+
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Constants;
+import mercandalli.com.filespace.config.MyAppComponent;
 import mercandalli.com.filespace.listeners.IListener;
 import mercandalli.com.filespace.listeners.IModelFileListener;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.listeners.IStringListener;
+import mercandalli.com.filespace.listeners.ResultCallback;
+import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.models.ModelFile;
 import mercandalli.com.filespace.models.ModelFileTypeENUM;
+import mercandalli.com.filespace.models.better.FileModel;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.adapters.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapters.AdapterModelFile;
 import mercandalli.com.filespace.ui.dialogs.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragments.BackFragment;
-import mercandalli.com.filespace.ui.fragments.FabFragment;
+import mercandalli.com.filespace.ui.fragments.InjectedFragment;
 import mercandalli.com.filespace.ui.views.DividerItemDecoration;
 import mercandalli.com.filespace.utils.DialogUtils;
 import mercandalli.com.filespace.utils.FileUtils;
 import mercandalli.com.filespace.utils.NetUtils;
 import mercandalli.com.filespace.utils.StringPair;
 
-public class FileMyCloudFragment extends FabFragment implements BackFragment.IListViewMode {
+public class FileMyCloudFragment extends InjectedFragment implements BackFragment.IListViewMode {
 
     private RecyclerView mRecyclerView;
     private GridView mGridView;
@@ -78,6 +85,9 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
     private List<ModelFile> mFilesToCutList = new ArrayList<>();
 
     private int mViewMode = Constants.MODE_LIST;
+
+    @Inject
+    FileManager mFileManager;
 
     public static FileMyCloudFragment newInstance() {
         return new FileMyCloudFragment();
@@ -287,6 +297,23 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
         parameters.add(new StringPair("mine", "" + true));
 
         if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
+
+
+            mFileManager.getFiles(-1, true, "", new ResultCallback<List<FileModel>>() {
+                @Override
+                public void success(List<FileModel> result) {
+                    for (FileModel fileModel : result) {
+                        Log.d("MainActivity", "" + fileModel);
+                    }
+                }
+
+                @Override
+                public void failure() {
+
+                }
+            });
+
+
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
@@ -622,5 +649,10 @@ public class FileMyCloudFragment extends FabFragment implements BackFragment.ILi
             mViewMode = viewMode;
             updateAdapter();
         }
+    }
+
+    @Override
+    protected void inject(MyAppComponent myAppComponent) {
+        myAppComponent.inject(this);
     }
 }

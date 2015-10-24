@@ -24,15 +24,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import mercandalli.com.filespace.config.MyApp;
-import mercandalli.com.filespace.listeners.ResultCallback;
 import mercandalli.com.filespace.listeners.SetToolbarCallback;
 import mercandalli.com.filespace.manager.file.FileManager;
-import mercandalli.com.filespace.models.better.FileModel;
 import mercandalli.com.filespace.notificationpush.NotificationPush;
 import mercandalli.com.filespace.ui.fragments.community.CommunityFragment;
 import mercandalli.com.filespace.ui.fragments.file.FileFragment;
@@ -51,41 +47,6 @@ public class MainActivity extends ApplicationDrawerActivity implements SetToolba
 
         // Dagger
         MyApp.get(this).getAppComponent().inject(this);
-
-        //TEST
-        //RestAdapter adapter = RetrofitUtils.getAuthorizedRestAdapter(this).create(FileApiService.class);
-
-
-        if (isLogged()) {
-            mFileManager.getFiles(-1, true, "", new ResultCallback<List<FileModel>>() {
-                @Override
-                public void success(List<FileModel> result) {
-                    for (FileModel fileModel : result) {
-                        Log.d("MainActivity", "" + fileModel);
-                    }
-                }
-
-                @Override
-                public void failure() {
-
-                }
-            });
-        }
-
-        /*
-        mFileManager.getFileById(565, new ResultCallback<FileModel>() {
-            @Override
-            public void success(FileModel result) {
-                Log.d("MainActivity", "" + result);
-            }
-
-            @Override
-            public void failure() {
-
-            }
-        });
-        */
-
 
         // Notif
         if (TextUtils.isEmpty(NotificationPush.regId)) {

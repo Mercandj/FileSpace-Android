@@ -2,6 +2,9 @@ package mercandalli.com.filespace.net.response;
 
 import com.google.gson.annotations.SerializedName;
 
+import mercandalli.com.filespace.models.better.FileModel;
+import mercandalli.com.filespace.models.better.FileTypeModel;
+
 /**
  * Created by Jonathan on 23/10/2015.
  */
@@ -24,27 +27,22 @@ public class GetFileResponse {
     @SerializedName("public")
     private long mPublic;
 
-    public int getId() {
-        return mId;
-    }
+    @SerializedName("type")
+    private String mType;
 
-    public int getIdUser() {
-        return mIdUser;
-    }
+    @SerializedName("directory")
+    private long mDirectory;
 
-    public String getName() {
-        return mName;
-    }
-
-    public String getUrl() {
-        return mUrl;
-    }
-
-    public long getSize() {
-        return mSize;
-    }
-
-    public long getPublic() {
-        return mPublic;
+    public FileModel createFileModel() {
+        return new FileModel.FileModelBuilder()
+                .id(mId)
+                .idUser(mIdUser)
+                .name(mName)
+                .url(mUrl)
+                .size(mSize)
+                .isPublic(mPublic == 1)
+                .type(new FileTypeModel(mType))
+                .isDirectory(mDirectory == 1)
+                .build();
     }
 }

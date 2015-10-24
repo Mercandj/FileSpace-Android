@@ -1,7 +1,6 @@
 package mercandalli.com.filespace.manager.file;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,16 +32,11 @@ public class FileManager {
         mFileApiService.getFileById(fileId, new Callback<GetFileResponse>() {
             @Override
             public void success(GetFileResponse getFileResponse, Response response) {
-                FileModel.FileModelBuilder builder = new FileModel.FileModelBuilder()
-                        .id(getFileResponse.getId())
-                        .name(getFileResponse.getName())
-                        .url(getFileResponse.getUrl());
-                result.success(builder.build());
+                result.success(getFileResponse.createFileModel());
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d("FileManager", error.getMessage());
                 result.failure();
             }
         });
@@ -54,18 +48,13 @@ public class FileManager {
             public void success(GetFilesResponse getFilesResponse, Response response) {
                 List<FileModel> fileModelList = new ArrayList<>();
                 for (GetFileResponse getFileResponse : getFilesResponse.getFiles()) {
-                    fileModelList.add(new FileModel.FileModelBuilder()
-                            .id(getFileResponse.getId())
-                            .name(getFileResponse.getName())
-                            .url(getFileResponse.getUrl())
-                            .build());
+                    fileModelList.add(getFileResponse.createFileModel());
                 }
                 result.success(fileModelList);
             }
 
             @Override
             public void failure(RetrofitError error) {
-                Log.d("FileManager", error.getMessage());
                 result.failure();
             }
         });
