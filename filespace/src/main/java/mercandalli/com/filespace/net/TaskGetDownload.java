@@ -26,11 +26,10 @@ import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import mercandalli.com.filespace.listeners.IListener;
-import mercandalli.com.filespace.models.ModelFile;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.ui.activities.ApplicationCallback;
-import mercandalli.com.filespace.utils.FileUtils;
+import mercandalli.com.filespace.listener.IListener;
+import mercandalli.com.filespace.model.ModelFile;
+import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.util.FileUtils;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

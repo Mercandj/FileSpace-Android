@@ -22,9 +22,9 @@ package mercandalli.com.filespace.extras.ia;
 import android.content.Context;
 
 import mercandalli.com.filespace.extras.ia.action.ENUM_Action;
-import mercandalli.com.filespace.listeners.IModelFormListener;
-import mercandalli.com.filespace.models.ModelForm;
-import mercandalli.com.filespace.utils.AlarmUtils;
+import mercandalli.com.filespace.listener.IModelFormListener;
+import mercandalli.com.filespace.model.ModelForm;
+import mercandalli.com.filespace.util.AlarmUtils;
 
 /**
  * Created by Jonathan on 19/04/2015.

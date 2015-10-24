@@ -31,12 +31,12 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import mercandalli.com.filespace.listeners.IBitmapListener;
-import mercandalli.com.filespace.listeners.ILongListener;
-import mercandalli.com.filespace.models.ModelFile;
-import mercandalli.com.filespace.models.ModelUser;
-import mercandalli.com.filespace.ui.activities.ConfigCallback;
-import mercandalli.com.filespace.utils.ImageUtils;
+import mercandalli.com.filespace.listener.IBitmapListener;
+import mercandalli.com.filespace.listener.ILongListener;
+import mercandalli.com.filespace.model.ModelFile;
+import mercandalli.com.filespace.model.ModelUser;
+import mercandalli.com.filespace.ui.activitiy.ConfigCallback;
+import mercandalli.com.filespace.util.ImageUtils;
 
 /**
  * Global behavior : DDL Image

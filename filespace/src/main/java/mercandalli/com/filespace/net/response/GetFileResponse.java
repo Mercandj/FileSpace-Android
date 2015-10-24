@@ -7,8 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import mercandalli.com.filespace.models.better.FileModel;
-import mercandalli.com.filespace.models.better.FileTypeModel;
+import mercandalli.com.filespace.model.file.FileModel;
+import mercandalli.com.filespace.model.file.FileTypeModel;
 
 /**
  * Created by Jonathan on 23/10/2015.

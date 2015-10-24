@@ -5,12 +5,12 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
-import mercandalli.com.filespace.listeners.ResultCallback;
-import mercandalli.com.filespace.models.better.FileModel;
+import mercandalli.com.filespace.listener.ResultCallback;
+import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.net.FileOnlineDataApi;
 import mercandalli.com.filespace.net.response.GetFileResponse;
 import mercandalli.com.filespace.net.response.GetFilesResponse;
-import mercandalli.com.filespace.persistence.FileLocalDataApi;
+import mercandalli.com.filespace.persistence.file.FileLocalDataApi;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

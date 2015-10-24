@@ -28,7 +28,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import mercandalli.com.filespace.utils.MathUtils;
+import mercandalli.com.filespace.util.MathUtils;
 
 /**
  * Created by Jonathan on 21/04/2015.

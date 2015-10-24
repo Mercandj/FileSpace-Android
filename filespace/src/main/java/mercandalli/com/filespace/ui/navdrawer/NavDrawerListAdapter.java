@@ -30,9 +30,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import mercandalli.com.filespace.config.Constants;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.FileUtils;
-import mercandalli.com.filespace.utils.FontUtils;
+import mercandalli.com.filespace.ui.activitiy.ApplicationActivity;
+import mercandalli.com.filespace.util.FileUtils;
+import mercandalli.com.filespace.util.FontUtils;
 
 import java.util.ArrayList;
 

@@ -34,17 +34,17 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import mercandalli.com.filespace.listeners.IBitmapListener;
-import mercandalli.com.filespace.models.Model;
-import mercandalli.com.filespace.models.ModelFile;
-import mercandalli.com.filespace.models.ModelServerMessage;
-import mercandalli.com.filespace.models.ModelUser;
+import mercandalli.com.filespace.listener.IBitmapListener;
+import mercandalli.com.filespace.model.Model;
+import mercandalli.com.filespace.model.ModelFile;
+import mercandalli.com.filespace.model.ModelServerMessage;
+import mercandalli.com.filespace.model.ModelUser;
 import mercandalli.com.filespace.net.Base64;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-import mercandalli.com.filespace.utils.FileUtils;
-import mercandalli.com.filespace.utils.HashUtils;
-import mercandalli.com.filespace.utils.NetUtils;
+import mercandalli.com.filespace.ui.activitiy.ApplicationActivity;
+import mercandalli.com.filespace.util.FileUtils;
+import mercandalli.com.filespace.util.HashUtils;
+import mercandalli.com.filespace.util.NetUtils;
 
 /**
  * Created by Jonathan on 10/12/2014.

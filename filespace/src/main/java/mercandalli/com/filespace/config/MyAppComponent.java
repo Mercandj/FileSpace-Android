@@ -7,8 +7,8 @@ import javax.inject.Singleton;
 import dagger.Component;
 import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.manager.file.FileModule;
-import mercandalli.com.filespace.ui.activities.MainActivity;
-import mercandalli.com.filespace.ui.fragments.file.FileMyCloudFragment;
+import mercandalli.com.filespace.ui.activitiy.MainActivity;
+import mercandalli.com.filespace.ui.fragment.file.FileMyCloudFragment;
 
 @Singleton
 @Component(

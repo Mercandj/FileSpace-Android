@@ -19,7 +19,7 @@
  */
 package mercandalli.com.filespace.ui.navdrawer;
 
-import mercandalli.com.filespace.listeners.IListener;
+import mercandalli.com.filespace.listener.IListener;
 
 /**
  * Sliding Menu stuff

@@ -19,7 +19,7 @@
  */
 package mercandalli.com.filespace.extras.ia;
 
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
+import mercandalli.com.filespace.ui.activitiy.ApplicationActivity;
 
 /**
  * Created by Jonathan on 19/04/2015.

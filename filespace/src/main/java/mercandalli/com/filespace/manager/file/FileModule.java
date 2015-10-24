@@ -7,8 +7,8 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import mercandalli.com.filespace.net.FileOnlineDataApi;
-import mercandalli.com.filespace.persistence.FileLocalDataApi;
-import mercandalli.com.filespace.utils.RetrofitUtils;
+import mercandalli.com.filespace.persistence.file.FileLocalDataApi;
+import mercandalli.com.filespace.util.RetrofitUtils;
 
 /**
  * Created by Jonathan on 23/10/2015.

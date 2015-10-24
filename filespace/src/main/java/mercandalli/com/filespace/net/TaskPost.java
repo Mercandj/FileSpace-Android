@@ -44,11 +44,11 @@ import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Config;
-import mercandalli.com.filespace.listeners.IPostExecuteListener;
-import mercandalli.com.filespace.ui.activities.ApplicationCallback;
-import mercandalli.com.filespace.utils.NetUtils;
-import mercandalli.com.filespace.utils.StringPair;
-import mercandalli.com.filespace.utils.StringUtils;
+import mercandalli.com.filespace.listener.IPostExecuteListener;
+import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.util.NetUtils;
+import mercandalli.com.filespace.util.StringPair;
+import mercandalli.com.filespace.util.StringUtils;
 
 /**
  * Global behavior : http Post

@@ -31,8 +31,6 @@ import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.provider.Settings;
 
-import mercandalli.com.filespace.ui.activities.ApplicationActivity;
-
 public enum ENUM_Action {
 
     BATTERIE(new Action() {

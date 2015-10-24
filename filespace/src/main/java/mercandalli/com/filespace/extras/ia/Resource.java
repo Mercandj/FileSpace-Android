@@ -29,8 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.extras.ia.language.Sentence;
-import mercandalli.com.filespace.utils.FileUtils;
-import mercandalli.com.filespace.utils.MathUtils;
+import mercandalli.com.filespace.util.FileUtils;
+import mercandalli.com.filespace.util.MathUtils;
 
 /**
  * Created by Jonathan on 24/04/2015.
