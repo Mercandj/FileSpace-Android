@@ -19,7 +19,7 @@ public class FileModule {
     @Singleton
     FileManager provideFileManager(Application app) {
         FileDAO fileDAO = new FileDAO();
-        FileApiService karaokeApiService = RetrofitUtils.getAuthorizedRestAdapter(app).create(FileApiService.class);
+        FileApiService karaokeApiService = RetrofitUtils.getAuthorizedRestAdapter().create(FileApiService.class);
         return new FileManager(fileDAO, karaokeApiService, app);
     }
 

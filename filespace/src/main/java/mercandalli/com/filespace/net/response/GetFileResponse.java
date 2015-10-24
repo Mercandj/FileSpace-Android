@@ -8,4 +8,22 @@ import com.google.gson.annotations.SerializedName;
 public class GetFileResponse {
     @SerializedName("id")
     private int mId;
+
+    @SerializedName("name")
+    private String mName;
+
+    @SerializedName("url")
+    private String mUrl;
+
+    public int getId() {
+        return mId;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public String getUrl() {
+        return mUrl;
+    }
 }

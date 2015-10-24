@@ -24,16 +24,18 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import mercandalli.com.filespace.config.MyApp;
+import mercandalli.com.filespace.listeners.ResultCallback;
 import mercandalli.com.filespace.listeners.SetToolbarCallback;
 import mercandalli.com.filespace.manager.file.FileManager;
-import mercandalli.com.filespace.net.FileApiService;
+import mercandalli.com.filespace.models.gson.FileModel;
 import mercandalli.com.filespace.notificationpush.NotificationPush;
 import mercandalli.com.filespace.ui.fragments.community.CommunityFragment;
 import mercandalli.com.filespace.ui.fragments.file.FileFragment;
-import mercandalli.com.filespace.utils.RetrofitUtils;
 
 /**
  * Main {@link Activity} launched by the xml.
@@ -51,8 +53,36 @@ public class MainActivity extends ApplicationDrawerActivity implements SetToolba
         MyApp.get(this).getAppComponent().inject(this);
 
         //TEST
-        RetrofitUtils.getAuthorizedRestAdapter(this).create(FileApiService.class);
+        //RestAdapter adapter = RetrofitUtils.getAuthorizedRestAdapter(this).create(FileApiService.class);
 
+
+        mFileManager.getFiles(-1, true, "", new ResultCallback<List<FileModel>>() {
+            @Override
+            public void success(List<FileModel> result) {
+                for (FileModel fileModel : result) {
+                    Log.d("MainActivity", "" + fileModel);
+                }
+            }
+
+            @Override
+            public void failure() {
+
+            }
+        });
+
+        /*
+        mFileManager.getFileById(565, new ResultCallback<FileModel>() {
+            @Override
+            public void success(FileModel result) {
+                Log.d("MainActivity", "" + result);
+            }
+
+            @Override
+            public void failure() {
+
+            }
+        });
+        */
 
 
         // Notif

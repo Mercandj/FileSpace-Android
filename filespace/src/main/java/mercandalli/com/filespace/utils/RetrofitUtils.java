@@ -1,7 +1,5 @@
 package mercandalli.com.filespace.utils;
 
-import android.content.Context;
-
 import com.squareup.okhttp.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
@@ -28,7 +26,7 @@ public class RetrofitUtils {
     private static RestAdapter.Builder getBaseRestAdapter() {
         RestAdapter.Builder builder = new RestAdapter.Builder();
         builder.setClient(new OkClient(getOkHttpClient()))
-                .setEndpoint(Constants.URL_SERVER_API);
+                .setEndpoint(Constants.URL_API);
 
         if (BuildConfig.DEBUG) {
             builder.setLogLevel(RestAdapter.LogLevel.FULL);
@@ -40,7 +38,7 @@ public class RetrofitUtils {
         return getBaseRestAdapter().build();
     }
 
-    public static RestAdapter getAuthorizedRestAdapter(Context context) {
+    public static RestAdapter getAuthorizedRestAdapter() {
         RestAdapter.Builder builder = getBaseRestAdapter()
                 .setRequestInterceptor(new RequestInterceptor() {
                     @Override
