@@ -27,17 +27,28 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.listeners.IPostExecuteListener;
 import mercandalli.com.filespace.ui.activities.ApplicationCallback;
+import mercandalli.com.filespace.utils.NetUtils;
 import mercandalli.com.filespace.utils.StringPair;
+import mercandalli.com.filespace.utils.StringUtils;
 
 /**
  * Global behavior : http Post
@@ -96,55 +107,137 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... urls) {
-        //try {
 
-            // http://stackoverflow.com/questions/9767952/how-to-add-parameters-to-httpurlconnection-using-post
 
-            //HttpPost httppost = new HttpPost(url);
 
-            //MultipartEntity mpEntity = new MultipartEntity();
-            //if (this.file != null) mpEntity.addPart("file", new FileBody(file, "*/*"));
-/*
-            String log_parameters = "";
-            if (this.parameters != null)
-                for (StringPair b : parameters) {
-                    mpEntity.addPart(b.getName(), new StringBody(b.getValue(), Charset.forName("UTF-8")));
-                    log_parameters += b.getName() + ":" + b.getValue() + " ";
-                }
-            Log.d("TaskPost", "url = " + url + " " + log_parameters);
 
-            httppost.setEntity(mpEntity);*/
-/*
-            StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
-            String result = Base64.encodeBytes(authentication.toString().getBytes());
-            httppost.setHeader("Authorization", "Basic " + result);
+        try {
+            if (this.parameters != null) {
+                if (!StringUtils.isNullOrEmpty(Config.getUserRegId()))
+                    parameters.add(new StringPair("android_id", "" + Config.getUserRegId()));
+                url = NetUtils.addUrlParameters(url, parameters);
+            }
 
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpResponse response = httpclient.execute(httppost);
+            Log.d("TaskGet", "url = " + url);
 
-            // receive response as inputStream
-            InputStream inputStream = response.getEntity().getContent();
+            URL tmp_url = new URL(url);
+            HttpURLConnection conn = (HttpURLConnection) tmp_url.openConnection();
+            conn.setReadTimeout(10000);
+            conn.setConnectTimeout(15000);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Authorization", "Basic " + Config.getUserToken());
+            conn.setUseCaches(false);
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
 
-            String resultString = null;
+            if (this.parameters != null) {
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                writer.write(getQuery(parameters));
+                writer.flush();
+                writer.close();
+                os.close();
+            }
+
+
+
+            conn.connect(); // Starts the query
+            int responseCode = conn.getResponseCode();
+            InputStream inputStream = new BufferedInputStream(conn.getInputStream());
 
             // convert inputstream to string
-            if (inputStream != null)
-                resultString = convertInputStreamToString(inputStream);
+            String resultString = convertInputStreamToString(inputStream);
 
-            int responseCode = response.getStatusLine().getStatusCode();
+            //int responseCode = response.getStatusLine().getStatusCode();
             if (responseCode >= 300)
                 resultString = "Status Code " + responseCode + ". " + resultString;
+
+            conn.disconnect();
+
             return resultString;
-
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
         return null;
+
+
+
+
+
+
+
+
+
+//        try {
+//
+//            // http://stackoverflow.com/questions/9767952/how-to-add-parameters-to-httpurlconnection-using-post
+//
+//            HttpPost httppost = new HttpPost(url);
+//
+//            MultipartEntity mpEntity = new MultipartEntity();
+//            if (this.file != null) mpEntity.addPart("file", new FileBody(file, "*/*"));
+//
+//            String log_parameters = "";
+//            if (this.parameters != null)
+//                for (StringPair b : parameters) {
+//                    mpEntity.addPart(b.getName(), new StringBody(b.getValue(), Charset.forName("UTF-8")));
+//                    log_parameters += b.getName() + ":" + b.getValue() + " ";
+//                }
+//            Log.d("TaskPost", "url = " + url + " " + log_parameters);
+//
+//            httppost.setEntity(mpEntity);
+//
+//            StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
+//            String result = Base64.encodeBytes(authentication.toString().getBytes());
+//            httppost.setHeader("Authorization", "Basic " + result);
+//
+//            HttpClient httpclient = new DefaultHttpClient();
+//            HttpResponse response = httpclient.execute(httppost);
+//
+//            // receive response as inputStream
+//            InputStream inputStream = response.getEntity().getContent();
+//
+//            String resultString = null;
+//
+//            // convert inputstream to string
+//            if (inputStream != null)
+//                resultString = convertInputStreamToString(inputStream);
+//
+//            int responseCode = response.getStatusLine().getStatusCode();
+//            if (responseCode >= 300)
+//                resultString = "Status Code " + responseCode + ". " + resultString;
+//            return resultString;
+//
+//
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        } catch (ClientProtocolException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+    }
+
+    private String getQuery(List<StringPair> params) throws UnsupportedEncodingException
+    {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+
+        for (StringPair pair : params)
+        {
+            if (first)
+                first = false;
+            else
+                result.append("&");
+
+            result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
+            result.append("=");
+            result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
+        }
+
+        return result.toString();
     }
 
     /**

@@ -19,7 +19,6 @@
  */
 package mercandalli.com.filespace.ui.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -44,7 +43,6 @@ import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.extras.ia.action.ENUM_Action;
 import mercandalli.com.filespace.listeners.SetToolbarCallback;
 import mercandalli.com.filespace.models.ModelSetting;
-import mercandalli.com.filespace.ui.activities.ApplicationCallback;
 import mercandalli.com.filespace.ui.activities.RegisterLoginActivity;
 import mercandalli.com.filespace.ui.adapters.AdapterModelSetting;
 import mercandalli.com.filespace.ui.dialogs.DialogAuthorLabel;
@@ -61,14 +59,12 @@ public class SettingsFragment extends BackFragment {
     private List<ModelSetting> list;
     private int click_version;
     private boolean isDevelopper = false;
-    private Activity mActivity;
-    private ApplicationCallback mApplicationCallback;
     private SetToolbarCallback mSetToolbarCallback;
     private String mTitle;
     private Toolbar mToolbar;
 
-    public static HomeFragment newInstance(String title) {
-        final HomeFragment fragment = new HomeFragment();
+    public static SettingsFragment newInstance(String title) {
+        final SettingsFragment fragment = new SettingsFragment();
         final Bundle args = new Bundle();
         args.putString(BUNDLE_ARG_TITLE, title);
         fragment.setArguments(args);
@@ -106,7 +102,7 @@ public class SettingsFragment extends BackFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_home_toolbar);
+        mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_settings_toolbar);
         mToolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(mToolbar);
         setStatusBarColor(mActivity, R.color.notifications_bar);

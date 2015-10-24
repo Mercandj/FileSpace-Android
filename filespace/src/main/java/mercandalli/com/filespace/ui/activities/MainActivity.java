@@ -32,7 +32,7 @@ import mercandalli.com.filespace.config.MyApp;
 import mercandalli.com.filespace.listeners.ResultCallback;
 import mercandalli.com.filespace.listeners.SetToolbarCallback;
 import mercandalli.com.filespace.manager.file.FileManager;
-import mercandalli.com.filespace.models.gson.FileModel;
+import mercandalli.com.filespace.models.better.FileModel;
 import mercandalli.com.filespace.notificationpush.NotificationPush;
 import mercandalli.com.filespace.ui.fragments.community.CommunityFragment;
 import mercandalli.com.filespace.ui.fragments.file.FileFragment;
@@ -56,19 +56,21 @@ public class MainActivity extends ApplicationDrawerActivity implements SetToolba
         //RestAdapter adapter = RetrofitUtils.getAuthorizedRestAdapter(this).create(FileApiService.class);
 
 
-        mFileManager.getFiles(-1, true, "", new ResultCallback<List<FileModel>>() {
-            @Override
-            public void success(List<FileModel> result) {
-                for (FileModel fileModel : result) {
-                    Log.d("MainActivity", "" + fileModel);
+        if (isLogged()) {
+            mFileManager.getFiles(-1, true, "", new ResultCallback<List<FileModel>>() {
+                @Override
+                public void success(List<FileModel> result) {
+                    for (FileModel fileModel : result) {
+                        Log.d("MainActivity", "" + fileModel);
+                    }
                 }
-            }
 
-            @Override
-            public void failure() {
+                @Override
+                public void failure() {
 
-            }
-        });
+                }
+            });
+        }
 
         /*
         mFileManager.getFileById(565, new ResultCallback<FileModel>() {

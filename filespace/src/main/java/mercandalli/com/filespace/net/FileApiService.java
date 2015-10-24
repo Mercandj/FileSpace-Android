@@ -4,6 +4,7 @@ import java.util.List;
 
 import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.net.response.GetFileResponse;
+import mercandalli.com.filespace.net.response.GetFilesResponse;
 import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -23,5 +24,5 @@ public interface FileApiService {
             @Query("id_file_parent") int fileParentId,
             @Query("mine") boolean mine,
             @Query("search") String search,
-            Callback<List<GetFileResponse>> result);
+            Callback<GetFilesResponse> result);
 }

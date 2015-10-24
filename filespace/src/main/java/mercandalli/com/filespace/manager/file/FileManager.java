@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.listeners.ResultCallback;
-import mercandalli.com.filespace.models.gson.FileModel;
+import mercandalli.com.filespace.models.better.FileModel;
 import mercandalli.com.filespace.net.FileApiService;
 import mercandalli.com.filespace.net.response.GetFileResponse;
+import mercandalli.com.filespace.net.response.GetFilesResponse;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -48,11 +49,11 @@ public class FileManager {
     }
 
     public void getFiles(final int fileParentId, final boolean mine, final String search, final ResultCallback<List<FileModel>> result) {
-        mFileApiService.getFiles(fileParentId, mine, search, new Callback<List<GetFileResponse>>() {
+        mFileApiService.getFiles(fileParentId, mine, search, new Callback<GetFilesResponse>() {
             @Override
-            public void success(List<GetFileResponse> getFileResponses, Response response) {
+            public void success(GetFilesResponse getFilesResponse, Response response) {
                 List<FileModel> fileModelList = new ArrayList<>();
-                for (GetFileResponse getFileResponse : getFileResponses) {
+                for (GetFileResponse getFileResponse : getFilesResponse.getFiles()) {
                     fileModelList.add(new FileModel.FileModelBuilder()
                             .id(getFileResponse.getId())
                             .name(getFileResponse.getName())

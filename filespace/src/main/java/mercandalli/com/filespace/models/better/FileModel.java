@@ -1,4 +1,4 @@
-package mercandalli.com.filespace.models.gson;
+package mercandalli.com.filespace.models.better;
 
 /**
  * Created by Jonathan on 24/10/2015.
@@ -34,15 +34,16 @@ public class FileModel {
         public FileModel build() {
             FileModel fileModel = new FileModel();
             fileModel.setId(id);
-            return new FileModel();
+            fileModel.setName(name);
+            fileModel.setUrl(url);
+            return fileModel;
         }
 
     }
 
     @Override
     public String toString() {
-        String toString = super.toString();
-        toString += "FileModel[" + mId + "] ";
+        String toString = "FileModel[" + mId + "] ";
         toString += mName;
         return toString;
     }
