@@ -123,7 +123,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                 new NavDrawerItem(getString(R.string.tab_workspace), new IListener() {
                     @Override
                     public void execute() {
-                        mBackFragment = new WorkspaceFragment();
+                        mBackFragment = WorkspaceFragment.newInstance(getString(R.string.tab_workspace));
                         getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, mBackFragment).commit();
                     }
                 }, R.drawable.q_ic_drawer_workspace, R.drawable.q_ic_drawer_workspace_pressed, Constants.TAB_VIEW_TYPE_NORMAL)

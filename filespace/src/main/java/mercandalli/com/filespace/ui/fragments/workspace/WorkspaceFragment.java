@@ -58,8 +58,8 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     private Toolbar mToolbar;
     private SetToolbarCallback mSetToolbarCallback;
 
-    public static FileFragment newInstance(String title) {
-        final FileFragment fragment = new FileFragment();
+    public static WorkspaceFragment newInstance(String title) {
+        final WorkspaceFragment fragment = new WorkspaceFragment();
         final Bundle args = new Bundle();
         args.putString(BUNDLE_ARG_TITLE, title);
         fragment.setArguments(args);
