@@ -44,7 +44,10 @@ public class GetFileResponse {
     @SerializedName("date_creation")
     private String mDateCreation;
 
-    public FileModel createFileModel() {
+    @SerializedName("is_apk_update")
+    private int mIsApkUpdate;
+
+    public FileModel createModel() {
 
         Date dateCreation = null;
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -66,6 +69,7 @@ public class GetFileResponse {
                 .type(new FileTypeModel(mType))
                 .isDirectory(mDirectory == 1)
                 .dateCreation(dateCreation)
+                .isApkUpdate(mIsApkUpdate == 1)
                 .build();
     }
 }

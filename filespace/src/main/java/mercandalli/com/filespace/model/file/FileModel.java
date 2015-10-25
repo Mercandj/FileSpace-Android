@@ -3,6 +3,8 @@ package mercandalli.com.filespace.model.file;
 import java.io.File;
 import java.util.Date;
 
+import mercandalli.com.filespace.config.Config;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.util.FileUtils;
 
 /**
@@ -21,6 +23,7 @@ public class FileModel {
     private FileTypeModel mType;
     private boolean mIsDirectory;
     private Date mDateCreation;
+    private boolean mIsApkUpdate;
 
     // Local attrs
     private File mFile;
@@ -40,6 +43,7 @@ public class FileModel {
         private FileTypeModel type;
         private boolean isDirectory;
         private Date dateCreation;
+        private boolean isApkUpdate;
 
         // Local attrs
         private File file;
@@ -96,6 +100,11 @@ public class FileModel {
             return this;
         }
 
+        public FileModelBuilder isApkUpdate(boolean isApkUpdate) {
+            this.isApkUpdate = isApkUpdate;
+            return this;
+        }
+
         public FileModelBuilder file(File file) {
             if (file != null && file.exists()) {
                 id = file.hashCode();
@@ -136,6 +145,7 @@ public class FileModel {
             fileModel.setType(type);
             fileModel.setIsDirectory(isDirectory);
             fileModel.setDateCreation(dateCreation);
+            fileModel.setIsApkUpdate(isApkUpdate);
             fileModel.setFile(file);
             fileModel.setLastModified(lastModified);
             fileModel.setCount(count);
@@ -173,6 +183,10 @@ public class FileModel {
 
     public String getFullName() {
         return mName + (mIsDirectory ? "" : ("." + mType));
+    }
+
+    public String getOnlineUrl() {
+        return Constants.URL_API + "/" + Config.routeFile + "/" + getId();
     }
 
     /*
@@ -257,6 +271,14 @@ public class FileModel {
 
     public void setDateCreation(Date mDateCreation) {
         this.mDateCreation = mDateCreation;
+    }
+
+    public boolean isApkUpdate() {
+        return mIsApkUpdate;
+    }
+
+    public void setIsApkUpdate(boolean mIsApkUpdate) {
+        this.mIsApkUpdate = mIsApkUpdate;
     }
 
     public File getFile() {

@@ -1,22 +1,17 @@
 package mercandalli.com.filespace.net.response;
 
-import com.google.gson.annotations.SerializedName;
+import android.content.Context;
 
 import java.util.List;
 
 /**
  * Created by Jonathan on 24/10/2015.
  */
-public class GetFilesResponse {
+public class GetFilesResponse extends MyResponse<GetFileResponse> {
 
-    @SerializedName("result")
-    private List<GetFileResponse> mFiles;
-
-    @SerializedName("toast")
-    private String mToast;
-
-    public List<GetFileResponse> getFiles() {
-        return mFiles;
+    @Override
+    public List<GetFileResponse> getResult(final Context context) {
+        return super.getResult(context);
     }
 
     public String getToast() {

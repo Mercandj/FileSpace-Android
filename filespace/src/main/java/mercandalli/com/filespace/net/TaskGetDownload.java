@@ -26,11 +26,6 @@ import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import mercandalli.com.filespace.listener.IListener;
-import mercandalli.com.filespace.model.ModelFile;
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
-import mercandalli.com.filespace.util.FileUtils;
-
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +34,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Config;
+import mercandalli.com.filespace.listener.IListener;
+import mercandalli.com.filespace.model.ModelFile;
+import mercandalli.com.filespace.model.file.FileModel;
+import mercandalli.com.filespace.util.FileUtils;
 
 /**
  * Global behavior : DDL file
@@ -50,20 +50,30 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
     String url;
     String url_ouput;
     IListener listener;
-    ApplicationCallback app;
-    ModelFile modelFile;
     Activity mActivity;
+
+    long mFileSize;
+    String mFileTypeTitle;
 
     int id = 1;
     NotificationManager mNotifyManager;
     NotificationCompat.Builder mBuilder;
 
-    public TaskGetDownload(Activity activity, ApplicationCallback app, String url, String url_ouput, ModelFile modelFile, IListener listener) {
+    public TaskGetDownload(Activity activity, String url, String url_ouput, ModelFile modelFile, IListener listener) {
         mActivity = activity;
-        this.app = app;
         this.url = url;
         this.url_ouput = url_ouput;
-        this.modelFile = modelFile;
+        this.mFileSize = modelFile.size;
+        this.mFileTypeTitle = modelFile.type.getTitle();
+        this.listener = listener;
+    }
+
+    public TaskGetDownload(Activity activity, String url, String url_ouput, FileModel fileModel, IListener listener) {
+        mActivity = activity;
+        this.url = url;
+        this.url_ouput = url_ouput;
+        this.mFileSize = fileModel.getSize();
+        this.mFileTypeTitle = fileModel.getType().getTitle();
         this.listener = listener;
     }
 
@@ -72,8 +82,8 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
         super.onPreExecute();
         mNotifyManager = (NotificationManager) this.mActivity.getSystemService(Context.NOTIFICATION_SERVICE);
         mBuilder = new NotificationCompat.Builder(this.mActivity);
-        mBuilder.setContentTitle(this.modelFile.type.getTitle() + " Download")
-                .setContentText("Download in progress : 0 / " + FileUtils.humanReadableByteCount(this.modelFile.size) + " : 0%")
+        mBuilder.setContentTitle(mFileTypeTitle + " Download")
+                .setContentText("Download in progress : 0 / " + FileUtils.humanReadableByteCount(mFileSize) + " : 0%")
                 .setSmallIcon(R.drawable.ic_notification);
     }
 
@@ -98,11 +108,8 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
 
     public void file_from_url_Authorization(String url) {
         try {
-            StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
-            String result = Base64.encodeBytes(authentication.toString().getBytes());
-
             HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
-            conn.setRequestProperty("Authorization", "Basic " + result);
+            conn.setRequestProperty("Authorization", "Basic " + Config.getUserToken());
             conn.setRequestMethod("GET");
 
             InputStream inputStream = conn.getInputStream();
@@ -155,7 +162,7 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
         mBuilder.setProgress(100, (int) incr, false);
         mBuilder.setContentText("Download in progress " + incr + "%");
         if (values.length > 1)
-            mBuilder.setContentText("Download in progress : " + FileUtils.humanReadableByteCount(values[1]) + " / " + FileUtils.humanReadableByteCount(this.modelFile.size) + " : " + incr + "%");
+            mBuilder.setContentText("Download in progress : " + FileUtils.humanReadableByteCount(values[1]) + " / " + FileUtils.humanReadableByteCount(mFileSize) + " : " + incr + "%");
 
         mNotifyManager.notify(id, mBuilder.build());
     }

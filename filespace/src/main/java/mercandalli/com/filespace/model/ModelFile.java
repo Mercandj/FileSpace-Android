@@ -220,7 +220,7 @@ public class ModelFile extends Model implements Parcelable {
 
     public void executeOnline(ArrayList<ModelFile> files, View view) {
         if (this.type.equals(ModelFileTypeENUM.TEXT.type)) {
-            FileTextActivity.startForSelection(mActivity, this, true);
+            FileTextActivity.start(mActivity, this, true);
         } else if (this.type.equals(ModelFileTypeENUM.PICTURE.type)) {
             Intent intent = new Intent(mActivity, FilePictureActivity.class);
             intent.putExtra("ID", this.id);
@@ -273,7 +273,7 @@ public class ModelFile extends Model implements Parcelable {
                     mActivity.startActivity(intent);
                     mActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                 } else if (!StringUtils.isNullOrEmpty(content.article.article_content_1)) {
-                    FileTextActivity.startForSelection(mActivity, this, true);
+                    FileTextActivity.start(mActivity, this, true);
                 }
             }
         }
@@ -396,7 +396,7 @@ public class ModelFile extends Model implements Parcelable {
         }
         String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + id;
         String url_ouput = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + app.getConfig().getLocalFolderName() + File.separator + this.getNameExt();
-        new TaskGetDownload(mActivity, this.app, url, url_ouput, this, listener).execute();
+        new TaskGetDownload(mActivity, url, url_ouput, this, listener).execute();
     }
 
     public boolean isOnline() {

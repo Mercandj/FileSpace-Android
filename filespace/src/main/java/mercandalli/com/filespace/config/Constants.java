@@ -21,7 +21,6 @@ package mercandalli.com.filespace.config;
 
 public class Constants {
 
-    public static final String URL_SERVER_API = "http://mercandalli.com/FileSpace-API/";
     public static final String URL_API = "http://mercandalli.com/FileSpace-API";
 
     public static final int TAB_VIEW_TYPE_NORMAL = 0;

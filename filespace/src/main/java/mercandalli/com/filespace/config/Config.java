@@ -57,7 +57,7 @@ public class Config {
     public String currentToken = null;
 
     // Local routes
-    private static final String localFolderNameDefault = "FileSpace";
+    public static final String localFolderNameDefault = "FileSpace";
     private static final String fileName = "settings_json_1.txt";
 
     // Server routes

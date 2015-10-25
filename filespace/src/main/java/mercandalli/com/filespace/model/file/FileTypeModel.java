@@ -1,7 +1,5 @@
 package mercandalli.com.filespace.model.file;
 
-import mercandalli.com.filespace.model.ModelFileType;
-
 /**
  * Created by Jonathan on 24/10/2015.
  */
@@ -39,9 +37,9 @@ public class FileTypeModel {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ModelFileType))
+        if (!(o instanceof FileTypeModel))
             return false;
-        String[] objExtensions = ((ModelFileType) o).getExtensions();
+        String[] objExtensions = ((FileTypeModel) o).getExtensions();
         if (this.mExtensions == null || objExtensions == null)
             return false;
         for (String myExt : this.mExtensions)

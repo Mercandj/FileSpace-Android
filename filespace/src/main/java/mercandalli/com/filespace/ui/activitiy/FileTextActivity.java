@@ -35,6 +35,7 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelFile;
 import mercandalli.com.filespace.model.ModelFileTypeENUM;
+import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.net.TaskGet;
 
 /**
@@ -55,12 +56,25 @@ public class FileTextActivity extends ApplicationActivity implements IPostExecut
     private EditText mEditText;
     private ProgressBar mProgressBar;
 
-    public static void startForSelection(Activity activity, final ModelFile modelFile, boolean isOnline) {
+    public static void start(Activity activity, final ModelFile modelFile, boolean isOnline) {
         final Intent intent = new Intent(activity, FileTextActivity.class);
         intent.putExtra(EXTRA_MODEL_FILE_URL, "" + modelFile.onlineUrl);
         if (modelFile.type.equals(ModelFileTypeENUM.FILESPACE.type)) {
             intent.putExtra(EXTRA_MODEL_FILE_ARTICLE_CONTENT_1, "" + modelFile.content.article.article_content_1);
         }
+        intent.putExtra(EXTRA_MODEL_FILE_ONLINE, isOnline);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+    }
+
+    public static void start(Activity activity, final FileModel fileModel, boolean isOnline) {
+        final Intent intent = new Intent(activity, FileTextActivity.class);
+        intent.putExtra(EXTRA_MODEL_FILE_URL, "" + fileModel.getOnlineUrl());
+        /*
+        if (fileModel.getType().equals(ModelFileTypeENUM.FILESPACE.type)) {
+            intent.putExtra(EXTRA_MODEL_FILE_ARTICLE_CONTENT_1, "" + modelFile.content.article.article_content_1);
+        }
+        */
         intent.putExtra(EXTRA_MODEL_FILE_ONLINE, isOnline);
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
