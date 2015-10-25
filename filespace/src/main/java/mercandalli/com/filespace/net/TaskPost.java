@@ -109,8 +109,6 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... urls) {
 
 
-
-
         try {
             if (this.parameters != null) {
                 if (!StringUtils.isNullOrEmpty(Config.getUserRegId()))
@@ -141,7 +139,6 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
             }
 
 
-
             conn.connect(); // Starts the query
             int responseCode = conn.getResponseCode();
             InputStream inputStream = new BufferedInputStream(conn.getInputStream());
@@ -160,13 +157,6 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
             e.printStackTrace();
         }
         return null;
-
-
-
-
-
-
-
 
 
 //        try {
@@ -220,13 +210,11 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
 //        return null;
     }
 
-    private String getQuery(List<StringPair> params) throws UnsupportedEncodingException
-    {
+    private String getQuery(List<StringPair> params) throws UnsupportedEncodingException {
         StringBuilder result = new StringBuilder();
         boolean first = true;
 
-        for (StringPair pair : params)
-        {
+        for (StringPair pair : params) {
             if (first)
                 first = false;
             else

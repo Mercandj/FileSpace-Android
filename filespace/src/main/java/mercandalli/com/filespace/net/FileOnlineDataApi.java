@@ -3,6 +3,7 @@ package mercandalli.com.filespace.net;
 import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.net.response.GetFilesResponse;
 import retrofit.Callback;
+import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.Multipart;
 import retrofit.http.POST;
@@ -43,15 +44,18 @@ public interface FileOnlineDataApi {
     @POST("/" + Config.routeFileDelete + "/{id}")
     void delete(
             @Path("id") int fileId,
+            @Body String body,
             Callback<GetFilesResponse> result);
 
-    @POST("/" + Config.routeFileDelete + "/{id}")
+    @Multipart
+    @POST("/" + Config.routeFile + "/{id}")
     void setParent(
             @Path("id") int fileId,
             @Part("id_file_parent") TypedString idFileParent,
             Callback<GetFilesResponse> result);
 
-    @POST("/" + Config.routeFileDelete + "/{id}")
+    @Multipart
+    @POST("/" + Config.routeFile + "/{id}")
     void setPublic(
             @Path("id") int fileId,
             @Part("public") TypedString isPublic,

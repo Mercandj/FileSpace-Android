@@ -189,12 +189,12 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                                         break;
 
                                     case 5:
-                                        mFileManager.setPublic(fileModel,  !fileModel.isPublic(), new IListener() {
-                                        @Override
-                                        public void execute() {
-                                            mApplicationCallback.refreshAdapters();
-                                        }
-                                    });
+                                        mFileManager.setPublic(fileModel, !fileModel.isPublic(), new IListener() {
+                                            @Override
+                                            public void execute() {
+                                                mApplicationCallback.refreshAdapters();
+                                            }
+                                        });
                                         break;
 
                                     case 6:
@@ -259,8 +259,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                 if (mFilesList.get(position).isDirectory()) {
                     FileMyCloudFragment.this.mIdFileDirectoryStack.add(mFilesList.get(position).getId());
                     refreshList();
-                }
-                else {
+                } else {
                     mFileManager.executeOnline(mActivity, mFilesList.get(position), mFilesList, view);
                 }
             }

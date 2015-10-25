@@ -106,7 +106,7 @@ public class FileManager {
 
     public void delete(final FileModel fileModel, final IListener listener) {
         if (fileModel.isOnline()) {
-            mFileOnlineDataApi.delete(fileModel.getId(), new Callback<GetFilesResponse>() {
+            mFileOnlineDataApi.delete(fileModel.getId(), "", new Callback<GetFilesResponse>() {
                 @Override
                 public void success(GetFilesResponse getFilesResponse, Response response) {
                     getFilesResponse.getResult(mContext);
