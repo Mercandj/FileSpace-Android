@@ -41,7 +41,7 @@ public class FileSpaceModel {
     public FileSpaceTypeENUM mType;
     public Date mDateCreation;
 
-    public Timer timer = new Timer();
+    public Timer mTimer = new Timer();
     public Article article = new Article();
 
     public FileSpaceModel() {
@@ -53,12 +53,12 @@ public class FileSpaceModel {
     }
 
     public String getAdapterTitle() {
-        if (this.timer.timer_date != null) {
+        if (this.mTimer.timer_date != null) {
             SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
             SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {
-                return TimeUtils.printDifferenceFuture(this.timer.timer_date, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
+                return TimeUtils.printDifferenceFuture(this.mTimer.timer_date, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -72,12 +72,12 @@ public class FileSpaceModel {
 
     @Override
     public String toString() {
-        if (this.timer.timer_date != null) {
+        if (this.mTimer.timer_date != null) {
             SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
             SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {
-                return TimeUtils.printDifferenceFuture(this.timer.timer_date, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
+                return TimeUtils.printDifferenceFuture(this.mTimer.timer_date, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -93,7 +93,7 @@ public class FileSpaceModel {
         SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
         long diff = 0;
         try {
-            diff = this.timer.timer_date.getTime() - dateFormatLocal.parse(dateFormatGmt.format(new Date())).getTime();
+            diff = this.mTimer.timer_date.getTime() - dateFormatLocal.parse(dateFormatGmt.format(new Date())).getTime();
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -109,7 +109,7 @@ public class FileSpaceModel {
             json.put("date_creation", dateFormatGmt.format(mDateCreation));
             switch (mType) {
                 case TIMER:
-                    json.put("timer_date", "" + dateFormatGmt.format(this.timer.timer_date));
+                    json.put("timer_date", "" + dateFormatGmt.format(this.mTimer.timer_date));
                     break;
                 case ARTICLE:
                     json.put("article_content_1", "" + this.article.article_content_1);
@@ -123,11 +123,11 @@ public class FileSpaceModel {
         return json;
     }
 
-
     public enum FileSpaceTypeENUM {
         UNKNOWN("unknown"),
         TIMER("timer"),
         ARTICLE("article");
+
         private String type;
 
         FileSpaceTypeENUM(String type) {
@@ -150,13 +150,13 @@ public class FileSpaceModel {
     public class Timer {
         public Date timer_date;
     }
-
     public class Article {
         public String article_title_1, article_content_1;
     }
 
     public static class FileSpaceModelBuilder {
-        private Date dateCreation;
+
+        private Date dateCreation, timerDate;
         private FileSpaceTypeENUM type;
         private String articleTitle1, articleContent1;
 
@@ -167,6 +167,11 @@ public class FileSpaceModel {
 
         public FileSpaceModelBuilder type(final String type) {
             this.type = create(type);
+            return this;
+        }
+
+        public FileSpaceModelBuilder timerDate(Date timerDate) {
+            this.timerDate = timerDate;
             return this;
         }
 
@@ -183,11 +188,14 @@ public class FileSpaceModel {
         public FileSpaceModel build() {
             FileSpaceModel fileSpaceModel = new FileSpaceModel();
             fileSpaceModel.setDateCreation(dateCreation);
+            fileSpaceModel.setTimerDate(timerDate);
+            fileSpaceModel.setArticleTitle1(articleTitle1);
+            fileSpaceModel.setArticleContent1(articleContent1);
             fileSpaceModel.setType(type);
             return fileSpaceModel;
         }
-    }
 
+    }
     public FileSpaceTypeENUM getType() {
         return mType;
     }
@@ -202,5 +210,18 @@ public class FileSpaceModel {
 
     public void setDateCreation(Date mDateCreation) {
         this.mDateCreation = mDateCreation;
+    }
+
+
+    public void setTimerDate(Date timerDate) {
+        this.mTimer.timer_date = timerDate;
+    }
+
+    public void setArticleTitle1(String article_title_1) {
+        this.article.article_title_1 = article_title_1;
+    }
+
+    public void setArticleContent1(String article_content_1) {
+        this.article.article_content_1 = article_content_1;
     }
 }

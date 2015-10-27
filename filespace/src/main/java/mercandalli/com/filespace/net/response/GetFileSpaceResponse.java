@@ -17,8 +17,11 @@ public class GetFileSpaceResponse {
     @SerializedName("type")
     private String mType;
 
-    @SerializedName("article_title_1")
+    @SerializedName("date_creation")
     private String mDateCreation;
+
+    @SerializedName("timer_date")
+    private String mTimerDate;
 
     @SerializedName("article_title_1")
     private String mArticleTitle1;
@@ -29,10 +32,16 @@ public class GetFileSpaceResponse {
     public FileSpaceModel createModel() {
 
         Date dateCreation = null;
+        Date timerDate = null;
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
         try {
-            dateCreation = dateFormatGmt.parse(mDateCreation);
+            if (mDateCreation != null) {
+                dateCreation = dateFormatGmt.parse(mDateCreation);
+            }
+            if (mTimerDate != null) {
+                timerDate = dateFormatGmt.parse(mTimerDate);
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -40,6 +49,7 @@ public class GetFileSpaceResponse {
         return new FileSpaceModel.FileSpaceModelBuilder()
                 .type(mType)
                 .dateCreation(dateCreation)
+                .timerDate(timerDate)
                 .articleTitle1(mArticleTitle1)
                 .articleContent1(mArticleContent1)
                 .build();
