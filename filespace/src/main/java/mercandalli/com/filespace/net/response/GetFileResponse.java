@@ -1,5 +1,6 @@
 package mercandalli.com.filespace.net.response;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.text.ParseException;
@@ -8,7 +9,9 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import mercandalli.com.filespace.model.file.FileModel;
+import mercandalli.com.filespace.model.file.FileSpaceModel;
 import mercandalli.com.filespace.model.file.FileTypeModel;
+import mercandalli.com.filespace.util.StringUtils;
 
 /**
  * Created by Jonathan on 23/10/2015.
@@ -47,6 +50,9 @@ public class GetFileResponse {
     @SerializedName("is_apk_update")
     private int mIsApkUpdate;
 
+    @SerializedName("content")
+    private String mContent;
+
     public FileModel createModel() {
 
         Date dateCreation = null;
@@ -56,6 +62,15 @@ public class GetFileResponse {
             dateCreation = dateFormatGmt.parse(mDateCreation);
         } catch (ParseException e) {
             e.printStackTrace();
+        }
+
+        FileSpaceModel content = null;
+        if (!StringUtils.isNullOrEmpty(mContent)) {
+            Gson gson = new Gson();
+            GetFileSpaceResponse contentResponse = gson.fromJson(mContent, GetFileSpaceResponse.class);
+            if (contentResponse != null) {
+                content = contentResponse.createModel();
+            }
         }
 
         return new FileModel.FileModelBuilder()
@@ -70,6 +85,7 @@ public class GetFileResponse {
                 .isDirectory(mDirectory == 1)
                 .dateCreation(dateCreation)
                 .isApkUpdate(mIsApkUpdate == 1)
+                .content(content)
                 .build();
     }
 }

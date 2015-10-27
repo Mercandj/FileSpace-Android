@@ -16,7 +16,7 @@ import retrofit.mime.TypedString;
 /**
  * Created by Jonathan on 23/10/2015.
  */
-public interface FileOnlineDataApi {
+public interface FileOnlineApi {
 
     @GET("/" + Config.routeFile)
     void getFiles(

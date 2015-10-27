@@ -1,11 +1,11 @@
-package mercandalli.com.filespace.persistence;
+package mercandalli.com.filespace.local;
 
 import android.content.Context;
 
 /**
  * Created by Jonathan on 24/10/2015.
  */
-public interface LocalDataApi<T> {
+public interface PersistenceApi<T> {
     T get(Context context, int id);
     void add(Context context, T entity);
     T update(Context context, T entity);

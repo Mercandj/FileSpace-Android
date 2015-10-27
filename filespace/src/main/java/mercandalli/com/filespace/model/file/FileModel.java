@@ -24,6 +24,7 @@ public class FileModel {
     private boolean mIsDirectory;
     private Date mDateCreation;
     private boolean mIsApkUpdate;
+    private FileSpaceModel mContent;
 
     // Local attrs
     private File mFile;
@@ -44,6 +45,7 @@ public class FileModel {
         private boolean isDirectory;
         private Date dateCreation;
         private boolean isApkUpdate;
+        private FileSpaceModel content;
 
         // Local attrs
         private File file;
@@ -105,6 +107,11 @@ public class FileModel {
             return this;
         }
 
+        public FileModelBuilder content(FileSpaceModel content) {
+            this.content = content;
+            return this;
+        }
+
         public FileModelBuilder file(File file) {
             if (file != null && file.exists()) {
                 id = file.hashCode();
@@ -146,6 +153,7 @@ public class FileModel {
             fileModel.setIsDirectory(isDirectory);
             fileModel.setDateCreation(dateCreation);
             fileModel.setIsApkUpdate(isApkUpdate);
+            fileModel.setContent(content);
             fileModel.setFile(file);
             fileModel.setLastModified(lastModified);
             fileModel.setCount(count);
@@ -279,6 +287,14 @@ public class FileModel {
 
     public void setIsApkUpdate(boolean mIsApkUpdate) {
         this.mIsApkUpdate = mIsApkUpdate;
+    }
+
+    public FileSpaceModel getContent() {
+        return mContent;
+    }
+
+    public void setContent(FileSpaceModel mContent) {
+        this.mContent = mContent;
     }
 
     public File getFile() {

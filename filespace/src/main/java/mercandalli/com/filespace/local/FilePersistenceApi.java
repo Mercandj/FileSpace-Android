@@ -1,14 +1,14 @@
-package mercandalli.com.filespace.persistence.file;
+package mercandalli.com.filespace.local;
 
 import android.content.Context;
 
 import mercandalli.com.filespace.model.file.FileModel;
-import mercandalli.com.filespace.persistence.LocalDataApi;
 
 /**
  * Created by Jonathan on 24/10/2015.
  */
-public class FileLocalDataApi implements LocalDataApi<FileModel> {
+public class FilePersistenceApi implements PersistenceApi<FileModel> {
+
     @Override
     public FileModel get(Context context, int id) {
         return null;

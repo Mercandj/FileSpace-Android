@@ -4,6 +4,7 @@ import com.squareup.okhttp.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
 
+import mercandalli.com.filespace.BuildConfig;
 import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.config.Constants;
 import retrofit.RequestInterceptor;
@@ -32,6 +33,7 @@ public class RetrofitUtils {
             builder.setLogLevel(RestAdapter.LogLevel.FULL);
         }
         */
+
         return builder;
     }
 

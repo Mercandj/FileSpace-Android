@@ -17,13 +17,15 @@ import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.ResultCallback;
 import mercandalli.com.filespace.model.file.FileModel;
+import mercandalli.com.filespace.model.file.FileParentModel;
 import mercandalli.com.filespace.model.file.FileTypeModel;
 import mercandalli.com.filespace.model.file.FileTypeModelENUM;
-import mercandalli.com.filespace.net.FileOnlineDataApi;
+import mercandalli.com.filespace.net.FileOnlineApi;
 import mercandalli.com.filespace.net.TaskGetDownload;
 import mercandalli.com.filespace.net.response.GetFileResponse;
 import mercandalli.com.filespace.net.response.GetFilesResponse;
-import mercandalli.com.filespace.persistence.file.FileLocalDataApi;
+import mercandalli.com.filespace.local.FileLocalApi;
+import mercandalli.com.filespace.local.FilePersistenceApi;
 import mercandalli.com.filespace.ui.activitiy.FileTextActivity;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.HtmlUtils;
@@ -40,33 +42,40 @@ import retrofit.mime.TypedString;
  * Created by Jonathan on 23/10/2015.
  */
 public class FileManager {
-    private FileLocalDataApi mFileLocalDataApi;
-    private FileOnlineDataApi mFileOnlineDataApi;
     private Context mContext;
+    private FileOnlineApi mFileOnlineApi;
+    private FileLocalApi mFileLocalApi;
+    private FilePersistenceApi mFilePersistenceApi;
 
-    public FileManager(FileLocalDataApi fileLocalDataApi, FileOnlineDataApi fileOnlineDataApi, Context context) {
-        mFileLocalDataApi = fileLocalDataApi;
-        mFileOnlineDataApi = fileOnlineDataApi;
+    public FileManager(Context context, FileOnlineApi fileOnlineApi, FileLocalApi fileLocalApi, FilePersistenceApi filePersistenceApi) {
         mContext = context;
+        mFileOnlineApi = fileOnlineApi;
+        mFileLocalApi = fileLocalApi;
+        mFilePersistenceApi = filePersistenceApi;
     }
 
-    public void getFiles(final int fileParentId, final boolean mine, final String search, final ResultCallback<List<FileModel>> resultCallback) {
-        mFileOnlineDataApi.getFiles(fileParentId, mine, StringUtils.toEmptyIfNull(search), new Callback<GetFilesResponse>() {
-            @Override
-            public void success(GetFilesResponse getFilesResponse, Response response) {
-                List<GetFileResponse> result = getFilesResponse.getResult(mContext);
-                List<FileModel> fileModelList = new ArrayList<>();
-                for (GetFileResponse getFileResponse : result) {
-                    fileModelList.add(getFileResponse.createModel());
+    public void getFiles(final FileParentModel fileParent, final String search, final int sortMode, final ResultCallback<List<FileModel>> resultCallback) {
+        if (fileParent.isOnline()) {
+            mFileOnlineApi.getFiles(fileParent.getId(), fileParent.isMine(), StringUtils.toEmptyIfNull(search), new Callback<GetFilesResponse>() {
+                @Override
+                public void success(GetFilesResponse getFilesResponse, Response response) {
+                    List<GetFileResponse> result = getFilesResponse.getResult(mContext);
+                    List<FileModel> fileModelList = new ArrayList<>();
+                    for (GetFileResponse getFileResponse : result) {
+                        fileModelList.add(getFileResponse.createModel());
+                    }
+                    resultCallback.success(fileModelList);
                 }
-                resultCallback.success(fileModelList);
-            }
 
-            @Override
-            public void failure(RetrofitError error) {
-                resultCallback.failure();
-            }
-        });
+                @Override
+                public void failure(RetrofitError error) {
+                    resultCallback.failure();
+                }
+            });
+        }
+        else {
+            resultCallback.success(mFileLocalApi.getFiles(fileParent.getFile(), search, sortMode));
+        }
     }
 
     public void download(final Activity activity, final FileModel fileModel, final IListener listener) {
@@ -83,7 +92,7 @@ public class FileManager {
 
     public void rename(final FileModel fileModel, final String newName, final IListener listener) {
         if (fileModel.isOnline()) {
-            mFileOnlineDataApi.rename(fileModel.getId(), new TypedString(newName), new Callback<GetFilesResponse>() {
+            mFileOnlineApi.rename(fileModel.getId(), new TypedString(newName), new Callback<GetFilesResponse>() {
                 @Override
                 public void success(GetFilesResponse getFilesResponse, Response response) {
                     getFilesResponse.getResult(mContext);
@@ -106,7 +115,7 @@ public class FileManager {
 
     public void delete(final FileModel fileModel, final IListener listener) {
         if (fileModel.isOnline()) {
-            mFileOnlineDataApi.delete(fileModel.getId(), "", new Callback<GetFilesResponse>() {
+            mFileOnlineApi.delete(fileModel.getId(), "", new Callback<GetFilesResponse>() {
                 @Override
                 public void success(GetFilesResponse getFilesResponse, Response response) {
                     getFilesResponse.getResult(mContext);
@@ -129,7 +138,7 @@ public class FileManager {
 
     public void setParent(final FileModel fileModel, final int id_file_parent, final IListener listener) {
         if (fileModel.isOnline()) {
-            mFileOnlineDataApi.setParent(fileModel.getId(), new TypedString("" + id_file_parent), new Callback<GetFilesResponse>() {
+            mFileOnlineApi.setParent(fileModel.getId(), new TypedString("" + id_file_parent), new Callback<GetFilesResponse>() {
                 @Override
                 public void success(GetFilesResponse getFilesResponse, Response response) {
                     getFilesResponse.getResult(mContext);
@@ -146,7 +155,7 @@ public class FileManager {
 
     public void setPublic(final FileModel fileModel, final boolean isPublic, final IListener listener) {
         if (fileModel.isOnline()) {
-            mFileOnlineDataApi.setPublic(fileModel.getId(), new TypedString("" + isPublic), new Callback<GetFilesResponse>() {
+            mFileOnlineApi.setPublic(fileModel.getId(), new TypedString("" + isPublic), new Callback<GetFilesResponse>() {
                 @Override
                 public void success(GetFilesResponse getFilesResponse, Response response) {
                     getFilesResponse.getResult(mContext);

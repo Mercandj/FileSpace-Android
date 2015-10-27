@@ -33,6 +33,7 @@ import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IFileModelListener;
+import mercandalli.com.filespace.model.ModelFileTypeENUM;
 import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.model.file.FileTypeModel;
 import mercandalli.com.filespace.model.file.FileTypeModelENUM;
@@ -209,11 +210,11 @@ public class AdapterFileModel extends RecyclerView.Adapter<AdapterFileModel.View
             else
                 return adapterTitleStart + fileModel.getUrl();
         }
-        /*
-        else if (fileModel.getType().equals(ModelFileTypeENUM.FILESPACE.type) && fileModel.content != null) {
-            return adapterTitleStart + fileModel.content.getAdapterTitle();
+
+        else if (fileModel.getType().equals(FileTypeModelENUM.FILESPACE.type) && fileModel.getContent() != null) {
+            return adapterTitleStart + fileModel.getContent().getAdapterTitle();
         }
-        */
+
         else if (fileModel.getName() != null)
             return adapterTitleStart + fileModel.getFullName();
         else
@@ -225,10 +226,10 @@ public class AdapterFileModel extends RecyclerView.Adapter<AdapterFileModel.View
             return "Directory: " + StringUtils.longToShortString(fileModel.getCount()) + " file" + (fileModel.getCount() > 1 ? "s" : "");
         if (fileModel.isDirectory())
             return "Directory";
-        /*
-        if (ModelFileTypeENUM.FILESPACE.type.equals(fileModel.getType()) && fileModel.content != null)
-            return fileModel.getType().getTitle() + " " + StringUtils.capitalize(fileModel.content.type.type.toString());
-        */
+
+        if (FileTypeModelENUM.FILESPACE.type.equals(fileModel.getType()) && fileModel.getContent() != null)
+            return fileModel.getType().getTitle() + " " + StringUtils.capitalize(fileModel.getContent().getType().toString());
+
         if (fileModel.getType() != null)
             return fileModel.getType().getTitle();
         return "";
