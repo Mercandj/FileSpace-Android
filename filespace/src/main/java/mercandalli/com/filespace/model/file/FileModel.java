@@ -1,5 +1,8 @@
 package mercandalli.com.filespace.model.file;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.File;
 import java.util.Date;
 
@@ -10,7 +13,11 @@ import mercandalli.com.filespace.util.FileUtils;
 /**
  * Created by Jonathan on 24/10/2015.
  */
-public class FileModel {
+public class FileModel implements Parcelable {
+
+    private FileModel() {
+
+    }
 
     // Online & Local attrs
     private int mId;
@@ -30,6 +37,10 @@ public class FileModel {
     private File mFile;
     private long mLastModified;
     private long mCount;
+
+    public FileModel(File file) {
+        setFile(file);
+    }
 
     public static class FileModelBuilder {
 
@@ -197,6 +208,10 @@ public class FileModel {
         return Constants.URL_API + "/" + Config.routeFile + "/" + getId();
     }
 
+    public boolean isAudio() {
+        return !(mIsDirectory || mType == null) && mType.equals(FileTypeModelENUM.AUDIO.type);
+    }
+
     /*
      * GETTER and SETTER
      */
@@ -319,5 +334,44 @@ public class FileModel {
 
     public void setCount(long mCount) {
         this.mCount = mCount;
+    }
+
+
+    public static final Creator<FileModel> CREATOR = new Creator<FileModel>() {
+        @Override
+        public FileModel createFromParcel(Parcel in) {
+            return new FileModel(in);
+        }
+
+        @Override
+        public FileModel[] newArray(int size) {
+            return new FileModel[size];
+        }
+    };
+
+    public FileModel(Parcel in) {
+        this.mId = in.readInt();
+        this.mUrl = in.readString();
+        this.mName = in.readString();
+        this.mSize = in.readLong();
+        boolean[] b = new boolean[1];
+        in.readBooleanArray(b);
+        this.mIsDirectory = b[0];
+        this.mType = new FileTypeModel(in.readString());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
+        dest.writeString(mUrl);
+        dest.writeString(mName);
+        dest.writeLong(mSize);
+        dest.writeBooleanArray(new boolean[]{this.isDirectory()});
+        dest.writeString(mType.getFirstExtension());
     }
 }

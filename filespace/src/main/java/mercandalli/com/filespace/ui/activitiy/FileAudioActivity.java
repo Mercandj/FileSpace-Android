@@ -49,8 +49,8 @@ import java.util.List;
 import java.util.Map;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.model.ModelFile;
-import mercandalli.com.filespace.net.Base64;
+import mercandalli.com.filespace.config.Config;
+import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.ui.view.PlayPauseView;
 import mercandalli.com.filespace.ui.view.slider.Slider;
 import mercandalli.com.filespace.util.FileUtils;
@@ -60,11 +60,10 @@ import mercandalli.com.filespace.util.FileUtils;
  */
 public class FileAudioActivity extends ApplicationActivity {
 
-    private String login, password;
     private boolean online;
 
-    private ModelFile file;
-    private List<ModelFile> files;
+    private FileModel file;
+    private List<FileModel> files;
 
     private Slider sliderNumber;
     private PlayPauseView play;
@@ -155,17 +154,17 @@ public class FileAudioActivity extends ApplicationActivity {
                         this.files = new ArrayList<>();
                         this.online = false;
                         for (Uri uri : audioUris) {
-                            this.files.add(new ModelFile(this, this, new File(uri.getPath())));
+                            this.files.add(new FileModel(new File(uri.getPath())));
                         }
                         if (audioUris.size() != 0) {
-                            this.file = new ModelFile(this, this, new File(audioUris.get(0).getPath()));
+                            this.file = new FileModel(new File(audioUris.get(0).getPath()));
                             start();
                             return;
                         }
                     } else if (audioUri != null) {
                         this.files = new ArrayList<>();
                         this.online = false;
-                        this.file = new ModelFile(this, this, new File("file".equals(audioUri.getScheme()) ? audioUri.getPath() : FileUtils.getRealPathFromURI(this, audioUri)));
+                        this.file = new FileModel(new File("file".equals(audioUri.getScheme()) ? audioUri.getPath() : FileUtils.getRealPathFromURI(this, audioUri)));
                         this.files.add(this.file);
                         start();
                         return;
@@ -176,10 +175,8 @@ public class FileAudioActivity extends ApplicationActivity {
             this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             return;
         } else {
-            this.login = extras.getString("LOGIN");
-            this.password = extras.getString("PASSWORD");
             this.online = extras.getBoolean("ONLINE");
-            this.file = (ModelFile) extras.getParcelable("FILE");
+            this.file = (FileModel) extras.getParcelable("FILE");
             this.files = (ArrayList) extras.getParcelableArrayList("FILES");
             start();
         }
@@ -266,7 +263,7 @@ public class FileAudioActivity extends ApplicationActivity {
         }
         if (files != null) {
             boolean idMark = false;
-            for (ModelFile f : files) {
+            for (FileModel f : files) {
                 if (idMark && f.isAudio()) {
                     FileAudioActivity.this.file = f;
                     start();
@@ -275,7 +272,7 @@ public class FileAudioActivity extends ApplicationActivity {
                 if (f.equals(file))
                     idMark = true;
             }
-            for (ModelFile f : files) {
+            for (FileModel f : files) {
                 if (f.isAudio()) {
                     FileAudioActivity.this.file = f;
                     start();
@@ -317,7 +314,7 @@ public class FileAudioActivity extends ApplicationActivity {
         if (file == null)
             return;
         try {
-            Uri uri = Uri.parse((this.online) ? file.onlineUrl : file.url);
+            Uri uri = Uri.parse((this.online) ? file.getOnlineUrl() : file.getUrl());
 
             this.player = new MediaPlayer();
             this.player.setOnCompletionListener(this.onCompletion);
@@ -334,9 +331,7 @@ public class FileAudioActivity extends ApplicationActivity {
 
             if (this.online) {
                 Map<String, String> headers = new HashMap<String, String>();
-                StringBuilder authentication = new StringBuilder().append(this.login).append(":").append(this.password);
-                String result = Base64.encodeBytes(authentication.toString().getBytes());
-                headers.put("Authorization", "Basic " + result);
+                headers.put("Authorization", "Basic " + Config.getUserToken());
                 this.player.setDataSource(this, uri, headers);
             } else
                 this.player.setDataSource(this, uri);
@@ -347,7 +342,7 @@ public class FileAudioActivity extends ApplicationActivity {
 
             this.sliderNumber.setProgress(0);
             this.sliderNumber.setMax(this.player.getDuration());
-            this.title.setText("" + this.file.name);
+            this.title.setText("" + this.file.getName());
             this.size.setText(getTimeStr(this.player.getCurrentPosition()) + " / " + getTimeStr(this.player.getDuration()));
 
             updatePosition();
@@ -371,7 +366,7 @@ public class FileAudioActivity extends ApplicationActivity {
             buttonsIntent_close.putExtra("do_action", "prev");
 
             RemoteViews remoteViews = new RemoteViews(this.getPackageName(), R.layout.notification_musique);
-            remoteViews.setTextViewText(R.id.titre_notif, file.name);
+            remoteViews.setTextViewText(R.id.titre_notif, file.getName());
             remoteViews.setOnClickPendingIntent(R.id.close, PendingIntent.getActivity(this, 0, buttonsIntent_close, 0));
             remoteViews.setOnClickPendingIntent(R.id.play, PendingIntent.getActivity(this, 0, buttonsIntent_close, 0));
             remoteViews.setOnClickPendingIntent(R.id.next, PendingIntent.getActivity(this, 0, buttonsIntent_next, 0));

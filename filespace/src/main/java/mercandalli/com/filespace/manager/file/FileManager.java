@@ -30,6 +30,7 @@ import mercandalli.com.filespace.net.FileOnlineApi;
 import mercandalli.com.filespace.net.TaskGetDownload;
 import mercandalli.com.filespace.net.response.GetFileResponse;
 import mercandalli.com.filespace.net.response.GetFilesResponse;
+import mercandalli.com.filespace.ui.activitiy.FileAudioActivity;
 import mercandalli.com.filespace.ui.activitiy.FilePictureActivity;
 import mercandalli.com.filespace.ui.activitiy.FileTextActivity;
 import mercandalli.com.filespace.util.FileUtils;
@@ -77,8 +78,7 @@ public class FileManager {
                     resultCallback.failure();
                 }
             });
-        }
-        else {
+        } else {
             resultCallback.success(mFileLocalApi.getFiles(fileParent.getFile(), search, sortMode));
         }
     }
@@ -196,27 +196,25 @@ public class FileManager {
                         makeSceneTransitionAnimation(activity, p1, p2);
                 activity.startActivity(intent, options.toBundle());
             }
-        } /* else if (this.type.equals(FileTypeModelENUM.AUDIO.type)) {
+        } else if (fileModel.getType().equals(FileTypeModelENUM.AUDIO.type)) {
             Intent intent = new Intent(activity, FileAudioActivity.class);
-            intent.putExtra("LOGIN", "" + app.getConfig().getUser().getAccessLogin());
-            intent.putExtra("PASSWORD", "" + app.getConfig().getUser().getAccessPassword());
             intent.putExtra("ONLINE", true);
-            intent.putExtra("FILE", this);
-            ArrayList<ModelFile> tmpFiles = new ArrayList<>();
-            for (ModelFile f : files)
-                if (f.type.equals(ModelFileTypeENUM.AUDIO.type))
+            intent.putExtra("FILE", fileModel);
+            ArrayList<FileModel> tmpFiles = new ArrayList<>();
+            for (FileModel f : files)
+                if (f.getType().equals(FileTypeModelENUM.AUDIO.type))
                     tmpFiles.add(f);
             intent.putParcelableArrayListExtra("FILES", tmpFiles);
             if (view == null) {
-                mActivity.startActivity(intent);
-                mActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
             } else {
                 Pair<View, String> p1 = Pair.create(view.findViewById(R.id.icon), "transitionIcon");
                 ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(mActivity, p1);
-                mActivity.startActivity(intent, options.toBundle());
+                        makeSceneTransitionAnimation(activity, p1);
+                activity.startActivity(intent, options.toBundle());
             }
-        } else if (this.type.equals(FileTypeModelENUM.FILESPACE.type)) {
+        } /* else if (this.type.equals(FileTypeModelENUM.FILESPACE.type)) {
             if (content != null) {
                 if (content.timer.timer_date != null) {
                     Intent intent = new Intent(activity, FileTimerActivity.class);
