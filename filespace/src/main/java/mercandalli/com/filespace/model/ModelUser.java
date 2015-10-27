@@ -22,16 +22,6 @@ package mercandalli.com.filespace.model;
 import android.app.Activity;
 import android.graphics.Bitmap;
 
-import mercandalli.com.filespace.config.Constants;
-import mercandalli.com.filespace.listener.IBitmapListener;
-import mercandalli.com.filespace.listener.IPostExecuteListener;
-import mercandalli.com.filespace.net.TaskGetDownloadImage;
-import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
-import mercandalli.com.filespace.util.FileUtils;
-import mercandalli.com.filespace.util.HashUtils;
-import mercandalli.com.filespace.util.ImageUtils;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,6 +31,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+
+import mercandalli.com.filespace.config.Constants;
+import mercandalli.com.filespace.listener.IBitmapListener;
+import mercandalli.com.filespace.listener.IPostExecuteListener;
+import mercandalli.com.filespace.net.TaskGetDownloadImage;
+import mercandalli.com.filespace.net.TaskPost;
+import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.util.FileUtils;
+import mercandalli.com.filespace.util.HashUtils;
+import mercandalli.com.filespace.util.ImageUtils;
 
 public class ModelUser extends Model {
 
@@ -120,7 +120,7 @@ public class ModelUser extends Model {
                 picture.size = this.file_profile_picture_size;
                 picture.onlineUrl = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + id_file_profile_picture;
 
-                new TaskGetDownloadImage(mActivity, app, this.app.getConfig().getUser(), picture, Constants.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
+                new TaskGetDownloadImage(mActivity, app, picture, Constants.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
                     @Override
                     public void execute(Bitmap bitmap) {
                         if (bitmap != null) {

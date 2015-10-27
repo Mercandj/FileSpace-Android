@@ -206,7 +206,7 @@ public class ModelFile extends Model implements Parcelable {
                 ModelFile.this.bitmap = ImageUtils.load_image(mActivity, this.id);
                 ModelFile.this.app.updateAdapters();
             } else
-                new TaskGetDownloadImage(mActivity, app, this.app.getConfig().getUser(), this, Constants.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
+                new TaskGetDownloadImage(mActivity, app, this, Constants.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
                     @Override
                     public void execute(Bitmap bitmap) {
                         if (bitmap != null) {

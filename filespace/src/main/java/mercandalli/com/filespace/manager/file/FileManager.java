@@ -2,7 +2,10 @@ package mercandalli.com.filespace.manager.file;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Environment;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.text.Spanned;
 import android.view.View;
 import android.widget.Toast;
@@ -12,10 +15,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.ResultCallback;
+import mercandalli.com.filespace.local.FileLocalApi;
+import mercandalli.com.filespace.local.FilePersistenceApi;
 import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.model.file.FileParentModel;
 import mercandalli.com.filespace.model.file.FileTypeModel;
@@ -24,8 +30,7 @@ import mercandalli.com.filespace.net.FileOnlineApi;
 import mercandalli.com.filespace.net.TaskGetDownload;
 import mercandalli.com.filespace.net.response.GetFileResponse;
 import mercandalli.com.filespace.net.response.GetFilesResponse;
-import mercandalli.com.filespace.local.FileLocalApi;
-import mercandalli.com.filespace.local.FilePersistenceApi;
+import mercandalli.com.filespace.ui.activitiy.FilePictureActivity;
 import mercandalli.com.filespace.ui.activitiy.FileTextActivity;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.HtmlUtils;
@@ -173,16 +178,14 @@ public class FileManager {
     public void executeOnline(final Activity activity, final FileModel fileModel, final ArrayList<FileModel> files, View view) {
         if (fileModel.getType().equals(FileTypeModelENUM.TEXT.type)) {
             FileTextActivity.start(activity, fileModel, true);
-        } /* else if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
+        } else if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
             Intent intent = new Intent(activity, FilePictureActivity.class);
-            intent.putExtra("ID", this.id);
-            intent.putExtra("TITLE", "" + this.getNameExt());
-            intent.putExtra("URL_FILE", "" + this.onlineUrl);
-            intent.putExtra("LOGIN", "" + this.app.getConfig().getUser().getAccessLogin());
-            intent.putExtra("PASSWORD", "" + this.app.getConfig().getUser().getAccessPassword());
+            intent.putExtra("ID", fileModel.getId());
+            intent.putExtra("TITLE", "" + fileModel.getFullName());
+            intent.putExtra("URL_FILE", "" + fileModel.getOnlineUrl());
             intent.putExtra("ONLINE", true);
-            intent.putExtra("SIZE_FILE", size);
-            intent.putExtra("DATE_FILE", date_creation);
+            intent.putExtra("SIZE_FILE", fileModel.getSize());
+            intent.putExtra("DATE_FILE", fileModel.getDateCreation());
             if (view == null) {
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
@@ -193,7 +196,7 @@ public class FileManager {
                         makeSceneTransitionAnimation(activity, p1, p2);
                 activity.startActivity(intent, options.toBundle());
             }
-        } else if (this.type.equals(FileTypeModelENUM.AUDIO.type)) {
+        } /* else if (this.type.equals(FileTypeModelENUM.AUDIO.type)) {
             Intent intent = new Intent(activity, FileAudioActivity.class);
             intent.putExtra("LOGIN", "" + app.getConfig().getUser().getAccessLogin());
             intent.putExtra("PASSWORD", "" + app.getConfig().getUser().getAccessPassword());

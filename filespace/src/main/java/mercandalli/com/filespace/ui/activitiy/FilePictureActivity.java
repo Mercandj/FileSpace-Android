@@ -34,6 +34,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.File;
+import java.util.Date;
+
+import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IBitmapListener;
 import mercandalli.com.filespace.listener.ILongListener;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
@@ -41,16 +45,11 @@ import mercandalli.com.filespace.util.ColorUtils;
 import mercandalli.com.filespace.util.FontUtils;
 import mercandalli.com.filespace.util.ImageUtils;
 
-import java.io.File;
-import java.util.Date;
-
-import mercandalli.com.filespace.R;
-
 /**
  * Created by Jonathan on 29/05/2015.
  */
 public class FilePictureActivity extends ApplicationActivity {
-    private String url, login, password, title;
+    private String url, title;
     private int id;
     private boolean online;
     private long sizeFile;
@@ -93,8 +92,6 @@ public class FilePictureActivity extends ApplicationActivity {
             this.id = extras.getInt("ID");
             this.title = extras.getString("TITLE");
             this.url = extras.getString("URL_FILE");
-            this.login = extras.getString("LOGIN");
-            this.password = extras.getString("PASSWORD");
             this.online = extras.getBoolean("ONLINE");
             this.sizeFile = extras.getLong("SIZE_FILE");
             this.date_creation = (Date) extras.getSerializable("DATE_FILE");
@@ -119,7 +116,7 @@ public class FilePictureActivity extends ApplicationActivity {
             } else if (this.id != 0) {
                 this.progressBar.setVisibility(View.VISIBLE);
                 this.progress_tv.setVisibility(View.VISIBLE);
-                (new TaskGetDownloadImage(this, this, login, password, url, id, sizeFile, -1, new IBitmapListener() {
+                (new TaskGetDownloadImage(this, this, url, id, sizeFile, -1, new IBitmapListener() {
                     @Override
                     public void execute(Bitmap bitmap) {
                         ((ImageView) findViewById(R.id.icon)).setImageBitmap(bitmap);
