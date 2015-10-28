@@ -37,23 +37,23 @@ public class FileModel implements Parcelable {
     public static class FileModelBuilder {
 
         // Online & Local attrs
-        private int id;
-        private int idUser;
-        private int idFileParent;
-        private String name;
-        private String url;
-        private long size;
-        private boolean isPublic;
-        private FileTypeModel type;
-        private boolean isDirectory;
-        private Date dateCreation;
-        private boolean isApkUpdate;
-        private FileSpaceModel content;
+        protected int id;
+        protected int idUser;
+        protected int idFileParent;
+        protected String name;
+        protected String url;
+        protected long size;
+        protected boolean isPublic;
+        protected FileTypeModel type;
+        protected boolean isDirectory;
+        protected Date dateCreation;
+        protected boolean isApkUpdate;
+        protected FileSpaceModel content;
 
         // Local attrs
-        private File file;
-        private long lastModified;
-        private long count;
+        protected File file;
+        protected long lastModified;
+        protected long count;
 
         public FileModelBuilder id(int id) {
             this.id = id;

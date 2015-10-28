@@ -1,5 +1,5 @@
 /**
- * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
+ * This mFileModel is part of FileSpace for Android, an app for managing your server (mFileModelList, talks...).
  * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  * <p/>
@@ -55,23 +55,19 @@ import mercandalli.com.filespace.ui.view.PlayPauseView;
 import mercandalli.com.filespace.ui.view.slider.Slider;
 import mercandalli.com.filespace.util.FileUtils;
 
-/**
- * Created by Jonathan on 14/12/2014.
- */
 public class FileAudioActivity extends ApplicationActivity {
 
-    private boolean online;
+    private boolean mIsOnline;
 
-    private FileModel file;
-    private List<FileModel> files;
+    private FileModel mFileModel;
+    private List<FileModel> mFileModelList;
 
-    private Slider sliderNumber;
-    private PlayPauseView play;
-    private TextView title, size;
-    private MediaPlayer player;
-    private final Handler handler = new Handler();
-    private final int UPDATE_FREQUENCY = 1000;
-    private boolean isMovingSeekBar = false;
+    private Slider mSliderNumber;
+    private PlayPauseView mPlayPauseView;
+    private TextView mTitleTextView;
+    private TextView mSizeTextView;
+    private MediaPlayer mMediaPlayer;
+    private final Handler mHandler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,10 +89,10 @@ public class FileAudioActivity extends ApplicationActivity {
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.notifications_bar_audio));
         }
 
-        this.title = (TextView) this.findViewById(R.id.title);
-        this.size = (TextView) this.findViewById(R.id.size);
-        this.sliderNumber = (Slider) this.findViewById(R.id.sliderNumber);
-        this.sliderNumber.setValueToDisplay(new Slider.ValueToDisplay() {
+        this.mTitleTextView = (TextView) this.findViewById(R.id.title);
+        this.mSizeTextView = (TextView) this.findViewById(R.id.size);
+        this.mSliderNumber = (Slider) this.findViewById(R.id.sliderNumber);
+        this.mSliderNumber.setValueToDisplay(new Slider.ValueToDisplay() {
             @Override
             public String convert(int value) {
                 long minutes = value / 60000;
@@ -105,22 +101,22 @@ public class FileAudioActivity extends ApplicationActivity {
             }
         });
 
-        this.play = (PlayPauseView) this.findViewById(R.id.play);
-        //this.play.setImageResource(android.R.drawable.ic_media_pause);
-        this.play.setOnClickListener(new View.OnClickListener() {
+        this.mPlayPauseView = (PlayPauseView) this.findViewById(R.id.play);
+        //this.mPlayPauseView.setImageResource(android.R.drawable.ic_media_pause);
+        this.mPlayPauseView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (FileAudioActivity.this.player != null) {
-                    if (FileAudioActivity.this.player.isPlaying()) {
-                        //play.setImageResource(android.R.drawable.ic_media_play);
-                        FileAudioActivity.this.player.pause();
+                if (FileAudioActivity.this.mMediaPlayer != null) {
+                    if (FileAudioActivity.this.mMediaPlayer.isPlaying()) {
+                        //mPlayPauseView.setImageResource(android.R.drawable.ic_media_play);
+                        FileAudioActivity.this.mMediaPlayer.pause();
                         setNotification(false);
                     } else {
-                        //play.setImageResource(android.R.drawable.ic_media_pause);
-                        FileAudioActivity.this.player.start();
+                        //mPlayPauseView.setImageResource(android.R.drawable.ic_media_pause);
+                        FileAudioActivity.this.mMediaPlayer.start();
                         setNotification(true);
                     }
-                    play.toggle();
+                    mPlayPauseView.toggle();
                 }
             }
         });
@@ -151,21 +147,21 @@ public class FileAudioActivity extends ApplicationActivity {
                     ArrayList<Uri> audioUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
                     Uri audioUri = (Uri) intent.getData();
                     if (audioUris != null) {
-                        this.files = new ArrayList<>();
-                        this.online = false;
+                        this.mFileModelList = new ArrayList<>();
+                        this.mIsOnline = false;
                         for (Uri uri : audioUris) {
-                            this.files.add(new FileModel(new File(uri.getPath())));
+                            this.mFileModelList.add(new FileModel.FileModelBuilder().file(new File(uri.getPath())).build());
                         }
                         if (audioUris.size() != 0) {
-                            this.file = new FileModel(new File(audioUris.get(0).getPath()));
+                            this.mFileModel = new FileModel.FileModelBuilder().file(new File(audioUris.get(0).getPath())).build();
                             start();
                             return;
                         }
                     } else if (audioUri != null) {
-                        this.files = new ArrayList<>();
-                        this.online = false;
-                        this.file = new FileModel(new File("file".equals(audioUri.getScheme()) ? audioUri.getPath() : FileUtils.getRealPathFromURI(this, audioUri)));
-                        this.files.add(this.file);
+                        this.mFileModelList = new ArrayList<>();
+                        this.mIsOnline = false;
+                        this.mFileModel = new FileModel.FileModelBuilder().file(new File("file".equals(audioUri.getScheme()) ? audioUri.getPath() : FileUtils.getRealPathFromURI(this, audioUri))).build();
+                        this.mFileModelList.add(this.mFileModel);
                         start();
                         return;
                     }
@@ -175,22 +171,26 @@ public class FileAudioActivity extends ApplicationActivity {
             this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             return;
         } else {
-            this.online = extras.getBoolean("ONLINE");
-            this.file = (FileModel) extras.getParcelable("FILE");
-            this.files = (ArrayList) extras.getParcelableArrayList("FILES");
+            this.mIsOnline = extras.getBoolean("ONLINE");
+            this.mFileModel = extras.getParcelable("FILE");
+            this.mFileModelList = extras.getParcelableArrayList("FILES");
             start();
         }
 
         String action = (String) extras.get("do_action");
         if (action != null) {
-            if (action.equals("close")) {
-                if (player != null) {
-                    player.pause();
-                }
-            } else if (action.equals("next")) {
-                next();
-            } else if (action.equals("prev")) {
-                previous();
+            switch (action) {
+                case "close":
+                    if (mMediaPlayer != null) {
+                        mMediaPlayer.pause();
+                    }
+                    break;
+                case "next":
+                    next();
+                    break;
+                case "prev":
+                    previous();
+                    break;
             }
         }
     }
@@ -205,14 +205,18 @@ public class FileAudioActivity extends ApplicationActivity {
         if (action == null)
             action = intent.getStringExtra("do_action");
         if (action != null) {
-            if (action.equals("close")) {
-                if (player != null) {
-                    player.pause();
-                }
-            } else if (action.equals("next")) {
-                next();
-            } else if (action.equals("prev")) {
-                previous();
+            switch (action) {
+                case "close":
+                    if (mMediaPlayer != null) {
+                        mMediaPlayer.pause();
+                    }
+                    break;
+                case "next":
+                    next();
+                    break;
+                case "prev":
+                    previous();
+                    break;
             }
         }
     }
@@ -240,11 +244,12 @@ public class FileAudioActivity extends ApplicationActivity {
     public final UpdaterPosition updatePositionRunnable = new UpdaterPosition();
 
     private void updatePosition() {
-        this.handler.removeCallbacks(updatePositionRunnable);
-        if (!this.sliderNumber.isPress())
-            this.sliderNumber.setProgress(player.getCurrentPosition());
-        this.handler.postDelayed(updatePositionRunnable, UPDATE_FREQUENCY);
-        this.size.setText(getTimeStr(this.player.getCurrentPosition()) + " / " + getTimeStr(this.player.getDuration()));
+        mHandler.removeCallbacks(updatePositionRunnable);
+        if (!this.mSliderNumber.isPress())
+            this.mSliderNumber.setProgress(mMediaPlayer.getCurrentPosition());
+        int updateFrequency = 1000;
+        this.mHandler.postDelayed(updatePositionRunnable, updateFrequency);
+        this.mSizeTextView.setText(getTimeStr(this.mMediaPlayer.getCurrentPosition()) + " / " + getTimeStr(this.mMediaPlayer.getDuration()));
     }
 
     private MediaPlayer.OnCompletionListener onCompletion = new MediaPlayer.OnCompletionListener() {
@@ -258,23 +263,23 @@ public class FileAudioActivity extends ApplicationActivity {
      * Play the next song
      */
     private void next() {
-        if (this.player.isPlaying()) {
-            this.player.stop();
+        if (this.mMediaPlayer.isPlaying()) {
+            this.mMediaPlayer.stop();
         }
-        if (files != null) {
+        if (mFileModelList != null) {
             boolean idMark = false;
-            for (FileModel f : files) {
+            for (FileModel f : mFileModelList) {
                 if (idMark && f.isAudio()) {
-                    FileAudioActivity.this.file = f;
+                    FileAudioActivity.this.mFileModel = f;
                     start();
                     return;
                 }
-                if (f.equals(file))
+                if (f.equals(mFileModel))
                     idMark = true;
             }
-            for (FileModel f : files) {
+            for (FileModel f : mFileModelList) {
                 if (f.isAudio()) {
-                    FileAudioActivity.this.file = f;
+                    FileAudioActivity.this.mFileModel = f;
                     start();
                     return;
                 }
@@ -286,23 +291,23 @@ public class FileAudioActivity extends ApplicationActivity {
      * Play the previous song
      */
     private void previous() {
-        if (this.player != null)
-            if (this.player.isPlaying())
-                this.player.stop();
-        if (files != null) {
+        if (this.mMediaPlayer != null)
+            if (this.mMediaPlayer.isPlaying())
+                this.mMediaPlayer.stop();
+        if (mFileModelList != null) {
             boolean idMark = false;
-            for (int i = files.size() - 1; i >= 0; i--) {
-                if (idMark && files.get(i).isAudio()) {
-                    FileAudioActivity.this.file = files.get(i);
+            for (int i = mFileModelList.size() - 1; i >= 0; i--) {
+                if (idMark && mFileModelList.get(i).isAudio()) {
+                    FileAudioActivity.this.mFileModel = mFileModelList.get(i);
                     start();
                     return;
                 }
-                if (files.get(i).equals(file))
+                if (mFileModelList.get(i).equals(mFileModel))
                     idMark = true;
             }
-            for (int i = files.size() - 1; i >= 0; i--) {
-                if (files.get(i).isAudio()) {
-                    FileAudioActivity.this.file = files.get(i);
+            for (int i = mFileModelList.size() - 1; i >= 0; i--) {
+                if (mFileModelList.get(i).isAudio()) {
+                    FileAudioActivity.this.mFileModel = mFileModelList.get(i);
                     start();
                     return;
                 }
@@ -311,39 +316,39 @@ public class FileAudioActivity extends ApplicationActivity {
     }
 
     public void start() {
-        if (file == null)
+        if (mFileModel == null)
             return;
         try {
-            Uri uri = Uri.parse((this.online) ? file.getOnlineUrl() : file.getUrl());
+            Uri uri = Uri.parse((this.mIsOnline) ? mFileModel.getOnlineUrl() : mFileModel.getUrl());
 
-            this.player = new MediaPlayer();
-            this.player.setOnCompletionListener(this.onCompletion);
-            this.sliderNumber.setOnValueChangedListener(new Slider.OnValueChangedListener() {
+            this.mMediaPlayer = new MediaPlayer();
+            this.mMediaPlayer.setOnCompletionListener(this.onCompletion);
+            this.mSliderNumber.setOnValueChangedListener(new Slider.OnValueChangedListener() {
                 @Override
                 public void onValueChanged(int value) {
                 }
 
                 @Override
                 public void onValueChangedUp(int value) {
-                    player.seekTo(value);
+                    mMediaPlayer.seekTo(value);
                 }
             });
 
-            if (this.online) {
+            if (this.mIsOnline) {
                 Map<String, String> headers = new HashMap<String, String>();
                 headers.put("Authorization", "Basic " + Config.getUserToken());
-                this.player.setDataSource(this, uri, headers);
+                this.mMediaPlayer.setDataSource(this, uri, headers);
             } else
-                this.player.setDataSource(this, uri);
+                this.mMediaPlayer.setDataSource(this, uri);
 
-            this.player.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            this.player.prepare();
-            this.player.start();
+            this.mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            this.mMediaPlayer.prepare();
+            this.mMediaPlayer.start();
 
-            this.sliderNumber.setProgress(0);
-            this.sliderNumber.setMax(this.player.getDuration());
-            this.title.setText("" + this.file.getName());
-            this.size.setText(getTimeStr(this.player.getCurrentPosition()) + " / " + getTimeStr(this.player.getDuration()));
+            this.mSliderNumber.setProgress(0);
+            this.mSliderNumber.setMax(this.mMediaPlayer.getDuration());
+            this.mTitleTextView.setText("" + this.mFileModel.getName());
+            this.mSizeTextView.setText(getTimeStr(this.mMediaPlayer.getCurrentPosition()) + " / " + getTimeStr(this.mMediaPlayer.getDuration()));
 
             updatePosition();
 
@@ -366,7 +371,7 @@ public class FileAudioActivity extends ApplicationActivity {
             buttonsIntent_close.putExtra("do_action", "prev");
 
             RemoteViews remoteViews = new RemoteViews(this.getPackageName(), R.layout.notification_musique);
-            remoteViews.setTextViewText(R.id.titre_notif, file.getName());
+            remoteViews.setTextViewText(R.id.titre_notif, mFileModel.getName());
             remoteViews.setOnClickPendingIntent(R.id.close, PendingIntent.getActivity(this, 0, buttonsIntent_close, 0));
             remoteViews.setOnClickPendingIntent(R.id.play, PendingIntent.getActivity(this, 0, buttonsIntent_close, 0));
             remoteViews.setOnClickPendingIntent(R.id.next, PendingIntent.getActivity(this, 0, buttonsIntent_next, 0));
@@ -385,7 +390,7 @@ public class FileAudioActivity extends ApplicationActivity {
                     .setContent(remoteViews)
                     .build();
             foregroundNote.bigContentView = remoteViews;
-            if (player.isPlaying()) {
+            if (mMediaPlayer.isPlaying()) {
                 NotificationManager notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
                 notificationManager.notify(0, foregroundNote);
             }
@@ -426,9 +431,9 @@ public class FileAudioActivity extends ApplicationActivity {
         setNotification(false);
         if (updatePositionRunnable != null)
             updatePositionRunnable.kill();
-        if (player != null) {
-            player.stop();
-            player.reset();
+        if (mMediaPlayer != null) {
+            mMediaPlayer.stop();
+            mMediaPlayer.reset();
         }
         supportFinishAfterTransition();
     }
@@ -437,19 +442,19 @@ public class FileAudioActivity extends ApplicationActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        sliderNumber.updateAfterRotation();
+        mSliderNumber.updateAfterRotation();
 
-        ViewTreeObserver observer = sliderNumber.getViewTreeObserver();
+        ViewTreeObserver observer = mSliderNumber.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 
             @Override
             public void onGlobalLayout() {
                 Log.v("ActivityFileAudio",
-                        String.format("new width=%d; new height=%d", sliderNumber.getWidth(),
-                                sliderNumber.getHeight()));
+                        String.format("new width=%d; new height=%d", mSliderNumber.getWidth(),
+                                mSliderNumber.getHeight()));
 
-                sliderNumber.updateAfterRotation();
-                sliderNumber.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                mSliderNumber.updateAfterRotation();
+                mSliderNumber.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
     }
