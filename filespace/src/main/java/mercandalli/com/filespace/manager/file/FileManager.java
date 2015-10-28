@@ -11,10 +11,15 @@ import android.os.Environment;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +28,7 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listener.IListener;
+import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.listener.ResultCallback;
 import mercandalli.com.filespace.local.FileLocalApi;
 import mercandalli.com.filespace.local.FilePersistenceApi;
@@ -121,6 +127,11 @@ public class FileManager {
             }
             listener.execute();
         }
+    }
+
+    public void renameLocalByPath(FileModel fileModel, String path) {
+        File tmp = new File(path);
+        fileModel.getFile().renameTo(tmp);
     }
 
     public void delete(final FileModel fileModel, final IListener listener) {
@@ -390,5 +401,54 @@ public class FileManager {
             parameters.add(new StringPair("id_file_parent", "" + fileModel.getIdFileParent()));
         }
         return parameters;
+    }
+
+    public void copyLocalFile(final Activity activity, final FileModel fileModel, final String outputPath) {
+        copyLocalFile(activity, fileModel, outputPath, null);
+    }
+
+    public void copyLocalFile(final Activity activity, final FileModel fileModel, String outputPath, IPostExecuteListener listener) {
+        if (fileModel.isOnline()) {
+            //TODO copy online
+            Toast.makeText(activity, activity.getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+        } else {
+            InputStream in;
+            OutputStream out;
+            try {
+                File dir = new File(outputPath);
+                if (!dir.exists())
+                    dir.mkdirs();
+
+                String outputUrl = outputPath + fileModel.getFullName();
+                while ((new File(outputUrl)).exists()) {
+                    outputUrl = outputPath + fileModel.getCopyName();
+                }
+
+                if (fileModel.isDirectory()) {
+                    File copy = new File(outputUrl);
+                    copy.mkdirs();
+                    File[] children = fileModel.getFile().listFiles();
+                    for (File aChildren : children) {
+                        copyLocalFile(activity, new FileModel.FileModelBuilder().file(aChildren).build(), copy.getAbsolutePath() + File.separator);
+                    }
+                } else {
+                    in = new FileInputStream(fileModel.getFile().getAbsoluteFile());
+                    out = new FileOutputStream(outputUrl);
+
+                    byte[] buffer = new byte[1024];
+                    int read;
+                    while ((read = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, read);
+                    }
+                    in.close();
+                    out.flush();
+                    out.close();
+                }
+            } catch (Exception e) {
+                Log.e("tag", e.getMessage());
+            }
+        }
+        if (listener != null)
+            listener.onPostExecute(null, null);
     }
 }

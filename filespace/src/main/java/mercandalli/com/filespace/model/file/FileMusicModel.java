@@ -19,6 +19,25 @@ public class FileMusicModel extends FileModel {
             return this;
         }
 
+        public FileMusicModelBuilder fileModel(FileModel fileModel) {
+            id(fileModel.getId());
+            idUser(fileModel.getIdUser());
+            idFileParent(fileModel.getIdFileParent());
+            name(fileModel.getName());
+            url(fileModel.getUrl());
+            size(fileModel.getSize());
+            isPublic(fileModel.isPublic());
+            type(fileModel.getType());
+            isDirectory(fileModel.isDirectory());
+            dateCreation(fileModel.getDateCreation());
+            isApkUpdate(fileModel.isApkUpdate());
+            content(fileModel.getContent());
+            file(fileModel.getFile());
+            lastModified(fileModel.getLastModified());
+            count(fileModel.getCount());
+            return this;
+        }
+
         public FileMusicModel build() {
             FileMusicModel fileMusicModel = new FileMusicModel();
             fileMusicModel.setId(id);

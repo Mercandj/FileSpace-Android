@@ -49,8 +49,8 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
 
     private boolean mShowSize;
 
-    public FileModelAdapter(Activity app, final List<FileModel> files, IFileModelListener moreListener) {
-        this.mActivity = app;
+    public FileModelAdapter(final Activity activity, final List<FileModel> files, IFileModelListener moreListener) {
+        this.mActivity = activity;
         this.files.clear();
         this.files.addAll(files);
         this.moreListener = moreListener;

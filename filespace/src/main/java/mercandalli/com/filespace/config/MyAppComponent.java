@@ -8,6 +8,7 @@ import dagger.Component;
 import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.manager.file.FileModule;
 import mercandalli.com.filespace.ui.activitiy.MainActivity;
+import mercandalli.com.filespace.ui.fragment.file.FileLocalFragment;
 import mercandalli.com.filespace.ui.fragment.file.FileLocalMusicFragment;
 import mercandalli.com.filespace.ui.fragment.file.FileMyCloudFragment;
 
@@ -28,6 +29,8 @@ public interface MyAppComponent {
     void inject(FileMyCloudFragment fileMyCloudFragment);
 
     void inject(FileLocalMusicFragment fileLocalMusicFragment);
+
+    void inject(FileLocalFragment fileLocalFragment);
 
     //void inject(HomeFragment homeFragment);
 

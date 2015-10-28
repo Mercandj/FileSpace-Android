@@ -208,6 +208,10 @@ public class FileModel implements Parcelable {
         return mName + (mIsDirectory ? "" : ("." + mType));
     }
 
+    public String getCopyName() {
+        return mName + " - Copy" + (mIsDirectory ? "" : ("." + mType));
+    }
+
     public String getOnlineUrl() {
         return Constants.URL_API + "/" + Config.routeFile + "/" + getId();
     }

@@ -48,40 +48,49 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.config.Constants;
+import mercandalli.com.filespace.config.MyAppComponent;
+import mercandalli.com.filespace.listener.IFileModelListener;
 import mercandalli.com.filespace.listener.IListener;
-import mercandalli.com.filespace.listener.IModelFileListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.listener.IStringListener;
-import mercandalli.com.filespace.model.ModelFile;
+import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.model.ModelFileTypeENUM;
-import mercandalli.com.filespace.model.MusicModelFile;
+import mercandalli.com.filespace.model.file.FileModel;
+import mercandalli.com.filespace.model.file.FileMusicModel;
+import mercandalli.com.filespace.model.file.FileTypeModelENUM;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.adapter.AdapterGridModelFile;
-import mercandalli.com.filespace.ui.adapter.AdapterModelFile;
+import mercandalli.com.filespace.ui.adapter.file.FileModelAdapter;
+import mercandalli.com.filespace.ui.adapter.file.FileModelGridAdapter;
 import mercandalli.com.filespace.ui.fragment.BackFragment;
-import mercandalli.com.filespace.ui.fragment.FabFragment;
+import mercandalli.com.filespace.ui.fragment.InjectedFragment;
 import mercandalli.com.filespace.ui.view.DividerItemDecoration;
 import mercandalli.com.filespace.util.DialogUtils;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.StringPair;
 
-public class FileLocalFragment extends FabFragment
+public class FileLocalFragment extends InjectedFragment
         implements BackFragment.IListViewMode, BackFragment.ISortMode {
 
     private RecyclerView mRecyclerView;
     private GridView mGridView;
-    private ArrayList<ModelFile> mFilesList;
+    private ArrayList<FileModel> mFilesList;
     private ProgressBar mProgressBar;
     private File mCurrentDirectory;
     private TextView mMessageTextView;
 
-    private List<ModelFile> mFilesToCutList = new ArrayList<>();
-    private List<ModelFile> mFilesToCopyList = new ArrayList<>();
+    private List<FileModel> mFilesToCutList = new ArrayList<>();
+    private List<FileModel> mFilesToCopyList = new ArrayList<>();
 
     private int mSortMode = Constants.SORT_DATE_MODIFICATION;
     private int mViewMode = Constants.MODE_LIST;
+
+    @Inject
+    FileManager mFileManager;
 
     public static FileLocalFragment newInstance() {
         return new FileLocalFragment();
@@ -160,9 +169,11 @@ public class FileLocalFragment extends FabFragment
 
         mFilesList = new ArrayList<>();
         for (File file : fs) {
-            ModelFile tmpModelFile = new ModelFile(mActivity, mApplicationCallback, file);
+            FileModel tmpModelFile = new FileModel.FileModelBuilder().file(file).build();
+            /*
             if (mSortMode == Constants.SORT_SIZE)
                 tmpModelFile.adapterTitleStart = FileUtils.humanReadableByteCount(tmpModelFile.size) + " - ";
+            */
             mFilesList.add(tmpModelFile);
         }
 
@@ -180,9 +191,9 @@ public class FileLocalFragment extends FabFragment
             } else
                 mMessageTextView.setVisibility(View.GONE);
 
-            final AdapterModelFile adapter = new AdapterModelFile(mActivity, mFilesList, new IModelFileListener() {
+            final FileModelAdapter adapter = new FileModelAdapter(mActivity, mFilesList, new IFileModelListener() {
                 @Override
-                public void executeModelFile(final ModelFile modelFile) {
+                public void executeFileModel(final FileModel fileModel) {
                     final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
                     String[] menuList = {getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties)};
                     if (mApplicationCallback.isLogged())
@@ -195,34 +206,35 @@ public class FileLocalFragment extends FabFragment
                                         item += 1;
                                     switch (item) {
                                         case 0:
-                                            if (modelFile.directory) {
+                                            if (fileModel.isDirectory()) {
                                                 Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-                                            } else
-                                                DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
+                                            } else {
+                                                DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + fileModel.getName(), getString(R.string.upload), new IListener() {
                                                     @Override
                                                     public void execute() {
-                                                        if (modelFile.getFile() != null) {
-                                                            List<StringPair> parameters = modelFile.getForUpload();
-                                                            (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeFile, new IPostExecuteListener() {
+                                                        if (fileModel.getFile() != null) {
+                                                            List<StringPair> parameters = mFileManager.getForUpload(fileModel);
+                                                            (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
                                                                 @Override
                                                                 public void onPostExecute(JSONObject json, String body) {
 
                                                                 }
-                                                            }, parameters, modelFile.getFile())).execute();
+                                                            }, parameters, fileModel.getFile())).execute();
                                                         }
                                                     }
                                                 }, getString(R.string.cancel), null);
+                                            }
                                             break;
                                         case 1:
-                                            modelFile.openLocalAs();
+                                            mFileManager.openLocalAs(mActivity, fileModel);
                                             break;
                                         case 2:
-                                            DialogUtils.prompt(mActivity, "Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                            DialogUtils.prompt(mActivity, "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
-                                                    modelFile.rename(text, new IPostExecuteListener() {
+                                                    mFileManager.rename(fileModel, text, new IListener() {
                                                         @Override
-                                                        public void onPostExecute(JSONObject json, String body) {
+                                                        public void execute() {
                                                             if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
                                                                 mFilesToCutList.clear();
                                                                 refreshFab();
@@ -235,15 +247,15 @@ public class FileLocalFragment extends FabFragment
                                                         }
                                                     });
                                                 }
-                                            }, "Cancel", null, modelFile.getNameExt());
+                                            }, "Cancel", null, fileModel.getFullName());
                                             break;
                                         case 3:
-                                            DialogUtils.alert(mActivity, "Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                            DialogUtils.alert(mActivity, "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
                                                 @Override
                                                 public void execute() {
-                                                    modelFile.delete(new IPostExecuteListener() {
+                                                    mFileManager.delete(fileModel, new IListener() {
                                                         @Override
-                                                        public void onPostExecute(JSONObject json, String body) {
+                                                        public void execute() {
                                                             if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
                                                                 mFilesToCutList.clear();
                                                                 refreshFab();
@@ -259,19 +271,19 @@ public class FileLocalFragment extends FabFragment
                                             }, "No", null);
                                             break;
                                         case 4:
-                                            FileLocalFragment.this.mFilesToCopyList.add(modelFile);
+                                            FileLocalFragment.this.mFilesToCopyList.add(fileModel);
                                             Toast.makeText(mActivity, "File ready to copy.", Toast.LENGTH_SHORT).show();
                                             refreshFab();
                                             break;
                                         case 5:
-                                            FileLocalFragment.this.mFilesToCutList.add(modelFile);
+                                            FileLocalFragment.this.mFilesToCutList.add(fileModel);
                                             Toast.makeText(mActivity, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                             refreshFab();
                                             break;
                                         case 6:
                                             DialogUtils.alert(mActivity,
-                                                    getString(R.string.properties) + " : " + modelFile.name,
-                                                    modelFile.toSpanned(),
+                                                    getString(R.string.properties) + " : " + fileModel.getName(),
+                                                    mFileManager.toSpanned(fileModel),
                                                     "OK",
                                                     null,
                                                     null,
@@ -287,30 +299,35 @@ public class FileLocalFragment extends FabFragment
 
             mRecyclerView.setAdapter(adapter);
 
-            adapter.setOnItemClickListener(new AdapterModelFile.OnItemClickListener() {
+            adapter.setOnItemClickListener(new FileModelAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    if (hasItemSelected()) {
+                    /*if (hasItemSelected()) {
                         mFilesList.get(position).selected = !mFilesList.get(position).selected;
                         adapter.notifyItemChanged(position);
-                    } else if (mFilesList.get(position).directory) {
-                        mCurrentDirectory = new File(mFilesList.get(position).url);
+                    } else */
+                    if (mFilesList.get(position).isDirectory()) {
+                        mCurrentDirectory = new File(mFilesList.get(position).getUrl());
                         refreshList();
                     } else {
-                        List<MusicModelFile> tmpFiles = new ArrayList<>();
-                        for (ModelFile f : mFilesList)
-                            if (f.type != null && f.type.equals(ModelFileTypeENUM.AUDIO.type))
-                                tmpFiles.add(new MusicModelFile(mActivity, mApplicationCallback, f));
-                        mFilesList.get(position).executeLocal(tmpFiles, view);
+                        List<FileMusicModel> tmpFiles = new ArrayList<>();
+                        for (FileModel f : mFilesList) {
+                            if (f.getType() != null && f.getType().equals(ModelFileTypeENUM.AUDIO.type)) {
+                                tmpFiles.add(new FileMusicModel.FileMusicModelBuilder().fileModel(f).build());
+                            }
+                        }
+                        mFileManager.executeLocal(mActivity, mFilesList.get(position), tmpFiles, view);
                     }
                 }
             });
 
-            adapter.setOnItemLongClickListener(new AdapterModelFile.OnItemLongClickListener() {
+            adapter.setOnItemLongClickListener(new FileModelAdapter.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(View view, int position) {
+                    /*
                     mFilesList.get(position).selected = !mFilesList.get(position).selected;
                     adapter.notifyItemChanged(position);
+                    */
                     return true;
                 }
             });
@@ -320,22 +337,25 @@ public class FileLocalFragment extends FabFragment
                 mGridView.setVisibility(View.VISIBLE);
                 mRecyclerView.setVisibility(View.GONE);
 
-                mGridView.setAdapter(new AdapterGridModelFile(mActivity, mFilesList));
+                mGridView.setAdapter(new FileModelGridAdapter(mActivity, mFilesList));
                 mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        if (hasItemSelected()) {
+                        /*if (hasItemSelected()) {
                             mFilesList.get(position).selected = !mFilesList.get(position).selected;
                             adapter.notifyItemChanged(position);
-                        } else if (mFilesList.get(position).directory) {
-                            mCurrentDirectory = new File(mFilesList.get(position).url);
+                        } else */
+                        if (mFilesList.get(position).isDirectory()) {
+                            mCurrentDirectory = new File(mFilesList.get(position).getUrl());
                             refreshList();
                         } else {
-                            List<MusicModelFile> tmpFiles = new ArrayList<>();
-                            for (ModelFile f : mFilesList)
-                                if (f.type != null && f.type.equals(ModelFileTypeENUM.AUDIO.type))
-                                    tmpFiles.add(new MusicModelFile(mActivity, mApplicationCallback, f));
-                            mFilesList.get(position).executeLocal(tmpFiles, view);
+                            List<FileMusicModel> tmpFiles = new ArrayList<>();
+                            for (FileModel f : mFilesList) {
+                                if (f.getType() != null && f.getType().equals(FileTypeModelENUM.AUDIO.type)) {
+                                    tmpFiles.add(new FileMusicModel.FileMusicModelBuilder().fileModel(f).build());
+                                }
+                            }
+                            mFileManager.executeLocal(mActivity, mFilesList.get(position), tmpFiles, view);
                         }
                     }
                 });
@@ -345,7 +365,7 @@ public class FileLocalFragment extends FabFragment
                         if (position >= mFilesList.size()) {
                             return false;
                         }
-                        final ModelFile modelFile = mFilesList.get(position);
+                        final FileModel fileModel = mFilesList.get(position);
 
                         final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
                         String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties)};
@@ -360,31 +380,31 @@ public class FileLocalFragment extends FabFragment
                                             item--;
                                         switch (item) {
                                             case 0:
-                                                if (modelFile.directory) {
+                                                if (fileModel.isDirectory()) {
                                                     Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                                 } else
-                                                    DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + modelFile.name, getString(R.string.upload), new IListener() {
+                                                    DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + fileModel.getName(), getString(R.string.upload), new IListener() {
                                                         @Override
                                                         public void execute() {
-                                                            if (modelFile.getFile() != null) {
-                                                                List<StringPair> parameters = modelFile.getForUpload();
-                                                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeFile, new IPostExecuteListener() {
+                                                            if (fileModel.getFile() != null) {
+                                                                List<StringPair> parameters = mFileManager.getForUpload(fileModel);
+                                                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
                                                                     @Override
                                                                     public void onPostExecute(JSONObject json, String body) {
 
                                                                     }
-                                                                }, parameters, modelFile.getFile())).execute();
+                                                                }, parameters, fileModel.getFile())).execute();
                                                             }
                                                         }
                                                     }, getString(R.string.cancel), null);
                                                 break;
                                             case 1:
-                                                DialogUtils.prompt(mActivity, "Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                                DialogUtils.prompt(mActivity, "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
                                                     @Override
                                                     public void execute(String text) {
-                                                        modelFile.rename(text, new IPostExecuteListener() {
+                                                        mFileManager.rename(fileModel, text, new IListener() {
                                                             @Override
-                                                            public void onPostExecute(JSONObject json, String body) {
+                                                            public void execute() {
                                                                 if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
                                                                     mFilesToCutList.clear();
                                                                     refreshFab();
@@ -393,15 +413,15 @@ public class FileLocalFragment extends FabFragment
                                                             }
                                                         });
                                                     }
-                                                }, "Cancel", null, modelFile.getNameExt());
+                                                }, "Cancel", null, fileModel.getFullName());
                                                 break;
                                             case 2:
-                                                DialogUtils.alert(mActivity, "Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                                DialogUtils.alert(mActivity, "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
                                                     @Override
                                                     public void execute() {
-                                                        modelFile.delete(new IPostExecuteListener() {
+                                                        mFileManager.delete(fileModel, new IListener() {
                                                             @Override
-                                                            public void onPostExecute(JSONObject json, String body) {
+                                                            public void execute() {
                                                                 if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
                                                                     mFilesToCutList.clear();
                                                                     refreshFab();
@@ -413,19 +433,19 @@ public class FileLocalFragment extends FabFragment
                                                 }, "No", null);
                                                 break;
                                             case 3:
-                                                FileLocalFragment.this.mFilesToCopyList.add(modelFile);
+                                                FileLocalFragment.this.mFilesToCopyList.add(fileModel);
                                                 Toast.makeText(mActivity, "File ready to copy.", Toast.LENGTH_SHORT).show();
                                                 refreshFab();
                                                 break;
                                             case 4:
-                                                FileLocalFragment.this.mFilesToCutList.add(modelFile);
+                                                FileLocalFragment.this.mFilesToCutList.add(fileModel);
                                                 Toast.makeText(mActivity, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                                 refreshFab();
                                                 break;
                                             case 5:
                                                 DialogUtils.alert(mActivity,
-                                                        getString(R.string.properties) + " : " + modelFile.name,
-                                                        "Name : " + modelFile.name + "\nExtension : " + modelFile.type + "\nType : " + modelFile.type.getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
+                                                        getString(R.string.properties) + " : " + fileModel.getName(),
+                                                        "Name : " + fileModel.getName() + "\nExtension : " + fileModel.getType() + "\nType : " + fileModel.getType().getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(fileModel.getSize()),
                                                         "OK",
                                                         null,
                                                         null,
@@ -495,15 +515,19 @@ public class FileLocalFragment extends FabFragment
     }
 
     public boolean hasItemSelected() {
-        for (ModelFile file : mFilesList)
+        /*
+        for (FileModel file : mFilesList)
             if (file.selected)
                 return true;
+                */
         return false;
     }
 
     public void deselectAll() {
-        for (ModelFile file : mFilesList)
+        /*
+        for (FileModel file : mFilesList)
             file.selected = false;
+            */
         updateAdapter();
     }
 
@@ -517,14 +541,14 @@ public class FileLocalFragment extends FabFragment
             case 0:
                 if ((mFilesToCopyList != null && mFilesToCopyList.size() != 0) || (mFilesToCutList != null && mFilesToCutList.size() != 0)) {
                     if (mFilesToCopyList != null) {
-                        for (ModelFile file : mFilesToCopyList) {
-                            file.copyFile(mCurrentDirectory.getAbsolutePath() + File.separator);
+                        for (FileModel file : mFilesToCopyList) {
+                            mFileManager.copyLocalFile(mActivity, file, mCurrentDirectory.getAbsolutePath() + File.separator);
                         }
                         mFilesToCopyList.clear();
                     }
                     if (mFilesToCutList != null) {
-                        for (ModelFile file : mFilesToCutList) {
-                            file.renameLocalByPath(mCurrentDirectory.getAbsolutePath() + File.separator + file.getNameExt());
+                        for (FileModel file : mFilesToCutList) {
+                            mFileManager.renameLocalByPath(file, mCurrentDirectory.getAbsolutePath() + File.separator + file.getFullName());
                         }
                         mFilesToCutList.clear();
                     }
@@ -608,5 +632,10 @@ public class FileLocalFragment extends FabFragment
             mViewMode = viewMode;
             updateAdapter();
         }
+    }
+
+    @Override
+    protected void inject(MyAppComponent myAppComponent) {
+        myAppComponent.inject(this);
     }
 }
