@@ -399,12 +399,13 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                         if (hasItemSelected()) {
                             mFilesList.get(position).selected = !mFilesList.get(position).selected;
                             mFileModelAdapter.notifyItemChanged(position);
-                        } else if (mFilesList.get(position).isDirectory()) {
-                            FileMyCloudFragment.this.mIdFileDirectoryStack.add(mFilesList.get(position).id);
+                        } else */
+                        if (mFilesList.get(position).isDirectory()) {
+                            FileMyCloudFragment.this.mIdFileDirectoryStack.add(mFilesList.get(position).getId());
                             refreshList();
-                        } else
-                            mFilesList.get(position).executeOnline(mFilesList, view);
-                            */
+                        } else {
+                            mFileManager.executeOnline(mActivity, mFilesList.get(position), mFilesList, view);
+                        }
                     }
                 });
                 this.mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

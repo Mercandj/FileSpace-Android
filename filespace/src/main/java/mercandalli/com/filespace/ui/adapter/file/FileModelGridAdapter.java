@@ -63,7 +63,9 @@ public class FileModelGridAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View itemLayoutView, ViewGroup parent) {
         LayoutInflater inflater = mActivity.getLayoutInflater();
-        itemLayoutView = inflater.inflate(R.layout.tab_file_images, parent, false);
+        if (itemLayoutView == null) {
+            itemLayoutView = inflater.inflate(R.layout.tab_file_images, parent, false);
+        }
 
         RelativeLayout item = (RelativeLayout) itemLayoutView.findViewById(R.id.item);
         TextView title = (TextView) itemLayoutView.findViewById(R.id.title);
