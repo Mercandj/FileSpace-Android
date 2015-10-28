@@ -31,7 +31,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.listener.IModelFileListener;
 import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.model.file.FileTypeModelENUM;
 import mercandalli.com.filespace.util.StringUtils;
@@ -40,7 +39,6 @@ public class FileModelGridAdapter extends BaseAdapter {
 
     private Activity mActivity;
     public List<FileModel> files;
-    private IModelFileListener moreListener;
 
     public FileModelGridAdapter(Activity activity, List<FileModel> files) {
         this.mActivity = activity;
