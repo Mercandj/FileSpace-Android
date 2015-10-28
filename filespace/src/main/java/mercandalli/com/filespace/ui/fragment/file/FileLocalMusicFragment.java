@@ -57,21 +57,15 @@ import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.config.MyAppComponent;
 import mercandalli.com.filespace.listener.IFileModelListener;
 import mercandalli.com.filespace.listener.IListener;
-import mercandalli.com.filespace.listener.IModelFileListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.listener.IStringListener;
 import mercandalli.com.filespace.manager.file.FileManager;
-import mercandalli.com.filespace.model.ModelFile;
-import mercandalli.com.filespace.model.MusicModelFile;
 import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.model.file.FileMusicModel;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.adapter.AdapterDragMusicModelFile;
-import mercandalli.com.filespace.ui.adapter.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapter.file.FileModelGridAdapter;
 import mercandalli.com.filespace.ui.adapter.file.FileMusicModelDragAdapter;
 import mercandalli.com.filespace.ui.fragment.BackFragment;
-import mercandalli.com.filespace.ui.fragment.FabFragment;
 import mercandalli.com.filespace.ui.fragment.InjectedFragment;
 import mercandalli.com.filespace.util.DialogUtils;
 import mercandalli.com.filespace.util.FileUtils;
@@ -105,7 +99,7 @@ public class FileLocalMusicFragment extends InjectedFragment
         mRefreshActivityAdapterListener = new IListener() {
             @Override
             public void execute() {
-                if(mApplicationCallback != null) {
+                if (mApplicationCallback != null) {
                     mApplicationCallback.refreshAdapters();
                 }
             }
