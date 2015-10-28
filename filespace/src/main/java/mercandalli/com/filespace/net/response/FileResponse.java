@@ -16,7 +16,7 @@ import mercandalli.com.filespace.util.StringUtils;
 /**
  * Created by Jonathan on 23/10/2015.
  */
-public class GetFileResponse {
+public class FileResponse {
     @SerializedName("id")
     private int mId;
 
@@ -67,7 +67,7 @@ public class GetFileResponse {
         FileSpaceModel content = null;
         if (!StringUtils.isNullOrEmpty(mContent)) {
             Gson gson = new Gson();
-            GetFileSpaceResponse contentResponse = gson.fromJson(mContent, GetFileSpaceResponse.class);
+            FileSpaceResponse contentResponse = gson.fromJson(mContent, FileSpaceResponse.class);
             if (contentResponse != null) {
                 content = contentResponse.createModel();
             }

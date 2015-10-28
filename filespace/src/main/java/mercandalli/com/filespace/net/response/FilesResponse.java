@@ -7,10 +7,10 @@ import java.util.List;
 /**
  * Created by Jonathan on 24/10/2015.
  */
-public class GetFilesResponse extends MyResponse<GetFileResponse> {
+public class FilesResponse extends MyResponse<FileResponse> {
 
     @Override
-    public List<GetFileResponse> getResult(final Context context) {
+    public List<FileResponse> getResult(final Context context) {
         return super.getResult(context);
     }
 

@@ -1,8 +1,12 @@
 package mercandalli.com.filespace.manager.file;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
@@ -23,13 +27,14 @@ import mercandalli.com.filespace.listener.ResultCallback;
 import mercandalli.com.filespace.local.FileLocalApi;
 import mercandalli.com.filespace.local.FilePersistenceApi;
 import mercandalli.com.filespace.model.file.FileModel;
+import mercandalli.com.filespace.model.file.FileMusicModel;
 import mercandalli.com.filespace.model.file.FileParentModel;
 import mercandalli.com.filespace.model.file.FileTypeModel;
 import mercandalli.com.filespace.model.file.FileTypeModelENUM;
 import mercandalli.com.filespace.net.FileOnlineApi;
 import mercandalli.com.filespace.net.TaskGetDownload;
-import mercandalli.com.filespace.net.response.GetFileResponse;
-import mercandalli.com.filespace.net.response.GetFilesResponse;
+import mercandalli.com.filespace.net.response.FileResponse;
+import mercandalli.com.filespace.net.response.FilesResponse;
 import mercandalli.com.filespace.ui.activitiy.FileAudioActivity;
 import mercandalli.com.filespace.ui.activitiy.FilePictureActivity;
 import mercandalli.com.filespace.ui.activitiy.FileTextActivity;
@@ -62,13 +67,13 @@ public class FileManager {
 
     public void getFiles(final FileParentModel fileParent, final String search, final int sortMode, final ResultCallback<List<FileModel>> resultCallback) {
         if (fileParent.isOnline()) {
-            mFileOnlineApi.getFiles(fileParent.getId(), fileParent.isMine(), StringUtils.toEmptyIfNull(search), new Callback<GetFilesResponse>() {
+            mFileOnlineApi.getFiles(fileParent.getId(), fileParent.isMine(), StringUtils.toEmptyIfNull(search), new Callback<FilesResponse>() {
                 @Override
-                public void success(GetFilesResponse getFilesResponse, Response response) {
-                    List<GetFileResponse> result = getFilesResponse.getResult(mContext);
+                public void success(FilesResponse filesResponse, Response response) {
+                    List<FileResponse> result = filesResponse.getResult(mContext);
                     List<FileModel> fileModelList = new ArrayList<>();
-                    for (GetFileResponse getFileResponse : result) {
-                        fileModelList.add(getFileResponse.createModel());
+                    for (FileResponse fileResponse : result) {
+                        fileModelList.add(fileResponse.createModel());
                     }
                     resultCallback.success(fileModelList);
                 }
@@ -97,10 +102,10 @@ public class FileManager {
 
     public void rename(final FileModel fileModel, final String newName, final IListener listener) {
         if (fileModel.isOnline()) {
-            mFileOnlineApi.rename(fileModel.getId(), new TypedString(newName), new Callback<GetFilesResponse>() {
+            mFileOnlineApi.rename(fileModel.getId(), new TypedString(newName), new Callback<FilesResponse>() {
                 @Override
-                public void success(GetFilesResponse getFilesResponse, Response response) {
-                    getFilesResponse.getResult(mContext);
+                public void success(FilesResponse filesResponse, Response response) {
+                    filesResponse.getResult(mContext);
                     listener.execute();
                 }
 
@@ -120,10 +125,10 @@ public class FileManager {
 
     public void delete(final FileModel fileModel, final IListener listener) {
         if (fileModel.isOnline()) {
-            mFileOnlineApi.delete(fileModel.getId(), "", new Callback<GetFilesResponse>() {
+            mFileOnlineApi.delete(fileModel.getId(), "", new Callback<FilesResponse>() {
                 @Override
-                public void success(GetFilesResponse getFilesResponse, Response response) {
-                    getFilesResponse.getResult(mContext);
+                public void success(FilesResponse filesResponse, Response response) {
+                    filesResponse.getResult(mContext);
                     listener.execute();
                 }
 
@@ -143,10 +148,10 @@ public class FileManager {
 
     public void setParent(final FileModel fileModel, final int id_file_parent, final IListener listener) {
         if (fileModel.isOnline()) {
-            mFileOnlineApi.setParent(fileModel.getId(), new TypedString("" + id_file_parent), new Callback<GetFilesResponse>() {
+            mFileOnlineApi.setParent(fileModel.getId(), new TypedString("" + id_file_parent), new Callback<FilesResponse>() {
                 @Override
-                public void success(GetFilesResponse getFilesResponse, Response response) {
-                    getFilesResponse.getResult(mContext);
+                public void success(FilesResponse filesResponse, Response response) {
+                    filesResponse.getResult(mContext);
                     listener.execute();
                 }
 
@@ -160,10 +165,10 @@ public class FileManager {
 
     public void setPublic(final FileModel fileModel, final boolean isPublic, final IListener listener) {
         if (fileModel.isOnline()) {
-            mFileOnlineApi.setPublic(fileModel.getId(), new TypedString("" + isPublic), new Callback<GetFilesResponse>() {
+            mFileOnlineApi.setPublic(fileModel.getId(), new TypedString("" + isPublic), new Callback<FilesResponse>() {
                 @Override
-                public void success(GetFilesResponse getFilesResponse, Response response) {
-                    getFilesResponse.getResult(mContext);
+                public void success(FilesResponse filesResponse, Response response) {
+                    filesResponse.getResult(mContext);
                     listener.execute();
                 }
 
@@ -232,6 +237,119 @@ public class FileManager {
         }*/
     }
 
+    public void executeLocal(final Activity activity, final FileModel fileModel, List<FileMusicModel> files, View view) {
+        if (fileModel.isOnline()) {
+            return;
+        }
+        if (fileModel.getType().equals(FileTypeModelENUM.APK.type)) {
+            Intent apkIntent = new Intent();
+            apkIntent.setAction(Intent.ACTION_VIEW);
+            apkIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "application/vnd.android.package-archive");
+            activity.startActivity(apkIntent);
+        } else if (fileModel.getType().equals(FileTypeModelENUM.TEXT.type)) {
+            Intent txtIntent = new Intent();
+            txtIntent.setAction(Intent.ACTION_VIEW);
+            txtIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "text/plain");
+            try {
+                activity.startActivity(txtIntent);
+            } catch (ActivityNotFoundException e) {
+                txtIntent.setType("text/*");
+                activity.startActivity(txtIntent);
+            }
+        } else if (fileModel.getType().equals(FileTypeModelENUM.HTML.type)) {
+            Intent htmlIntent = new Intent();
+            htmlIntent.setAction(Intent.ACTION_VIEW);
+            htmlIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "text/html");
+            try {
+                activity.startActivity(htmlIntent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(activity, "ERREUR", Toast.LENGTH_SHORT).show();
+            }
+        } else if (fileModel.getType().equals(FileTypeModelENUM.AUDIO.type)) {
+            Intent intent = new Intent(activity, FileAudioActivity.class);
+            intent.putExtra("ONLINE", false);
+            intent.putExtra("FILE", fileModel);
+            ArrayList<FileModel> tmpFiles = new ArrayList<>();
+            for (FileModel f : files)
+                if (f.getType() != null && f.getType().equals(FileTypeModelENUM.AUDIO.type))
+                    tmpFiles.add(f);
+            intent.putParcelableArrayListExtra("FILES", tmpFiles);
+            if (view == null) {
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+            } else {
+                Pair<View, String> p1 = Pair.create(view.findViewById(R.id.icon), "transitionIcon");
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation(activity, p1);
+                activity.startActivity(intent, options.toBundle());
+            }
+        } else if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
+            Intent picIntent = new Intent();
+            picIntent.setAction(Intent.ACTION_VIEW);
+            picIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "image/*");
+            activity.startActivity(picIntent);
+        } else if (fileModel.getType().equals(FileTypeModelENUM.VIDEO.type)) {
+            Intent videoIntent = new Intent();
+            videoIntent.setAction(Intent.ACTION_VIEW);
+            videoIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "video/*");
+            try {
+                activity.startActivity(videoIntent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(activity, "ERREUR", Toast.LENGTH_SHORT).show();
+            }
+        } else if (fileModel.getType().equals(FileTypeModelENUM.PDF.type)) {
+            Intent pdfIntent = new Intent();
+            pdfIntent.setAction(Intent.ACTION_VIEW);
+            pdfIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "application/pdf");
+            try {
+                activity.startActivity(pdfIntent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(activity, "ERREUR", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    public void openLocalAs(final Activity activity, final FileModel fileModel) {
+        if (!fileModel.isOnline()) {
+            return;
+        }
+        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(activity);
+        String[] menuList = {
+                activity.getString(R.string.text),
+                activity.getString(R.string.image),
+                activity.getString(R.string.audio),
+                activity.getString(R.string.video),
+                activity.getString(R.string.other)};
+        menuAlert.setTitle(activity.getString(R.string.open_as));
+
+        menuAlert.setItems(menuList,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        String type_mime = "";
+                        switch (item) {
+                            case 0:
+                                type_mime = "text/plain";
+                                break;
+                            case 1:
+                                type_mime = "image/*";
+                                break;
+                            case 2:
+                                type_mime = "audio/*";
+                                break;
+                            case 3:
+                                type_mime = "video/*";
+                                break;
+                        }
+                        Intent i = new Intent();
+                        i.setAction(Intent.ACTION_VIEW);
+                        i.setDataAndType(Uri.fromFile(fileModel.getFile()), type_mime);
+                        activity.startActivity(i);
+                    }
+                });
+        AlertDialog menuDrop = menuAlert.create();
+        menuDrop.show();
+    }
+
     public Spanned toSpanned(final FileModel fileModel) {
         final FileTypeModel type = fileModel.getType();
         final boolean isDirectory = fileModel.isDirectory();
@@ -258,5 +376,19 @@ public class FileManager {
         if (fileModel.isOnline())
             spl.add(new StringPair("Visibility", isPublic ? "Public" : "Private"));
         return HtmlUtils.createListItem(spl);
+    }
+
+    public List<StringPair> getForUpload(final FileModel fileModel) {
+        List<StringPair> parameters = new ArrayList<>();
+        if (fileModel.getName() != null) {
+            parameters.add(new StringPair("url", fileModel.getName()));
+        }
+        if (fileModel.isDirectory()) {
+            parameters.add(new StringPair("directory", "true"));
+        }
+        if (fileModel.getIdFileParent() != -1) {
+            parameters.add(new StringPair("id_file_parent", "" + fileModel.getIdFileParent()));
+        }
+        return parameters;
     }
 }

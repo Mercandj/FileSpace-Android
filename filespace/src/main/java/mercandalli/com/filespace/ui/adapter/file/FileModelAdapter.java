@@ -33,14 +33,13 @@ import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IFileModelListener;
-import mercandalli.com.filespace.model.ModelFileTypeENUM;
 import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.model.file.FileTypeModel;
 import mercandalli.com.filespace.model.file.FileTypeModelENUM;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.StringUtils;
 
-public class AdapterFileModel extends RecyclerView.Adapter<AdapterFileModel.ViewHolder> {
+public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.ViewHolder> {
 
     private Activity mActivity;
     public final List<FileModel> files = new ArrayList<>();
@@ -50,7 +49,7 @@ public class AdapterFileModel extends RecyclerView.Adapter<AdapterFileModel.View
 
     private boolean mShowSize;
 
-    public AdapterFileModel(Activity app, final List<FileModel> files, IFileModelListener moreListener) {
+    public FileModelAdapter(Activity app, final List<FileModel> files, IFileModelListener moreListener) {
         this.mActivity = app;
         this.files.clear();
         this.files.addAll(files);
@@ -58,7 +57,7 @@ public class AdapterFileModel extends RecyclerView.Adapter<AdapterFileModel.View
     }
 
     @Override
-    public AdapterFileModel.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FileModelAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file, parent, false), viewType);
     }
 

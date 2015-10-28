@@ -36,35 +36,35 @@ import mercandalli.com.filespace.listener.IFileModelListener;
 import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.model.file.FileTypeModel;
 import mercandalli.com.filespace.model.file.FileTypeModelENUM;
-import mercandalli.com.filespace.model.file.MusicFileModel;
+import mercandalli.com.filespace.model.file.FileMusicModel;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.StringUtils;
 
-public class AdapterDragMusicFileModel extends RecyclerView.Adapter<AdapterDragMusicFileModel.ViewHolder> {
+public class FileMusicModelDragAdapter extends RecyclerView.Adapter<FileMusicModelDragAdapter.ViewHolder> {
 
     private Activity mActivity;
-    private List<MusicFileModel> files;
+    private List<FileMusicModel> files;
     private OnItemClickListener mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
     private IFileModelListener moreListener;
 
     private boolean mShowSize;
 
-    public AdapterDragMusicFileModel(Activity activity, List<MusicFileModel> files, IFileModelListener moreListener) {
+    public FileMusicModelDragAdapter(Activity activity, List<FileMusicModel> files, IFileModelListener moreListener) {
         this.mActivity = activity;
         this.files = files;
         this.moreListener = moreListener;
     }
 
     @Override
-    public AdapterDragMusicFileModel.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FileMusicModelDragAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_drag, parent, false), viewType);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         if (position < files.size()) {
-            final MusicFileModel file = files.get(position);
+            final FileMusicModel file = files.get(position);
 
             viewHolder.title.setText(getAdapterTitle(file));
             viewHolder.subtitle.setText(getAdapterSubtitle(file));
@@ -136,23 +136,23 @@ public class AdapterDragMusicFileModel extends RecyclerView.Adapter<AdapterDragM
     }
 
 
-    public void remplaceList(ArrayList<MusicFileModel> list) {
+    public void remplaceList(ArrayList<FileMusicModel> list) {
         files.clear();
         files.addAll(0, list);
         notifyDataSetChanged();
     }
 
-    public void addFirst(ArrayList<MusicFileModel> list) {
+    public void addFirst(ArrayList<FileMusicModel> list) {
         files.addAll(0, list);
         notifyDataSetChanged();
     }
 
-    public void addLast(ArrayList<MusicFileModel> list) {
+    public void addLast(ArrayList<FileMusicModel> list) {
         files.addAll(files.size(), list);
         notifyDataSetChanged();
     }
 
-    public void addItem(MusicFileModel name, int position) {
+    public void addItem(FileMusicModel name, int position) {
         this.files.add(position, name);
         this.notifyItemInserted(position);
     }
@@ -205,32 +205,32 @@ public class AdapterDragMusicFileModel extends RecyclerView.Adapter<AdapterDragM
             return adapterTitleStart + fileModel.getUrl();
     }
 
-    public String getAdapterSubtitle(MusicFileModel musicFileModel) {
-        if (!StringUtils.isNullOrEmpty(musicFileModel.getAlbum()) && !StringUtils.isNullOrEmpty(musicFileModel.getArtist())) {
-            return musicFileModel.getArtist() + " - " + musicFileModel.getAlbum();
+    public String getAdapterSubtitle(FileMusicModel fileMusicModel) {
+        if (!StringUtils.isNullOrEmpty(fileMusicModel.getAlbum()) && !StringUtils.isNullOrEmpty(fileMusicModel.getArtist())) {
+            return fileMusicModel.getArtist() + " - " + fileMusicModel.getAlbum();
         }
-        if (!StringUtils.isNullOrEmpty(musicFileModel.getArtist())) {
-            return musicFileModel.getArtist();
+        if (!StringUtils.isNullOrEmpty(fileMusicModel.getArtist())) {
+            return fileMusicModel.getArtist();
         }
-        if (!StringUtils.isNullOrEmpty(musicFileModel.getAlbum())) {
-            return musicFileModel.getAlbum();
+        if (!StringUtils.isNullOrEmpty(fileMusicModel.getAlbum())) {
+            return fileMusicModel.getAlbum();
         }
 
         String adapterTitleStart = "";
         if (mShowSize) {
-            adapterTitleStart = FileUtils.humanReadableByteCount(musicFileModel.getSize()) + " - ";
+            adapterTitleStart = FileUtils.humanReadableByteCount(fileMusicModel.getSize()) + " - ";
         }
 
-        if (musicFileModel.getType() == null) {
-            if (musicFileModel.getName() != null)
-                return adapterTitleStart + musicFileModel.getFullName();
+        if (fileMusicModel.getType() == null) {
+            if (fileMusicModel.getName() != null)
+                return adapterTitleStart + fileMusicModel.getFullName();
             else
-                return adapterTitleStart + musicFileModel.getUrl();
-        } else if (musicFileModel.getType().equals(FileTypeModelENUM.FILESPACE.type) && musicFileModel.getContent() != null) {
-            return adapterTitleStart + musicFileModel.getContent().getAdapterTitle();
-        } else if (musicFileModel.getName() != null)
-            return adapterTitleStart + musicFileModel.getFullName();
+                return adapterTitleStart + fileMusicModel.getUrl();
+        } else if (fileMusicModel.getType().equals(FileTypeModelENUM.FILESPACE.type) && fileMusicModel.getContent() != null) {
+            return adapterTitleStart + fileMusicModel.getContent().getAdapterTitle();
+        } else if (fileMusicModel.getName() != null)
+            return adapterTitleStart + fileMusicModel.getFullName();
         else
-            return adapterTitleStart + musicFileModel.getUrl();
+            return adapterTitleStart + fileMusicModel.getUrl();
     }
 }

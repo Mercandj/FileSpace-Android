@@ -15,10 +15,6 @@ import mercandalli.com.filespace.util.FileUtils;
  */
 public class FileModel implements Parcelable {
 
-    private FileModel() {
-
-    }
-
     // Online & Local attrs
     private int mId;
     private int mIdUser;
@@ -37,10 +33,6 @@ public class FileModel implements Parcelable {
     private File mFile;
     private long mLastModified;
     private long mCount;
-
-    public FileModel(File file) {
-        setFile(file);
-    }
 
     public static class FileModelBuilder {
 
@@ -148,6 +140,18 @@ public class FileModel implements Parcelable {
 
         public FileModelBuilder count(long count) {
             this.count = count;
+            return this;
+        }
+
+        public FileModelBuilder parcel(Parcel in) {
+            id = in.readInt();
+            url = in.readString();
+            name = in.readString();
+            size = in.readLong();
+            boolean[] b = new boolean[1];
+            in.readBooleanArray(b);
+            isDirectory = b[0];
+            type = new FileTypeModel(in.readString());
             return this;
         }
 
@@ -340,7 +344,7 @@ public class FileModel implements Parcelable {
     public static final Creator<FileModel> CREATOR = new Creator<FileModel>() {
         @Override
         public FileModel createFromParcel(Parcel in) {
-            return new FileModel(in);
+            return new FileModelBuilder().parcel(in).build();
         }
 
         @Override
@@ -348,17 +352,6 @@ public class FileModel implements Parcelable {
             return new FileModel[size];
         }
     };
-
-    public FileModel(Parcel in) {
-        this.mId = in.readInt();
-        this.mUrl = in.readString();
-        this.mName = in.readString();
-        this.mSize = in.readLong();
-        boolean[] b = new boolean[1];
-        in.readBooleanArray(b);
-        this.mIsDirectory = b[0];
-        this.mType = new FileTypeModel(in.readString());
-    }
 
     @Override
     public int describeContents() {

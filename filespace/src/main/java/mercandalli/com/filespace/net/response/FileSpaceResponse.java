@@ -12,7 +12,7 @@ import mercandalli.com.filespace.model.file.FileSpaceModel;
 /**
  * Created by Jonathan on 23/10/2015.
  */
-public class GetFileSpaceResponse {
+public class FileSpaceResponse {
 
     @SerializedName("type")
     private String mType;

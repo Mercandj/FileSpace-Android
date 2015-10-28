@@ -58,8 +58,8 @@ import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.model.file.FileParentModel;
 import mercandalli.com.filespace.model.file.FileTypeModelENUM;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.adapter.file.AdapterFileModel;
-import mercandalli.com.filespace.ui.adapter.file.AdapterGridFileModel;
+import mercandalli.com.filespace.ui.adapter.file.FileModelAdapter;
+import mercandalli.com.filespace.ui.adapter.file.FileModelGridAdapter;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragment.BackFragment;
 import mercandalli.com.filespace.ui.fragment.InjectedFragment;
@@ -72,7 +72,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
 
     private RecyclerView mRecyclerView;
     private GridView mGridView;
-    private AdapterFileModel mAdapterFileModel;
+    private FileModelAdapter mFileModelAdapter;
     private final ArrayList<FileModel> mFilesList = new ArrayList<>();
     private ProgressBar mProgressBar;
     private TextView mMessageTextView;
@@ -105,7 +105,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
 
         resetPath();
 
-        mAdapterFileModel = new AdapterFileModel(mActivity, mFilesList, new IFileModelListener() {
+        mFileModelAdapter = new FileModelAdapter(mActivity, mFilesList, new IFileModelListener() {
             @Override
             public void executeFileModel(final FileModel fileModel) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
@@ -243,17 +243,17 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
             }
         });
 
-        mRecyclerView.setAdapter(mAdapterFileModel);
+        mRecyclerView.setAdapter(mFileModelAdapter);
         mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
-        mAdapterFileModel.setOnItemClickListener(new AdapterFileModel.OnItemClickListener() {
+        mFileModelAdapter.setOnItemClickListener(new FileModelAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 /*
                 if (hasItemSelected()) {
                     mFilesList.get(position).selected = !mFilesList.get(position).selected;
-                    mAdapterFileModel.notifyItemChanged(position);
+                    mFileModelAdapter.notifyItemChanged(position);
                 }
                 else
                 */
@@ -266,12 +266,12 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
             }
         });
 
-        mAdapterFileModel.setOnItemLongClickListener(new AdapterFileModel.OnItemLongClickListener() {
+        mFileModelAdapter.setOnItemLongClickListener(new FileModelAdapter.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(View view, int position) {
                 /*
                 mFilesList.get(position).selected = !mFilesList.get(position).selected;
-                mAdapterFileModel.notifyItemChanged(position);
+                mFileModelAdapter.notifyItemChanged(position);
                 */
                 return true;
             }
@@ -383,7 +383,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
             } else
                 this.mMessageTextView.setVisibility(View.GONE);
 
-            mAdapterFileModel.replaceList(mFilesList);
+            mFileModelAdapter.replaceList(mFilesList);
 
             refreshFab();
 
@@ -391,14 +391,14 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                 this.mGridView.setVisibility(View.VISIBLE);
                 this.mRecyclerView.setVisibility(View.GONE);
 
-                this.mGridView.setAdapter(new AdapterGridFileModel(mActivity, mFilesList));
+                this.mGridView.setAdapter(new FileModelGridAdapter(mActivity, mFilesList));
                 this.mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         /*
                         if (hasItemSelected()) {
                             mFilesList.get(position).selected = !mFilesList.get(position).selected;
-                            mAdapterFileModel.notifyItemChanged(position);
+                            mFileModelAdapter.notifyItemChanged(position);
                         } else if (mFilesList.get(position).isDirectory()) {
                             FileMyCloudFragment.this.mIdFileDirectoryStack.add(mFilesList.get(position).id);
                             refreshList();

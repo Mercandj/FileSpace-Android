@@ -36,13 +36,13 @@ import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.model.file.FileTypeModelENUM;
 import mercandalli.com.filespace.util.StringUtils;
 
-public class AdapterGridFileModel extends BaseAdapter {
+public class FileModelGridAdapter extends BaseAdapter {
 
     private Activity mActivity;
     public List<FileModel> files;
     private IModelFileListener moreListener;
 
-    public AdapterGridFileModel(Activity activity, List<FileModel> files) {
+    public FileModelGridAdapter(Activity activity, List<FileModel> files) {
         this.mActivity = activity;
         this.files = files;
     }
