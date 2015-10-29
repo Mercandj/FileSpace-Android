@@ -213,7 +213,7 @@ public class FileLocalFragment extends InjectedFragment
                                                     @Override
                                                     public void execute() {
                                                         if (fileModel.getFile() != null) {
-                                                            List<StringPair> parameters = mFileManager.getForUpload(fileModel);
+                                                            List<StringPair> parameters = FileManager.getForUpload(fileModel);
                                                             (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
                                                                 @Override
                                                                 public void onPostExecute(JSONObject json, String body) {
@@ -387,7 +387,7 @@ public class FileLocalFragment extends InjectedFragment
                                                         @Override
                                                         public void execute() {
                                                             if (fileModel.getFile() != null) {
-                                                                List<StringPair> parameters = mFileManager.getForUpload(fileModel);
+                                                                List<StringPair> parameters = FileManager.getForUpload(fileModel);
                                                                 (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
                                                                     @Override
                                                                     public void onPostExecute(JSONObject json, String body) {

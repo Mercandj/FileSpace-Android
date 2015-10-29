@@ -22,7 +22,6 @@ package mercandalli.com.filespace.ui.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,9 +31,10 @@ import org.json.JSONObject;
 import java.io.File;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.listener.IModelFileListener;
+import mercandalli.com.filespace.listener.IFileModelListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelFile;
+import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
@@ -63,7 +63,7 @@ public class DialogRequest extends Dialog {
         this.setTitle(R.string.app_name);
         this.setCancelable(true);
 
-        ((Button) this.findViewById(R.id.request)).setOnClickListener(new View.OnClickListener() {
+        this.findViewById(R.id.request).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -107,13 +107,13 @@ public class DialogRequest extends Dialog {
             }
         });
 
-        ((Button) this.findViewById(R.id.fileButton)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.fileButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogFileChooser = new DialogFileChooser(mActivity, mApplicationCallback, new IModelFileListener() {
+                dialogFileChooser = new DialogFileChooser(mActivity, mApplicationCallback, new IFileModelListener() {
                     @Override
-                    public void executeModelFile(ModelFile modelFile) {
-                        ((TextView) DialogRequest.this.findViewById(R.id.label)).setText("" + modelFile.url);
+                    public void executeFileModel(FileModel fileModel) {
+                        ((TextView) DialogRequest.this.findViewById(R.id.label)).setText(fileModel.getUrl());
                         DialogRequest.this.file = new File(modelFile.url);
                         DialogRequest.this.modelFile = modelFile;
                     }
@@ -121,7 +121,7 @@ public class DialogRequest extends Dialog {
             }
         });
 
-        ((TextView) this.findViewById(R.id.method)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.method).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 currentMethod++;
@@ -132,7 +132,7 @@ public class DialogRequest extends Dialog {
         });
         refreshButtonMethod();
 
-        DialogRequest.this.show();
+        show();
     }
 
     public void refreshButtonMethod() {

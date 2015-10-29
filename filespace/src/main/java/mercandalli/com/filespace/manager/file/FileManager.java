@@ -389,7 +389,7 @@ public class FileManager {
         return HtmlUtils.createListItem(spl);
     }
 
-    public List<StringPair> getForUpload(final FileModel fileModel) {
+    public static List<StringPair> getForUpload(final FileModel fileModel) {
         List<StringPair> parameters = new ArrayList<>();
         if (fileModel.getName() != null) {
             parameters.add(new StringPair("url", fileModel.getName()));

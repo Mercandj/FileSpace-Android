@@ -32,11 +32,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.listener.IModelFileListener;
-import mercandalli.com.filespace.model.ModelFile;
-import mercandalli.com.filespace.model.ModelFileType;
+import mercandalli.com.filespace.listener.IFileModelListener;
+import mercandalli.com.filespace.model.file.FileModel;
+import mercandalli.com.filespace.model.file.FileTypeModel;
 import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
-import mercandalli.com.filespace.ui.adapter.AdapterModelFile;
+import mercandalli.com.filespace.ui.adapter.file.FileModelAdapter;
 
 public class DialogFileChooser extends Dialog {
 
@@ -44,11 +44,11 @@ public class DialogFileChooser extends Dialog {
     private ApplicationCallback mApplicationActivity;
     private RecyclerView files;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<ModelFile> listModelFile;
+    private List<FileModel> listModelFile;
     private File currentFolder;
-    private IModelFileListener listener;
+    private IFileModelListener listener;
 
-    public DialogFileChooser(final Activity activity, final ApplicationCallback applicationCallback, IModelFileListener listener) {
+    public DialogFileChooser(final Activity activity, final ApplicationCallback applicationCallback, IFileModelListener listener) {
         super(activity);
 
         this.mActivity = activity;
@@ -83,19 +83,19 @@ public class DialogFileChooser extends Dialog {
 
     private void updateAdapter() {
         getFiles();
-        AdapterModelFile adapter = new AdapterModelFile(mActivity, listModelFile, null);
+        FileModelAdapter adapter = new FileModelAdapter(mActivity, listModelFile, null);
         files.setAdapter(adapter);
-        adapter.setOnItemClickListener(new AdapterModelFile.OnItemClickListener() {
+        adapter.setOnItemClickListener(new FileModelAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View arg1, int position) {
                 if (position < listModelFile.size()) {
-                    ModelFile file = listModelFile.get(position);
-                    if (file.directory) {
+                    FileModel file = listModelFile.get(position);
+                    if (file.isDirectory()) {
                         currentFolder = file.getFile();
                         updateAdapter();
                     } else {
-                        DialogFileChooser.this.listener.executeModelFile(file);
-                        DialogFileChooser.this.dismiss();
+                        listener.executeFileModel(file);
+                        dismiss();
                     }
                 }
             }
@@ -106,17 +106,17 @@ public class DialogFileChooser extends Dialog {
         String path = this.currentFolder.getAbsolutePath();
         File f = new File(path);
         File fs[] = f.listFiles();
-        listModelFile = new ArrayList<ModelFile>();
+        listModelFile = new ArrayList<>();
         if (fs != null)
             for (File file : fs) {
-                ModelFile modelFile = new ModelFile(mActivity, mApplicationActivity);
-                modelFile.url = file.getAbsolutePath();
-                modelFile.name = file.getName();
-                modelFile.type = new ModelFileType(file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1));
-                modelFile.size = file.getTotalSpace();
-                modelFile.directory = file.isDirectory();
-                modelFile.setFile(file);
-                listModelFile.add(modelFile);
+                FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
+                fileModelBuilder.url(file.getAbsolutePath());
+                fileModelBuilder.name(file.getName());
+                fileModelBuilder.type(new FileTypeModel(file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1)));
+                fileModelBuilder.size(file.getTotalSpace());
+                fileModelBuilder.isDirectory(file.isDirectory());
+                fileModelBuilder.file(file);
+                listModelFile.add(fileModelBuilder.build());
             }
     }
 }

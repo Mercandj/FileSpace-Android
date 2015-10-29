@@ -22,7 +22,6 @@ package mercandalli.com.filespace.ui.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,9 +31,11 @@ import java.io.File;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.listener.IModelFileListener;
+import mercandalli.com.filespace.config.Config;
+import mercandalli.com.filespace.listener.IFileModelListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
-import mercandalli.com.filespace.model.ModelFile;
+import mercandalli.com.filespace.manager.file.FileManager;
+import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
 import mercandalli.com.filespace.util.StringPair;
@@ -45,7 +46,7 @@ public class DialogUpload extends Dialog {
     private final ApplicationCallback mApplicationCallback;
     DialogFileChooser dialogFileChooser;
     File file;
-    ModelFile modelFile;
+    FileModel mFileModel;
     int id_file_parent;
 
     public DialogUpload(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final IPostExecuteListener listener) {
@@ -58,14 +59,15 @@ public class DialogUpload extends Dialog {
         this.setTitle(R.string.app_name);
         this.setCancelable(true);
 
-        ((Button) this.findViewById(R.id.request)).setOnClickListener(new View.OnClickListener() {
+        this.findViewById(R.id.request).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (file != null) {
                     List<StringPair> parameters = null;
-                    if (DialogUpload.this.modelFile != null)
-                        parameters = DialogUpload.this.modelFile.getForUpload();
-                    (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeFile, new IPostExecuteListener() {
+                    if (mFileModel != null) {
+                        parameters = FileManager.getForUpload(mFileModel);
+                    }
+                    (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
                             if (listener != null)
@@ -79,21 +81,21 @@ public class DialogUpload extends Dialog {
             }
         });
 
-        ((Button) this.findViewById(R.id.fileButton)).setOnClickListener(new View.OnClickListener() {
+        this.findViewById(R.id.fileButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogFileChooser = new DialogFileChooser(mActivity, mApplicationCallback, new IModelFileListener() {
+                dialogFileChooser = new DialogFileChooser(mActivity, mApplicationCallback, new IFileModelListener() {
                     @Override
-                    public void executeModelFile(ModelFile modelFile) {
-                        modelFile.id_file_parent = DialogUpload.this.id_file_parent;
-                        ((TextView) DialogUpload.this.findViewById(R.id.label)).setText("" + modelFile.url);
-                        DialogUpload.this.file = new File(modelFile.url);
-                        DialogUpload.this.modelFile = modelFile;
+                    public void executeFileModel(FileModel fileModel) {
+                        fileModel.setIdFileParent(id_file_parent);
+                        ((TextView) DialogUpload.this.findViewById(R.id.label)).setText(fileModel.getUrl());
+                        DialogUpload.this.file = new File(fileModel.getUrl());
+                        DialogUpload.this.mFileModel = fileModel;
                     }
                 });
             }
         });
 
-        DialogUpload.this.show();
+        show();
     }
 }

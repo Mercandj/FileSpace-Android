@@ -21,7 +21,6 @@ package mercandalli.com.filespace.model;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -317,77 +316,7 @@ public class ModelFile extends Model implements Parcelable {
         menuDrop.show();
     }
 
-    public void executeLocal(List<MusicModelFile> files, View view) {
-        if (!file.exists())
-            return;
-        if (this.type.equals(ModelFileTypeENUM.APK.type)) {
-            Intent apkIntent = new Intent();
-            apkIntent.setAction(Intent.ACTION_VIEW);
-            apkIntent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
-            mActivity.startActivity(apkIntent);
-        } else if (this.type.equals(ModelFileTypeENUM.TEXT.type)) {
-            Intent txtIntent = new Intent();
-            txtIntent.setAction(Intent.ACTION_VIEW);
-            txtIntent.setDataAndType(Uri.fromFile(file), "text/plain");
-            try {
-                mActivity.startActivity(txtIntent);
-            } catch (ActivityNotFoundException e) {
-                txtIntent.setType("text/*");
-                mActivity.startActivity(txtIntent);
-            }
-        } else if (this.type.equals(ModelFileTypeENUM.HTML.type)) {
-            Intent htmlIntent = new Intent();
-            htmlIntent.setAction(Intent.ACTION_VIEW);
-            htmlIntent.setDataAndType(Uri.fromFile(file), "text/html");
-            try {
-                this.mActivity.startActivity(htmlIntent);
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(this.mActivity, "ERREUR", Toast.LENGTH_SHORT).show();
-            }
-        } else if (this.type.equals(ModelFileTypeENUM.AUDIO.type)) {
-            Intent intent = new Intent(this.mActivity, FileAudioActivity.class);
-            intent.putExtra("ONLINE", false);
-            intent.putExtra("FILE", this);
-            ArrayList<ModelFile> tmpFiles = new ArrayList<>();
-            for (ModelFile f : files)
-                if (f.type != null)
-                    if (f.type.equals(ModelFileTypeENUM.AUDIO.type))
-                        tmpFiles.add(f);
-            intent.putParcelableArrayListExtra("FILES", tmpFiles);
-            if (view == null) {
-                this.mActivity.startActivity(intent);
-                this.mActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-            } else {
-                Pair<View, String> p1 = Pair.create(view.findViewById(R.id.icon), "transitionIcon");
-                ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(this.mActivity, p1);
-                this.mActivity.startActivity(intent, options.toBundle());
-            }
-        } else if (this.type.equals(ModelFileTypeENUM.PICTURE.type)) {
-            Intent picIntent = new Intent();
-            picIntent.setAction(Intent.ACTION_VIEW);
-            picIntent.setDataAndType(Uri.fromFile(file), "image/*");
-            this.mActivity.startActivity(picIntent);
-        } else if (this.type.equals(ModelFileTypeENUM.VIDEO.type)) {
-            Intent videoIntent = new Intent();
-            videoIntent.setAction(Intent.ACTION_VIEW);
-            videoIntent.setDataAndType(Uri.fromFile(file), "video/*");
-            try {
-                mActivity.startActivity(videoIntent);
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(mActivity, "ERREUR", Toast.LENGTH_SHORT).show();
-            }
-        } else if (this.type.equals(ModelFileTypeENUM.PDF.type)) {
-            Intent pdfIntent = new Intent();
-            pdfIntent.setAction(Intent.ACTION_VIEW);
-            pdfIntent.setDataAndType(Uri.fromFile(file), "application/pdf");
-            try {
-                mActivity.startActivity(pdfIntent);
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(mActivity, "ERREUR", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+
 
     public void download(IListener listener) {
         if (this.directory) {
