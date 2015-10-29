@@ -35,7 +35,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,14 +51,15 @@ import mercandalli.com.filespace.listener.IFileModelListener;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.listener.IStringListener;
+import mercandalli.com.filespace.listener.ResultCallback;
 import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.model.ModelFile;
-import mercandalli.com.filespace.model.ModelFileTypeENUM;
 import mercandalli.com.filespace.model.file.FileModel;
-import mercandalli.com.filespace.net.TaskGet;
+import mercandalli.com.filespace.model.file.FileParentModel;
+import mercandalli.com.filespace.model.file.FileTypeModelENUM;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.adapter.AdapterGridModelFile;
 import mercandalli.com.filespace.ui.adapter.file.FileModelAdapter;
+import mercandalli.com.filespace.ui.adapter.file.FileModelGridAdapter;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragment.BackFragment;
 import mercandalli.com.filespace.ui.fragment.FabFragment;
@@ -86,7 +86,6 @@ public class FileCloudFragment extends InjectedFragment implements
     private ProgressBar mProgressBar;
     private TextView mMessageTextView;
 
-    private String url = "";
     private List<FileModel> filesToCut = new ArrayList<>();
 
     @Inject
@@ -136,15 +135,17 @@ public class FileCloudFragment extends InjectedFragment implements
         if (!isAdded()) {
             return;
         }
+        /*
         List<StringPair> parameters = new ArrayList<>();
         if (search != null)
             parameters.add(new StringPair("search", "" + search));
         parameters.add(new StringPair("url", "" + this.url));
         parameters.add(new StringPair("all-public", "" + true));
+        */
 
         if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
-/*
-            mFileManager.getFiles(new FileParentModel(mIdFileDirectoryStack.peek(), true), search, Constants.SORT_DATE_MODIFICATION, new ResultCallback<List<FileModel>>() {
+
+            mFileManager.getFiles(new FileParentModel(-1), false, search, Constants.SORT_DATE_MODIFICATION, new ResultCallback<List<FileModel>>() {
                 @Override
                 public void success(List<FileModel> result) {
                     mFilesList.clear();
@@ -156,8 +157,9 @@ public class FileCloudFragment extends InjectedFragment implements
                 public void failure() {
 
                 }
-            });*/
+            });
 
+            /*
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
@@ -187,6 +189,7 @@ public class FileCloudFragment extends InjectedFragment implements
                     },
                     parameters
             ).execute();
+            */
         } else {
             this.mProgressBar.setVisibility(View.GONE);
             if (isAdded())
@@ -215,13 +218,16 @@ public class FileCloudFragment extends InjectedFragment implements
             if (!NetUtils.isInternetConnection(mActivity))
                 mMessageTextView.setText(getString(R.string.no_internet_connection));
             else if (mFilesList.size() == 0) {
+                /*
                 if (this.url == null)
                     this.mMessageTextView.setText(getString(R.string.no_file_server));
                 else if (this.url.equals(""))
                     this.mMessageTextView.setText(getString(R.string.no_file_server));
                 else
                     this.mMessageTextView.setText(getString(R.string.no_file_directory));
-                this.mMessageTextView.setVisibility(View.VISIBLE);
+                    */
+                mMessageTextView.setText(getString(R.string.no_file_server));
+                mMessageTextView.setVisibility(View.VISIBLE);
             } else
                 this.mMessageTextView.setVisibility(View.GONE);
 
@@ -233,18 +239,21 @@ public class FileCloudFragment extends InjectedFragment implements
                 this.mGridView.setVisibility(View.VISIBLE);
                 this.mRecyclerView.setVisibility(View.GONE);
 
-                this.mGridView.setAdapter(new AdapterGridModelFile(mActivity, mFilesList));
+                this.mGridView.setAdapter(new FileModelGridAdapter(mActivity, mFilesList));
                 this.mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        if (hasItemSelected()) {
+                        /*if (hasItemSelected()) {
                             mFilesList.get(position).selected = !mFilesList.get(position).selected;
                             mAdapterModelFile.notifyItemChanged(position);
-                        } else if (mFilesList.get(position).directory) {
-                            FileCloudFragment.this.url = mFilesList.get(position).url + "/";
+                        } else */
+                        if (mFilesList.get(position).isDirectory()) {
+                            Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                            //FileCloudFragment.this.url = mFilesList.get(position).getUrl() + "/";
                             refreshList();
-                        } else
-                            mFilesList.get(position).executeOnline(mFilesList, view);
+                        } else {
+                            mFileManager.executeOnline(mActivity, mFilesList.get(position), mFilesList, view);
+                        }
                     }
                 });
                 this.mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -254,21 +263,21 @@ public class FileCloudFragment extends InjectedFragment implements
                             return false;
                         final FileModel fileModel = mFilesList.get(position);
 
-                        final AlertDialog.Builder menuAleart = new AlertDialog.Builder(mActivity);
+                        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
                         String[] menuList = {getString(R.string.download)};
-                        if (!fileModel.isDirectory() && fileModel.isMine()) {
-                            if (modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
-                                menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public", "Set as profile"};
+                        if (!fileModel.isDirectory() && mFileManager.isMine(fileModel)) {
+                            if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
+                                menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (fileModel.isPublic()) ? "Become private" : "Become public", "Set as profile"};
                             } else
-                                menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public"};
+                                menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (fileModel.isPublic()) ? "Become private" : "Become public"};
                         }
-                        menuAleart.setTitle(getString(R.string.action));
-                        menuAleart.setItems(menuList,
+                        menuAlert.setTitle(getString(R.string.action));
+                        menuAlert.setItems(menuList,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int item) {
                                         switch (item) {
                                             case 0:
-                                                modelFile.download(new IListener() {
+                                                mFileManager.download(mActivity, fileModel, new IListener() {
                                                     @Override
                                                     public void execute() {
                                                         Toast.makeText(mActivity, "Download finished.", Toast.LENGTH_SHORT).show();
@@ -278,12 +287,12 @@ public class FileCloudFragment extends InjectedFragment implements
                                                 break;
 
                                             case 1:
-                                                DialogUtils.prompt(mActivity, "Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                                DialogUtils.prompt(mActivity, "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
                                                     @Override
                                                     public void execute(String text) {
-                                                        modelFile.rename(text, new IPostExecuteListener() {
+                                                        mFileManager.rename(fileModel, text, new IListener() {
                                                             @Override
-                                                            public void onPostExecute(JSONObject json, String body) {
+                                                            public void execute() {
                                                                 if (filesToCut != null && filesToCut.size() != 0) {
                                                                     filesToCut.clear();
                                                                     refreshFab.execute();
@@ -292,16 +301,16 @@ public class FileCloudFragment extends InjectedFragment implements
                                                             }
                                                         });
                                                     }
-                                                }, "Cancel", null, modelFile.getNameExt());
+                                                }, "Cancel", null, fileModel.getFullName());
                                                 break;
 
                                             case 2:
-                                                DialogUtils.alert(mActivity, "Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                                DialogUtils.alert(mActivity, "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
                                                     @Override
                                                     public void execute() {
-                                                        modelFile.delete(new IPostExecuteListener() {
+                                                        mFileManager.delete(fileModel, new IListener() {
                                                             @Override
-                                                            public void onPostExecute(JSONObject json, String body) {
+                                                            public void execute() {
                                                                 if (filesToCut != null && filesToCut.size() != 0) {
                                                                     filesToCut.clear();
                                                                     refreshFab.execute();
@@ -314,14 +323,14 @@ public class FileCloudFragment extends InjectedFragment implements
                                                 break;
 
                                             case 3:
-                                                FileCloudFragment.this.filesToCut.add(modelFile);
+                                                FileCloudFragment.this.filesToCut.add(fileModel);
                                                 Toast.makeText(mActivity, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                                 break;
 
                                             case 4:
                                                 DialogUtils.alert(mActivity,
-                                                        getString(R.string.properties) + " : " + modelFile.name,
-                                                        "Name : " + modelFile.name + "\nExtension : " + modelFile.type + "\nType : " + modelFile.type.getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(modelFile.size),
+                                                        getString(R.string.properties) + " : " + fileModel.getName(),
+                                                        "Name : " + fileModel.getName() + "\nExtension : " + fileModel.getType() + "\nType : " + fileModel.getType().getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(fileModel.getSize()),
                                                         "OK",
                                                         null,
                                                         null,
@@ -329,9 +338,9 @@ public class FileCloudFragment extends InjectedFragment implements
                                                 break;
 
                                             case 5:
-                                                modelFile.setPublic(!modelFile._public, new IPostExecuteListener() {
+                                                mFileManager.setPublic(fileModel, !fileModel.isPublic(), new IListener() {
                                                     @Override
-                                                    public void onPostExecute(JSONObject json, String body) {
+                                                    public void execute() {
                                                         mApplicationCallback.refreshAdapters();
                                                     }
                                                 });
@@ -340,15 +349,14 @@ public class FileCloudFragment extends InjectedFragment implements
                                             // Picture set as profile
                                             case 6:
                                                 List<StringPair> parameters = new ArrayList<>();
-                                                parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
-                                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                parameters.add(new StringPair("id_file_profile_picture", "" + fileModel.getId()));
+                                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUserPut, new IPostExecuteListener() {
                                                     @Override
                                                     public void onPostExecute(JSONObject json, String body) {
                                                         try {
-                                                            if (json != null)
-                                                                if (json.has("succeed"))
-                                                                    if (json.getBoolean("succeed"))
-                                                                        mApplicationCallback.getConfig().setUserIdFileProfilePicture(modelFile.id);
+                                                            if (json != null && json.has("succeed"))
+                                                                if (json.getBoolean("succeed"))
+                                                                    mApplicationCallback.getConfig().setUserIdFileProfilePicture(fileModel.getId());
                                                         } catch (JSONException e) {
                                                             e.printStackTrace();
                                                         }
@@ -358,7 +366,7 @@ public class FileCloudFragment extends InjectedFragment implements
                                         }
                                     }
                                 });
-                        AlertDialog menuDrop = menuAleart.create();
+                        AlertDialog menuDrop = menuAlert.create();
                         menuDrop.show();
                         return false;
                     }
@@ -389,16 +397,20 @@ public class FileCloudFragment extends InjectedFragment implements
     }
 
     public boolean hasItemSelected() {
+        /*
         for (FileModel file : mFilesList)
             if (file.selected)
                 return true;
+                */
         return false;
     }
 
     public void deselectAll() {
+        /*
         for (FileModel file : mFilesList)
             file.selected = false;
         updateAdapter();
+        */
     }
 
     @Override
@@ -421,7 +433,8 @@ public class FileCloudFragment extends InjectedFragment implements
                 break;
 
             case 1:
-                FileCloudFragment.this.url = "";
+                //FileCloudFragment.this.url = "";
+                Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                 FileCloudFragment.this.refreshList();
                 break;
         }
@@ -464,40 +477,56 @@ public class FileCloudFragment extends InjectedFragment implements
 
     @Override
     public void onItemClick(View view, int position) {
-        if (hasItemSelected()) {
+        /*if (hasItemSelected()) {
             mFilesList.get(position).selected = !mFilesList.get(position).selected;
             mAdapterModelFile.notifyItemChanged(position);
-        } else if (mFilesList.get(position).directory) {
-            FileCloudFragment.this.url = mFilesList.get(position).url + "/";
+        } else */
+        if (mFilesList.get(position).isDirectory()) {
+            //FileCloudFragment.this.url = mFilesList.get(position).getUrl() + "/";
+            Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
             refreshList();
-        } else
-            mFilesList.get(position).executeOnline(mFilesList, view);
+        } else {
+            mFileManager.executeOnline(mActivity, mFilesList.get(position), mFilesList, view);
+        }
     }
 
     @Override
     public boolean onItemLongClick(View view, int position) {
-        mFilesList.get(position).selected = !mFilesList.get(position).selected;
+        /*mFilesList.get(position).selected = !mFilesList.get(position).selected;
         mAdapterModelFile.notifyItemChanged(position);
+        */
         return true;
     }
 
     @Override
     public void executeFileModel(final FileModel fileModel) {
-        final AlertDialog.Builder menuAleart = new AlertDialog.Builder(mActivity);
+        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
         String[] menuList = {getString(R.string.download)};
-        if (!modelFile.directory && modelFile.isMine()) {
-            if (modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
-                menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public", "Set as profile"};
+        if (!fileModel.isDirectory() && mFileManager.isMine(fileModel)) {
+            if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
+                menuList = new String[]{
+                        getString(R.string.download),
+                        getString(R.string.rename),
+                        getString(R.string.delete),
+                        getString(R.string.cut),
+                        getString(R.string.properties),
+                        (fileModel.isPublic()) ? "Become private" : "Become public", "Set as profile"};
             } else
-                menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public"};
+                menuList = new String[]{
+                        getString(R.string.download),
+                        getString(R.string.rename),
+                        getString(R.string.delete),
+                        getString(R.string.cut),
+                        getString(R.string.properties),
+                        (fileModel.isPublic()) ? "Become private" : "Become public"};
         }
-        menuAleart.setTitle(getString(R.string.action));
-        menuAleart.setItems(menuList,
+        menuAlert.setTitle(getString(R.string.action));
+        menuAlert.setItems(menuList,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
                         switch (item) {
                             case 0:
-                                modelFile.download(new IListener() {
+                                mFileManager.download(mActivity, fileModel, new IListener() {
                                     @Override
                                     public void execute() {
                                         Toast.makeText(mActivity, "Download finished.", Toast.LENGTH_SHORT).show();
@@ -507,12 +536,12 @@ public class FileCloudFragment extends InjectedFragment implements
                                 break;
 
                             case 1:
-                                DialogUtils.prompt(mActivity, "Rename", "Rename " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Ok", new IStringListener() {
+                                DialogUtils.prompt(mActivity, "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
                                     @Override
                                     public void execute(String text) {
-                                        modelFile.rename(text, new IPostExecuteListener() {
+                                        mFileManager.rename(fileModel, text, new IListener() {
                                             @Override
-                                            public void onPostExecute(JSONObject json, String body) {
+                                            public void execute() {
                                                 if (filesToCut != null && filesToCut.size() != 0) {
                                                     filesToCut.clear();
                                                     refreshFab.execute();
@@ -521,16 +550,16 @@ public class FileCloudFragment extends InjectedFragment implements
                                             }
                                         });
                                     }
-                                }, "Cancel", null, modelFile.getNameExt());
+                                }, "Cancel", null, fileModel.getFullName());
                                 break;
 
                             case 2:
-                                DialogUtils.alert(mActivity, "Delete", "Delete " + (modelFile.directory ? "directory" : "file") + " " + modelFile.name + " ?", "Yes", new IListener() {
+                                DialogUtils.alert(mActivity, "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
                                     @Override
                                     public void execute() {
-                                        modelFile.delete(new IPostExecuteListener() {
+                                        mFileManager.delete(fileModel, new IListener() {
                                             @Override
-                                            public void onPostExecute(JSONObject json, String body) {
+                                            public void execute() {
                                                 if (filesToCut != null && filesToCut.size() != 0) {
                                                     filesToCut.clear();
                                                     refreshFab.execute();
@@ -558,9 +587,9 @@ public class FileCloudFragment extends InjectedFragment implements
                                 break;
 
                             case 5:
-                                modelFile.setPublic(!modelFile._public, new IPostExecuteListener() {
+                                mFileManager.setPublic(fileModel, !fileModel.isPublic(), new IListener() {
                                     @Override
-                                    public void onPostExecute(JSONObject json, String body) {
+                                    public void execute() {
                                         mApplicationCallback.refreshAdapters();
                                     }
                                 });
@@ -586,7 +615,7 @@ public class FileCloudFragment extends InjectedFragment implements
                         }
                     }
                 });
-        AlertDialog menuDrop = menuAleart.create();
+        AlertDialog menuDrop = menuAlert.create();
         menuDrop.show();
     }
 

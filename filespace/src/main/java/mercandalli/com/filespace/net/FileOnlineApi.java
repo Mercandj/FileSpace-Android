@@ -1,6 +1,7 @@
 package mercandalli.com.filespace.net;
 
 import mercandalli.com.filespace.config.Config;
+import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.net.response.FilesResponse;
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -14,14 +15,14 @@ import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
 /**
- * Created by Jonathan on 23/10/2015.
+ * The {@link FileModel} online api .
  */
 public interface FileOnlineApi {
 
     @GET("/" + Config.routeFile)
     void getFiles(
             @Query("id_file_parent") int fileParentId,
-            @Query("mine") boolean mine,
+            @Query("all-public") String publicFiles,
             @Query("search") String search,
             Callback<FilesResponse> result);
 

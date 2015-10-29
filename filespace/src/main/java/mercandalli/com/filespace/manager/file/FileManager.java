@@ -71,9 +71,9 @@ public class FileManager {
         mFilePersistenceApi = filePersistenceApi;
     }
 
-    public void getFiles(final FileParentModel fileParent, final String search, final int sortMode, final ResultCallback<List<FileModel>> resultCallback) {
+    public void getFiles(final FileParentModel fileParent, boolean areMyFiles, final String search, final int sortMode, final ResultCallback<List<FileModel>> resultCallback) {
         if (fileParent.isOnline()) {
-            mFileOnlineApi.getFiles(fileParent.getId(), fileParent.isMine(), StringUtils.toEmptyIfNull(search), new Callback<FilesResponse>() {
+            mFileOnlineApi.getFiles(fileParent.getId(), areMyFiles ? "" : "true", StringUtils.toEmptyIfNull(search), new Callback<FilesResponse>() {
                 @Override
                 public void success(FilesResponse filesResponse, Response response) {
                     List<FileResponse> result = filesResponse.getResult(mContext);
@@ -191,7 +191,7 @@ public class FileManager {
         }
     }
 
-    public void executeOnline(final Activity activity, final FileModel fileModel, final ArrayList<FileModel> files, View view) {
+    public void executeOnline(final Activity activity, final FileModel fileModel, final List<FileModel> files, View view) {
         if (fileModel.getType().equals(FileTypeModelENUM.TEXT.type)) {
             FileTextActivity.start(activity, fileModel, true);
         } else if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
@@ -453,9 +453,6 @@ public class FileManager {
     }
 
     public boolean isMine(final FileModel fileModel) {
-        if (!fileModel.isOnline()) {
-            return true;
-        }
-
+        return !fileModel.isOnline() || fileModel.getIdUser() == Config.getUserId();
     }
 }

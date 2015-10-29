@@ -8,12 +8,10 @@ import java.io.File;
 public class FileParentModel {
 
     private int mId;
-    private boolean mIsMine;
     private File mFile;
 
-    public FileParentModel(final int id, final boolean isMine) {
+    public FileParentModel(final int id) {
         mId = id;
-        mIsMine = isMine;
     }
 
     public FileParentModel(final File file) {
@@ -26,14 +24,6 @@ public class FileParentModel {
 
     public void setId(int mId) {
         this.mId = mId;
-    }
-
-    public boolean isMine() {
-        return mIsMine;
-    }
-
-    public void setIsMine(boolean isMine) {
-        this.mIsMine = isMine;
     }
 
     public File getFile() {
