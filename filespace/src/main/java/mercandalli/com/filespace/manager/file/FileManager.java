@@ -451,4 +451,11 @@ public class FileManager {
         if (listener != null)
             listener.onPostExecute(null, null);
     }
+
+    public boolean isMine(final FileModel fileModel) {
+        if (!fileModel.isOnline()) {
+            return true;
+        }
+
+    }
 }

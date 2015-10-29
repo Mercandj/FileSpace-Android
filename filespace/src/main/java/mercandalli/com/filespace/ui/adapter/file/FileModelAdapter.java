@@ -147,18 +147,18 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
     }
 
 
-    public void replaceList(ArrayList<FileModel> list) {
+    public void replaceList(List<FileModel> list) {
         files.clear();
         files.addAll(list);
         notifyDataSetChanged();
     }
 
-    public void addFirst(ArrayList<FileModel> list) {
+    public void addFirst(List<FileModel> list) {
         files.addAll(0, list);
         notifyDataSetChanged();
     }
 
-    public void addLast(ArrayList<FileModel> list) {
+    public void addLast(List<FileModel> list) {
         files.addAll(files.size(), list);
         notifyDataSetChanged();
     }

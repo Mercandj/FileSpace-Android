@@ -42,21 +42,28 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.config.Constants;
+import mercandalli.com.filespace.config.MyAppComponent;
+import mercandalli.com.filespace.listener.IFileModelListener;
 import mercandalli.com.filespace.listener.IListener;
-import mercandalli.com.filespace.listener.IModelFileListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.listener.IStringListener;
+import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.model.ModelFile;
 import mercandalli.com.filespace.model.ModelFileTypeENUM;
+import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.adapter.AdapterGridModelFile;
-import mercandalli.com.filespace.ui.adapter.AdapterModelFile;
+import mercandalli.com.filespace.ui.adapter.file.FileModelAdapter;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragment.BackFragment;
 import mercandalli.com.filespace.ui.fragment.FabFragment;
+import mercandalli.com.filespace.ui.fragment.InjectedFragment;
 import mercandalli.com.filespace.ui.view.DividerItemDecoration;
 import mercandalli.com.filespace.util.DialogUtils;
 import mercandalli.com.filespace.util.FileUtils;
@@ -66,21 +73,24 @@ import mercandalli.com.filespace.util.StringPair;
 /**
  * A {@link FabFragment} used by {@link FileFragment} to display the public cloud {@link ModelFile}.
  */
-public class FileCloudFragment extends FabFragment implements
+public class FileCloudFragment extends InjectedFragment implements
         BackFragment.IListViewMode,
-        AdapterModelFile.OnItemClickListener,
-        AdapterModelFile.OnItemLongClickListener,
-        IModelFileListener {
+        FileModelAdapter.OnItemClickListener,
+        FileModelAdapter.OnItemLongClickListener,
+        IFileModelListener {
 
     private RecyclerView mRecyclerView;
     private GridView mGridView;
-    private AdapterModelFile mAdapterModelFile;
-    private ArrayList<ModelFile> mFilesList = new ArrayList<>();
+    private FileModelAdapter mAdapterModelFile;
+    private List<FileModel> mFilesList = new ArrayList<>();
     private ProgressBar mProgressBar;
     private TextView mMessageTextView;
 
     private String url = "";
-    private List<ModelFile> filesToCut = new ArrayList<>();
+    private List<FileModel> filesToCut = new ArrayList<>();
+
+    @Inject
+    FileManager mFileManager;
 
     /**
      * {@link Constants#MODE_LIST} or {@link Constants#MODE_GRID}
@@ -105,7 +115,7 @@ public class FileCloudFragment extends FabFragment implements
         mGridView = (GridView) rootView.findViewById(R.id.gridView);
         mGridView.setVisibility(View.GONE);
 
-        mAdapterModelFile = new AdapterModelFile(mActivity, mFilesList, this);
+        mAdapterModelFile = new FileModelAdapter(mActivity, mFilesList, this);
         mRecyclerView.setAdapter(mAdapterModelFile);
         mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
@@ -132,11 +142,26 @@ public class FileCloudFragment extends FabFragment implements
         parameters.add(new StringPair("url", "" + this.url));
         parameters.add(new StringPair("all-public", "" + true));
 
-        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged())
+        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
+/*
+            mFileManager.getFiles(new FileParentModel(mIdFileDirectoryStack.peek(), true), search, Constants.SORT_DATE_MODIFICATION, new ResultCallback<List<FileModel>>() {
+                @Override
+                public void success(List<FileModel> result) {
+                    mFilesList.clear();
+                    mFilesList.addAll(result);
+                    updateAdapter();
+                }
+
+                @Override
+                public void failure() {
+
+                }
+            });*/
+
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
-                    this.mApplicationCallback.getConfig().getUrlServer() + this.mApplicationCallback.getConfig().routeFile,
+                    this.mApplicationCallback.getConfig().getUrlServer() + Config.routeFile,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -162,7 +187,7 @@ public class FileCloudFragment extends FabFragment implements
                     },
                     parameters
             ).execute();
-        else {
+        } else {
             this.mProgressBar.setVisibility(View.GONE);
             if (isAdded())
                 this.mMessageTextView.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
@@ -200,7 +225,7 @@ public class FileCloudFragment extends FabFragment implements
             } else
                 this.mMessageTextView.setVisibility(View.GONE);
 
-            this.mAdapterModelFile.remplaceList(mFilesList);
+            this.mAdapterModelFile.replaceList(mFilesList);
 
             this.refreshFab.execute();
 
@@ -227,11 +252,11 @@ public class FileCloudFragment extends FabFragment implements
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                         if (position >= mFilesList.size())
                             return false;
-                        final ModelFile modelFile = mFilesList.get(position);
+                        final FileModel fileModel = mFilesList.get(position);
 
                         final AlertDialog.Builder menuAleart = new AlertDialog.Builder(mActivity);
                         String[] menuList = {getString(R.string.download)};
-                        if (!modelFile.directory && modelFile.isMine()) {
+                        if (!fileModel.isDirectory() && fileModel.isMine()) {
                             if (modelFile.type.equals(ModelFileTypeENUM.PICTURE.type)) {
                                 menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (modelFile._public) ? "Become private" : "Become public", "Set as profile"};
                             } else
@@ -364,14 +389,14 @@ public class FileCloudFragment extends FabFragment implements
     }
 
     public boolean hasItemSelected() {
-        for (ModelFile file : mFilesList)
+        for (FileModel file : mFilesList)
             if (file.selected)
                 return true;
         return false;
     }
 
     public void deselectAll() {
-        for (ModelFile file : mFilesList)
+        for (FileModel file : mFilesList)
             file.selected = false;
         updateAdapter();
     }
@@ -457,7 +482,7 @@ public class FileCloudFragment extends FabFragment implements
     }
 
     @Override
-    public void executeModelFile(final ModelFile modelFile) {
+    public void executeFileModel(final FileModel fileModel) {
         final AlertDialog.Builder menuAleart = new AlertDialog.Builder(mActivity);
         String[] menuList = {getString(R.string.download)};
         if (!modelFile.directory && modelFile.isMine()) {
@@ -518,14 +543,14 @@ public class FileCloudFragment extends FabFragment implements
                                 break;
 
                             case 3:
-                                FileCloudFragment.this.filesToCut.add(modelFile);
+                                FileCloudFragment.this.filesToCut.add(fileModel);
                                 Toast.makeText(mActivity, "File ready to cut.", Toast.LENGTH_SHORT).show();
                                 break;
 
                             case 4:
                                 DialogUtils.alert(mActivity,
-                                        getString(R.string.properties) + " : " + modelFile.name,
-                                        modelFile.toSpanned(),
+                                        getString(R.string.properties) + " : " + fileModel.getName(),
+                                        mFileManager.toSpanned(fileModel),
                                         "OK",
                                         null,
                                         null,
@@ -544,15 +569,14 @@ public class FileCloudFragment extends FabFragment implements
                             // Picture set as profile
                             case 6:
                                 List<StringPair> parameters = new ArrayList<>();
-                                parameters.add(new StringPair("id_file_profile_picture", "" + modelFile.id));
+                                parameters.add(new StringPair("id_file_profile_picture", "" + fileModel.getId()));
                                 (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserPut, new IPostExecuteListener() {
                                     @Override
                                     public void onPostExecute(JSONObject json, String body) {
                                         try {
-                                            if (json != null)
-                                                if (json.has("succeed"))
-                                                    if (json.getBoolean("succeed"))
-                                                        mApplicationCallback.getConfig().setUserIdFileProfilePicture(modelFile.id);
+                                            if (json != null && json.has("succeed"))
+                                                if (json.getBoolean("succeed"))
+                                                    mApplicationCallback.getConfig().setUserIdFileProfilePicture(fileModel.getId());
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -564,5 +588,10 @@ public class FileCloudFragment extends FabFragment implements
                 });
         AlertDialog menuDrop = menuAleart.create();
         menuDrop.show();
+    }
+
+    @Override
+    protected void inject(MyAppComponent myAppComponent) {
+        myAppComponent.inject(this);
     }
 }

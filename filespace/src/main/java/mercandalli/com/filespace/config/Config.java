@@ -204,11 +204,11 @@ public class Config {
         }
     }
 
-    public boolean isLogged() {
+    public static boolean isLogged() {
         return getUserId() > -1;
     }
 
-    public int getUserId() {
+    public static int getUserId() {
         return ENUM_Int.INTEGER_USER_ID.value;
     }
 
