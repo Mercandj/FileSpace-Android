@@ -34,7 +34,6 @@ import mercandalli.com.filespace.local.FileLocalApi;
 import mercandalli.com.filespace.local.FilePersistenceApi;
 import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.model.file.FileMusicModel;
-import mercandalli.com.filespace.model.file.FileParentModel;
 import mercandalli.com.filespace.model.file.FileTypeModel;
 import mercandalli.com.filespace.model.file.FileTypeModelENUM;
 import mercandalli.com.filespace.net.FileOnlineApi;
@@ -53,6 +52,7 @@ import mercandalli.com.filespace.util.TimeUtils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
 /**
@@ -71,7 +71,11 @@ public class FileManager {
         mFilePersistenceApi = filePersistenceApi;
     }
 
-    public void getFiles(final FileParentModel fileParent, boolean areMyFiles, final String search, final int sortMode, final ResultCallback<List<FileModel>> resultCallback) {
+    public void getFiles(final FileModel fileParent, final int sortMode, final ResultCallback<List<FileModel>> resultCallback) {
+        getFiles(fileParent, true, null, sortMode, resultCallback);
+    }
+
+    public void getFiles(final FileModel fileParent, boolean areMyFiles, final String search, final int sortMode, final ResultCallback<List<FileModel>> resultCallback) {
         if (fileParent.isOnline()) {
             mFileOnlineApi.getFiles(fileParent.getId(), areMyFiles ? "" : "true", StringUtils.toEmptyIfNull(search), new Callback<FilesResponse>() {
                 @Override
@@ -103,6 +107,31 @@ public class FileManager {
             String url = Constants.URL_API + "/" + Config.routeFile + "/" + fileModel.getId();
             String url_ouput = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.localFolderNameDefault + File.separator + fileModel.getFullName();
             new TaskGetDownload(activity, url, url_ouput, fileModel, listener).execute();
+        }
+    }
+
+    public void upload(final Activity activity, final FileModel fileModel, int idFileParent, final IListener listener) {
+        if (NetUtils.isInternetConnection(mContext) && !fileModel.isOnline()) {
+            if (fileModel.isDirectory()) {
+                Toast.makeText(mContext, "Directory download not supported yet.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            mFileOnlineApi.uploadFile(
+                    new TypedFile("*/*", fileModel.getFile()),
+                    new TypedString(fileModel.getName()),
+                    new TypedString("" + idFileParent),
+                    new TypedString("false"),
+                    new Callback<FilesResponse>() {
+                        @Override
+                        public void success(FilesResponse filesResponse, Response response) {
+                            listener.execute();
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+
+                        }
+                    });
         }
     }
 

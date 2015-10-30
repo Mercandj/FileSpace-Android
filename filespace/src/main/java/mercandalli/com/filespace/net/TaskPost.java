@@ -97,14 +97,6 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
         this.file = file;
     }
 
-    public TaskPost(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener, File file) {
-        mActivity = activity;
-        this.mApplicationCallback = app;
-        this.url = url;
-        this.listener = listener;
-        this.file = file;
-    }
-
     @Override
     protected String doInBackground(Void... urls) {
 

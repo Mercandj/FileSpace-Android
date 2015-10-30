@@ -156,6 +156,7 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
                     JSONArray array = json.getJSONArray("apk_update");
                     PackageManager packageManager = mActivity.getPackageManager();
                     PackageInfo packageInfo = packageManager.getPackageInfo(mActivity.getPackageName(), 0);
+                    /*
                     label:
                     for (int i = 0; i < array.length(); i++) {
                         ModelFile file = new ModelFile(mActivity, mApplicationCallback, array.getJSONObject(i));
@@ -164,6 +165,7 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
                             break label;
                         }
                     }
+                    */
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

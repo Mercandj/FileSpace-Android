@@ -45,9 +45,18 @@ public class DialogUpload extends Dialog {
     private final Activity mActivity;
     private final ApplicationCallback mApplicationCallback;
     DialogFileChooser dialogFileChooser;
-    File file;
+    File mFile;
     FileModel mFileModel;
     int id_file_parent;
+
+    public DialogUpload(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final FileModel fileModel, final IPostExecuteListener listener) {
+        this(activity, applicationCallback, id_file_parent, listener);
+
+        fileModel.setIdFileParent(id_file_parent);
+        ((TextView) DialogUpload.this.findViewById(R.id.label)).setText(fileModel.getUrl());
+        mFile = new File(fileModel.getUrl());
+        mFileModel = fileModel;
+    }
 
     public DialogUpload(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final IPostExecuteListener listener) {
         super(activity);
@@ -62,7 +71,7 @@ public class DialogUpload extends Dialog {
         this.findViewById(R.id.request).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (file != null) {
+                if (mFile != null) {
                     List<StringPair> parameters = null;
                     if (mFileModel != null) {
                         parameters = FileManager.getForUpload(mFileModel);
@@ -73,9 +82,10 @@ public class DialogUpload extends Dialog {
                             if (listener != null)
                                 listener.onPostExecute(json, body);
                         }
-                    }, parameters, file)).execute();
-                } else
+                    }, parameters, mFile)).execute();
+                } else {
                     Toast.makeText(mActivity, mActivity.getString(R.string.no_file), Toast.LENGTH_SHORT).show();
+                }
 
                 DialogUpload.this.dismiss();
             }
@@ -84,12 +94,12 @@ public class DialogUpload extends Dialog {
         this.findViewById(R.id.fileButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogFileChooser = new DialogFileChooser(mActivity, mApplicationCallback, new IFileModelListener() {
+                dialogFileChooser = new DialogFileChooser(mActivity, new IFileModelListener() {
                     @Override
                     public void executeFileModel(FileModel fileModel) {
                         fileModel.setIdFileParent(id_file_parent);
                         ((TextView) DialogUpload.this.findViewById(R.id.label)).setText(fileModel.getUrl());
-                        DialogUpload.this.file = new File(fileModel.getUrl());
+                        DialogUpload.this.mFile = new File(fileModel.getUrl());
                         DialogUpload.this.mFileModel = fileModel;
                     }
                 });

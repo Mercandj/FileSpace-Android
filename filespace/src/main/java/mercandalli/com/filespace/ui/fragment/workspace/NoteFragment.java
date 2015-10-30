@@ -12,7 +12,7 @@ import java.io.UnsupportedEncodingException;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IListener;
-import mercandalli.com.filespace.model.ModelFileSpace;
+import mercandalli.com.filespace.model.file.FileSpaceModel;
 import mercandalli.com.filespace.ui.fragment.BackFragment;
 import mercandalli.com.filespace.util.DialogUtils;
 import mercandalli.com.filespace.util.FontUtils;
@@ -26,7 +26,7 @@ public class NoteFragment extends BackFragment {
     private View rootView;
     private TextView input;
 
-    private ModelFileSpace article;
+    private FileSpaceModel mFileSpaceModel;
 
     public static NoteFragment newInstance() {
         return new NoteFragment();
@@ -36,7 +36,7 @@ public class NoteFragment extends BackFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.rootView = inflater.inflate(R.layout.fragment_workspace_note, container, false);
 
-        this.article = new ModelFileSpace(mActivity, mApplicationCallback, "article");
+        mFileSpaceModel = new FileSpaceModel.FileSpaceModelBuilder().type("article").build();
 
         this.input = (TextView) this.rootView.findViewById(R.id.input);
         FontUtils.applyFont(mActivity, this.input, "fonts/Roboto-Light.ttf");
@@ -46,7 +46,7 @@ public class NoteFragment extends BackFragment {
             try {
                 String txt_tmp = new String(txt.getBytes("ISO-8859-1"), "UTF-8");
                 this.input.setText(txt_tmp);
-                this.article.article.article_content_1 = txt_tmp;
+                mFileSpaceModel.getArticle().article_content_1 = txt_tmp;
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -60,7 +60,7 @@ public class NoteFragment extends BackFragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s != null) {
                     mApplicationCallback.getConfig().setUserNoteWorkspace1(s.toString());
-                    article.article.article_content_1 = s.toString();
+                    mFileSpaceModel.getArticle().article_content_1 = s.toString();
                 }
             }
 

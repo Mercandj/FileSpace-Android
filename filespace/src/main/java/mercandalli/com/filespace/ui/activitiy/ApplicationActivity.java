@@ -41,7 +41,8 @@ import java.util.List;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
-import mercandalli.com.filespace.model.ModelFile;
+import mercandalli.com.filespace.manager.file.FileManager;
+import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.util.StringPair;
 
@@ -51,7 +52,6 @@ import mercandalli.com.filespace.util.StringPair;
 public abstract class ApplicationActivity extends AppCompatActivity implements ApplicationCallback, ConfigCallback {
 
     private Config mConfig;
-    public Dialog mDialog;
 
     /* OnResult code */
     public static final int REQUEST_TAKE_PHOTO = 1;
@@ -113,8 +113,8 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             if (mPhotoFile != null && mPhotoFile.getFile() != null) {
-                List<StringPair> parameters = mPhotoFile.getForUpload();
-                (new TaskPost(this, this, getConfig().getUrlServer() + getConfig().routeFile, new IPostExecuteListener() {
+                List<StringPair> parameters = FileManager.getForUpload(mPhotoFile);
+                (new TaskPost(this, this, getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
                     @Override
                     public void onPostExecute(JSONObject json, String body) {
                         if (mPhotoFileListener != null)
@@ -127,27 +127,23 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
         }
     }
 
-    public static ModelFile mPhotoFile = null;
+    public static FileModel mPhotoFile = null;
     public static IPostExecuteListener mPhotoFileListener = null;
 
     @Override
-    public ModelFile createImageFile() {
+    public FileModel createImageFile() {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_FileSpace_";
         File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + this.getConfig().getLocalFolderName());
-        ModelFile result = new ModelFile(this, this);
-        result.name = imageFileName + ".jpg";
+        FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
+        fileModelBuilder.name(imageFileName + ".jpg");
         try {
-            result.setFile(File.createTempFile(
-                    imageFileName,  /* prefix */
-                    ".jpg",         /* suffix */
-                    storageDir      /* directory */
-            ));
+            fileModelBuilder.file(File.createTempFile(imageFileName, ".jpg", storageDir));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return fileModelBuilder.build();
     }
 
     @Override

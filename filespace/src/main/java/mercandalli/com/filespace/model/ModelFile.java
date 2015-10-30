@@ -199,7 +199,7 @@ public class ModelFile extends Model implements Parcelable {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
+        /*
         if (this.type.equals(ModelFileTypeENUM.PICTURE.type) && this.size >= 0) {
             if (ImageUtils.is_image(mActivity, this.id)) {
                 ModelFile.this.bitmap = ImageUtils.load_image(mActivity, this.id);
@@ -214,12 +214,12 @@ public class ModelFile extends Model implements Parcelable {
                         }
                     }
                 }).execute();
-        }
+        }*/
     }
 
     public void executeOnline(ArrayList<ModelFile> files, View view) {
         if (this.type.equals(ModelFileTypeENUM.TEXT.type)) {
-            FileTextActivity.start(mActivity, this, true);
+            //FileTextActivity.start(mActivity, this, true);
         } else if (this.type.equals(ModelFileTypeENUM.PICTURE.type)) {
             Intent intent = new Intent(mActivity, FilePictureActivity.class);
             intent.putExtra("ID", this.id);
@@ -272,7 +272,7 @@ public class ModelFile extends Model implements Parcelable {
                     mActivity.startActivity(intent);
                     mActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                 } else if (!StringUtils.isNullOrEmpty(content.article.article_content_1)) {
-                    FileTextActivity.start(mActivity, this, true);
+                    //FileTextActivity.start(mActivity, this, true);
                 }
             }
         }

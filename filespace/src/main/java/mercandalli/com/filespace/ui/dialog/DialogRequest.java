@@ -33,7 +33,6 @@ import java.io.File;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IFileModelListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
-import mercandalli.com.filespace.model.ModelFile;
 import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
@@ -45,7 +44,7 @@ public class DialogRequest extends Dialog {
     private final Activity mActivity;
     private final ApplicationCallback mApplicationCallback;
     private File file;
-    ModelFile modelFile;
+    FileModel mFileModel;
 
     private final int GET = 0;
     private final int POST = 1;
@@ -77,7 +76,7 @@ public class DialogRequest extends Dialog {
                                     if (listener != null)
                                         listener.onPostExecute(json, body);
                                 }
-                            }, file)).execute();
+                            })).execute();
                         break;
 
                     case PUT:
@@ -110,12 +109,12 @@ public class DialogRequest extends Dialog {
         findViewById(R.id.fileButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogFileChooser = new DialogFileChooser(mActivity, mApplicationCallback, new IFileModelListener() {
+                dialogFileChooser = new DialogFileChooser(mActivity, new IFileModelListener() {
                     @Override
                     public void executeFileModel(FileModel fileModel) {
                         ((TextView) DialogRequest.this.findViewById(R.id.label)).setText(fileModel.getUrl());
-                        DialogRequest.this.file = new File(modelFile.url);
-                        DialogRequest.this.modelFile = modelFile;
+                        DialogRequest.this.file = new File(fileModel.getUrl());
+                        DialogRequest.this.mFileModel = fileModel;
                     }
                 });
             }

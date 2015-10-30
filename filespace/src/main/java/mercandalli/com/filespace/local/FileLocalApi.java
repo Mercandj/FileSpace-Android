@@ -58,9 +58,7 @@ public class FileLocalApi {
         List<FileModel> mFilesList = new ArrayList<>();
         for (File file : fs) {
             FileModel.FileModelBuilder mileModelBuilder = new FileModel.FileModelBuilder();
-            mFilesList.add(
-                    mileModelBuilder.file(file)
-                            .build());
+            mFilesList.add(mileModelBuilder.file(file).build());
         }
 
         return mFilesList;

@@ -24,7 +24,7 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
     /**
      * The {@link RecyclerView} with animated {@link ViewHolder}.
      */
-    private RecyclerView recyclerView;
+    private RecyclerView mRecyclerView;
 
     /**
      * The animation duration for each {@link RecyclerView}.
@@ -52,11 +52,16 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
     private boolean mAnimsInitialized;
     private final float mFrom;
 
-    public ScaleAnimationAdapter(RecyclerView.Adapter adapter, int cardPerLine) {
-        this(adapter, cardPerLine, 0.0F);
+    public ScaleAnimationAdapter(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
+        this(recyclerView, adapter, 1, 0.0F);
     }
 
-    public ScaleAnimationAdapter(RecyclerView.Adapter adapter, int cardPerLine, float from) {
+    public ScaleAnimationAdapter(RecyclerView recyclerView, RecyclerView.Adapter adapter, int cardPerLine) {
+        this(recyclerView, adapter, cardPerLine, 0.0F);
+    }
+
+    public ScaleAnimationAdapter(RecyclerView recyclerView, RecyclerView.Adapter adapter, int cardPerLine, float from) {
+        mRecyclerView = recyclerView;
         mAdapter = adapter;
         mViewHolderPerLine = cardPerLine;
         this.mFrom = from;
@@ -75,7 +80,7 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
         } else {
             Animator[] animators = this.getAnimators(holder.itemView);
 
-            LinearLayoutManager layoutManager = ((LinearLayoutManager) this.getRecyclerView().getLayoutManager());
+            LinearLayoutManager layoutManager = ((LinearLayoutManager) mRecyclerView.getLayoutManager());
             int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
 
             if (!mAnimsInitialized && firstVisiblePosition <= 1)
@@ -138,6 +143,10 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
         this.mDuration = duration;
     }
 
+    public void setOffsetDuration(int mOffsetDuration) {
+        this.mOffsetDuration = mOffsetDuration;
+    }
+
     public void setInterpolator(Interpolator interpolator) {
         this.mInterpolator = interpolator;
     }
@@ -147,11 +156,11 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
     }
 
     private RecyclerView getRecyclerView() {
-        return recyclerView;
+        return mRecyclerView;
     }
 
     public void setRecyclerView(RecyclerView recyclerView) {
-        this.recyclerView = recyclerView;
+        this.mRecyclerView = recyclerView;
     }
 
     public int getItemViewType(int position) {
@@ -173,11 +182,6 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
         ViewCompat.setAlpha(v, 1.0F);
         ViewCompat.setScaleY(v, 1.0F);
         ViewCompat.setScaleX(v, 1.0F);
-        ViewCompat.setTranslationY(v, 0.0F);
-        ViewCompat.setTranslationX(v, 0.0F);
-        ViewCompat.setRotation(v, 0.0F);
-        ViewCompat.setRotationY(v, 0.0F);
-        ViewCompat.setRotationX(v, 0.0F);
         v.setPivotY((float) (v.getMeasuredHeight() / 2));
         ViewCompat.setPivotX(v, (float) (v.getMeasuredWidth() / 2));
         ViewCompat.animate(v).setInterpolator(null);

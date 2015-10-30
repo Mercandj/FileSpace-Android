@@ -56,7 +56,6 @@ import mercandalli.com.filespace.listener.IStringListener;
 import mercandalli.com.filespace.listener.ResultCallback;
 import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.model.file.FileModel;
-import mercandalli.com.filespace.model.file.FileParentModel;
 import mercandalli.com.filespace.model.file.FileTypeModelENUM;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.adapter.file.FileModelAdapter;
@@ -307,19 +306,24 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
 
         if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
 
-            mFileManager.getFiles(new FileParentModel(mIdFileDirectoryStack.peek()), true, search, Constants.SORT_DATE_MODIFICATION, new ResultCallback<List<FileModel>>() {
-                @Override
-                public void success(List<FileModel> result) {
-                    mFilesList.clear();
-                    mFilesList.addAll(result);
-                    updateAdapter();
-                }
+            mFileManager.getFiles(
+                    new FileModel.FileModelBuilder().id(mIdFileDirectoryStack.peek()).build(),
+                    true,
+                    search,
+                    Constants.SORT_DATE_MODIFICATION,
+                    new ResultCallback<List<FileModel>>() {
+                        @Override
+                        public void success(List<FileModel> result) {
+                            mFilesList.clear();
+                            mFilesList.addAll(result);
+                            updateAdapter();
+                        }
 
-                @Override
-                public void failure() {
+                        @Override
+                        public void failure() {
 
-                }
-            });
+                        }
+                    });
 
             /*
             new TaskGet(

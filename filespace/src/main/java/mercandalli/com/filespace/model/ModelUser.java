@@ -35,6 +35,7 @@ import java.util.TimeZone;
 import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listener.IBitmapListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
+import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
@@ -104,9 +105,7 @@ public class ModelUser extends Model {
 
             userLocation = new ModelUserLocation(mActivity, app, json);
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
+        } catch (JSONException | ParseException e) {
             e.printStackTrace();
         }
 
@@ -115,12 +114,10 @@ public class ModelUser extends Model {
                 ModelUser.this.bitmap = ImageUtils.load_image(mActivity, this.id_file_profile_picture);
                 ModelUser.this.app.updateAdapters();
             } else {
-                ModelFile picture = new ModelFile(mActivity, app);
-                picture.id = this.id_file_profile_picture;
-                picture.size = this.file_profile_picture_size;
-                picture.onlineUrl = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + id_file_profile_picture;
-
-                new TaskGetDownloadImage(mActivity, app, picture, Constants.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
+                FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
+                fileModelBuilder.id(this.id_file_profile_picture);
+                fileModelBuilder.size(this.file_profile_picture_size);
+                new TaskGetDownloadImage(mActivity, app, fileModelBuilder.build(), Constants.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
                     @Override
                     public void execute(Bitmap bitmap) {
                         if (bitmap != null) {

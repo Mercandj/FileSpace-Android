@@ -36,9 +36,9 @@ import java.util.TimeZone;
 
 import mercandalli.com.filespace.listener.IBitmapListener;
 import mercandalli.com.filespace.model.Model;
-import mercandalli.com.filespace.model.ModelFile;
 import mercandalli.com.filespace.model.ModelServerMessage;
 import mercandalli.com.filespace.model.ModelUser;
+import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.net.Base64;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
 import mercandalli.com.filespace.ui.activitiy.ApplicationActivity;
@@ -54,7 +54,6 @@ public class Config {
     private Activity mActivity;
     private ApplicationActivity app;
     private List<ModelServerMessage> listServerMessage_1;
-    public String currentToken = null;
 
     // Local routes
     public static final String localFolderNameDefault = "FileSpace";
@@ -304,10 +303,9 @@ public class Config {
         if (file.exists()) {
             return BitmapFactory.decodeFile(file.getPath());
         } else if (NetUtils.isInternetConnection(app)) {
-            ModelFile modelFile = new ModelFile(app, app);
-            modelFile.id = this.getUserIdFileProfilePicture();
-            modelFile.onlineUrl = this.app.getConfig().getUrlServer() + this.app.getConfig().routeFile + "/" + this.getUserIdFileProfilePicture();
-            new TaskGetDownloadImage(app, app, modelFile, 100000, new IBitmapListener() {
+            FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
+            fileModelBuilder.id(getUserIdFileProfilePicture());
+            new TaskGetDownloadImage(app, app, fileModelBuilder.build(), 100000, new IBitmapListener() {
                 @Override
                 public void execute(Bitmap bitmap) {
                     //TODO photo profile

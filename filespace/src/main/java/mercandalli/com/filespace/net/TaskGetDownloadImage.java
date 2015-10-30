@@ -34,6 +34,7 @@ import java.net.URL;
 import mercandalli.com.filespace.listener.IBitmapListener;
 import mercandalli.com.filespace.listener.ILongListener;
 import mercandalli.com.filespace.model.ModelFile;
+import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.ui.activitiy.ConfigCallback;
 import mercandalli.com.filespace.util.ImageUtils;
 
@@ -65,12 +66,12 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         this.isModelFile = isModelFile;
     }
 
-    public TaskGetDownloadImage(Activity activity, ConfigCallback app, ModelFile fileModel, long sizeLimit, IBitmapListener listener) {
+    public TaskGetDownloadImage(Activity activity, ConfigCallback app, FileModel fileModel, long sizeLimit, IBitmapListener listener) {
         mActivity = activity;
         this.app = app;
-        this.url = fileModel.onlineUrl;
-        this.idFile = fileModel.id;
-        this.sizeFile = fileModel.size;
+        this.url = fileModel.getOnlineUrl();
+        this.idFile = fileModel.getId();
+        this.sizeFile = fileModel.getSize();
         this.listener = listener;
         this.sizeLimit = sizeLimit;
     }

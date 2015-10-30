@@ -29,14 +29,13 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import mercandalli.com.filespace.model.ModelFileSpace;
-import mercandalli.com.filespace.util.PointLong;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.model.file.FileSpaceModel;
+import mercandalli.com.filespace.util.PointLong;
 
 /**
  * Created by Jonathan on 09/05/2015.
@@ -46,7 +45,7 @@ public class FileTimerActivity extends ApplicationActivity {
     private String initate, url, login;
     private boolean online;
     public Date timer_date;
-    ModelFileSpace modelFileContent;
+    public FileSpaceModel mFileSpaceModel;
     TextView txt, second;
     Runnable runnable;
     Handler handler;
@@ -81,8 +80,8 @@ public class FileTimerActivity extends ApplicationActivity {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {
                 this.timer_date = dateFormat.parse("" + extras.getString("TIMER_DATE"));
-                modelFileContent = new ModelFileSpace(this, this, "timer");
-                modelFileContent.timer.timer_date = timer_date;
+                mFileSpaceModel = new FileSpaceModel.FileSpaceModelBuilder().type("timer").build();
+                mFileSpaceModel.getTimer().timer_date = timer_date;
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -91,9 +90,9 @@ public class FileTimerActivity extends ApplicationActivity {
             runnable = new Runnable() {
                 @Override
                 public void run() {
-                    if (modelFileContent != null) {
-                        txt.setText(modelFileContent.toString());
-                        PointLong diff = modelFileContent.diffSecond();
+                    if (mFileSpaceModel != null) {
+                        txt.setText(mFileSpaceModel.toString());
+                        PointLong diff = mFileSpaceModel.diffSecond();
                         if (diff.y < 0)
                             diff.y = -diff.y;
                         second.setText(diff.x + " : " + ((diff.y < 10) ? "0" : "") + diff.y);

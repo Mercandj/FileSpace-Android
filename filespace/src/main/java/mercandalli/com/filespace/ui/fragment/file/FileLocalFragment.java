@@ -59,7 +59,6 @@ import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.listener.IStringListener;
 import mercandalli.com.filespace.manager.file.FileManager;
-import mercandalli.com.filespace.model.ModelFileTypeENUM;
 import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.model.file.FileMusicModel;
 import mercandalli.com.filespace.model.file.FileTypeModelENUM;
@@ -169,12 +168,12 @@ public class FileLocalFragment extends InjectedFragment
 
         mFilesList = new ArrayList<>();
         for (File file : fs) {
-            FileModel tmpModelFile = new FileModel.FileModelBuilder().file(file).build();
+            FileModel tmpFileModel = new FileModel.FileModelBuilder().file(file).build();
             /*
             if (mSortMode == Constants.SORT_SIZE)
-                tmpModelFile.adapterTitleStart = FileUtils.humanReadableByteCount(tmpModelFile.size) + " - ";
+                tmpFileModel.adapterTitleStart = FileUtils.humanReadableByteCount(tmpFileModel.size) + " - ";
             */
-            mFilesList.add(tmpModelFile);
+            mFilesList.add(tmpFileModel);
         }
 
         updateAdapter();
@@ -312,7 +311,7 @@ public class FileLocalFragment extends InjectedFragment
                     } else {
                         List<FileMusicModel> tmpFiles = new ArrayList<>();
                         for (FileModel f : mFilesList) {
-                            if (f.getType() != null && f.getType().equals(ModelFileTypeENUM.AUDIO.type)) {
+                            if (f.getType() != null && f.getType().equals(FileTypeModelENUM.AUDIO.type)) {
                                 tmpFiles.add(new FileMusicModel.FileMusicModelBuilder().fileModel(f).build());
                             }
                         }

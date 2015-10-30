@@ -41,15 +41,11 @@ public class FileSpaceModel {
     public FileSpaceTypeENUM mType;
     public Date mDateCreation;
 
-    public Timer mTimer = new Timer();
-    public Article article = new Article();
+    private Timer mTimer = new Timer();
+    private Article mArticle = new Article();
 
     public FileSpaceModel() {
 
-    }
-
-    public FileSpaceModel(final String type) {
-        this.mType = FileSpaceModel.FileSpaceTypeENUM.create(type);
     }
 
     public String getAdapterTitle() {
@@ -63,10 +59,12 @@ public class FileSpaceModel {
                 e.printStackTrace();
             }
         }
-        if (!StringUtils.isNullOrEmpty(this.article.article_content_1))
-            return this.article.article_title_1;
-        if (this.mDateCreation != null)
-            return this.mDateCreation.toString();
+        if (!StringUtils.isNullOrEmpty(mArticle.article_content_1)) {
+            return mArticle.article_title_1;
+        }
+        if (mDateCreation != null) {
+            return mDateCreation.toString();
+        }
         return "null";
     }
 
@@ -112,8 +110,8 @@ public class FileSpaceModel {
                     json.put("timer_date", "" + dateFormatGmt.format(this.mTimer.timer_date));
                     break;
                 case ARTICLE:
-                    json.put("article_content_1", "" + this.article.article_content_1);
-                    json.put("article_title_1", "" + this.article.article_title_1);
+                    json.put("article_content_1", "" + mArticle.article_content_1);
+                    json.put("article_title_1", "" + mArticle.article_title_1);
                     break;
             }
 
@@ -150,6 +148,7 @@ public class FileSpaceModel {
     public class Timer {
         public Date timer_date;
     }
+
     public class Article {
         public String article_title_1, article_content_1;
     }
@@ -196,6 +195,7 @@ public class FileSpaceModel {
         }
 
     }
+
     public FileSpaceTypeENUM getType() {
         return mType;
     }
@@ -218,10 +218,18 @@ public class FileSpaceModel {
     }
 
     public void setArticleTitle1(String article_title_1) {
-        this.article.article_title_1 = article_title_1;
+        mArticle.article_title_1 = article_title_1;
     }
 
     public void setArticleContent1(String article_content_1) {
-        this.article.article_content_1 = article_content_1;
+        mArticle.article_content_1 = article_content_1;
+    }
+
+    public Timer getTimer() {
+        return mTimer;
+    }
+
+    public Article getArticle() {
+        return mArticle;
     }
 }

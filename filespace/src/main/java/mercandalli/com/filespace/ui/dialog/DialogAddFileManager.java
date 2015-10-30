@@ -47,10 +47,13 @@ import java.util.List;
 import java.util.TimeZone;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Config;
+import mercandalli.com.filespace.listener.IFileModelListener;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.listener.IStringListener;
-import mercandalli.com.filespace.model.ModelFile;
+import mercandalli.com.filespace.manager.file.FileManager;
+import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activitiy.ApplicationActivity;
 import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
@@ -61,9 +64,7 @@ public class DialogAddFileManager extends Dialog {
 
     private final Activity mActivity;
     private final ApplicationCallback mApplicationCallback;
-    private File file;
     private IListener dismissListener;
-    private Dialog mDialog;
 
     public DialogAddFileManager(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final IPostExecuteListener listener, final IListener dismissListener) {
         super(activity, android.R.style.Theme_Translucent_NoTitleBar);
@@ -87,7 +88,12 @@ public class DialogAddFileManager extends Dialog {
         (this.findViewById(R.id.uploadFile)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDialog = new DialogUpload(mActivity, mApplicationCallback, id_file_parent, listener);
+                new DialogFileChooser(mActivity, new IFileModelListener() {
+                    @Override
+                    public void executeFileModel(final FileModel fileModel) {
+                        new DialogUpload(mActivity, mApplicationCallback, id_file_parent, fileModel, listener);
+                    }
+                });
                 DialogAddFileManager.this.dismiss();
             }
         });
@@ -98,18 +104,18 @@ public class DialogAddFileManager extends Dialog {
                 DialogUtils.prompt(mActivity, mActivity.getString(R.string.dialog_file_create_folder), mActivity.getString(R.string.dialog_file_name_interrogation), mActivity.getString(R.string.dialog_file_create), new IStringListener() {
                     @Override
                     public void execute(String text) {
-                        ModelFile folder = new ModelFile(mActivity, mApplicationCallback);
-                        folder.name = text;
-                        folder.directory = true;
-                        folder.id_file_parent = id_file_parent;
-                        List<StringPair> parameters = folder.getForUpload();
-                        (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeFile, new IPostExecuteListener() {
+                        FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
+                        fileModelBuilder.name(text);
+                        fileModelBuilder.isDirectory(true);
+                        fileModelBuilder.idFileParent(id_file_parent);
+                        List<StringPair> parameters = FileManager.getForUpload(fileModelBuilder.build());
+                        (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
                             @Override
                             public void onPostExecute(JSONObject json, String body) {
                                 if (listener != null)
                                     listener.onPostExecute(json, body);
                             }
-                        }, parameters, file)).execute();
+                        }, parameters)).execute();
                     }
                 }, mActivity.getString(R.string.cancel), null);
                 DialogAddFileManager.this.dismiss();
@@ -137,7 +143,7 @@ public class DialogAddFileManager extends Dialog {
                 // Ensure that there's a camera activity to handle the intent
                 if (takePictureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
                     // Create the File where the photo should go
-                    ApplicationActivity.mPhotoFile = mApplicationCallback.createImageFile();                    
+                    ApplicationActivity.mPhotoFile = mApplicationCallback.createImageFile();
                     // Continue only if the File was successfully created
                     if (ApplicationActivity.mPhotoFile != null) {
                         if (listener != null)

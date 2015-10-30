@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelInformation;
@@ -116,19 +117,19 @@ public class GenealogyStatisticsFragment extends FabFragment {
             new TaskGet(
                     mActivity,
                     mApplicationCallback,
-                    mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeGenealogyStatistics,
+                    mApplicationCallback.getConfig().getUrlServer() + Config.routeGenealogyStatistics,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
-                            list = new ArrayList<ModelInformation>();
+                            list = new ArrayList<>();
                             list.add(new ModelInformation("Genealogy Statistics", Constants.TAB_VIEW_TYPE_SECTION));
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ModelInformation modelFile = new ModelInformation(array.getJSONObject(i));
-                                            list.add(modelFile);
+                                            ModelInformation modelInformation = new ModelInformation(array.getJSONObject(i));
+                                            list.add(modelInformation);
                                         }
                                     }
                                 } else

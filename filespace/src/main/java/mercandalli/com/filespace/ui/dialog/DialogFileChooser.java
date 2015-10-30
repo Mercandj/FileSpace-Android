@@ -25,76 +25,88 @@ import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
+import android.view.WindowManager;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Constants;
+import mercandalli.com.filespace.config.MyApp;
 import mercandalli.com.filespace.listener.IFileModelListener;
+import mercandalli.com.filespace.listener.ResultCallback;
+import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.model.file.FileModel;
-import mercandalli.com.filespace.model.file.FileTypeModel;
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.adapter.animation.ScaleAnimationAdapter;
 import mercandalli.com.filespace.ui.adapter.file.FileModelAdapter;
 
 public class DialogFileChooser extends Dialog {
 
-    private Activity mActivity;
-    private ApplicationCallback mApplicationActivity;
-    private RecyclerView files;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private List<FileModel> listModelFile;
-    private File currentFolder;
-    private IFileModelListener listener;
+    @Inject
+    FileManager mFileManager;
 
-    public DialogFileChooser(final Activity activity, final ApplicationCallback applicationCallback, IFileModelListener listener) {
+    private Activity mActivity;
+    private RecyclerView mRecyclerView;
+    private List<FileModel> mFileModelList;
+    private File currentFolder;
+    private IFileModelListener mIFileModelListener;
+
+    public DialogFileChooser(final Activity activity, IFileModelListener listener) {
         super(activity);
 
-        this.mActivity = activity;
-        this.mApplicationActivity = applicationCallback;
-        this.listener = listener;
+        MyApp.get(activity).getAppComponent().inject(this);
 
-        this.setContentView(R.layout.dialog_filechooser);
-        this.setTitle(R.string.app_name);
-        this.setCancelable(true);
+        mActivity = activity;
+        mIFileModelListener = listener;
+        mFileModelList = new ArrayList<>();
 
-        files = (RecyclerView) this.findViewById(R.id.files);
-        files.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getContext());
-        files.setLayoutManager(mLayoutManager);
+        setContentView(R.layout.dialog_filechooser);
+        setTitle(R.string.app_name);
+        setCancelable(true);
+
+        getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+
+        mRecyclerView = (RecyclerView) this.findViewById(R.id.files);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         this.currentFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
 
-        ((Button) this.findViewById(R.id.up)).setOnClickListener(new View.OnClickListener() {
+        this.findViewById(R.id.up).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 File parent = currentFolder.getParentFile();
                 if (parent != null)
                     currentFolder = parent;
-                updateAdapter();
+                refreshList();
             }
         });
 
-        updateAdapter();
+        refreshList();
 
         DialogFileChooser.this.show();
     }
 
     private void updateAdapter() {
-        getFiles();
-        FileModelAdapter adapter = new FileModelAdapter(mActivity, listModelFile, null);
-        files.setAdapter(adapter);
+        FileModelAdapter adapter = new FileModelAdapter(mActivity, mFileModelList, null);
+        ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, adapter);
+        scaleAnimationAdapter.setDuration(200);
+        scaleAnimationAdapter.setOffsetDuration(40);
+
+        mRecyclerView.setAdapter(scaleAnimationAdapter);
         adapter.setOnItemClickListener(new FileModelAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View arg1, int position) {
-                if (position < listModelFile.size()) {
-                    FileModel file = listModelFile.get(position);
+                if (position < mFileModelList.size()) {
+                    FileModel file = mFileModelList.get(position);
                     if (file.isDirectory()) {
                         currentFolder = file.getFile();
-                        updateAdapter();
+                        refreshList();
                     } else {
-                        listener.executeFileModel(file);
+                        mIFileModelListener.executeFileModel(file);
                         dismiss();
                     }
                 }
@@ -102,12 +114,31 @@ public class DialogFileChooser extends Dialog {
         });
     }
 
-    private void getFiles() {
+    private void refreshList() {
+
+        mFileManager.getFiles(
+                new FileModel.FileModelBuilder().file(currentFolder).build(),
+                Constants.SORT_ABC,
+                new ResultCallback<List<FileModel>>() {
+                    @Override
+                    public void success(List<FileModel> result) {
+                        mFileModelList.clear();
+                        mFileModelList.addAll(result);
+                        updateAdapter();
+                    }
+
+                    @Override
+                    public void failure() {
+
+                    }
+                });
+
+        /*
         String path = this.currentFolder.getAbsolutePath();
         File f = new File(path);
         File fs[] = f.listFiles();
-        listModelFile = new ArrayList<>();
-        if (fs != null)
+        mFileModelList = new ArrayList<>();
+        if (fs != null) {
             for (File file : fs) {
                 FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
                 fileModelBuilder.url(file.getAbsolutePath());
@@ -116,7 +147,9 @@ public class DialogFileChooser extends Dialog {
                 fileModelBuilder.size(file.getTotalSpace());
                 fileModelBuilder.isDirectory(file.isDirectory());
                 fileModelBuilder.file(file);
-                listModelFile.add(fileModelBuilder.build());
+                mFileModelList.add(fileModelBuilder.build());
             }
+        }
+        */
     }
 }
