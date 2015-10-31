@@ -51,7 +51,7 @@ import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.adapter.AdapterModelConnversationUser;
 import mercandalli.com.filespace.ui.fragment.BackFragment;
-import mercandalli.com.filespace.ui.view.DividerItemDecoration;
+import mercandalli.com.filespace.ui.view.divider.DividerItemDecoration;
 import mercandalli.com.filespace.util.DialogUtils;
 import mercandalli.com.filespace.util.NetUtils;
 import mercandalli.com.filespace.util.StringPair;

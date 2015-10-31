@@ -63,7 +63,7 @@ import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragment.BackFragment;
 import mercandalli.com.filespace.ui.fragment.FabFragment;
 import mercandalli.com.filespace.ui.fragment.InjectedFragment;
-import mercandalli.com.filespace.ui.view.DividerItemDecoration;
+import mercandalli.com.filespace.ui.view.divider.DividerItemDecoration;
 import mercandalli.com.filespace.util.DialogUtils;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.NetUtils;

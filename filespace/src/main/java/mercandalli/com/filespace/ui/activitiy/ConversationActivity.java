@@ -48,7 +48,7 @@ import mercandalli.com.filespace.model.ModelConversationMessage;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.adapter.AdapterModelConnversationMessage;
-import mercandalli.com.filespace.ui.view.DividerItemDecoration;
+import mercandalli.com.filespace.ui.view.divider.DividerItemDecoration;
 import mercandalli.com.filespace.util.NetUtils;
 import mercandalli.com.filespace.util.StringPair;
 

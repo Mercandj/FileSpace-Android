@@ -22,10 +22,11 @@ package mercandalli.com.filespace.ui.dialog;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Environment;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.ui.adapter.animation.ScaleAnimationAdapter;
 import mercandalli.com.filespace.ui.adapter.file.FileModelAdapter;
+import mercandalli.com.filespace.ui.view.divider.SpacesItemDecoration;
 
 public class DialogFileChooser extends Dialog {
 
@@ -71,7 +73,8 @@ public class DialogFileChooser extends Dialog {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.files);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        mRecyclerView.addItemDecoration(new SpacesItemDecoration(20, 2));
 
         mCurrentFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
 
@@ -92,7 +95,7 @@ public class DialogFileChooser extends Dialog {
     }
 
     private void updateAdapter() {
-        FileModelAdapter adapter = new FileModelAdapter(mActivity, mFileModelList, null);
+        FileModelAdapter adapter = new FileModelAdapter(mActivity, mFileModelList, R.layout.tab_file_light, null);
         ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, adapter);
         scaleAnimationAdapter.setDuration(200);
         scaleAnimationAdapter.setOffsetDuration(40);
@@ -104,8 +107,12 @@ public class DialogFileChooser extends Dialog {
                 if (position < mFileModelList.size()) {
                     FileModel file = mFileModelList.get(position);
                     if (file.isDirectory()) {
-                        mCurrentFile = file.getFile();
-                        refreshList();
+                        if (file.getCount() == 0) {
+                            Toast.makeText(mActivity, "No files", Toast.LENGTH_SHORT).show();
+                        } else {
+                            mCurrentFile = file.getFile();
+                            refreshList();
+                        }
                     } else {
                         mIFileModelListener.executeFileModel(file);
                         dismiss();

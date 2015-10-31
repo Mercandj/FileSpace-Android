@@ -53,7 +53,7 @@ import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
 import mercandalli.com.filespace.ui.adapter.AdapterModelGenealogyUser;
 import mercandalli.com.filespace.ui.dialog.DialogAddGenealogyPerson;
 import mercandalli.com.filespace.ui.fragment.FabFragment;
-import mercandalli.com.filespace.ui.view.DividerItemDecoration;
+import mercandalli.com.filespace.ui.view.divider.DividerItemDecoration;
 import mercandalli.com.filespace.util.DialogUtils;
 import mercandalli.com.filespace.util.NetUtils;
 import mercandalli.com.filespace.util.StringPair;

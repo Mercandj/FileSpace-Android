@@ -20,6 +20,7 @@
 package mercandalli.com.filespace.ui.adapter.file;
 
 import android.app.Activity;
+import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,29 +43,35 @@ import mercandalli.com.filespace.util.StringUtils;
 public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.ViewHolder> {
 
     private Activity mActivity;
-    public final List<FileModel> files = new ArrayList<>();
+    public final List<FileModel> mFiles = new ArrayList<>();
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
-    private IFileModelListener moreListener;
+    private IFileModelListener mMoreListener;
 
     private boolean mShowSize;
+    private final int mRowLayout;
 
     public FileModelAdapter(final Activity activity, final List<FileModel> files, IFileModelListener moreListener) {
-        this.mActivity = activity;
-        this.files.clear();
-        this.files.addAll(files);
-        this.moreListener = moreListener;
+        this(activity, files, R.layout.tab_file, moreListener);
+    }
+
+    public FileModelAdapter(final Activity activity, final List<FileModel> files, @LayoutRes int rowLayout, IFileModelListener moreListener) {
+        mActivity = activity;
+        mFiles.clear();
+        mFiles.addAll(files);
+        mRowLayout = rowLayout;
+        mMoreListener = moreListener;
     }
 
     @Override
     public FileModelAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file, parent, false), viewType);
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(mRowLayout, parent, false), viewType);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
-        if (position < files.size()) {
-            final FileModel fileModel = files.get(position);
+        if (position < mFiles.size()) {
+            final FileModel fileModel = mFiles.get(position);
 
             viewHolder.title.setText(getAdapterTitle(fileModel));
             viewHolder.subtitle.setText(getAdapterSubtitle(fileModel));
@@ -93,13 +100,15 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
                 viewHolder.icon.setImageBitmap(file.bitmap);
                 */
 
-            if (moreListener == null)
+            if (mMoreListener == null) {
                 viewHolder.more.setVisibility(View.GONE);
+            }
             viewHolder.more.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (moreListener != null)
-                        moreListener.executeFileModel(fileModel);
+                    if (mMoreListener != null) {
+                        mMoreListener.executeFileModel(fileModel);
+                    }
                 }
             });
 
@@ -143,35 +152,35 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
 
     @Override
     public int getItemCount() {
-        return files.size();
+        return mFiles.size();
     }
 
 
     public void replaceList(List<FileModel> list) {
-        files.clear();
-        files.addAll(list);
+        mFiles.clear();
+        mFiles.addAll(list);
         notifyDataSetChanged();
     }
 
     public void addFirst(List<FileModel> list) {
-        files.addAll(0, list);
+        mFiles.addAll(0, list);
         notifyDataSetChanged();
     }
 
     public void addLast(List<FileModel> list) {
-        files.addAll(files.size(), list);
+        mFiles.addAll(mFiles.size(), list);
         notifyDataSetChanged();
     }
 
     public void addItem(FileModel name, int position) {
-        this.files.add(position, name);
+        this.mFiles.add(position, name);
         this.notifyItemInserted(position);
     }
 
     public void removeAll() {
-        int size = files.size();
+        int size = mFiles.size();
         if (size > 0) {
-            files.clear();
+            mFiles.clear();
             this.notifyItemRangeInserted(0, size - 1);
         }
     }

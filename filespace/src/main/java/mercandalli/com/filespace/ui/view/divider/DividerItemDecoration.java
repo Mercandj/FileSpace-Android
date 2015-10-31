@@ -17,7 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
  */
-package mercandalli.com.filespace.ui.view;
+package mercandalli.com.filespace.ui.view.divider;
 
 /**
  * Created by Jonathan on 21/03/2015.
