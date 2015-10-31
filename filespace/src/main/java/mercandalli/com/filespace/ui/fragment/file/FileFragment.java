@@ -41,12 +41,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import org.json.JSONObject;
-
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listener.IListener;
-import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.listener.SetToolbarCallback;
 import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
@@ -396,11 +393,10 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     }
 
     public void add() {
-        new DialogAddFileManager(mActivity, mApplicationCallback, -1, new IPostExecuteListener() {
+        new DialogAddFileManager(mActivity, mApplicationCallback, -1, new IListener() {
             @Override
-            public void onPostExecute(JSONObject json, String body) {
-                if (json != null)
-                    refreshListServer();
+            public void execute() {
+                refreshListServer();
             }
         }, new IListener() { // Dismiss
             @Override

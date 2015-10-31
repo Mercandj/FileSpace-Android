@@ -422,11 +422,10 @@ public class FileCloudFragment extends InjectedFragment implements
         switch (fab_id) {
             case 0:
                 fab.hide();
-                new DialogAddFileManager(mActivity, mApplicationCallback, -1, new IPostExecuteListener() {
+                new DialogAddFileManager(mActivity, mApplicationCallback, -1, new IListener() {
                     @Override
-                    public void onPostExecute(JSONObject json, String body) {
-                        if (json != null)
-                            refreshList();
+                    public void execute() {
+                        refreshList();
                     }
                 }, new IListener() { // Dismiss
                     @Override

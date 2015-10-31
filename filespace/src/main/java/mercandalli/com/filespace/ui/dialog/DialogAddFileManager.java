@@ -66,7 +66,7 @@ public class DialogAddFileManager extends Dialog {
     private final ApplicationCallback mApplicationCallback;
     private IListener dismissListener;
 
-    public DialogAddFileManager(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final IPostExecuteListener listener, final IListener dismissListener) {
+    public DialogAddFileManager(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final IListener listener, final IListener dismissListener) {
         super(activity, android.R.style.Theme_Translucent_NoTitleBar);
         this.mActivity = activity;
         this.mApplicationCallback = applicationCallback;
@@ -113,7 +113,7 @@ public class DialogAddFileManager extends Dialog {
                             @Override
                             public void onPostExecute(JSONObject json, String body) {
                                 if (listener != null)
-                                    listener.onPostExecute(json, body);
+                                    listener.execute();
                             }
                         }, parameters)).execute();
                     }
@@ -199,13 +199,11 @@ public class DialogAddFileManager extends Dialog {
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
                                                     if (listener != null)
-                                                        listener.onPostExecute(json, body);
+                                                        listener.execute();
                                                 }
                                             }
                                             , parameters).execute();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                } catch (ParseException e) {
+                                } catch (JSONException | ParseException e) {
                                     e.printStackTrace();
                                 }
 

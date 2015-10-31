@@ -33,11 +33,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.json.JSONObject;
-
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IListener;
-import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.listener.SetToolbarCallback;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragment.BackFragment;
@@ -216,11 +213,10 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public void add() {
-        new DialogAddFileManager(mActivity, mApplicationCallback, -1, new IPostExecuteListener() {
+        new DialogAddFileManager(mActivity, mApplicationCallback, -1, new IListener() {
             @Override
-            public void onPostExecute(JSONObject json, String body) {
-                if (json != null)
-                    refreshListServer();
+            public void execute() {
+                refreshListServer();
             }
         }, new IListener() { // Dismiss
             @Override

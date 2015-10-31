@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
@@ -47,7 +48,7 @@ public class DialogCreateArticle extends Dialog {
 
     EditText article_title_1, article_content_1;
 
-    public DialogCreateArticle(final Activity activity, final ApplicationCallback applicationCallback, final IPostExecuteListener listener) {
+    public DialogCreateArticle(final Activity activity, final ApplicationCallback applicationCallback, final IListener listener) {
         super(activity);
         this.mActivity = activity;
         this.mApplicationCallback = applicationCallback;
@@ -89,7 +90,7 @@ public class DialogCreateArticle extends Dialog {
                                 @Override
                                 public void onPostExecute(JSONObject json, String body) {
                                     if (listener != null)
-                                        listener.onPostExecute(json, body);
+                                        listener.execute();
                                 }
                             }
                             , parameters, "text/html; charset=utf-8").execute();

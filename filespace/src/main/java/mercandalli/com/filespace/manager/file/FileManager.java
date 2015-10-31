@@ -110,7 +110,7 @@ public class FileManager {
         }
     }
 
-    public void upload(final Activity activity, final FileModel fileModel, int idFileParent, final IListener listener) {
+    public void upload(final FileModel fileModel, int idFileParent, final IListener listener) {
         if (NetUtils.isInternetConnection(mContext) && !fileModel.isOnline()) {
             if (fileModel.isDirectory()) {
                 Toast.makeText(mContext, "Directory download not supported yet.", Toast.LENGTH_SHORT).show();

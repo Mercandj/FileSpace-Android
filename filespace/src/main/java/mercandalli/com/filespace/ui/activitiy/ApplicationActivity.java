@@ -20,7 +20,6 @@
 package mercandalli.com.filespace.ui.activitiy;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
@@ -40,6 +39,7 @@ import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Config;
+import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.model.file.FileModel;
@@ -118,7 +118,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
                     @Override
                     public void onPostExecute(JSONObject json, String body) {
                         if (mPhotoFileListener != null)
-                            mPhotoFileListener.onPostExecute(json, body);
+                            mPhotoFileListener.execute();
                     }
                 }, parameters, mPhotoFile.getFile())).execute();
             } else {
@@ -128,7 +128,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
     }
 
     public static FileModel mPhotoFile = null;
-    public static IPostExecuteListener mPhotoFileListener = null;
+    public static IListener mPhotoFileListener = null;
 
     @Override
     public FileModel createImageFile() {

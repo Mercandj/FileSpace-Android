@@ -25,41 +25,40 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONObject;
-
-import java.io.File;
-import java.util.List;
+import javax.inject.Inject;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.Config;
+import mercandalli.com.filespace.config.MyApp;
 import mercandalli.com.filespace.listener.IFileModelListener;
-import mercandalli.com.filespace.listener.IPostExecuteListener;
+import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.model.file.FileModel;
-import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
-import mercandalli.com.filespace.util.StringPair;
 
 public class DialogUpload extends Dialog {
+
+    @Inject
+    FileManager mFileManager;
 
     private final Activity mActivity;
     private final ApplicationCallback mApplicationCallback;
     DialogFileChooser dialogFileChooser;
-    File mFile;
     FileModel mFileModel;
     int id_file_parent;
 
-    public DialogUpload(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final FileModel fileModel, final IPostExecuteListener listener) {
+    public DialogUpload(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final FileModel fileModel, final IListener listener) {
         this(activity, applicationCallback, id_file_parent, listener);
 
         fileModel.setIdFileParent(id_file_parent);
         ((TextView) DialogUpload.this.findViewById(R.id.label)).setText(fileModel.getUrl());
-        mFile = new File(fileModel.getUrl());
         mFileModel = fileModel;
     }
 
-    public DialogUpload(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final IPostExecuteListener listener) {
+    public DialogUpload(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final IListener listener) {
         super(activity);
+
+        MyApp.get(activity).getAppComponent().inject(this);
+
         mActivity = activity;
         mApplicationCallback = applicationCallback;
         this.id_file_parent = id_file_parent;
@@ -71,7 +70,9 @@ public class DialogUpload extends Dialog {
         this.findViewById(R.id.request).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mFile != null) {
+                if (mFileModel != null && !mFileModel.isDirectory()) {
+
+                    /*
                     List<StringPair> parameters = null;
                     if (mFileModel != null) {
                         parameters = FileManager.getForUpload(mFileModel);
@@ -83,6 +84,10 @@ public class DialogUpload extends Dialog {
                                 listener.onPostExecute(json, body);
                         }
                     }, parameters, mFile)).execute();
+                    */
+
+                    mFileManager.upload(mFileModel, id_file_parent, listener);
+
                 } else {
                     Toast.makeText(mActivity, mActivity.getString(R.string.no_file), Toast.LENGTH_SHORT).show();
                 }
@@ -99,7 +104,6 @@ public class DialogUpload extends Dialog {
                     public void executeFileModel(FileModel fileModel) {
                         fileModel.setIdFileParent(id_file_parent);
                         ((TextView) DialogUpload.this.findViewById(R.id.label)).setText(fileModel.getUrl());
-                        DialogUpload.this.mFile = new File(fileModel.getUrl());
                         DialogUpload.this.mFileModel = fileModel;
                     }
                 });

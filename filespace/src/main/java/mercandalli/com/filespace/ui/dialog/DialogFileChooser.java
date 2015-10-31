@@ -51,7 +51,7 @@ public class DialogFileChooser extends Dialog {
     private Activity mActivity;
     private RecyclerView mRecyclerView;
     private List<FileModel> mFileModelList;
-    private File currentFolder;
+    private File mCurrentFile;
     private IFileModelListener mIFileModelListener;
 
     public DialogFileChooser(final Activity activity, IFileModelListener listener) {
@@ -69,18 +69,19 @@ public class DialogFileChooser extends Dialog {
 
         getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
 
-        mRecyclerView = (RecyclerView) this.findViewById(R.id.files);
+        mRecyclerView = (RecyclerView) findViewById(R.id.files);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        this.currentFolder = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+        mCurrentFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
 
-        this.findViewById(R.id.up).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.up).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File parent = currentFolder.getParentFile();
-                if (parent != null)
-                    currentFolder = parent;
+                File parent = mCurrentFile.getParentFile();
+                if (parent != null) {
+                    mCurrentFile = parent;
+                }
                 refreshList();
             }
         });
@@ -103,7 +104,7 @@ public class DialogFileChooser extends Dialog {
                 if (position < mFileModelList.size()) {
                     FileModel file = mFileModelList.get(position);
                     if (file.isDirectory()) {
-                        currentFolder = file.getFile();
+                        mCurrentFile = file.getFile();
                         refreshList();
                     } else {
                         mIFileModelListener.executeFileModel(file);
@@ -115,9 +116,8 @@ public class DialogFileChooser extends Dialog {
     }
 
     private void refreshList() {
-
         mFileManager.getFiles(
-                new FileModel.FileModelBuilder().file(currentFolder).build(),
+                new FileModel.FileModelBuilder().file(mCurrentFile).build(),
                 Constants.SORT_ABC,
                 new ResultCallback<List<FileModel>>() {
                     @Override
@@ -132,24 +132,5 @@ public class DialogFileChooser extends Dialog {
 
                     }
                 });
-
-        /*
-        String path = this.currentFolder.getAbsolutePath();
-        File f = new File(path);
-        File fs[] = f.listFiles();
-        mFileModelList = new ArrayList<>();
-        if (fs != null) {
-            for (File file : fs) {
-                FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
-                fileModelBuilder.url(file.getAbsolutePath());
-                fileModelBuilder.name(file.getName());
-                fileModelBuilder.type(new FileTypeModel(file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf(".") + 1)));
-                fileModelBuilder.size(file.getTotalSpace());
-                fileModelBuilder.isDirectory(file.isDirectory());
-                fileModelBuilder.file(file);
-                mFileModelList.add(fileModelBuilder.build());
-            }
-        }
-        */
     }
 }

@@ -634,11 +634,10 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                     mFilesToCutList.clear();
                 } else {
                     fab.hide();
-                    new DialogAddFileManager(mActivity, mApplicationCallback, FileMyCloudFragment.this.mIdFileDirectoryStack.peek(), new IPostExecuteListener() {
+                    new DialogAddFileManager(mActivity, mApplicationCallback, FileMyCloudFragment.this.mIdFileDirectoryStack.peek(), new IListener() {
                         @Override
-                        public void onPostExecute(JSONObject json, String body) {
-                            if (json != null)
-                                refreshList();
+                        public void execute() {
+                            refreshList();
                         }
                     }, new IListener() { // Dismiss
                         @Override
