@@ -97,8 +97,8 @@ public class DialogFileChooser extends Dialog {
     private void updateAdapter() {
         FileModelAdapter adapter = new FileModelAdapter(mActivity, mFileModelList, R.layout.tab_file_light, null);
         ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, adapter);
-        scaleAnimationAdapter.setDuration(200);
-        scaleAnimationAdapter.setOffsetDuration(40);
+        scaleAnimationAdapter.setDuration(220);
+        scaleAnimationAdapter.setOffsetDuration(32);
 
         mRecyclerView.setAdapter(scaleAnimationAdapter);
         adapter.setOnItemClickListener(new FileModelAdapter.OnItemClickListener() {
