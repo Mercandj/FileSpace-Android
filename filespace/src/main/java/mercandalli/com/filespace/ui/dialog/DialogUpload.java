@@ -71,23 +71,7 @@ public class DialogUpload extends Dialog {
             @Override
             public void onClick(View v) {
                 if (mFileModel != null && !mFileModel.isDirectory()) {
-
-                    /*
-                    List<StringPair> parameters = null;
-                    if (mFileModel != null) {
-                        parameters = FileManager.getForUpload(mFileModel);
-                    }
-                    (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
-                        @Override
-                        public void onPostExecute(JSONObject json, String body) {
-                            if (listener != null)
-                                listener.onPostExecute(json, body);
-                        }
-                    }, parameters, mFile)).execute();
-                    */
-
                     mFileManager.upload(mFileModel, id_file_parent, listener);
-
                 } else {
                     Toast.makeText(mActivity, mActivity.getString(R.string.no_file), Toast.LENGTH_SHORT).show();
                 }

@@ -134,16 +134,8 @@ public class FileCloudFragment extends InjectedFragment implements
         if (!isAdded()) {
             return;
         }
-        /*
-        List<StringPair> parameters = new ArrayList<>();
-        if (search != null)
-            parameters.add(new StringPair("search", "" + search));
-        parameters.add(new StringPair("url", "" + this.url));
-        parameters.add(new StringPair("all-public", "" + true));
-        */
 
         if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
-
             mFileManager.getFiles(
                     new FileModel.FileModelBuilder().id(-1).build(),
                     false,
@@ -162,38 +154,6 @@ public class FileCloudFragment extends InjectedFragment implements
 
                         }
                     });
-
-            /*
-            new TaskGet(
-                    mActivity,
-                    mApplicationCallback,
-                    this.mApplicationCallback.getConfig().getUrlServer() + Config.routeFile,
-                    new IPostExecuteListener() {
-                        @Override
-                        public void onPostExecute(JSONObject json, String body) {
-                            if (!isAdded())
-                                return;
-                            mFilesList = new ArrayList<>();
-                            try {
-                                if (json != null) {
-                                    if (json.has("result")) {
-                                        JSONArray array = json.getJSONArray("result");
-                                        for (int i = 0; i < array.length(); i++) {
-                                            ModelFile modelFile = new ModelFile(mActivity, mApplicationCallback, array.getJSONObject(i));
-                                            mFilesList.add(modelFile);
-                                        }
-                                    }
-                                } else
-                                    Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            updateAdapter();
-                        }
-                    },
-                    parameters
-            ).execute();
-            */
         } else {
             this.mProgressBar.setVisibility(View.GONE);
             if (isAdded())
@@ -285,7 +245,7 @@ public class FileCloudFragment extends InjectedFragment implements
                                                     @Override
                                                     public void execute() {
                                                         Toast.makeText(mActivity, "Download finished.", Toast.LENGTH_SHORT).show();
-                                                        mApplicationCallback.refreshAdapters();
+                                                        mApplicationCallback.refreshData();
                                                     }
                                                 });
                                                 break;
@@ -301,7 +261,7 @@ public class FileCloudFragment extends InjectedFragment implements
                                                                     filesToCut.clear();
                                                                     refreshFab.execute();
                                                                 }
-                                                                mApplicationCallback.refreshAdapters();
+                                                                mApplicationCallback.refreshData();
                                                             }
                                                         });
                                                     }
@@ -319,7 +279,7 @@ public class FileCloudFragment extends InjectedFragment implements
                                                                     filesToCut.clear();
                                                                     refreshFab.execute();
                                                                 }
-                                                                mApplicationCallback.refreshAdapters();
+                                                                mApplicationCallback.refreshData();
                                                             }
                                                         });
                                                     }
@@ -345,7 +305,7 @@ public class FileCloudFragment extends InjectedFragment implements
                                                 mFileManager.setPublic(fileModel, !fileModel.isPublic(), new IListener() {
                                                     @Override
                                                     public void execute() {
-                                                        mApplicationCallback.refreshAdapters();
+                                                        mApplicationCallback.refreshData();
                                                     }
                                                 });
                                                 break;
@@ -533,7 +493,7 @@ public class FileCloudFragment extends InjectedFragment implements
                                     @Override
                                     public void execute() {
                                         Toast.makeText(mActivity, "Download finished.", Toast.LENGTH_SHORT).show();
-                                        mApplicationCallback.refreshAdapters();
+                                        mApplicationCallback.refreshData();
                                     }
                                 });
                                 break;
@@ -549,7 +509,7 @@ public class FileCloudFragment extends InjectedFragment implements
                                                     filesToCut.clear();
                                                     refreshFab.execute();
                                                 }
-                                                mApplicationCallback.refreshAdapters();
+                                                mApplicationCallback.refreshData();
                                             }
                                         });
                                     }
@@ -567,7 +527,7 @@ public class FileCloudFragment extends InjectedFragment implements
                                                     filesToCut.clear();
                                                     refreshFab.execute();
                                                 }
-                                                mApplicationCallback.refreshAdapters();
+                                                mApplicationCallback.refreshData();
                                             }
                                         });
                                     }
@@ -593,7 +553,7 @@ public class FileCloudFragment extends InjectedFragment implements
                                 mFileManager.setPublic(fileModel, !fileModel.isPublic(), new IListener() {
                                     @Override
                                     public void execute() {
-                                        mApplicationCallback.refreshAdapters();
+                                        mApplicationCallback.refreshData();
                                     }
                                 });
                                 break;

@@ -70,10 +70,10 @@ public class MainActivity extends ApplicationDrawerActivity implements SetToolba
     }
 
     @Override
-    public void refreshAdapters() {
+    public void refreshData() {
         if (mBackFragment instanceof FileFragment) {
             FileFragment fragmentFileManager = (FileFragment) mBackFragment;
-            fragmentFileManager.refreshAdapterListServer();
+            fragmentFileManager.refreshData();
         }
     }
 }

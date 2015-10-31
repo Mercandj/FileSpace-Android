@@ -130,7 +130,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                                             @Override
                                             public void execute() {
                                                 Toast.makeText(mActivity, "Download finished.", Toast.LENGTH_SHORT).show();
-                                                mApplicationCallback.refreshAdapters();
+                                                mApplicationCallback.refreshData();
                                             }
                                         });
                                         break;
@@ -146,7 +146,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                                                             mFilesToCutList.clear();
                                                             refreshFab();
                                                         }
-                                                        mApplicationCallback.refreshAdapters();
+                                                        mApplicationCallback.refreshData();
                                                     }
                                                 });
                                             }
@@ -164,7 +164,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                                                             mFilesToCutList.clear();
                                                             refreshFab();
                                                         }
-                                                        mApplicationCallback.refreshAdapters();
+                                                        mApplicationCallback.refreshData();
                                                     }
                                                 });
                                             }
@@ -194,7 +194,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                                         mFileManager.setPublic(fileModel, !fileModel.isPublic(), new IListener() {
                                             @Override
                                             public void execute() {
-                                                mApplicationCallback.refreshAdapters();
+                                                mApplicationCallback.refreshData();
                                             }
                                         });
                                         break;
@@ -227,7 +227,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                                                         if (json != null)
                                                             if (json.has("succeed"))
                                                                 if (json.getBoolean("succeed"))
-                                                                    mApplicationCallback.refreshAdapters();
+                                                                    mApplicationCallback.refreshData();
                                                     } catch (JSONException e) {
                                                         e.printStackTrace();
                                                     }
@@ -463,7 +463,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                                                     @Override
                                                     public void execute() {
                                                         Toast.makeText(mActivity, "Download finished.", Toast.LENGTH_SHORT).show();
-                                                        mApplicationCallback.refreshAdapters();
+                                                        mApplicationCallback.refreshData();
                                                     }
                                                 });
                                                 break;
@@ -479,7 +479,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                                                                     mFilesToCutList.clear();
                                                                     refreshFab();
                                                                 }
-                                                                mApplicationCallback.refreshAdapters();
+                                                                mApplicationCallback.refreshData();
                                                             }
                                                         });
                                                     }
@@ -497,7 +497,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                                                                     mFilesToCutList.clear();
                                                                     refreshFab();
                                                                 }
-                                                                mApplicationCallback.refreshAdapters();
+                                                                mApplicationCallback.refreshData();
                                                             }
                                                         });
                                                     }
@@ -524,7 +524,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                                                 mFileManager.setPublic(fileModel, !fileModel.isPublic(), new IListener() {
                                                     @Override
                                                     public void execute() {
-                                                        mApplicationCallback.refreshAdapters();
+                                                        mApplicationCallback.refreshData();
                                                     }
                                                 });
                                                 break;
@@ -556,7 +556,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                                                                 if (json != null)
                                                                     if (json.has("succeed"))
                                                                         if (json.getBoolean("succeed"))
-                                                                            mApplicationCallback.refreshAdapters();
+                                                                            mApplicationCallback.refreshData();
                                                             } catch (JSONException e) {
                                                                 e.printStackTrace();
                                                             }
@@ -628,7 +628,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                         mFileManager.setParent(file, FileMyCloudFragment.this.mIdFileDirectoryStack.peek(), new IListener() {
                             @Override
                             public void execute() {
-                                mApplicationCallback.refreshAdapters();
+                                mApplicationCallback.refreshData();
                             }
                         });
                     mFilesToCutList.clear();

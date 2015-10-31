@@ -107,7 +107,7 @@ public class FileTimerActivity extends ApplicationActivity {
     }
 
     @Override
-    public void refreshAdapters() {
+    public void refreshData() {
 
     }
 

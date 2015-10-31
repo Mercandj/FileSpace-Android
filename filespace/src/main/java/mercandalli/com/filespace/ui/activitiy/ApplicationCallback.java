@@ -12,7 +12,7 @@ public interface ApplicationCallback extends ConfigCallback {
 
     FileModel createImageFile();
 
-    void refreshAdapters();
+    void refreshData();
 
     void updateAdapters();
 

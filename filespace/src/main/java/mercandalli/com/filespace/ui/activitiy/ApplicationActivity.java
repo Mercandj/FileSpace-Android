@@ -97,7 +97,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
         return mConfig;
     }
 
-    public abstract void refreshAdapters();
+    public abstract void refreshData();
 
     public abstract void updateAdapters();
 

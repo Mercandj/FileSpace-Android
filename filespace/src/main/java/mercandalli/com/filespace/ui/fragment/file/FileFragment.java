@@ -373,7 +373,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         }
     }
 
-    public void refreshAdapterListServer() {
+    public void refreshData() {
         for (FabFragment fr : listFragment) {
             if (fr != null) {
                 if (fr instanceof FileCloudFragment) {

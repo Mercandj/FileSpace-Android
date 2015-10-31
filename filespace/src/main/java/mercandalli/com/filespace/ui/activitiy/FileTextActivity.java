@@ -121,7 +121,7 @@ public class FileTextActivity extends ApplicationActivity implements IPostExecut
     }
 
     @Override
-    public void refreshAdapters() {
+    public void refreshData() {
 
     }
 

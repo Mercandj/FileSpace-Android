@@ -100,7 +100,7 @@ public class FileLocalMusicFragment extends InjectedFragment
             @Override
             public void execute() {
                 if (mApplicationCallback != null) {
-                    mApplicationCallback.refreshAdapters();
+                    mApplicationCallback.refreshData();
                 }
             }
         };
@@ -190,6 +190,9 @@ public class FileLocalMusicFragment extends InjectedFragment
             Collections.sort(files, new Comparator<FileMusicModel>() {
                 @Override
                 public int compare(final FileMusicModel f1, final FileMusicModel f2) {
+                    if (f1.getName() == null || f2.getName() == null) {
+                        return 0;
+                    }
                     return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
                 }
             });

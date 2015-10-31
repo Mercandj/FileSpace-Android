@@ -35,8 +35,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -51,18 +49,15 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.config.MyAppComponent;
 import mercandalli.com.filespace.listener.IFileModelListener;
 import mercandalli.com.filespace.listener.IListener;
-import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.listener.IStringListener;
 import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.model.file.FileMusicModel;
 import mercandalli.com.filespace.model.file.FileTypeModelENUM;
-import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.adapter.file.FileModelAdapter;
 import mercandalli.com.filespace.ui.adapter.file.FileModelGridAdapter;
 import mercandalli.com.filespace.ui.fragment.BackFragment;
@@ -70,7 +65,6 @@ import mercandalli.com.filespace.ui.fragment.InjectedFragment;
 import mercandalli.com.filespace.ui.view.DividerItemDecoration;
 import mercandalli.com.filespace.util.DialogUtils;
 import mercandalli.com.filespace.util.FileUtils;
-import mercandalli.com.filespace.util.StringPair;
 
 public class FileLocalFragment extends InjectedFragment
         implements BackFragment.IListViewMode, BackFragment.ISortMode {
@@ -212,13 +206,12 @@ public class FileLocalFragment extends InjectedFragment
                                                     @Override
                                                     public void execute() {
                                                         if (fileModel.getFile() != null) {
-                                                            List<StringPair> parameters = FileManager.getForUpload(fileModel);
-                                                            (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
+                                                            mFileManager.upload(fileModel, -1, new IListener() {
                                                                 @Override
-                                                                public void onPostExecute(JSONObject json, String body) {
-
+                                                                public void execute() {
+                                                                    mApplicationCallback.refreshData();
                                                                 }
-                                                            }, parameters, fileModel.getFile())).execute();
+                                                            });
                                                         }
                                                     }
                                                 }, getString(R.string.cancel), null);
@@ -242,7 +235,7 @@ public class FileLocalFragment extends InjectedFragment
                                                                 mFilesToCopyList.clear();
                                                                 refreshFab();
                                                             }
-                                                            mApplicationCallback.refreshAdapters();
+                                                            mApplicationCallback.refreshData();
                                                         }
                                                     });
                                                 }
@@ -263,7 +256,7 @@ public class FileLocalFragment extends InjectedFragment
                                                                 mFilesToCopyList.clear();
                                                                 refreshFab();
                                                             }
-                                                            mApplicationCallback.refreshAdapters();
+                                                            mApplicationCallback.refreshData();
                                                         }
                                                     });
                                                 }
@@ -386,13 +379,12 @@ public class FileLocalFragment extends InjectedFragment
                                                         @Override
                                                         public void execute() {
                                                             if (fileModel.getFile() != null) {
-                                                                List<StringPair> parameters = FileManager.getForUpload(fileModel);
-                                                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
+                                                                mFileManager.upload(fileModel, -1, new IListener() {
                                                                     @Override
-                                                                    public void onPostExecute(JSONObject json, String body) {
+                                                                    public void execute() {
 
                                                                     }
-                                                                }, parameters, fileModel.getFile())).execute();
+                                                                });
                                                             }
                                                         }
                                                     }, getString(R.string.cancel), null);
@@ -408,7 +400,7 @@ public class FileLocalFragment extends InjectedFragment
                                                                     mFilesToCutList.clear();
                                                                     refreshFab();
                                                                 }
-                                                                mApplicationCallback.refreshAdapters();
+                                                                mApplicationCallback.refreshData();
                                                             }
                                                         });
                                                     }
@@ -425,7 +417,7 @@ public class FileLocalFragment extends InjectedFragment
                                                                     mFilesToCutList.clear();
                                                                     refreshFab();
                                                                 }
-                                                                mApplicationCallback.refreshAdapters();
+                                                                mApplicationCallback.refreshData();
                                                             }
                                                         });
                                                     }

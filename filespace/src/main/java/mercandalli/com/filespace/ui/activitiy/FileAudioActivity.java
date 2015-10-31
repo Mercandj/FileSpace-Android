@@ -401,7 +401,7 @@ public class FileAudioActivity extends ApplicationActivity {
     }
 
     @Override
-    public void refreshAdapters() {
+    public void refreshData() {
 
     }
 
