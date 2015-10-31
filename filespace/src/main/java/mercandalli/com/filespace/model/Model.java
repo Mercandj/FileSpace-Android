@@ -24,7 +24,7 @@ import android.app.Activity;
 import org.json.JSONObject;
 
 import mercandalli.com.filespace.config.Constants;
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 
 public abstract class Model {
 

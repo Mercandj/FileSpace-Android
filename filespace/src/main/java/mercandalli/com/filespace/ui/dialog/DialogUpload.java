@@ -33,7 +33,7 @@ import mercandalli.com.filespace.listener.IFileModelListener;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.model.file.FileModel;
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 
 public class DialogUpload extends Dialog {
 

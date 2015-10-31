@@ -33,9 +33,8 @@ import java.net.URL;
 
 import mercandalli.com.filespace.listener.IBitmapListener;
 import mercandalli.com.filespace.listener.ILongListener;
-import mercandalli.com.filespace.model.ModelFile;
 import mercandalli.com.filespace.model.file.FileModel;
-import mercandalli.com.filespace.ui.activitiy.ConfigCallback;
+import mercandalli.com.filespace.ui.activity.ConfigCallback;
 import mercandalli.com.filespace.util.ImageUtils;
 
 /**

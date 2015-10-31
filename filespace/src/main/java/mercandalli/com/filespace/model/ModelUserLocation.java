@@ -2,7 +2,7 @@ package mercandalli.com.filespace.model;
 
 import android.app.Activity;
 
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;

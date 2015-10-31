@@ -38,7 +38,7 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 import mercandalli.com.filespace.util.StringPair;
 
 public class DialogCreateArticle extends Dialog {

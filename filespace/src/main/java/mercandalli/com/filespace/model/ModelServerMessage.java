@@ -22,7 +22,7 @@ package mercandalli.com.filespace.model;
 import android.app.Activity;
 import android.util.Log;
 
-import mercandalli.com.filespace.ui.activitiy.ApplicationActivity;
+import mercandalli.com.filespace.ui.activity.ApplicationActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;

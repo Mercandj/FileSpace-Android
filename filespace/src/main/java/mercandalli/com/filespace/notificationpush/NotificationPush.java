@@ -29,7 +29,7 @@ import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import mercandalli.com.filespace.ui.activitiy.ApplicationActivity;
+import mercandalli.com.filespace.ui.activity.ApplicationActivity;
 
 import java.io.IOException;
 

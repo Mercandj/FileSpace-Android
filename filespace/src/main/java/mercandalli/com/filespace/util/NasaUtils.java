@@ -17,7 +17,7 @@ import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelNasaImage;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 
 /**
  * Created by Jonathan on 29/09/2015.

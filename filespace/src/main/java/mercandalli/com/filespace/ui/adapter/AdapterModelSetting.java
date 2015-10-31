@@ -33,7 +33,7 @@ import java.util.List;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.model.ModelSetting;
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 import mercandalli.com.filespace.util.FontUtils;
 
 public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSetting.ViewHolder> {

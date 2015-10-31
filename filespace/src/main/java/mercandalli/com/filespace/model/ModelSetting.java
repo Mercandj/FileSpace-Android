@@ -23,7 +23,7 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 
 import org.json.JSONObject;
 

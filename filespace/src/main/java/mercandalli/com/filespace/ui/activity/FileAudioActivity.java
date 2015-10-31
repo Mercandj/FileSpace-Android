@@ -17,7 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package mercandalli.com.filespace.ui.activitiy;
+package mercandalli.com.filespace.ui.activity;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -77,7 +77,7 @@ public class FileAudioActivity extends ApplicationActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            toolbar.setBackgroundColor(this.getResources().getColor(R.color.actionbar_audio));
+            toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.actionbar_audio));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("FileSpace - Audio");
         }
@@ -158,22 +158,22 @@ public class FileAudioActivity extends ApplicationActivity {
                             return;
                         }
                     } else if (audioUri != null) {
-                        this.mFileModelList = new ArrayList<>();
-                        this.mIsOnline = false;
-                        this.mFileModel = new FileModel.FileModelBuilder().file(new File("file".equals(audioUri.getScheme()) ? audioUri.getPath() : FileUtils.getRealPathFromURI(this, audioUri))).build();
-                        this.mFileModelList.add(this.mFileModel);
+                        mFileModelList = new ArrayList<>();
+                        mIsOnline = false;
+                        mFileModel = new FileModel.FileModelBuilder().file(new File("file".equals(audioUri.getScheme()) ? audioUri.getPath() : FileUtils.getRealPathFromURI(this, audioUri))).build();
+                        mFileModelList.add(this.mFileModel);
                         start();
                         return;
                     }
                 }
             }
-            this.finish();
-            this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            finish();
+            overridePendingTransition(R.anim.right_in, R.anim.right_out);
             return;
         } else {
-            this.mIsOnline = extras.getBoolean("ONLINE");
-            this.mFileModel = extras.getParcelable("FILE");
-            this.mFileModelList = extras.getParcelableArrayList("FILES");
+            mIsOnline = extras.getBoolean("ONLINE");
+            mFileModel = extras.getParcelable("FILE");
+            mFileModelList = extras.getParcelableArrayList("FILES");
             start();
         }
 

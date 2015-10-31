@@ -32,7 +32,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import mercandalli.com.filespace.config.Constants;
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 
 /**
  * Created by Jonathan on 17/04/2015.

@@ -38,7 +38,7 @@ import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.HashUtils;
 import mercandalli.com.filespace.util.ImageUtils;

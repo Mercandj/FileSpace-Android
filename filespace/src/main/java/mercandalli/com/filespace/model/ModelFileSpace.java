@@ -22,7 +22,7 @@ package mercandalli.com.filespace.model;
 import android.app.Activity;
 import android.util.Log;
 
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 import mercandalli.com.filespace.util.PointLong;
 import mercandalli.com.filespace.util.StringUtils;
 import mercandalli.com.filespace.util.TimeUtils;

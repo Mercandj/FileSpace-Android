@@ -26,7 +26,7 @@ import java.io.File;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.model.ModelFile;
-import mercandalli.com.filespace.ui.activitiy.ApplicationActivity;
+import mercandalli.com.filespace.ui.activity.ApplicationActivity;
 
 public class DialogShowTxt extends Dialog {
 

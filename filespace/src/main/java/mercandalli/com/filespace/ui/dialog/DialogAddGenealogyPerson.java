@@ -36,7 +36,7 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelGenealogyPerson;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 import mercandalli.com.filespace.ui.fragment.genealogy.GenealogyListFragment;
 import mercandalli.com.filespace.util.NetUtils;
 import mercandalli.com.filespace.util.StringPair;

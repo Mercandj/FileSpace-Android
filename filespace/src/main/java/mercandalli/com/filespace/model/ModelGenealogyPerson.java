@@ -24,7 +24,7 @@ import android.text.Spanned;
 
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 import mercandalli.com.filespace.ui.dialog.DialogAddGenealogyPerson;
 import mercandalli.com.filespace.util.HtmlUtils;
 import mercandalli.com.filespace.util.StringPair;

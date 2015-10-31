@@ -30,7 +30,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import mercandalli.com.filespace.config.Constants;
-import mercandalli.com.filespace.ui.activitiy.ApplicationActivity;
+import mercandalli.com.filespace.ui.activity.ApplicationActivity;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.FontUtils;
 

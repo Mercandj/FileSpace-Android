@@ -61,7 +61,7 @@ import mercandalli.com.filespace.listener.SetToolbarCallback;
 import mercandalli.com.filespace.model.ModelHome;
 import mercandalli.com.filespace.model.ModelNasaImage;
 import mercandalli.com.filespace.model.ModelServerMessage;
-import mercandalli.com.filespace.ui.activitiy.ApplicationDrawerActivity;
+import mercandalli.com.filespace.ui.activity.ApplicationDrawerActivity;
 import mercandalli.com.filespace.ui.adapter.AdapterModelHome;
 import mercandalli.com.filespace.util.NasaUtils;
 

@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.manager.file.FileModule;
-import mercandalli.com.filespace.ui.activitiy.MainActivity;
+import mercandalli.com.filespace.ui.activity.MainActivity;
 import mercandalli.com.filespace.ui.dialog.DialogFileChooser;
 import mercandalli.com.filespace.ui.dialog.DialogUpload;
 import mercandalli.com.filespace.ui.fragment.file.FileCloudFragment;

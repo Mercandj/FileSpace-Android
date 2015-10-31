@@ -37,7 +37,6 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,8 +54,8 @@ import mercandalli.com.filespace.listener.IStringListener;
 import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activitiy.ApplicationActivity;
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationActivity;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 import mercandalli.com.filespace.util.DialogUtils;
 import mercandalli.com.filespace.util.StringPair;
 

@@ -22,8 +22,8 @@ package mercandalli.com.filespace.model;
 import android.app.Activity;
 import android.content.Intent;
 
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
-import mercandalli.com.filespace.ui.activitiy.ConversationActivity;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ConversationActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;

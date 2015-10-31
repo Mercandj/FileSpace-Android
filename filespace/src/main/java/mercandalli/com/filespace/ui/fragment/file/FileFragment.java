@@ -45,7 +45,7 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.SetToolbarCallback;
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragment.BackFragment;
 import mercandalli.com.filespace.ui.fragment.FabFragment;

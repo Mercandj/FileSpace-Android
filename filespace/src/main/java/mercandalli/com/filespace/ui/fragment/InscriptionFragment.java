@@ -42,7 +42,7 @@ import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelUser;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activitiy.MainActivity;
+import mercandalli.com.filespace.ui.activity.MainActivity;
 import mercandalli.com.filespace.util.GpsUtils;
 import mercandalli.com.filespace.util.HashUtils;
 import mercandalli.com.filespace.util.NetUtils;

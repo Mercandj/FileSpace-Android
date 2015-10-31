@@ -30,7 +30,7 @@ import android.widget.TextView;
 
 import mercandalli.com.filespace.listener.IModelUserListener;
 import mercandalli.com.filespace.model.ModelConversationMessage;
-import mercandalli.com.filespace.ui.activitiy.ApplicationActivity;
+import mercandalli.com.filespace.ui.activity.ApplicationActivity;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -41,7 +41,7 @@ import mercandalli.com.filespace.model.ModelUser;
 import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.net.Base64;
 import mercandalli.com.filespace.net.TaskGetDownloadImage;
-import mercandalli.com.filespace.ui.activitiy.ApplicationActivity;
+import mercandalli.com.filespace.ui.activity.ApplicationActivity;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.HashUtils;
 import mercandalli.com.filespace.util.NetUtils;

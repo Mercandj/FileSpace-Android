@@ -43,7 +43,7 @@ import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.extras.ia.action.ENUM_Action;
 import mercandalli.com.filespace.listener.SetToolbarCallback;
 import mercandalli.com.filespace.model.ModelSetting;
-import mercandalli.com.filespace.ui.activitiy.RegisterLoginActivity;
+import mercandalli.com.filespace.ui.activity.RegisterLoginActivity;
 import mercandalli.com.filespace.ui.adapter.AdapterModelSetting;
 import mercandalli.com.filespace.ui.dialog.DialogAuthorLabel;
 import mercandalli.com.filespace.util.TimeUtils;

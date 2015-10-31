@@ -36,7 +36,7 @@ import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.net.TaskGet;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 
 public class DialogRequest extends Dialog {
 

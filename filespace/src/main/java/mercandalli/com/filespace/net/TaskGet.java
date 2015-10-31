@@ -42,8 +42,7 @@ import java.util.List;
 
 import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
-import mercandalli.com.filespace.model.ModelFile;
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 import mercandalli.com.filespace.util.NetUtils;
 import mercandalli.com.filespace.util.StringPair;
 import mercandalli.com.filespace.util.StringUtils;

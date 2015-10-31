@@ -110,12 +110,12 @@ public class FileModel implements Parcelable {
             return this;
         }
 
-        public FileModelBuilder content(FileSpaceModel content) {
+        public FileModelBuilder content(final FileSpaceModel content) {
             this.content = content;
             return this;
         }
 
-        public FileModelBuilder file(File file) {
+        public FileModelBuilder file(final File file) {
             if (file != null && file.exists()) {
                 id = file.hashCode();
                 isDirectory = file.isDirectory();

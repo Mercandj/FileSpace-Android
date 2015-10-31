@@ -30,7 +30,7 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.TextView;
 
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 import mercandalli.com.filespace.util.FontUtils;
 import mercandalli.com.filespace.util.StringUtils;
 

@@ -405,14 +405,6 @@ public class FileCloudFragment extends InjectedFragment implements
 
     @Override
     public boolean isFabVisible(int fab_id) {
-        if (mActivity != null && mApplicationCallback != null && (!NetUtils.isInternetConnection(mActivity) || !mApplicationCallback.isLogged()))
-            return false;
-        switch (fab_id) {
-            case 0:
-                return true;
-            case 1:
-                return false;
-        }
         return false;
     }
 

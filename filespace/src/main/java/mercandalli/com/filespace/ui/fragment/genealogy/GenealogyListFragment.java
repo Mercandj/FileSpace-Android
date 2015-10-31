@@ -49,7 +49,7 @@ import mercandalli.com.filespace.listener.IModelGenealogyUserListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelGenealogyPerson;
 import mercandalli.com.filespace.net.TaskGet;
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 import mercandalli.com.filespace.ui.adapter.AdapterModelGenealogyUser;
 import mercandalli.com.filespace.ui.dialog.DialogAddGenealogyPerson;
 import mercandalli.com.filespace.ui.fragment.FabFragment;

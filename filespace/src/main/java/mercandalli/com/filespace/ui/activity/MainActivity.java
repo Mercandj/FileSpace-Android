@@ -17,7 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package mercandalli.com.filespace.ui.activitiy;
+package mercandalli.com.filespace.ui.activity;
 
 import android.app.Activity;
 import android.os.Bundle;

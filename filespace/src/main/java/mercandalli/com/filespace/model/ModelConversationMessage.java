@@ -21,7 +21,7 @@ package mercandalli.com.filespace.model;
 
 import android.app.Activity;
 
-import mercandalli.com.filespace.ui.activitiy.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 import mercandalli.com.filespace.util.TimeUtils;
 
 import org.json.JSONException;

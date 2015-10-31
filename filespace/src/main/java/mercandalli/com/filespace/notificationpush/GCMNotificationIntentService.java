@@ -32,7 +32,7 @@ import android.support.v4.app.NotificationCompat;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import mercandalli.com.filespace.model.ModelServerMessage;
-import mercandalli.com.filespace.ui.activitiy.ConversationActivity;
+import mercandalli.com.filespace.ui.activity.ConversationActivity;
 import mercandalli.com.filespace.util.FileUtils;
 
 import org.json.JSONArray;

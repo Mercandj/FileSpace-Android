@@ -1,4 +1,4 @@
-package mercandalli.com.filespace.ui.activitiy;
+package mercandalli.com.filespace.ui.activity;
 
 import mercandalli.com.filespace.config.Config;
 

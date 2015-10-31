@@ -24,7 +24,7 @@ import android.view.View;
 
 import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listener.IModelHomeListener;
-import mercandalli.com.filespace.ui.activitiy.ApplicationActivity;
+import mercandalli.com.filespace.ui.activity.ApplicationActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
