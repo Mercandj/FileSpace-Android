@@ -1,5 +1,7 @@
 package mercandalli.com.filespace.model.file;
 
+import java.io.File;
+
 public class FileMusicModel extends FileModel {
 
     private String mAlbum;
@@ -38,6 +40,12 @@ public class FileMusicModel extends FileModel {
             return this;
         }
 
+        public FileMusicModelBuilder file(final File file) {
+            super.file(file);
+            return this;
+        }
+
+        @Override
         public FileMusicModel build() {
             FileMusicModel fileMusicModel = new FileMusicModel();
             fileMusicModel.setId(id);

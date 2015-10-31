@@ -33,7 +33,6 @@ import mercandalli.com.filespace.listener.ResultCallback;
 import mercandalli.com.filespace.local.FileLocalApi;
 import mercandalli.com.filespace.local.FilePersistenceApi;
 import mercandalli.com.filespace.model.file.FileModel;
-import mercandalli.com.filespace.model.file.FileMusicModel;
 import mercandalli.com.filespace.model.file.FileTypeModel;
 import mercandalli.com.filespace.model.file.FileTypeModelENUM;
 import mercandalli.com.filespace.net.FileOnlineApi;
@@ -277,7 +276,11 @@ public class FileManager {
         }*/
     }
 
-    public void executeLocal(final Activity activity, final FileModel fileModel, List<FileMusicModel> files, View view) {
+    public void executeLocal(final Activity activity, final int position, final List fileModelList, View view) {
+        if (fileModelList == null || position >= fileModelList.size()) {
+            return;
+        }
+        final FileModel fileModel = (FileModel) fileModelList.get(position);
         if (fileModel.isOnline()) {
             return;
         }
@@ -306,6 +309,21 @@ public class FileManager {
                 Toast.makeText(activity, "ERREUR", Toast.LENGTH_SHORT).show();
             }
         } else if (fileModel.getType().equals(FileTypeModelENUM.AUDIO.type)) {
+
+            int musicCurrentPosition = position;
+            List<String> filesPath = new ArrayList<>();
+            for (int i = 0; i < fileModelList.size(); i++) {
+                final FileModel f = (FileModel) fileModelList.get(i);
+                if (f.getType() != null && f.getType().equals(FileTypeModelENUM.AUDIO.type) && f.getFile() != null) {
+                    filesPath.add(f.getFile().getAbsolutePath());
+                } else if (i < musicCurrentPosition) {
+                    musicCurrentPosition--;
+                }
+            }
+            FileAudioActivity.startLocal(activity, musicCurrentPosition, filesPath, view.findViewById(R.id.icon));
+
+
+            /*
             Intent intent = new Intent(activity, FileAudioActivity.class);
             intent.putExtra("ONLINE", false);
             intent.putExtra("FILE", fileModel);
@@ -323,6 +341,7 @@ public class FileManager {
                         makeSceneTransitionAnimation(activity, p1);
                 activity.startActivity(intent, options.toBundle());
             }
+            */
         } else if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
             Intent picIntent = new Intent();
             picIntent.setAction(Intent.ACTION_VIEW);

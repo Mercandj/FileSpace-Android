@@ -56,8 +56,6 @@ import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IStringListener;
 import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.model.file.FileModel;
-import mercandalli.com.filespace.model.file.FileMusicModel;
-import mercandalli.com.filespace.model.file.FileTypeModelENUM;
 import mercandalli.com.filespace.ui.adapter.file.FileModelAdapter;
 import mercandalli.com.filespace.ui.adapter.file.FileModelGridAdapter;
 import mercandalli.com.filespace.ui.fragment.BackFragment;
@@ -302,13 +300,7 @@ public class FileLocalFragment extends InjectedFragment
                         mCurrentDirectory = new File(mFilesList.get(position).getUrl());
                         refreshList();
                     } else {
-                        List<FileMusicModel> tmpFiles = new ArrayList<>();
-                        for (FileModel f : mFilesList) {
-                            if (f.getType() != null && f.getType().equals(FileTypeModelENUM.AUDIO.type)) {
-                                tmpFiles.add(new FileMusicModel.FileMusicModelBuilder().fileModel(f).build());
-                            }
-                        }
-                        mFileManager.executeLocal(mActivity, mFilesList.get(position), tmpFiles, view);
+                        mFileManager.executeLocal(mActivity, position, mFilesList, view);
                     }
                 }
             });
@@ -341,13 +333,7 @@ public class FileLocalFragment extends InjectedFragment
                             mCurrentDirectory = new File(mFilesList.get(position).getUrl());
                             refreshList();
                         } else {
-                            List<FileMusicModel> tmpFiles = new ArrayList<>();
-                            for (FileModel f : mFilesList) {
-                                if (f.getType() != null && f.getType().equals(FileTypeModelENUM.AUDIO.type)) {
-                                    tmpFiles.add(new FileMusicModel.FileMusicModelBuilder().fileModel(f).build());
-                                }
-                            }
-                            mFileManager.executeLocal(mActivity, mFilesList.get(position), tmpFiles, view);
+                            mFileManager.executeLocal(mActivity, position, mFilesList, view);
                         }
                     }
                 });
