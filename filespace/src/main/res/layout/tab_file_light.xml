@@ -3,7 +3,7 @@
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
-<FrameLayout
+<android.support.v7.widget.CardView
     android:id="@+id/item"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -83,4 +83,4 @@
 
     </RelativeLayout>
 
-</FrameLayout>
+</android.support.v7.widget.CardView>

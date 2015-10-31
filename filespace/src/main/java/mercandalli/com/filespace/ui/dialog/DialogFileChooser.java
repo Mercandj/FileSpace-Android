@@ -55,6 +55,7 @@ public class DialogFileChooser extends Dialog {
     private List<FileModel> mFileModelList;
     private File mCurrentFile;
     private IFileModelListener mIFileModelListener;
+    private final String mRootPath;
 
     public DialogFileChooser(final Activity activity, IFileModelListener listener) {
         super(activity);
@@ -74,18 +75,21 @@ public class DialogFileChooser extends Dialog {
         mRecyclerView = (RecyclerView) findViewById(R.id.files);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        mRecyclerView.addItemDecoration(new SpacesItemDecoration(20, 2));
+        mRecyclerView.addItemDecoration(new SpacesItemDecoration(12, 2));
 
-        mCurrentFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+        mRootPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        mCurrentFile = new File(mRootPath);
 
         findViewById(R.id.up).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                File parent = mCurrentFile.getParentFile();
-                if (parent != null) {
-                    mCurrentFile = parent;
+                if (!mRootPath.equals(mCurrentFile.getAbsolutePath())) {
+                    File parent = mCurrentFile.getParentFile();
+                    if (parent != null) {
+                        mCurrentFile = parent;
+                    }
+                    refreshList();
                 }
-                refreshList();
             }
         });
 
