@@ -87,8 +87,11 @@ public class FileMusicModel extends FileModel {
     }
 
     public String getPath() {
-        if (mFile != null)
+        if (mFile != null) {
             return mFile.getPath();
+        } else {
+            getOnlineUrl();
+        }
         return null;
     }
 }

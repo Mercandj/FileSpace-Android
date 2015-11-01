@@ -30,6 +30,9 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
     private final Context mAppContext;
     private final AudioManager mAudioManager;
 
+    private UpdaterPosition mUpdatePositionRunnable = new UpdaterPosition();
+    private final List<OnPlayerStatusChangeListener> mOnPlayerStatusChangeListeners;
+
 
     public boolean isPlaying() {
         return mCurrentStatus == STATUS_PLAYING;
@@ -38,15 +41,15 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
     private final Handler mHandler = new Handler();
 
     private void updatePosition() {
-        mHandler.removeCallbacks(updatePositionRunnable);
+        mHandler.removeCallbacks(mUpdatePositionRunnable);
         if (isPlaying()) {
             synchronized (mOnPlayerStatusChangeListeners) {
                 for (int i = 0, size = mOnPlayerStatusChangeListeners.size(); i < size; i++) {
-                    mOnPlayerStatusChangeListeners.get(i).onPlayerProgressChanged(getCurrentProgress(), getPreviewDuration(), mCurrentMusicIndex, mCurrentMusic);
+                    mOnPlayerStatusChangeListeners.get(i).onPlayerProgressChanged(getCurrentProgress(), getDuration(), mCurrentMusicIndex, mCurrentMusic);
                 }
             }
         }
-        mHandler.postDelayed(updatePositionRunnable, 1000);
+        mHandler.postDelayed(mUpdatePositionRunnable, 1000);
     }
 
     private class UpdaterPosition implements Runnable {
@@ -56,7 +59,7 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
         }
     }
 
-    private UpdaterPosition updatePositionRunnable = new UpdaterPosition();
+
 
 
     public interface OnPlayerStatusChangeListener {
@@ -66,7 +69,7 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
     }
 
 
-    private final List<OnPlayerStatusChangeListener> mOnPlayerStatusChangeListeners;
+
 
     public MusicPlayer(Application application) {
         mAppContext = application.getApplicationContext();
@@ -124,7 +127,7 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
         return mCurrentMusic;
     }
 
-    public int getPreviewDuration() {
+    public int getDuration() {
         if (mPreparingMusic == null && mCurrentMusic != null) {
             return mMediaPlayer.getDuration();
         }
@@ -194,12 +197,12 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
     }
 
 
-    private void prepare(@NonNull FileMusicModel preview) {
+    private void prepare(@NonNull FileMusicModel fileMusicModel) {
         if (STATUS_PREPARING == mCurrentStatus) {
             return;
         }
 
-        mPreparingMusic = preview;
+        mPreparingMusic = fileMusicModel;
         setCurrentStatus(STATUS_PREPARING);
 
         if (mMediaPlayer.isPlaying()) {
@@ -208,7 +211,7 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
         mMediaPlayer.reset();
 
         try {
-            mMediaPlayer.setDataSource(preview.getPath());
+            mMediaPlayer.setDataSource(fileMusicModel.getPath());
             mMediaPlayer.prepareAsync();
         } catch (IOException e) {
             mMediaPlayer.reset();
