@@ -152,7 +152,7 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
                 }
             }
 
-            if(firstStart) {
+            if (firstStart) {
                 mMusicPlayer.startMusic(mCurrentPosition, mFileMusicModelList);
             }
 

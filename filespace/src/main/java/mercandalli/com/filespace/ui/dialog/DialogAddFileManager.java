@@ -66,7 +66,7 @@ public class DialogAddFileManager extends Dialog {
     private IListener dismissListener;
 
     public DialogAddFileManager(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final IListener listener, final IListener dismissListener) {
-        super(activity, android.R.style.Theme_Translucent_NoTitleBar);
+        super(activity, R.style.DialogFullscreen);
         this.mActivity = activity;
         this.mApplicationCallback = applicationCallback;
         this.dismissListener = dismissListener;

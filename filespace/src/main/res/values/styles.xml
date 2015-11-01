@@ -71,4 +71,9 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+
+    <style name="DialogFullscreen" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
 </resources>

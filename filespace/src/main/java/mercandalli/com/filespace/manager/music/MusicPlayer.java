@@ -1,16 +1,20 @@
 package mercandalli.com.filespace.manager.music;
 
 import android.app.Application;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.widget.RemoteViews;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.model.file.FileMusicModel;
 
 public class MusicPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
@@ -60,15 +64,11 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
     }
 
 
-
-
     public interface OnPlayerStatusChangeListener {
         void onPlayerStatusChanged(int status);
 
         void onPlayerProgressChanged(int progress, int duration, int musicPosition, FileMusicModel music);
     }
-
-
 
 
     public MusicPlayer(Application application) {
@@ -241,10 +241,39 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
 
     private void setCurrentStatus(int currentStatus) {
         mCurrentStatus = currentStatus;
+        setNotification(currentStatus == STATUS_PLAYING);
+
         synchronized (mOnPlayerStatusChangeListeners) {
             for (int i = 0, size = mOnPlayerStatusChangeListeners.size(); i < size; i++) {
                 mOnPlayerStatusChangeListeners.get(i).onPlayerStatusChanged(mCurrentStatus);
             }
+        }
+    }
+
+
+    private void setNotification(boolean activated) {
+        if (activated) {
+            RemoteViews remoteViews = new RemoteViews(mAppContext.getPackageName(), R.layout.notification_musique);
+            remoteViews.setTextViewText(R.id.titre_notif, mCurrentMusic.getName());
+
+            Notification.Builder mNotifyBuilder = new Notification.Builder(mAppContext);
+            Notification foregroundNote = mNotifyBuilder.setSmallIcon(R.drawable.audio)
+                    /*
+                    .setContentTitle("Music")
+                    .setContentText( "Text" )*/
+                    //.setContentIntent(pIntent)
+                    .setAutoCancel(false)
+                    .setOngoing(true)
+                    .setContent(remoteViews)
+                    .build();
+            foregroundNote.bigContentView = remoteViews;
+            if (mMediaPlayer.isPlaying()) {
+                NotificationManager notificationManager = (NotificationManager) mAppContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.notify(0, foregroundNote);
+            }
+        } else {
+            NotificationManager notificationManager = (NotificationManager) mAppContext.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(0);
         }
     }
 
