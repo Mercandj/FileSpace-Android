@@ -20,13 +20,9 @@
 package mercandalli.com.filespace.ui.activity;
 
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
@@ -44,12 +40,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.MyApp;
+import mercandalli.com.filespace.manager.music.MusicPlayer;
 import mercandalli.com.filespace.model.file.FileMusicModel;
-import mercandalli.com.filespace.service.AudioService;
 import mercandalli.com.filespace.ui.view.PlayPauseView;
 import mercandalli.com.filespace.ui.view.slider.Slider;
 
-public class FileAudioActivity extends AppCompatActivity implements View.OnClickListener, ServiceConnection, AudioService.ViewUpdater {
+public class FileAudioActivity extends AppCompatActivity implements View.OnClickListener, MusicPlayer.OnPlayerStatusChangeListener {
 
     private static final String EXTRA_IS_ONLINE = "FileAudioActivity.Extra.EXTRA_IS_ONLINE";
     private static final String EXTRA_FILE_CURRENT_POSITION = "FileAudioActivity.Extra.EXTRA_FILE_CURRENT_POSITION";
@@ -65,9 +62,9 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
     private TextView mSizeTextView;
     private PlayPauseView mPlayPauseView;
 
-    private AudioService mAudioService;
-    private Intent mPlayIntent;
-    private boolean mMusicBound;
+    MusicPlayer mMusicPlayer;
+
+    static boolean firstStart;
 
     public static void startLocal(Activity activity, final int currentPosition, final List<String> fileMusicPath, final View animationView) {
         Bundle args = new Bundle();
@@ -83,18 +80,10 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
             args = options.toBundle();
         }
 
+        firstStart = true;
+
         activity.startActivity(intent, args);
         activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (mPlayIntent == null) {
-            mPlayIntent = new Intent(this, AudioService.class);
-            bindService(mPlayIntent, this, Context.BIND_AUTO_CREATE);
-            startService(mPlayIntent);
-        }
     }
 
     @Override
@@ -117,6 +106,8 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.notifications_bar_audio));
         }
 
+        mMusicPlayer = MyApp.get(this).getAppComponent().provideMusicPlayer();
+
         mTitleTextView = (TextView) this.findViewById(R.id.title);
         mSizeTextView = (TextView) this.findViewById(R.id.size);
         mSliderNumber = (Slider) this.findViewById(R.id.sliderNumber);
@@ -136,9 +127,7 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
 
             @Override
             public void onValueChangedUp(int value) {
-                if (mAudioService != null) {
-                    mAudioService.seekTo(value);
-                }
+                mMusicPlayer.seekTo(value);
             }
         });
 
@@ -162,35 +151,16 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
                     mFileMusicModelList.add(new FileMusicModel.FileMusicModelBuilder().file(new File(absolutePath)).build());
                 }
             }
+
+            if(firstStart) {
+                mMusicPlayer.startMusic(mCurrentPosition, mFileMusicModelList);
+            }
+
         } else {
             throw new IllegalArgumentException("Use static start() method");
         }
 
-    }
-
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-        AudioService.MusicBinder binder = (AudioService.MusicBinder) service;
-        mAudioService = binder.getService();
-        mAudioService.setList(mFileMusicModelList);
-        mAudioService.setViewUpdater(this);
-        mMusicBound = true;
-
-        if (!mAudioService.isPlaying()) {
-            play();
-        }
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-        mMusicBound = false;
-    }
-
-    @Override
-    protected void onDestroy() {
-        stopService(mPlayIntent);
-        mAudioService = null;
-        super.onDestroy();
+        firstStart = false;
     }
 
     @Override
@@ -198,48 +168,20 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
         final int idView = v.getId();
         switch (idView) {
             case R.id.play:
-                if (isPlaying()) {
-                    pause();
+                if (mMusicPlayer.isPlaying()) {
+                    mMusicPlayer.pause();
                 } else {
-                    start();
+                    mMusicPlayer.play();
                 }
                 mPlayPauseView.toggle();
                 break;
             case R.id.next:
-                next();
+                mMusicPlayer.next();
                 break;
             case R.id.previous:
-                previous();
+                mMusicPlayer.previous();
                 break;
         }
-    }
-
-    private boolean isPlaying() {
-        return mAudioService.isPlaying();
-    }
-
-    private void start() {
-        mAudioService.start();
-    }
-
-    private void play() {
-        mAudioService.setPlayingIndex(mCurrentPosition);
-        mAudioService.play();
-    }
-
-    /**
-     * Pauses playback. Call start() to resume.
-     */
-    private void pause() {
-        mAudioService.pause();
-    }
-
-    private void next() {
-        mAudioService.next();
-    }
-
-    private void previous() {
-        mAudioService.previous();
     }
 
     private String getTimeStr(long milliseconds) {
@@ -269,13 +211,31 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
         supportFinishAfterTransition();
     }
 
+
     @Override
-    public void updateViewAudioService(int playingIndex) {
-        mCurrentPosition = playingIndex;
-        final FileMusicModel currentMusicModel = mFileMusicModelList.get(mCurrentPosition);
-        mSliderNumber.setProgress(mAudioService.getCurrentPosition());
-        mSliderNumber.setMax(mAudioService.getDuration());
-        mTitleTextView.setText(currentMusicModel.getName());
-        mSizeTextView.setText(getTimeStr(mAudioService.getCurrentPosition()) + " / " + getTimeStr(mAudioService.getDuration()));
+    public void onPlayerStatusChanged(int status) {
+
+    }
+
+    @Override
+    public void onPlayerProgressChanged(int progress, int duration, int musicPosition, FileMusicModel music) {
+        //mCurrentPosition = mAudioService.getPlayingIndex();
+        mCurrentPosition = musicPosition;
+        mSliderNumber.setProgress(progress);
+        mSliderNumber.setMax(duration);
+        mTitleTextView.setText(music.getName());
+        mSizeTextView.setText(getTimeStr(progress) + " / " + getTimeStr(duration));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mMusicPlayer.registerOnPlayerStatusChangeListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mMusicPlayer.unregisterOnPreviewPlayerStatusChangeListener(this);
     }
 }

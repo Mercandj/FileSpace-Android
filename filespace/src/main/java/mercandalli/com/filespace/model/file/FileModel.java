@@ -30,7 +30,7 @@ public class FileModel implements Parcelable {
     private FileSpaceModel mContent;
 
     // Local attrs
-    private File mFile;
+    protected File mFile;
     private long mLastModified;
     private long mCount;
 

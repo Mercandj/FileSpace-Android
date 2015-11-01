@@ -7,6 +7,8 @@ import javax.inject.Singleton;
 import dagger.Component;
 import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.manager.file.FileModule;
+import mercandalli.com.filespace.manager.music.MusicModule;
+import mercandalli.com.filespace.manager.music.MusicPlayer;
 import mercandalli.com.filespace.ui.activity.MainActivity;
 import mercandalli.com.filespace.ui.dialog.DialogFileChooser;
 import mercandalli.com.filespace.ui.dialog.DialogUpload;
@@ -19,7 +21,8 @@ import mercandalli.com.filespace.ui.fragment.file.FileMyCloudFragment;
 @Component(
         modules = {
                 MyAppModule.class,
-                FileModule.class
+                FileModule.class,
+                MusicModule.class
         }
 )
 public interface MyAppComponent {
@@ -47,4 +50,6 @@ public interface MyAppComponent {
     Application provideApp();
 
     FileManager provideFileManager();
+
+    MusicPlayer provideMusicPlayer();
 }

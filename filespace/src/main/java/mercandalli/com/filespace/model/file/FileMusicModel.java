@@ -85,4 +85,10 @@ public class FileMusicModel extends FileModel {
     public void setAlbum(final String album) {
         mAlbum = album;
     }
+
+    public String getPath() {
+        if (mFile != null)
+            return mFile.getPath();
+        return null;
+    }
 }

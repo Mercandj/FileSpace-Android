@@ -117,10 +117,6 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name="mercandalli.com.filespace.service.AudioService"
-            android:enabled="true"/>
-
         <activity
             android:name="mercandalli.com.filespace.ui.activity.FileTimerActivity"
             android:label="@string/app_name"
