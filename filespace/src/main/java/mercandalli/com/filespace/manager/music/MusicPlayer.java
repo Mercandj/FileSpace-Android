@@ -3,7 +3,9 @@ package mercandalli.com.filespace.manager.music;
 import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
@@ -16,6 +18,8 @@ import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.model.file.FileMusicModel;
+import mercandalli.com.filespace.ui.activity.FileAudioActivity;
+import mercandalli.com.filespace.ui.activity.FileAudioActivityOld;
 
 public class MusicPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
 
@@ -250,11 +254,24 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
         }
     }
 
-
     private void setNotification(boolean activated) {
         if (activated) {
+
+            Intent intent = new Intent(mAppContext, FileAudioActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            Intent buttonsIntent_close = new Intent(mAppContext, FileAudioActivity.class);
+            buttonsIntent_close.putExtra("do_action", "close");
+            Intent buttonsIntent_next = new Intent(mAppContext, FileAudioActivity.class);
+            buttonsIntent_close.putExtra("do_action", "next");
+            Intent buttonsIntent_prev = new Intent(mAppContext, FileAudioActivity.class);
+            buttonsIntent_close.putExtra("do_action", "prev");
+
             RemoteViews remoteViews = new RemoteViews(mAppContext.getPackageName(), R.layout.notification_musique);
             remoteViews.setTextViewText(R.id.titre_notif, mCurrentMusic.getName());
+            remoteViews.setOnClickPendingIntent(R.id.close, PendingIntent.getActivity(mAppContext, 0, buttonsIntent_close, 0));
+            remoteViews.setOnClickPendingIntent(R.id.play, PendingIntent.getActivity(mAppContext, 0, buttonsIntent_close, 0));
+            remoteViews.setOnClickPendingIntent(R.id.next, PendingIntent.getActivity(mAppContext, 0, buttonsIntent_next, 0));
+            remoteViews.setOnClickPendingIntent(R.id.prev, PendingIntent.getActivity(mAppContext, 0, buttonsIntent_prev, 0));
 
             Notification.Builder mNotifyBuilder = new Notification.Builder(mAppContext);
             Notification foregroundNote = mNotifyBuilder.setSmallIcon(R.drawable.audio)
@@ -267,6 +284,7 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
                     .setContent(remoteViews)
                     .build();
             foregroundNote.bigContentView = remoteViews;
+
             if (mMediaPlayer.isPlaying()) {
                 NotificationManager notificationManager = (NotificationManager) mAppContext.getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.notify(0, foregroundNote);

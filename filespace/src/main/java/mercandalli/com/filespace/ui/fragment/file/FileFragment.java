@@ -52,7 +52,7 @@ import mercandalli.com.filespace.ui.fragment.FabFragment;
 import mercandalli.com.filespace.util.DialogUtils;
 import mercandalli.com.filespace.util.NetUtils;
 
-public class FileFragment extends BackFragment implements ViewPager.OnPageChangeListener {
+public class FileFragment extends BackFragment implements ViewPager.OnPageChangeListener, FabFragment.RefreshFabCallback {
 
     private static final String BUNDLE_ARG_TITLE = "FileFragment.Args.BUNDLE_ARG_TITLE";
 
@@ -129,7 +129,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
 
-        if (mApplicationCallback.isLogged()) {
+        if (savedInstanceState == null && mApplicationCallback.isLogged()) {
             if (NetUtils.isInternetConnection(mActivity)) {
                 mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
                 mViewPager.setCurrentItem(INIT_FRAGMENT);
@@ -137,9 +137,15 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                 mViewPager.setOffscreenPageLimit(NB_FRAGMENT);
                 mViewPager.setCurrentItem(INIT_FRAGMENT + 1);
             }
-        } else {
+        } else if (savedInstanceState == null) {
             mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
             mViewPager.setCurrentItem(0);
+        }
+
+        if (savedInstanceState != null) {
+            for (FabFragment f : listFragment) {
+                f.setRefreshFab(this);
+            }
         }
 
         tabs.setupWithViewPager(mViewPager);
@@ -262,6 +268,11 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         }
     }
 
+    @Override
+    public void onRefreshFab() {
+        refreshFab();
+    }
+
     public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
         ApplicationCallback mApplicationCallback;
 
@@ -294,12 +305,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                     fragment = FileLocalFragment.newInstance();
                     break;
             }
-            fragment.setRefreshFab(new IListener() {
-                @Override
-                public void execute() {
-                    refreshFab();
-                }
-            });
+            fragment.setRefreshFab(FileFragment.this);
             listFragment[i] = fragment;
             return listFragment[i];
         }

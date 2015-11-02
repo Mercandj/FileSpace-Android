@@ -178,7 +178,7 @@ public class GenealogyListFragment extends FabFragment {
 
             if (!NetUtils.isInternetConnection(mActivity)) {
                 this.setListVisibility(false);
-                this.refreshFab.execute();
+                this.refreshFab.onRefreshFab();
             }
         }
     }
@@ -187,7 +187,7 @@ public class GenealogyListFragment extends FabFragment {
         if (this.recyclerView != null && this.list != null && this.isAdded()) {
             this.circularProgressBar.setVisibility(View.GONE);
 
-            this.refreshFab.execute();
+            this.refreshFab.onRefreshFab();
             this.recyclerView.setVisibility(View.VISIBLE);
 
             if (this.list.size() == 0) {

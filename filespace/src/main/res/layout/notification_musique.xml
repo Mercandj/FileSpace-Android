@@ -1,81 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="60dp"
-                android:background="#777"
-                android:padding="10dp">
+    android:layout_width="fill_parent"
+    android:layout_height="60dp"
+    android:padding="10dp"
+    android:background="#454545"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="40dp"
+        android:layout_width="38dp"
         android:layout_height="40dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentTop="false"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="6dp"
         android:src="@drawable/audio"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="12dp"/>
-
-    <ImageView
-        android:id="@+id/close"
-        android:layout_width="44dp"
-        android:layout_height="40dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:padding="5dp"
-        android:src="@android:drawable/ic_menu_close_clear_cancel"
-        android:visibility="gone"/>
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="6dp" />
 
     <TextView
         android:id="@+id/titre_notif"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_toEndOf="@+id/imageView1"
         android:ellipsize="marquee"
         android:focusable="false"
         android:marqueeRepeatLimit="marquee_forever"
         android:maxLines="1"
         android:scrollHorizontally="true"
         android:singleLine="true"
-        android:text="Titre"
+        tools:text="Titre"
         android:textColor="#fff"
         android:textSize="20sp"
-        android:layout_alignTop="@+id/close"
-        android:layout_toEndOf="@+id/imageView1"
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="8dp"/>
+        android:layout_centerVertical="true" />
 
     <ImageView
         android:id="@+id/next"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="50dp"
         android:padding="3dp"
-        android:src="@android:drawable/ic_media_next"
-        android:layout_below="@+id/imageView1"
-        android:layout_marginTop="8dp"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/play"
-        android:visibility="gone"/>
+        android:src="@drawable/ic_music_next"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/close" />
 
     <ImageView
         android:id="@+id/play"
-        android:layout_width="110dp"
+        android:layout_width="40dp"
         android:layout_height="50dp"
         android:padding="3dp"
-        android:src="@android:drawable/ic_media_pause"
-        android:layout_alignTop="@+id/next"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"/>
+        android:src="@drawable/ic_music_pause"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/next" />
 
     <ImageView
         android:id="@+id/prev"
-        android:layout_width="44dp"
+        android:layout_width="40dp"
         android:layout_height="50dp"
-        android:padding="3dp"
-        android:src="@android:drawable/ic_media_previous"
-        android:layout_alignTop="@+id/play"
-        android:layout_alignParentStart="true"
         android:layout_toStartOf="@+id/play"
-        android:visibility="gone"/>
+        android:padding="3dp"
+        android:src="@drawable/ic_music_previous" />
+
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="40dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:padding="5dp"
+        android:src="@drawable/ic_music_close" />
 
 </RelativeLayout>

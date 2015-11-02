@@ -8,13 +8,13 @@ import mercandalli.com.filespace.listener.IListener;
  * Manage the floating button.
  */
 public abstract class FabFragment extends BackFragment {
-    protected IListener refreshFab;
+    protected RefreshFabCallback refreshFab;
 
     public FabFragment() {
         super();
     }
 
-    public void setRefreshFab(IListener refreshFab) {
+    public void setRefreshFab(RefreshFabCallback refreshFab) {
         this.refreshFab = refreshFab;
     }
 
@@ -26,6 +26,10 @@ public abstract class FabFragment extends BackFragment {
 
     public void refreshFab() {
         if (refreshFab != null)
-            refreshFab.execute();
+            refreshFab.onRefreshFab();
+    }
+
+    public interface RefreshFabCallback{
+        void onRefreshFab();
     }
 }

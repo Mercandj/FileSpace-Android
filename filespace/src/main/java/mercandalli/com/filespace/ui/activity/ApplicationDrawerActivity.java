@@ -244,7 +244,9 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
         );
 
         // Initial Fragment
-        selectItem(getInitFragmentId());
+        if (savedInstanceState == null) {
+            selectItem(getInitFragmentId());
+        }
 
         mDrawerList.setAdapter(new NavDrawerListAdapter(this, navDrawerItems.getListe()));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());

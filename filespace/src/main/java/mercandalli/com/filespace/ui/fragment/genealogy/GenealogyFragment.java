@@ -248,9 +248,9 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
                 default:
                     fragment = GenealogyTreeFragment.newInstance();
             }
-            fragment.setRefreshFab(new IListener() {
+            fragment.setRefreshFab(new FabFragment.RefreshFabCallback() {
                 @Override
-                public void execute() {
+                public void onRefreshFab() {
                     refreshFab();
                 }
             });

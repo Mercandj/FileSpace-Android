@@ -162,7 +162,7 @@ public class FileCloudFragment extends InjectedFragment implements
 
             if (!NetUtils.isInternetConnection(mActivity)) {
                 this.setListVisibility(false);
-                this.refreshFab.execute();
+                refreshFab();
             }
         }
     }
@@ -197,7 +197,7 @@ public class FileCloudFragment extends InjectedFragment implements
 
             this.mAdapterModelFile.replaceList(mFilesList);
 
-            this.refreshFab.execute();
+            this.refreshFab();
 
             if (mViewMode == Constants.MODE_GRID) {
                 this.mGridView.setVisibility(View.VISIBLE);
@@ -259,7 +259,7 @@ public class FileCloudFragment extends InjectedFragment implements
                                                             public void execute() {
                                                                 if (filesToCut != null && filesToCut.size() != 0) {
                                                                     filesToCut.clear();
-                                                                    refreshFab.execute();
+                                                                    refreshFab();
                                                                 }
                                                                 mApplicationCallback.refreshData();
                                                             }
@@ -277,7 +277,7 @@ public class FileCloudFragment extends InjectedFragment implements
                                                             public void execute() {
                                                                 if (filesToCut != null && filesToCut.size() != 0) {
                                                                     filesToCut.clear();
-                                                                    refreshFab.execute();
+                                                                    refreshFab();
                                                                 }
                                                                 mApplicationCallback.refreshData();
                                                             }
@@ -349,7 +349,7 @@ public class FileCloudFragment extends InjectedFragment implements
             return true;
         } else if (filesToCut != null && filesToCut.size() != 0) {
             filesToCut.clear();
-            refreshFab.execute();
+            refreshFab();
             return true;
         }
         return false;
@@ -499,7 +499,7 @@ public class FileCloudFragment extends InjectedFragment implements
                                             public void execute() {
                                                 if (filesToCut != null && filesToCut.size() != 0) {
                                                     filesToCut.clear();
-                                                    refreshFab.execute();
+                                                    refreshFab();
                                                 }
                                                 mApplicationCallback.refreshData();
                                             }
@@ -517,7 +517,7 @@ public class FileCloudFragment extends InjectedFragment implements
                                             public void execute() {
                                                 if (filesToCut != null && filesToCut.size() != 0) {
                                                     filesToCut.clear();
-                                                    refreshFab.execute();
+                                                    refreshFab();
                                                 }
                                                 mApplicationCallback.refreshData();
                                             }
