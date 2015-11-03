@@ -172,6 +172,6 @@ public class TutorialActivity extends AppCompatActivity implements ViewPager.OnP
 
     private boolean isFirstLogin() {
         final SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_TUTORIAL, MODE_PRIVATE);
-        return sharedPreferences.getBoolean(KEY_IS_FIRST_LOGIN, false);
+        return sharedPreferences.getBoolean(KEY_IS_FIRST_LOGIN, true);
     }
 }
