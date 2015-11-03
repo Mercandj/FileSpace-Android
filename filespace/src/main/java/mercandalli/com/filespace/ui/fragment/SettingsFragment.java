@@ -44,6 +44,7 @@ import mercandalli.com.filespace.extras.ia.action.ENUM_Action;
 import mercandalli.com.filespace.listener.SetToolbarCallback;
 import mercandalli.com.filespace.model.ModelSetting;
 import mercandalli.com.filespace.ui.activity.RegisterLoginActivity;
+import mercandalli.com.filespace.ui.activity.WelcomeActivity;
 import mercandalli.com.filespace.ui.adapter.AdapterModelSetting;
 import mercandalli.com.filespace.ui.dialog.DialogAuthorLabel;
 import mercandalli.com.filespace.util.TimeUtils;
@@ -162,6 +163,13 @@ public class SettingsFragment extends BackFragment {
                 }
             }));
         }
+
+        list.add(new ModelSetting(mActivity, mApplicationCallback, mActivity.getString(R.string.tutorial), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                WelcomeActivity.start(mActivity);
+            }
+        }));
 
         list.add(new ModelSetting(mActivity, mApplicationCallback, mActivity.getString(R.string.about), new View.OnClickListener() {
             @Override
