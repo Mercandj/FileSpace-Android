@@ -32,11 +32,18 @@ public class WelcomeActivity extends AppCompatActivity implements ViewPager.OnPa
     private ImageView[] dots;
     private ViewPagerAdapter mAdapter;
 
+    private boolean mStartedByIntent;
+
+    private static final String EXTRA_START_BY_INTENT = "WelcomeActivity.Extra.EXTRA_START_BY_INTENT";
+
     private static final String SHARED_PREFERENCES_TUTORIAL = "Login.Permission";
     private static final String KEY_IS_FIRST_LOGIN = "LoginPermission.Key.KEY_IS_FIRST_LOGIN";
 
     public static void start(Activity activity) {
-        activity.startActivity(new Intent(activity, WelcomeActivity.class));
+        final Intent intent = new Intent(activity, WelcomeActivity.class);
+        intent.putExtra(EXTRA_START_BY_INTENT, true);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 
     @Override
@@ -44,10 +51,19 @@ public class WelcomeActivity extends AppCompatActivity implements ViewPager.OnPa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        if (!isFirstLogin()) {
-            MainActivity.start(this);
-            finish();
-        } else {
+        boolean start = false;
+        Bundle extras = getIntent().getExtras();
+        if (isFirstLogin()) {
+            start = true;
+            mStartedByIntent = false;
+        } else if (extras != null &&
+                extras.containsKey(EXTRA_START_BY_INTENT) &&
+                extras.getBoolean(EXTRA_START_BY_INTENT)) {
+            start = true;
+            mStartedByIntent = true;
+        }
+
+        if (start) {
             intro_images = (ViewPager) findViewById(R.id.tutorial_pager_introduction);
             btnNext = (ImageView) findViewById(R.id.btn_next);
             btnFinish = (TextView) findViewById(R.id.btn_finish);
@@ -64,6 +80,9 @@ public class WelcomeActivity extends AppCompatActivity implements ViewPager.OnPa
             intro_images.setCurrentItem(0);
             intro_images.addOnPageChangeListener(this);
             setUiPageViewController();
+        } else {
+            MainActivity.start(this);
+            finish();
         }
     }
 
@@ -98,28 +117,25 @@ public class WelcomeActivity extends AppCompatActivity implements ViewPager.OnPa
                     intro_images.setCurrentItem((intro_images.getCurrentItem() < dotsCount)
                             ? intro_images.getCurrentItem() + 1 : 0);
                 } else {
-
-                    final SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREFERENCES_TUTORIAL, MODE_PRIVATE)
-                            .edit();
-                    editor.putBoolean(KEY_IS_FIRST_LOGIN, false);
-                    editor.apply();
-
-                    MainActivity.start(this);
-                    finish();
+                    validate();
                 }
                 break;
 
             case R.id.btn_finish:
-
-                final SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREFERENCES_TUTORIAL, MODE_PRIVATE)
-                        .edit();
-                editor.putBoolean(KEY_IS_FIRST_LOGIN, false);
-                editor.apply();
-
-                MainActivity.start(this);
-                finish();
+                validate();
                 break;
         }
+    }
+
+    private void validate() {
+        final SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREFERENCES_TUTORIAL, MODE_PRIVATE)
+                .edit();
+        editor.putBoolean(KEY_IS_FIRST_LOGIN, false);
+        editor.apply();
+
+        if (!mStartedByIntent)
+            MainActivity.start(this);
+        finish();
     }
 
     @Override

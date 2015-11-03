@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Toast;
@@ -45,6 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelUser;
 import mercandalli.com.filespace.net.TaskPost;
@@ -56,7 +58,7 @@ import mercandalli.com.filespace.util.NetUtils;
 import mercandalli.com.filespace.util.StringPair;
 import mercandalli.com.filespace.util.StringUtils;
 
-public class RegisterLoginActivity extends ApplicationActivity {
+public class RegisterLoginActivity extends ApplicationActivity implements ViewPager.OnPageChangeListener {
 
     private final int NB_FRAGMENT = 2;
     private int INIT_FRAGMENT = 1;
@@ -73,22 +75,7 @@ public class RegisterLoginActivity extends ApplicationActivity {
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) this.findViewById(R.id.tabs);
         mViewPager = (ViewPager) this.findViewById(R.id.pager);
         mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageSelected(int arg0) {
-                RegisterLoginActivity.this.invalidateOptionsMenu();
-            }
-
-            @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int arg0) {
-
-            }
-        });
+        mViewPager.addOnPageChangeListener(this);
         mViewPager.setOffscreenPageLimit(this.NB_FRAGMENT - 1);
 
         if (this.getConfig().getUserUsername() == null || this.getConfig().getUserPassword() == null)
@@ -99,10 +86,10 @@ public class RegisterLoginActivity extends ApplicationActivity {
         mViewPager.setCurrentItem(this.INIT_FRAGMENT);
 
         tabs.setViewPager(mViewPager);
-        tabs.setIndicatorColor(getResources().getColor(R.color.white));
+        tabs.setIndicatorColor(ContextCompat.getColor(this, R.color.white));
 
         if (this.getConfig().isAutoConncetion() && this.getConfig().getUrlServer() != null && this.getConfig().getUserUsername() != null && this.getConfig().getUserPassword() != null)
-            if (!this.getConfig().getUserUsername().equals("") && !this.getConfig().getUserPassword().equals("") && this.getConfig().getUserId() != -1)
+            if (!this.getConfig().getUserUsername().equals("") && !this.getConfig().getUserPassword().equals("") && Config.getUserId() != -1)
                 connectionSucceed();
 
         (this.findViewById(R.id.signin)).setOnClickListener(new View.OnClickListener() {
@@ -187,6 +174,21 @@ public class RegisterLoginActivity extends ApplicationActivity {
 
     }
 
+    @Override
+    public void onPageSelected(int arg0) {
+        RegisterLoginActivity.this.invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onPageScrolled(int arg0, float arg1, int arg2) {
+        // Nothing here
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int arg0) {
+        // Nothing here
+    }
+
     public int getCurrentFragmentIndex() {
         return mViewPager.getCurrentItem();
     }
@@ -260,7 +262,7 @@ public class RegisterLoginActivity extends ApplicationActivity {
         parameters.add(new StringPair("username", "" + user.username));
         parameters.add(new StringPair("password", "" + user.password));
         if (NetUtils.isInternetConnection(this))
-            (new TaskPost(this, this, this.getConfig().getUrlServer() + this.getConfig().routeUser, new IPostExecuteListener() {
+            (new TaskPost(this, this, this.getConfig().getUrlServer() + Config.routeUser, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     try {
