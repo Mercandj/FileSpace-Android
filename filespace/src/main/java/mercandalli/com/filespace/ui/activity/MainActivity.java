@@ -27,12 +27,9 @@ import android.util.Log;
 
 import javax.inject.Inject;
 
-import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.MyApp;
 import mercandalli.com.filespace.listener.SetToolbarCallback;
 import mercandalli.com.filespace.manager.file.FileManager;
-import mercandalli.com.filespace.model.file.FileModel;
-import mercandalli.com.filespace.model.file.FileTypeModelENUM;
 import mercandalli.com.filespace.notificationpush.NotificationPush;
 import mercandalli.com.filespace.ui.fragment.community.CommunityFragment;
 import mercandalli.com.filespace.ui.fragment.file.FileFragment;
@@ -46,9 +43,7 @@ public class MainActivity extends ApplicationDrawerActivity implements SetToolba
     FileManager mFileManager;
 
     public static void start(Activity activity) {
-        final Intent intent = new Intent(activity, MainActivity.class);
-        activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        activity.startActivity(new Intent(activity, MainActivity.class));
     }
 
     @Override

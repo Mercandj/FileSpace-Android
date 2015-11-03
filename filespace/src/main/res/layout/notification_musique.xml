@@ -19,11 +19,10 @@
 
     <TextView
         android:id="@+id/titre_notif"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_toEndOf="@+id/imageView1"
         android:ellipsize="marquee"
         android:focusable="false"
         android:marqueeRepeatLimit="marquee_forever"
@@ -33,7 +32,9 @@
         tools:text="Titre"
         android:textColor="#fff"
         android:textSize="20sp"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/imageView1"
+        android:layout_toStartOf="@+id/prev"/>
 
     <ImageView
         android:id="@+id/next"

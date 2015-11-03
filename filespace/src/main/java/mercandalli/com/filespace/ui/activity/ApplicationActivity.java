@@ -59,6 +59,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mConfig = new Config(this, this);
 
         //region Handle NFC
@@ -150,5 +151,4 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
     public boolean isLogged() {
         return mConfig != null && mConfig.isLogged();
     }
-
 }
