@@ -4,8 +4,8 @@ import java.io.File;
 
 public class FileMusicModel extends FileModel {
 
-    private String mAlbum;
-    private String mArtist;
+    protected String mAlbum;
+    protected String mArtist;
 
     public static class FileMusicModelBuilder extends FileModelBuilder {
         private String album;
@@ -48,24 +48,24 @@ public class FileMusicModel extends FileModel {
         @Override
         public FileMusicModel build() {
             FileMusicModel fileMusicModel = new FileMusicModel();
-            fileMusicModel.setId(id);
-            fileMusicModel.setIdUser(idUser);
-            fileMusicModel.setIdFileParent(idFileParent);
-            fileMusicModel.setName(name);
-            fileMusicModel.setUrl(url);
-            fileMusicModel.setSize(size);
-            fileMusicModel.setPublic(isPublic);
-            fileMusicModel.setType(type);
-            fileMusicModel.setIsDirectory(isDirectory);
-            fileMusicModel.setDateCreation(dateCreation);
-            fileMusicModel.setIsApkUpdate(isApkUpdate);
-            fileMusicModel.setContent(content);
-            fileMusicModel.setFile(file);
-            fileMusicModel.setLastModified(lastModified);
-            fileMusicModel.setCount(count);
+            fileMusicModel.mId = id;
+            fileMusicModel.mIdUser = idUser;
+            fileMusicModel.mIdFileParent = idFileParent;
+            fileMusicModel.mName = name;
+            fileMusicModel.mUrl = url;
+            fileMusicModel.mSize = size;
+            fileMusicModel.mIsPublic = isPublic;
+            fileMusicModel.mType = type;
+            fileMusicModel.mIsDirectory = isDirectory;
+            fileMusicModel.mDateCreation = dateCreation;
+            fileMusicModel.mIsApkUpdate = isApkUpdate;
+            fileMusicModel.mContent = content;
+            fileMusicModel.mFile = file;
+            fileMusicModel.mLastModified = lastModified;
+            fileMusicModel.mCount = count;
 
-            fileMusicModel.setAlbum(album);
-            fileMusicModel.setArtist(artist);
+            fileMusicModel.mAlbum = album;
+            fileMusicModel.mArtist = artist;
             return fileMusicModel;
         }
     }
@@ -76,14 +76,6 @@ public class FileMusicModel extends FileModel {
 
     public String getArtist() {
         return mArtist;
-    }
-
-    public void setArtist(final String artist) {
-        mArtist = artist;
-    }
-
-    public void setAlbum(final String album) {
-        mAlbum = album;
     }
 
     public String getPath() {

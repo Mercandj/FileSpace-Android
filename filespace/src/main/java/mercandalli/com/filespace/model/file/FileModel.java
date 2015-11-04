@@ -16,23 +16,23 @@ import mercandalli.com.filespace.util.FileUtils;
 public class FileModel implements Parcelable {
 
     // Online & Local attrs
-    private int mId;
-    private int mIdUser;
-    private int mIdFileParent;
-    private String mName;
-    private String mUrl;
-    private long mSize;
-    private boolean mIsPublic;
-    private FileTypeModel mType;
-    private boolean mIsDirectory;
-    private Date mDateCreation;
-    private boolean mIsApkUpdate;
-    private FileSpaceModel mContent;
+    protected int mId;
+    protected int mIdUser;
+    protected int mIdFileParent;
+    protected String mName;
+    protected String mUrl;
+    protected long mSize;
+    protected boolean mIsPublic;
+    protected FileTypeModel mType;
+    protected boolean mIsDirectory;
+    protected Date mDateCreation;
+    protected boolean mIsApkUpdate;
+    protected FileSpaceModel mContent;
 
     // Local attrs
     protected File mFile;
-    private long mLastModified;
-    private long mCount;
+    protected long mLastModified;
+    protected long mCount;
 
     public static class FileModelBuilder {
 
@@ -157,21 +157,21 @@ public class FileModel implements Parcelable {
 
         public FileModel build() {
             FileModel fileModel = new FileModel();
-            fileModel.setId(id);
-            fileModel.setIdUser(idUser);
-            fileModel.setIdFileParent(idFileParent);
-            fileModel.setName(name);
-            fileModel.setUrl(url);
-            fileModel.setSize(size);
-            fileModel.setPublic(isPublic);
-            fileModel.setType(type);
-            fileModel.setIsDirectory(isDirectory);
-            fileModel.setDateCreation(dateCreation);
-            fileModel.setIsApkUpdate(isApkUpdate);
-            fileModel.setContent(content);
-            fileModel.setFile(file);
-            fileModel.setLastModified(lastModified);
-            fileModel.setCount(count);
+            fileModel.mId = id;
+            fileModel.mIdUser = idUser;
+            fileModel.mIdFileParent = idFileParent;
+            fileModel.mName = name;
+            fileModel.mUrl = url;
+            fileModel.mSize = size;
+            fileModel.mIsPublic = isPublic;
+            fileModel.mType = type;
+            fileModel.mIsDirectory = isDirectory;
+            fileModel.mDateCreation = dateCreation;
+            fileModel.mIsApkUpdate = isApkUpdate;
+            fileModel.mContent = content;
+            fileModel.mFile = file;
+            fileModel.mLastModified = lastModified;
+            fileModel.mCount = count;
             return fileModel;
         }
     }
@@ -228,16 +228,8 @@ public class FileModel implements Parcelable {
         return mId;
     }
 
-    public void setId(int mId) {
-        this.mId = mId;
-    }
-
     public int getIdUser() {
         return mIdUser;
-    }
-
-    public void setIdUser(int mIdUser) {
-        this.mIdUser = mIdUser;
     }
 
     public int getIdFileParent() {
@@ -252,98 +244,49 @@ public class FileModel implements Parcelable {
         return mName;
     }
 
-    public void setName(String mName) {
-        this.mName = mName;
-    }
-
     public String getUrl() {
         return mUrl;
-    }
-
-    public void setUrl(String mUrl) {
-        this.mUrl = mUrl;
     }
 
     public long getSize() {
         return mSize;
     }
 
-    public void setSize(long mSize) {
-        this.mSize = mSize;
-    }
-
     public boolean isPublic() {
         return mIsPublic;
-    }
-
-    public void setPublic(boolean mIsPublic) {
-        this.mIsPublic = mIsPublic;
     }
 
     public FileTypeModel getType() {
         return mType;
     }
 
-    public void setType(FileTypeModel mType) {
-        this.mType = mType;
-    }
-
     public boolean isDirectory() {
         return mIsDirectory;
-    }
-
-    public void setIsDirectory(boolean mIsDirectory) {
-        this.mIsDirectory = mIsDirectory;
     }
 
     public Date getDateCreation() {
         return mDateCreation;
     }
 
-    public void setDateCreation(Date mDateCreation) {
-        this.mDateCreation = mDateCreation;
-    }
-
     public boolean isApkUpdate() {
         return mIsApkUpdate;
-    }
-
-    public void setIsApkUpdate(boolean mIsApkUpdate) {
-        this.mIsApkUpdate = mIsApkUpdate;
     }
 
     public FileSpaceModel getContent() {
         return mContent;
     }
 
-    public void setContent(FileSpaceModel mContent) {
-        this.mContent = mContent;
-    }
-
     public File getFile() {
         return mFile;
-    }
-
-    public void setFile(File mFile) {
-        this.mFile = mFile;
     }
 
     public long getLastModified() {
         return mLastModified;
     }
 
-    public void setLastModified(long mLastModified) {
-        this.mLastModified = mLastModified;
-    }
-
     public long getCount() {
         return mCount;
     }
-
-    public void setCount(long mCount) {
-        this.mCount = mCount;
-    }
-
 
     public static final Creator<FileModel> CREATOR = new Creator<FileModel>() {
         @Override

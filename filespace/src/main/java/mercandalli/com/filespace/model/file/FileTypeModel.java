@@ -58,16 +58,8 @@ public class FileTypeModel {
         return this.mTitle != null ? this.mTitle : "";
     }
 
-    public void setTitle(String mTitle) {
-        this.mTitle = mTitle;
-    }
-
     public String[] getExtensions() {
         return mExtensions;
-    }
-
-    public void setExtensions(String[] mExtensions) {
-        this.mExtensions = mExtensions;
     }
 
     public String getFirstExtension() {
