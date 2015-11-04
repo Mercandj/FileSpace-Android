@@ -36,7 +36,6 @@ import java.net.URL;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.listener.IListener;
-import mercandalli.com.filespace.model.ModelFile;
 import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.util.FileUtils;
 
@@ -58,15 +57,6 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
     int id = 1;
     NotificationManager mNotifyManager;
     NotificationCompat.Builder mBuilder;
-
-    public TaskGetDownload(Activity activity, String url, String url_ouput, ModelFile modelFile, IListener listener) {
-        mActivity = activity;
-        this.url = url;
-        this.url_ouput = url_ouput;
-        this.mFileSize = modelFile.size;
-        this.mFileTypeTitle = modelFile.type.getTitle();
-        this.listener = listener;
-    }
 
     public TaskGetDownload(Activity activity, String url, String url_ouput, FileModel fileModel, IListener listener) {
         mActivity = activity;

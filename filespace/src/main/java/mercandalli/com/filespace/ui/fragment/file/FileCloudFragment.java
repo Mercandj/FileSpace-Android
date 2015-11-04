@@ -53,7 +53,6 @@ import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.listener.IStringListener;
 import mercandalli.com.filespace.listener.ResultCallback;
 import mercandalli.com.filespace.manager.file.FileManager;
-import mercandalli.com.filespace.model.ModelFile;
 import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.model.file.FileTypeModelENUM;
 import mercandalli.com.filespace.net.TaskPost;

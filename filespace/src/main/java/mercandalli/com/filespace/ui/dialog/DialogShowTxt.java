@@ -25,7 +25,6 @@ import android.widget.EditText;
 import java.io.File;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.model.ModelFile;
 import mercandalli.com.filespace.ui.activity.ApplicationActivity;
 
 public class DialogShowTxt extends Dialog {
@@ -33,7 +32,6 @@ public class DialogShowTxt extends Dialog {
     DialogFileChooser dialogFileChooser;
     ApplicationActivity app;
     File file;
-    ModelFile modelFile;
 
     public DialogShowTxt(final ApplicationActivity app, String txt) {
         super(app);

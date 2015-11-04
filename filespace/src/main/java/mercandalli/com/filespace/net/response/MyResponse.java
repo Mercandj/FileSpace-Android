@@ -7,11 +7,8 @@ import android.widget.Toast;
 
 import com.google.gson.annotations.SerializedName;
 
-import org.json.JSONArray;
-
 import java.util.List;
 
-import mercandalli.com.filespace.model.ModelFile;
 import mercandalli.com.filespace.util.StringUtils;
 
 /**
