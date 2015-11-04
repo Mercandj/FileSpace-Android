@@ -27,7 +27,7 @@ import android.util.Log;
 
 import javax.inject.Inject;
 
-import mercandalli.com.filespace.config.MyApp;
+import mercandalli.com.filespace.config.App;
 import mercandalli.com.filespace.listener.SetToolbarCallback;
 import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.notificationpush.NotificationPush;
@@ -51,7 +51,7 @@ public class MainActivity extends ApplicationDrawerActivity implements SetToolba
         super.onCreate(savedInstanceState);
 
         // Dagger
-        MyApp.get(this).getAppComponent().inject(this);
+        App.get(this).getAppComponent().inject(this);
 
         // Notif
         if (TextUtils.isEmpty(NotificationPush.regId)) {

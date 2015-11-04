@@ -35,8 +35,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.App;
 import mercandalli.com.filespace.config.Constants;
-import mercandalli.com.filespace.config.MyApp;
 import mercandalli.com.filespace.listener.IFileModelListener;
 import mercandalli.com.filespace.listener.ResultCallback;
 import mercandalli.com.filespace.manager.file.FileManager;
@@ -60,7 +60,7 @@ public class DialogFileChooser extends Dialog {
     public DialogFileChooser(final Activity activity, IFileModelListener listener) {
         super(activity);
 
-        MyApp.get(activity).getAppComponent().inject(this);
+        App.get(activity).getAppComponent().inject(this);
 
         mActivity = activity;
         mIFileModelListener = listener;

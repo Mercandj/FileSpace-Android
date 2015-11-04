@@ -28,7 +28,7 @@ import android.widget.Toast;
 import javax.inject.Inject;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.MyApp;
+import mercandalli.com.filespace.config.App;
 import mercandalli.com.filespace.listener.IFileModelListener;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.manager.file.FileManager;
@@ -57,7 +57,7 @@ public class DialogUpload extends Dialog {
     public DialogUpload(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final IListener listener) {
         super(activity);
 
-        MyApp.get(activity).getAppComponent().inject(this);
+        App.get(activity).getAppComponent().inject(this);
 
         mActivity = activity;
         mApplicationCallback = applicationCallback;

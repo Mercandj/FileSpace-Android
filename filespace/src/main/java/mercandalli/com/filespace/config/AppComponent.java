@@ -20,15 +20,15 @@ import mercandalli.com.filespace.ui.fragment.file.FileMyCloudFragment;
 @Singleton
 @Component(
         modules = {
-                MyAppModule.class,
+                AppModule.class,
                 FileModule.class,
                 MusicModule.class
         }
 )
-public interface MyAppComponent {
+public interface AppComponent {
 
     //Injections
-    void inject(MyApp app);
+    void inject(App app);
 
     void inject(MainActivity mainActivity);
 

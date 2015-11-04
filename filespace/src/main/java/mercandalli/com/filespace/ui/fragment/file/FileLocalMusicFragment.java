@@ -52,9 +52,9 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.AppComponent;
 import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.config.Constants;
-import mercandalli.com.filespace.config.MyAppComponent;
 import mercandalli.com.filespace.listener.IFileModelListener;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
@@ -469,7 +469,7 @@ public class FileLocalMusicFragment extends InjectedFragment
     }
 
     @Override
-    protected void inject(MyAppComponent myAppComponent) {
-        myAppComponent.inject(this);
+    protected void inject(AppComponent appComponent) {
+        appComponent.inject(this);
     }
 }

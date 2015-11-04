@@ -6,20 +6,20 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * The {@link MyApp} module
+ * The {@link App} module
  */
 @Module
-public class MyAppModule {
+public class AppModule {
 
-    private MyApp mMyApp;
+    private App mApp;
 
-    public MyAppModule(MyApp myApp) {
-        this.mMyApp = myApp;
+    public AppModule(App app) {
+        this.mApp = app;
     }
 
     @Provides
     public Application provideApp() {
-        return mMyApp;
+        return mApp;
     }
 
 }

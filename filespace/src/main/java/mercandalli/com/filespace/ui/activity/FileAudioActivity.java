@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.MyApp;
+import mercandalli.com.filespace.config.App;
 import mercandalli.com.filespace.manager.music.MusicPlayer;
 import mercandalli.com.filespace.model.file.FileMusicModel;
 import mercandalli.com.filespace.ui.view.PlayPauseView;
@@ -106,7 +106,7 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.notifications_bar_audio));
         }
 
-        mMusicPlayer = MyApp.get(this).getAppComponent().provideMusicPlayer();
+        mMusicPlayer = App.get(this).getAppComponent().provideMusicPlayer();
 
         mTitleTextView = (TextView) this.findViewById(R.id.title);
         mSizeTextView = (TextView) this.findViewById(R.id.size);
