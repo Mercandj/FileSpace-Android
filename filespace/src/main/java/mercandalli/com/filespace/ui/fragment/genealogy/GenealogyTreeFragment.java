@@ -124,7 +124,6 @@ public class GenealogyTreeFragment extends FabFragment {
                 requestReady = false;
                 new TaskGet(
                         mActivity,
-                        mApplicationCallback,
                         mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeGenealogyChildren + "/" + id_user,
                         new IPostExecuteListener() {
                             @Override
@@ -170,7 +169,6 @@ public class GenealogyTreeFragment extends FabFragment {
                 requestReady = false;
                 new TaskGet(
                         mActivity,
-                        mApplicationCallback,
                         mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeGenealogy + "/" + id_user,
                         new IPostExecuteListener() {
                             @Override

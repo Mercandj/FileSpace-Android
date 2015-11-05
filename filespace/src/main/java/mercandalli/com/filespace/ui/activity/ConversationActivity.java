@@ -201,7 +201,6 @@ public class ConversationActivity extends ApplicationActivity {
         if (NetUtils.isInternetConnection(this)) {
             new TaskGet(
                     this,
-                    this,
                     this.url,
                     new IPostExecuteListener() {
                         @Override

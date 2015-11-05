@@ -145,7 +145,6 @@ public class GenealogyListFragment extends FabFragment {
         if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged())
             new TaskGet(
                     mActivity,
-                    mApplicationCallback,
                     mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeGenealogy,
                     new IPostExecuteListener() {
                         @Override

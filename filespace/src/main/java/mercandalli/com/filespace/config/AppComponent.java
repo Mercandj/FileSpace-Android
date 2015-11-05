@@ -11,6 +11,7 @@ import mercandalli.com.filespace.manager.music.MusicModule;
 import mercandalli.com.filespace.manager.music.MusicPlayer;
 import mercandalli.com.filespace.ui.activity.MainActivity;
 import mercandalli.com.filespace.ui.activity.SearchActivity;
+import mercandalli.com.filespace.ui.adapter.file.FileMusicModelDragAdapter;
 import mercandalli.com.filespace.ui.dialog.DialogFileChooser;
 import mercandalli.com.filespace.ui.dialog.DialogUpload;
 import mercandalli.com.filespace.ui.fragment.file.FileCloudFragment;
@@ -46,6 +47,8 @@ public interface AppComponent {
     void inject(DialogUpload dialogUpload);
 
     void inject(SearchActivity searchActivity);
+
+    void inject(FileMusicModelDragAdapter fileMusicModelDragAdapter);
 
     //void inject(HomeFragment homeFragment);
 

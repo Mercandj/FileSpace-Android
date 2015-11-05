@@ -101,7 +101,7 @@ public class FileTextActivity extends ApplicationActivity implements IPostExecut
             mIsOnline = extras.getBoolean(EXTRA_MODEL_FILE_ONLINE);
 
             if (savedInstanceState == null) {
-                new TaskGet(this, this, this.mUrl, this).execute();
+                new TaskGet(this, this.mUrl, this).execute();
             } else {
                 mProgressBar.setVisibility(View.GONE);
             }

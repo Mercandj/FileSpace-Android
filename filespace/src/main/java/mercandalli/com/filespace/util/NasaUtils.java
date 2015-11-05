@@ -46,7 +46,6 @@ public class NasaUtils {
             final String date = getRandomDate();
             new TaskGet(
                     (Activity) context,
-                    applicationCallback,
                     getNasaPhoto(date),
                     new IPostExecuteListener() {
                         @Override

@@ -116,7 +116,6 @@ public class GenealogyStatisticsFragment extends FabFragment {
         if (NetUtils.isInternetConnection(mActivity))
             new TaskGet(
                     mActivity,
-                    mApplicationCallback,
                     mApplicationCallback.getConfig().getUrlServer() + Config.routeGenealogyStatistics,
                     new IPostExecuteListener() {
                         @Override

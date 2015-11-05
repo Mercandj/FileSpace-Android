@@ -19,7 +19,7 @@
  */
 package mercandalli.com.filespace.net;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -32,7 +32,6 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -42,7 +41,6 @@ import java.util.List;
 
 import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
-import mercandalli.com.filespace.ui.activity.ApplicationCallback;
 import mercandalli.com.filespace.util.NetUtils;
 import mercandalli.com.filespace.util.StringPair;
 import mercandalli.com.filespace.util.StringUtils;
@@ -56,23 +54,20 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 
     String url;
     IPostExecuteListener listener;
-    File file;
     List<StringPair> parameters;
-    ApplicationCallback mApplicationCallback;
-    Activity mActivity;
+    Context mContext;
     boolean isAuthentication = true;
 
-    public TaskGet(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener) {
-        this(activity, app, url, listener, null, true);
+    public TaskGet(Context context, String url, IPostExecuteListener listener) {
+        this(context, url, listener, null, true);
     }
 
-    public TaskGet(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener, List<StringPair> parameters) {
-        this(activity, app, url, listener, parameters, true);
+    public TaskGet(Context context, String url, IPostExecuteListener listener, List<StringPair> parameters) {
+        this(context, url, listener, parameters, true);
     }
 
-    public TaskGet(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener, List<StringPair> parameters, boolean isAuthentication) {
-        mActivity = activity;
-        this.mApplicationCallback = app;
+    public TaskGet(Context context, String url, IPostExecuteListener listener, List<StringPair> parameters, boolean isAuthentication) {
+        mContext = context;
         this.url = url;
         this.listener = listener;
         this.parameters = parameters;
@@ -150,17 +145,17 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
                     this.listener.onPostExecute(json, response);
                 if (json.has("toast"))
                     if (!json.getString("toast").equals(""))
-                        Toast.makeText(mActivity, json.getString("toast"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, json.getString("toast"), Toast.LENGTH_SHORT).show();
                 if (json.has("apk_update")) {
                     JSONArray array = json.getJSONArray("apk_update");
-                    PackageManager packageManager = mActivity.getPackageManager();
-                    PackageInfo packageInfo = packageManager.getPackageInfo(mActivity.getPackageName(), 0);
+                    PackageManager packageManager = mContext.getPackageManager();
+                    PackageInfo packageInfo = packageManager.getPackageInfo(mContext.getPackageName(), 0);
                     /*
                     label:
                     for (int i = 0; i < array.length(); i++) {
-                        ModelFile file = new ModelFile(mActivity, mApplicationCallback, array.getJSONObject(i));
+                        ModelFile file = new ModelFile(mContext, mApplicationCallback, array.getJSONObject(i));
                         if (packageInfo.lastUpdateTime < file.date_creation.getTime()) {
-                            Toast.makeText(mActivity, "You have an update.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "You have an update.", Toast.LENGTH_SHORT).show();
                             break label;
                         }
                     }

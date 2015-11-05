@@ -94,7 +94,6 @@ public class GenealogyBigTreeFragment extends FabFragment {
         if (NetUtils.isInternetConnection(mActivity)) {
             new TaskGet(
                     mActivity,
-                    mApplicationCallback,
                     mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeGenealogy + "/" + genealogyPerson.id,
                     new IPostExecuteListener() {
                         @Override

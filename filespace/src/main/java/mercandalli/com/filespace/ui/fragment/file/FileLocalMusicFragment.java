@@ -21,10 +21,7 @@ package mercandalli.com.filespace.ui.fragment.file;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,13 +38,9 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -59,6 +52,7 @@ import mercandalli.com.filespace.listener.IFileModelListener;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.listener.IStringListener;
+import mercandalli.com.filespace.listener.ResultCallback;
 import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.model.file.FileModel;
 import mercandalli.com.filespace.model.file.FileMusicModel;
@@ -79,6 +73,8 @@ public class FileLocalMusicFragment extends InjectedFragment
     private ArrayList<FileMusicModel> files;
     private ProgressBar mProgressBar;
     private TextView message;
+
+    private FileMusicModelDragAdapter mAdapter;
 
     private int mSortMode = Constants.SORT_DATE_MODIFICATION;
     private int mViewMode = Constants.MODE_LIST;
@@ -124,6 +120,85 @@ public class FileLocalMusicFragment extends InjectedFragment
         mGridView = (GridView) rootView.findViewById(R.id.gridView);
         mGridView.setVisibility(View.GONE);
 
+        files = new ArrayList<>();
+
+        mAdapter = new FileMusicModelDragAdapter(mActivity, files, new IFileModelListener() {
+            @Override
+            public void executeFileModel(final FileModel fileModel) {
+                final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
+                String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties)};
+                if (mApplicationCallback.isLogged())
+                    menuList = new String[]{getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.properties)};
+                menuAlert.setTitle("Action");
+                menuAlert.setItems(menuList,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int item) {
+                                if (!mApplicationCallback.isLogged())
+                                    item += 2;
+                                switch (item) {
+                                    case 0:
+                                        if (fileModel.isDirectory()) {
+                                            Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                        } else
+                                            DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + fileModel.getName(), getString(R.string.upload), new IListener() {
+                                                @Override
+                                                public void execute() {
+                                                    if (fileModel.getFile() != null) {
+                                                        List<StringPair> parameters = FileManager.getForUpload(fileModel);
+                                                        (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
+                                                            @Override
+                                                            public void onPostExecute(JSONObject json, String body) {
+
+                                                            }
+                                                        }, parameters, fileModel.getFile())).execute();
+                                                    }
+                                                }
+                                            }, getString(R.string.cancel), null);
+                                        break;
+                                    case 1:
+                                        mFileManager.openLocalAs(mActivity, fileModel);
+                                        break;
+                                    case 2:
+                                        DialogUtils.prompt(mActivity, "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
+                                            @Override
+                                            public void execute(String text) {
+                                                mFileManager.rename(fileModel, text, mRefreshActivityAdapterListener);
+                                            }
+                                        }, "Cancel", null, fileModel.getFullName());
+                                        break;
+                                    case 3:
+                                        DialogUtils.alert(mActivity, "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
+                                            @Override
+                                            public void execute() {
+                                                mFileManager.delete(fileModel, mRefreshActivityAdapterListener);
+                                            }
+                                        }, "No", null);
+                                        break;
+                                    case 4:
+                                        DialogUtils.alert(mActivity,
+                                                getString(R.string.properties) + " : " + fileModel.getName(),
+                                                mFileManager.toSpanned(fileModel),
+                                                "OK",
+                                                null,
+                                                null,
+                                                null);
+                                        break;
+                                }
+                            }
+                        });
+                AlertDialog menuDrop = menuAlert.create();
+                menuDrop.show();
+            }
+        });
+        mAdapter.setOnItemClickListener(new FileMusicModelDragAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                mFileManager.execute(mActivity, position, files, view);
+            }
+        });
+
+        mRecyclerView.setAdapter(mAdapter);
+
         refreshList();
 
         mApplicationCallback.invalidateMenu();
@@ -136,87 +211,24 @@ public class FileLocalMusicFragment extends InjectedFragment
     }
 
     public void refreshList(final String search) {
-        if (files == null) {
-            files = new ArrayList<>();
-        } else {
-            files.clear();
-        }
+        mFileManager.getLocalMusic(mActivity, mSortMode, search, new ResultCallback<List<FileMusicModel>>() {
+            @Override
+            public void success(List<FileMusicModel> result) {
+                if (files == null) {
+                    files = new ArrayList<>();
+                } else {
+                    files.clear();
+                }
+                files.addAll(result);
 
-        String[] STAR = {"*"};
+                updateAdapter();
+            }
 
-        Uri allsongsuri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
-
-        String[] searchArray = null;
-        if (search != null) {
-            searchArray = new String[]{"%" + search + "%"};
-            selection += " AND " + MediaStore.Audio.Media.DISPLAY_NAME + " LIKE ?";
-        }
-
-        Cursor cursor = mActivity.getContentResolver().query(allsongsuri, STAR, selection, searchArray, null);
-
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                do {
-                    String song_name = cursor.getString(cursor
-                            .getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
-                    int song_id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
-
-                    String fullpath = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-
-                    String album_name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
-                    int album_id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-
-                    String artist_name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-                    int artist_id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
-
-                    FileMusicModel.FileMusicModelBuilder fileMusicModelBuilder = new FileMusicModel.FileMusicModelBuilder();
-                    fileMusicModelBuilder.file(new File(fullpath));
-                    fileMusicModelBuilder.album(album_name);
-                    fileMusicModelBuilder.artist(artist_name);
-                    /*
-                    if (mSortMode == Constants.SORT_SIZE)
-                        fileMusicModel.adapterTitleStart = FileUtils.humanReadableByteCount(fileMusicModel.getSize()) + " - ";
-                        */
-                    files.add(fileMusicModelBuilder.build());
-
-                } while (cursor.moveToNext());
+            @Override
+            public void failure() {
 
             }
-            cursor.close();
-        }
-
-        if (mSortMode == Constants.SORT_ABC) {
-            Collections.sort(files, new Comparator<FileMusicModel>() {
-                @Override
-                public int compare(final FileMusicModel f1, final FileMusicModel f2) {
-                    if (f1.getName() == null || f2.getName() == null) {
-                        return 0;
-                    }
-                    return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
-                }
-            });
-        } else if (mSortMode == Constants.SORT_SIZE) {
-            Collections.sort(files, new Comparator<FileMusicModel>() {
-                @Override
-                public int compare(final FileMusicModel f1, final FileMusicModel f2) {
-                    return (new Long(f2.getSize())).compareTo(f1.getSize());
-                }
-            });
-        } else {
-            final Map<FileModel, Long> staticLastModifiedTimes = new HashMap<>();
-            for (FileModel f : files) {
-                staticLastModifiedTimes.put(f, f.getLastModified());
-            }
-            Collections.sort(files, new Comparator<FileMusicModel>() {
-                @Override
-                public int compare(final FileMusicModel f1, final FileMusicModel f2) {
-                    return staticLastModifiedTimes.get(f2).compareTo(staticLastModifiedTimes.get(f1));
-                }
-            });
-        }
-
-        updateAdapter();
+        });
     }
 
     public void updateAdapter() {
@@ -230,82 +242,7 @@ public class FileLocalMusicFragment extends InjectedFragment
             } else
                 message.setVisibility(View.GONE);
 
-            final FileMusicModelDragAdapter adapter = new FileMusicModelDragAdapter(mActivity, files, new IFileModelListener() {
-                @Override
-                public void executeFileModel(final FileModel fileModel) {
-                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
-                    String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties)};
-                    if (mApplicationCallback.isLogged())
-                        menuList = new String[]{getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.properties)};
-                    menuAlert.setTitle("Action");
-                    menuAlert.setItems(menuList,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int item) {
-                                    if (!mApplicationCallback.isLogged())
-                                        item += 2;
-                                    switch (item) {
-                                        case 0:
-                                            if (fileModel.isDirectory()) {
-                                                Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-                                            } else
-                                                DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + fileModel.getName(), getString(R.string.upload), new IListener() {
-                                                    @Override
-                                                    public void execute() {
-                                                        if (fileModel.getFile() != null) {
-                                                            List<StringPair> parameters = FileManager.getForUpload(fileModel);
-                                                            (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
-                                                                @Override
-                                                                public void onPostExecute(JSONObject json, String body) {
-
-                                                                }
-                                                            }, parameters, fileModel.getFile())).execute();
-                                                        }
-                                                    }
-                                                }, getString(R.string.cancel), null);
-                                            break;
-                                        case 1:
-                                            mFileManager.openLocalAs(mActivity, fileModel);
-                                            break;
-                                        case 2:
-                                            DialogUtils.prompt(mActivity, "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
-                                                @Override
-                                                public void execute(String text) {
-                                                    mFileManager.rename(fileModel, text, mRefreshActivityAdapterListener);
-                                                }
-                                            }, "Cancel", null, fileModel.getFullName());
-                                            break;
-                                        case 3:
-                                            DialogUtils.alert(mActivity, "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
-                                                @Override
-                                                public void execute() {
-                                                    mFileManager.delete(fileModel, mRefreshActivityAdapterListener);
-                                                }
-                                            }, "No", null);
-                                            break;
-                                        case 4:
-                                            DialogUtils.alert(mActivity,
-                                                    getString(R.string.properties) + " : " + fileModel.getName(),
-                                                    mFileManager.toSpanned(fileModel),
-                                                    "OK",
-                                                    null,
-                                                    null,
-                                                    null);
-                                            break;
-                                    }
-                                }
-                            });
-                    AlertDialog menuDrop = menuAlert.create();
-                    menuDrop.show();
-                }
-            });
-            adapter.setOnItemClickListener(new FileMusicModelDragAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(View view, int position) {
-                    mFileManager.execute(mActivity, position, files, view);
-                }
-            });
-
-            mRecyclerView.setAdapter(adapter);
+            mAdapter.setList(files);
 
             // Extend the Callback class
             ItemTouchHelper.Callback _ithCallback = new ItemTouchHelper.Callback() {
@@ -314,7 +251,7 @@ public class FileLocalMusicFragment extends InjectedFragment
                     // get the viewHolder's and target's positions in your adapter data, swap them
                     Collections.swap(files, viewHolder.getAdapterPosition(), target.getAdapterPosition());
                     // and notify the adapter that its dataset has changed
-                    adapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                    mAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
                     return true;
                 }
 

@@ -170,7 +170,6 @@ public class UserLocationFragment extends BackFragment {
         if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged())
             new TaskGet(
                     mActivity,
-                    mApplicationCallback,
                     mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUser,
                     new IPostExecuteListener() {
                         @Override

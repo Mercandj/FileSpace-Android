@@ -121,7 +121,6 @@ public class TalkFragment extends BackFragment {
         if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged())
             new TaskGet(
                     mActivity,
-                    mApplicationCallback,
                     mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserConversation,
                     new IPostExecuteListener() {
                         @Override

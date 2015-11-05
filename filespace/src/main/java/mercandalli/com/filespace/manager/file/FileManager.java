@@ -6,14 +6,20 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,8 +27,12 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Config;
@@ -33,6 +43,7 @@ import mercandalli.com.filespace.listener.ResultCallback;
 import mercandalli.com.filespace.local.FileLocalApi;
 import mercandalli.com.filespace.local.FilePersistenceApi;
 import mercandalli.com.filespace.model.file.FileModel;
+import mercandalli.com.filespace.model.file.FileMusicModel;
 import mercandalli.com.filespace.model.file.FileTypeModel;
 import mercandalli.com.filespace.model.file.FileTypeModelENUM;
 import mercandalli.com.filespace.net.FileOnlineApi;
@@ -224,7 +235,7 @@ public class FileManager {
             return;
         }
         final FileModel fileModel = (FileModel) fileModelList.get(position);
-        if(fileModel.isOnline()) {
+        if (fileModel.isOnline()) {
             executeOnline(activity, position, fileModelList, view);
         } else {
             executeLocal(activity, position, fileModelList, view);
@@ -520,5 +531,108 @@ public class FileManager {
 
     public boolean isMine(final FileModel fileModel) {
         return !fileModel.isOnline() || fileModel.getIdUser() == Config.getUserId();
+    }
+
+    public void getLocalMusic(final Context context, final int sortMode, final String search, final ResultCallback<List<FileMusicModel>> resultCallback) {
+
+        List<FileMusicModel> files = new ArrayList<>();
+
+        String[] STAR = {"*"};
+
+        Uri allsongsuri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+
+        String[] searchArray = null;
+        if (search != null) {
+            searchArray = new String[]{"%" + search + "%"};
+            selection += " AND " + MediaStore.Audio.Media.DISPLAY_NAME + " LIKE ?";
+        }
+
+        Cursor cursor = context.getContentResolver().query(allsongsuri, STAR, selection, searchArray, null);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    String song_name = cursor.getString(cursor
+                            .getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+                    int song_id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+
+                    String fullpath = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+
+                    String album_name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
+                    int album_id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
+
+                    String artist_name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+                    int artist_id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
+
+                    FileMusicModel.FileMusicModelBuilder fileMusicModelBuilder = new FileMusicModel.FileMusicModelBuilder();
+                    fileMusicModelBuilder.file(new File(fullpath));
+                    fileMusicModelBuilder.album(album_name);
+                    fileMusicModelBuilder.artist(artist_name);
+
+                    /*
+                    if (mSortMode == Constants.SORT_SIZE)
+                        fileMusicModel.adapterTitleStart = FileUtils.humanReadableByteCount(fileMusicModel.getSize()) + " - ";
+                        */
+                    files.add(fileMusicModelBuilder.build());
+
+                } while (cursor.moveToNext());
+
+            }
+            cursor.close();
+        }
+
+        if (sortMode == Constants.SORT_ABC) {
+            Collections.sort(files, new Comparator<FileMusicModel>() {
+                @Override
+                public int compare(final FileMusicModel f1, final FileMusicModel f2) {
+                    if (f1.getName() == null || f2.getName() == null) {
+                        return 0;
+                    }
+                    return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
+                }
+            });
+        } else if (sortMode == Constants.SORT_SIZE) {
+            Collections.sort(files, new Comparator<FileMusicModel>() {
+                @Override
+                public int compare(final FileMusicModel f1, final FileMusicModel f2) {
+                    return (new Long(f2.getSize())).compareTo(f1.getSize());
+                }
+            });
+        } else {
+            final Map<FileModel, Long> staticLastModifiedTimes = new HashMap<>();
+            for (FileModel f : files) {
+                staticLastModifiedTimes.put(f, f.getLastModified());
+            }
+            Collections.sort(files, new Comparator<FileMusicModel>() {
+                @Override
+                public int compare(final FileMusicModel f1, final FileMusicModel f2) {
+                    return staticLastModifiedTimes.get(f2).compareTo(staticLastModifiedTimes.get(f1));
+                }
+            });
+        }
+
+        resultCallback.success(files);
+    }
+
+    public void getCover(final Context context, final FileMusicModel fileMusicModel, final ImageView imageView) {
+
+        if (!StringUtils.isNullOrEmpty(fileMusicModel.getAlbum())) {
+            CoverUtils.getCoverUrl(context, fileMusicModel.getAlbum(), new ResultCallback<String>() {
+                @Override
+                public void success(String result) {
+                    Picasso.with(context)
+                            .load(result)
+                            .networkPolicy(NetworkPolicy.OFFLINE)
+                            .into(imageView);
+                }
+
+                @Override
+                public void failure() {
+
+                }
+            });
+        }
+
     }
 }

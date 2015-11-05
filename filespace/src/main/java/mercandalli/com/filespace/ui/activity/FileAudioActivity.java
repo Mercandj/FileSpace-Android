@@ -48,9 +48,9 @@ import mercandalli.com.filespace.ui.view.slider.Slider;
 
 public class FileAudioActivity extends AppCompatActivity implements View.OnClickListener, MusicPlayer.OnPlayerStatusChangeListener {
 
-    private static final String EXTRA_IS_ONLINE = "FileAudioActivity.Extra.EXTRA_IS_ONLINE";
-    private static final String EXTRA_FILE_CURRENT_POSITION = "FileAudioActivity.Extra.EXTRA_FILE_CURRENT_POSITION";
-    private static final String EXTRA_FILES_PATH = "FileAudioActivity.Extra.EXTRA_FILES_PATH";
+    public static final String EXTRA_IS_ONLINE = "FileAudioActivity.Extra.EXTRA_IS_ONLINE";
+    public static final String EXTRA_FILE_CURRENT_POSITION = "FileAudioActivity.Extra.EXTRA_FILE_CURRENT_POSITION";
+    public static final String EXTRA_FILES_PATH = "FileAudioActivity.Extra.EXTRA_FILES_PATH";
 
     private boolean mIsOnline;
 
@@ -70,7 +70,7 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
         Bundle args = new Bundle();
         final Intent intent = new Intent(activity, FileAudioActivity.class);
 
-        intent.putExtra(EXTRA_IS_ONLINE, true);
+        intent.putExtra(EXTRA_IS_ONLINE, false);
         intent.putExtra(EXTRA_FILE_CURRENT_POSITION, currentPosition);
         intent.putExtra(EXTRA_FILES_PATH, new ArrayList<>(fileMusicPath));//fileMusicPath.toArray());
 

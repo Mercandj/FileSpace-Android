@@ -106,7 +106,6 @@ public class ServerLogsFragment extends BackFragment {
         if (NetUtils.isInternetConnection(mActivity))
             new TaskGet(
                     mActivity,
-                    mApplicationCallback,
                     mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserConnection,
                     new IPostExecuteListener() {
                         @Override

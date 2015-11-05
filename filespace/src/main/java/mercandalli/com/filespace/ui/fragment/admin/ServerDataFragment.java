@@ -102,7 +102,6 @@ public class ServerDataFragment extends BackFragment {
         if (NetUtils.isInternetConnection(mActivity))
             new TaskGet(
                     mActivity,
-                    mApplicationCallback,
                     mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeInformation,
                     new IPostExecuteListener() {
                         @Override

@@ -31,12 +31,16 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.App;
 import mercandalli.com.filespace.listener.IFileModelListener;
+import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.model.file.FileModel;
+import mercandalli.com.filespace.model.file.FileMusicModel;
 import mercandalli.com.filespace.model.file.FileTypeModel;
 import mercandalli.com.filespace.model.file.FileTypeModelENUM;
-import mercandalli.com.filespace.model.file.FileMusicModel;
 import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.StringUtils;
 
@@ -50,10 +54,16 @@ public class FileMusicModelDragAdapter extends RecyclerView.Adapter<FileMusicMod
 
     private boolean mShowSize;
 
+    @Inject
+    FileManager mFileManager;
+
     public FileMusicModelDragAdapter(Activity activity, List<FileMusicModel> files, IFileModelListener moreListener) {
         this.mActivity = activity;
-        this.files = files;
+        this.files = new ArrayList<>();
+        this.files.addAll(files);
         this.moreListener = moreListener;
+
+        App.get(mActivity).getAppComponent().inject(this);
     }
 
     @Override
@@ -85,9 +95,11 @@ public class FileMusicModelDragAdapter extends RecyclerView.Adapter<FileMusicMod
                     viewHolder.icon.setImageResource(R.drawable.file_space);
                 else
                     viewHolder.icon.setImageResource(R.drawable.file_default);
-            } else
+            } else {
                 viewHolder.icon.setImageResource(R.drawable.file_default);
+            }
 
+            mFileManager.getCover(mActivity, file, viewHolder.icon);
 
             if (moreListener == null)
                 viewHolder.more.setVisibility(View.GONE);
@@ -163,6 +175,12 @@ public class FileMusicModelDragAdapter extends RecyclerView.Adapter<FileMusicMod
             files = new ArrayList<>();
             this.notifyItemRangeInserted(0, size - 1);
         }
+    }
+
+    public void setList(List<FileMusicModel> list) {
+        files.clear();
+        files.addAll(list);
+        notifyDataSetChanged();
     }
 
     @Override

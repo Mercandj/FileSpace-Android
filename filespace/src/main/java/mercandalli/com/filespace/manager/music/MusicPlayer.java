@@ -19,7 +19,6 @@ import java.util.List;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.model.file.FileMusicModel;
 import mercandalli.com.filespace.ui.activity.FileAudioActivity;
-import mercandalli.com.filespace.ui.activity.FileAudioActivityOld;
 
 public class MusicPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
 
@@ -261,10 +260,16 @@ public class MusicPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             Intent buttonsIntent_close = new Intent(mAppContext, FileAudioActivity.class);
             buttonsIntent_close.putExtra("do_action", "close");
+            buttonsIntent_close.putExtra(FileAudioActivity.EXTRA_FILE_CURRENT_POSITION, mCurrentMusicIndex);
+            buttonsIntent_close.putExtra(FileAudioActivity.EXTRA_IS_ONLINE, mCurrentMusic.isOnline());
             Intent buttonsIntent_next = new Intent(mAppContext, FileAudioActivity.class);
-            buttonsIntent_close.putExtra("do_action", "next");
+            buttonsIntent_next.putExtra("do_action", "next");
+            buttonsIntent_next.putExtra(FileAudioActivity.EXTRA_FILE_CURRENT_POSITION, mCurrentMusicIndex);
+            buttonsIntent_next.putExtra(FileAudioActivity.EXTRA_IS_ONLINE, mCurrentMusic.isOnline());
             Intent buttonsIntent_prev = new Intent(mAppContext, FileAudioActivity.class);
-            buttonsIntent_close.putExtra("do_action", "prev");
+            buttonsIntent_prev.putExtra("do_action", "prev");
+            buttonsIntent_prev.putExtra(FileAudioActivity.EXTRA_FILE_CURRENT_POSITION, mCurrentMusicIndex);
+            buttonsIntent_prev.putExtra(FileAudioActivity.EXTRA_IS_ONLINE, mCurrentMusic.isOnline());
 
             RemoteViews remoteViews = new RemoteViews(mAppContext.getPackageName(), R.layout.notification_musique);
             remoteViews.setTextViewText(R.id.titre_notif, mCurrentMusic.getName());
