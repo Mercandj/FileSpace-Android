@@ -99,7 +99,7 @@ public class FileMusicModelDragAdapter extends RecyclerView.Adapter<FileMusicMod
                 viewHolder.icon.setImageResource(R.drawable.file_default);
             }
 
-            mFileManager.getCover(mActivity, file, viewHolder.icon);
+            //mFileManager.getCover(mActivity, file, viewHolder.icon);
 
             if (moreListener == null)
                 viewHolder.more.setVisibility(View.GONE);
