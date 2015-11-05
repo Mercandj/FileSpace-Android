@@ -300,7 +300,7 @@ public class FileLocalFragment extends InjectedFragment
                         mCurrentDirectory = new File(mFilesList.get(position).getUrl());
                         refreshList();
                     } else {
-                        mFileManager.executeLocal(mActivity, position, mFilesList, view);
+                        mFileManager.execute(mActivity, position, mFilesList, view);
                     }
                 }
             });
@@ -333,7 +333,7 @@ public class FileLocalFragment extends InjectedFragment
                             mCurrentDirectory = new File(mFilesList.get(position).getUrl());
                             refreshList();
                         } else {
-                            mFileManager.executeLocal(mActivity, position, mFilesList, view);
+                            mFileManager.execute(mActivity, position, mFilesList, view);
                         }
                     }
                 });

@@ -262,7 +262,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                     FileMyCloudFragment.this.mIdFileDirectoryStack.add(mFilesList.get(position).getId());
                     refreshList();
                 } else {
-                    mFileManager.executeOnline(mActivity, mFilesList.get(position), mFilesList, view);
+                    mFileManager.execute(mActivity, position, mFilesList, view);
                 }
             }
         });
@@ -412,7 +412,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                             FileMyCloudFragment.this.mIdFileDirectoryStack.add(mFilesList.get(position).getId());
                             refreshList();
                         } else {
-                            mFileManager.executeOnline(mActivity, mFilesList.get(position), mFilesList, view);
+                            mFileManager.execute(mActivity, position, mFilesList, view);
                         }
                     }
                 });

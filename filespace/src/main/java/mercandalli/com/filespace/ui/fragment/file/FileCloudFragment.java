@@ -69,7 +69,7 @@ import mercandalli.com.filespace.util.NetUtils;
 import mercandalli.com.filespace.util.StringPair;
 
 /**
- * A {@link FabFragment} used by {@link FileFragment} to display the public cloud {@link ModelFile}.
+ * A {@link FabFragment} used by {@link FileFragment} to display the public cloud {@link FileModel}.
  */
 public class FileCloudFragment extends InjectedFragment implements
         BackFragment.IListViewMode,
@@ -215,7 +215,7 @@ public class FileCloudFragment extends InjectedFragment implements
                             //FileCloudFragment.this.url = mFilesList.get(position).getUrl() + "/";
                             refreshList();
                         } else {
-                            mFileManager.executeOnline(mActivity, mFilesList.get(position), mFilesList, view);
+                            mFileManager.execute(mActivity, position, mFilesList, view);
                         }
                     }
                 });
@@ -440,7 +440,7 @@ public class FileCloudFragment extends InjectedFragment implements
             Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
             refreshList();
         } else {
-            mFileManager.executeOnline(mActivity, mFilesList.get(position), mFilesList, view);
+            mFileManager.execute(mActivity, position, mFilesList, view);
         }
     }
 

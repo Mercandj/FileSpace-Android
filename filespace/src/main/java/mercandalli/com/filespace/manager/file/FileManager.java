@@ -219,7 +219,23 @@ public class FileManager {
         }
     }
 
-    public void executeOnline(final Activity activity, final FileModel fileModel, final List<FileModel> files, View view) {
+    public void execute(final Activity activity, final int position, final List fileModelList, View view) {
+        if (fileModelList == null || position >= fileModelList.size()) {
+            return;
+        }
+        final FileModel fileModel = (FileModel) fileModelList.get(position);
+        if(fileModel.isOnline()) {
+            executeOnline(activity, position, fileModelList, view);
+        } else {
+            executeLocal(activity, position, fileModelList, view);
+        }
+    }
+
+    private void executeOnline(final Activity activity, final int position, final List<FileModel> fileModelList, View view) {
+        if (fileModelList == null || position >= fileModelList.size()) {
+            return;
+        }
+        final FileModel fileModel = fileModelList.get(position);
         if (fileModel.getType().equals(FileTypeModelENUM.TEXT.type)) {
             FileTextActivity.start(activity, fileModel, true);
         } else if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
@@ -245,9 +261,11 @@ public class FileManager {
             intent.putExtra("ONLINE", true);
             intent.putExtra("FILE", fileModel);
             ArrayList<FileModel> tmpFiles = new ArrayList<>();
-            for (FileModel f : files)
-                if (f.getType().equals(FileTypeModelENUM.AUDIO.type))
+            for (FileModel f : fileModelList) {
+                if (f.getType().equals(FileTypeModelENUM.AUDIO.type)) {
                     tmpFiles.add(f);
+                }
+            }
             intent.putParcelableArrayListExtra("FILES", tmpFiles);
             if (view == null) {
                 activity.startActivity(intent);
@@ -276,7 +294,7 @@ public class FileManager {
         }*/
     }
 
-    public void executeLocal(final Activity activity, final int position, final List fileModelList, View view) {
+    private void executeLocal(final Activity activity, final int position, final List fileModelList, View view) {
         if (fileModelList == null || position >= fileModelList.size()) {
             return;
         }

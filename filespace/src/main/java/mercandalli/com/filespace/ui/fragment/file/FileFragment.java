@@ -46,6 +46,7 @@ import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.SetToolbarCallback;
 import mercandalli.com.filespace.ui.activity.ApplicationCallback;
+import mercandalli.com.filespace.ui.activity.SearchActivity;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragment.BackFragment;
 import mercandalli.com.filespace.ui.fragment.FabFragment;
@@ -511,7 +512,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        MenuItem searchItem = menu.findItem(R.id.action_filter);
         SearchView mSearchView = (SearchView) searchItem.getActionView();
 
         SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
@@ -544,6 +545,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_filter).setVisible(false);
         menu.findItem(R.id.action_search).setVisible(true);
         menu.findItem(R.id.action_delete).setVisible(false);
         menu.findItem(R.id.action_add).setVisible(false);
@@ -582,6 +584,9 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                 return true;
             case R.id.action_sort:
                 sort();
+                return true;
+            case R.id.action_search:
+                SearchActivity.start(mActivity);
                 return true;
         }
         return super.onOptionsItemSelected(item);

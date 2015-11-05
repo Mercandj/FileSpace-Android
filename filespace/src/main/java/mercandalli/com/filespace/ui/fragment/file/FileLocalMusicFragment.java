@@ -301,7 +301,7 @@ public class FileLocalMusicFragment extends InjectedFragment
             adapter.setOnItemClickListener(new FileMusicModelDragAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    mFileManager.executeLocal(mActivity, position, files, view);
+                    mFileManager.execute(mActivity, position, files, view);
                 }
             });
 
@@ -346,7 +346,7 @@ public class FileLocalMusicFragment extends InjectedFragment
                 this.mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        mFileManager.executeLocal(mActivity, position, files, view);
+                        mFileManager.execute(mActivity, position, files, view);
                     }
                 });
                 this.mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
