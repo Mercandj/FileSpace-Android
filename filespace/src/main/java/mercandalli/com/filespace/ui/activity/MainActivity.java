@@ -28,6 +28,7 @@ import android.util.Log;
 import javax.inject.Inject;
 
 import mercandalli.com.filespace.config.App;
+import mercandalli.com.filespace.config.Permission;
 import mercandalli.com.filespace.listener.SetToolbarCallback;
 import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.notificationpush.NotificationPush;

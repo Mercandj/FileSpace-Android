@@ -1,10 +1,12 @@
 package mercandalli.com.filespace.ui.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -16,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.config.Permission;
 import mercandalli.com.filespace.ui.view.WelcomeFirstView;
 import mercandalli.com.filespace.ui.view.WelcomeSecondView;
 
@@ -23,6 +26,14 @@ import mercandalli.com.filespace.ui.view.WelcomeSecondView;
  * Created by Jonathan on 03/11/2015.
  */
 public class WelcomeActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener {
+
+    Permission mPermission;
+
+    private static final String[] PERMISSIONS = new String[]{
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
 
     private ImageView btnNext;
     private TextView btnFinish;
@@ -64,6 +75,9 @@ public class WelcomeActivity extends AppCompatActivity implements ViewPager.OnPa
         }
 
         if (start) {
+            mPermission = new Permission(this, PERMISSIONS);
+            mPermission.askPermissions();
+
             intro_images = (ViewPager) findViewById(R.id.tutorial_pager_introduction);
             btnNext = (ImageView) findViewById(R.id.btn_next);
             btnFinish = (TextView) findViewById(R.id.btn_finish);
@@ -205,5 +219,12 @@ public class WelcomeActivity extends AppCompatActivity implements ViewPager.OnPa
     private boolean isFirstLogin() {
         final SharedPreferences sharedPreferences = getSharedPreferences(WelcomeActivity.SHARED_PREFERENCES_TUTORIAL, MODE_PRIVATE);
         return sharedPreferences.getBoolean(WelcomeActivity.KEY_IS_FIRST_LOGIN, true);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mPermission.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

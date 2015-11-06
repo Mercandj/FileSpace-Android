@@ -53,57 +53,77 @@ public class FileMusicModelDragAdapter extends RecyclerView.Adapter<FileMusicMod
     private IFileModelListener moreListener;
 
     private boolean mShowSize;
+    private boolean mHasHeader;
+
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_ITEM = 1;
 
     @Inject
     FileManager mFileManager;
 
-    public FileMusicModelDragAdapter(Activity activity, List<FileMusicModel> files, IFileModelListener moreListener) {
+    public FileMusicModelDragAdapter(Activity activity, List<FileMusicModel> files, boolean hasHeader, IFileModelListener moreListener) {
         this.mActivity = activity;
         this.files = new ArrayList<>();
         this.files.addAll(files);
         this.moreListener = moreListener;
+        this.mHasHeader = hasHeader;
 
         App.get(mActivity).getAppComponent().inject(this);
     }
 
     @Override
-    public FileMusicModelDragAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_drag, parent, false), viewType);
+    public int getItemViewType(int position) {
+        if (mHasHeader && isHeader(position)) {
+            return TYPE_HEADER;
+        }
+        return TYPE_ITEM;
+    }
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == TYPE_HEADER) {
+            return new HeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_header, parent, false), viewType);
+        }
+        return new FileViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_drag, parent, false), viewType);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
-        if (position < files.size()) {
-            final FileMusicModel file = files.get(position);
+        if (mHasHeader && position == 0) {
+            final HeaderViewHolder headerViewHolder = (HeaderViewHolder) viewHolder;
 
-            viewHolder.title.setText(getAdapterTitle(file));
-            viewHolder.subtitle.setText(getAdapterSubtitle(file));
+        } else if (position < files.size() + (mHasHeader ? 1 : 0)) {
+            final FileViewHolder fileViewHolder = (FileViewHolder) viewHolder;
+            final FileMusicModel file = files.get(position - (mHasHeader ? 1 : 0));
+
+            fileViewHolder.title.setText(getAdapterTitle(file));
+            fileViewHolder.subtitle.setText(getAdapterSubtitle(file));
 
             if (file.isDirectory())
-                viewHolder.icon.setImageResource(R.drawable.directory);
+                fileViewHolder.icon.setImageResource(R.drawable.directory);
             else if (file.getType() != null) {
                 FileTypeModel type = file.getType();
                 if (type.equals(FileTypeModelENUM.AUDIO.type))
-                    viewHolder.icon.setImageResource(R.drawable.file_audio);
+                    fileViewHolder.icon.setImageResource(R.drawable.file_audio);
                 else if (type.equals(FileTypeModelENUM.PDF.type))
-                    viewHolder.icon.setImageResource(R.drawable.file_pdf);
+                    fileViewHolder.icon.setImageResource(R.drawable.file_pdf);
                 else if (type.equals(FileTypeModelENUM.APK.type))
-                    viewHolder.icon.setImageResource(R.drawable.file_apk);
+                    fileViewHolder.icon.setImageResource(R.drawable.file_apk);
                 else if (type.equals(FileTypeModelENUM.ARCHIVE.type))
-                    viewHolder.icon.setImageResource(R.drawable.file_archive);
+                    fileViewHolder.icon.setImageResource(R.drawable.file_archive);
                 else if (type.equals(FileTypeModelENUM.FILESPACE.type))
-                    viewHolder.icon.setImageResource(R.drawable.file_space);
+                    fileViewHolder.icon.setImageResource(R.drawable.file_space);
                 else
-                    viewHolder.icon.setImageResource(R.drawable.file_default);
+                    fileViewHolder.icon.setImageResource(R.drawable.file_default);
             } else {
-                viewHolder.icon.setImageResource(R.drawable.file_default);
+                fileViewHolder.icon.setImageResource(R.drawable.file_default);
             }
 
-            //mFileManager.getCover(mActivity, file, viewHolder.icon);
+            //mFileManager.getCover(mActivity, file, fileViewHolder.icon);
 
             if (moreListener == null)
-                viewHolder.more.setVisibility(View.GONE);
-            viewHolder.more.setOnClickListener(new OnClickListener() {
+                fileViewHolder.more.setVisibility(View.GONE);
+            fileViewHolder.more.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (moreListener != null)
@@ -113,13 +133,25 @@ public class FileMusicModelDragAdapter extends RecyclerView.Adapter<FileMusicMod
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener, View.OnLongClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public ViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
+
+    public class HeaderViewHolder extends ViewHolder {
+        public HeaderViewHolder(View itemLayoutView, int viewType) {
+            super(itemLayoutView);
+        }
+    }
+
+    public class FileViewHolder extends ViewHolder implements OnClickListener, View.OnLongClickListener {
         public TextView title, subtitle;
         public ImageView icon;
         public View item;
         public View more;
 
-        public ViewHolder(View itemLayoutView, int viewType) {
+        public FileViewHolder(View itemLayoutView, int viewType) {
             super(itemLayoutView);
             item = itemLayoutView.findViewById(R.id.item);
             title = (TextView) itemLayoutView.findViewById(R.id.title);
@@ -144,7 +176,7 @@ public class FileMusicModelDragAdapter extends RecyclerView.Adapter<FileMusicMod
 
     @Override
     public int getItemCount() {
-        return files.size();
+        return files.size() + (mHasHeader ? 1 : 0);
     }
 
 
@@ -183,9 +215,8 @@ public class FileMusicModelDragAdapter extends RecyclerView.Adapter<FileMusicMod
         notifyDataSetChanged();
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return 0;
+    public boolean isHeader(int position) {
+        return position == 0;
     }
 
     public interface OnItemClickListener {

@@ -16,7 +16,7 @@
     android:background="@color/tab_file"
     android:stateListAnimator="@anim/tab_music_elevation"
     android:transitionName="transitionRoot"
-    app:cardCornerRadius="4dp">
+    app:cardCornerRadius="2dp">
 
     <RelativeLayout
         android:layout_width="match_parent"

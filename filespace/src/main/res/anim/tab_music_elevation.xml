@@ -5,16 +5,16 @@
         <objectAnimator
             android:duration="300"
             android:propertyName="translationZ"
-            android:valueFrom="2.0dp"
-            android:valueTo="10dp"
+            android:valueFrom="0sp"
+            android:valueTo="4sp"
             android:valueType="floatType"/>
     </item>
     <item>
         <objectAnimator
             android:duration="300"
             android:propertyName="translationZ"
-            android:valueFrom="10dp"
-            android:valueTo="2.0dp"
+            android:valueFrom="4sp"
+            android:valueTo="0sp"
             android:valueType="floatType"/>
     </item>
 

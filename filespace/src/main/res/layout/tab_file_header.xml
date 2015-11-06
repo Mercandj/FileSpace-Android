@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+	Personal Project : Control server
+		MERCANDALLI Jonathan
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/default_4"
+    android:transitionName="transitionRoot">
+
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5">
+
+        <include layout="@layout/card_file" />
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="4dp"
+        android:layout_height="1dp" />
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5">
+
+        <include layout="@layout/card_file" />
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="4dp"
+        android:layout_height="1dp" />
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5">
+
+        <include layout="@layout/card_file" />
+
+    </FrameLayout>
+
+</LinearLayout>

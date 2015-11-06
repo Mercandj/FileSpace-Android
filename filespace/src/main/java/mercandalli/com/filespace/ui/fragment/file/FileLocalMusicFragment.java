@@ -122,7 +122,7 @@ public class FileLocalMusicFragment extends InjectedFragment
 
         files = new ArrayList<>();
 
-        mAdapter = new FileMusicModelDragAdapter(mActivity, files, new IFileModelListener() {
+        mAdapter = new FileMusicModelDragAdapter(mActivity, files, true, new IFileModelListener() {
             @Override
             public void executeFileModel(final FileModel fileModel) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
@@ -248,10 +248,12 @@ public class FileLocalMusicFragment extends InjectedFragment
             ItemTouchHelper.Callback _ithCallback = new ItemTouchHelper.Callback() {
                 //and in your imlpementaion of
                 public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                    // get the viewHolder's and target's positions in your adapter data, swap them
-                    Collections.swap(files, viewHolder.getAdapterPosition(), target.getAdapterPosition());
-                    // and notify the adapter that its dataset has changed
-                    mAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                    if (viewHolder.getAdapterPosition() - 1 >= 0 && target.getAdapterPosition() - 1 >= 0) {
+                        // get the viewHolder's and target's positions in your adapter data, swap them
+                        Collections.swap(files, viewHolder.getAdapterPosition() - 1, target.getAdapterPosition() - 1);
+                        // and notify the adapter that its dataset has changed
+                        mAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                    }
                     return true;
                 }
 
@@ -263,6 +265,10 @@ public class FileLocalMusicFragment extends InjectedFragment
                 //defines the enabled move directions in each state (idle, swiping, dragging).
                 @Override
                 public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                    if (viewHolder instanceof FileMusicModelDragAdapter.HeaderViewHolder) {
+                        return makeFlag(ItemTouchHelper.ACTION_STATE_IDLE,
+                                ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
+                    }
                     return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
                             ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
                 }

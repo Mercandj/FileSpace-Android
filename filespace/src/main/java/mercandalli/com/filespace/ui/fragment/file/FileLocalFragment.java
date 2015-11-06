@@ -469,7 +469,7 @@ public class FileLocalFragment extends InjectedFragment
         if (hasItemSelected()) {
             deselectAll();
             return true;
-        } else if (!mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + mApplicationCallback.getConfig().getLocalFolderName())) {
+        } else if (!mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())) {
             if (mCurrentDirectory.getParent() != null) {
                 FileLocalFragment.this.mCurrentDirectory = new File(mCurrentDirectory.getParentFile().getPath());
                 FileLocalFragment.this.refreshList();
@@ -557,7 +557,7 @@ public class FileLocalFragment extends InjectedFragment
                 break;
 
             case 1:
-                if (mCurrentDirectory.getParent() != null) {
+                if (mCurrentDirectory.getParent() != null && !mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())) {
                     FileLocalFragment.this.mCurrentDirectory = new File(mCurrentDirectory.getParentFile().getPath());
                     //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
                     FileLocalFragment.this.refreshList();
@@ -572,7 +572,7 @@ public class FileLocalFragment extends InjectedFragment
             case 0:
                 return true;
             case 1:
-                return this.mCurrentDirectory != null && mCurrentDirectory.getParent() != null;
+                return this.mCurrentDirectory != null && mCurrentDirectory.getParent() != null && !mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath());
         }
         return false;
     }
