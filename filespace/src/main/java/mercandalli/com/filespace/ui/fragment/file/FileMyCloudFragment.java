@@ -665,7 +665,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
             case 0:
                 return true;
             case 1:
-                return this.mIdFileDirectoryStack.peek() != -1;
+                return !(mIdFileDirectoryStack == null || mIdFileDirectoryStack.size() == 0) && this.mIdFileDirectoryStack.peek() != -1;
         }
         return false;
     }

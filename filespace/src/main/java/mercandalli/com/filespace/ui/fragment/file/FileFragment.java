@@ -143,12 +143,6 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
             mViewPager.setCurrentItem(0);
         }
 
-        if (savedInstanceState != null) {
-            for (FabFragment f : listFragment) {
-                f.setRefreshFab(this);
-            }
-        }
-
         tabs.setupWithViewPager(mViewPager);
 
         mFab1 = ((FloatingActionButton) rootView.findViewById(R.id.fragment_file_fab_1));
@@ -159,6 +153,8 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         return rootView;
     }
 
+    // TODO SAVE THE VALUE with onPageScrolled and savedInstanceState and restore this value
+    // DON'T USE getCurrentItem()
     public int getCurrentFragmentIndex() {
         if (mViewPager == null)
             return -1;
@@ -283,7 +279,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         }
 
         @Override
-        public BackFragment getItem(int i) {
+        public FabFragment getItem(int i) {
             if (!mApplicationCallback.isLogged()) {
                 i += 2;
             }
@@ -306,7 +302,6 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                     fragment = FileLocalFragment.newInstance();
                     break;
             }
-            fragment.setRefreshFab(FileFragment.this);
             listFragment[i] = fragment;
             return listFragment[i];
         }
@@ -545,8 +540,8 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_filter).setVisible(false);
-        menu.findItem(R.id.action_search).setVisible(true);
+        menu.findItem(R.id.action_filter).setVisible(true);
+        menu.findItem(R.id.action_search).setVisible(false);
         menu.findItem(R.id.action_delete).setVisible(false);
         menu.findItem(R.id.action_add).setVisible(false);
         menu.findItem(R.id.action_download).setVisible(false);

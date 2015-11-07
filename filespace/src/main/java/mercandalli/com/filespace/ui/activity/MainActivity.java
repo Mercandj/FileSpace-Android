@@ -28,17 +28,17 @@ import android.util.Log;
 import javax.inject.Inject;
 
 import mercandalli.com.filespace.config.App;
-import mercandalli.com.filespace.config.Permission;
 import mercandalli.com.filespace.listener.SetToolbarCallback;
 import mercandalli.com.filespace.manager.file.FileManager;
 import mercandalli.com.filespace.notificationpush.NotificationPush;
+import mercandalli.com.filespace.ui.fragment.FabFragment;
 import mercandalli.com.filespace.ui.fragment.community.CommunityFragment;
 import mercandalli.com.filespace.ui.fragment.file.FileFragment;
 
 /**
  * Main {@link Activity} launched by the xml.
  */
-public class MainActivity extends ApplicationDrawerActivity implements SetToolbarCallback {
+public class MainActivity extends ApplicationDrawerActivity implements SetToolbarCallback, FabFragment.RefreshFabCallback {
 
     @Inject
     FileManager mFileManager;
@@ -80,6 +80,13 @@ public class MainActivity extends ApplicationDrawerActivity implements SetToolba
         if (mBackFragment instanceof FileFragment) {
             FileFragment fragmentFileManager = (FileFragment) mBackFragment;
             fragmentFileManager.refreshData();
+        }
+    }
+
+    @Override
+    public void onRefreshFab() {
+        if (getBackFragment() instanceof FabFragment.RefreshFabCallback) {
+            ((FabFragment.RefreshFabCallback) getBackFragment()).onRefreshFab();
         }
     }
 }

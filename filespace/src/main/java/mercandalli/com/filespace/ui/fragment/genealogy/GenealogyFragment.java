@@ -38,7 +38,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IModelGenealogyUserListener;
 import mercandalli.com.filespace.listener.SetToolbarCallback;
 import mercandalli.com.filespace.model.ModelGenealogyPerson;
@@ -248,12 +247,6 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
                 default:
                     fragment = GenealogyTreeFragment.newInstance();
             }
-            fragment.setRefreshFab(new FabFragment.RefreshFabCallback() {
-                @Override
-                public void onRefreshFab() {
-                    refreshFab();
-                }
-            });
             listFragment[i] = fragment;
             return fragment;
         }

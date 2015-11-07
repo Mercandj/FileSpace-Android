@@ -43,7 +43,7 @@ import mercandalli.com.filespace.util.StringUtils;
 public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.ViewHolder> {
 
     private Activity mActivity;
-    public final List<FileModel> mFiles = new ArrayList<>();
+    private final List<FileModel> mFiles = new ArrayList<>();
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
     private IFileModelListener mMoreListener;

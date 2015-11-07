@@ -211,6 +211,9 @@ public class FileLocalMusicFragment extends InjectedFragment
     }
 
     public void refreshList(final String search) {
+        if (mFileManager == null) {
+            return;
+        }
         mFileManager.getLocalMusic(mActivity, mSortMode, search, new ResultCallback<List<FileMusicModel>>() {
             @Override
             public void success(List<FileMusicModel> result) {
