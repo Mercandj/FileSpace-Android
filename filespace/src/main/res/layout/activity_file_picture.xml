@@ -3,59 +3,58 @@
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-    >
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/icon"
         android:layout_width="match_parent"
         android:layout_height="280dp"
-        android:id="@+id/icon"
-        android:transitionName="transitionIcon"
-        android:src="@drawable/ic_launcher"
-        android:scaleType="centerCrop"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"/>
+        android:layout_alignParentTop="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_launcher"
+        android:transitionName="transitionIcon"/>
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/my_toolbar"
         android:layout_width="fill_parent"
         android:layout_height="?attr/actionBarSize"
+        android:layout_marginTop="@dimen/notification_bar_height"
         android:background="@color/notifications_bar_picture"
-        app:titleTextAppearance="@style/ToolbarTitle"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        android:layout_marginTop="@dimen/notification_bar_height"/>
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:titleTextAppearance="@style/ToolbarTitle"/>
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="64dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/icon"
+        android:background="@color/actionbar"
         android:ellipsize="marquee"
         android:focusable="false"
+        android:gravity="center_vertical"
         android:marqueeRepeatLimit="marquee_forever"
         android:maxLines="1"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
         android:scrollHorizontally="true"
         android:singleLine="true"
-        android:textColor="#fff"
-        android:textSize="20sp"
         android:text="Title"
-        android:layout_below="@+id/icon"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
         android:textAlignment="center"
-        android:gravity="center_vertical"
-        android:background="@color/actionbar"/>
+        android:textColor="#fff"
+        android:textSize="20sp"/>
 
     <ImageButton
         android:id="@+id/circle"
-        android:transitionName="transitionFab"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
@@ -68,28 +67,29 @@
         android:src="@drawable/ic_menu_send_white"
         android:stateListAnimator="@anim/circle_button_elevation"
         android:tint="@android:color/white"
+        android:transitionName="transitionFab"
         />
 
     <ProgressBar
+        android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:max="100"
-        android:progress="20"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/title"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="-7dp"/>
+        android:layout_marginTop="-7dp"
+        android:max="100"
+        android:progress="20"/>
 
     <TextView
+        android:id="@+id/progress_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/progress_tv"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="0%"
+        android:layout_alignParentEnd="true"
         android:layout_below="@+id/progressBar"
         android:layout_marginRight="10dp"
         android:layout_marginTop="2dp"
-        android:layout_alignParentEnd="true"/>
+        android:text="0%"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
 </RelativeLayout>

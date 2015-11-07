@@ -122,7 +122,7 @@ public class Config {
         STRING_USER_PASSWORD("", "string_user_password_1"),
         STRING_USER_REGID("", "string_user_regid_1"),
         STRING_USER_NOTE_WORKSPACE_1("", "string_user_note_workspace_1"),
-        STRING_LOCAL_FOLDER_NAME_1("" + localFolderNameDefault, "string_local_folder_name_1"),;
+        STRING_LOCAL_FOLDER_NAME_1("", "string_local_folder_name_1"),;
 
         String value;
         String key;

@@ -122,7 +122,7 @@ public class FileLocalMusicFragment extends InjectedFragment
 
         files = new ArrayList<>();
 
-        mAdapter = new FileMusicModelDragAdapter(mActivity, files, true, new IFileModelListener() {
+        mAdapter = new FileMusicModelDragAdapter(mActivity, files, false, new IFileModelListener() {
             @Override
             public void executeFileModel(final FileModel fileModel) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);

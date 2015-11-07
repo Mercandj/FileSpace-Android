@@ -2,7 +2,8 @@
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -29,7 +30,7 @@
                 android:minLines="1"
                 android:singleLine="true"
                 android:textColor="@color/white"
-                android:textColorHint="@color/white_70" />
+                android:textColorHint="@color/white_70"/>
 
             <ImageButton
                 android:id="@+id/activity_search_toolbar_btn_clear"
@@ -38,7 +39,7 @@
                 android:layout_gravity="end"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_close"
-                android:visibility="invisible" />
+                android:visibility="invisible"/>
         </FrameLayout>
 
     </android.support.v7.widget.Toolbar>
@@ -49,5 +50,5 @@
         android:layout_height="match_parent"
         android:clickable="true"
         android:focusable="true"
-        android:scrollbars="vertical" />
+        android:scrollbars="vertical"/>
 </LinearLayout>
