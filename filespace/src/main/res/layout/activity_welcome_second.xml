@@ -21,13 +21,13 @@
             android:clickable="false"
             android:padding="70dp"
             android:scaleType="fitCenter"
-            tools:src="@drawable/welcome_first"/>
+            tools:src="@drawable/welcome_second"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Explore your local files"
+            android:text="Manage and launch your files"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/white"/>
 

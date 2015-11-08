@@ -19,8 +19,9 @@ import android.widget.TextView;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.config.Permission;
-import mercandalli.com.filespace.ui.view.WelcomeFirstView;
-import mercandalli.com.filespace.ui.view.WelcomeSecondView;
+import mercandalli.com.filespace.ui.view.welcome.WelcomeFirstView;
+import mercandalli.com.filespace.ui.view.welcome.WelcomeSecondView;
+import mercandalli.com.filespace.ui.view.welcome.WelcomeThirdView;
 
 /**
  * Created by Jonathan on 03/11/2015.
@@ -201,7 +202,7 @@ public class WelcomeActivity extends AppCompatActivity implements ViewPager.OnPa
                     itemView = new WelcomeSecondView(mContext);
                     break;
                 case 2:
-                    itemView = new WelcomeFirstView(mContext);
+                    itemView = new WelcomeThirdView(mContext);
                     break;
             }
 

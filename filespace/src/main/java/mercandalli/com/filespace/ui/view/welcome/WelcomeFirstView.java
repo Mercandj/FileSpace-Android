@@ -1,4 +1,4 @@
-package mercandalli.com.filespace.ui.view;
+package mercandalli.com.filespace.ui.view.welcome;
 
 import android.content.Context;
 import android.util.AttributeSet;

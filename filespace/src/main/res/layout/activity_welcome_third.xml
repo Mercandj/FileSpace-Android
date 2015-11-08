@@ -15,19 +15,20 @@
 
         <ImageView
             android:id="@+id/activity_welcome_first_img"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:adjustViewBounds="true"
+            android:layout_gravity="center_horizontal"
             android:clickable="false"
-            android:padding="70dp"
             android:scaleType="fitCenter"
-            tools:src="@drawable/welcome_first"/>
+            tools:src="@mipmap/ic_launcher"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:layout_gravity="center"
-            android:text="Explore your local files"
+            android:text="Welcome"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/white"/>
 

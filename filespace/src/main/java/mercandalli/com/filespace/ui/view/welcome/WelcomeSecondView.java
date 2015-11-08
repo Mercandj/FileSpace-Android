@@ -1,10 +1,9 @@
-package mercandalli.com.filespace.ui.view;
+package mercandalli.com.filespace.ui.view.welcome;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 
 import mercandalli.com.filespace.R;
 
@@ -29,8 +28,6 @@ public class WelcomeSecondView extends FrameLayout {
     }
 
     private void setContentView(Context context) {
-        final View view = inflate(context, R.layout.activity_welcome_first, this);
-
-        ((ImageView) view.findViewById(R.id.activity_welcome_first_img)).setImageResource(R.drawable.welcome_second);
+        final View view = inflate(context, R.layout.activity_welcome_second, this);
     }
 }
