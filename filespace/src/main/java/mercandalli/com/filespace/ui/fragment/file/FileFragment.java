@@ -51,7 +51,6 @@ import mercandalli.com.filespace.ui.activity.SearchActivity;
 import mercandalli.com.filespace.ui.dialog.DialogAddFileManager;
 import mercandalli.com.filespace.ui.fragment.BackFragment;
 import mercandalli.com.filespace.ui.fragment.FabFragment;
-import mercandalli.com.filespace.util.DialogUtils;
 import mercandalli.com.filespace.util.NetUtils;
 
 public class FileFragment extends BackFragment implements ViewPager.OnPageChangeListener, FabFragment.RefreshFabCallback {
@@ -399,26 +398,6 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         });
     }
 
-    public void download() {
-        DialogUtils.alert(mActivity, "Download", "Download all files ?", "Yes", new IListener() {
-            @Override
-            public void execute() {
-                // TODO download all
-                Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-            }
-        }, "No", null);
-    }
-
-    public void upload() {
-        DialogUtils.alert(mActivity, "Upload", "Upload all files ?", "Yes", new IListener() {
-            @Override
-            public void execute() {
-                // TODO Upload all
-                Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-            }
-        }, "No", null);
-    }
-
     public void goHome() {
         FabFragment fabFragment = getCurrentFragment();
         if (fabFragment != null) {
@@ -539,18 +518,10 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         menu.findItem(R.id.action_search).setVisible(false);
         menu.findItem(R.id.action_delete).setVisible(false);
         menu.findItem(R.id.action_add).setVisible(false);
-        menu.findItem(R.id.action_download).setVisible(false);
-        menu.findItem(R.id.action_upload).setVisible(false);
         menu.findItem(R.id.action_home).setVisible(false);
         menu.findItem(R.id.action_sort).setVisible(true);
 
         switch (getCurrentFragmentIndex()) {
-            case 0:
-                menu.findItem(R.id.action_download).setVisible(true);
-                break;
-            case 1:
-                menu.findItem(R.id.action_download).setVisible(true);
-                break;
             case 2:
                 menu.findItem(R.id.action_home).setVisible(true);
                 break;
@@ -562,12 +533,6 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         switch (item.getItemId()) {
             case R.id.action_add:
                 add();
-                return true;
-            case R.id.action_download:
-                download();
-                return true;
-            case R.id.action_upload:
-                upload();
                 return true;
             case R.id.action_home:
                 goHome();

@@ -18,18 +18,6 @@
         android:title="@string/menu_action_add"/>
 
     <item
-        android:id="@+id/action_download"
-        android:icon="@android:drawable/ic_menu_save"
-        app:showAsAction="ifRoom"
-        android:title="@string/menu_action_download"/>
-
-    <item
-        android:id="@+id/action_upload"
-        android:icon="@android:drawable/ic_menu_upload_you_tube"
-        app:showAsAction="ifRoom"
-        android:title="@string/menu_action_upload"/>
-
-    <item
         android:id="@+id/action_home"
         android:icon="@drawable/ic_home_white_24dp"
         app:showAsAction="ifRoom"
