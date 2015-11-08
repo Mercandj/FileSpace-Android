@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import mercandalli.com.filespace.R;
 
@@ -29,5 +30,7 @@ public class WelcomeSecondView extends FrameLayout {
 
     private void setContentView(Context context) {
         final View view = inflate(context, R.layout.activity_welcome_second, this);
+
+        ((ImageView) view.findViewById(R.id.activity_welcome_second_img)).setImageResource(R.drawable.welcome_second);
     }
 }
