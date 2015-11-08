@@ -28,6 +28,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -59,8 +60,8 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
     private static final int NB_FRAGMENT = 4;
     private static final int INIT_FRAGMENT = 1;
-    public static FabFragment listFragment[] = new FabFragment[NB_FRAGMENT];
     private ViewPager mViewPager;
+    private FileManagerFragmentPagerAdapter mPagerAdapter;
 
     private FloatingActionButton mFab1;
     private FloatingActionButton mFab2;
@@ -123,7 +124,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.fragment_file_app_bar_layout);
         coordinatorLayoutView = rootView.findViewById(R.id.fragment_file_coordinator_layout);
 
-        final FileManagerFragmentPagerAdapter mPagerAdapter = new FileManagerFragmentPagerAdapter(getChildFragmentManager(), mApplicationCallback);
+        mPagerAdapter = new FileManagerFragmentPagerAdapter(getChildFragmentManager(), mApplicationCallback);
 
         final TabLayout tabs = (TabLayout) rootView.findViewById(R.id.fragment_file_tab_layout);
         mViewPager = (ViewPager) rootView.findViewById(R.id.fragment_file_view_pager);
@@ -153,30 +154,30 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         return rootView;
     }
 
-    // TODO SAVE THE VALUE with onPageScrolled and savedInstanceState and restore this value
-    // DON'T USE getCurrentItem()
     public int getCurrentFragmentIndex() {
-        if (mViewPager == null)
-            return -1;
-        int result = mViewPager.getCurrentItem();
-        if (result >= listFragment.length) {
-            return -1;
+        return mViewPager.getCurrentItem();
+    }
+
+    public FabFragment getCurrentFragment() {
+        Fragment fragment = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.fragment_file_view_pager + ":" + mPagerAdapter.getItemId(getCurrentFragmentIndex()));
+        if (fragment == null || !(fragment instanceof FabFragment)) {
+            return null;
         }
-        return result + (mApplicationCallback.isLogged() ? 0 : 2);
+        return (FabFragment) fragment;
     }
 
     @Override
     public boolean back() {
         int currentFragmentId = getCurrentFragmentIndex();
-        if (listFragment == null || currentFragmentId == -1) {
+        if (currentFragmentId == -1) {
             return false;
         }
-        FabFragment fragment = listFragment[currentFragmentId];
-        if (fragment == null) {
+        FabFragment fabFragment = getCurrentFragment();
+        if (fabFragment == null) {
             return false;
         }
-        refreshFab(fragment);
-        return fragment.back();
+        refreshFab(fabFragment);
+        return fabFragment.back();
     }
 
     private void refreshFab() {
@@ -184,12 +185,13 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     }
 
     private void refreshFab(int currentFragmentId) {
-        if (listFragment == null || currentFragmentId == -1)
+        if (currentFragmentId == -1)
             return;
-        FabFragment fragment = listFragment[currentFragmentId];
-        if (fragment == null)
+        FabFragment fabFragment = getCurrentFragment();
+        if (fabFragment == null) {
             return;
-        refreshFab(fragment);
+        }
+        refreshFab(fabFragment);
     }
 
     private void refreshFab(final FabFragment currentFragment) {
@@ -284,26 +286,18 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                 i += 2;
             }
 
-            FabFragment fragment;
             switch (i) {
                 case 0:
-                    fragment = FileCloudFragment.newInstance();
-                    break;
+                    return FileCloudFragment.newInstance();
                 case 1:
-                    fragment = FileMyCloudFragment.newInstance();
-                    break;
+                    return FileMyCloudFragment.newInstance();
                 case 2:
-                    fragment = FileLocalFragment.newInstance();
-                    break;
+                    return FileLocalFragment.newInstance();
                 case 3:
-                    fragment = FileLocalMusicFragment.newInstance();
-                    break;
+                    return FileLocalMusicFragment.newInstance();
                 default:
-                    fragment = FileLocalFragment.newInstance();
-                    break;
+                    return FileLocalFragment.newInstance();
             }
-            listFragment[i] = fragment;
-            return listFragment[i];
         }
 
         @Override
@@ -339,57 +333,54 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     }
 
     public void refreshListServer(String search) {
-        for (FabFragment fr : listFragment) {
-            if (fr != null) {
-                if (fr instanceof FileCloudFragment) {
-                    FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fr;
-                    fragmentFileManagerFragment.refreshList(search);
-                } else if (fr instanceof FileMyCloudFragment) {
-                    FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fr;
-                    fragmentFileManagerFragment.refreshList(search);
-                } else if (fr instanceof FileLocalFragment) {
-                    FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fr;
-                    fragmentFileManagerFragment.refreshList(search);
-                } else if (fr instanceof FileLocalMusicFragment) {
-                    FileLocalMusicFragment fragmentFileManagerFragment = (FileLocalMusicFragment) fr;
-                    fragmentFileManagerFragment.refreshList(search);
-                }
+        FabFragment fabFragment = getCurrentFragment();
+        if (fabFragment != null) {
+            if (fabFragment instanceof FileCloudFragment) {
+                FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
+                fragmentFileManagerFragment.refreshList(search);
+            } else if (fabFragment instanceof FileMyCloudFragment) {
+                FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fabFragment;
+                fragmentFileManagerFragment.refreshList(search);
+            } else if (fabFragment instanceof FileLocalFragment) {
+                FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fabFragment;
+                fragmentFileManagerFragment.refreshList(search);
+            } else if (fabFragment instanceof FileLocalMusicFragment) {
+                FileLocalMusicFragment fragmentFileManagerFragment = (FileLocalMusicFragment) fabFragment;
+                fragmentFileManagerFragment.refreshList(search);
             }
         }
     }
 
     public void updateAdapterListServer() {
-        for (FabFragment fr : listFragment) {
-            if (fr != null) {
-                if (fr instanceof FileCloudFragment) {
-                    FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fr;
-                    fragmentFileManagerFragment.updateAdapter();
-                } else if (fr instanceof FileMyCloudFragment) {
-                    FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fr;
-                    fragmentFileManagerFragment.updateAdapter();
-                } else if (fr instanceof FileLocalFragment) {
-                    FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fr;
-                    fragmentFileManagerFragment.updateAdapter();
-                }
+        FabFragment fabFragment = getCurrentFragment();
+        if (fabFragment != null) {
+            if (fabFragment instanceof FileCloudFragment) {
+                FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
+                fragmentFileManagerFragment.updateAdapter();
+            } else if (fabFragment instanceof FileMyCloudFragment) {
+                FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fabFragment;
+                fragmentFileManagerFragment.updateAdapter();
+            } else if (fabFragment instanceof FileLocalFragment) {
+                FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fabFragment;
+                fragmentFileManagerFragment.updateAdapter();
             }
         }
     }
 
     public void refreshData() {
-        for (FabFragment fr : listFragment) {
-            if (fr != null) {
-                if (fr instanceof FileCloudFragment) {
-                    FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fr;
-                    fragmentFileManagerFragment.refreshList();
-                }
-                if (fr instanceof FileMyCloudFragment) {
-                    FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fr;
-                    fragmentFileManagerFragment.refreshList();
-                }
-                if (fr instanceof FileLocalFragment) {
-                    FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fr;
-                    fragmentFileManagerFragment.refreshList();
-                }
+        FabFragment fabFragment = getCurrentFragment();
+        if (fabFragment != null) {
+            if (fabFragment instanceof FileCloudFragment) {
+                FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
+                fragmentFileManagerFragment.refreshList();
+            }
+            if (fabFragment instanceof FileMyCloudFragment) {
+                FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fabFragment;
+                fragmentFileManagerFragment.refreshList();
+            }
+            if (fabFragment instanceof FileLocalFragment) {
+                FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fabFragment;
+                fragmentFileManagerFragment.refreshList();
             }
         }
     }
@@ -429,12 +420,13 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     }
 
     public void goHome() {
-        if (listFragment.length > 2)
-            if (listFragment[2] != null)
-                if (listFragment[2] instanceof FileLocalFragment) {
-                    FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) listFragment[2];
-                    fragmentFileManagerFragment.goHome();
-                }
+        FabFragment fabFragment = getCurrentFragment();
+        if (fabFragment != null) {
+            if (fabFragment instanceof FileLocalFragment) {
+                FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fabFragment;
+                fragmentFileManagerFragment.goHome();
+            }
+        }
     }
 
     public void sort() {
@@ -452,11 +444,10 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                                 if (getCurrentFragmentIndex() != 2 && getCurrentFragmentIndex() != 3)
                                     Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                 else {
-                                    for (BackFragment fr : listFragment) {
-                                        if (fr != null) {
-                                            if (fr instanceof ISortMode) {
-                                                ((ISortMode) fr).setSortMode(item == 0 ? Constants.SORT_ABC : (item == 1 ? Constants.SORT_SIZE : Constants.SORT_DATE_MODIFICATION));
-                                            }
+                                    FabFragment fabFragment = getCurrentFragment();
+                                    if (fabFragment != null) {
+                                        if (fabFragment instanceof ISortMode) {
+                                            ((ISortMode) fabFragment).setSortMode(item == 0 ? Constants.SORT_ABC : (item == 1 ? Constants.SORT_SIZE : Constants.SORT_DATE_MODIFICATION));
                                         }
                                     }
                                 }
@@ -468,14 +459,14 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                                 else
                                     mViewMode = Constants.MODE_LIST;
                                 mApplicationCallback.getConfig().setUserFileModeView(mViewMode);
-                                for (BackFragment fr : listFragment) {
-                                    if (fr != null) {
-                                        if (fr instanceof IListViewMode) {
-                                            IListViewMode fragmentFileManagerFragment = (IListViewMode) fr;
-                                            fragmentFileManagerFragment.setViewMode(mViewMode);
-                                        }
+                                FabFragment fabFragment = getCurrentFragment();
+                                if (fabFragment != null) {
+                                    if (fabFragment instanceof IListViewMode) {
+                                        IListViewMode fragmentFileManagerFragment = (IListViewMode) fabFragment;
+                                        fragmentFileManagerFragment.setViewMode(mViewMode);
                                     }
                                 }
+
                                 break;
                             default:
                                 Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
@@ -493,10 +484,14 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                     .setAction(getString(R.string.refresh), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (NetUtils.isInternetConnection(mActivity))
-                                listFragment[getCurrentFragmentIndex()].onFocus();
-                            else
+                            if (NetUtils.isInternetConnection(mActivity)) {
+                                FabFragment fabFragment = getCurrentFragment();
+                                if (fabFragment != null) {
+                                    fabFragment.onFocus();
+                                }
+                            } else {
                                 updateNoInternet();
+                            }
                         }
                     });
             this.mSnackbar.show();
