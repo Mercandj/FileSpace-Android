@@ -19,13 +19,11 @@
  */
 package mercandalli.com.filespace.ui.activity;
 
-import android.accounts.Account;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -36,16 +34,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.model.people.Person;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,14 +61,13 @@ import mercandalli.com.filespace.ui.dialog.DialogCallback;
 import mercandalli.com.filespace.ui.fragment.login.LoginFragment;
 import mercandalli.com.filespace.ui.fragment.login.RegistrationFragment;
 import mercandalli.com.filespace.ui.view.PagerSlidingTabStrip;
-import mercandalli.com.filespace.util.HashUtils;
 import mercandalli.com.filespace.util.NetUtils;
 import mercandalli.com.filespace.util.StringPair;
 import mercandalli.com.filespace.util.StringUtils;
 
 import static android.Manifest.permission.GET_ACCOUNTS;
 
-public class RegisterLoginActivity extends ApplicationActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DialogCallback {
+public class RegisterLoginActivity extends ApplicationActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, DialogCallback, GoogleApiClient.OnConnectionFailedListener {
 
     /* Request code used to invoke sign in user interactions. */
     private static final int RC_GOOGLE_SIGN_IN = 0;
@@ -89,6 +86,7 @@ public class RegisterLoginActivity extends ApplicationActivity implements ViewPa
      * The key of the value stored for knowing if it is the first request of the account permission.
      */
     private static final String KEY_IS_FIRST_ACCOUNT_PERMISSION_REQUEST = "AccountPermission.Key.KEY_1";
+    private static final int RC_SIGN_IN = 28757;
 
     private final int NB_FRAGMENT = 2;
     private int INIT_FRAGMENT = 1;
@@ -137,12 +135,24 @@ public class RegisterLoginActivity extends ApplicationActivity implements ViewPa
         findViewById(R.id.activity_register_login_signin).setOnClickListener(this);
         findViewById(R.id.activity_register_login_gg_sign).setOnClickListener(this);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Plus.API)
-                .addScope(new Scope(Scopes.PROFILE))
+        // Configure sign-in to request the user's ID, email address, and basic
+        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
                 .build();
+
+        // Build a GoogleApiClient with access to the Google Sign-In API and the
+        // options specified by gso.
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
+/*
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Plus.API)
+                .addApi(Auth.GOOGLE_SIGN_IN_API)
+                .addScope(new Scope(Scopes.PROFILE))
+                .build();*/
     }
 
     public void connectionSucceed() {
@@ -206,8 +216,13 @@ public class RegisterLoginActivity extends ApplicationActivity implements ViewPa
     private void onGoogleSignInClicked() {
 
         if (ContextCompat.checkSelfPermission(this, GET_ACCOUNTS) == PackageManager.PERMISSION_GRANTED) {
+
+            Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+            startActivityForResult(signInIntent, RC_SIGN_IN);
+            /*
             mShouldResolve = true;
             mGoogleApiClient.connect();
+            */
         } else if (shouldRequestAccountPermissionRationale()) {
             requestAccountPermissionRationale();
         } else {
@@ -256,53 +271,6 @@ public class RegisterLoginActivity extends ApplicationActivity implements ViewPa
     }
 
     @Override
-    public void onConnected(Bundle bundle) {
-        //The user has successfully signed in with Google.
-        mShouldResolve = false;
-
-        //Retrieve profile information on the currently signed in user
-        if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
-            onGoogleConnectionSucceeded();
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        // Google+ Nothing here
-    }
-
-    /**
-     * Code executed once the user has logged in with Google +.
-     */
-    private void onGoogleConnectionSucceeded() {
-        GetGoogleIdTokenTask task = new GetGoogleIdTokenTask();
-        task.execute();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        // Could not connect to Google Play Services.  The user needs to select an account,
-        // grant permissions or resolve an error in order to sign in. Refer to the javadoc for
-        // ConnectionResult to see possible error codes.
-        if (!mIsResolving && mShouldResolve) {
-            if (connectionResult.hasResolution()) {
-                try {
-                    connectionResult.startResolutionForResult(this, RC_GOOGLE_SIGN_IN);
-                    mIsResolving = true;
-                } catch (IntentSender.SendIntentException e) {
-                    mIsResolving = false;
-                    mGoogleApiClient.connect();
-                }
-            } else {
-                // Could not resolve the connection result, show the user an error dialog.
-                //TODO login 1: Show a toast or a snackbar error.
-            }
-        } else {
-            //TODO login 3 : Show sign-out UI
-        }
-    }
-
-    @Override
     public void onPositiveClick() {
         // The user understood why the app needs the contacts permission
         // Remember that the we requested the contacts permission.
@@ -323,6 +291,27 @@ public class RegisterLoginActivity extends ApplicationActivity implements ViewPa
     @Override
     public void onNeutralClick() {
 
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.e("RegisterLoginActivity", "onConnectionFailed error");
+        if (!mIsResolving && mShouldResolve) {
+            if (connectionResult.hasResolution()) {
+                try {
+                    connectionResult.startResolutionForResult(this, RC_GOOGLE_SIGN_IN);
+                    mIsResolving = true;
+                } catch (IntentSender.SendIntentException e) {
+                    mIsResolving = false;
+                    mGoogleApiClient.connect();
+                }
+            } else {
+                // Could not resolve the connection result, show the user an error dialog.
+                //TODO login 1: Show a toast or a snackbar error.
+            }
+        } else {
+            //TODO login 3 : Show sign-out UI
+        }
     }
 
     public class RegisterLoginPagerAdapter extends FragmentPagerAdapter {
@@ -439,42 +428,21 @@ public class RegisterLoginActivity extends ApplicationActivity implements ViewPa
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RC_GOOGLE_SIGN_IN) {//Google
-            // If the error resolution was not successful we should not resolve further.
-            if (resultCode != RESULT_OK) {
-                mShouldResolve = false;
-            }
-
-            mIsResolving = false;
-            mGoogleApiClient.connect();
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
         }
     }
 
-    private class GetGoogleIdTokenTask extends AsyncTask<Void, Void, Response> {
-
-        @Override
-        protected Response doInBackground(Void... params) {
-
-            Response response = new Response();
-
-            //We retrieve the ID token using the defined account and the server client ID
-            response.mAccountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
-            Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
-            response.mId = currentPerson.getId();
-            Account account = new Account(response.mAccountName, GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
-
-            return response;
+    private void handleSignInResult(GoogleSignInResult result) {
+        Log.d("RegisterLoginActivity", "handleSignInResult:" + result.isSuccess());
+        if (result.isSuccess()) {
+            // Signed in successfully, show authenticated UI.
+            GoogleSignInAccount acct = result.getSignInAccount();
+        } else {
+            // Signed out, show unauthenticated UI.
         }
-
-        @Override
-        protected void onPostExecute(Response response) {
-            googlePlusRegisterLogin(response.mAccountName, HashUtils.sha1(response.mId));
-        }
-
-    }
-
-    class Response {
-        public String mAccountName, mId;
     }
 
 
