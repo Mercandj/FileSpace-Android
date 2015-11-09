@@ -43,7 +43,7 @@ import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.extras.ia.action.ENUM_Action;
 import mercandalli.com.filespace.listener.SetToolbarCallback;
 import mercandalli.com.filespace.model.ModelSetting;
-import mercandalli.com.filespace.ui.activity.RegisterLoginActivity;
+import mercandalli.com.filespace.ui.activity.LoginRegisterActivity;
 import mercandalli.com.filespace.ui.activity.WelcomeActivity;
 import mercandalli.com.filespace.ui.adapter.AdapterModelSetting;
 import mercandalli.com.filespace.ui.dialog.DialogAuthorLabel;
@@ -156,7 +156,7 @@ public class SettingsFragment extends BackFragment {
             list.add(new ModelSetting(mActivity, mApplicationCallback, "Login / Sign in", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(mActivity, RegisterLoginActivity.class);
+                    Intent intent = new Intent(mActivity, LoginRegisterActivity.class);
                     mActivity.startActivity(intent);
                     mActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                     mActivity.finish();

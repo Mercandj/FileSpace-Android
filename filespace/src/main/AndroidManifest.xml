@@ -79,7 +79,7 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name="mercandalli.com.filespace.ui.activity.RegisterLoginActivity"
+            android:name=".ui.activity.LoginRegisterActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"

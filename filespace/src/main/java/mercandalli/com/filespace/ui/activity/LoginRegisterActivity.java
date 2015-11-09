@@ -61,13 +61,14 @@ import mercandalli.com.filespace.ui.dialog.DialogCallback;
 import mercandalli.com.filespace.ui.fragment.login.LoginFragment;
 import mercandalli.com.filespace.ui.fragment.login.RegistrationFragment;
 import mercandalli.com.filespace.ui.view.PagerSlidingTabStrip;
+import mercandalli.com.filespace.util.HashUtils;
 import mercandalli.com.filespace.util.NetUtils;
 import mercandalli.com.filespace.util.StringPair;
 import mercandalli.com.filespace.util.StringUtils;
 
 import static android.Manifest.permission.GET_ACCOUNTS;
 
-public class RegisterLoginActivity extends ApplicationActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, DialogCallback, GoogleApiClient.OnConnectionFailedListener {
+public class LoginRegisterActivity extends ApplicationActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, DialogCallback, GoogleApiClient.OnConnectionFailedListener {
 
     /* Request code used to invoke sign in user interactions. */
     private static final int RC_GOOGLE_SIGN_IN = 0;
@@ -174,7 +175,7 @@ public class RegisterLoginActivity extends ApplicationActivity implements ViewPa
 
     @Override
     public void onPageSelected(int arg0) {
-        RegisterLoginActivity.this.invalidateOptionsMenu();
+        LoginRegisterActivity.this.invalidateOptionsMenu();
     }
 
     @Override
@@ -390,29 +391,29 @@ public class RegisterLoginActivity extends ApplicationActivity implements ViewPa
                                 if (json.getBoolean("succeed")) {
 
                                     if (!StringUtils.isNullOrEmpty(user.username))
-                                        RegisterLoginActivity.this.getConfig().setUserUsername(user.username);
+                                        LoginRegisterActivity.this.getConfig().setUserUsername(user.username);
 
                                     if (!StringUtils.isNullOrEmpty(user.password))
-                                        RegisterLoginActivity.this.getConfig().setUserPassword(user.password);
+                                        LoginRegisterActivity.this.getConfig().setUserPassword(user.password);
 
                                     connectionSucceed();
                                 }
                             if (json.has("user")) {
                                 JSONObject user = json.getJSONObject("user");
                                 if (user.has("id"))
-                                    RegisterLoginActivity.this.getConfig().setUserId(user.getInt("id"));
+                                    LoginRegisterActivity.this.getConfig().setUserId(user.getInt("id"));
                                 if (user.has("admin")) {
                                     Object admin_obj = user.get("admin");
                                     if (admin_obj instanceof Integer)
-                                        RegisterLoginActivity.this.getConfig().setUserAdmin(user.getInt("admin") == 1);
+                                        LoginRegisterActivity.this.getConfig().setUserAdmin(user.getInt("admin") == 1);
                                     else if (admin_obj instanceof Boolean)
-                                        RegisterLoginActivity.this.getConfig().setUserAdmin(user.getBoolean("admin"));
+                                        LoginRegisterActivity.this.getConfig().setUserAdmin(user.getBoolean("admin"));
                                 }
                                 if (user.has("id_file_profile_picture"))
-                                    RegisterLoginActivity.this.getConfig().setUserIdFileProfilePicture(user.getInt("id_file_profile_picture"));
+                                    LoginRegisterActivity.this.getConfig().setUserIdFileProfilePicture(user.getInt("id_file_profile_picture"));
                             }
                         } else
-                            Toast.makeText(RegisterLoginActivity.this, RegisterLoginActivity.this.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginRegisterActivity.this, LoginRegisterActivity.this.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -440,6 +441,8 @@ public class RegisterLoginActivity extends ApplicationActivity implements ViewPa
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
+
+            googlePlusRegisterLogin(acct.getEmail(), HashUtils.sha1(acct.getId()));
         } else {
             // Signed out, show unauthenticated UI.
         }
