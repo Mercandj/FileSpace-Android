@@ -19,9 +19,18 @@
  */
 package mercandalli.com.filespace.ui.activity;
 
+import android.accounts.Account;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -30,12 +39,11 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.plus.People;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
 
@@ -50,20 +58,53 @@ import mercandalli.com.filespace.config.Config;
 import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelUser;
 import mercandalli.com.filespace.net.TaskPost;
-import mercandalli.com.filespace.ui.fragment.InscriptionFragment;
-import mercandalli.com.filespace.ui.fragment.LoginFragment;
+import mercandalli.com.filespace.ui.dialog.ConfirmationDialog;
+import mercandalli.com.filespace.ui.dialog.DialogCallback;
+import mercandalli.com.filespace.ui.fragment.login.LoginFragment;
+import mercandalli.com.filespace.ui.fragment.login.RegistrationFragment;
 import mercandalli.com.filespace.ui.view.PagerSlidingTabStrip;
 import mercandalli.com.filespace.util.HashUtils;
 import mercandalli.com.filespace.util.NetUtils;
 import mercandalli.com.filespace.util.StringPair;
 import mercandalli.com.filespace.util.StringUtils;
 
-public class RegisterLoginActivity extends ApplicationActivity implements ViewPager.OnPageChangeListener {
+import static android.Manifest.permission.GET_ACCOUNTS;
+
+public class RegisterLoginActivity extends ApplicationActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, DialogCallback {
+
+    /* Request code used to invoke sign in user interactions. */
+    private static final int RC_GOOGLE_SIGN_IN = 0;
+
+    /**
+     * Id to identity READ_CONTACTS permission request.
+     **/
+    private static final int REQUEST_GET_ACCOUNT_PERMISSION = 1;
+
+    /**
+     * The name of the {@link android.content.SharedPreferences} used for saving the record audio permission state.
+     */
+    private static final String SHARED_PREFERENCES_GET_ACCOUNT_PERMISSION = "ContactsPermission";
+
+    /**
+     * The key of the value stored for knowing if it is the first request of the account permission.
+     */
+    private static final String KEY_IS_FIRST_ACCOUNT_PERMISSION_REQUEST = "AccountPermission.Key.KEY_1";
 
     private final int NB_FRAGMENT = 2;
     private int INIT_FRAGMENT = 1;
-    public Fragment listFragment[] = new Fragment[NB_FRAGMENT];
+
+    public Fragment mListFragment[] = new Fragment[NB_FRAGMENT];
     private ViewPager mViewPager;
+
+    /* Client used to interact with Google APIs. */
+    private GoogleApiClient mGoogleApiClient;
+
+    /* Is there a ConnectionResult resolution in progress? */
+    private boolean mIsResolving = false;
+
+    /* Should we automatically resolve ConnectionResults when possible? */
+    private boolean mShouldResolve = false;
+    private boolean mRequestLaunched;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,16 +113,17 @@ public class RegisterLoginActivity extends ApplicationActivity implements ViewPa
 
         RegisterLoginPagerAdapter mPagerAdapter = new RegisterLoginPagerAdapter(getSupportFragmentManager(), this);
 
-        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) this.findViewById(R.id.tabs);
-        mViewPager = (ViewPager) this.findViewById(R.id.pager);
+        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.activity_register_login_tabs);
+        mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
-        mViewPager.setOffscreenPageLimit(this.NB_FRAGMENT - 1);
+        mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
 
-        if (this.getConfig().getUserUsername() == null || this.getConfig().getUserPassword() == null)
+        if (this.getConfig().getUserUsername() == null || this.getConfig().getUserPassword() == null) {
             this.INIT_FRAGMENT = 0;
-        else if (this.getConfig().getUserUsername().equals("") || this.getConfig().getUserPassword().equals(""))
+        } else if (this.getConfig().getUserUsername().equals("") || this.getConfig().getUserPassword().equals("")) {
             this.INIT_FRAGMENT = 0;
+        }
 
         mViewPager.setCurrentItem(this.INIT_FRAGMENT);
 
@@ -92,69 +134,15 @@ public class RegisterLoginActivity extends ApplicationActivity implements ViewPa
             if (!this.getConfig().getUserUsername().equals("") && !this.getConfig().getUserPassword().equals("") && Config.getUserId() != -1)
                 connectionSucceed();
 
-        (this.findViewById(R.id.signin)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listFragment[getCurrentFragmentIndex()] != null) {
-                    if (listFragment[getCurrentFragmentIndex()] instanceof InscriptionFragment) {
-                        ((InscriptionFragment) listFragment[getCurrentFragmentIndex()]).inscription();
-                    } else if (listFragment[getCurrentFragmentIndex()] instanceof LoginFragment) {
-                        ((LoginFragment) listFragment[getCurrentFragmentIndex()]).login();
-                    }
-                }
-            }
-        });
+        findViewById(R.id.activity_register_login_signin).setOnClickListener(this);
+        findViewById(R.id.activity_register_login_gg_sign).setOnClickListener(this);
 
-        SignInButton signInButton = (SignInButton) findViewById(R.id.signInButton);
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signInWithGplus();
-            }
-        });
-
-        // Initializing google plus api client
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-
-                    @Override
-                    public void onConnected(Bundle arg0) {
-                        mSignInClicked = false;
-                        //Toast.makeText(getActivity(), "User is connected!", Toast.LENGTH_LONG).show();
-
-                        // Get user's information
-                        getProfileInformation();
-                    }
-
-                    @Override
-                    public void onConnectionSuspended(int arg0) {
-                        mGoogleApiClient.connect();
-                    }
-                })
-                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(ConnectionResult result) {
-                        if (!result.hasResolution()) {
-                            GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), RegisterLoginActivity.this,
-                                    0).show();
-                            return;
-                        }
-
-                        if (!mIntentInProgress) {
-                            // Store the ConnectionResult for later usage
-                            mConnectionResult = result;
-
-                            if (mSignInClicked) {
-                                // The user has already clicked 'sign-in' so we attempt to
-                                // resolve all
-                                // errors until the user is signed in, or they cancel.
-                                resolveSignInError();
-                            }
-                        }
-
-                    }
-                }).addApi(Plus.API)
-                .addScope(Plus.SCOPE_PLUS_LOGIN).build();
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Plus.API)
+                .addScope(new Scope(Scopes.PROFILE))
+                .build();
     }
 
     public void connectionSucceed() {
@@ -193,6 +181,150 @@ public class RegisterLoginActivity extends ApplicationActivity implements ViewPa
         return mViewPager.getCurrentItem();
     }
 
+    @Override
+    public void onClick(View v) {
+        final int viewId = v.getId();
+        switch (viewId) {
+            case R.id.activity_register_login_gg_sign:
+                onGoogleSignInClicked();
+                break;
+            case R.id.activity_register_login_signin:
+                if (mListFragment[getCurrentFragmentIndex()] != null) {
+                    if (mListFragment[getCurrentFragmentIndex()] instanceof RegistrationFragment) {
+                        ((RegistrationFragment) mListFragment[getCurrentFragmentIndex()]).inscription();
+                    } else if (mListFragment[getCurrentFragmentIndex()] instanceof LoginFragment) {
+                        ((LoginFragment) mListFragment[getCurrentFragmentIndex()]).login();
+                    }
+                }
+                break;
+        }
+    }
+
+    /**
+     * Action when the user clicked the Google + signing button
+     **/
+    private void onGoogleSignInClicked() {
+
+        if (ContextCompat.checkSelfPermission(this, GET_ACCOUNTS) == PackageManager.PERMISSION_GRANTED) {
+            mShouldResolve = true;
+            mGoogleApiClient.connect();
+        } else if (shouldRequestAccountPermissionRationale()) {
+            requestAccountPermissionRationale();
+        } else {
+            requestAccountPermissionInSettings();
+        }
+
+    }
+
+    /**
+     * Show a UI rationale for requesting the {@link android.Manifest.permission#GET_ACCOUNTS}.
+     * <p/>
+     * If the user agree, a native poop-up will appear.
+     */
+    private void requestAccountPermissionRationale() {
+        ConfirmationDialog.newInstance(
+                "Permission needed",
+                "FileSpace needs the Contacts permission in order to link your Google account to the app. Nothing will be saved, the permission is only used for the log-in.",
+                android.R.string.ok,
+                android.R.string.cancel,
+                this,
+                this).show();
+    }
+
+    private void requestAccountPermissionInSettings() {
+        Snackbar.make(findViewById(R.id.activity_register_login_signin), "FileSpace needs the Contacts permission for using Google.", Snackbar.LENGTH_LONG)
+                .setAction(android.R.string.ok, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        final Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        intent.setData(Uri.parse("package:" + getPackageName()));
+                        startActivity(intent);
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * Checks if the Contact permission has to be requested when the user want to log-in using
+     * his Google account.
+     *
+     * @return : False if the permission has already been granted, true otherwise.
+     */
+    private boolean shouldRequestAccountPermissionRationale() {
+        return ActivityCompat.shouldShowRequestPermissionRationale(this, GET_ACCOUNTS) ||
+                isFirstAccountPermissionRequest();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        //The user has successfully signed in with Google.
+        mShouldResolve = false;
+
+        //Retrieve profile information on the currently signed in user
+        if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
+            onGoogleConnectionSucceeded();
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        // Google+ Nothing here
+    }
+
+    /**
+     * Code executed once the user has logged in with Google +.
+     */
+    private void onGoogleConnectionSucceeded() {
+        GetGoogleIdTokenTask task = new GetGoogleIdTokenTask();
+        task.execute();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        // Could not connect to Google Play Services.  The user needs to select an account,
+        // grant permissions or resolve an error in order to sign in. Refer to the javadoc for
+        // ConnectionResult to see possible error codes.
+        if (!mIsResolving && mShouldResolve) {
+            if (connectionResult.hasResolution()) {
+                try {
+                    connectionResult.startResolutionForResult(this, RC_GOOGLE_SIGN_IN);
+                    mIsResolving = true;
+                } catch (IntentSender.SendIntentException e) {
+                    mIsResolving = false;
+                    mGoogleApiClient.connect();
+                }
+            } else {
+                // Could not resolve the connection result, show the user an error dialog.
+                //TODO login 1: Show a toast or a snackbar error.
+            }
+        } else {
+            //TODO login 3 : Show sign-out UI
+        }
+    }
+
+    @Override
+    public void onPositiveClick() {
+        // The user understood why the app needs the contacts permission
+        // Remember that the we requested the contacts permission.
+        final SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREFERENCES_GET_ACCOUNT_PERMISSION, MODE_PRIVATE)
+                .edit();
+        editor.putBoolean(KEY_IS_FIRST_ACCOUNT_PERMISSION_REQUEST, false);
+        editor.apply();
+
+        //Request the account permission
+        ActivityCompat.requestPermissions(this, new String[]{GET_ACCOUNTS}, REQUEST_GET_ACCOUNT_PERMISSION);
+    }
+
+    @Override
+    public void onNegativeClick() {
+
+    }
+
+    @Override
+    public void onNeutralClick() {
+
+    }
+
     public class RegisterLoginPagerAdapter extends FragmentPagerAdapter {
         ApplicationActivity app;
 
@@ -206,16 +338,16 @@ public class RegisterLoginActivity extends ApplicationActivity implements ViewPa
             Fragment fragment;
             switch (i) {
                 case 0:
-                    fragment = InscriptionFragment.newInstance();
+                    fragment = RegistrationFragment.newInstance();
                     break;
                 case 1:
                     fragment = LoginFragment.newInstance();
                     break;
                 default:
-                    fragment = InscriptionFragment.newInstance();
+                    fragment = RegistrationFragment.newInstance();
                     break;
             }
-            listFragment[i] = fragment;
+            mListFragment[i] = fragment;
             return fragment;
         }
 
@@ -240,19 +372,17 @@ public class RegisterLoginActivity extends ApplicationActivity implements ViewPa
     }
 
 
-    boolean requestLaunched = false;
-
     private void googlePlusRegisterLogin(String username, String password) {
-        if (requestLaunched)
+        if (mRequestLaunched)
             return;
-        requestLaunched = true;
+        mRequestLaunched = true;
 
         final ModelUser user = new ModelUser();
         user.username = username;
         user.password = password;
 
         if (StringUtils.isNullOrEmpty(this.getConfig().getUrlServer())) {
-            requestLaunched = false;
+            mRequestLaunched = false;
             return;
         }
 
@@ -297,107 +427,77 @@ public class RegisterLoginActivity extends ApplicationActivity implements ViewPa
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    requestLaunched = false;
+                    mRequestLaunched = false;
                 }
             }, parameters)).execute();
         else
-            requestLaunched = false;
+            mRequestLaunched = false;
     }
 
-    /****************************************
-     * Login via Google+
-     ****************************************/
 
     @Override
-    protected void onActivityResult(int requestCode, int responseCode, Intent intent) {
-        if (requestCode == RC_SIGN_IN) {
-            mIntentInProgress = false;
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-            if (!mGoogleApiClient.isConnecting()) {
-                mGoogleApiClient.connect();
+        if (requestCode == RC_GOOGLE_SIGN_IN) {//Google
+            // If the error resolution was not successful we should not resolve further.
+            if (resultCode != RESULT_OK) {
+                mShouldResolve = false;
             }
-        }
-    }
 
-    private static final int RC_SIGN_IN = 0;
-
-    // Profile pic image size in pixels
-    private static final int PROFILE_PIC_SIZE = 400;
-
-    // Google client to interact with Google API
-    private GoogleApiClient mGoogleApiClient;
-
-
-    /**
-     * A flag indicating that a PendingIntent is in progress and prevents us
-     * from starting further intents.
-     */
-    private boolean mIntentInProgress;
-
-    private boolean mSignInClicked;
-
-    private ConnectionResult mConnectionResult;
-
-    /**
-     * Sign-in into google
-     */
-    private void signInWithGplus() {
-        if (!mGoogleApiClient.isConnecting()) {
-            mSignInClicked = true;
-            resolveSignInError();
-        }
-    }
-
-    /**
-     * Method to resolve any signin errors
-     */
-    private void resolveSignInError() {
-        if (mConnectionResult == null) {
-            mIntentInProgress = false;
+            mIsResolving = false;
             mGoogleApiClient.connect();
-            return;
-        }
-        if (mConnectionResult.hasResolution()) {
-            try {
-                mIntentInProgress = true;
-                mConnectionResult.startResolutionForResult(this, RC_SIGN_IN);
-            } catch (IntentSender.SendIntentException e) {
-                mIntentInProgress = false;
-                mGoogleApiClient.connect();
-            }
         }
     }
 
-    /**
-     * Fetching user's information name, email, profile pic
-     */
-    private void getProfileInformation() {
+    private class GetGoogleIdTokenTask extends AsyncTask<Void, Void, Response> {
 
-        Plus.PeopleApi.loadVisible(mGoogleApiClient, null).setResultCallback(new ResultCallback<People.LoadPeopleResult>() {
-            @Override
-            public void onResult(People.LoadPeopleResult loadPeopleResult) {
+        @Override
+        protected Response doInBackground(Void... params) {
 
-            }
-        });
+            Response response = new Response();
 
-        Plus.PeopleApi.loadConnected(mGoogleApiClient);
-
-        if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
+            //We retrieve the ID token using the defined account and the server client ID
+            response.mAccountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
             Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
-            String personName = currentPerson.getDisplayName();
-            String personPhotoUrl = currentPerson.getImage().getUrl();
-            String personGooglePlusProfile = currentPerson.getUrl();
-            String email = Plus.AccountApi.getAccountName(mGoogleApiClient);
+            response.mId = currentPerson.getId();
+            Account account = new Account(response.mAccountName, GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
 
-            // by default the profile url gives 50x50 px image only
-            // we can replace the value with whatever dimension we want by
-            // replacing sz=X
-            personPhotoUrl = personPhotoUrl.substring(0, personPhotoUrl.length() - 2) + PROFILE_PIC_SIZE;
-
-            googlePlusRegisterLogin(email, HashUtils.sha1(currentPerson.getId()));
-        } else {
-            Toast.makeText(this, getString(R.string.failed_google_plus), Toast.LENGTH_LONG).show();
+            return response;
         }
+
+        @Override
+        protected void onPostExecute(Response response) {
+            googlePlusRegisterLogin(response.mAccountName, HashUtils.sha1(response.mId));
+        }
+
+    }
+
+    class Response {
+        public String mAccountName, mId;
+    }
+
+
+    /**
+     * Check if this is the first request to allow the {@link android.Manifest.permission#GET_ACCOUNTS} permission.
+     *
+     * @return Returns true if this is the very first request to allow {@link android.Manifest.permission#GET_ACCOUNTS} permission, false otherwise
+     */
+    private boolean isFirstAccountPermissionRequest() {
+        final SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_GET_ACCOUNT_PERMISSION, MODE_PRIVATE);
+        return sharedPreferences.getBoolean(KEY_IS_FIRST_ACCOUNT_PERMISSION_REQUEST, true);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == REQUEST_GET_ACCOUNT_PERMISSION &&
+                grantResults.length == 1 &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            mShouldResolve = true;
+            mGoogleApiClient.connect();
+        }
+
     }
 
 }

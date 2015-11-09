@@ -1,26 +1,15 @@
 /**
- * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
+ * Personal Project : Control server
  * <p/>
- * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
- * LICENSE:
- * <p/>
- * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
- * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
- * later version.
- * <p/>
- * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
- * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
- * details.
- *
- * @author Jonathan Mercandalli
- * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
+ * MERCANDALLI Jonathan
  */
-package mercandalli.com.filespace.ui.fragment;
+
+package mercandalli.com.filespace.ui.fragment.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,31 +32,40 @@ import mercandalli.com.filespace.listener.IPostExecuteListener;
 import mercandalli.com.filespace.model.ModelUser;
 import mercandalli.com.filespace.net.TaskPost;
 import mercandalli.com.filespace.ui.activity.MainActivity;
+import mercandalli.com.filespace.ui.fragment.BackFragment;
 import mercandalli.com.filespace.util.GpsUtils;
 import mercandalli.com.filespace.util.HashUtils;
 import mercandalli.com.filespace.util.NetUtils;
 import mercandalli.com.filespace.util.StringPair;
 import mercandalli.com.filespace.util.StringUtils;
 
-public class InscriptionFragment extends BackFragment {
-    
-    private boolean requestLaunched = false; // Block the second task if one launch
+public class LoginFragment extends BackFragment {
 
+    private boolean requestLaunched = false; // Block the second task if one launch
     private EditText username, password;
 
-    public static InscriptionFragment newInstance() {
-        return new InscriptionFragment();
-    }
-
-    public InscriptionFragment() {
-        super();
+    public static LoginFragment newInstance() {
+        Bundle args = new Bundle();
+        LoginFragment fragment = new LoginFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_inscription, container, false);
-        this.username = (EditText) rootView.findViewById(R.id.username);
-        this.password = (EditText) rootView.findViewById(R.id.password);
+        View rootView = inflater.inflate(R.layout.fragment_log_in, container, false);
+        this.username = (EditText) rootView.findViewById(R.id.fragment_log_in_username);
+        this.password = (EditText) rootView.findViewById(R.id.fragment_log_in_password);
+
+        if (this.mApplicationCallback.getConfig().getUserUsername() != null)
+            if (!this.mApplicationCallback.getConfig().getUserUsername().equals("")) {
+                this.username.setText(this.mApplicationCallback.getConfig().getUserUsername());
+            }
+
+        if (this.mApplicationCallback.getConfig().getUserPassword() != null)
+            if (!this.mApplicationCallback.getConfig().getUserPassword().equals("")) {
+                this.password.setHint(Html.fromHtml("&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"));
+            }
 
         ((CheckBox) rootView.findViewById(R.id.autoconnection)).setChecked(mApplicationCallback.getConfig().isAutoConncetion());
         ((CheckBox) rootView.findViewById(R.id.autoconnection)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -80,7 +78,7 @@ public class InscriptionFragment extends BackFragment {
         this.username.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    InscriptionFragment.this.password.requestFocus();
+                    LoginFragment.this.password.requestFocus();
                     return true;
                 }
                 return false;
@@ -90,7 +88,7 @@ public class InscriptionFragment extends BackFragment {
         this.password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    inscription();
+                    login();
                     return true;
                 }
                 return false;
@@ -107,7 +105,7 @@ public class InscriptionFragment extends BackFragment {
         getActivity().finish();
     }
 
-    public void inscription() {
+    public void login() {
         ModelUser user = new ModelUser();
 
         if (!StringUtils.isNullOrEmpty(username.getText().toString()))
@@ -116,10 +114,11 @@ public class InscriptionFragment extends BackFragment {
         if (!StringUtils.isNullOrEmpty(password.getText().toString()))
             user.password = HashUtils.sha1(password.getText().toString());
 
-        inscription(user);
+        login(user);
     }
 
-    public void inscription(ModelUser user) {
+    public void login(ModelUser user) {
+        Log.d("LoginFragment", "login requestLaunched=" + requestLaunched);
         if (requestLaunched)
             return;
         requestLaunched = true;
@@ -139,35 +138,47 @@ public class InscriptionFragment extends BackFragment {
             return;
         }
 
-        // Register : POST /user
+        // Login : POST /user
         List<StringPair> parameters = new ArrayList<>();
-        parameters.add(new StringPair("username", "" + user.username));
-        parameters.add(new StringPair("password", "" + user.password));
-        parameters.add(new StringPair("latitude", "" + GpsUtils.getLatitude(getActivity())));
-        parameters.add(new StringPair("longitude", "" + GpsUtils.getLongitude(getActivity())));
-        parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
-
+        double latitude = GpsUtils.getLatitude(getActivity()),
+                longitude = GpsUtils.getLongitude(getActivity());
+        parameters.add(new StringPair("login", "true"));
+        if (latitude != 0 && longitude != 0) {
+            parameters.add(new StringPair("latitude", "" + latitude));
+            parameters.add(new StringPair("longitude", "" + longitude));
+            parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
+        }
+        Log.d("LoginFragment", "login " + mApplicationCallback.getConfig().getUserPassword() + mApplicationCallback.getConfig().getUserUsername() + " isInternetConnection=" + NetUtils.isInternetConnection(mActivity));
         if (NetUtils.isInternetConnection(mActivity))
             (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUser, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
+                    requestLaunched = false;
                     try {
                         if (json != null) {
-                            if (json.has("succeed")) {
-                                if (json.getBoolean("succeed"))
+                            if (json.has("succeed"))
+                                if (json.getBoolean("succeed")) {
                                     connectionSucceed();
-                            }
+                                }
                             if (json.has("user")) {
                                 JSONObject user = json.getJSONObject("user");
                                 if (user.has("id"))
                                     mApplicationCallback.getConfig().setUserId(user.getInt("id"));
+                                if (user.has("admin")) {
+                                    Object admin_obj = user.get("admin");
+                                    if (admin_obj instanceof Integer)
+                                        mApplicationCallback.getConfig().setUserAdmin(user.getInt("admin") == 1);
+                                    else if (admin_obj instanceof Boolean)
+                                        mApplicationCallback.getConfig().setUserAdmin(user.getBoolean("admin"));
+                                }
+                                if (user.has("id_file_profile_picture"))
+                                    mApplicationCallback.getConfig().setUserIdFileProfilePicture(user.getInt("id_file_profile_picture"));
                             }
                         } else
                             Toast.makeText(mActivity, getString(R.string.server_error), Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    requestLaunched = false;
                 }
             }, parameters)).execute();
         else

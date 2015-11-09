@@ -32,7 +32,7 @@
             android:textSize="42sp"/>
 
         <ImageView
-            android:id="@+id/signin"
+            android:id="@+id/activity_register_login_signin"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_alignParentRight="true"
@@ -46,10 +46,10 @@
             android:id="@+id/circle_ic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/signin"
-            android:layout_alignLeft="@+id/signin"
-            android:layout_alignRight="@+id/signin"
-            android:layout_alignTop="@+id/signin"
+            android:layout_alignBottom="@+id/activity_register_login_signin"
+            android:layout_alignLeft="@+id/activity_register_login_signin"
+            android:layout_alignRight="@+id/activity_register_login_signin"
+            android:layout_alignTop="@+id/activity_register_login_signin"
             android:contentDescription="@string/image_description"
             android:paddingLeft="19dp"
             android:paddingRight="16dp"
@@ -66,7 +66,7 @@
         android:orientation="vertical">
 
         <mercandalli.com.filespace.ui.view.PagerSlidingTabStrip
-            android:id="@+id/tabs"
+            android:id="@+id/activity_register_login_tabs"
             android:layout_width="match_parent"
             android:layout_height="42dip"
             android:background="@color/actionbar"
@@ -74,17 +74,15 @@
             custom:pstsIndicatorHeight="2dp"
             custom:pstsUnderlineHeight="0dp"/>
 
-        <android.support.v4.view.ViewPager android:id="@+id/pager"
-                                           xmlns:android="http://schemas.android.com/apk/res/android"
-                                           android:layout_width="match_parent"
-                                           android:layout_height="match_parent"
-                                           android:layout_below="@+id/tabs">
-
-
-        </android.support.v4.view.ViewPager>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/activity_register_login_tabs"/>
 
         <com.google.android.gms.common.SignInButton
-            android:id="@+id/signInButton"
+            android:id="@+id/activity_register_login_gg_sign"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/app_description"
