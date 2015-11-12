@@ -118,8 +118,9 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
                 (new TaskPost(this, this, getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
                     @Override
                     public void onPostExecute(JSONObject json, String body) {
-                        if (mPhotoFileListener != null)
+                        if (mPhotoFileListener != null) {
                             mPhotoFileListener.execute();
+                        }
                     }
                 }, parameters, mPhotoFile.getFile())).execute();
             } else {

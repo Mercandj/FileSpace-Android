@@ -77,7 +77,7 @@ public class FileLocalFragment extends InjectedFragment
     private List<FileModel> mFilesToCutList = new ArrayList<>();
     private List<FileModel> mFilesToCopyList = new ArrayList<>();
 
-    private int mSortMode = Constants.SORT_DATE_MODIFICATION;
+    private int mSortMode = Constants.SORT_ABC;
     private int mViewMode = Constants.MODE_LIST;
 
     @Inject
@@ -142,7 +142,7 @@ public class FileLocalFragment extends InjectedFragment
             Collections.sort(fs, new Comparator<File>() {
                 @Override
                 public int compare(final File f1, final File f2) {
-                    return (new Long(f2.length())).compareTo(f1.length());
+                    return (Long.valueOf(f2.length())).compareTo(f1.length());
                 }
             });
         } else {

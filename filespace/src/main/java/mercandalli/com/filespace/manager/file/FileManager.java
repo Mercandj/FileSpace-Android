@@ -188,10 +188,11 @@ public class FileManager {
                 }
             });
         } else {
-            if (fileModel.getFile().isDirectory())
+            if (fileModel.getFile().isDirectory()) {
                 FileUtils.deleteDirectory(fileModel.getFile());
-            else
+            } else {
                 fileModel.getFile().delete();
+            }
             listener.execute();
         }
     }
