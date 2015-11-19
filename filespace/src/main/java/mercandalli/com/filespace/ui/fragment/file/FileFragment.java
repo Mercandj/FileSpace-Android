@@ -521,10 +521,8 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         menu.findItem(R.id.action_home).setVisible(false);
         menu.findItem(R.id.action_sort).setVisible(true);
 
-        switch (getCurrentFragmentIndex()) {
-            case 2:
-                menu.findItem(R.id.action_home).setVisible(true);
-                break;
+        if (getCurrentFragmentIndex() == (mApplicationCallback.isLogged() ? 2 : 0)) {
+            menu.findItem(R.id.action_home).setVisible(true);
         }
     }
 

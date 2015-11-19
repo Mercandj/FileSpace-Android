@@ -251,9 +251,9 @@ public class FileLocalMusicFragment extends InjectedFragment
             ItemTouchHelper.Callback _ithCallback = new ItemTouchHelper.Callback() {
                 //and in your imlpementaion of
                 public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                    if (viewHolder.getAdapterPosition() - 1 >= 0 && target.getAdapterPosition() - 1 >= 0) {
+                    if (viewHolder.getAdapterPosition() >= 0 && target.getAdapterPosition() >= 0) {
                         // get the viewHolder's and target's positions in your adapter data, swap them
-                        Collections.swap(files, viewHolder.getAdapterPosition() - 1, target.getAdapterPosition() - 1);
+                        Collections.swap(files, viewHolder.getAdapterPosition(), target.getAdapterPosition());
                         // and notify the adapter that its dataset has changed
                         mAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
                     }
