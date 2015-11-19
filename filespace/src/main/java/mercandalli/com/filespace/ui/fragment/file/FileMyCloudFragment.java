@@ -83,6 +83,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
     private final List<FileModel> mFilesToCutList = new ArrayList<>();
 
     private int mViewMode = Constants.MODE_LIST;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Inject
     FileManager mFileManager;
@@ -98,9 +99,9 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         mMessageTextView = (TextView) rootView.findViewById(R.id.message);
 
-        SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.fragment_file_files_swipe_refresh_layout);
-        swipeLayout.setOnRefreshListener(this);
-        swipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.fragment_file_files_swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
@@ -304,13 +305,6 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
         if (!isAdded()) {
             return;
         }
-        /*
-        List<StringPair> parameters = new ArrayList<>();
-        if (search != null)
-            parameters.add(new StringPair("search", "" + search));
-        parameters.add(new StringPair("id_file_parent", "" + mIdFileDirectoryStack.peek()));
-        parameters.add(new StringPair("mine", "" + true));
-        */
 
         if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
 
@@ -322,6 +316,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                     new ResultCallback<List<FileModel>>() {
                         @Override
                         public void success(List<FileModel> result) {
+                            mSwipeRefreshLayout.setRefreshing(false);
                             mFilesList.clear();
                             mFilesList.addAll(result);
                             updateAdapter();
@@ -329,44 +324,13 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
 
                         @Override
                         public void failure() {
-
+                            Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                            mSwipeRefreshLayout.setRefreshing(false);
                         }
                     });
 
-            /*
-            new TaskGet(
-                    mActivity,
-                    mApplicationCallback,
-                    this.mApplicationCallback.getConfig().getUrlServer() + this.mApplicationCallback.getConfig().routeFile,
-                    new IPostExecuteListener() {
-                        @Override
-                        public void onPostExecute(JSONObject json, String body) {
-                            if (!isAdded())
-                                return;
-                            mFilesList = new ArrayList<>();
-                            try {
-                                if (json != null) {
-                                    if (json.has("result")) {
-                                        JSONArray array = json.getJSONArray("result");
-                                        for (int i = 0; i < array.length(); i++) {
-                                            ModelFile modelFile = new ModelFile(mActivity, mApplicationCallback, array.getJSONObject(i));
-                                            mFilesList.add(modelFile);
-                                        }
-                                    }
-                                } else
-                                    Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            updateAdapter();
-                        }
-                    },
-                    parameters
-            ).execute();
-            */
-
         } else {
-            
+            mSwipeRefreshLayout.setRefreshing(false);
             this.mProgressBar.setVisibility(View.GONE);
             if (this.isAdded())
                 this.mMessageTextView.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));

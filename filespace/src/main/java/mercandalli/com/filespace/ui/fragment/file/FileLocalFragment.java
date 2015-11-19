@@ -49,8 +49,8 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.config.AppComponent;
+import mercandalli.com.filespace.config.Constants;
 import mercandalli.com.filespace.listener.IFileModelListener;
 import mercandalli.com.filespace.listener.IListener;
 import mercandalli.com.filespace.listener.IStringListener;
@@ -94,6 +94,8 @@ public class FileLocalFragment extends InjectedFragment
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         mProgressBar.setVisibility(View.INVISIBLE);
         mMessageTextView = (TextView) rootView.findViewById(R.id.message);
+
+        (rootView.findViewById(R.id.fragment_file_files_swipe_refresh_layout)).setEnabled(false);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
         mRecyclerView.setHasFixedSize(true);

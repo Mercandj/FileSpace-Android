@@ -23,6 +23,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -75,7 +76,7 @@ public class FileCloudFragment extends InjectedFragment implements
         BackFragment.IListViewMode,
         FileModelAdapter.OnItemClickListener,
         FileModelAdapter.OnItemLongClickListener,
-        IFileModelListener {
+        IFileModelListener, SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView mRecyclerView;
     private GridView mGridView;
@@ -85,6 +86,7 @@ public class FileCloudFragment extends InjectedFragment implements
     private TextView mMessageTextView;
 
     private List<FileModel> filesToCut = new ArrayList<>();
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Inject
     FileManager mFileManager;
@@ -104,6 +106,13 @@ public class FileCloudFragment extends InjectedFragment implements
         final View rootView = inflater.inflate(R.layout.fragment_file_files, container, false);
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         mMessageTextView = (TextView) rootView.findViewById(R.id.message);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.fragment_file_files_swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
         mRecyclerView.setHasFixedSize(true);
@@ -143,6 +152,7 @@ public class FileCloudFragment extends InjectedFragment implements
                     new ResultCallback<List<FileModel>>() {
                         @Override
                         public void success(List<FileModel> result) {
+                            mSwipeRefreshLayout.setRefreshing(false);
                             mFilesList.clear();
                             mFilesList.addAll(result);
                             updateAdapter();
@@ -150,10 +160,11 @@ public class FileCloudFragment extends InjectedFragment implements
 
                         @Override
                         public void failure() {
-
+                            mSwipeRefreshLayout.setRefreshing(false);
                         }
                     });
         } else {
+            mSwipeRefreshLayout.setRefreshing(false);
             this.mProgressBar.setVisibility(View.GONE);
             if (isAdded())
                 this.mMessageTextView.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
@@ -576,5 +587,10 @@ public class FileCloudFragment extends InjectedFragment implements
     @Override
     protected void inject(AppComponent appComponent) {
         appComponent.inject(this);
+    }
+
+    @Override
+    public void onRefresh() {
+        refreshList();
     }
 }
