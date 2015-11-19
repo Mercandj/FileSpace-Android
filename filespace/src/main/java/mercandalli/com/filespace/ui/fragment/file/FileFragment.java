@@ -415,12 +415,13 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         menuAlert.setItems(menuList,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
+                        final int fragmentIndex = getCurrentFragmentIndex() + (!mApplicationCallback.isLogged() ? 2 : 0);
 
                         switch (item) {
                             case 0:
                             case 1:
                             case 2:
-                                if (getCurrentFragmentIndex() != 2 && getCurrentFragmentIndex() != 3)
+                                if (fragmentIndex != 2 && fragmentIndex != 3)
                                     Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                 else {
                                     FabFragment fabFragment = getCurrentFragment();
