@@ -17,8 +17,8 @@ android {
         applicationId "mercandalli.com.filespace"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 16
-        versionName "0.0.16"
+        versionCode 17
+        versionName "0.0.17"
     }
     buildTypes {
         release {

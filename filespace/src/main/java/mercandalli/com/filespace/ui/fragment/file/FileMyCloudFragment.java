@@ -23,6 +23,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -69,7 +70,7 @@ import mercandalli.com.filespace.util.FileUtils;
 import mercandalli.com.filespace.util.NetUtils;
 import mercandalli.com.filespace.util.StringPair;
 
-public class FileMyCloudFragment extends InjectedFragment implements BackFragment.IListViewMode {
+public class FileMyCloudFragment extends InjectedFragment implements BackFragment.IListViewMode, SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView mRecyclerView;
     private GridView mGridView;
@@ -96,6 +97,13 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
 
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         mMessageTextView = (TextView) rootView.findViewById(R.id.message);
+
+        SwipeRefreshLayout swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.fragment_file_files_swipe_refresh_layout);
+        swipeLayout.setOnRefreshListener(this);
+        swipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
         mRecyclerView.setHasFixedSize(true);
@@ -358,6 +366,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
             */
 
         } else {
+            
             this.mProgressBar.setVisibility(View.GONE);
             if (this.isAdded())
                 this.mMessageTextView.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
@@ -695,5 +704,10 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
     @Override
     protected void inject(AppComponent appComponent) {
         appComponent.inject(this);
+    }
+
+    @Override
+    public void onRefresh() {
+        refreshList();
     }
 }
