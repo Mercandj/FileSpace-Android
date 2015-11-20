@@ -23,7 +23,7 @@
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground">
 
-        <mercandalli.com.filespace.ui.view.CircularImageView
+        <mercandalli.com.filespace.common.view.CircularImageView
             android:id="@+id/icon"
             android:layout_width="50dp"
             android:layout_height="50dp"

@@ -22,7 +22,7 @@ package mercandalli.com.filespace.extras.ia;
 import android.content.Context;
 import android.util.Log;
 
-import mercandalli.com.filespace.util.StringUtils;
+import mercandalli.com.filespace.common.util.StringUtils;
 
 /**
  * Created by Jonathan on 19/04/2015.

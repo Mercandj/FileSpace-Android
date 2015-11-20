@@ -26,7 +26,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import mercandalli.com.filespace.util.LogUtils;
+import mercandalli.com.filespace.common.util.LogUtils;
 
 /**
  * Created by Jonathan on 24/04/2015.

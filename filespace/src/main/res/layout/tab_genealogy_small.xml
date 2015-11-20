@@ -57,7 +57,7 @@
             android:layout_toStartOf="@+id/more"
             />
 
-        <mercandalli.com.filespace.ui.view.CircularImageView
+        <mercandalli.com.filespace.common.view.CircularImageView
             android:id="@+id/icon"
             android:layout_width="36dp"
             android:layout_height="36dp"

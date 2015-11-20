@@ -81,7 +81,7 @@
             android:layout_centerHorizontal="true">
         </RelativeLayout>
 
-        <mercandalli.com.filespace.ui.view.PlayPauseView
+        <mercandalli.com.filespace.common.view.PlayPauseView
             android:id="@+id/play"
             android:layout_width="match_parent"
             android:layout_height="60dp"
