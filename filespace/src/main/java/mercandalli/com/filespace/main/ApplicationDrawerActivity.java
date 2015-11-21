@@ -37,23 +37,23 @@ import java.util.List;
 import java.util.Stack;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.common.listener.IListener;
-import mercandalli.com.filespace.common.listener.SetToolbarCallback;
+import mercandalli.com.filespace.admin.AdminFragment;
 import mercandalli.com.filespace.common.fragment.BackFragment;
 import mercandalli.com.filespace.common.fragment.HomeFragment;
-import mercandalli.com.filespace.user.ProfileFragment;
 import mercandalli.com.filespace.common.fragment.RoboticsFragment;
 import mercandalli.com.filespace.common.fragment.SettingsFragment;
 import mercandalli.com.filespace.common.fragment.WebFragment;
-import mercandalli.com.filespace.admin.AdminFragment;
-import mercandalli.com.filespace.user.community.CommunityFragment;
-import mercandalli.com.filespace.file.FileFragment;
 import mercandalli.com.filespace.common.fragment.genealogy.GenealogyFragment;
-import mercandalli.com.filespace.workspace.WorkspaceFragment;
+import mercandalli.com.filespace.common.listener.IListener;
+import mercandalli.com.filespace.common.listener.SetToolbarCallback;
+import mercandalli.com.filespace.common.util.DialogUtils;
+import mercandalli.com.filespace.file.FileFragment;
 import mercandalli.com.filespace.main.navdrawer.NavDrawerItem;
 import mercandalli.com.filespace.main.navdrawer.NavDrawerItemList;
 import mercandalli.com.filespace.main.navdrawer.NavDrawerListAdapter;
-import mercandalli.com.filespace.common.util.DialogUtils;
+import mercandalli.com.filespace.user.ProfileFragment;
+import mercandalli.com.filespace.user.community.CommunityFragment;
+import mercandalli.com.filespace.workspace.WorkspaceFragment;
 
 public abstract class ApplicationDrawerActivity extends ApplicationActivity implements SetToolbarCallback {
 
@@ -62,7 +62,7 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
     protected BackFragment mBackFragment;
     private final int INIT_FRAGMENT_ID = 3;
     private final int INIT_FRAGMENT_LOGGED_ID = 3;
-    private Stack<Integer> ID_FRAGMENT_VISITED = new Stack<>();
+    private Stack<Integer> mVisitedFragmentIdStack = new Stack<>();
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -251,8 +251,8 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
         } else {
             FragmentManager fragmentManager = getSupportFragmentManager();
             List<Fragment> fragments = fragmentManager.getFragments();
-            for(Fragment fragment : fragments){
-                if(fragment != null && fragment instanceof BackFragment) {
+            for (Fragment fragment : fragments) {
+                if (fragment != null && fragment instanceof BackFragment) {
                     mBackFragment = (BackFragment) fragment;
                 }
             }
@@ -289,9 +289,9 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
                     }
             }
         if (position == getInitFragmentId()) {
-            ID_FRAGMENT_VISITED = new Stack<>();
+            mVisitedFragmentIdStack = new Stack<>();
         }
-        ID_FRAGMENT_VISITED.push(position);
+        mVisitedFragmentIdStack.push(position);
 
         for (NavDrawerItem nav : navDrawerItems.getListe()) {
             nav.isSelected = false;
@@ -343,17 +343,19 @@ public abstract class ApplicationDrawerActivity extends ApplicationActivity impl
         if (mBackFragment != null && mBackFragment.back()) {
             return true;
         }
-        if (ID_FRAGMENT_VISITED == null) {
-            Log.e("ApplicationDrawer", "backPressed() ID_FRAGMENT_VISITED==null");
+        if (mVisitedFragmentIdStack == null) {
+            Log.e("ApplicationDrawer", "backPressed() mVisitedFragmentIdStack==null");
             return false;
         }
-        if (ID_FRAGMENT_VISITED.empty()) {
-            Log.e("ApplicationDrawer", "backPressed() ID_FRAGMENT_VISITED.empty()");
+        if (mVisitedFragmentIdStack.empty()) {
+            Log.e("ApplicationDrawer", "backPressed() mVisitedFragmentIdStack.empty()");
             return false;
         }
-        if (ID_FRAGMENT_VISITED.pop() == getInitFragmentId())
+        if (mVisitedFragmentIdStack.pop() == getInitFragmentId())
             return false;
-        selectItem(ID_FRAGMENT_VISITED.pop());
+        if (!mVisitedFragmentIdStack.isEmpty()) {
+            selectItem(mVisitedFragmentIdStack.pop());
+        }
         return true;
     }
 

@@ -24,6 +24,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -49,20 +50,20 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.main.AppComponent;
-import mercandalli.com.filespace.main.Constants;
-import mercandalli.com.filespace.file.FileModelListener;
+import mercandalli.com.filespace.common.fragment.BackFragment;
+import mercandalli.com.filespace.common.fragment.InjectedFragment;
 import mercandalli.com.filespace.common.listener.IListener;
 import mercandalli.com.filespace.common.listener.IStringListener;
+import mercandalli.com.filespace.common.util.DialogUtils;
+import mercandalli.com.filespace.common.util.FileUtils;
+import mercandalli.com.filespace.file.FileDivider;
 import mercandalli.com.filespace.file.FileManager;
 import mercandalli.com.filespace.file.FileModel;
 import mercandalli.com.filespace.file.FileModelAdapter;
 import mercandalli.com.filespace.file.FileModelGridAdapter;
-import mercandalli.com.filespace.common.fragment.BackFragment;
-import mercandalli.com.filespace.common.fragment.InjectedFragment;
-import mercandalli.com.filespace.common.view.divider.DividerItemDecoration;
-import mercandalli.com.filespace.common.util.DialogUtils;
-import mercandalli.com.filespace.common.util.FileUtils;
+import mercandalli.com.filespace.file.FileModelListener;
+import mercandalli.com.filespace.main.AppComponent;
+import mercandalli.com.filespace.main.Constants;
 
 public class FileLocalFragment extends InjectedFragment
         implements BackFragment.IListViewMode, BackFragment.ISortMode {
@@ -100,7 +101,7 @@ public class FileLocalFragment extends InjectedFragment
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+        mRecyclerView.addItemDecoration(new FileDivider(ContextCompat.getColor(mActivity, R.color.file_divider)));
 
         mGridView = (GridView) rootView.findViewById(R.id.gridView);
         mGridView.setVisibility(View.GONE);

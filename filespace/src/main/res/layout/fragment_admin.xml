@@ -31,10 +31,10 @@
             android:layout_height="42dip"
             android:background="@color/actionbar"
             app:tabTextAppearance="@style/TextAppearanceTabLayout"
-            app:tabTextColor="@color/white"
-            app:tabSelectedTextColor="@color/white"
+            app:tabTextColor="@android:color/white"
+            app:tabSelectedTextColor="@android:color/white"
             app:tabIndicatorHeight="2dp"
-            app:tabIndicatorColor="@color/white"
+            app:tabIndicatorColor="@android:color/white"
             app:tabMode="scrollable"
             android:layout_alignParentTop="false"/>
 

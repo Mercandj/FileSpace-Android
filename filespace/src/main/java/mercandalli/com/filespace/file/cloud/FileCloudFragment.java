@@ -23,6 +23,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,30 +46,30 @@ import java.util.List;
 import javax.inject.Inject;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.main.AppComponent;
-import mercandalli.com.filespace.main.Config;
-import mercandalli.com.filespace.main.Constants;
-import mercandalli.com.filespace.file.FileModelListener;
-import mercandalli.com.filespace.file.FileFragment;
+import mercandalli.com.filespace.common.fragment.BackFragment;
+import mercandalli.com.filespace.common.fragment.FabFragment;
+import mercandalli.com.filespace.common.fragment.InjectedFragment;
 import mercandalli.com.filespace.common.listener.IListener;
 import mercandalli.com.filespace.common.listener.IPostExecuteListener;
 import mercandalli.com.filespace.common.listener.IStringListener;
 import mercandalli.com.filespace.common.listener.ResultCallback;
-import mercandalli.com.filespace.file.FileManager;
-import mercandalli.com.filespace.file.FileModel;
-import mercandalli.com.filespace.file.FileTypeModelENUM;
 import mercandalli.com.filespace.common.net.TaskPost;
-import mercandalli.com.filespace.file.FileModelAdapter;
-import mercandalli.com.filespace.file.FileModelGridAdapter;
-import mercandalli.com.filespace.file.FileAddDialog;
-import mercandalli.com.filespace.common.fragment.BackFragment;
-import mercandalli.com.filespace.common.fragment.FabFragment;
-import mercandalli.com.filespace.common.fragment.InjectedFragment;
-import mercandalli.com.filespace.common.view.divider.DividerItemDecoration;
 import mercandalli.com.filespace.common.util.DialogUtils;
 import mercandalli.com.filespace.common.util.FileUtils;
 import mercandalli.com.filespace.common.util.NetUtils;
 import mercandalli.com.filespace.common.util.StringPair;
+import mercandalli.com.filespace.file.FileAddDialog;
+import mercandalli.com.filespace.file.FileDivider;
+import mercandalli.com.filespace.file.FileFragment;
+import mercandalli.com.filespace.file.FileManager;
+import mercandalli.com.filespace.file.FileModel;
+import mercandalli.com.filespace.file.FileModelAdapter;
+import mercandalli.com.filespace.file.FileModelGridAdapter;
+import mercandalli.com.filespace.file.FileModelListener;
+import mercandalli.com.filespace.file.FileTypeModelENUM;
+import mercandalli.com.filespace.main.AppComponent;
+import mercandalli.com.filespace.main.Config;
+import mercandalli.com.filespace.main.Constants;
 
 /**
  * A {@link FabFragment} used by {@link FileFragment} to display the public cloud {@link FileModel}.
@@ -125,7 +126,7 @@ public class FileCloudFragment extends InjectedFragment implements
         mAdapterModelFile = new FileModelAdapter(mActivity, mFilesList, this);
         mRecyclerView.setAdapter(mAdapterModelFile);
         mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+        mRecyclerView.addItemDecoration(new FileDivider(ContextCompat.getColor(mActivity, R.color.file_divider)));
 
         mAdapterModelFile.setOnItemClickListener(this);
         mAdapterModelFile.setOnItemLongClickListener(this);

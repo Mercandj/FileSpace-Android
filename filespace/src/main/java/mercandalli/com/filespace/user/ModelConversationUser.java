@@ -24,7 +24,6 @@ import android.content.Intent;
 
 import mercandalli.com.filespace.common.model.Model;
 import mercandalli.com.filespace.main.ApplicationCallback;
-import mercandalli.com.filespace.common.activity.ConversationActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,7 +36,6 @@ import java.util.Date;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.user.ModelUser;
 
 public class ModelConversationUser extends Model {
 

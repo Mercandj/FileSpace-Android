@@ -24,7 +24,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -43,18 +42,18 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.main.Constants;
+import mercandalli.com.filespace.common.activity.SearchActivity;
+import mercandalli.com.filespace.common.fragment.BackFragment;
+import mercandalli.com.filespace.common.fragment.FabFragment;
+import mercandalli.com.filespace.common.listener.IListener;
+import mercandalli.com.filespace.common.listener.SetToolbarCallback;
+import mercandalli.com.filespace.common.util.NetUtils;
 import mercandalli.com.filespace.file.audio.FileAudioLocalFragment;
 import mercandalli.com.filespace.file.cloud.FileCloudFragment;
 import mercandalli.com.filespace.file.cloud.FileMyCloudFragment;
 import mercandalli.com.filespace.file.local.FileLocalFragment;
-import mercandalli.com.filespace.common.listener.IListener;
-import mercandalli.com.filespace.common.listener.SetToolbarCallback;
 import mercandalli.com.filespace.main.ApplicationCallback;
-import mercandalli.com.filespace.common.activity.SearchActivity;
-import mercandalli.com.filespace.common.fragment.BackFragment;
-import mercandalli.com.filespace.common.fragment.FabFragment;
-import mercandalli.com.filespace.common.util.NetUtils;
+import mercandalli.com.filespace.main.Constants;
 
 public class FileFragment extends BackFragment implements ViewPager.OnPageChangeListener, FabFragment.RefreshFabCallback {
 
@@ -70,12 +69,9 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     private View coordinatorLayoutView;
     private Snackbar mSnackbar;
 
-    private AppBarLayout mAppBarLayout;
-
-    protected int mViewMode = Constants.MODE_LIST;
+    private int mViewMode = Constants.MODE_LIST;
 
     private String mTitle;
-    private Toolbar mToolbar;
     private SetToolbarCallback mSetToolbarCallback;
 
     public static FileFragment newInstance(String title) {
@@ -117,18 +113,16 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_file, container, false);
 
-        mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_file_toolbar);
-        mToolbar.setTitle(mTitle);
-        mSetToolbarCallback.setToolbar(mToolbar);
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.fragment_file_toolbar);
+        toolbar.setTitle(mTitle);
+        mSetToolbarCallback.setToolbar(toolbar);
         setStatusBarColor(mActivity, R.color.notifications_bar);
         setHasOptionsMenu(true);
 
-        mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.fragment_file_app_bar_layout);
         coordinatorLayoutView = rootView.findViewById(R.id.fragment_file_coordinator_layout);
 
         mPagerAdapter = new FileManagerFragmentPagerAdapter(getChildFragmentManager(), mApplicationCallback);
 
-        final TabLayout tabs = (TabLayout) rootView.findViewById(R.id.fragment_file_tab_layout);
         mViewPager = (ViewPager) rootView.findViewById(R.id.fragment_file_view_pager);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
@@ -146,7 +140,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
             mViewPager.setCurrentItem(0);
         }
 
-        tabs.setupWithViewPager(mViewPager);
+        ((TabLayout) rootView.findViewById(R.id.fragment_file_tab_layout)).setupWithViewPager(mViewPager);
 
         mFab1 = ((FloatingActionButton) rootView.findViewById(R.id.fragment_file_fab_1));
         mFab1.setVisibility(View.GONE);
@@ -154,18 +148,6 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         mFab2.setVisibility(View.GONE);
 
         return rootView;
-    }
-
-    public int getCurrentFragmentIndex() {
-        return mViewPager.getCurrentItem();
-    }
-
-    public FabFragment getCurrentFragment() {
-        Fragment fragment = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.fragment_file_view_pager + ":" + mPagerAdapter.getItemId(getCurrentFragmentIndex()));
-        if (fragment == null || !(fragment instanceof FabFragment)) {
-            return null;
-        }
-        return (FabFragment) fragment;
     }
 
     @Override
@@ -180,59 +162,6 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         }
         refreshFab(fabFragment);
         return fabFragment.back();
-    }
-
-    private void refreshFab() {
-        refreshFab(getCurrentFragmentIndex());
-    }
-
-    private void refreshFab(int currentFragmentId) {
-        if (currentFragmentId == -1)
-            return;
-        FabFragment fabFragment = getCurrentFragment();
-        if (fabFragment == null) {
-            return;
-        }
-        refreshFab(fabFragment);
-    }
-
-    private void refreshFab(final FabFragment currentFragment) {
-        if (mFab1 == null) {
-            return;
-        }
-        int imageResource;
-        if (currentFragment.isFabVisible(0)) {
-            mFab1.show();
-            imageResource = currentFragment.getFabImageResource(0);
-            if (imageResource == -1)
-                imageResource = android.R.drawable.ic_input_add;
-            mFab1.setImageResource(imageResource);
-            mFab1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    currentFragment.onFabClick(0, mFab1);
-                }
-            });
-        } else
-            mFab1.hide();
-
-        if (mFab2 == null) {
-            return;
-        }
-        if (currentFragment.isFabVisible(1)) {
-            mFab2.show();
-            imageResource = currentFragment.getFabImageResource(1);
-            if (imageResource == -1)
-                imageResource = android.R.drawable.ic_input_add;
-            mFab2.setImageResource(imageResource);
-            mFab2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    currentFragment.onFabClick(1, mFab2);
-                }
-            });
-        } else
-            mFab2.hide();
     }
 
     @Override
@@ -250,7 +179,6 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     @Override
     public void onPageSelected(int position) {
         mApplicationCallback.invalidateMenu();
-        mAppBarLayout.setExpanded(true);
         if (mApplicationCallback.isLogged()) {
             switch (position) {
                 case 0:
@@ -274,60 +202,86 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         refreshFab();
     }
 
-    public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
-        ApplicationCallback mApplicationCallback;
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
 
-        public FileManagerFragmentPagerAdapter(FragmentManager fm, ApplicationCallback applicationCallback) {
-            super(fm);
-            mApplicationCallback = applicationCallback;
-        }
+        MenuItem searchItem = menu.findItem(R.id.action_filter);
+        SearchView mSearchView = (SearchView) searchItem.getActionView();
 
-        @Override
-        public FabFragment getItem(int i) {
-            if (!mApplicationCallback.isLogged()) {
-                i += 2;
+        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String query) {
+                if (query == null) {
+                    return true;
+                }
+                if (query.replaceAll(" ", "").equals("")) {
+                    refreshListServer();
+                }
+                return true;
             }
 
-            switch (i) {
-                case 0:
-                    return FileCloudFragment.newInstance();
-                case 1:
-                    return FileMyCloudFragment.newInstance();
-                case 2:
-                    return FileLocalFragment.newInstance();
-                case 3:
-                    return FileAudioLocalFragment.newInstance();
-                default:
-                    return FileLocalFragment.newInstance();
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (query == null) {
+                    return false;
+                }
+                if (query.replaceAll(" ", "").equals("")) {
+                    return false;
+                }
+                refreshListServer(query);
+                return false;
             }
-        }
+        };
 
-        @Override
-        public int getCount() {
-            return NB_FRAGMENT - (mApplicationCallback.isLogged() ? 0 : 2);
+        if (mSearchView != null) {
+            mSearchView.setOnQueryTextListener(queryTextListener);
         }
+    }
 
-        @Override
-        public CharSequence getPageTitle(int i) {
-            if (!mApplicationCallback.isLogged())
-                i += 2;
-            String title = "null";
-            switch (i) {
-                case 0:
-                    title = getString(R.string.file_fragment_public_cloud);
-                    break;
-                case 1:
-                    title = getString(R.string.file_fragment_my_cloud);
-                    break;
-                case 2:
-                    title = getString(R.string.file_fragment_local);
-                    break;
-                case 3:
-                    title = getString(R.string.file_fragment_music);
-                    break;
-            }
-            return title;
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_filter).setVisible(true);
+        menu.findItem(R.id.action_search).setVisible(false);
+        menu.findItem(R.id.action_delete).setVisible(false);
+        menu.findItem(R.id.action_add).setVisible(false);
+        menu.findItem(R.id.action_home).setVisible(false);
+        menu.findItem(R.id.action_sort).setVisible(true);
+
+        if (getCurrentFragmentIndex() == (mApplicationCallback.isLogged() ? 2 : 0)) {
+            menu.findItem(R.id.action_home).setVisible(true);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add:
+                add();
+                return true;
+            case R.id.action_home:
+                goHome();
+                return true;
+            case R.id.action_sort:
+                sort();
+                return true;
+            case R.id.action_search:
+                SearchActivity.start(mActivity);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public int getCurrentFragmentIndex() {
+        return mViewPager.getCurrentItem();
+    }
+
+    public FabFragment getCurrentFragment() {
+        Fragment fragment = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.fragment_file_view_pager + ":" + mPagerAdapter.getItemId(getCurrentFragmentIndex()));
+        if (fragment == null || !(fragment instanceof FabFragment)) {
+            return null;
+        }
+        return (FabFragment) fragment;
     }
 
     public void refreshListServer() {
@@ -437,10 +391,11 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                                 break;
 
                             case 3:
-                                if (mViewMode == Constants.MODE_LIST)
+                                if (mViewMode == Constants.MODE_LIST) {
                                     mViewMode = Constants.MODE_GRID;
-                                else
+                                } else {
                                     mViewMode = Constants.MODE_LIST;
+                                }
                                 mApplicationCallback.getConfig().setUserFileModeView(mViewMode);
                                 FabFragment fabFragment = getCurrentFragment();
                                 if (fabFragment != null) {
@@ -481,71 +436,112 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.action_filter);
-        SearchView mSearchView = (SearchView) searchItem.getActionView();
-
-        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextChange(String query) {
-                if (query == null) {
-                    return true;
-                }
-                if (query.replaceAll(" ", "").equals("")) {
-                    refreshListServer();
-                }
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (query == null)
-                    return false;
-                if (query.replaceAll(" ", "").equals(""))
-                    return false;
-                refreshListServer(query);
-                return false;
-            }
-        };
-
-        if (mSearchView != null) {
-            mSearchView.setOnQueryTextListener(queryTextListener);
-        }
+    private void refreshFab() {
+        refreshFab(getCurrentFragmentIndex());
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_filter).setVisible(true);
-        menu.findItem(R.id.action_search).setVisible(false);
-        menu.findItem(R.id.action_delete).setVisible(false);
-        menu.findItem(R.id.action_add).setVisible(false);
-        menu.findItem(R.id.action_home).setVisible(false);
-        menu.findItem(R.id.action_sort).setVisible(true);
-
-        if (getCurrentFragmentIndex() == (mApplicationCallback.isLogged() ? 2 : 0)) {
-            menu.findItem(R.id.action_home).setVisible(true);
+    private void refreshFab(int currentFragmentId) {
+        if (currentFragmentId == -1)
+            return;
+        FabFragment fabFragment = getCurrentFragment();
+        if (fabFragment == null) {
+            return;
         }
+        refreshFab(fabFragment);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_add:
-                add();
-                return true;
-            case R.id.action_home:
-                goHome();
-                return true;
-            case R.id.action_sort:
-                sort();
-                return true;
-            case R.id.action_search:
-                SearchActivity.start(mActivity);
-                return true;
+    private void refreshFab(final FabFragment currentFragment) {
+        if (mFab1 == null) {
+            return;
         }
-        return super.onOptionsItemSelected(item);
+        int imageResource;
+        if (currentFragment.isFabVisible(0)) {
+            mFab1.show();
+            imageResource = currentFragment.getFabImageResource(0);
+            if (imageResource == -1)
+                imageResource = android.R.drawable.ic_input_add;
+            mFab1.setImageResource(imageResource);
+            mFab1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    currentFragment.onFabClick(0, mFab1);
+                }
+            });
+        } else
+            mFab1.hide();
+
+        if (mFab2 == null) {
+            return;
+        }
+        if (currentFragment.isFabVisible(1)) {
+            mFab2.show();
+            imageResource = currentFragment.getFabImageResource(1);
+            if (imageResource == -1)
+                imageResource = android.R.drawable.ic_input_add;
+            mFab2.setImageResource(imageResource);
+            mFab2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    currentFragment.onFabClick(1, mFab2);
+                }
+            });
+        } else
+            mFab2.hide();
+    }
+
+    public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
+        ApplicationCallback mApplicationCallback;
+
+        public FileManagerFragmentPagerAdapter(FragmentManager fm, ApplicationCallback applicationCallback) {
+            super(fm);
+            mApplicationCallback = applicationCallback;
+        }
+
+        @Override
+        public FabFragment getItem(int i) {
+            if (!mApplicationCallback.isLogged()) {
+                i += 2;
+            }
+
+            switch (i) {
+                case 0:
+                    return FileCloudFragment.newInstance();
+                case 1:
+                    return FileMyCloudFragment.newInstance();
+                case 2:
+                    return FileLocalFragment.newInstance();
+                case 3:
+                    return FileAudioLocalFragment.newInstance();
+                default:
+                    return FileLocalFragment.newInstance();
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return NB_FRAGMENT - (mApplicationCallback.isLogged() ? 0 : 2);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int i) {
+            if (!mApplicationCallback.isLogged())
+                i += 2;
+            String title = "null";
+            switch (i) {
+                case 0:
+                    title = getString(R.string.file_fragment_public_cloud);
+                    break;
+                case 1:
+                    title = getString(R.string.file_fragment_my_cloud);
+                    break;
+                case 2:
+                    title = getString(R.string.file_fragment_local);
+                    break;
+                case 3:
+                    title = getString(R.string.file_fragment_music);
+                    break;
+            }
+            return title;
+        }
     }
 }

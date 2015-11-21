@@ -17,7 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package mercandalli.com.filespace.common.activity;
+package mercandalli.com.filespace.user;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -44,10 +44,8 @@ import java.util.List;
 
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.common.listener.IPostExecuteListener;
-import mercandalli.com.filespace.user.ModelConversationMessage;
 import mercandalli.com.filespace.common.net.TaskGet;
 import mercandalli.com.filespace.common.net.TaskPost;
-import mercandalli.com.filespace.user.AdapterModelConnversationMessage;
 import mercandalli.com.filespace.common.view.divider.DividerItemDecoration;
 import mercandalli.com.filespace.common.util.NetUtils;
 import mercandalli.com.filespace.common.util.StringPair;

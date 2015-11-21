@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/fragment_file_coordinator_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/fragment_file_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextAppearance="@style/ToolbarTitle" />
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/fragment_file_tab_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="center_horizontal"
+        android:background="@color/actionbar"
+        app:tabIndicatorColor="@android:color/white"
+        app:tabIndicatorHeight="2dp"
+        app:tabSelectedTextColor="@android:color/white"
+        app:tabTextAppearance="@style/TextAppearanceTabLayout"
+        app:tabTextColor="@android:color/white" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/fragment_file_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fragment_file_fab_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="25dp"
+        android:elevation="@dimen/circle_button_elevation_high"
+        android:scaleType="fitXY"
+        android:src="@drawable/add"
+        android:stateListAnimator="@anim/circle_button_elevation"
+        android:tint="@android:color/white"
+        android:transitionName="transitionFab"
+        app:layout_anchor="@id/fragment_file_coordinator_layout"
+        app:layout_anchorGravity="bottom|right|end" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fragment_file_fab_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="106dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:elevation="@dimen/circle_button_elevation_high"
+        android:scaleType="fitXY"
+        android:src="@drawable/arrow_up"
+        android:stateListAnimator="@anim/circle_button_elevation"
+        android:tint="@android:color/white"
+        app:layout_anchor="@id/fragment_file_coordinator_layout"
+        app:layout_anchorGravity="bottom|right|end" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:background="@drawable/shadow_bottom" />
+
+</FrameLayout>

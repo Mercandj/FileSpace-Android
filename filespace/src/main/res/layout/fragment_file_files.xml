@@ -1,8 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-	Personal Project : Control server
-		MERCANDALLI Jonathan
-
--->
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -17,20 +13,23 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="true"
+            android:clipToPadding="false"
             android:focusable="true"
+            android:paddingTop="3dp"
             android:scrollbars="vertical" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
-
 
     <GridView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
+        android:clipToPadding="false"
         android:focusable="true"
         android:horizontalSpacing="4dp"
         android:numColumns="3"
+        android:paddingTop="20dp"
         android:scrollbars="vertical"
         android:stretchMode="columnWidth"
         android:verticalSpacing="4dp"

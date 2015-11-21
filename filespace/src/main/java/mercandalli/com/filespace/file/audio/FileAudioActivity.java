@@ -41,9 +41,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.main.App;
 import mercandalli.com.filespace.common.view.PlayPauseView;
 import mercandalli.com.filespace.common.view.slider.Slider;
+import mercandalli.com.filespace.main.App;
 
 public class FileAudioActivity extends AppCompatActivity implements View.OnClickListener, FileAudioPlayer.OnPlayerStatusChangeListener {
 
@@ -103,9 +103,9 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
         }
 
         Window window = this.getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.notifications_bar_audio));
         }
 

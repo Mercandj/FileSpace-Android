@@ -13,7 +13,7 @@
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:background="@android:color/white">
 
         <TextView
             android:id="@+id/title"
@@ -55,7 +55,7 @@
             android:layout_width="90dp"
             android:layout_height="36dp"
             android:background="@drawable/button_blue"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="16sp"
             android:text="OK"
             android:id="@+id/button1"
@@ -70,7 +70,7 @@
             android:layout_width="90dp"
             android:layout_height="36dp"
             android:background="@drawable/button_blue"
-            android:textColor="@color/white"
+            android:textColor="@android:color/white"
             android:textSize="16sp"
             android:text="LOGIN"
             android:id="@+id/button2"

@@ -59,7 +59,7 @@
             android:layout_height="55dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:background="@color/white"
+            android:background="@android:color/white"
             android:gravity="center_vertical">
 
             <EditText

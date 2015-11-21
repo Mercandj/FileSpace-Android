@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-	Personal Project : Control server
-		MERCANDALLI Jonathan
--->
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,20 +16,20 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:titleTextAppearance="@style/ToolbarTitle"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:titleTextAppearance="@style/ToolbarTitle" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="42dip"
+            android:layout_alignParentTop="false"
             android:background="@color/actionbar"
-            app:tabTextAppearance="@style/TextAppearanceTabLayout"
-            app:tabTextColor="@color/white"
-            app:tabSelectedTextColor="@color/white"
+            app:tabIndicatorColor="@android:color/white"
             app:tabIndicatorHeight="2dp"
-            app:tabIndicatorColor="@color/white"
-            android:layout_alignParentTop="false"/>
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabTextAppearance="@style/TextAppearanceTabLayout"
+            app:tabTextColor="@android:color/white" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -42,6 +37,6 @@
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </android.support.design.widget.CoordinatorLayout>
