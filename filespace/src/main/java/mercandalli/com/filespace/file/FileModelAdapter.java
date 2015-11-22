@@ -39,29 +39,42 @@ import mercandalli.com.filespace.common.util.StringUtils;
 public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.ViewHolder> {
 
     private Activity mActivity;
-    private final List<FileModel> mFiles = new ArrayList<>();
-    OnItemClickListener mItemClickListener;
-    OnItemLongClickListener mItemLongClickListener;
+    private final List<FileModel> mFiles;
+    private final OnFileClickListener mOnFileClickListener;
+    private final OnFileLongClickListener mOnFileLongClickListener;
     private FileModelListener mMoreListener;
 
     private boolean mShowSize;
     private final int mRowLayout;
 
-    public FileModelAdapter(final Activity activity, final List<FileModel> files, FileModelListener moreListener) {
-        this(activity, files, R.layout.tab_file, moreListener);
+    public FileModelAdapter(
+            final Activity activity,
+            final List<FileModel> files,
+            final FileModelListener moreListener,
+            final OnFileClickListener onFileClickListener,
+            final OnFileLongClickListener onFileLongClickListener) {
+        this(activity, files, R.layout.tab_file, moreListener, onFileClickListener, onFileLongClickListener);
     }
 
-    public FileModelAdapter(final Activity activity, final List<FileModel> files, @LayoutRes int rowLayout, FileModelListener moreListener) {
+    public FileModelAdapter(
+            final Activity activity,
+            final List<FileModel> files,
+            final @LayoutRes int rowLayout,
+            final FileModelListener moreListener,
+            final OnFileClickListener onFileClickListener,
+            final OnFileLongClickListener onFileLongClickListener) {
         mActivity = activity;
-        mFiles.clear();
+        mFiles = new ArrayList<>();
         mFiles.addAll(files);
         mRowLayout = rowLayout;
         mMoreListener = moreListener;
+        mOnFileClickListener = onFileClickListener;
+        mOnFileLongClickListener = onFileLongClickListener;
     }
 
     @Override
     public FileModelAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(mRowLayout, parent, false), viewType);
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(mRowLayout, parent, false), mOnFileClickListener, mOnFileLongClickListener);
     }
 
     @Override
@@ -72,24 +85,26 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
             viewHolder.title.setText(getAdapterTitle(fileModel));
             viewHolder.subtitle.setText(getAdapterSubtitle(fileModel));
 
-            if (fileModel.isDirectory())
+            if (fileModel.isDirectory()) {
                 viewHolder.icon.setImageResource(R.drawable.directory);
-            else if (fileModel.getType() != null) {
+            } else if (fileModel.getType() != null) {
                 FileTypeModel type = fileModel.getType();
-                if (type.equals(FileTypeModelENUM.AUDIO.type))
+                if (type.equals(FileTypeModelENUM.AUDIO.type)) {
                     viewHolder.icon.setImageResource(R.drawable.file_audio);
-                else if (type.equals(FileTypeModelENUM.PDF.type))
+                } else if (type.equals(FileTypeModelENUM.PDF.type))
                     viewHolder.icon.setImageResource(R.drawable.file_pdf);
-                else if (type.equals(FileTypeModelENUM.APK.type))
+                else if (type.equals(FileTypeModelENUM.APK.type)) {
                     viewHolder.icon.setImageResource(R.drawable.file_apk);
-                else if (type.equals(FileTypeModelENUM.ARCHIVE.type))
+                } else if (type.equals(FileTypeModelENUM.ARCHIVE.type)) {
                     viewHolder.icon.setImageResource(R.drawable.file_archive);
-                else if (type.equals(FileTypeModelENUM.FILESPACE.type))
+                } else if (type.equals(FileTypeModelENUM.FILESPACE.type)) {
                     viewHolder.icon.setImageResource(R.drawable.file_space);
-                else
+                } else {
                     viewHolder.icon.setImageResource(R.drawable.file_default);
-            } else
+                }
+            } else {
                 viewHolder.icon.setImageResource(R.drawable.file_default);
+            }
 
             /*
             if (file.bitmap != null)
@@ -117,33 +132,9 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener, View.OnLongClickListener {
-        public TextView title, subtitle;
-        public ImageView icon;
-        public View item;
-        public View more;
-
-        public ViewHolder(View itemLayoutView, int viewType) {
-            super(itemLayoutView);
-            item = itemLayoutView.findViewById(R.id.item);
-            title = (TextView) itemLayoutView.findViewById(R.id.title);
-            subtitle = (TextView) itemLayoutView.findViewById(R.id.subtitle);
-            icon = (ImageView) itemLayoutView.findViewById(R.id.icon);
-            more = itemLayoutView.findViewById(R.id.more);
-            itemLayoutView.setOnClickListener(this);
-            itemLayoutView.setOnLongClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (mItemClickListener != null)
-                mItemClickListener.onItemClick(v, getAdapterPosition());
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            return mItemLongClickListener != null && mItemLongClickListener.onItemLongClick(v, getAdapterPosition());
-        }
+    @Override
+    public int getItemViewType(int position) {
+        return 0;
     }
 
     @Override
@@ -181,27 +172,6 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
         }
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return 0;
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
-
-    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
-        this.mItemClickListener = mItemClickListener;
-    }
-
-    public interface OnItemLongClickListener {
-        boolean onItemLongClick(View view, int position);
-    }
-
-    public void setOnItemLongClickListener(final OnItemLongClickListener mItemLongClickListener) {
-        this.mItemLongClickListener = mItemLongClickListener;
-    }
-
     private String getAdapterTitle(FileModel fileModel) {
         String adapterTitleStart = "";
         if (mShowSize) {
@@ -213,13 +183,9 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
                 return adapterTitleStart + fileModel.getFullName();
             else
                 return adapterTitleStart + fileModel.getUrl();
-        }
-
-        else if (fileModel.getType().equals(FileTypeModelENUM.FILESPACE.type) && fileModel.getContent() != null) {
+        } else if (fileModel.getType().equals(FileTypeModelENUM.FILESPACE.type) && fileModel.getContent() != null) {
             return adapterTitleStart + fileModel.getContent().getAdapterTitle();
-        }
-
-        else if (fileModel.getName() != null)
+        } else if (fileModel.getName() != null)
             return adapterTitleStart + fileModel.getFullName();
         else
             return adapterTitleStart + fileModel.getUrl();
@@ -237,5 +203,49 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
         if (fileModel.getType() != null)
             return fileModel.getType().getTitle();
         return "";
+    }
+
+    public interface OnFileClickListener {
+
+        void onFileClick(View view, int position);
+    }
+
+    public interface OnFileLongClickListener {
+
+        boolean onFileLongClick(View view, int position);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener, View.OnLongClickListener {
+        public final TextView title, subtitle;
+        public final ImageView icon;
+        public final View item;
+        public final View more;
+        private final OnFileClickListener mOnFileClickListener;
+        private final OnFileLongClickListener mOnFileLongClickListener;
+
+        public ViewHolder(View itemLayoutView, OnFileClickListener onFileClickListener, OnFileLongClickListener onFileLongClickListener) {
+            super(itemLayoutView);
+            item = itemLayoutView.findViewById(R.id.item);
+            title = (TextView) itemLayoutView.findViewById(R.id.title);
+            subtitle = (TextView) itemLayoutView.findViewById(R.id.subtitle);
+            icon = (ImageView) itemLayoutView.findViewById(R.id.icon);
+            more = itemLayoutView.findViewById(R.id.more);
+            mOnFileClickListener = onFileClickListener;
+            mOnFileLongClickListener = onFileLongClickListener;
+            itemLayoutView.setOnClickListener(this);
+            itemLayoutView.setOnLongClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (mOnFileClickListener != null) {
+                mOnFileClickListener.onFileClick(v, getAdapterPosition());
+            }
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            return mOnFileLongClickListener != null && mOnFileLongClickListener.onFileLongClick(v, getAdapterPosition());
+        }
     }
 }

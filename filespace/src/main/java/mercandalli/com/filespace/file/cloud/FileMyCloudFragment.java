@@ -252,15 +252,9 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                 AlertDialog menuDrop = menuAlert.create();
                 menuDrop.show();
             }
-        });
-
-        mRecyclerView.setAdapter(mFileModelAdapter);
-        mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
-        mRecyclerView.addItemDecoration(new FileDivider(ContextCompat.getColor(mActivity, R.color.file_divider)));
-
-        mFileModelAdapter.setOnItemClickListener(new FileModelAdapter.OnItemClickListener() {
+        }, new FileModelAdapter.OnFileClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
+            public void onFileClick(View view, int position) {
                 /*
                 if (hasItemSelected()) {
                     mFilesList.get(position).selected = !mFilesList.get(position).selected;
@@ -275,11 +269,9 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                     mFileManager.execute(mActivity, position, mFilesList, view);
                 }
             }
-        });
-
-        mFileModelAdapter.setOnItemLongClickListener(new FileModelAdapter.OnItemLongClickListener() {
+        }, new FileModelAdapter.OnFileLongClickListener() {
             @Override
-            public boolean onItemLongClick(View view, int position) {
+            public boolean onFileLongClick(View view, int position) {
                 /*
                 mFilesList.get(position).selected = !mFilesList.get(position).selected;
                 mFileModelAdapter.notifyItemChanged(position);
@@ -287,6 +279,10 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                 return true;
             }
         });
+
+        mRecyclerView.setAdapter(mFileModelAdapter);
+        mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
+        mRecyclerView.addItemDecoration(new FileDivider(ContextCompat.getColor(mActivity, R.color.file_divider)));
 
         refreshList();
 

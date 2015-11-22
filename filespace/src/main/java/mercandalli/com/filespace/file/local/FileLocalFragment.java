@@ -65,8 +65,11 @@ import mercandalli.com.filespace.file.FileModelListener;
 import mercandalli.com.filespace.main.AppComponent;
 import mercandalli.com.filespace.main.Constants;
 
-public class FileLocalFragment extends InjectedFragment
-        implements BackFragment.IListViewMode, BackFragment.ISortMode {
+public class FileLocalFragment extends InjectedFragment implements
+        BackFragment.IListViewMode,
+        BackFragment.ISortMode,
+        FileModelAdapter.OnFileClickListener,
+        FileModelAdapter.OnFileLongClickListener {
 
     private RecyclerView mRecyclerView;
     private GridView mGridView;
@@ -118,12 +121,192 @@ public class FileLocalFragment extends InjectedFragment
         return rootView;
     }
 
+    @Override
+    public boolean back() {
+        if (hasItemSelected()) {
+            deselectAll();
+            return true;
+        } else if (!mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())) {
+            if (mCurrentDirectory.getParent() != null) {
+                FileLocalFragment.this.mCurrentDirectory = new File(mCurrentDirectory.getParentFile().getPath());
+                FileLocalFragment.this.refreshList();
+                return true;
+            }
+        } else if ((mFilesToCopyList != null && mFilesToCopyList.size() != 0) || (mFilesToCutList != null && mFilesToCutList.size() != 0)) {
+            if (mFilesToCopyList != null) {
+                mFilesToCopyList.clear();
+            }
+            if (mFilesToCutList != null) {
+                mFilesToCutList.clear();
+            }
+            refreshFab();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onFocus() {
+    }
+
+    @Override
+    public void onFabClick(int fab_id, FloatingActionButton fab) {
+        switch (fab_id) {
+            case 0:
+                if ((mFilesToCopyList != null && mFilesToCopyList.size() != 0) || (mFilesToCutList != null && mFilesToCutList.size() != 0)) {
+                    if (mFilesToCopyList != null) {
+                        for (FileModel file : mFilesToCopyList) {
+                            mFileManager.copyLocalFile(mActivity, file, mCurrentDirectory.getAbsolutePath() + File.separator);
+                        }
+                        mFilesToCopyList.clear();
+                    }
+                    if (mFilesToCutList != null) {
+                        for (FileModel file : mFilesToCutList) {
+                            mFileManager.renameLocalByPath(file, mCurrentDirectory.getAbsolutePath() + File.separator + file.getFullName());
+                        }
+                        mFilesToCutList.clear();
+                    }
+                    refreshList();
+                } else {
+                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
+                    final String[] menuList = {"New Folder or File"};
+                    menuAlert.setTitle("Action");
+                    menuAlert.setItems(menuList,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int item) {
+                                    switch (item) {
+                                        case 0:
+                                            DialogUtils.prompt(mActivity, "New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
+                                                @Override
+                                                public void execute(String text) {
+                                                    createFile(mCurrentDirectory.getPath() + File.separator, text);
+                                                    refreshList();
+                                                }
+                                            }, getString(R.string.cancel), null, null, "Name");
+                                            break;
+                                    }
+                                }
+                            });
+                    AlertDialog menuDrop = menuAlert.create();
+                    menuDrop.show();
+                }
+                refreshFab();
+                break;
+
+            case 1:
+                if (mCurrentDirectory.getParent() != null && !mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())) {
+                    FileLocalFragment.this.mCurrentDirectory = new File(mCurrentDirectory.getParentFile().getPath());
+                    //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
+                    FileLocalFragment.this.refreshList();
+                }
+                break;
+        }
+    }
+
+    @Override
+    public boolean isFabVisible(int fab_id) {
+        switch (fab_id) {
+            case 0:
+                return true;
+            case 1:
+                return this.mCurrentDirectory != null && mCurrentDirectory.getParent() != null && !mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath());
+        }
+        return false;
+    }
+
+    @Override
+    public int getFabImageResource(int fab_id) {
+        switch (fab_id) {
+            case 0:
+                if (mFilesToCopyList != null && mFilesToCopyList.size() != 0) {
+                    return R.drawable.ic_menu_paste_holo_dark;
+                } else if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
+                    return R.drawable.ic_menu_paste_holo_dark;
+                } else {
+                    return R.drawable.add;
+                }
+            case 1:
+                return R.drawable.arrow_up;
+        }
+        return R.drawable.add;
+    }
+
+    @Override
+    public void setSortMode(int mSortMode) {
+        if (mSortMode == Constants.SORT_ABC ||
+                mSortMode == Constants.SORT_DATE_MODIFICATION ||
+                mSortMode == Constants.SORT_SIZE) {
+            this.mSortMode = mSortMode;
+            refreshList();
+        }
+    }
+
+    @Override
+    public void setViewMode(int viewMode) {
+        if (viewMode != mViewMode) {
+            mViewMode = viewMode;
+            updateAdapter();
+        }
+    }
+
+    @Override
+    protected void inject(AppComponent appComponent) {
+        appComponent.inject(this);
+    }
+
+    @Override
+    public void onFileClick(View view, int position) {
+        /*if (hasItemSelected()) {
+            mFilesList.get(position).selected = !mFilesList.get(position).selected;
+            adapter.notifyItemChanged(position);
+        } else */
+        if (mFilesList.get(position).isDirectory()) {
+            mCurrentDirectory = new File(mFilesList.get(position).getUrl());
+            refreshList();
+        } else {
+            mFileManager.execute(mActivity, position, mFilesList, view);
+        }
+    }
+
+    @Override
+    public boolean onFileLongClick(View view, int position) {
+        /*
+        mFilesList.get(position).selected = !mFilesList.get(position).selected;
+        adapter.notifyItemChanged(position);
+        */
+        return true;
+    }
+
+    public void goHome() {
+        this.mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + mApplicationCallback.getConfig().getLocalFolderName());
+        this.refreshList();
+    }
+
+    public boolean hasItemSelected() {
+        /*
+        for (FileModel file : mFilesList)
+            if (file.selected)
+                return true;
+                */
+        return false;
+    }
+
+    public void deselectAll() {
+        /*
+        for (FileModel file : mFilesList)
+            file.selected = false;
+            */
+        updateAdapter();
+    }
+
     public void refreshList() {
         refreshList(null);
     }
 
     public void refreshList(final String search) {
-        if (mCurrentDirectory == null) return;
+        if (mCurrentDirectory == null) {
+            return;
+        }
 
         List<File> fs = Arrays.asList((search == null) ? mCurrentDirectory.listFiles() : mCurrentDirectory.listFiles(
                 new FilenameFilter() {
@@ -134,21 +317,27 @@ public class FileLocalFragment extends InjectedFragment
                 }
         ));
 
-        if (mSortMode == Constants.SORT_ABC) {
+        if (mSortMode == Constants.SORT_ABC)
+
+        {
             Collections.sort(fs, new Comparator<File>() {
                 @Override
                 public int compare(final File f1, final File f2) {
                     return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
                 }
             });
-        } else if (mSortMode == Constants.SORT_SIZE) {
+        } else if (mSortMode == Constants.SORT_SIZE)
+
+        {
             Collections.sort(fs, new Comparator<File>() {
                 @Override
                 public int compare(final File f1, final File f2) {
                     return (Long.valueOf(f2.length())).compareTo(f1.length());
                 }
             });
-        } else {
+        } else
+
+        {
             final Map<File, Long> staticLastModifiedTimes = new HashMap<>();
             for (File f : fs) {
                 staticLastModifiedTimes.put(f, f.lastModified());
@@ -162,7 +351,11 @@ public class FileLocalFragment extends InjectedFragment
         }
 
         mFilesList = new ArrayList<>();
-        for (File file : fs) {
+        for (
+                File file
+                : fs)
+
+        {
             FileModel tmpFileModel = new FileModel.FileModelBuilder().file(file).build();
             /*
             if (mSortMode == Constants.SORT_SIZE)
@@ -172,6 +365,7 @@ public class FileLocalFragment extends InjectedFragment
         }
 
         updateAdapter();
+
     }
 
     public void updateAdapter() {
@@ -182,8 +376,9 @@ public class FileLocalFragment extends InjectedFragment
             if (mFilesList.size() == 0) {
                 mMessageTextView.setText(getString(R.string.no_file_local_folder, "" + mCurrentDirectory.getName()));
                 mMessageTextView.setVisibility(View.VISIBLE);
-            } else
+            } else {
                 mMessageTextView.setVisibility(View.GONE);
+            }
 
             final FileModelAdapter adapter = new FileModelAdapter(mActivity, mFilesList, new FileModelListener() {
                 @Override
@@ -196,8 +391,9 @@ public class FileLocalFragment extends InjectedFragment
                     menuAlert.setItems(menuList,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int item) {
-                                    if (!mApplicationCallback.isLogged())
+                                    if (!mApplicationCallback.isLogged()) {
                                         item += 1;
+                                    }
                                     switch (item) {
                                         case 0:
                                             if (fileModel.isDirectory()) {
@@ -288,36 +484,9 @@ public class FileLocalFragment extends InjectedFragment
                     AlertDialog menuDrop = menuAlert.create();
                     menuDrop.show();
                 }
-            });
+            }, this, this);
 
             mRecyclerView.setAdapter(adapter);
-
-            adapter.setOnItemClickListener(new FileModelAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(View view, int position) {
-                    /*if (hasItemSelected()) {
-                        mFilesList.get(position).selected = !mFilesList.get(position).selected;
-                        adapter.notifyItemChanged(position);
-                    } else */
-                    if (mFilesList.get(position).isDirectory()) {
-                        mCurrentDirectory = new File(mFilesList.get(position).getUrl());
-                        refreshList();
-                    } else {
-                        mFileManager.execute(mActivity, position, mFilesList, view);
-                    }
-                }
-            });
-
-            adapter.setOnItemLongClickListener(new FileModelAdapter.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(View view, int position) {
-                    /*
-                    mFilesList.get(position).selected = !mFilesList.get(position).selected;
-                    adapter.notifyItemChanged(position);
-                    */
-                    return true;
-                }
-            });
 
 
             if (mViewMode == Constants.MODE_GRID) {
@@ -446,7 +615,7 @@ public class FileLocalFragment extends InjectedFragment
         }
     }
 
-    public boolean createFile(String path, String name) {
+    private boolean createFile(String path, String name) {
         int len = path.length();
         if (len < 1 || name.length() < 1)
             return false;
@@ -465,157 +634,5 @@ public class FileLocalFragment extends InjectedFragment
             }
         }
         return false;
-    }
-
-    @Override
-    public boolean back() {
-        if (hasItemSelected()) {
-            deselectAll();
-            return true;
-        } else if (!mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())) {
-            if (mCurrentDirectory.getParent() != null) {
-                FileLocalFragment.this.mCurrentDirectory = new File(mCurrentDirectory.getParentFile().getPath());
-                FileLocalFragment.this.refreshList();
-                return true;
-            }
-        } else if ((mFilesToCopyList != null && mFilesToCopyList.size() != 0) || (mFilesToCutList != null && mFilesToCutList.size() != 0)) {
-            if (mFilesToCopyList != null)
-                mFilesToCopyList.clear();
-            if (mFilesToCutList != null)
-                mFilesToCutList.clear();
-            refreshFab();
-            return true;
-        }
-        return false;
-    }
-
-    public void goHome() {
-        this.mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + mApplicationCallback.getConfig().getLocalFolderName());
-        this.refreshList();
-    }
-
-    public boolean hasItemSelected() {
-        /*
-        for (FileModel file : mFilesList)
-            if (file.selected)
-                return true;
-                */
-        return false;
-    }
-
-    public void deselectAll() {
-        /*
-        for (FileModel file : mFilesList)
-            file.selected = false;
-            */
-        updateAdapter();
-    }
-
-    @Override
-    public void onFocus() {
-    }
-
-    @Override
-    public void onFabClick(int fab_id, FloatingActionButton fab) {
-        switch (fab_id) {
-            case 0:
-                if ((mFilesToCopyList != null && mFilesToCopyList.size() != 0) || (mFilesToCutList != null && mFilesToCutList.size() != 0)) {
-                    if (mFilesToCopyList != null) {
-                        for (FileModel file : mFilesToCopyList) {
-                            mFileManager.copyLocalFile(mActivity, file, mCurrentDirectory.getAbsolutePath() + File.separator);
-                        }
-                        mFilesToCopyList.clear();
-                    }
-                    if (mFilesToCutList != null) {
-                        for (FileModel file : mFilesToCutList) {
-                            mFileManager.renameLocalByPath(file, mCurrentDirectory.getAbsolutePath() + File.separator + file.getFullName());
-                        }
-                        mFilesToCutList.clear();
-                    }
-                    refreshList();
-                } else {
-                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
-                    final String[] menuList = {"New Folder or File"};
-                    menuAlert.setTitle("Action");
-                    menuAlert.setItems(menuList,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int item) {
-                                    switch (item) {
-                                        case 0:
-                                            DialogUtils.prompt(mActivity, "New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
-                                                @Override
-                                                public void execute(String text) {
-                                                    createFile(mCurrentDirectory.getPath() + File.separator, text);
-                                                    refreshList();
-                                                }
-                                            }, getString(R.string.cancel), null, null, "Name");
-                                            break;
-                                    }
-                                }
-                            });
-                    AlertDialog menuDrop = menuAlert.create();
-                    menuDrop.show();
-                }
-                refreshFab();
-                break;
-
-            case 1:
-                if (mCurrentDirectory.getParent() != null && !mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())) {
-                    FileLocalFragment.this.mCurrentDirectory = new File(mCurrentDirectory.getParentFile().getPath());
-                    //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
-                    FileLocalFragment.this.refreshList();
-                }
-                break;
-        }
-    }
-
-    @Override
-    public boolean isFabVisible(int fab_id) {
-        switch (fab_id) {
-            case 0:
-                return true;
-            case 1:
-                return this.mCurrentDirectory != null && mCurrentDirectory.getParent() != null && !mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath());
-        }
-        return false;
-    }
-
-    @Override
-    public int getFabImageResource(int fab_id) {
-        switch (fab_id) {
-            case 0:
-                if (mFilesToCopyList != null && mFilesToCopyList.size() != 0)
-                    return R.drawable.ic_menu_paste_holo_dark;
-                else if (mFilesToCutList != null && mFilesToCutList.size() != 0)
-                    return R.drawable.ic_menu_paste_holo_dark;
-                else
-                    return R.drawable.add;
-            case 1:
-                return R.drawable.arrow_up;
-        }
-        return R.drawable.add;
-    }
-
-    @Override
-    public void setSortMode(int mSortMode) {
-        if (mSortMode == Constants.SORT_ABC ||
-                mSortMode == Constants.SORT_DATE_MODIFICATION ||
-                mSortMode == Constants.SORT_SIZE) {
-            this.mSortMode = mSortMode;
-            refreshList();
-        }
-    }
-
-    @Override
-    public void setViewMode(int viewMode) {
-        if (viewMode != mViewMode) {
-            mViewMode = viewMode;
-            updateAdapter();
-        }
-    }
-
-    @Override
-    protected void inject(AppComponent appComponent) {
-        appComponent.inject(this);
     }
 }

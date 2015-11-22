@@ -17,16 +17,16 @@ import java.util.List;
 import javax.inject.Inject;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.main.App;
-import mercandalli.com.filespace.main.Constants;
+import mercandalli.com.filespace.common.animation.ScaleAnimationAdapter;
 import mercandalli.com.filespace.common.listener.ResultCallback;
+import mercandalli.com.filespace.common.view.divider.SpacesItemDecoration;
 import mercandalli.com.filespace.file.FileManager;
 import mercandalli.com.filespace.file.FileModel;
-import mercandalli.com.filespace.common.animation.ScaleAnimationAdapter;
 import mercandalli.com.filespace.file.FileModelAdapter;
-import mercandalli.com.filespace.common.view.divider.SpacesItemDecoration;
+import mercandalli.com.filespace.main.App;
+import mercandalli.com.filespace.main.Constants;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements FileModelAdapter.OnFileClickListener {
 
     @Inject
     FileManager mFileManager;
@@ -64,30 +64,12 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void updateAdapter() {
-        FileModelAdapter adapter = new FileModelAdapter(this, mFileModelList, R.layout.tab_file_light, null);
+        FileModelAdapter adapter = new FileModelAdapter(this, mFileModelList, R.layout.tab_file_light, null, this, null);
         ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, adapter);
         scaleAnimationAdapter.setDuration(220);
         scaleAnimationAdapter.setOffsetDuration(32);
 
         mRecyclerView.setAdapter(scaleAnimationAdapter);
-        adapter.setOnItemClickListener(new FileModelAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View arg1, int position) {
-                if (position < mFileModelList.size()) {
-                    FileModel file = mFileModelList.get(position);
-                    if (file.isDirectory()) {
-                        if (file.getCount() == 0) {
-                            Toast.makeText(SearchActivity.this, "No files", Toast.LENGTH_SHORT).show();
-                        } else {
-                            mCurrentFile = file.getFile();
-                            refreshList();
-                        }
-                    } else {
-                        mFileManager.execute(SearchActivity.this, position, mFileModelList, arg1);
-                    }
-                }
-            }
-        });
     }
 
     private void refreshList() {
@@ -107,5 +89,22 @@ public class SearchActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    @Override
+    public void onFileClick(View view, int position) {
+        if (position < mFileModelList.size()) {
+            FileModel file = mFileModelList.get(position);
+            if (file.isDirectory()) {
+                if (file.getCount() == 0) {
+                    Toast.makeText(SearchActivity.this, "No files", Toast.LENGTH_SHORT).show();
+                } else {
+                    mCurrentFile = file.getFile();
+                    refreshList();
+                }
+            } else {
+                mFileManager.execute(SearchActivity.this, position, mFileModelList, view);
+            }
+        }
     }
 }

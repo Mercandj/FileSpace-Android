@@ -35,25 +35,25 @@ import java.util.List;
 import java.util.Map;
 
 import mercandalli.com.filespace.R;
-import mercandalli.com.filespace.main.Config;
-import mercandalli.com.filespace.main.Constants;
-import mercandalli.com.filespace.file.audio.FileAudioActivity;
-import mercandalli.com.filespace.file.audio.CoverUtils;
 import mercandalli.com.filespace.common.listener.IListener;
 import mercandalli.com.filespace.common.listener.IPostExecuteListener;
 import mercandalli.com.filespace.common.listener.ResultCallback;
-import mercandalli.com.filespace.file.local.FileLocalApi;
-import mercandalli.com.filespace.file.audio.FileAudioModel;
-import mercandalli.com.filespace.file.cloud.FileOnlineApi;
 import mercandalli.com.filespace.common.net.TaskGetDownload;
-import mercandalli.com.filespace.file.cloud.response.FileResponse;
-import mercandalli.com.filespace.file.cloud.response.FilesResponse;
 import mercandalli.com.filespace.common.util.FileUtils;
 import mercandalli.com.filespace.common.util.HtmlUtils;
 import mercandalli.com.filespace.common.util.NetUtils;
 import mercandalli.com.filespace.common.util.StringPair;
 import mercandalli.com.filespace.common.util.StringUtils;
 import mercandalli.com.filespace.common.util.TimeUtils;
+import mercandalli.com.filespace.file.audio.CoverUtils;
+import mercandalli.com.filespace.file.audio.FileAudioActivity;
+import mercandalli.com.filespace.file.audio.FileAudioModel;
+import mercandalli.com.filespace.file.cloud.FileOnlineApi;
+import mercandalli.com.filespace.file.cloud.response.FileResponse;
+import mercandalli.com.filespace.file.cloud.response.FilesResponse;
+import mercandalli.com.filespace.file.local.FileLocalApi;
+import mercandalli.com.filespace.main.Config;
+import mercandalli.com.filespace.main.Constants;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -61,7 +61,7 @@ import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
 /**
- * Created by Jonathan on 23/10/2015.
+ * A {@link FileModel} Manager.
  */
 public class FileManager {
     private Context mContext;
@@ -394,7 +394,7 @@ public class FileManager {
     }
 
     public void openLocalAs(final Activity activity, final FileModel fileModel) {
-        if (!fileModel.isOnline()) {
+        if (fileModel.isOnline()) {
             return;
         }
         final AlertDialog.Builder menuAlert = new AlertDialog.Builder(activity);

@@ -35,13 +35,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 import mercandalli.com.filespace.R;
+import mercandalli.com.filespace.common.animation.ScaleAnimationAdapter;
+import mercandalli.com.filespace.common.listener.ResultCallback;
+import mercandalli.com.filespace.common.view.divider.SpacesItemDecoration;
 import mercandalli.com.filespace.main.App;
 import mercandalli.com.filespace.main.Constants;
-import mercandalli.com.filespace.common.listener.ResultCallback;
-import mercandalli.com.filespace.common.animation.ScaleAnimationAdapter;
-import mercandalli.com.filespace.common.view.divider.SpacesItemDecoration;
 
-public class FileChooserDialog extends Dialog {
+public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFileClickListener {
 
     @Inject
     FileManager mFileManager;
@@ -95,31 +95,12 @@ public class FileChooserDialog extends Dialog {
     }
 
     private void updateAdapter() {
-        FileModelAdapter adapter = new FileModelAdapter(mActivity, mFileModelList, R.layout.tab_file_light, null);
+        FileModelAdapter adapter = new FileModelAdapter(mActivity, mFileModelList, R.layout.tab_file_light, null, this, null);
         ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, adapter);
         scaleAnimationAdapter.setDuration(220);
         scaleAnimationAdapter.setOffsetDuration(32);
 
         mRecyclerView.setAdapter(scaleAnimationAdapter);
-        adapter.setOnItemClickListener(new FileModelAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View arg1, int position) {
-                if (position < mFileModelList.size()) {
-                    FileModel file = mFileModelList.get(position);
-                    if (file.isDirectory()) {
-                        if (file.getCount() == 0) {
-                            Toast.makeText(mActivity, "No files", Toast.LENGTH_SHORT).show();
-                        } else {
-                            mCurrentFile = file.getFile();
-                            refreshList();
-                        }
-                    } else {
-                        mFileModelListener.executeFileModel(file);
-                        dismiss();
-                    }
-                }
-            }
-        });
     }
 
     private void refreshList() {
@@ -139,5 +120,23 @@ public class FileChooserDialog extends Dialog {
 
                     }
                 });
+    }
+
+    @Override
+    public void onFileClick(View view, int position) {
+        if (position < mFileModelList.size()) {
+            FileModel file = mFileModelList.get(position);
+            if (file.isDirectory()) {
+                if (file.getCount() == 0) {
+                    Toast.makeText(mActivity, "No files", Toast.LENGTH_SHORT).show();
+                } else {
+                    mCurrentFile = file.getFile();
+                    refreshList();
+                }
+            } else {
+                mFileModelListener.executeFileModel(file);
+                dismiss();
+            }
+        }
     }
 }
