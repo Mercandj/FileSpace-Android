@@ -17,7 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package mercandalli.com.filespace.file;
+package mercandalli.com.filespace.file.image;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -46,7 +46,7 @@ import mercandalli.com.filespace.common.util.ColorUtils;
 import mercandalli.com.filespace.common.util.FontUtils;
 import mercandalli.com.filespace.common.util.ImageUtils;
 
-public class FilePictureActivity extends ApplicationActivity {
+public class FileImageActivity extends ApplicationActivity {
     private String url, title;
     private int id;
     private boolean online;
@@ -143,8 +143,8 @@ public class FilePictureActivity extends ApplicationActivity {
             public void onClick(View v) {
                 Intent picIntent = new Intent();
                 picIntent.setAction(Intent.ACTION_VIEW);
-                picIntent.setDataAndType(Uri.parse("file://" + (new File(FilePictureActivity.this.getFilesDir() + "/file_" + id)).getAbsolutePath()), "image/*");
-                FilePictureActivity.this.startActivity(picIntent);
+                picIntent.setDataAndType(Uri.parse("file://" + (new File(FileImageActivity.this.getFilesDir() + "/file_" + id)).getAbsolutePath()), "image/*");
+                FileImageActivity.this.startActivity(picIntent);
             }
         });
     }

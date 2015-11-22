@@ -17,7 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package mercandalli.com.filespace.file;
+package mercandalli.com.filespace.file.text;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -34,6 +34,8 @@ import org.json.JSONObject;
 import mercandalli.com.filespace.R;
 import mercandalli.com.filespace.common.listener.IPostExecuteListener;
 import mercandalli.com.filespace.common.net.TaskGet;
+import mercandalli.com.filespace.file.FileModel;
+import mercandalli.com.filespace.file.FileTypeModelENUM;
 import mercandalli.com.filespace.main.ApplicationActivity;
 
 /**

@@ -51,7 +51,9 @@ import mercandalli.com.filespace.file.audio.FileAudioModel;
 import mercandalli.com.filespace.file.cloud.FileOnlineApi;
 import mercandalli.com.filespace.file.cloud.response.FileResponse;
 import mercandalli.com.filespace.file.cloud.response.FilesResponse;
+import mercandalli.com.filespace.file.image.FileImageActivity;
 import mercandalli.com.filespace.file.local.FileLocalApi;
+import mercandalli.com.filespace.file.text.FileTextActivity;
 import mercandalli.com.filespace.main.Config;
 import mercandalli.com.filespace.main.Constants;
 import retrofit.Callback;
@@ -246,7 +248,7 @@ public class FileManager {
         if (fileModel.getType().equals(FileTypeModelENUM.TEXT.type)) {
             FileTextActivity.start(activity, fileModel, true);
         } else if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
-            Intent intent = new Intent(activity, FilePictureActivity.class);
+            Intent intent = new Intent(activity, FileImageActivity.class);
             intent.putExtra("ID", fileModel.getId());
             intent.putExtra("TITLE", "" + fileModel.getFullName());
             intent.putExtra("URL_FILE", "" + fileModel.getOnlineUrl());
