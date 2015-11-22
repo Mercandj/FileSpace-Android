@@ -51,7 +51,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-#Jarvis files to ignore
+#FileSpace files to ignore
 /php/upload/
 *.sublime-workspace
 *.sublime-project

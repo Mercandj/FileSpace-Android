@@ -1,21 +1,21 @@
 /**
- * This file is part of Jarvis for Android, an app for managing your server (files, talks...).
+ * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
  * <p/>
- * Copyright (c) 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
+ * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  * <p/>
  * LICENSE:
  * <p/>
- * Jarvis for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
+ * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
  * <p/>
- * Jarvis for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
  *
  * @author Jonathan Mercandalli
  * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 Jarvis for Android contributors (http://mercandalli.com)
+ * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
 package mercandalli.com.filespace.common.fragment;
 
@@ -48,14 +48,11 @@ import mercandalli.com.filespace.common.listener.IPostExecuteListener;
 import mercandalli.com.filespace.common.listener.SetToolbarCallback;
 import mercandalli.com.filespace.common.model.ModelHardware;
 import mercandalli.com.filespace.common.net.TaskPost;
-import mercandalli.com.filespace.common.view.slider.Slider;
 import mercandalli.com.filespace.common.util.NetUtils;
 import mercandalli.com.filespace.common.util.RoboticsUtils;
 import mercandalli.com.filespace.common.util.StringPair;
+import mercandalli.com.filespace.common.view.slider.Slider;
 
-/**
- * Created by Jonathan on 03/01/2015.
- */
 public class RoboticsFragment extends BackFragment implements SensorEventListener {
 
     private static final String BUNDLE_ARG_TITLE = "RoboticsFragment.Args.BUNDLE_ARG_TITLE";
