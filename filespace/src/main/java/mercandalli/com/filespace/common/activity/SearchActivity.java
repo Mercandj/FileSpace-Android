@@ -64,7 +64,7 @@ public class SearchActivity extends AppCompatActivity implements FileModelAdapte
     }
 
     private void updateAdapter() {
-        FileModelAdapter adapter = new FileModelAdapter(this, mFileModelList, R.layout.tab_file_light, null, this, null);
+        FileModelAdapter adapter = new FileModelAdapter(mFileModelList, R.layout.tab_file_light, null, this, null);
         ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, adapter);
         scaleAnimationAdapter.setDuration(220);
         scaleAnimationAdapter.setOffsetDuration(32);

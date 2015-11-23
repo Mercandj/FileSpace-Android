@@ -19,7 +19,6 @@
  */
 package mercandalli.com.filespace.file;
 
-import android.app.Activity;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -38,7 +37,6 @@ import mercandalli.com.filespace.common.util.StringUtils;
 
 public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.ViewHolder> {
 
-    private Activity mActivity;
     private final List<FileModel> mFiles;
     private final OnFileClickListener mOnFileClickListener;
     private final OnFileLongClickListener mOnFileLongClickListener;
@@ -48,22 +46,19 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
     private final int mRowLayout;
 
     public FileModelAdapter(
-            final Activity activity,
             final List<FileModel> files,
             final FileModelListener moreListener,
             final OnFileClickListener onFileClickListener,
             final OnFileLongClickListener onFileLongClickListener) {
-        this(activity, files, R.layout.tab_file, moreListener, onFileClickListener, onFileLongClickListener);
+        this(files, R.layout.tab_file, moreListener, onFileClickListener, onFileLongClickListener);
     }
 
     public FileModelAdapter(
-            final Activity activity,
             final List<FileModel> files,
             final @LayoutRes int rowLayout,
             final FileModelListener moreListener,
             final OnFileClickListener onFileClickListener,
             final OnFileLongClickListener onFileLongClickListener) {
-        mActivity = activity;
         mFiles = new ArrayList<>();
         mFiles.addAll(files);
         mRowLayout = rowLayout;

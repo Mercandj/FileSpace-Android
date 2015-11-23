@@ -380,7 +380,7 @@ public class FileLocalFragment extends InjectedFragment implements
                 mMessageTextView.setVisibility(View.GONE);
             }
 
-            final FileModelAdapter adapter = new FileModelAdapter(mActivity, mFilesList, new FileModelListener() {
+            final FileModelAdapter adapter = new FileModelAdapter(mFilesList, new FileModelListener() {
                 @Override
                 public void executeFileModel(final FileModel fileModel) {
                     final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);

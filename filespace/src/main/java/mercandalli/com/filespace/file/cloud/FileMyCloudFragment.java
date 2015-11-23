@@ -116,7 +116,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
 
         resetPath();
 
-        mFileModelAdapter = new FileModelAdapter(mActivity, mFilesList, new FileModelListener() {
+        mFileModelAdapter = new FileModelAdapter(mFilesList, new FileModelListener() {
             @Override
             public void executeFileModel(final FileModel fileModel) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);

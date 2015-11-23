@@ -123,7 +123,7 @@ public class FileCloudFragment extends InjectedFragment implements
         mGridView = (GridView) rootView.findViewById(R.id.gridView);
         mGridView.setVisibility(View.GONE);
 
-        mAdapterModelFile = new FileModelAdapter(mActivity, mFilesList, this, this, this);
+        mAdapterModelFile = new FileModelAdapter(mFilesList, this, this, this);
         mRecyclerView.setAdapter(mAdapterModelFile);
         mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new FileDivider(ContextCompat.getColor(mActivity, R.color.file_divider)));
