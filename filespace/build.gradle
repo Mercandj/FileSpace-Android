@@ -5,7 +5,7 @@ apply from: '../config/quality.gradle'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.1'
+    buildToolsVersion '23.0.2'
 
     compileOptions {
         encoding "UTF-8"
@@ -14,7 +14,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "mercandalli.com.filespace"
+        applicationId "com.mercandalli.android.filespace"
         minSdkVersion 17
         targetSdkVersion 23
         versionCode 17
@@ -54,10 +54,9 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.1'
     compile 'org.glassfish:javax.annotation:10.0-b28'
 
-    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.google.code.gson:gson:2.4'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
-    compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
 
     compile 'com.squareup.picasso:picasso:2.5.2'

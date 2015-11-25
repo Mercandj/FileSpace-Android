@@ -9,7 +9,7 @@
                 android:transitionName="transitionRoot"
                 android:id="@+id/item">
 
-    <mercandalli.com.filespace.common.view.SquareImageView
+    <com.mercandalli.android.filespace.common.view.SquareImageView
         android:id="@+id/icon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

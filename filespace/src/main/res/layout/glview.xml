@@ -9,11 +9,11 @@
                 android:layout_height="fill_parent"
                 android:orientation="vertical">
 
-    <mercandalli.com.filespace.extras.physics.MyGLSurfaceView
+    <com.mercandalli.android.filespace.extras.physics.MyGLSurfaceView
         android:id="@+id/GLview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
-    </mercandalli.com.filespace.extras.physics.MyGLSurfaceView>
+    </com.mercandalli.android.filespace.extras.physics.MyGLSurfaceView>
 
     <Button
         android:id="@+id/left"

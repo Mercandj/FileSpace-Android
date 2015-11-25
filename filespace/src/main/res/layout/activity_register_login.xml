@@ -65,7 +65,7 @@
         android:layout_below="@+id/rl_top"
         android:orientation="vertical">
 
-        <mercandalli.com.filespace.common.view.PagerSlidingTabStrip
+        <com.mercandalli.android.filespace.common.view.PagerSlidingTabStrip
             android:id="@+id/activity_register_login_tabs"
             android:layout_width="match_parent"
             android:layout_height="42dip"

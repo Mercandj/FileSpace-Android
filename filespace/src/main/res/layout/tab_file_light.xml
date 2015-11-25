@@ -59,7 +59,7 @@
             android:textSize="12sp"
             tools:text="Subtitle"/>
 
-        <mercandalli.com.filespace.common.view.CircularImageView
+        <com.mercandalli.android.filespace.common.view.CircularImageView
             android:id="@+id/icon"
             android:layout_width="36dp"
             android:layout_height="36dp"

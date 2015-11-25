@@ -7,7 +7,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <mercandalli.com.filespace.common.view.game.GameView
+    <com.mercandalli.android.filespace.admin.game.GameView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/game_view"
         android:layout_width="match_parent"

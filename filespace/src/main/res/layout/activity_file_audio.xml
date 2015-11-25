@@ -69,7 +69,7 @@
             android:layout_above="@+id/rl_sliderNumber"
             android:layout_centerHorizontal="true"></RelativeLayout>
 
-        <mercandalli.com.filespace.common.view.PlayPauseView
+        <com.mercandalli.android.filespace.common.view.PlayPauseView
             android:id="@+id/play"
             android:layout_width="match_parent"
             android:layout_height="60dp"
@@ -126,7 +126,7 @@
             android:layout_marginBottom="6dp"
             android:layout_marginTop="16dp">
 
-            <mercandalli.com.filespace.common.view.slider.Slider
+            <com.mercandalli.android.filespace.common.view.slider.Slider
                 android:id="@+id/sliderNumber"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

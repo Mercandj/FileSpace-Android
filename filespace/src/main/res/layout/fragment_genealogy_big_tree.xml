@@ -11,7 +11,7 @@
                 android:orientation="vertical"
                 android:background="#fff">
 
-    <mercandalli.com.filespace.common.view.GenealogyBigTreeView
+    <com.mercandalli.android.filespace.common.view.GenealogyBigTreeView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/arbre_view"
         android:layout_width="match_parent"
