@@ -19,6 +19,7 @@
  */
 package com.mercandalli.android.filespace.file.image;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.RippleDrawable;
@@ -34,26 +35,31 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.io.File;
-import java.util.Date;
-
 import com.mercandalli.android.filespace.R;
 import com.mercandalli.android.filespace.common.listener.IBitmapListener;
 import com.mercandalli.android.filespace.common.listener.ILongListener;
 import com.mercandalli.android.filespace.common.net.TaskGetDownloadImage;
-import com.mercandalli.android.filespace.main.ApplicationActivity;
 import com.mercandalli.android.filespace.common.util.ColorUtils;
 import com.mercandalli.android.filespace.common.util.FontUtils;
 import com.mercandalli.android.filespace.common.util.ImageUtils;
+import com.mercandalli.android.filespace.main.ApplicationActivity;
 
+import java.io.File;
+import java.util.Date;
+
+/**
+ * An {@link Activity} for displaying the image
+ * {@link com.mercandalli.android.filespace.file.FileModel}: online or offline.
+ */
 public class FileImageActivity extends ApplicationActivity {
-    private String url, title;
-    private int id;
+
+    private String mUrl, mTitle;
+    private int mId;
     private boolean online;
     private long sizeFile;
     private Date date_creation;
     private ImageButton circle;
-    private TextView title_tv, progress_tv;
+    private TextView mTitleTextView, mProgressTextView;
 
     Bitmap bitmap;
     ProgressBar progressBar;
@@ -75,8 +81,8 @@ public class FileImageActivity extends ApplicationActivity {
         // Get views
         this.progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
         this.circle = (ImageButton) this.findViewById(R.id.circle);
-        this.title_tv = (TextView) this.findViewById(R.id.title);
-        this.progress_tv = (TextView) this.findViewById(R.id.progress_tv);
+        this.mTitleTextView = (TextView) this.findViewById(R.id.title);
+        this.mProgressTextView = (TextView) this.findViewById(R.id.progress_tv);
 
         this.progressBar.setProgress(0);
 
@@ -87,52 +93,52 @@ public class FileImageActivity extends ApplicationActivity {
             this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             return;
         } else {
-            this.id = extras.getInt("ID");
-            this.title = extras.getString("TITLE");
-            this.url = extras.getString("URL_FILE");
+            this.mId = extras.getInt("ID");
+            this.mTitle = extras.getString("TITLE");
+            this.mUrl = extras.getString("URL_FILE");
             this.online = extras.getBoolean("ONLINE");
             this.sizeFile = extras.getLong("SIZE_FILE");
             this.date_creation = (Date) extras.getSerializable("DATE_FILE");
 
-            if (this.title != null) {
-                title_tv.setText(this.title);
-                FontUtils.applyFont(this, title_tv, "fonts/Roboto-Regular.ttf");
+            if (this.mTitle != null) {
+                mTitleTextView.setText(this.mTitle);
+                FontUtils.applyFont(this, mTitleTextView, "fonts/Roboto-Regular.ttf");
             }
 
-            if (ImageUtils.is_image(this, this.id)) {
-                bitmap = ImageUtils.load_image(this, this.id);
+            if (ImageUtils.is_image(this, this.mId)) {
+                bitmap = ImageUtils.load_image(this, this.mId);
                 ((ImageView) this.findViewById(R.id.icon)).setImageBitmap(bitmap);
                 int bgColor = ColorUtils.getMutedColor(bitmap);
                 if (bgColor != 0) {
-                    title_tv.setBackgroundColor(bgColor);
-                    title_tv.setTextColor(ColorUtils.colorText(bgColor));
+                    mTitleTextView.setBackgroundColor(bgColor);
+                    mTitleTextView.setTextColor(ColorUtils.colorText(bgColor));
                     RippleDrawable cir = ImageUtils.getPressedColorRippleDrawable(bgColor, ColorUtils.getDarkMutedColor(bitmap));
                     this.circle.setBackground(cir);
                 }
                 this.progressBar.setVisibility(View.GONE);
-                this.progress_tv.setVisibility(View.GONE);
-            } else if (this.id != 0) {
+                this.mProgressTextView.setVisibility(View.GONE);
+            } else if (this.mId != 0) {
                 this.progressBar.setVisibility(View.VISIBLE);
-                this.progress_tv.setVisibility(View.VISIBLE);
-                (new TaskGetDownloadImage(this, this, url, id, sizeFile, -1, new IBitmapListener() {
+                this.mProgressTextView.setVisibility(View.VISIBLE);
+                (new TaskGetDownloadImage(this, this, mUrl, mId, sizeFile, -1, new IBitmapListener() {
                     @Override
                     public void execute(Bitmap bitmap) {
                         ((ImageView) findViewById(R.id.icon)).setImageBitmap(bitmap);
                         int bgColor = ColorUtils.getMutedColor(bitmap);
                         if (bgColor != 0) {
-                            title_tv.setBackgroundColor(bgColor);
-                            title_tv.setTextColor(ColorUtils.colorText(bgColor));
+                            mTitleTextView.setBackgroundColor(bgColor);
+                            mTitleTextView.setTextColor(ColorUtils.colorText(bgColor));
                             RippleDrawable cir = ImageUtils.getPressedColorRippleDrawable(bgColor, ColorUtils.getDarkMutedColor(bitmap));
                             circle.setBackground(cir);
                         }
                         progressBar.setVisibility(View.GONE);
-                        progress_tv.setVisibility(View.GONE);
+                        mProgressTextView.setVisibility(View.GONE);
                     }
                 }, new ILongListener() {
                     @Override
                     public void execute(long text) {
                         progressBar.setProgress((int) text);
-                        progress_tv.setText(text + "%");
+                        mProgressTextView.setText(text + "%");
                     }
                 })).execute();
             }
@@ -143,7 +149,7 @@ public class FileImageActivity extends ApplicationActivity {
             public void onClick(View v) {
                 Intent picIntent = new Intent();
                 picIntent.setAction(Intent.ACTION_VIEW);
-                picIntent.setDataAndType(Uri.parse("file://" + (new File(FileImageActivity.this.getFilesDir() + "/file_" + id)).getAbsolutePath()), "image/*");
+                picIntent.setDataAndType(Uri.parse("file://" + (new File(FileImageActivity.this.getFilesDir() + "/file_" + mId)).getAbsolutePath()), "image/*");
                 FileImageActivity.this.startActivity(picIntent);
             }
         });
