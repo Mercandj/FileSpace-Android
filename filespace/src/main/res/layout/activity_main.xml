@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-	Personal Project : Control server
-		MERCANDALLI Jonathan
--->
 <android.support.v4.widget.DrawerLayout
     android:id="@+id/activity_main_drawer_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,18 +10,31 @@
     <FrameLayout
         android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
-    <ListView
-        android:id="@+id/activity_main_left_drawer"
-        android:layout_width="300dp"
+    <android.support.design.widget.NavigationView
+        android:id="@+id/activity_main_nav_view"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#fff"
-        android:choiceMode="singleChoice"
-        android:clipToPadding="false"
-        android:divider="#ccc"
-        android:dividerHeight="0dp"
-        android:fitsSystemWindows="true"/>
+        android:fitsSystemWindows="true">
+
+        <ListView
+            android:id="@+id/activity_main_left_drawer"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="#fff"
+            android:choiceMode="singleChoice"
+            android:clipToPadding="false"
+            android:divider="#ccc"
+            android:dividerHeight="0dp"
+            android:fitsSystemWindows="true" />
+
+        <com.mercandalli.android.filespace.main.navdrawer.NavDrawerView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

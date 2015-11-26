@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/view_nav_drawer_header"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/notifications_bar"
+        android:elevation="8dp">
+
+        <com.mercandalli.android.filespace.common.view.CircularImageView
+            android:id="@+id/view_nav_drawer_header_icon"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="15dp"
+            android:contentDescription="@string/image_description"
+            android:src="@drawable/ic_user" />
+
+        <TextView
+            android:id="@+id/view_nav_drawer_header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="78dp"
+            android:layout_marginTop="10dp"
+            android:ellipsize="marquee"
+            android:focusable="false"
+            android:gravity="center_vertical"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:maxLines="1"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="@string/app_name"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textColor="#fff"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginStart="78dp"
+            android:layout_marginTop="40dp"
+            android:ellipsize="marquee"
+            android:focusable="false"
+            android:gravity="center_vertical"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:maxLines="1"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="@string/app_name_full"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textColor="#fff"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/imageStorage"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="15dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_storage_usage_white" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/view_nav_drawer_home"
+        android:layout_width="match_parent"
+        android:layout_height="65dp">
+
+        <ImageView
+            android:id="@+id/view_nav_drawer_home_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="28dp"
+            android:contentDescription="@string/image_description"
+            android:src="@drawable/q_ic_drawer_home" />
+
+        <TextView
+            android:id="@+id/view_nav_drawer_home_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="47dp"
+            android:layout_marginStart="78dp"
+            android:gravity="center_vertical"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            android:text="@string/tab_home"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textColor="#000"
+            android:textSize="24sp" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/view_nav_drawer_files"
+        android:layout_width="match_parent"
+        android:layout_height="65dp">
+
+        <ImageView
+            android:id="@+id/view_nav_drawer_files_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="28dp"
+            android:contentDescription="@string/image_description"
+            android:src="@drawable/q_ic_drawer_files" />
+
+        <TextView
+            android:id="@+id/view_nav_drawer_files_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="47dp"
+            android:layout_marginStart="78dp"
+            android:gravity="center_vertical"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            android:text="@string/tab_files"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textColor="#000"
+            android:textSize="24sp" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/view_nav_drawer_workspace"
+        android:layout_width="match_parent"
+        android:layout_height="65dp">
+
+        <ImageView
+            android:id="@+id/view_nav_drawer_workspace_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="28dp"
+            android:contentDescription="@string/image_description"
+            android:src="@drawable/q_ic_drawer_workspace" />
+
+        <TextView
+            android:id="@+id/view_nav_drawer_workspace_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="47dp"
+            android:layout_marginStart="78dp"
+            android:gravity="center_vertical"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            android:text="@string/tab_workspace"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textColor="#000"
+            android:textSize="24sp" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/view_nav_drawer_community"
+        android:layout_width="match_parent"
+        android:layout_height="65dp">
+
+        <ImageView
+            android:id="@+id/view_nav_drawer_community_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="28dp"
+            android:contentDescription="@string/image_description"
+            android:src="@drawable/q_ic_drawer_community" />
+
+        <TextView
+            android:id="@+id/view_nav_drawer_community_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="47dp"
+            android:layout_marginStart="78dp"
+            android:gravity="center_vertical"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            android:text="@string/tab_community"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textColor="#000"
+            android:textSize="24sp" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/view_nav_drawer_robotics"
+        android:layout_width="match_parent"
+        android:layout_height="65dp">
+
+        <ImageView
+            android:id="@+id/view_nav_drawer_robotics_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="28dp"
+            android:contentDescription="@string/image_description"
+            android:src="@drawable/q_ic_drawer_robotics" />
+
+        <TextView
+            android:id="@+id/view_nav_drawer_robotics_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="47dp"
+            android:layout_marginStart="78dp"
+            android:gravity="center_vertical"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textColor="#000"
+            android:textSize="24sp"
+            tools:text="Community" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/view_nav_drawer_genealogy"
+        android:layout_width="match_parent"
+        android:layout_height="65dp">
+
+        <ImageView
+            android:id="@+id/view_nav_drawer_genealogy_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="28dp"
+            android:contentDescription="@string/image_description"
+            android:src="@drawable/q_ic_drawer_robotics" />
+
+        <TextView
+            android:id="@+id/view_nav_drawer_genealogy_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="47dp"
+            android:layout_marginStart="78dp"
+            android:gravity="center_vertical"
+            android:minHeight="?android:attr/listPreferredItemHeightSmall"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textColor="#000"
+            android:textSize="24sp"
+            tools:text="Community" />
+
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ccc" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="42dp">
+
+        <TextView
+            android:id="@+id/view_nav_drawer_other"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="14dp"
+            android:gravity="center_vertical"
+            android:paddingTop="5dp"
+            android:text="Other"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textColor="#545454"
+            android:textSize="14sp" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/view_nav_drawer_settings"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <TextView
+            android:id="@+id/view_nav_drawer_settings_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="47dp"
+            android:layout_marginStart="78dp"
+            android:gravity="center_vertical"
+            android:text="@string/tab_settings"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textColor="#444"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/view_nav_drawer_settings_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="28dp"
+            android:contentDescription="@string/image_description"
+            android:gravity="center_vertical"
+            android:src="@drawable/ic_settings_grey" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/view_nav_logout_settings"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <TextView
+            android:id="@+id/view_nav_drawer_logout_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="47dp"
+            android:layout_marginStart="78dp"
+            android:gravity="center_vertical"
+            android:text="@string/tab_log_out"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textColor="#444"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/view_nav_drawer_logout_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="28dp"
+            android:contentDescription="@string/image_description"
+            android:gravity="center_vertical"
+            android:src="@drawable/ic_log_out" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/view_nav_drawer_about"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <TextView
+            android:id="@+id/view_nav_drawer_about_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="47dp"
+            android:layout_marginStart="78dp"
+            android:gravity="center_vertical"
+            android:text="@string/tab_about"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textColor="#444"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/view_nav_drawer_about_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="28dp"
+            android:contentDescription="@string/image_description"
+            android:gravity="center_vertical"
+            android:src="@drawable/ic_help_grey" />
+
+    </FrameLayout>
+
+</LinearLayout>
