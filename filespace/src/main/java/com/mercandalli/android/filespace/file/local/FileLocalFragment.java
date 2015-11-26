@@ -36,19 +36,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.inject.Inject;
-
 import com.mercandalli.android.filespace.R;
 import com.mercandalli.android.filespace.common.fragment.BackFragment;
 import com.mercandalli.android.filespace.common.fragment.InjectedFragment;
@@ -65,6 +52,23 @@ import com.mercandalli.android.filespace.file.FileModelListener;
 import com.mercandalli.android.filespace.main.AppComponent;
 import com.mercandalli.android.filespace.main.Constants;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+/**
+ * A {@link InjectedFragment} used to display the local {@link FileModel} provide by the
+ * {@link FileLocalApi}.
+ */
 public class FileLocalFragment extends InjectedFragment implements
         BackFragment.IListViewMode,
         BackFragment.ISortMode,

@@ -29,8 +29,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
-import org.json.JSONObject;
-
 import com.mercandalli.android.filespace.R;
 import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
 import com.mercandalli.android.filespace.common.net.TaskGet;
@@ -38,8 +36,10 @@ import com.mercandalli.android.filespace.file.FileModel;
 import com.mercandalli.android.filespace.file.FileTypeModelENUM;
 import com.mercandalli.android.filespace.main.ApplicationActivity;
 
+import org.json.JSONObject;
+
 /**
- * Created by Jonathan on 14/12/2014.
+ * An {@link Activity} for displaying the text file: online or offline.
  */
 public class FileTextActivity extends ApplicationActivity implements IPostExecuteListener {
 

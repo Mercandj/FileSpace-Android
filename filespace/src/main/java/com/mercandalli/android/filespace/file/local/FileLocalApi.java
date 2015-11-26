@@ -1,5 +1,8 @@
 package com.mercandalli.android.filespace.file.local;
 
+import com.mercandalli.android.filespace.file.FileModel;
+import com.mercandalli.android.filespace.main.Constants;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
@@ -10,11 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.mercandalli.android.filespace.main.Constants;
-import com.mercandalli.android.filespace.file.FileModel;
-
 /**
- * Created by Jonathan on 24/10/2015.
+ * An API providing the local {@link FileModel}.
  */
 public class FileLocalApi {
 

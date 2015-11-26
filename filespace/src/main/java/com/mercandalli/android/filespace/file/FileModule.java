@@ -2,16 +2,17 @@ package com.mercandalli.android.filespace.file;
 
 import android.app.Application;
 
+import com.mercandalli.android.filespace.common.util.RetrofitUtils;
+import com.mercandalli.android.filespace.file.cloud.FileOnlineApi;
+import com.mercandalli.android.filespace.file.local.FileLocalApi;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import com.mercandalli.android.filespace.file.cloud.FileOnlineApi;
-import com.mercandalli.android.filespace.file.local.FileLocalApi;
-import com.mercandalli.android.filespace.common.util.RetrofitUtils;
 
 /**
- * Created by Jonathan on 23/10/2015.
+ * A Dagger module used by the {@link com.mercandalli.android.filespace.main.AppComponent}.
  */
 @Module
 public class FileModule {
