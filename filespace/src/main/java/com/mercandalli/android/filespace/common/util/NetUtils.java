@@ -23,14 +23,14 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.mercandalli.android.filespace.common.Preconditions;
+
 import java.util.List;
 
-/**
- * Created by Jonathan on 21/05/2015.
- */
 public class NetUtils {
 
     public static boolean isInternetConnection(Context context) {
+        Preconditions.checkNotNull(context);
         final ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnected();

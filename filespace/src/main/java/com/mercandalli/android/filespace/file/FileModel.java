@@ -3,16 +3,16 @@ package com.mercandalli.android.filespace.file;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.mercandalli.android.filespace.common.util.FileUtils;
+import com.mercandalli.android.filespace.file.filespace.FileSpaceModel;
+import com.mercandalli.android.filespace.main.Config;
+import com.mercandalli.android.filespace.main.Constants;
+
 import java.io.File;
 import java.util.Date;
 
-import com.mercandalli.android.filespace.main.Config;
-import com.mercandalli.android.filespace.main.Constants;
-import com.mercandalli.android.filespace.file.filespace.FileSpaceModel;
-import com.mercandalli.android.filespace.common.util.FileUtils;
-
 /**
- * Created by Jonathan on 24/10/2015.
+ * The main file model.
  */
 public class FileModel implements Parcelable {
 
@@ -214,7 +214,7 @@ public class FileModel implements Parcelable {
     }
 
     public String getOnlineUrl() {
-        return Constants.URL_API + "/" + Config.routeFile + "/" + getId();
+        return Constants.URL_DOMAIN_API + "/" + Config.routeFile + "/" + getId();
     }
 
     public boolean isAudio() {

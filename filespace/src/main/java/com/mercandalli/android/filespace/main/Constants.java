@@ -21,7 +21,7 @@ package com.mercandalli.android.filespace.main;
 
 public class Constants {
 
-    public static final String URL_API = "http://mercandalli.com/FileSpace-API";
+    public static final String URL_DOMAIN_API = "http://mercandalli.com/FileSpace-API";
 
     public static final int TAB_VIEW_TYPE_NORMAL = 0;
     public static final int TAB_VIEW_TYPE_SECTION = 1;

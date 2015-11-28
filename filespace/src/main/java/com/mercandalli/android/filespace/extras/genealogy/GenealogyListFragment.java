@@ -22,6 +22,7 @@ package com.mercandalli.android.filespace.extras.genealogy;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -36,6 +37,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mercandalli.android.filespace.R;
+import com.mercandalli.android.filespace.common.fragment.FabFragment;
+import com.mercandalli.android.filespace.common.listener.IListener;
+import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
+import com.mercandalli.android.filespace.common.net.TaskGet;
+import com.mercandalli.android.filespace.common.util.DialogUtils;
+import com.mercandalli.android.filespace.common.util.NetUtils;
+import com.mercandalli.android.filespace.common.util.StringPair;
+import com.mercandalli.android.filespace.common.util.StringUtils;
+import com.mercandalli.android.filespace.common.view.divider.DividerItemDecoration;
+import com.mercandalli.android.filespace.main.ApplicationCallback;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,21 +56,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mercandalli.android.filespace.R;
-import com.mercandalli.android.filespace.common.listener.IListener;
-import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
-import com.mercandalli.android.filespace.common.net.TaskGet;
-import com.mercandalli.android.filespace.main.ApplicationCallback;
-import com.mercandalli.android.filespace.common.fragment.FabFragment;
-import com.mercandalli.android.filespace.common.view.divider.DividerItemDecoration;
-import com.mercandalli.android.filespace.common.util.DialogUtils;
-import com.mercandalli.android.filespace.common.util.NetUtils;
-import com.mercandalli.android.filespace.common.util.StringPair;
-import com.mercandalli.android.filespace.common.util.StringUtils;
-
-/**
- * Created by Jonathan on 28/08/2015.
- */
 public class GenealogyListFragment extends FabFragment {
 
     private View rootView;
@@ -95,6 +93,22 @@ public class GenealogyListFragment extends FabFragment {
 
     public void setOnSelect(IModelGenealogyUserListener onSelect) {
         this.onSelect = onSelect;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        mActivity = (Activity) context;
+        if (context instanceof ApplicationCallback) {
+            mApplicationCallback = (ApplicationCallback) context;
+        }
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onDetach() {
+        mApplicationCallback = null;
+        mActivity = null;
+        super.onDetach();
     }
 
     @Override

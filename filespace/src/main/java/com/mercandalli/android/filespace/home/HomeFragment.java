@@ -45,19 +45,19 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mercandalli.android.filespace.R;
+import com.mercandalli.android.filespace.common.fragment.BackFragment;
+import com.mercandalli.android.filespace.common.listener.SetToolbarCallback;
+import com.mercandalli.android.filespace.extras.ia.Interpreter;
+import com.mercandalli.android.filespace.extras.ia.InterpreterMain;
+import com.mercandalli.android.filespace.extras.ia.InterpreterResult;
+import com.mercandalli.android.filespace.main.Constants;
+import com.mercandalli.android.filespace.main.DrawerActivity;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-
-import com.mercandalli.android.filespace.R;
-import com.mercandalli.android.filespace.common.fragment.BackFragment;
-import com.mercandalli.android.filespace.main.Constants;
-import com.mercandalli.android.filespace.extras.ia.Interpreter;
-import com.mercandalli.android.filespace.extras.ia.InterpreterMain;
-import com.mercandalli.android.filespace.extras.ia.InterpreterResult;
-import com.mercandalli.android.filespace.common.listener.SetToolbarCallback;
-import com.mercandalli.android.filespace.main.ApplicationDrawerActivity;
 
 /**
  * Created by Jonathan on 03/01/2015.
@@ -249,8 +249,8 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mActivity instanceof ApplicationDrawerActivity) {
-                            ((ApplicationDrawerActivity) mActivity).selectItem(3);
+                        if (mActivity instanceof DrawerActivity) {
+                            ((DrawerActivity) mActivity).selectItem(3);
                         }
                     }
                 },
@@ -258,7 +258,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((ApplicationDrawerActivity) mActivity).selectItem(4);
+                        ((DrawerActivity) mActivity).selectItem(4);
                     }
                 },
                 Constants.TAB_VIEW_TYPE_TWO_BUTTONS));

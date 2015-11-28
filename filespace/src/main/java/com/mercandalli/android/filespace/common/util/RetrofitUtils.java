@@ -25,7 +25,7 @@ public class RetrofitUtils {
     private static RestAdapter.Builder getBaseRestAdapter() {
         RestAdapter.Builder builder = new RestAdapter.Builder();
         builder.setClient(new OkClient(getOkHttpClient()))
-                .setEndpoint(Constants.URL_API);
+                .setEndpoint(Constants.URL_DOMAIN_API);
 
         /*
         if (BuildConfig.DEBUG) {

@@ -18,22 +18,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.mercandalli.android.filespace.R;
 import com.mercandalli.android.filespace.common.listener.IListener;
 import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
@@ -56,6 +40,22 @@ import com.mercandalli.android.filespace.file.local.FileLocalApi;
 import com.mercandalli.android.filespace.file.text.FileTextActivity;
 import com.mercandalli.android.filespace.main.Config;
 import com.mercandalli.android.filespace.main.Constants;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -111,7 +111,7 @@ public class FileManager {
                 Toast.makeText(mContext, "Directory download not supported yet.", Toast.LENGTH_SHORT).show();
                 return;
             }
-            String url = Constants.URL_API + "/" + Config.routeFile + "/" + fileModel.getId();
+            String url = Constants.URL_DOMAIN_API + "/" + Config.routeFile + "/" + fileModel.getId();
             String url_ouput = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.localFolderNameDefault + File.separator + fileModel.getFullName();
             new TaskGetDownload(activity, url, url_ouput, fileModel, listener).execute();
         }

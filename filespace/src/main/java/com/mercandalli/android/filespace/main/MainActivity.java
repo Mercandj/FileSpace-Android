@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -25,22 +25,16 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import javax.inject.Inject;
-
-import com.mercandalli.android.filespace.common.listener.SetToolbarCallback;
-import com.mercandalli.android.filespace.file.FileManager;
-import com.mercandalli.android.filespace.notificationpush.NotificationPush;
 import com.mercandalli.android.filespace.common.fragment.FabFragment;
-import com.mercandalli.android.filespace.user.community.CommunityFragment;
+import com.mercandalli.android.filespace.common.listener.SetToolbarCallback;
 import com.mercandalli.android.filespace.file.FileFragment;
+import com.mercandalli.android.filespace.notificationpush.NotificationPush;
+import com.mercandalli.android.filespace.user.community.CommunityFragment;
 
 /**
  * Main {@link Activity} launched by the xml.
  */
-public class MainActivity extends ApplicationDrawerActivity implements SetToolbarCallback, FabFragment.RefreshFabCallback {
-
-    @Inject
-    FileManager mFileManager;
+public class MainActivity extends DrawerActivity implements SetToolbarCallback, FabFragment.RefreshFabCallback {
 
     public static void start(Activity activity) {
         activity.startActivity(new Intent(activity, MainActivity.class));
