@@ -50,6 +50,9 @@ import com.mercandalli.android.filespace.workspace.WorkspaceFragment;
 
 import java.util.List;
 
+/**
+ * An abstract class with a {@link NavigationView}.
+ */
 public abstract class DrawerActivity extends ApplicationActivity implements
         SetToolbarCallback,
         NavDrawerView.OnNavDrawerClickCallback {
@@ -76,7 +79,9 @@ public abstract class DrawerActivity extends ApplicationActivity implements
         navDrawerView.setOnNavDrawerClickCallback(this);
         navDrawerView.setSelectedRow(this, getInitFragmentId());
         navDrawerView.setConnected(isLogged());
-        navDrawerView.setUser(getConfig().getUser());
+        if(isLogged()) {
+            navDrawerView.setUser(getConfig().getUser(), getConfig().getUserProfilePicture());
+        }
 
         // Initial Fragment
         if (savedInstanceState == null) {

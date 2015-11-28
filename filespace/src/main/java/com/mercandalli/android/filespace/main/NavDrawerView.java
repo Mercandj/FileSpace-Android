@@ -1,6 +1,7 @@
 package com.mercandalli.android.filespace.main;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -90,13 +91,14 @@ public class NavDrawerView extends FrameLayout implements View.OnClickListener {
         }
     }
 
-    /* package */ void setUser(final ModelUser modelUser) {
+    /* package */ void setUser(final ModelUser modelUser, Bitmap profilePicture) {
         final boolean isAdmin = modelUser.isAdmin();
         for (final NavDrawerRow navDrawerRow : NavDrawerRow.values()) {
             if (!navDrawerRow.mVisibleIfNotAdmin) {
                 mChildrenViews.get(navDrawerRow.mId).setVisibility(isAdmin ? VISIBLE : GONE);
             }
         }
+        mNavDrawerHeaderView.setUser(modelUser, profilePicture);
     }
 
     private void initView(@NonNull Context context) {

@@ -1,6 +1,7 @@
 package com.mercandalli.android.filespace.main;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Environment;
 import android.os.StatFs;
 import android.support.annotation.NonNull;
@@ -17,8 +18,12 @@ import com.mercandalli.android.filespace.common.util.FileUtils;
 import com.mercandalli.android.filespace.common.util.FontUtils;
 import com.mercandalli.android.filespace.user.ModelUser;
 
-public class NavDrawerHeaderView extends FrameLayout implements View.OnClickListener {
+/**
+ * The nav drawer header.
+ */
+public class NavDrawerHeaderView extends FrameLayout {
 
+    /* Views */
     private TextView mTitleTextView;
     private TextView mSubtitleTextView;
     private ImageView mIconImageView;
@@ -39,10 +44,23 @@ public class NavDrawerHeaderView extends FrameLayout implements View.OnClickList
         initView(context, attrs);
     }
 
-    @Override
-    public void onClick(View v) {
+    /**
+     * Set the current {@link ModelUser}.
+     *
+     * @param modelUser      The {@link ModelUser}.
+     * @param profilePicture The user profile picture.
+     */
+    /* package */ void setUser(final ModelUser modelUser, final Bitmap profilePicture) {
+        Preconditions.checkNotNull(modelUser);
 
+        mTitleTextView.setText(modelUser.username);
 
+        mIconImageView.setVisibility(View.VISIBLE);
+        mStorageImageView.setVisibility(View.GONE);
+
+        if (profilePicture != null) {
+            mIconImageView.setImageBitmap(profilePicture);
+        }
     }
 
     private void initView(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -50,21 +68,23 @@ public class NavDrawerHeaderView extends FrameLayout implements View.OnClickList
 
         findViews();
 
+        if (!isInEditMode()) {
+            FontUtils.applyFont(context, mTitleTextView, "fonts/Roboto-Medium.ttf");
+            FontUtils.applyFont(context, mSubtitleTextView, "fonts/Roboto-Light.ttf");
 
-        FontUtils.applyFont(context, mTitleTextView, "fonts/Roboto-Medium.ttf");
+            StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getAbsolutePath());
+            long blockSize = statFs.getBlockSize();
+            long totalSize = statFs.getBlockCount() * blockSize;
+            long availableSize = statFs.getAvailableBlocks() * blockSize;
+            long freeSize = statFs.getFreeBlocks() * blockSize;
 
-        mSubtitleTextView.setText("Edit your profile");
-        mIconImageView.setVisibility(View.INVISIBLE);
+            mIconImageView.setVisibility(View.GONE);
+            mStorageImageView.setVisibility(View.VISIBLE);
+            mSubtitleTextView.setText(String.format("Using %s of %s", FileUtils.humanReadableByteCount(totalSize - availableSize), FileUtils.humanReadableByteCount(totalSize)));
+            mTitleTextView.setText(String.format("%d%% Full", (int) ((totalSize - availableSize) * 100.0 / totalSize)));
 
-        StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getAbsolutePath());
-        long blockSize = statFs.getBlockSize();
-        long totalSize = statFs.getBlockCount() * blockSize;
-        long availableSize = statFs.getAvailableBlocks() * blockSize;
-        long freeSize = statFs.getFreeBlocks() * blockSize;
-
-        mStorageImageView.setVisibility(View.GONE);
-        mSubtitleTextView.setText(String.format("Using %s of %s", FileUtils.humanReadableByteCount(totalSize - availableSize), FileUtils.humanReadableByteCount(totalSize)));
-
+            setPadding(0, getStatusBarHeight(), 0, 0);
+        }
     }
 
     private void findViews() {
@@ -74,13 +94,17 @@ public class NavDrawerHeaderView extends FrameLayout implements View.OnClickList
         mStorageImageView = (ImageView) findViewById(R.id.view_nav_drawer_header_image_storage);
     }
 
-
-    /* package */ void setUser(final ModelUser modelUser) {
-        Preconditions.checkNotNull(modelUser);
-
-        mTitleTextView.setText(modelUser.username);
-
-        mIconImageView.setVisibility(View.INVISIBLE);
-        mStorageImageView.setVisibility(View.GONE);
+    /**
+     * Get the height of the top status bar.
+     *
+     * @return The status bar height (px).
+     */
+    private int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 }
