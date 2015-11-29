@@ -44,26 +44,25 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.mercandalli.android.filespace.R;
+import com.mercandalli.android.filespace.common.dialog.ConfirmationDialog;
+import com.mercandalli.android.filespace.common.dialog.DialogCallback;
+import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
+import com.mercandalli.android.filespace.common.net.TaskPost;
+import com.mercandalli.android.filespace.common.util.HashUtils;
+import com.mercandalli.android.filespace.common.util.NetUtils;
+import com.mercandalli.android.filespace.common.util.StringPair;
+import com.mercandalli.android.filespace.common.util.StringUtils;
+import com.mercandalli.android.filespace.common.view.PagerSlidingTabStrip;
+import com.mercandalli.android.filespace.main.ApplicationActivity;
+import com.mercandalli.android.filespace.main.Config;
+import com.mercandalli.android.filespace.main.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.mercandalli.android.filespace.R;
-import com.mercandalli.android.filespace.main.Config;
-import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
-import com.mercandalli.android.filespace.common.net.TaskPost;
-import com.mercandalli.android.filespace.common.dialog.ConfirmationDialog;
-import com.mercandalli.android.filespace.common.dialog.DialogCallback;
-import com.mercandalli.android.filespace.common.view.PagerSlidingTabStrip;
-import com.mercandalli.android.filespace.common.util.HashUtils;
-import com.mercandalli.android.filespace.common.util.NetUtils;
-import com.mercandalli.android.filespace.common.util.StringPair;
-import com.mercandalli.android.filespace.common.util.StringUtils;
-import com.mercandalli.android.filespace.main.ApplicationActivity;
-import com.mercandalli.android.filespace.main.MainActivity;
 
 import static android.Manifest.permission.GET_ACCOUNTS;
 
@@ -390,26 +389,26 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
                                 if (json.getBoolean("succeed")) {
 
                                     if (!StringUtils.isNullOrEmpty(user.username))
-                                        LoginRegisterActivity.this.getConfig().setUserUsername(user.username);
+                                        LoginRegisterActivity.this.getConfig().setUserUsername(LoginRegisterActivity.this, user.username);
 
                                     if (!StringUtils.isNullOrEmpty(user.password))
-                                        LoginRegisterActivity.this.getConfig().setUserPassword(user.password);
+                                        LoginRegisterActivity.this.getConfig().setUserPassword(LoginRegisterActivity.this, user.password);
 
                                     connectionSucceed();
                                 }
                             if (json.has("user")) {
                                 JSONObject user = json.getJSONObject("user");
                                 if (user.has("id"))
-                                    LoginRegisterActivity.this.getConfig().setUserId(user.getInt("id"));
+                                    LoginRegisterActivity.this.getConfig().setUserId(LoginRegisterActivity.this, user.getInt("id"));
                                 if (user.has("admin")) {
                                     Object admin_obj = user.get("admin");
                                     if (admin_obj instanceof Integer)
-                                        LoginRegisterActivity.this.getConfig().setUserAdmin(user.getInt("admin") == 1);
+                                        LoginRegisterActivity.this.getConfig().setUserAdmin(LoginRegisterActivity.this, user.getInt("admin") == 1);
                                     else if (admin_obj instanceof Boolean)
-                                        LoginRegisterActivity.this.getConfig().setUserAdmin(user.getBoolean("admin"));
+                                        LoginRegisterActivity.this.getConfig().setUserAdmin(LoginRegisterActivity.this, user.getBoolean("admin"));
                                 }
                                 if (user.has("id_file_profile_picture"))
-                                    LoginRegisterActivity.this.getConfig().setUserIdFileProfilePicture(user.getInt("id_file_profile_picture"));
+                                    LoginRegisterActivity.this.getConfig().setUserIdFileProfilePicture(LoginRegisterActivity.this, user.getInt("id_file_profile_picture"));
                             }
                         } else
                             Toast.makeText(LoginRegisterActivity.this, LoginRegisterActivity.this.getString(R.string.server_error), Toast.LENGTH_SHORT).show();

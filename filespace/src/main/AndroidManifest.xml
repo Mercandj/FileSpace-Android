@@ -72,7 +72,7 @@
         </activity>
 
         <activity
-            android:name="com.mercandalli.android.filespace.main.MainActivity"
+            android:name=".main.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" />

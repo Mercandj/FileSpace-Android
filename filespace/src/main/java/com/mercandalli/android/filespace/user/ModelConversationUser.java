@@ -22,6 +22,7 @@ package com.mercandalli.android.filespace.user;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.mercandalli.android.filespace.R;
 import com.mercandalli.android.filespace.common.model.Model;
 import com.mercandalli.android.filespace.main.ApplicationCallback;
 
@@ -34,8 +35,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.mercandalli.android.filespace.R;
 
 public class ModelConversationUser extends Model {
 
@@ -99,8 +98,8 @@ public class ModelConversationUser extends Model {
 
     public void open() {
         Intent intent = new Intent(mActivity, ConversationActivity.class);
-        intent.putExtra("LOGIN", "" + this.app.getConfig().getUser().getAccessLogin());
-        intent.putExtra("PASSWORD", "" + this.app.getConfig().getUser().getAccessPassword());
+        intent.putExtra("LOGIN", "" + this.app.getConfig().getUser(mActivity).getAccessLogin());
+        intent.putExtra("PASSWORD", "" + this.app.getConfig().getUser(mActivity).getAccessPassword());
         intent.putExtra("ID_CONVERSATION", "" + this.id_conversation);
         mActivity.startActivity(intent);
         mActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);

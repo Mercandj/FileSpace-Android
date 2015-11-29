@@ -8,15 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.io.UnsupportedEncodingException;
-
 import com.mercandalli.android.filespace.R;
-import com.mercandalli.android.filespace.common.listener.IListener;
-import com.mercandalli.android.filespace.file.filespace.FileSpaceModel;
 import com.mercandalli.android.filespace.common.fragment.BackFragment;
+import com.mercandalli.android.filespace.common.listener.IListener;
 import com.mercandalli.android.filespace.common.util.DialogUtils;
 import com.mercandalli.android.filespace.common.util.FontUtils;
 import com.mercandalli.android.filespace.common.util.StringUtils;
+import com.mercandalli.android.filespace.file.filespace.FileSpaceModel;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by Jonathan on 21/07/2015.
@@ -59,7 +59,7 @@ public class NoteFragment extends BackFragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s != null) {
-                    mApplicationCallback.getConfig().setUserNoteWorkspace1(s.toString());
+                    mApplicationCallback.getConfig().setUserNoteWorkspace1(mActivity, s.toString());
                     mFileSpaceModel.getArticle().article_content_1 = s.toString();
                 }
             }
@@ -87,7 +87,7 @@ public class NoteFragment extends BackFragment {
             @Override
             public void execute() {
                 input.setText("");
-                mApplicationCallback.getConfig().setUserNoteWorkspace1("");
+                mApplicationCallback.getConfig().setUserNoteWorkspace1(mActivity, "");
             }
         }, getString(R.string.no), null);
     }

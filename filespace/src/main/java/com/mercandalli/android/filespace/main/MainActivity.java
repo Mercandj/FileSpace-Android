@@ -34,7 +34,7 @@ import com.mercandalli.android.filespace.user.community.CommunityFragment;
 /**
  * Main {@link Activity} launched by the xml.
  */
-public class MainActivity extends DrawerActivity implements SetToolbarCallback, FabFragment.RefreshFabCallback {
+public class MainActivity extends NavDrawerActivity implements SetToolbarCallback, FabFragment.RefreshFabCallback {
 
     public static void start(Activity activity) {
         activity.startActivity(new Intent(activity, MainActivity.class));

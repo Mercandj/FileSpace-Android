@@ -34,20 +34,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mercandalli.android.filespace.R;
 import com.mercandalli.android.filespace.common.fragment.BackFragment;
 import com.mercandalli.android.filespace.common.listener.ILocationListener;
 import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
-import com.mercandalli.android.filespace.settings.ModelSetting;
 import com.mercandalli.android.filespace.common.net.TaskGet;
 import com.mercandalli.android.filespace.common.net.TaskPost;
-import com.mercandalli.android.filespace.settings.AdapterModelSetting;
 import com.mercandalli.android.filespace.common.util.FileUtils;
 import com.mercandalli.android.filespace.common.util.FontUtils;
 import com.mercandalli.android.filespace.common.util.GpsUtils;
@@ -56,6 +48,14 @@ import com.mercandalli.android.filespace.common.util.NetUtils;
 import com.mercandalli.android.filespace.common.util.StringPair;
 import com.mercandalli.android.filespace.common.util.StringUtils;
 import com.mercandalli.android.filespace.common.util.TimeUtils;
+import com.mercandalli.android.filespace.settings.AdapterModelSetting;
+import com.mercandalli.android.filespace.settings.ModelSetting;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Jonathan on 03/01/2015.
@@ -91,7 +91,7 @@ public class ProfileFragment extends BackFragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
 
-        Bitmap icon_profile_online = mApplicationCallback.getConfig().getUserProfilePicture();
+        Bitmap icon_profile_online = mApplicationCallback.getConfig().getUserProfilePicture(mActivity);
         if (icon_profile_online != null) {
             icon_back.setImageBitmap(ImageUtils.setBlur(ImageUtils.setBrightness(icon_profile_online, -50), 15));
         }

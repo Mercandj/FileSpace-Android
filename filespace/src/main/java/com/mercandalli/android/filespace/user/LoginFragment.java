@@ -21,22 +21,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mercandalli.android.filespace.R;
+import com.mercandalli.android.filespace.common.fragment.BackFragment;
 import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
 import com.mercandalli.android.filespace.common.net.TaskPost;
-import com.mercandalli.android.filespace.main.MainActivity;
-import com.mercandalli.android.filespace.common.fragment.BackFragment;
 import com.mercandalli.android.filespace.common.util.GpsUtils;
 import com.mercandalli.android.filespace.common.util.HashUtils;
 import com.mercandalli.android.filespace.common.util.NetUtils;
 import com.mercandalli.android.filespace.common.util.StringPair;
 import com.mercandalli.android.filespace.common.util.StringUtils;
+import com.mercandalli.android.filespace.main.MainActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginFragment extends BackFragment {
 
@@ -70,7 +70,7 @@ public class LoginFragment extends BackFragment {
         ((CheckBox) rootView.findViewById(R.id.autoconnection)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mApplicationCallback.getConfig().setAutoConnection(isChecked);
+                mApplicationCallback.getConfig().setAutoConnection(mActivity, isChecked);
             }
         });
 
@@ -123,12 +123,12 @@ public class LoginFragment extends BackFragment {
         requestLaunched = true;
 
         if (!StringUtils.isNullOrEmpty(user.username))
-            mApplicationCallback.getConfig().setUserUsername(user.username);
+            mApplicationCallback.getConfig().setUserUsername(mActivity, user.username);
         else
             user.username = mApplicationCallback.getConfig().getUserUsername();
 
         if (!StringUtils.isNullOrEmpty(user.password))
-            mApplicationCallback.getConfig().setUserPassword(user.password);
+            mApplicationCallback.getConfig().setUserPassword(mActivity, user.password);
         else
             user.password = mApplicationCallback.getConfig().getUserPassword();
 
@@ -162,16 +162,16 @@ public class LoginFragment extends BackFragment {
                             if (json.has("user")) {
                                 JSONObject user = json.getJSONObject("user");
                                 if (user.has("id"))
-                                    mApplicationCallback.getConfig().setUserId(user.getInt("id"));
+                                    mApplicationCallback.getConfig().setUserId(mActivity, user.getInt("id"));
                                 if (user.has("admin")) {
                                     Object admin_obj = user.get("admin");
                                     if (admin_obj instanceof Integer)
-                                        mApplicationCallback.getConfig().setUserAdmin(user.getInt("admin") == 1);
+                                        mApplicationCallback.getConfig().setUserAdmin(mActivity, user.getInt("admin") == 1);
                                     else if (admin_obj instanceof Boolean)
-                                        mApplicationCallback.getConfig().setUserAdmin(user.getBoolean("admin"));
+                                        mApplicationCallback.getConfig().setUserAdmin(mActivity, user.getBoolean("admin"));
                                 }
                                 if (user.has("id_file_profile_picture"))
-                                    mApplicationCallback.getConfig().setUserIdFileProfilePicture(user.getInt("id_file_profile_picture"));
+                                    mApplicationCallback.getConfig().setUserIdFileProfilePicture(mActivity, user.getInt("id_file_profile_picture"));
                             }
                         } else
                             Toast.makeText(mActivity, getString(R.string.server_error), Toast.LENGTH_SHORT).show();

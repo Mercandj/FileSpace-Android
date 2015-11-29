@@ -31,7 +31,8 @@ public class NetUtils {
 
     public static boolean isInternetConnection(Context context) {
         Preconditions.checkNotNull(context);
-        final ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final Context applicationContext = context.getApplicationContext();
+        final ConnectivityManager conMgr = (ConnectivityManager) applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnected();
     }

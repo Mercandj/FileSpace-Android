@@ -25,17 +25,17 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.mercandalli.android.filespace.common.listener.IBitmapListener;
+import com.mercandalli.android.filespace.common.listener.ILongListener;
+import com.mercandalli.android.filespace.common.util.ImageUtils;
+import com.mercandalli.android.filespace.file.FileModel;
+import com.mercandalli.android.filespace.main.ConfigCallback;
+
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import com.mercandalli.android.filespace.common.listener.IBitmapListener;
-import com.mercandalli.android.filespace.common.listener.ILongListener;
-import com.mercandalli.android.filespace.file.FileModel;
-import com.mercandalli.android.filespace.main.ConfigCallback;
-import com.mercandalli.android.filespace.common.util.ImageUtils;
 
 /**
  * Global behavior : DDL Image
@@ -119,7 +119,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
 
         Bitmap x = null;
         try {
-            StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
+            StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser(mActivity).getAccessLogin()).append(":").append(app.getConfig().getUser(mActivity).getAccessPassword());
             String result = Base64.encodeBytes(authentication.toString().getBytes());
 
             HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();

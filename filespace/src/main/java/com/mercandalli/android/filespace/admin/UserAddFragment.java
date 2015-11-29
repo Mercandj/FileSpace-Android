@@ -30,21 +30,21 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mercandalli.android.filespace.R;
+import com.mercandalli.android.filespace.common.fragment.BackFragment;
+import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
+import com.mercandalli.android.filespace.common.net.TaskPost;
+import com.mercandalli.android.filespace.common.util.HashUtils;
+import com.mercandalli.android.filespace.common.util.NetUtils;
+import com.mercandalli.android.filespace.common.util.StringPair;
+import com.mercandalli.android.filespace.common.util.StringUtils;
+import com.mercandalli.android.filespace.user.ModelUser;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.mercandalli.android.filespace.R;
-import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
-import com.mercandalli.android.filespace.user.ModelUser;
-import com.mercandalli.android.filespace.common.net.TaskPost;
-import com.mercandalli.android.filespace.common.fragment.BackFragment;
-import com.mercandalli.android.filespace.common.util.HashUtils;
-import com.mercandalli.android.filespace.common.util.NetUtils;
-import com.mercandalli.android.filespace.common.util.StringPair;
-import com.mercandalli.android.filespace.common.util.StringUtils;
 
 
 public class UserAddFragment extends BackFragment {
@@ -133,7 +133,7 @@ public class UserAddFragment extends BackFragment {
                                     if (json.has("user")) {
                                         JSONObject user = json.getJSONObject("user");
                                         if (user.has("id"))
-                                            mApplicationCallback.getConfig().setUserId(user.getInt("id"));
+                                            mApplicationCallback.getConfig().setUserId(mActivity, user.getInt("id"));
                                     }
                                 } else
                                     Toast.makeText(mActivity, mActivity.getString(R.string.server_error), Toast.LENGTH_SHORT).show();

@@ -50,7 +50,7 @@ public class NotificationPush {
         shareRegidTask = new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
-                app.getConfig().setUserRegId(regId);
+                app.getConfig().setUserRegId(app, regId);
                 return "";
             }
 

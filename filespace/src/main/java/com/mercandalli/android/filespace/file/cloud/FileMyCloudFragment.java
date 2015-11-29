@@ -38,15 +38,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-
-import javax.inject.Inject;
-
 import com.mercandalli.android.filespace.R;
 import com.mercandalli.android.filespace.common.fragment.BackFragment;
 import com.mercandalli.android.filespace.common.fragment.InjectedFragment;
@@ -70,6 +61,15 @@ import com.mercandalli.android.filespace.file.FileTypeModelENUM;
 import com.mercandalli.android.filespace.main.AppComponent;
 import com.mercandalli.android.filespace.main.Config;
 import com.mercandalli.android.filespace.main.Constants;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
+import javax.inject.Inject;
 
 public class FileMyCloudFragment extends InjectedFragment implements BackFragment.IListViewMode, SwipeRefreshLayout.OnRefreshListener {
 
@@ -221,7 +221,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                                                         if (json != null)
                                                             if (json.has("succeed"))
                                                                 if (json.getBoolean("succeed"))
-                                                                    mApplicationCallback.getConfig().setUserIdFileProfilePicture(fileModel.getId());
+                                                                    mApplicationCallback.getConfig().setUserIdFileProfilePicture(mActivity, fileModel.getId());
                                                     } catch (JSONException e) {
                                                         e.printStackTrace();
                                                     }
@@ -510,7 +510,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                                                             try {
                                                                 if (json != null && json.has("succeed"))
                                                                     if (json.getBoolean("succeed"))
-                                                                        mApplicationCallback.getConfig().setUserIdFileProfilePicture(fileModel.getId());
+                                                                        mApplicationCallback.getConfig().setUserIdFileProfilePicture(mActivity, fileModel.getId());
                                                             } catch (JSONException e) {
                                                                 e.printStackTrace();
                                                             }

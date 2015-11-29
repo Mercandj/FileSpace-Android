@@ -23,7 +23,7 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.mercandalli.android.filespace.common.model.Model;
-import com.mercandalli.android.filespace.main.ApplicationActivity;
+import com.mercandalli.android.filespace.main.ApplicationCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +36,7 @@ public class ModelServerMessage extends Model {
         super();
     }
 
-    public ModelServerMessage(Activity activity, ApplicationActivity app, JSONObject json) {
+    public ModelServerMessage(Activity activity, ApplicationCallback app, JSONObject json) {
         super(activity, app);
 
         try {

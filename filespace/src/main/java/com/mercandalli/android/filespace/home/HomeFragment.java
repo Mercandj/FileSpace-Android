@@ -52,7 +52,7 @@ import com.mercandalli.android.filespace.extras.ia.Interpreter;
 import com.mercandalli.android.filespace.extras.ia.InterpreterMain;
 import com.mercandalli.android.filespace.extras.ia.InterpreterResult;
 import com.mercandalli.android.filespace.main.Constants;
-import com.mercandalli.android.filespace.main.DrawerActivity;
+import com.mercandalli.android.filespace.main.NavDrawerActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -140,7 +140,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
         this.input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    Interpreter interpreter = new InterpreterMain(mActivity, mApplicationCallback.getConfig().getUser().isAdmin());
+                    Interpreter interpreter = new InterpreterMain(mActivity, mApplicationCallback.getConfig().getUser(mActivity).isAdmin());
                     addItemList("FileSpace", interpreter.interpret(input.getText().toString()));
                     input.setText("");
                     return true;
@@ -206,14 +206,14 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
         }
         mModelHomeList = new ArrayList<>();
 
-        List<ModelServerMessage> serverMessageList = mApplicationCallback.getConfig().getListServerMessage_1();
+        List<ModelServerMessage> serverMessageList = mApplicationCallback.getConfig().getListServerMessage_1(mActivity);
         for (int i = serverMessageList.size() - 1; i >= 0; i--) {
             mModelHomeList.add(new ModelHome(mModelHomeList.size(), "Notification", new IModelHomeListener() {
                 @Override
                 public void execute(ModelHome modelHome) {
                     removeItemList(modelHome);
                     if (modelHome.serverMessage != null)
-                        mApplicationCallback.getConfig().removeServerMessage(modelHome.serverMessage);
+                        mApplicationCallback.getConfig().removeServerMessage(mActivity, modelHome.serverMessage);
                 }
             }, serverMessageList.get(i), Constants.TAB_VIEW_TYPE_HOME_INFORMATION));
         }
@@ -229,7 +229,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                     @Override
                     public void execute(ModelHome modelHome) {
                         removeItemList(modelHome);
-                        mApplicationCallback.getConfig().setHomeWelcomeMessage(false);
+                        mApplicationCallback.getConfig().setHomeWelcomeMessage(mActivity, false);
                     }
                 }, htmlMessage, Constants.TAB_VIEW_TYPE_HOME_INFORMATION));
             } else {
@@ -237,7 +237,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                     @Override
                     public void execute(ModelHome modelHome) {
                         removeItemList(modelHome);
-                        mApplicationCallback.getConfig().setHomeWelcomeMessage(false);
+                        mApplicationCallback.getConfig().setHomeWelcomeMessage(mActivity, false);
                     }
                 }, htmlMessage, Constants.TAB_VIEW_TYPE_HOME_INFORMATION));
             }
@@ -249,8 +249,8 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mActivity instanceof DrawerActivity) {
-                            ((DrawerActivity) mActivity).selectItem(3);
+                        if (mActivity instanceof NavDrawerActivity) {
+                            ((NavDrawerActivity) mActivity).selectItem(3);
                         }
                     }
                 },
@@ -258,7 +258,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((DrawerActivity) mActivity).selectItem(4);
+                        ((NavDrawerActivity) mActivity).selectItem(4);
                     }
                 },
                 Constants.TAB_VIEW_TYPE_TWO_BUTTONS));

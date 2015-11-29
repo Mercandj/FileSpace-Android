@@ -53,7 +53,7 @@ import java.util.List;
 /**
  * An abstract class with a {@link NavigationView}.
  */
-public abstract class DrawerActivity extends ApplicationActivity implements
+public abstract class NavDrawerActivity extends ApplicationActivity implements
         SetToolbarCallback,
         NavDrawerView.OnNavDrawerClickCallback {
 
@@ -80,7 +80,7 @@ public abstract class DrawerActivity extends ApplicationActivity implements
         navDrawerView.setSelectedRow(this, getInitFragmentId());
         navDrawerView.setConnected(isLogged());
         if(isLogged()) {
-            navDrawerView.setUser(getConfig().getUser(), getConfig().getUserProfilePicture());
+            navDrawerView.setUser(getConfig().getUser(this), getConfig().getUserProfilePicture(this));
         }
 
         // Initial Fragment
@@ -172,11 +172,11 @@ public abstract class DrawerActivity extends ApplicationActivity implements
         Preconditions.checkNotNull(navDrawerRow);
 
         if (navDrawerRow.equals(NavDrawerView.NavDrawerRow.LOGOUT)) {
-            DialogUtils.alert(DrawerActivity.this, "Log out", "Do you want to log out?", "Yes", new IListener() {
+            DialogUtils.alert(NavDrawerActivity.this, "Log out", "Do you want to log out?", "Yes", new IListener() {
                 @Override
                 public void execute() {
-                    DrawerActivity.this.getConfig().reset();
-                    DrawerActivity.this.finish();
+                    NavDrawerActivity.this.getConfig().reset(NavDrawerActivity.this);
+                    NavDrawerActivity.this.finish();
                 }
             }, getString(R.string.cancel), null);
             return;

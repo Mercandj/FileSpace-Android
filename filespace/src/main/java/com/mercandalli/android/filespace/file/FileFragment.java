@@ -396,7 +396,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                                 } else {
                                     mViewMode = Constants.MODE_LIST;
                                 }
-                                mApplicationCallback.getConfig().setUserFileModeView(mViewMode);
+                                mApplicationCallback.getConfig().setUserFileModeView(mActivity, mViewMode);
                                 FabFragment fabFragment = getCurrentFragment();
                                 if (fabFragment != null) {
                                     if (fabFragment instanceof IListViewMode) {

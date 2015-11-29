@@ -18,8 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mercandalli.android.filespace.R;
-import com.mercandalli.android.filespace.main.Permission;
 import com.mercandalli.android.filespace.main.MainActivity;
+import com.mercandalli.android.filespace.main.Permission;
 
 /**
  * Created by Jonathan on 03/11/2015.

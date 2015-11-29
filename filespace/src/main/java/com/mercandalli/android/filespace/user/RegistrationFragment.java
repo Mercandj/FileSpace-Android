@@ -32,23 +32,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mercandalli.android.filespace.R;
-import com.mercandalli.android.filespace.main.Config;
+import com.mercandalli.android.filespace.common.fragment.BackFragment;
 import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
 import com.mercandalli.android.filespace.common.net.TaskPost;
-import com.mercandalli.android.filespace.main.MainActivity;
-import com.mercandalli.android.filespace.common.fragment.BackFragment;
 import com.mercandalli.android.filespace.common.util.GpsUtils;
 import com.mercandalli.android.filespace.common.util.HashUtils;
 import com.mercandalli.android.filespace.common.util.NetUtils;
 import com.mercandalli.android.filespace.common.util.StringPair;
 import com.mercandalli.android.filespace.common.util.StringUtils;
+import com.mercandalli.android.filespace.main.Config;
+import com.mercandalli.android.filespace.main.MainActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegistrationFragment extends BackFragment {
 
@@ -74,7 +74,7 @@ public class RegistrationFragment extends BackFragment {
         ((CheckBox) rootView.findViewById(R.id.autoconnection)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mApplicationCallback.getConfig().setAutoConnection(isChecked);
+                mApplicationCallback.getConfig().setAutoConnection(mActivity, isChecked);
             }
         });
 
@@ -127,13 +127,13 @@ public class RegistrationFragment extends BackFragment {
         mRequestLaunched = true;
 
         if (!StringUtils.isNullOrEmpty(user.username)) {
-            mApplicationCallback.getConfig().setUserUsername(user.username);
+            mApplicationCallback.getConfig().setUserUsername(mActivity, user.username);
         } else {
             user.username = mApplicationCallback.getConfig().getUserUsername();
         }
 
         if (!StringUtils.isNullOrEmpty(user.password)) {
-            mApplicationCallback.getConfig().setUserPassword(user.password);
+            mApplicationCallback.getConfig().setUserPassword(mActivity, user.password);
         } else {
             user.password = mApplicationCallback.getConfig().getUserPassword();
         }
@@ -163,7 +163,7 @@ public class RegistrationFragment extends BackFragment {
                             if (json.has("user")) {
                                 JSONObject user = json.getJSONObject("user");
                                 if (user.has("id")) {
-                                    mApplicationCallback.getConfig().setUserId(user.getInt("id"));
+                                    mApplicationCallback.getConfig().setUserId(mActivity, user.getInt("id"));
                                 }
                             }
                         } else {

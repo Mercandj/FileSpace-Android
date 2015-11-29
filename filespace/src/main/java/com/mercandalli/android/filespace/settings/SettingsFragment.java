@@ -124,7 +124,7 @@ public class SettingsFragment extends BackFragment {
             list.add(new ModelSetting("Auto connection", new OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    mApplicationCallback.getConfig().setAutoConnection(isChecked);
+                    mApplicationCallback.getConfig().setAutoConnection(mActivity, isChecked);
                 }
             }, mApplicationCallback.getConfig().isAutoConncetion()));
             list.add(new ModelSetting("Web application", new View.OnClickListener() {
@@ -138,7 +138,7 @@ public class SettingsFragment extends BackFragment {
             @Override
             public void onClick(View view) {
                 Toast.makeText(mActivity, "Welcome message enabled.", Toast.LENGTH_SHORT).show();
-                mApplicationCallback.getConfig().setHomeWelcomeMessage(true);
+                mApplicationCallback.getConfig().setHomeWelcomeMessage(mActivity, true);
             }
         }));
         if (mApplicationCallback.getConfig().isLogged()) {

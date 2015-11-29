@@ -20,8 +20,20 @@
 package com.mercandalli.android.filespace.main;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+
+import com.mercandalli.android.filespace.common.listener.IBitmapListener;
+import com.mercandalli.android.filespace.common.model.Model;
+import com.mercandalli.android.filespace.common.net.Base64;
+import com.mercandalli.android.filespace.common.net.TaskGetDownloadImage;
+import com.mercandalli.android.filespace.common.util.FileUtils;
+import com.mercandalli.android.filespace.common.util.HashUtils;
+import com.mercandalli.android.filespace.common.util.NetUtils;
+import com.mercandalli.android.filespace.file.FileModel;
+import com.mercandalli.android.filespace.home.ModelServerMessage;
+import com.mercandalli.android.filespace.user.ModelUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,24 +46,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import com.mercandalli.android.filespace.common.listener.IBitmapListener;
-import com.mercandalli.android.filespace.common.model.Model;
-import com.mercandalli.android.filespace.home.ModelServerMessage;
-import com.mercandalli.android.filespace.user.ModelUser;
-import com.mercandalli.android.filespace.file.FileModel;
-import com.mercandalli.android.filespace.common.net.Base64;
-import com.mercandalli.android.filespace.common.net.TaskGetDownloadImage;
-import com.mercandalli.android.filespace.common.util.FileUtils;
-import com.mercandalli.android.filespace.common.util.HashUtils;
-import com.mercandalli.android.filespace.common.util.NetUtils;
-
-/**
- * Created by Jonathan on 10/12/2014.
- */
 public class Config {
 
-    private Activity mActivity;
-    private ApplicationActivity app;
+    private ApplicationCallback app;
     private List<ModelServerMessage> listServerMessage_1;
 
     // Local routes
@@ -81,7 +78,6 @@ public class Config {
      * Static int to save/load
      */
     private enum ENUM_Int {
-        INTEGER_LAST_TAB(0, "int_last_tab_1"),
         INTEGER_USER_ID(-1, "int_user_id_1"),
         INTEGER_USER_ID_FILE_PROFILE_PICTURE(-1, "int_user_id_file_profile_picture_1"),
         INTEGER_USER_FILE_MODE_VIEW(-1, "int_user_file_mode_view_1"),;
@@ -132,13 +128,12 @@ public class Config {
         }
     }
 
-    public Config(Activity activity, ApplicationActivity app) {
-        mActivity = activity;
+    public Config(Activity activity, ApplicationCallback app) {
         this.app = app;
-        load();
+        load(activity);
     }
 
-    private void save() {
+    private void save(Context context) {
         try {
             JSONObject tmp_json = new JSONObject();
             JSONObject tmp_settings_1 = new JSONObject();
@@ -157,17 +152,17 @@ public class Config {
             }
 
             tmp_json.put("settings_1", tmp_settings_1);
-            FileUtils.writeStringFile(app, fileName, tmp_json.toString());
+            FileUtils.writeStringFile(context, fileName, tmp_json.toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    private void load() {
+    private void load(Activity activity) {
         this.listServerMessage_1 = new ArrayList<>();
         try {
-            JSONObject tmp_json = new JSONObject(FileUtils.readStringFile(app, fileName));
+            JSONObject tmp_json = new JSONObject(FileUtils.readStringFile(activity, fileName));
             if (tmp_json.has("settings_1")) {
                 JSONObject tmp_settings_1 = tmp_json.getJSONObject("settings_1");
                 for (ENUM_Int enum_int : ENUM_Int.values())
@@ -183,22 +178,11 @@ public class Config {
                 if (tmp_settings_1.has("listServerMessage_1")) {
                     JSONArray array_listServerMessage_1 = tmp_settings_1.getJSONArray("listServerMessage_1");
                     for (int i = 0; i < array_listServerMessage_1.length(); i++)
-                        this.listServerMessage_1.add(new ModelServerMessage(app, app, array_listServerMessage_1.getJSONObject(i)));
+                        this.listServerMessage_1.add(new ModelServerMessage(activity, app, array_listServerMessage_1.getJSONObject(i)));
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        }
-    }
-
-    public int getLastTab() {
-        return ENUM_Int.INTEGER_LAST_TAB.value;
-    }
-
-    public void setDisplayPosition(int value) {
-        if (ENUM_Int.INTEGER_LAST_TAB.value != value) {
-            ENUM_Int.INTEGER_LAST_TAB.value = value;
-            save();
         }
     }
 
@@ -210,10 +194,10 @@ public class Config {
         return ENUM_Int.INTEGER_USER_ID.value;
     }
 
-    public void setUserId(int value) {
+    public void setUserId(Activity activity, int value) {
         if (ENUM_Int.INTEGER_USER_ID.value != value) {
             ENUM_Int.INTEGER_USER_ID.value = value;
-            save();
+            save(activity);
         }
     }
 
@@ -221,21 +205,14 @@ public class Config {
         return ENUM_String.STRING_URL_SERVER.value;
     }
 
-    public void setUrlServer(String value) {
-        if (!ENUM_String.STRING_URL_SERVER.value.equals(value)) {
-            ENUM_String.STRING_URL_SERVER.value = value;
-            save();
-        }
-    }
-
     public String getUserNoteWorkspace1() {
         return ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value;
     }
 
-    public void setUserNoteWorkspace1(String value) {
+    public void setUserNoteWorkspace1(Activity activity, String value) {
         if (!ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value.equals(value)) {
             ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value = value;
-            save();
+            save(activity);
         }
     }
 
@@ -257,10 +234,10 @@ public class Config {
         return Base64.encodeBytes(authentication.getBytes());
     }
 
-    public void setUserUsername(String value) {
+    public void setUserUsername(Activity activity, String value) {
         if (!ENUM_String.STRING_USER_USERNAME.value.equals(value)) {
             ENUM_String.STRING_USER_USERNAME.value = value;
-            save();
+            save(activity);
         }
     }
 
@@ -268,21 +245,14 @@ public class Config {
         return ENUM_String.STRING_LOCAL_FOLDER_NAME_1.value;
     }
 
-    public void setLocalFolderName(String value) {
-        if (!ENUM_String.STRING_LOCAL_FOLDER_NAME_1.value.equals(value)) {
-            ENUM_String.STRING_LOCAL_FOLDER_NAME_1.value = value;
-            save();
-        }
-    }
-
     public String getUserPassword() {
         return ENUM_String.STRING_USER_PASSWORD.value;
     }
 
-    public void setUserPassword(String value) {
+    public void setUserPassword(Activity activity, String value) {
         if (!ENUM_String.STRING_USER_PASSWORD.value.equals(value)) {
             ENUM_String.STRING_USER_PASSWORD.value = value;
-            save();
+            save(activity);
         }
     }
 
@@ -290,21 +260,21 @@ public class Config {
         return ENUM_String.STRING_USER_REGID.value;
     }
 
-    public void setUserRegId(String value) {
+    public void setUserRegId(Activity activity, String value) {
         if (!ENUM_String.STRING_USER_REGID.value.equals(value)) {
             ENUM_String.STRING_USER_REGID.value = value;
-            save();
+            save(activity);
         }
     }
 
-    public Bitmap getUserProfilePicture() {
-        File file = new File(this.app.getFilesDir() + "/file_" + this.getUserIdFileProfilePicture());
+    public Bitmap getUserProfilePicture(Activity activity) {
+        File file = new File(activity.getFilesDir() + "/file_" + this.getUserIdFileProfilePicture());
         if (file.exists()) {
             return BitmapFactory.decodeFile(file.getPath());
-        } else if (NetUtils.isInternetConnection(app)) {
+        } else if (NetUtils.isInternetConnection(activity)) {
             FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
             fileModelBuilder.id(getUserIdFileProfilePicture());
-            new TaskGetDownloadImage(app, app, fileModelBuilder.build(), 100000, new IBitmapListener() {
+            new TaskGetDownloadImage(activity, app, fileModelBuilder.build(), 100000, new IBitmapListener() {
                 @Override
                 public void execute(Bitmap bitmap) {
                     //TODO photo profile
@@ -318,10 +288,10 @@ public class Config {
         return ENUM_Int.INTEGER_USER_ID_FILE_PROFILE_PICTURE.value;
     }
 
-    public void setUserIdFileProfilePicture(int value) {
+    public void setUserIdFileProfilePicture(Activity activity, int value) {
         if (ENUM_Int.INTEGER_USER_ID_FILE_PROFILE_PICTURE.value != value) {
             ENUM_Int.INTEGER_USER_ID_FILE_PROFILE_PICTURE.value = value;
-            save();
+            save(activity);
         }
     }
 
@@ -329,10 +299,10 @@ public class Config {
         return ENUM_Int.INTEGER_USER_FILE_MODE_VIEW.value;
     }
 
-    public void setUserFileModeView(int value) {
+    public void setUserFileModeView(Activity activity, int value) {
         if (ENUM_Int.INTEGER_USER_FILE_MODE_VIEW.value != value) {
             ENUM_Int.INTEGER_USER_FILE_MODE_VIEW.value = value;
-            save();
+            save(activity);
         }
     }
 
@@ -340,10 +310,10 @@ public class Config {
         return ENUM_Boolean.BOOLEAN_USER_ADMIN.value;
     }
 
-    public void setUserAdmin(boolean value) {
+    public void setUserAdmin(Activity activity, boolean value) {
         if (ENUM_Boolean.BOOLEAN_USER_ADMIN.value != value) {
             ENUM_Boolean.BOOLEAN_USER_ADMIN.value = value;
-            save();
+            save(activity);
         }
     }
 
@@ -351,10 +321,10 @@ public class Config {
         return ENUM_Boolean.BOOLEAN_HOME_WELCOME_MESSAGE.value;
     }
 
-    public void setHomeWelcomeMessage(boolean value) {
+    public void setHomeWelcomeMessage(Activity activity, boolean value) {
         if (ENUM_Boolean.BOOLEAN_HOME_WELCOME_MESSAGE.value != value) {
             ENUM_Boolean.BOOLEAN_HOME_WELCOME_MESSAGE.value = value;
-            save();
+            save(activity);
         }
     }
 
@@ -362,32 +332,18 @@ public class Config {
         return ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value;
     }
 
-    public void setAutoConnection(boolean value) {
+    public void setAutoConnection(Activity activity, boolean value) {
         if (ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value != value) {
             ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value = value;
-            save();
+            save(activity);
         }
     }
 
-    public ModelUser getUser() {
-        return new ModelUser(mActivity, app, getUserId(), getUserUsername(), getUserPassword(), getUserRegId(), isUserAdmin());
+    public ModelUser getUser(Activity activity) {
+        return new ModelUser(activity, app, getUserId(), getUserUsername(), getUserPassword(), getUserRegId(), isUserAdmin());
     }
 
-    public void addServerMessage(ModelServerMessage serverMessage) {
-        if (listServerMessage_1 == null)
-            listServerMessage_1 = new ArrayList<>();
-        if (serverMessage == null)
-            return;
-        boolean add = true;
-        for (ModelServerMessage s : listServerMessage_1)
-            if (serverMessage.equals(s))
-                add = false;
-        if (add)
-            listServerMessage_1.add(serverMessage);
-        save();
-    }
-
-    public void removeServerMessage(ModelServerMessage serverMessage) {
+    public void removeServerMessage(Activity activity, ModelServerMessage serverMessage) {
         if (listServerMessage_1 == null) {
             listServerMessage_1 = new ArrayList<>();
             return;
@@ -397,7 +353,7 @@ public class Config {
         for (int i = 0; i < listServerMessage_1.size(); i++) {
             if (listServerMessage_1.get(i).equals(serverMessage)) {
                 listServerMessage_1.remove(i);
-                save();
+                save(activity);
                 return;
             }
         }
@@ -407,8 +363,8 @@ public class Config {
         return fileName;
     }
 
-    public List<ModelServerMessage> getListServerMessage_1() {
-        this.load();
+    public List<ModelServerMessage> getListServerMessage_1(Activity activity) {
+        this.load(activity);
         return listServerMessage_1;
     }
 
@@ -416,15 +372,15 @@ public class Config {
      * Reset the saved values
      * (When the user log out)
      */
-    public void reset() {
-        setUserRegId("");
-        setUserUsername("");
-        setUserPassword("");
-        setUserNoteWorkspace1("");
-        setAutoConnection(true);
-        setUserId(-1);
-        setUserAdmin(false);
-        setUserIdFileProfilePicture(-1);
-        setHomeWelcomeMessage(true);
+    public void reset(Activity activity) {
+        setUserRegId(activity, "");
+        setUserUsername(activity, "");
+        setUserPassword(activity, "");
+        setUserNoteWorkspace1(activity, "");
+        setAutoConnection(activity, true);
+        setUserId(activity, -1);
+        setUserAdmin(activity, false);
+        setUserIdFileProfilePicture(activity, -1);
+        setHomeWelcomeMessage(activity, true);
     }
 }

@@ -35,7 +35,7 @@ import com.mercandalli.android.filespace.main.Constants;
 import com.mercandalli.android.filespace.main.ApplicationCallback;
 
 /**
- * Created by Jonathan on 17/04/2015.
+ * A simple {@link Fragment}.
  */
 public abstract class BackFragment extends Fragment {
 
@@ -45,12 +45,12 @@ public abstract class BackFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (Activity) getContext();
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mActivity = (Activity) getContext();
         if (context instanceof ApplicationCallback) {
             mApplicationCallback = (ApplicationCallback) context;
         } else {
@@ -61,6 +61,7 @@ public abstract class BackFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        mActivity = null;
         mApplicationCallback = null;
     }
 
