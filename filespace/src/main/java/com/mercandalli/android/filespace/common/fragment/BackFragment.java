@@ -31,11 +31,11 @@ import android.support.v4.content.ContextCompat;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.mercandalli.android.filespace.main.Constants;
 import com.mercandalli.android.filespace.main.ApplicationCallback;
+import com.mercandalli.android.filespace.main.Constants;
 
 /**
- * A simple {@link Fragment}.
+ * A simple {@link Fragment} that forwards the back button click.
  */
 public abstract class BackFragment extends Fragment {
 

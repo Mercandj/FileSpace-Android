@@ -6,7 +6,7 @@ import com.mercandalli.android.filespace.main.App;
 import com.mercandalli.android.filespace.main.AppComponent;
 
 /**
- * Created by Jonathan on 24/10/2015.
+ * A Dagger injected {@link FabFragment}.
  */
 public abstract class InjectedFragment extends FabFragment {
 

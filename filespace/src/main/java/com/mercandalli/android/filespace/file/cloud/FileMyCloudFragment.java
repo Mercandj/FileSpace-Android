@@ -152,7 +152,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                                                 mFileManager.rename(fileModel, text, new IListener() {
                                                     @Override
                                                     public void execute() {
-                                                        if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
+                                                        if (mFilesToCutList.size() != 0) {
                                                             mFilesToCutList.clear();
                                                             refreshFab();
                                                         }
@@ -170,7 +170,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                                                 mFileManager.delete(fileModel, new IListener() {
                                                     @Override
                                                     public void execute() {
-                                                        if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
+                                                        if (mFilesToCutList.size() != 0) {
                                                             mFilesToCutList.clear();
                                                             refreshFab();
                                                         }
@@ -348,7 +348,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
     }
 
     public void updateAdapter() {
-        if (this.mRecyclerView != null && mFilesList != null && this.isAdded() && mActivity != null) {
+        if (this.mRecyclerView != null && this.isAdded() && mActivity != null) {
 
             this.mProgressBar.setVisibility(View.GONE);
 
@@ -445,7 +445,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                                                         mFileManager.rename(fileModel, text, new IListener() {
                                                             @Override
                                                             public void execute() {
-                                                                if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
+                                                                if (mFilesToCutList.size() != 0) {
                                                                     mFilesToCutList.clear();
                                                                     refreshFab();
                                                                 }
@@ -463,7 +463,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                                                         mFileManager.delete(fileModel, new IListener() {
                                                             @Override
                                                             public void execute() {
-                                                                if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
+                                                                if (mFilesToCutList.size() != 0) {
                                                                     mFilesToCutList.clear();
                                                                     refreshFab();
                                                                 }
@@ -559,7 +559,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
             FileMyCloudFragment.this.mIdFileDirectoryStack.pop();
             FileMyCloudFragment.this.refreshList();
             return true;
-        } else if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
+        } else if (mFilesToCutList.size() != 0) {
             mFilesToCutList.clear();
             refreshFab();
             return true;
@@ -593,7 +593,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
     public void onFabClick(int fab_id, final FloatingActionButton fab) {
         switch (fab_id) {
             case 0:
-                if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
+                if (mFilesToCutList.size() != 0) {
                     for (FileModel file : mFilesToCutList)
                         mFileManager.setParent(file, FileMyCloudFragment.this.mIdFileDirectoryStack.peek(), new IListener() {
                             @Override
@@ -635,7 +635,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
             case 0:
                 return true;
             case 1:
-                return !(mIdFileDirectoryStack == null || mIdFileDirectoryStack.size() == 0) && this.mIdFileDirectoryStack.peek() != -1;
+                return !(mIdFileDirectoryStack.size() == 0) && this.mIdFileDirectoryStack.peek() != -1;
         }
         return false;
     }
@@ -644,10 +644,11 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
     public int getFabImageResource(int fab_id) {
         switch (fab_id) {
             case 0:
-                if (mFilesToCutList != null && mFilesToCutList.size() != 0)
+                if (mFilesToCutList.size() != 0) {
                     return R.drawable.ic_menu_paste_holo_dark;
-                else
+                } else {
                     return R.drawable.add;
+                }
             case 1:
                 return R.drawable.arrow_up;
         }

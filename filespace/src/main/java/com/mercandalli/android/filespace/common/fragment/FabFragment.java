@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
  * Manage the floating button.
  */
 public abstract class FabFragment extends BackFragment {
+
     protected RefreshFabCallback mRefreshFabCallback;
 
     public FabFragment() {
@@ -40,7 +41,7 @@ public abstract class FabFragment extends BackFragment {
             mRefreshFabCallback.onRefreshFab();
     }
 
-    public interface RefreshFabCallback{
+    public interface RefreshFabCallback {
         void onRefreshFab();
     }
 }
