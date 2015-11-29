@@ -109,7 +109,7 @@ public class RegistrationFragment extends BackFragment {
     }
 
     public void inscription() {
-        ModelUser user = new ModelUser();
+        UserModel user = new UserModel();
 
         if (!StringUtils.isNullOrEmpty(mUsername.getText().toString()))
             user.username = mUsername.getText().toString();
@@ -120,7 +120,7 @@ public class RegistrationFragment extends BackFragment {
         inscription(user);
     }
 
-    public void inscription(ModelUser user) {
+    public void inscription(UserModel user) {
         if (mRequestLaunched) {
             return;
         }

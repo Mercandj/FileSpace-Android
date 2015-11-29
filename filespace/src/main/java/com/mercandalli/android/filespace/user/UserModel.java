@@ -22,6 +22,18 @@ package com.mercandalli.android.filespace.user;
 import android.app.Activity;
 import android.graphics.Bitmap;
 
+import com.mercandalli.android.filespace.common.listener.IBitmapListener;
+import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
+import com.mercandalli.android.filespace.common.net.TaskGetDownloadImage;
+import com.mercandalli.android.filespace.common.net.TaskPost;
+import com.mercandalli.android.filespace.common.util.FileUtils;
+import com.mercandalli.android.filespace.common.util.HashUtils;
+import com.mercandalli.android.filespace.common.util.ImageUtils;
+import com.mercandalli.android.filespace.file.FileModel;
+import com.mercandalli.android.filespace.main.ApplicationCallback;
+import com.mercandalli.android.filespace.main.Config;
+import com.mercandalli.android.filespace.main.Constants;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,19 +44,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import com.mercandalli.android.filespace.common.model.Model;
-import com.mercandalli.android.filespace.main.Constants;
-import com.mercandalli.android.filespace.common.listener.IBitmapListener;
-import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
-import com.mercandalli.android.filespace.file.FileModel;
-import com.mercandalli.android.filespace.common.net.TaskGetDownloadImage;
-import com.mercandalli.android.filespace.common.net.TaskPost;
-import com.mercandalli.android.filespace.main.ApplicationCallback;
-import com.mercandalli.android.filespace.common.util.FileUtils;
-import com.mercandalli.android.filespace.common.util.HashUtils;
-import com.mercandalli.android.filespace.common.util.ImageUtils;
-
-public class ModelUser extends Model {
+public class UserModel {
 
     public int id, id_file_profile_picture = -1;
     public String username;
@@ -54,14 +54,13 @@ public class ModelUser extends Model {
     public long size_files, file_profile_picture_size = -1, num_files, server_max_size_end_user;
     private boolean admin = false;
     public Bitmap bitmap;
-    public ModelUserLocation userLocation;
+    public UserLocationModel userLocation;
 
-    public ModelUser() {
+    public UserModel() {
 
     }
 
-    public ModelUser(Activity activity, ApplicationCallback app, int id, String username, String password, String regId, boolean admin) {
-        super(activity, app);
+    public UserModel(int id, String username, String password, String regId, boolean admin) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -69,8 +68,7 @@ public class ModelUser extends Model {
         this.admin = admin;
     }
 
-    public ModelUser(Activity activity, ApplicationCallback app, JSONObject json) {
-        super(activity, app);
+    public UserModel(final Activity activity, final ApplicationCallback applicationCallback, JSONObject json) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
             if (json.has("id"))
@@ -104,26 +102,26 @@ public class ModelUser extends Model {
             if (json.has("num_files") && !json.isNull("num_files"))
                 this.num_files = json.getLong("num_files");
 
-            userLocation = new ModelUserLocation(mActivity, app, json);
+            userLocation = new UserLocationModel(json);
 
         } catch (JSONException | ParseException e) {
             e.printStackTrace();
         }
 
         if (hasPicture()) {
-            if (ImageUtils.is_image(mActivity, this.id_file_profile_picture)) {
-                ModelUser.this.bitmap = ImageUtils.load_image(mActivity, this.id_file_profile_picture);
-                ModelUser.this.app.updateAdapters();
+            if (ImageUtils.is_image(activity, this.id_file_profile_picture)) {
+                UserModel.this.bitmap = ImageUtils.load_image(activity, this.id_file_profile_picture);
+                applicationCallback.updateAdapters();
             } else {
                 FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
                 fileModelBuilder.id(this.id_file_profile_picture);
                 fileModelBuilder.size(this.file_profile_picture_size);
-                new TaskGetDownloadImage(mActivity, app, fileModelBuilder.build(), Constants.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
+                new TaskGetDownloadImage(activity, applicationCallback, fileModelBuilder.build(), Constants.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
                     @Override
                     public void execute(Bitmap bitmap) {
                         if (bitmap != null) {
-                            ModelUser.this.bitmap = bitmap;
-                            ModelUser.this.app.updateAdapters();
+                            UserModel.this.bitmap = bitmap;
+                            applicationCallback.updateAdapters();
                         }
                     }
                 }).execute();
@@ -162,16 +160,11 @@ public class ModelUser extends Model {
         return admin;
     }
 
-    @Override
-    public JSONObject toJSONObject() {
-        return null;
-    }
-
-    public void delete(IPostExecuteListener listener) {
-        if (this.app != null) {
-            if (this.app.getConfig().isUserAdmin() && this.id != this.app.getConfig().getUserId()) {
-                String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeUserDelete + "/" + this.id;
-                new TaskPost(mActivity, this.app, url, listener).execute();
+    public void delete(Activity activity, ApplicationCallback applicationCallback, IPostExecuteListener listener) {
+        if (applicationCallback != null) {
+            if (applicationCallback.getConfig().isUserAdmin() && this.id != Config.getUserId()) {
+                String url = applicationCallback.getConfig().getUrlServer() + Config.routeUserDelete + "/" + this.id;
+                new TaskPost(activity, applicationCallback, url, listener).execute();
                 return;
             }
         }

@@ -23,7 +23,6 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.mercandalli.android.filespace.R;
-import com.mercandalli.android.filespace.common.model.Model;
 import com.mercandalli.android.filespace.main.ApplicationCallback;
 
 import org.json.JSONArray;
@@ -36,19 +35,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ModelConversationUser extends Model {
+public class ConversationUserModel {
 
     public int id, id_conversation, id_user, num_messages;
     public Date date_creation;
-    public List<ModelUser> users;
+    public List<UserModel> users;
     public boolean to_all = false, to_yourself = false;
 
-    public ModelConversationUser() {
-
-    }
-
-    public ModelConversationUser(Activity activity, ApplicationCallback app, JSONObject json) {
-        super(activity, app);
+    public ConversationUserModel(Activity activity, ApplicationCallback applicationCallback, JSONObject json) {
         this.users = new ArrayList<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
@@ -63,7 +57,7 @@ public class ModelConversationUser extends Model {
             if (json.has("users")) {
                 JSONArray users_json = json.getJSONArray("users");
                 for (int i = 0; i < users_json.length(); i++) {
-                    this.users.add(new ModelUser(mActivity, app, users_json.getJSONObject(i)));
+                    this.users.add(new UserModel(activity, applicationCallback, users_json.getJSONObject(i)));
                 }
             }
             if (json.has("to_all"))
@@ -72,9 +66,7 @@ public class ModelConversationUser extends Model {
                 this.to_yourself = json.getBoolean("to_yourself");
             if (json.has("date_creation") && !json.isNull("date_creation"))
                 this.date_creation = dateFormat.parse(json.getString("date_creation"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
+        } catch (JSONException | ParseException e) {
             e.printStackTrace();
         }
     }
@@ -86,7 +78,7 @@ public class ModelConversationUser extends Model {
         } else if (this.to_yourself) {
             res += "yourself";
         } else {
-            for (ModelUser user : users)
+            for (UserModel user : users)
                 res += user.username + " ";
         }
         return res;
@@ -96,17 +88,12 @@ public class ModelConversationUser extends Model {
         return "" + this.num_messages + "  message" + ((this.num_messages != 0) ? "s" : "");
     }
 
-    public void open() {
-        Intent intent = new Intent(mActivity, ConversationActivity.class);
-        intent.putExtra("LOGIN", "" + this.app.getConfig().getUser(mActivity).getAccessLogin());
-        intent.putExtra("PASSWORD", "" + this.app.getConfig().getUser(mActivity).getAccessPassword());
+    public void open(final Activity activity, final ApplicationCallback applicationCallback) {
+        Intent intent = new Intent(activity, ConversationActivity.class);
+        intent.putExtra("LOGIN", "" + applicationCallback.getConfig().getUser().getAccessLogin());
+        intent.putExtra("PASSWORD", "" + applicationCallback.getConfig().getUser().getAccessPassword());
         intent.putExtra("ID_CONVERSATION", "" + this.id_conversation);
-        mActivity.startActivity(intent);
-        mActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-    }
-
-    @Override
-    public JSONObject toJSONObject() {
-        return null;
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 }

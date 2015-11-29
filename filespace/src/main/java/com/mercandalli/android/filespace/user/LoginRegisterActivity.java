@@ -365,7 +365,7 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
             return;
         mRequestLaunched = true;
 
-        final ModelUser user = new ModelUser();
+        final UserModel user = new UserModel();
         user.username = username;
         user.password = password;
 

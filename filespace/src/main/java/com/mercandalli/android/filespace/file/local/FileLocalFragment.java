@@ -321,27 +321,21 @@ public class FileLocalFragment extends InjectedFragment implements
                 }
         ));
 
-        if (mSortMode == Constants.SORT_ABC)
-
-        {
+        if (mSortMode == Constants.SORT_ABC) {
             Collections.sort(fs, new Comparator<File>() {
                 @Override
                 public int compare(final File f1, final File f2) {
                     return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
                 }
             });
-        } else if (mSortMode == Constants.SORT_SIZE)
-
-        {
+        } else if (mSortMode == Constants.SORT_SIZE) {
             Collections.sort(fs, new Comparator<File>() {
                 @Override
                 public int compare(final File f1, final File f2) {
                     return (Long.valueOf(f2.length())).compareTo(f1.length());
                 }
             });
-        } else
-
-        {
+        } else {
             final Map<File, Long> staticLastModifiedTimes = new HashMap<>();
             for (File f : fs) {
                 staticLastModifiedTimes.put(f, f.lastModified());
@@ -355,11 +349,7 @@ public class FileLocalFragment extends InjectedFragment implements
         }
 
         mFilesList = new ArrayList<>();
-        for (
-                File file
-                : fs)
-
-        {
+        for (File file : fs) {
             FileModel tmpFileModel = new FileModel.FileModelBuilder().file(file).build();
             /*
             if (mSortMode == Constants.SORT_SIZE)
@@ -492,7 +482,6 @@ public class FileLocalFragment extends InjectedFragment implements
 
             mRecyclerView.setAdapter(adapter);
 
-
             if (mViewMode == Constants.MODE_GRID) {
                 mGridView.setVisibility(View.VISIBLE);
                 mRecyclerView.setVisibility(View.GONE);
@@ -621,17 +610,21 @@ public class FileLocalFragment extends InjectedFragment implements
 
     private boolean createFile(String path, String name) {
         int len = path.length();
-        if (len < 1 || name.length() < 1)
+        if (len < 1 || name.length() < 1) {
             return false;
-        if (path.charAt(len - 1) != '/')
+        }
+        if (path.charAt(len - 1) != '/') {
             path += "/";
+        }
         if (!name.contains(".")) {
-            if (new File(path + name).mkdir())
+            if (new File(path + name).mkdir()) {
                 return true;
+            }
         } else {
             try {
-                if (new File(path + name).createNewFile())
+                if (new File(path + name).createNewFile()) {
                     return true;
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;

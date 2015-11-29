@@ -33,7 +33,7 @@ import com.mercandalli.android.filespace.common.util.HashUtils;
 import com.mercandalli.android.filespace.common.util.NetUtils;
 import com.mercandalli.android.filespace.file.FileModel;
 import com.mercandalli.android.filespace.home.ModelServerMessage;
-import com.mercandalli.android.filespace.user.ModelUser;
+import com.mercandalli.android.filespace.user.UserModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,6 +46,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
+/**
+ * TODO - Need a review ! (Shared pref)
+ */
 public class Config {
 
     private ApplicationCallback app;
@@ -339,8 +342,8 @@ public class Config {
         }
     }
 
-    public ModelUser getUser(Activity activity) {
-        return new ModelUser(activity, app, getUserId(), getUserUsername(), getUserPassword(), getUserRegId(), isUserAdmin());
+    public UserModel getUser() {
+        return new UserModel(getUserId(), getUserUsername(), getUserPassword(), getUserRegId(), isUserAdmin());
     }
 
     public void removeServerMessage(Activity activity, ModelServerMessage serverMessage) {

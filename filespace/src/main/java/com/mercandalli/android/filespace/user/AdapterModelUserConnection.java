@@ -35,11 +35,11 @@ import com.mercandalli.android.filespace.main.Constants;
 import com.mercandalli.android.filespace.common.util.FontUtils;
 
 public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterModelUserConnection.ViewHolder> {
-    private List<ModelUserConnection> itemsData;
+    private List<UserConnectionModel> itemsData;
     OnItemClickListener mItemClickListener;
     private final Activity mActivity;
 
-    public AdapterModelUserConnection(final Activity activity, List<ModelUserConnection> itemsData) {
+    public AdapterModelUserConnection(final Activity activity, List<UserConnectionModel> itemsData) {
         this.itemsData = itemsData;
         this.mActivity = activity;
     }
@@ -53,7 +53,7 @@ public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterMode
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        ModelUserConnection model = itemsData.get(position);
+        UserConnectionModel model = itemsData.get(position);
         switch (model.viewType) {
             case Constants.TAB_VIEW_TYPE_NORMAL:
                 viewHolder.title.setText(model.getAdapterTitle());
@@ -99,7 +99,7 @@ public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterMode
         return itemsData.size();
     }
 
-    public void addItem(ModelUserConnection name, int position) {
+    public void addItem(UserConnectionModel name, int position) {
         itemsData.add(position, name);
         notifyItemInserted(position);
     }

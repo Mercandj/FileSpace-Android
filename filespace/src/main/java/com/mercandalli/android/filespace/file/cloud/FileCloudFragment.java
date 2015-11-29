@@ -328,7 +328,7 @@ public class FileCloudFragment extends InjectedFragment implements
                             case 6:
                                 List<StringPair> parameters = new ArrayList<>();
                                 parameters.add(new StringPair("id_file_profile_picture", "" + fileModel.getId()));
-                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserPut, new IPostExecuteListener() {
+                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUserPut, new IPostExecuteListener() {
                                     @Override
                                     public void onPostExecute(JSONObject json, String body) {
                                         try {

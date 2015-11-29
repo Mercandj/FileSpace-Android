@@ -35,21 +35,21 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mercandalli.android.filespace.R;
+import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
+import com.mercandalli.android.filespace.common.net.TaskGet;
+import com.mercandalli.android.filespace.common.net.TaskPost;
+import com.mercandalli.android.filespace.common.util.NetUtils;
+import com.mercandalli.android.filespace.common.util.StringPair;
+import com.mercandalli.android.filespace.common.view.divider.DividerItemDecoration;
+import com.mercandalli.android.filespace.main.ApplicationActivity;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.mercandalli.android.filespace.R;
-import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
-import com.mercandalli.android.filespace.common.net.TaskGet;
-import com.mercandalli.android.filespace.common.net.TaskPost;
-import com.mercandalli.android.filespace.common.view.divider.DividerItemDecoration;
-import com.mercandalli.android.filespace.common.util.NetUtils;
-import com.mercandalli.android.filespace.common.util.StringPair;
-import com.mercandalli.android.filespace.main.ApplicationActivity;
 
 /**
  * Created by Jonathan on 14/12/2014.
@@ -61,7 +61,7 @@ public class ConversationActivity extends ApplicationActivity {
 
     private RecyclerView listView;
     private AdapterModelConnversationMessage adapter;
-    private ArrayList<ModelConversationMessage> list = new ArrayList<>();
+    private ArrayList<UserConversationMessageModel> list = new ArrayList<>();
     private ProgressBar circularProgressBar;
     private TextView message;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -114,7 +114,7 @@ public class ConversationActivity extends ApplicationActivity {
             }
         });
 
-        this.adapter = new AdapterModelConnversationMessage(this, list, null);
+        this.adapter = new AdapterModelConnversationMessage(list, null);
         this.listView.setAdapter(adapter);
         this.listView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
         this.listView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
@@ -210,7 +210,7 @@ public class ConversationActivity extends ApplicationActivity {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ModelConversationMessage modelFile = new ModelConversationMessage(ConversationActivity.this, ConversationActivity.this, array.getJSONObject(i));
+                                            UserConversationMessageModel modelFile = new UserConversationMessageModel(ConversationActivity.this, ConversationActivity.this, array.getJSONObject(i));
                                             list.add(modelFile);
                                         }
                                     }

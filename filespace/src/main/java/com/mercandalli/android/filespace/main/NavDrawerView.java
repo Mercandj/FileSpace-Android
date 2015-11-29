@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.mercandalli.android.filespace.R;
 import com.mercandalli.android.filespace.common.Preconditions;
 import com.mercandalli.android.filespace.common.util.FontUtils;
-import com.mercandalli.android.filespace.user.ModelUser;
+import com.mercandalli.android.filespace.user.UserModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -91,14 +91,14 @@ public class NavDrawerView extends FrameLayout implements View.OnClickListener {
         }
     }
 
-    /* package */ void setUser(final ModelUser modelUser, Bitmap profilePicture) {
-        final boolean isAdmin = modelUser.isAdmin();
+    /* package */ void setUser(final UserModel userModel, Bitmap profilePicture) {
+        final boolean isAdmin = userModel.isAdmin();
         for (final NavDrawerRow navDrawerRow : NavDrawerRow.values()) {
             if (!navDrawerRow.mVisibleIfNotAdmin) {
                 mChildrenViews.get(navDrawerRow.mId).setVisibility(isAdmin ? VISIBLE : GONE);
             }
         }
-        mNavDrawerHeaderView.setUser(modelUser, profilePicture);
+        mNavDrawerHeaderView.setUser(userModel, profilePicture);
     }
 
     private void initView(@NonNull Context context) {

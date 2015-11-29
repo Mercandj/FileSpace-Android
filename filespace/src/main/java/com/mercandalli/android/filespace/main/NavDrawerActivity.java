@@ -79,8 +79,8 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
         navDrawerView.setOnNavDrawerClickCallback(this);
         navDrawerView.setSelectedRow(this, getInitFragmentId());
         navDrawerView.setConnected(isLogged());
-        if(isLogged()) {
-            navDrawerView.setUser(getConfig().getUser(this), getConfig().getUserProfilePicture(this));
+        if (isLogged()) {
+            navDrawerView.setUser(getConfig().getUser(), getConfig().getUserProfilePicture(this));
         }
 
         // Initial Fragment
@@ -189,6 +189,8 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
                 case HEADER:
                     if (isLogged()) {
                         fragment = ProfileFragment.newInstance();
+                    } else {
+                        return;
                     }
                     break;
                 case HOME:

@@ -140,7 +140,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
         this.input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    Interpreter interpreter = new InterpreterMain(mActivity, mApplicationCallback.getConfig().getUser(mActivity).isAdmin());
+                    Interpreter interpreter = new InterpreterMain(mActivity, mApplicationCallback.getConfig().getUser().isAdmin());
                     addItemList("FileSpace", interpreter.interpret(input.getText().toString()));
                     input.setText("");
                     return true;

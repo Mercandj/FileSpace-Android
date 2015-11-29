@@ -36,6 +36,21 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mercandalli.android.filespace.R;
+import com.mercandalli.android.filespace.common.fragment.BackFragment;
+import com.mercandalli.android.filespace.common.listener.IListener;
+import com.mercandalli.android.filespace.common.listener.IModelUserListener;
+import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
+import com.mercandalli.android.filespace.common.listener.IStringListener;
+import com.mercandalli.android.filespace.common.net.TaskGet;
+import com.mercandalli.android.filespace.common.net.TaskPost;
+import com.mercandalli.android.filespace.common.util.DialogUtils;
+import com.mercandalli.android.filespace.common.util.NetUtils;
+import com.mercandalli.android.filespace.common.util.StringPair;
+import com.mercandalli.android.filespace.common.view.divider.DividerItemDecoration;
+import com.mercandalli.android.filespace.user.AdapterModelUser;
+import com.mercandalli.android.filespace.user.UserModel;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,23 +58,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mercandalli.android.filespace.R;
-import com.mercandalli.android.filespace.common.listener.IListener;
-import com.mercandalli.android.filespace.common.listener.IModelUserListener;
-import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
-import com.mercandalli.android.filespace.common.listener.IStringListener;
-import com.mercandalli.android.filespace.user.ModelUser;
-import com.mercandalli.android.filespace.common.net.TaskGet;
-import com.mercandalli.android.filespace.common.net.TaskPost;
-import com.mercandalli.android.filespace.user.AdapterModelUser;
-import com.mercandalli.android.filespace.common.fragment.BackFragment;
-import com.mercandalli.android.filespace.common.view.divider.DividerItemDecoration;
-import com.mercandalli.android.filespace.common.util.DialogUtils;
-import com.mercandalli.android.filespace.common.util.NetUtils;
-import com.mercandalli.android.filespace.common.util.StringPair;
-
 /**
- * Created by Jonathan on 30/03/2015.
+ * A {@link android.support.v4.app.Fragment} to see all the users.
  */
 public class UserFragment extends BackFragment {
 
@@ -68,7 +68,7 @@ public class UserFragment extends BackFragment {
     private RecyclerView recyclerView;
     private AdapterModelUser mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    List<ModelUser> list;
+    List<UserModel> list;
     private ProgressBar circularProgressBar;
     private TextView message;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -134,8 +134,8 @@ public class UserFragment extends BackFragment {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ModelUser modelUser = new ModelUser(mActivity, mApplicationCallback, array.getJSONObject(i));
-                                            list.add(modelUser);
+                                            UserModel userModel = new UserModel(mActivity, mApplicationCallback, array.getJSONObject(i));
+                                            list.add(userModel);
                                         }
                                     }
                                 } else
@@ -170,7 +170,7 @@ public class UserFragment extends BackFragment {
 
             this.mAdapter = new AdapterModelUser(list, new IModelUserListener() {
                 @Override
-                public void execute(final ModelUser modelUser) {
+                public void execute(final UserModel userModel) {
                     final AlertDialog.Builder menuAleart = new AlertDialog.Builder(mActivity);
                     String[] menuList = {getString(R.string.talk)};
                     if (mApplicationCallback.getConfig().isUserAdmin())
@@ -184,7 +184,7 @@ public class UserFragment extends BackFragment {
                                             DialogUtils.prompt(mActivity, "Send Message", "Write your message", "Send", new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
-                                                    String url = mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserConversation + "/" + modelUser.id;
+                                                    String url = mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserConversation + "/" + userModel.id;
                                                     List<StringPair> parameters = new ArrayList<>();
                                                     parameters.add(new StringPair("message", "" + text));
 
@@ -198,11 +198,11 @@ public class UserFragment extends BackFragment {
                                             }, getString(R.string.cancel), null);
                                             break;
                                         case 1:
-                                            DialogUtils.alert(mActivity, "Delete " + modelUser.username + "?", "This process cannot be undone.", getString(R.string.delete), new IListener() {
+                                            DialogUtils.alert(mActivity, "Delete " + userModel.username + "?", "This process cannot be undone.", getString(R.string.delete), new IListener() {
                                                 @Override
                                                 public void execute() {
                                                     if (mApplicationCallback.getConfig().isUserAdmin())
-                                                        modelUser.delete(new IPostExecuteListener() {
+                                                        userModel.delete(mActivity, mApplicationCallback, new IPostExecuteListener() {
                                                             @Override
                                                             public void onPostExecute(JSONObject json, String body) {
                                                                 UserFragment.this.refreshList();
@@ -222,13 +222,13 @@ public class UserFragment extends BackFragment {
             });
             this.recyclerView.setAdapter(mAdapter);
 
-            if (((ImageButton) rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
-                ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
+            if ((rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
+                (rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
                 Animation animOpen = AnimationUtils.loadAnimation(mActivity, R.anim.circle_button_bottom_open);
-                ((ImageButton) rootView.findViewById(R.id.circle)).startAnimation(animOpen);
+                (rootView.findViewById(R.id.circle)).startAnimation(animOpen);
             }
 
-            ((ImageButton) rootView.findViewById(R.id.circle)).setOnClickListener(new View.OnClickListener() {
+            (rootView.findViewById(R.id.circle)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // TODO Fab UserFragment

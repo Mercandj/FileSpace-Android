@@ -21,9 +21,8 @@ package com.mercandalli.android.filespace.user;
 
 import android.app.Activity;
 
-import com.mercandalli.android.filespace.common.model.Model;
-import com.mercandalli.android.filespace.main.ApplicationCallback;
 import com.mercandalli.android.filespace.common.util.TimeUtils;
+import com.mercandalli.android.filespace.main.ApplicationCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,15 +32,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class ModelConversationMessage extends Model {
+public class UserConversationMessageModel {
 
     public int id, id_conversation, id_user;
     public Date date_creation;
     public String content;
-    public ModelUser user;
+    public UserModel user;
 
-    public ModelConversationMessage(Activity activity, ApplicationCallback app, JSONObject json) {
-        super(activity, app);
+    public UserConversationMessageModel(Activity activity, ApplicationCallback app, JSONObject json) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
             if (json.has("id"))
@@ -53,7 +51,7 @@ public class ModelConversationMessage extends Model {
             if (json.has("content"))
                 this.content = json.getString("content");
             if (json.has("user"))
-                this.user = new ModelUser(activity, app, json.getJSONObject("user"));
+                this.user = new UserModel(activity, app, json.getJSONObject("user"));
             if (json.has("date_creation") && !json.isNull("date_creation"))
                 this.date_creation = dateFormat.parse(json.getString("date_creation"));
         } catch (JSONException e) {
@@ -84,10 +82,5 @@ public class ModelConversationMessage extends Model {
             e.printStackTrace();
         }
         return getUsername() + "  " + date + " ago";
-    }
-
-    @Override
-    public JSONObject toJSONObject() {
-        return null;
     }
 }

@@ -46,7 +46,7 @@ import java.util.List;
 import com.mercandalli.android.filespace.R;
 import com.mercandalli.android.filespace.main.Constants;
 import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
-import com.mercandalli.android.filespace.user.ModelUserConnection;
+import com.mercandalli.android.filespace.user.UserConnectionModel;
 import com.mercandalli.android.filespace.common.net.TaskGet;
 import com.mercandalli.android.filespace.user.AdapterModelUserConnection;
 import com.mercandalli.android.filespace.common.fragment.BackFragment;
@@ -60,7 +60,7 @@ public class ServerLogsFragment extends BackFragment {
     private RecyclerView recyclerView;
     private AdapterModelUserConnection mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    List<ModelUserConnection> list;
+    List<UserConnectionModel> list;
     private ProgressBar circularProgressBar;
     private TextView message;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -110,20 +110,20 @@ public class ServerLogsFragment extends BackFragment {
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
-                            list = new ArrayList<ModelUserConnection>();
+                            list = new ArrayList<UserConnectionModel>();
 
                             try {
                                 if (json != null) {
                                     if (json.has("result_count_all"))
-                                        list.add(new ModelUserConnection("Server Logs (" + json.getInt("result_count_all") + ")", Constants.TAB_VIEW_TYPE_SECTION));
+                                        list.add(new UserConnectionModel("Server Logs (" + json.getInt("result_count_all") + ")", Constants.TAB_VIEW_TYPE_SECTION));
                                     else
-                                        list.add(new ModelUserConnection("Server Logs", Constants.TAB_VIEW_TYPE_SECTION));
+                                        list.add(new UserConnectionModel("Server Logs", Constants.TAB_VIEW_TYPE_SECTION));
 
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         int array_length = array.length();
                                         for (int i = 0; i < array_length; i++) {
-                                            list.add(new ModelUserConnection(array.getJSONObject(i)));
+                                            list.add(new UserConnectionModel(array.getJSONObject(i)));
                                         }
                                     }
 
@@ -165,7 +165,7 @@ public class ServerLogsFragment extends BackFragment {
             ((ImageButton) rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mAdapter.addItem(new ModelUserConnection("Number", "" + i), 0);
+                    mAdapter.addItem(new UserConnectionModel("Number", "" + i), 0);
                     recyclerView.scrollToPosition(0);
                     i++;
                 }

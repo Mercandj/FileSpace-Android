@@ -105,7 +105,7 @@ public class LoginFragment extends BackFragment {
     }
 
     public void login() {
-        ModelUser user = new ModelUser();
+        UserModel user = new UserModel();
 
         if (!StringUtils.isNullOrEmpty(username.getText().toString()))
             user.username = username.getText().toString();
@@ -116,7 +116,7 @@ public class LoginFragment extends BackFragment {
         login(user);
     }
 
-    public void login(ModelUser user) {
+    public void login(UserModel user) {
         Log.d("LoginFragment", "login requestLaunched=" + requestLaunched);
         if (requestLaunched)
             return;

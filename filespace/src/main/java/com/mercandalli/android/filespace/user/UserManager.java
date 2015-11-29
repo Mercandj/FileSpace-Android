@@ -1,7 +1,7 @@
 package com.mercandalli.android.filespace.user;
 
 /**
- * Created by Jonathan on 24/10/2015.
+ * TODO - implement Mock and Impl
  */
 public class UserManager {
 }

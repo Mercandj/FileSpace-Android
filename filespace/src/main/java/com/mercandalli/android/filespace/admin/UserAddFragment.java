@@ -38,7 +38,7 @@ import com.mercandalli.android.filespace.common.util.HashUtils;
 import com.mercandalli.android.filespace.common.util.NetUtils;
 import com.mercandalli.android.filespace.common.util.StringPair;
 import com.mercandalli.android.filespace.common.util.StringUtils;
-import com.mercandalli.android.filespace.user.ModelUser;
+import com.mercandalli.android.filespace.user.UserModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,7 +53,7 @@ public class UserAddFragment extends BackFragment {
     private TextView username, password;
     private ImageButton circle;
 
-    private ModelUser newUser;
+    private UserModel newUser;
     private boolean requestLaunched = false;
 
     public static UserAddFragment newInstance() {
@@ -70,7 +70,7 @@ public class UserAddFragment extends BackFragment {
         this.username = (TextView) this.rootView.findViewById(R.id.username);
         this.password = (TextView) this.rootView.findViewById(R.id.password);
 
-        this.newUser = new ModelUser();
+        this.newUser = new UserModel();
 
         this.username.addTextChangedListener(new TextWatcher() {
             @Override

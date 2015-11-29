@@ -28,20 +28,20 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mercandalli.android.filespace.R;
 import com.mercandalli.android.filespace.common.listener.IModelUserListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AdapterModelUser extends RecyclerView.Adapter<AdapterModelUser.ViewHolder> {
 
-    private List<ModelUser> users;
+    private List<UserModel> users;
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
     private IModelUserListener moreListener;
 
-    public AdapterModelUser(List<ModelUser> users, IModelUserListener moreListener) {
+    public AdapterModelUser(List<UserModel> users, IModelUserListener moreListener) {
         this.users = users;
         this.moreListener = moreListener;
     }
@@ -54,7 +54,7 @@ public class AdapterModelUser extends RecyclerView.Adapter<AdapterModelUser.View
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         if (position < users.size()) {
-            final ModelUser user = users.get(position);
+            final UserModel user = users.get(position);
 
             viewHolder.title.setText(user.getAdapterTitle());
             viewHolder.subtitle.setText(user.getAdapterSubtitle());
@@ -108,23 +108,23 @@ public class AdapterModelUser extends RecyclerView.Adapter<AdapterModelUser.View
     }
 
 
-    public void remplaceList(ArrayList<ModelUser> list) {
+    public void remplaceList(ArrayList<UserModel> list) {
         users.clear();
         users.addAll(0, list);
         notifyDataSetChanged();
     }
 
-    public void addFirst(ArrayList<ModelUser> list) {
+    public void addFirst(ArrayList<UserModel> list) {
         users.addAll(0, list);
         notifyDataSetChanged();
     }
 
-    public void addLast(ArrayList<ModelUser> list) {
+    public void addLast(ArrayList<UserModel> list) {
         users.addAll(users.size(), list);
         notifyDataSetChanged();
     }
 
-    public void addItem(ModelUser name, int position) {
+    public void addItem(UserModel name, int position) {
         this.users.add(position, name);
         this.notifyItemInserted(position);
     }
@@ -139,8 +139,6 @@ public class AdapterModelUser extends RecyclerView.Adapter<AdapterModelUser.View
 
     @Override
     public int getItemViewType(int position) {
-        if (position < users.size())
-            return users.get(position).viewType;
         return 0;
     }
 

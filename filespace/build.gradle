@@ -15,8 +15,8 @@ android {
         applicationId "com.mercandalli.android.filespace"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 17
-        versionName "0.0.17"
+        versionCode 1
+        versionName "1.0.0"
     }
     buildTypes {
         release {
@@ -50,12 +50,14 @@ dependencies {
     //Dagger
     compile 'com.google.dagger:dagger:2.0.1'
     apt 'com.google.dagger:dagger-compiler:2.0.1'
-    compile 'org.glassfish:javax.annotation:10.0-b28'
 
+    //Network
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
 
+    //Other
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'org.glassfish:javax.annotation:10.0-b28'
 }

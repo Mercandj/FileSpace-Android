@@ -34,27 +34,27 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mercandalli.android.filespace.R;
+import com.mercandalli.android.filespace.common.fragment.BackFragment;
+import com.mercandalli.android.filespace.common.listener.IModelUserListener;
+import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
+import com.mercandalli.android.filespace.common.listener.IStringListener;
+import com.mercandalli.android.filespace.common.net.TaskGet;
+import com.mercandalli.android.filespace.common.net.TaskPost;
+import com.mercandalli.android.filespace.common.util.DialogUtils;
+import com.mercandalli.android.filespace.common.util.NetUtils;
+import com.mercandalli.android.filespace.common.util.StringPair;
+import com.mercandalli.android.filespace.common.view.divider.DividerItemDecoration;
+import com.mercandalli.android.filespace.user.AdapterModelConnversationUser;
+import com.mercandalli.android.filespace.user.ConversationUserModel;
+import com.mercandalli.android.filespace.user.UserModel;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.mercandalli.android.filespace.R;
-import com.mercandalli.android.filespace.common.listener.IModelUserListener;
-import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
-import com.mercandalli.android.filespace.common.listener.IStringListener;
-import com.mercandalli.android.filespace.user.ModelConversationUser;
-import com.mercandalli.android.filespace.user.ModelUser;
-import com.mercandalli.android.filespace.common.net.TaskGet;
-import com.mercandalli.android.filespace.common.net.TaskPost;
-import com.mercandalli.android.filespace.user.AdapterModelConnversationUser;
-import com.mercandalli.android.filespace.common.fragment.BackFragment;
-import com.mercandalli.android.filespace.common.view.divider.DividerItemDecoration;
-import com.mercandalli.android.filespace.common.util.DialogUtils;
-import com.mercandalli.android.filespace.common.util.NetUtils;
-import com.mercandalli.android.filespace.common.util.StringPair;
 
 /**
  * Created by Jonathan on 30/03/2015.
@@ -68,7 +68,7 @@ public class TalkFragment extends BackFragment {
     private RecyclerView recyclerView;
     private AdapterModelConnversationUser mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    List<ModelConversationUser> list;
+    List<ConversationUserModel> list;
     private ProgressBar circularProgressBar;
     private TextView message;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -131,7 +131,7 @@ public class TalkFragment extends BackFragment {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ModelConversationUser modelUser = new ModelConversationUser(mActivity, mApplicationCallback, array.getJSONObject(i));
+                                            ConversationUserModel modelUser = new ConversationUserModel(mActivity, mApplicationCallback, array.getJSONObject(i));
                                             list.add(modelUser);
                                         }
                                     }
@@ -168,11 +168,11 @@ public class TalkFragment extends BackFragment {
 
             this.mAdapter = new AdapterModelConnversationUser(list, new IModelUserListener() {
                 @Override
-                public void execute(final ModelUser modelUser) {
+                public void execute(final UserModel userModel) {
                     DialogUtils.prompt(mActivity, "Send Message", "Write your message", "Send", new IStringListener() {
                         @Override
                         public void execute(String text) {
-                            String url = mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserMessage + "/" + modelUser.id;
+                            String url = mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserMessage + "/" + userModel.id;
                             List<StringPair> parameters = new ArrayList<>();
                             parameters.add(new StringPair("message", "" + text));
 
@@ -205,7 +205,7 @@ public class TalkFragment extends BackFragment {
             this.mAdapter.setOnItemClickListener(new AdapterModelConnversationUser.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    list.get(position).open();
+                    list.get(position).open(mActivity, mApplicationCallback);
                 }
             });
 

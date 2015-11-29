@@ -16,7 +16,7 @@ import com.mercandalli.android.filespace.R;
 import com.mercandalli.android.filespace.common.Preconditions;
 import com.mercandalli.android.filespace.common.util.FileUtils;
 import com.mercandalli.android.filespace.common.util.FontUtils;
-import com.mercandalli.android.filespace.user.ModelUser;
+import com.mercandalli.android.filespace.user.UserModel;
 
 /**
  * The nav drawer header.
@@ -45,15 +45,15 @@ public class NavDrawerHeaderView extends FrameLayout {
     }
 
     /**
-     * Set the current {@link ModelUser}.
+     * Set the current {@link UserModel}.
      *
-     * @param modelUser      The {@link ModelUser}.
+     * @param userModel      The {@link UserModel}.
      * @param profilePicture The user profile picture.
      */
-    /* package */ void setUser(final ModelUser modelUser, final Bitmap profilePicture) {
-        Preconditions.checkNotNull(modelUser);
+    /* package */ void setUser(final UserModel userModel, final Bitmap profilePicture) {
+        Preconditions.checkNotNull(userModel);
 
-        mTitleTextView.setText(modelUser.username);
+        mTitleTextView.setText(userModel.username);
 
         mIconImageView.setVisibility(View.VISIBLE);
         mStorageImageView.setVisibility(View.GONE);

@@ -19,8 +19,8 @@
  */
 package com.mercandalli.android.filespace.common.listener;
 
-import com.mercandalli.android.filespace.user.ModelUser;
+import com.mercandalli.android.filespace.user.UserModel;
 
 public interface IModelUserListener {
-    void execute(ModelUser modelUser);
+    void execute(UserModel userModel);
 }

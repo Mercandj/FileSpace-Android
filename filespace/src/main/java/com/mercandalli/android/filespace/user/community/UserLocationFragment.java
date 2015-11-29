@@ -33,6 +33,19 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mercandalli.android.filespace.R;
+import com.mercandalli.android.filespace.common.fragment.BackFragment;
+import com.mercandalli.android.filespace.common.listener.IListener;
+import com.mercandalli.android.filespace.common.listener.ILocationListener;
+import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
+import com.mercandalli.android.filespace.common.net.TaskGet;
+import com.mercandalli.android.filespace.common.net.TaskPost;
+import com.mercandalli.android.filespace.common.util.DialogUtils;
+import com.mercandalli.android.filespace.common.util.GpsUtils;
+import com.mercandalli.android.filespace.common.util.NetUtils;
+import com.mercandalli.android.filespace.common.util.StringPair;
+import com.mercandalli.android.filespace.user.UserModel;
+import com.mercandalli.android.filespace.user.UserLocationModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,20 +53,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.mercandalli.android.filespace.R;
-import com.mercandalli.android.filespace.common.listener.IListener;
-import com.mercandalli.android.filespace.common.listener.ILocationListener;
-import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
-import com.mercandalli.android.filespace.user.ModelUser;
-import com.mercandalli.android.filespace.user.ModelUserLocation;
-import com.mercandalli.android.filespace.common.net.TaskGet;
-import com.mercandalli.android.filespace.common.net.TaskPost;
-import com.mercandalli.android.filespace.common.fragment.BackFragment;
-import com.mercandalli.android.filespace.common.util.DialogUtils;
-import com.mercandalli.android.filespace.common.util.GpsUtils;
-import com.mercandalli.android.filespace.common.util.NetUtils;
-import com.mercandalli.android.filespace.common.util.StringPair;
 
 
 public class UserLocationFragment extends BackFragment {
@@ -103,7 +102,7 @@ public class UserLocationFragment extends BackFragment {
                 */
             }
 
-            addLocation(new ModelUserLocation(mActivity, mApplicationCallback, "Zero Zero", 0, 0, 0));
+            addLocation(new UserLocationModel("Zero Zero", 0, 0, 0));
         }
 
 
@@ -174,14 +173,14 @@ public class UserLocationFragment extends BackFragment {
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
-                            List<ModelUserLocation> locations = new ArrayList<>();
+                            List<UserLocationModel> locations = new ArrayList<>();
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ModelUser modelUser = new ModelUser(mActivity, mApplicationCallback, array.getJSONObject(i));
-                                            locations.add(modelUser.userLocation);
+                                            UserModel userModel = new UserModel(mActivity, mApplicationCallback, array.getJSONObject(i));
+                                            locations.add(userModel.userLocation);
                                         }
                                     }
                                 } else
@@ -196,16 +195,16 @@ public class UserLocationFragment extends BackFragment {
             ).execute();
     }
 
-    public void addLocations(List<ModelUserLocation> locations) {
+    public void addLocations(List<UserLocationModel> locations) {
         int nbLocation = 0;
-        for (ModelUserLocation userLocation : locations) {
+        for (UserLocationModel userLocation : locations) {
             if (addLocation(userLocation))
                 nbLocation++;
         }
         text.setText(nbLocation + " user location" + ((nbLocation > 1) ? "s" : ""));
     }
 
-    public boolean addLocation(ModelUserLocation userLocation) {
+    public boolean addLocation(UserLocationModel userLocation) {
         if (map == null || userLocation == null)
             return false;
         if (userLocation.latitude == 0 && userLocation.longitude == 0)

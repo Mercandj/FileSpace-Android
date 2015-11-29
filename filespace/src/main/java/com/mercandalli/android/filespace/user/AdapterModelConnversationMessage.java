@@ -28,24 +28,20 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mercandalli.android.filespace.R;
 import com.mercandalli.android.filespace.common.listener.IModelUserListener;
-import com.mercandalli.android.filespace.main.ApplicationActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mercandalli.android.filespace.R;
-
 public class AdapterModelConnversationMessage extends RecyclerView.Adapter<AdapterModelConnversationMessage.ViewHolder> {
 
-    private ApplicationActivity app;
-    private List<ModelConversationMessage> users;
+    private List<UserConversationMessageModel> users;
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
     private IModelUserListener moreListener;
 
-    public AdapterModelConnversationMessage(ApplicationActivity app, List<ModelConversationMessage> users, IModelUserListener moreListener) {
-        this.app = app;
+    public AdapterModelConnversationMessage(List<UserConversationMessageModel> users, IModelUserListener moreListener) {
         this.users = users;
         this.moreListener = moreListener;
     }
@@ -58,12 +54,12 @@ public class AdapterModelConnversationMessage extends RecyclerView.Adapter<Adapt
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         if (position < users.size()) {
-            final ModelConversationMessage modelConversationMessage = users.get(position);
-            if (modelConversationMessage.user != null)
-                if (modelConversationMessage.user.bitmap != null)
-                    viewHolder.icon.setImageBitmap(modelConversationMessage.user.bitmap);
-            viewHolder.title.setText(modelConversationMessage.getAdapterTitle());
-            viewHolder.subtitle.setText(modelConversationMessage.getAdapterSubtitle());
+            final UserConversationMessageModel userConversationMessageModel = users.get(position);
+            if (userConversationMessageModel.user != null)
+                if (userConversationMessageModel.user.bitmap != null)
+                    viewHolder.icon.setImageBitmap(userConversationMessageModel.user.bitmap);
+            viewHolder.title.setText(userConversationMessageModel.getAdapterTitle());
+            viewHolder.subtitle.setText(userConversationMessageModel.getAdapterSubtitle());
         }
     }
 
@@ -102,23 +98,23 @@ public class AdapterModelConnversationMessage extends RecyclerView.Adapter<Adapt
     }
 
 
-    public void remplaceList(ArrayList<ModelConversationMessage> list) {
+    public void remplaceList(ArrayList<UserConversationMessageModel> list) {
         users.clear();
         users.addAll(0, list);
         notifyDataSetChanged();
     }
 
-    public void addFirst(ArrayList<ModelConversationMessage> list) {
+    public void addFirst(ArrayList<UserConversationMessageModel> list) {
         users.addAll(0, list);
         notifyDataSetChanged();
     }
 
-    public void addLast(ArrayList<ModelConversationMessage> list) {
+    public void addLast(ArrayList<UserConversationMessageModel> list) {
         users.addAll(users.size(), list);
         notifyDataSetChanged();
     }
 
-    public void addItem(ModelConversationMessage name, int position) {
+    public void addItem(UserConversationMessageModel name, int position) {
         this.users.add(position, name);
         this.notifyItemInserted(position);
     }
@@ -133,8 +129,6 @@ public class AdapterModelConnversationMessage extends RecyclerView.Adapter<Adapt
 
     @Override
     public int getItemViewType(int position) {
-        if (position < users.size())
-            return users.get(position).viewType;
         return 0;
     }
 

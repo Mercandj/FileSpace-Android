@@ -19,35 +19,30 @@
  */
 package com.mercandalli.android.filespace.user;
 
+import com.mercandalli.android.filespace.main.Constants;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.mercandalli.android.filespace.common.model.Model;
-import com.mercandalli.android.filespace.main.Constants;
-
-public class ModelUserConnection extends Model {
+public class UserConnectionModel {
 
     public String title, date_creation, url, username;
     public int viewType = Constants.TAB_VIEW_TYPE_NORMAL;
     public int id_user;
 
-    public ModelUserConnection() {
-        super();
-    }
-
-    public ModelUserConnection(String date_creation, String url) {
+    public UserConnectionModel(String date_creation, String url) {
         super();
         this.date_creation = date_creation;
         this.url = url;
     }
 
-    public ModelUserConnection(String title, int viewType) {
+    public UserConnectionModel(String title, int viewType) {
         super();
         this.title = title;
         this.viewType = viewType;
     }
 
-    public ModelUserConnection(JSONObject json) {
+    public UserConnectionModel(JSONObject json) {
         super();
         try {
             if (json.has("date_creation"))
@@ -64,17 +59,13 @@ public class ModelUserConnection extends Model {
     }
 
     public String getAdapterTitle() {
-        if (viewType != Constants.TAB_VIEW_TYPE_NORMAL)
+        if (viewType != Constants.TAB_VIEW_TYPE_NORMAL) {
             return title;
+        }
         return ((this.username == null) ? "#" + this.id_user : this.username) + " : " + this.date_creation;
     }
 
     public String getAdapterSubtitle() {
         return "" + this.url;
-    }
-
-    @Override
-    public JSONObject toJSONObject() {
-        return null;
     }
 }

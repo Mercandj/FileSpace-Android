@@ -64,7 +64,7 @@ public class ProfileFragment extends BackFragment {
 
     private View rootView;
     private ProgressBar circularProgressBar;
-    private ModelUser user;
+    private UserModel user;
 
     private TextView username;
     private RecyclerView recyclerView;
@@ -140,7 +140,7 @@ public class ProfileFragment extends BackFragment {
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
-                                        user = new ModelUser(mActivity, mApplicationCallback, json.getJSONObject("result"));
+                                        user = new UserModel(mActivity, mApplicationCallback, json.getJSONObject("result"));
                                         list.clear();
                                         list.add(new ModelSetting("Username", "" + user.username));
                                         list.add(new ModelSetting("Files size", FileUtils.humanReadableByteCount(user.size_files) + " / " + FileUtils.humanReadableByteCount(user.server_max_size_end_user)));

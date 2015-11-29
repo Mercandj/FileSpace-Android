@@ -119,7 +119,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
 
         Bitmap x = null;
         try {
-            StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser(mActivity).getAccessLogin()).append(":").append(app.getConfig().getUser(mActivity).getAccessPassword());
+            StringBuilder authentication = new StringBuilder().append(app.getConfig().getUser().getAccessLogin()).append(":").append(app.getConfig().getUser().getAccessPassword());
             String result = Base64.encodeBytes(authentication.toString().getBytes());
 
             HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();

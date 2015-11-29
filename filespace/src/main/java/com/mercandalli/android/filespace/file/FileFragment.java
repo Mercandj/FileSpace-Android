@@ -42,7 +42,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.mercandalli.android.filespace.R;
-import com.mercandalli.android.filespace.search.SearchActivity;
 import com.mercandalli.android.filespace.common.fragment.BackFragment;
 import com.mercandalli.android.filespace.common.fragment.FabFragment;
 import com.mercandalli.android.filespace.common.listener.IListener;
@@ -54,6 +53,7 @@ import com.mercandalli.android.filespace.file.cloud.FileMyCloudFragment;
 import com.mercandalli.android.filespace.file.local.FileLocalFragment;
 import com.mercandalli.android.filespace.main.ApplicationCallback;
 import com.mercandalli.android.filespace.main.Constants;
+import com.mercandalli.android.filespace.search.SearchActivity;
 
 public class FileFragment extends BackFragment implements ViewPager.OnPageChangeListener, FabFragment.RefreshFabCallback {
 
@@ -188,8 +188,9 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                     updateNoInternet();
                     break;
                 default:
-                    if (mSnackbar != null)
+                    if (mSnackbar != null) {
                         mSnackbar.dismiss();
+                    }
             }
             refreshFab(position);
         } else {
@@ -441,8 +442,9 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     }
 
     private void refreshFab(int currentFragmentId) {
-        if (currentFragmentId == -1)
+        if (currentFragmentId == -1) {
             return;
+        }
         FabFragment fabFragment = getCurrentFragment();
         if (fabFragment == null) {
             return;
@@ -458,8 +460,9 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         if (currentFragment.isFabVisible(0)) {
             mFab1.show();
             imageResource = currentFragment.getFabImageResource(0);
-            if (imageResource == -1)
+            if (imageResource == -1) {
                 imageResource = android.R.drawable.ic_input_add;
+            }
             mFab1.setImageResource(imageResource);
             mFab1.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -467,8 +470,9 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                     currentFragment.onFabClick(0, mFab1);
                 }
             });
-        } else
+        } else {
             mFab1.hide();
+        }
 
         if (mFab2 == null) {
             return;
@@ -476,8 +480,9 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         if (currentFragment.isFabVisible(1)) {
             mFab2.show();
             imageResource = currentFragment.getFabImageResource(1);
-            if (imageResource == -1)
+            if (imageResource == -1) {
                 imageResource = android.R.drawable.ic_input_add;
+            }
             mFab2.setImageResource(imageResource);
             mFab2.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -485,8 +490,9 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                     currentFragment.onFabClick(1, mFab2);
                 }
             });
-        } else
+        } else {
             mFab2.hide();
+        }
     }
 
     public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -524,8 +530,9 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
         @Override
         public CharSequence getPageTitle(int i) {
-            if (!mApplicationCallback.isLogged())
+            if (!mApplicationCallback.isLogged()) {
                 i += 2;
+            }
             String title = "null";
             switch (i) {
                 case 0:

@@ -1,23 +1,14 @@
 package com.mercandalli.android.filespace.user;
 
-import android.app.Activity;
-
-import com.mercandalli.android.filespace.common.model.Model;
-import com.mercandalli.android.filespace.main.ApplicationCallback;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by Assima on 7/6/15.
- */
-public class ModelUserLocation extends Model {
+public class UserLocationModel {
 
     public double longitude, latitude, altitude;
     public String title = "";
 
-    public ModelUserLocation(Activity activity, ApplicationCallback app, JSONObject json) {
-        super(activity, app);
+    public UserLocationModel(JSONObject json) {
         try {
             if (json.has("username"))
                 this.title = json.getString("username");
@@ -33,16 +24,10 @@ public class ModelUserLocation extends Model {
         }
     }
 
-    public ModelUserLocation(Activity activity, ApplicationCallback app, String title, double longitude, double latitude, double altitude) {
-        super(activity, app);
+    public UserLocationModel(String title, double longitude, double latitude, double altitude) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.altitude = altitude;
         this.title = title;
-    }
-
-    @Override
-    public JSONObject toJSONObject() {
-        return null;
     }
 }
