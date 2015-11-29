@@ -35,9 +35,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelInformation.ViewHolder> {
+
+    private final Activity mActivity;
     private final List<ModelInformation> mModelInformations;
-    OnItemClickListener mItemClickListener;
-    Activity mActivity;
+    private OnItemClickListener mItemClickListener;
 
     public AdapterModelInformation(final Activity activity, List<ModelInformation> modelInformations) {
         this.mModelInformations = new ArrayList<>();
@@ -57,11 +58,11 @@ public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelIn
         ModelInformation model = mModelInformations.get(position);
         switch (model.viewType) {
             case Constants.TAB_VIEW_TYPE_NORMAL:
-                viewHolder.title.setText("" + model.title);
-                viewHolder.value.setText("" + model.value);
+                viewHolder.title.setText(String.format("%s", model.title));
+                viewHolder.value.setText(String.format("%s", model.value));
                 break;
             case Constants.TAB_VIEW_TYPE_SECTION:
-                viewHolder.title.setText("" + model.title);
+                viewHolder.title.setText(String.format("%s", model.title));
                 FontUtils.applyFont(mActivity, viewHolder.title, "fonts/MYRIADAB.TTF");
                 break;
         }
@@ -89,7 +90,7 @@ public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelIn
         @Override
         public void onClick(View v) {
             if (mItemClickListener != null)
-                mItemClickListener.onItemClick(v, getPosition());
+                mItemClickListener.onItemClick(v, getAdapterPosition());
         }
     }
 
@@ -110,10 +111,6 @@ public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelIn
         notifyItemRemoved(position);
     }
 
-    public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
-    }
-
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }
@@ -123,5 +120,9 @@ public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelIn
         if (position < mModelInformations.size())
             return mModelInformations.get(position).viewType;
         return 0;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
     }
 }
