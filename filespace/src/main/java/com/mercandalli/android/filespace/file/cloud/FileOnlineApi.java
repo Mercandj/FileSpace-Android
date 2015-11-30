@@ -1,5 +1,6 @@
 package com.mercandalli.android.filespace.file.cloud;
 
+import com.mercandalli.android.filespace.file.FileUploadTypedFile;
 import com.mercandalli.android.filespace.main.Config;
 import com.mercandalli.android.filespace.file.FileModel;
 import com.mercandalli.android.filespace.file.cloud.response.FilesResponse;
@@ -11,7 +12,6 @@ import retrofit.http.POST;
 import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.Query;
-import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
 /**
@@ -29,7 +29,7 @@ public interface FileOnlineApi {
     @Multipart
     @POST("/" + Config.routeFile)
     void uploadFile(
-            @Part("file") TypedFile file,
+            @Part("file") FileUploadTypedFile file,
             @Part("url") TypedString url,
             @Part("id_file_parent") TypedString id_file_parent,
             @Part("directory") TypedString directory,

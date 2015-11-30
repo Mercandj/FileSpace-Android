@@ -2,6 +2,7 @@ package com.mercandalli.android.filespace.file;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +12,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.util.Pair;
 import android.text.Spanned;
 import android.util.Log;
@@ -60,18 +62,20 @@ import java.util.Map;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
 /**
  * A {@link FileModel} Manager.
  */
-public class FileManagerImpl extends FileManager {
+public class FileManagerImpl extends FileManager implements FileUploadTypedFile.FileUploadListener {
 
     private Context mContextApp;
     private FileOnlineApi mFileOnlineApi;
     private FileLocalApi mFileLocalApi;
     private FilePersistenceApi mFilePersistenceApi;
+
+    private NotificationManager mNotifyManager;
+    private NotificationCompat.Builder mNotificationBuilder;
 
     public FileManagerImpl(Context contextApp, FileOnlineApi fileOnlineApi, FileLocalApi fileLocalApi, FilePersistenceApi filePersistenceApi) {
         Preconditions.checkNotNull(contextApp);
@@ -132,7 +136,7 @@ public class FileManagerImpl extends FileManager {
                 return;
             }
             mFileOnlineApi.uploadFile(
-                    new TypedFile("*/*", fileModel.getFile()),
+                    new FileUploadTypedFile("*/*", fileModel, this),
                     new TypedString(fileModel.getName()),
                     new TypedString("" + idFileParent),
                     new TypedString("false"),
@@ -641,6 +645,37 @@ public class FileManagerImpl extends FileManager {
                 }
             });
         }
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onFileUploadProgress(final FileModel fileModel, long progress, long length) {
+        if (mNotificationBuilder == null) {
+            mNotificationBuilder = new NotificationCompat.Builder(this.mContextApp);
+            mNotificationBuilder.setContentTitle("Upload: " + fileModel.getName())
+                    .setContentText("Upload in progress: " + FileUtils.humanReadableByteCount(progress) + " / " + FileUtils.humanReadableByteCount(length))
+                    .setSmallIcon(R.drawable.ic_notification);
+        } else {
+            mNotificationBuilder.setContentText("Upload in progress: " + FileUtils.humanReadableByteCount(progress) + " / " + FileUtils.humanReadableByteCount(length));
+        }
+        mNotificationBuilder.setProgress((int) (length / 1000.0f), (int) (progress / 1000.0f), false);
+
+        if (mNotifyManager == null) {
+            mNotifyManager = (NotificationManager) this.mContextApp.getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+        mNotifyManager.notify(1, mNotificationBuilder.build());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onFileUploadFinished(FileModel fileModel) {
+        mNotificationBuilder.setContentText("Upload complete")
+                // Removes the progress bar
+                .setProgress(0, 0, false);
+        mNotifyManager.notify(1, mNotificationBuilder.build());
     }
 }
