@@ -82,7 +82,7 @@ public class myRenderer implements GLSurfaceView.Renderer {
 
         GLES30.glFlush();
 
-        // fps measure and display
+        // fps measure and buildDisplay
         tmp_fps++;
         if ((tmp_time = (System.currentTimeMillis() - time)) > 1000) {
             handler.post(new Runnable() { // Access UIThred

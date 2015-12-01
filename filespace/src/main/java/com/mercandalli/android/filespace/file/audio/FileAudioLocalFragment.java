@@ -68,7 +68,7 @@ public class FileAudioLocalFragment extends InjectedFragment
 
     private RecyclerView mRecyclerView; // http://nhaarman.github.io/ListViewAnimations/
     private GridView mGridView;
-    private ArrayList<FileAudioModel> files;
+    private List<FileAudioModel> files;
     private ProgressBar mProgressBar;
     private TextView message;
 

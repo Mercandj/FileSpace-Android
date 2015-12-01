@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.Date;
 
 /**
- * The main file model.
+ * The main file buildModel.
  */
 public class FileModel implements Parcelable {
 

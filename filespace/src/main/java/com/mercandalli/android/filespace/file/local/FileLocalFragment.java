@@ -66,7 +66,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 /**
- * A {@link InjectedFragment} used to display the local {@link FileModel} provide by the
+ * A {@link InjectedFragment} used to buildDisplay the local {@link FileModel} provide by the
  * {@link FileLocalApi}.
  */
 public class FileLocalFragment extends InjectedFragment implements

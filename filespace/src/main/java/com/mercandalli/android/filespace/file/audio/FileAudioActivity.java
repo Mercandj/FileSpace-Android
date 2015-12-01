@@ -71,11 +71,10 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
 
         intent.putExtra(EXTRA_IS_ONLINE, false);
         intent.putExtra(EXTRA_FILE_CURRENT_POSITION, currentPosition);
-        intent.putExtra(EXTRA_FILES_PATH, new ArrayList<>(fileMusicPath));//fileMusicPath.toArray());
+        intent.putExtra(EXTRA_FILES_PATH, new ArrayList<>(fileMusicPath));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && animationView != null) {
-            Pair<View, String> sharedPictureElt = Pair.create(animationView, "transitionIcon");
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sharedPictureElt);
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, animationView, "transitionIcon");
             args = options.toBundle();
         }
 

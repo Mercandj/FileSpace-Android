@@ -25,7 +25,7 @@ import android.widget.Button;
 import com.mercandalli.android.filespace.R;
 
 /**
- * OpenGL Fragment : display GLSurfaceView
+ * OpenGL Fragment : buildDisplay GLSurfaceView
  *
  * @author Jonathan
  */

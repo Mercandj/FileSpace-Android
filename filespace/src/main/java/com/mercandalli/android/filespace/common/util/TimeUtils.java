@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- * Created by Jonathan on 15/05/2015.
+ * The time util.
  */
 public class TimeUtils {
     private static final int SECOND = 1000;

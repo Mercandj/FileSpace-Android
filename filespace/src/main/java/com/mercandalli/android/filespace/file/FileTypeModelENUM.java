@@ -36,7 +36,7 @@ public enum FileTypeModelENUM {
     VCF(new FileTypeModel("Business card", new String[]{"vcf"})),
     PDF(new FileTypeModel("Pdf", "pdf")),
     SOURCE(new FileTypeModel("Source code", new String[]{"java", "c", "cs", "cpp", "sql", "php", "html", "js", "css"})),
-    THREE_D(new FileTypeModel("3d model", new String[]{"3ds", "obj", "max"})),
+    THREE_D(new FileTypeModel("3d buildModel", new String[]{"3ds", "obj", "max"})),
     ISO(new FileTypeModel("Optical disc", new String[]{"iso"})),
     KEYSTORE(new FileTypeModel("KeyStore", new String[]{"keystore", "jdk"})),
     DIRECTORY(new FileTypeModel("Directory", new String[]{"dir", ""}));

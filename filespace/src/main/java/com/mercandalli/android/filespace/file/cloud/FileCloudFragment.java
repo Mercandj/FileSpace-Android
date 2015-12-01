@@ -72,7 +72,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
- * A {@link FabFragment} used by {@link FileFragment} to display the public cloud {@link FileModel}.
+ * A {@link FabFragment} used by {@link FileFragment} to buildDisplay the public cloud {@link FileModel}.
  */
 public class FileCloudFragment extends InjectedFragment implements
         BackFragment.IListViewMode,

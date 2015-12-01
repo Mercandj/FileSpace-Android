@@ -31,6 +31,8 @@ import com.mercandalli.android.filespace.file.FileFragment;
 import com.mercandalli.android.filespace.notificationpush.NotificationPush;
 import com.mercandalli.android.filespace.user.community.CommunityFragment;
 
+import static com.mercandalli.android.filespace.device.DeviceUtils.getDevice;
+
 /**
  * Main {@link Activity} launched by the xml.
  */
@@ -55,6 +57,8 @@ public class MainActivity extends NavDrawerActivity implements SetToolbarCallbac
             Log.d("ActivityMain", "Already Registered with GCM Server!");
             NotificationPush.mainActNotif(this);
         }
+
+        getDevice(this);
     }
 
     @Override
