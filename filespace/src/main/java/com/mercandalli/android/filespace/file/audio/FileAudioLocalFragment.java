@@ -26,7 +26,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +57,6 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -101,6 +99,22 @@ public class FileAudioLocalFragment extends InjectedFragment
         };
     }
 
+    private void updateLayoutManager() {
+        if (!mIsInsideFolder) {
+            if (getResources().getBoolean(R.bool.is_landscape)) {
+                mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+            } else {
+                mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            }
+        } else {
+            if (getResources().getBoolean(R.bool.is_landscape)) {
+                mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            } else {
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            }
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_file_drag_drop, container, false);
@@ -110,11 +124,7 @@ public class FileAudioLocalFragment extends InjectedFragment
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
         mRecyclerView.setHasFixedSize(true);
-        if (getResources().getBoolean(R.bool.is_landscape)) {
-            mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        } else {
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        }
+        updateLayoutManager();
 
         mFileModels = new ArrayList<>();
 
@@ -197,7 +207,12 @@ public class FileAudioLocalFragment extends InjectedFragment
             }
         });
 
-        mFileModelCardAdapter = new FileModelCardAdapter(mFileModels, null, null, null);
+        mFileModelCardAdapter = new FileModelCardAdapter(mFileModels, null, new FileModelCardAdapter.OnFileClickListener() {
+            @Override
+            public void onFileClick(View view, int position) {
+                refreshList(mFileModels.get(position));
+            }
+        }, null);
 
         mRecyclerView.setAdapter(mFileModelCardAdapter);
 
@@ -209,11 +224,11 @@ public class FileAudioLocalFragment extends InjectedFragment
     }
 
     public void refreshList() {
-        mIsInsideFolder = false;
         refreshList("");
     }
 
     public void refreshList(final String search) {
+        mIsInsideFolder = false;
         if (mFileManager == null) {
             return;
         }
@@ -270,9 +285,15 @@ public class FileAudioLocalFragment extends InjectedFragment
             } else
                 message.setVisibility(View.GONE);
 
-            mFileAudioDragAdapter.setList(mFileModels);
-            mFileModelCardAdapter.setList(mFileModels);
+            if (mIsInsideFolder) {
+                mFileAudioDragAdapter.setList(mFileModels);
+            } else {
+                mFileModelCardAdapter.setList(mFileModels);
+            }
 
+            updateLayoutManager();
+
+            /*
             // Extend the Callback class
             ItemTouchHelper.Callback _ithCallback = new ItemTouchHelper.Callback() {
                 //and in your imlpementaion of
@@ -310,6 +331,7 @@ public class FileAudioLocalFragment extends InjectedFragment
             // Create an `ItemTouchHelper` and attach it to the `RecyclerView`
             ItemTouchHelper ith = new ItemTouchHelper(_ithCallback);
             ith.attachToRecyclerView(mRecyclerView);
+            */
         }
     }
 

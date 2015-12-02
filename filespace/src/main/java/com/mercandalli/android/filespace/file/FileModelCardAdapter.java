@@ -217,8 +217,8 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
             more = itemLayoutView.findViewById(R.id.card_file_more);
             mOnFileClickListener = onFileClickListener;
             mOnFileLongClickListener = onFileLongClickListener;
-            itemLayoutView.setOnClickListener(this);
-            itemLayoutView.setOnLongClickListener(this);
+            item.setOnClickListener(this);
+            item.setOnLongClickListener(this);
         }
 
         @Override
