@@ -45,8 +45,7 @@ import javax.inject.Inject;
 
 public class FileAudioDragAdapter extends RecyclerView.Adapter<FileAudioDragAdapter.ViewHolder> {
 
-    private Activity mActivity;
-    private List<FileAudioModel> files;
+    private List<FileModel> files;
     private OnItemClickListener mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
     private FileModelListener moreListener;
@@ -60,14 +59,13 @@ public class FileAudioDragAdapter extends RecyclerView.Adapter<FileAudioDragAdap
     @Inject
     FileManager mFileManager;
 
-    public FileAudioDragAdapter(Activity activity, List<FileAudioModel> files, boolean hasHeader, FileModelListener moreListener) {
-        this.mActivity = activity;
+    public FileAudioDragAdapter(Activity activity, List<FileModel> files, boolean hasHeader, FileModelListener moreListener) {
         this.files = new ArrayList<>();
         this.files.addAll(files);
         this.moreListener = moreListener;
         this.mHasHeader = hasHeader;
 
-        App.get(mActivity).getAppComponent().inject(this);
+        App.get(activity).getAppComponent().inject(this);
     }
 
     @Override
@@ -93,7 +91,7 @@ public class FileAudioDragAdapter extends RecyclerView.Adapter<FileAudioDragAdap
 
         } else if (position < files.size() + (mHasHeader ? 1 : 0)) {
             final FileViewHolder fileViewHolder = (FileViewHolder) viewHolder;
-            final FileAudioModel file = files.get(position - (mHasHeader ? 1 : 0));
+            final FileModel file = files.get(position - (mHasHeader ? 1 : 0));
 
             fileViewHolder.title.setText(getAdapterTitle(file));
             fileViewHolder.subtitle.setText(getAdapterSubtitle(file));
@@ -208,7 +206,7 @@ public class FileAudioDragAdapter extends RecyclerView.Adapter<FileAudioDragAdap
         }
     }
 
-    public void setList(List<FileAudioModel> list) {
+    public void setList(List<FileModel> list) {
         files.clear();
         files.addAll(list);
         notifyDataSetChanged();
@@ -241,44 +239,53 @@ public class FileAudioDragAdapter extends RecyclerView.Adapter<FileAudioDragAdap
         }
 
         if (fileModel.getType() == null) {
-            if (fileModel.getName() != null)
+            if (fileModel.getName() != null) {
                 return adapterTitleStart + fileModel.getFullName();
-            else
+            } else {
                 return adapterTitleStart + fileModel.getUrl();
+            }
         } else if (fileModel.getType().equals(FileTypeModelENUM.FILESPACE.type) && fileModel.getContent() != null) {
             return adapterTitleStart + fileModel.getContent().getAdapterTitle();
-        } else if (fileModel.getName() != null)
+        } else if (fileModel.getName() != null) {
             return adapterTitleStart + fileModel.getFullName();
-        else
+        } else {
             return adapterTitleStart + fileModel.getUrl();
+        }
     }
 
-    public String getAdapterSubtitle(FileAudioModel fileAudioModel) {
-        if (!StringUtils.isNullOrEmpty(fileAudioModel.getAlbum()) && !StringUtils.isNullOrEmpty(fileAudioModel.getArtist())) {
-            return fileAudioModel.getArtist() + " - " + fileAudioModel.getAlbum();
-        }
-        if (!StringUtils.isNullOrEmpty(fileAudioModel.getArtist())) {
-            return fileAudioModel.getArtist();
-        }
-        if (!StringUtils.isNullOrEmpty(fileAudioModel.getAlbum())) {
-            return fileAudioModel.getAlbum();
-        }
+    public String getAdapterSubtitle(FileModel fileModel) {
+        if (fileModel.isDirectory()) {
+            return "Directory: " + fileModel.getCount() + (fileModel.getCount() > 1 ? " files" : " file");
+        } else if (fileModel instanceof FileAudioModel) {
+            final FileAudioModel fileAudioModel = (FileAudioModel) fileModel;
+            if (!StringUtils.isNullOrEmpty(fileAudioModel.getAlbum()) && !StringUtils.isNullOrEmpty(fileAudioModel.getArtist())) {
+                return fileAudioModel.getArtist() + " - " + fileAudioModel.getAlbum();
+            }
+            if (!StringUtils.isNullOrEmpty(fileAudioModel.getArtist())) {
+                return fileAudioModel.getArtist();
+            }
+            if (!StringUtils.isNullOrEmpty(fileAudioModel.getAlbum())) {
+                return fileAudioModel.getAlbum();
+            }
 
-        String adapterTitleStart = "";
-        if (mShowSize) {
-            adapterTitleStart = FileUtils.humanReadableByteCount(fileAudioModel.getSize()) + " - ";
-        }
+            String adapterTitleStart = "";
+            if (mShowSize) {
+                adapterTitleStart = FileUtils.humanReadableByteCount(fileAudioModel.getSize()) + " - ";
+            }
 
-        if (fileAudioModel.getType() == null) {
-            if (fileAudioModel.getName() != null)
+            if (fileAudioModel.getType() == null) {
+                if (fileAudioModel.getName() != null) {
+                    return adapterTitleStart + fileAudioModel.getFullName();
+                } else {
+                    return adapterTitleStart + fileAudioModel.getUrl();
+                }
+            } else if (fileAudioModel.getType().equals(FileTypeModelENUM.FILESPACE.type) && fileAudioModel.getContent() != null) {
+                return adapterTitleStart + fileAudioModel.getContent().getAdapterTitle();
+            } else if (fileAudioModel.getName() != null)
                 return adapterTitleStart + fileAudioModel.getFullName();
             else
                 return adapterTitleStart + fileAudioModel.getUrl();
-        } else if (fileAudioModel.getType().equals(FileTypeModelENUM.FILESPACE.type) && fileAudioModel.getContent() != null) {
-            return adapterTitleStart + fileAudioModel.getContent().getAdapterTitle();
-        } else if (fileAudioModel.getName() != null)
-            return adapterTitleStart + fileAudioModel.getFullName();
-        else
-            return adapterTitleStart + fileAudioModel.getUrl();
+        }
+        return "";
     }
 }

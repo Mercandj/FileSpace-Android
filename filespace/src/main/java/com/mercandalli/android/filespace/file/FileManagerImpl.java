@@ -56,6 +56,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -546,11 +547,11 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
     @Override
     public void getLocalMusic(final Context context, final int sortMode, final String search, final ResultCallback<List<FileAudioModel>> resultCallback) {
 
-        List<FileAudioModel> files = new ArrayList<>();
+        final List<FileAudioModel> files = new ArrayList<>();
 
-        String[] STAR = {"*"};
+        final String[] STAR = {"*"};
 
-        Uri allsongsuri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        final Uri allsongsuri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
 
         String[] searchArray = null;
@@ -624,6 +625,31 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         }
 
         resultCallback.success(files);
+    }
+
+
+
+    @Override
+    public void getLocalMusicFolder(Context context, int sortMode, String search, final ResultCallback<List<FileModel>> resultCallback) {
+        getLocalMusic(context, sortMode, search, new ResultCallback<List<FileAudioModel>>() {
+            @Override
+            public void success(final List<FileAudioModel> result) {
+                final Map<String, FileModel> directories = new HashMap<>();
+                for(FileAudioModel fileAudioModel : result) {
+                    File parent = fileAudioModel.getFile().getParentFile();
+                    FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
+                    fileModelBuilder.file(parent);
+                    directories.put(parent.getPath(), fileModelBuilder.build());
+                }
+
+                resultCallback.success(new ArrayList<>(directories.values()));
+            }
+
+            @Override
+            public void failure() {
+                resultCallback.failure();
+            }
+        });
     }
 
     @Override

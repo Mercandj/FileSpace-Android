@@ -285,6 +285,9 @@ public class FileModel implements Parcelable {
         return mLastModified;
     }
 
+    /**
+     * @return If is a directory return then umber of children.
+     */
     public long getCount() {
         return mCount;
     }
