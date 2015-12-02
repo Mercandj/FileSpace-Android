@@ -10,12 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
 import com.mercandalli.android.filespace.R;
 import com.mercandalli.android.filespace.common.animation.ScaleAnimationAdapter;
 import com.mercandalli.android.filespace.common.listener.ResultCallback;
@@ -25,6 +19,12 @@ import com.mercandalli.android.filespace.file.FileModel;
 import com.mercandalli.android.filespace.file.FileModelAdapter;
 import com.mercandalli.android.filespace.main.App;
 import com.mercandalli.android.filespace.main.Constants;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
 
 public class SearchActivity extends AppCompatActivity implements FileModelAdapter.OnFileClickListener {
 
@@ -64,7 +64,7 @@ public class SearchActivity extends AppCompatActivity implements FileModelAdapte
     }
 
     private void updateAdapter() {
-        FileModelAdapter adapter = new FileModelAdapter(mFileModelList, R.layout.tab_file_light, null, this, null);
+        FileModelAdapter adapter = new FileModelAdapter(mFileModelList, null, this, null);
         ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, adapter);
         scaleAnimationAdapter.setDuration(220);
         scaleAnimationAdapter.setOffsetDuration(32);

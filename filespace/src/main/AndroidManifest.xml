@@ -56,7 +56,7 @@
             android:required="false" />
 
         <activity
-            android:name="com.mercandalli.android.filespace.welcome.WelcomeActivity"
+            android:name=".init.InitActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize">

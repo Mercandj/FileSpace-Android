@@ -16,4 +16,8 @@
     <dimen name="default_24">24dp</dimen>
     <dimen name="default_32">32dp</dimen>
     <dimen name="default_64">64dp</dimen>
+
+
+    <dimen name="horizontal_margin">2dp</dimen>
+    <dimen name="horizontal_card_margin">8dp</dimen>
 </resources>

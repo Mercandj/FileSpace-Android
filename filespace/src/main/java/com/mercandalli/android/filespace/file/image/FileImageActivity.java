@@ -107,7 +107,7 @@ public class FileImageActivity extends ApplicationActivity {
 
             if (ImageUtils.is_image(this, this.mId)) {
                 bitmap = ImageUtils.load_image(this, this.mId);
-                ((ImageView) this.findViewById(R.id.icon)).setImageBitmap(bitmap);
+                ((ImageView) this.findViewById(R.id.tab_icon)).setImageBitmap(bitmap);
                 int bgColor = ColorUtils.getMutedColor(bitmap);
                 if (bgColor != 0) {
                     mTitleTextView.setBackgroundColor(bgColor);
@@ -123,7 +123,7 @@ public class FileImageActivity extends ApplicationActivity {
                 (new TaskGetDownloadImage(this, this, mUrl, mId, sizeFile, -1, new IBitmapListener() {
                     @Override
                     public void execute(Bitmap bitmap) {
-                        ((ImageView) findViewById(R.id.icon)).setImageBitmap(bitmap);
+                        ((ImageView) findViewById(R.id.tab_icon)).setImageBitmap(bitmap);
                         int bgColor = ColorUtils.getMutedColor(bitmap);
                         if (bgColor != 0) {
                             mTitleTextView.setBackgroundColor(bgColor);

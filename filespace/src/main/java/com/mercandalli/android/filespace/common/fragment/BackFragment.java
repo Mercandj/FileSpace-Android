@@ -78,15 +78,6 @@ public abstract class BackFragment extends Fragment {
      */
     public abstract void onFocus();
 
-    public interface IListViewMode {
-        /**
-         * Define if the list or grid.
-         *
-         * @param viewMode {@link Constants#MODE_LIST} or {@link Constants#MODE_GRID}
-         */
-        void setViewMode(int viewMode);
-    }
-
     public interface ISortMode {
         /**
          * Define the list sort.

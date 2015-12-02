@@ -28,20 +28,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mercandalli.android.filespace.R;
+import com.mercandalli.android.filespace.common.util.FileUtils;
+import com.mercandalli.android.filespace.common.util.StringUtils;
+import com.mercandalli.android.filespace.file.FileManager;
+import com.mercandalli.android.filespace.file.FileModel;
+import com.mercandalli.android.filespace.file.FileModelListener;
+import com.mercandalli.android.filespace.file.FileTypeModel;
+import com.mercandalli.android.filespace.file.FileTypeModelENUM;
+import com.mercandalli.android.filespace.main.App;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import com.mercandalli.android.filespace.R;
-import com.mercandalli.android.filespace.main.App;
-import com.mercandalli.android.filespace.file.FileModelListener;
-import com.mercandalli.android.filespace.file.FileManager;
-import com.mercandalli.android.filespace.file.FileModel;
-import com.mercandalli.android.filespace.file.FileTypeModel;
-import com.mercandalli.android.filespace.file.FileTypeModelENUM;
-import com.mercandalli.android.filespace.common.util.FileUtils;
-import com.mercandalli.android.filespace.common.util.StringUtils;
 
 public class FileAudioDragAdapter extends RecyclerView.Adapter<FileAudioDragAdapter.ViewHolder> {
 
@@ -83,7 +83,7 @@ public class FileAudioDragAdapter extends RecyclerView.Adapter<FileAudioDragAdap
         if (viewType == TYPE_HEADER) {
             return new HeaderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_header, parent, false), viewType);
         }
-        return new FileViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_drag, parent, false), viewType);
+        return new FileViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_card_drag_drop, parent, false), viewType);
     }
 
     @Override
@@ -152,11 +152,11 @@ public class FileAudioDragAdapter extends RecyclerView.Adapter<FileAudioDragAdap
 
         public FileViewHolder(View itemLayoutView, int viewType) {
             super(itemLayoutView);
-            item = itemLayoutView.findViewById(R.id.item);
-            title = (TextView) itemLayoutView.findViewById(R.id.title);
-            subtitle = (TextView) itemLayoutView.findViewById(R.id.subtitle);
-            icon = (ImageView) itemLayoutView.findViewById(R.id.icon);
-            more = itemLayoutView.findViewById(R.id.more);
+            item = itemLayoutView.findViewById(R.id.tab_file_card_drag_drop_item);
+            title = (TextView) itemLayoutView.findViewById(R.id.tab_file_card_drag_drop_title);
+            subtitle = (TextView) itemLayoutView.findViewById(R.id.tab_file_card_drag_drop_subtitle);
+            icon = (ImageView) itemLayoutView.findViewById(R.id.tab_file_card_drag_drop_icon);
+            more = itemLayoutView.findViewById(R.id.tab_file_card_drag_drop_more);
             itemLayoutView.setOnClickListener(this);
             itemLayoutView.setOnLongClickListener(this);
         }
@@ -164,7 +164,7 @@ public class FileAudioDragAdapter extends RecyclerView.Adapter<FileAudioDragAdap
         @Override
         public void onClick(View v) {
             if (mItemClickListener != null)
-                mItemClickListener.onItemClick(v, getAdapterPosition());
+                mItemClickListener.onItemClick(icon, getAdapterPosition());
         }
 
         @Override

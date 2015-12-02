@@ -78,7 +78,7 @@ public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterMode
                     item = (RelativeLayout) itemLayoutView.findViewById(R.id.item);
                     title = (TextView) itemLayoutView.findViewById(R.id.title);
                     value = (TextView) itemLayoutView.findViewById(R.id.value);
-                    icon = (ImageView) itemLayoutView.findViewById(R.id.icon);
+                    icon = (ImageView) itemLayoutView.findViewById(R.id.tab_icon);
                     break;
                 case Constants.TAB_VIEW_TYPE_SECTION:
                     title = (TextView) itemLayoutView.findViewById(R.id.title);

@@ -69,8 +69,6 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
     private View coordinatorLayoutView;
     private Snackbar mSnackbar;
 
-    private int mViewMode = Constants.MODE_LIST;
-
     private String mTitle;
     private SetToolbarCallback mSetToolbarCallback;
 
@@ -368,7 +366,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
 
     public void sort() {
         final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
-        String[] menuList = {"Sort by name (A-Z)", "Sort by size", "Sort by date", mApplicationCallback.getConfig().getUserFileModeView() == Constants.MODE_LIST ? "Grid View" : "List View"};
+        String[] menuList = {"Sort by name (A-Z)", "Sort by size", "Sort by date"};
         menuAlert.setTitle(getString(R.string.view));
         menuAlert.setItems(menuList,
                 new DialogInterface.OnClickListener() {
@@ -389,23 +387,6 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
                                         }
                                     }
                                 }
-                                break;
-
-                            case 3:
-                                if (mViewMode == Constants.MODE_LIST) {
-                                    mViewMode = Constants.MODE_GRID;
-                                } else {
-                                    mViewMode = Constants.MODE_LIST;
-                                }
-                                mApplicationCallback.getConfig().setUserFileModeView(mActivity, mViewMode);
-                                FabFragment fabFragment = getCurrentFragment();
-                                if (fabFragment != null) {
-                                    if (fabFragment instanceof IListViewMode) {
-                                        IListViewMode fragmentFileManagerFragment = (IListViewMode) fabFragment;
-                                        fragmentFileManagerFragment.setViewMode(mViewMode);
-                                    }
-                                }
-
                                 break;
                             default:
                                 Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();

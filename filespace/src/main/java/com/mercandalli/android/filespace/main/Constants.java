@@ -25,21 +25,15 @@ public class Constants {
 
     public static final int TAB_VIEW_TYPE_NORMAL = 0;
     public static final int TAB_VIEW_TYPE_SECTION = 1;
-    public static final int TAB_VIEW_TYPE_SECTION_TITLE = 2;
-    public static final int TAB_VIEW_TYPE_SETTING = 3;
-    public static final int TAB_VIEW_TYPE_SETTING_NO_SELECTABLE = 4;
-    public static final int TAB_VIEW_TYPE_PROFILE = 5;
-    public static final int TAB_VIEW_TYPE_TWO_BUTTONS = 6;
-    public static final int TAB_VIEW_TYPE_HOME_INFORMATION = 7;
-    public static final int TAB_VIEW_TYPE_HOME_INFORMATION_FORM = 8;
-    public static final int TAB_VIEW_TYPE_HOME_IMAGE = 9;
+    public static final int TAB_VIEW_TYPE_TWO_BUTTONS = 2;
+    public static final int TAB_VIEW_TYPE_HOME_INFORMATION = 3;
+    public static final int TAB_VIEW_TYPE_HOME_INFORMATION_FORM = 4;
+    public static final int TAB_VIEW_TYPE_HOME_IMAGE = 5;
 
     public static final long SIZE_MAX_ONLINE_PICTURE_ICON = 100000;
     public static final int WIDTH_MAX_ONLINE_PICTURE_BITMAP = 500;
 
-    public static final int MODE_LIST = 0;
-    public static final int MODE_GRID = 1;
-    public static final int SORT_DATE_MODIFICATION = 2;
-    public static final int SORT_ABC = 3;
-    public static final int SORT_SIZE = 4;
+    public static final int SORT_DATE_MODIFICATION = 0;
+    public static final int SORT_ABC = 1;
+    public static final int SORT_SIZE = 2;
 }

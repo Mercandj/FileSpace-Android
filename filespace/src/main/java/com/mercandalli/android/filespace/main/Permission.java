@@ -1,8 +1,11 @@
 package com.mercandalli.android.filespace.main;
 
 import android.app.Activity;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+
+import com.mercandalli.android.filespace.common.Preconditions;
 
 public class Permission {
 
@@ -11,21 +14,33 @@ public class Permission {
     final Activity mActivity;
     final String[] mPermissions;
 
+    private OnPermissionResult mOnPermissionResult;
+
     public Permission(Activity activity, String[] permissions) {
         mActivity = activity;
         mPermissions = permissions;
     }
 
-    public void askPermissions() {
-        ActivityCompat.requestPermissions(mActivity, mPermissions, REQUEST_CODE);
+    /**
+     * @return True if ask request.
+     */
+    public void askPermissions(OnPermissionResult onPermissionResult) {
+        Preconditions.checkNotNull(onPermissionResult);
+        mOnPermissionResult = onPermissionResult;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(mActivity, mPermissions, REQUEST_CODE);
+        } else {
+            onPermissionResult.onPermissionResult(true);
+        }
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (REQUEST_CODE == requestCode) {
-
-        } else {
-
+            mOnPermissionResult.onPermissionResult(true);
         }
     }
 
+    public interface OnPermissionResult {
+        void onPermissionResult(boolean succeed);
+    }
 }

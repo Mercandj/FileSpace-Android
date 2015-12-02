@@ -30,9 +30,9 @@
             android:singleLine="true"
             android:textColor="#000"
             android:textSize="13sp"
-            android:layout_toEndOf="@+id/icon"
+            android:layout_toEndOf="@+id/tab_icon"
             android:layout_toStartOf="@+id/more"
-            android:layout_alignTop="@+id/icon"
+            android:layout_alignTop="@+id/tab_icon"
             android:gravity="top"
             />
 
@@ -50,15 +50,15 @@
             android:singleLine="true"
             android:textColor="#666"
             android:textSize="12sp"
-            android:layout_alignBottom="@+id/icon"
+            android:layout_alignBottom="@+id/tab_icon"
             android:gravity="bottom"
             android:layout_marginBottom="2dp"
-            android:layout_toEndOf="@+id/icon"
+            android:layout_toEndOf="@+id/tab_icon"
             android:layout_toStartOf="@+id/more"
             />
 
         <com.mercandalli.android.filespace.common.view.CircularImageView
-            android:id="@+id/icon"
+            android:id="@+id/tab_icon"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_alignParentLeft="true"

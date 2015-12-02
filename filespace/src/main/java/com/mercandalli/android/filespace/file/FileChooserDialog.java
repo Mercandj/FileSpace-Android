@@ -23,16 +23,11 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.os.Environment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
 
 import com.mercandalli.android.filespace.R;
 import com.mercandalli.android.filespace.common.animation.ScaleAnimationAdapter;
@@ -40,6 +35,12 @@ import com.mercandalli.android.filespace.common.listener.ResultCallback;
 import com.mercandalli.android.filespace.common.view.divider.SpacesItemDecoration;
 import com.mercandalli.android.filespace.main.App;
 import com.mercandalli.android.filespace.main.Constants;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
 
 public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFileClickListener {
 
@@ -70,7 +71,11 @@ public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFile
 
         mRecyclerView = (RecyclerView) findViewById(R.id.files);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        if (activity.getResources().getBoolean(R.bool.is_landscape)) {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(activity, 2));
+        } else {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        }
         mRecyclerView.addItemDecoration(new SpacesItemDecoration(12, 2));
 
         mRootPath = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -95,7 +100,7 @@ public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFile
     }
 
     private void updateAdapter() {
-        FileModelAdapter adapter = new FileModelAdapter(mFileModelList, R.layout.tab_file_light, null, this, null);
+        FileModelAdapter adapter = new FileModelAdapter(mFileModelList, null, this, null);
         ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, adapter);
         scaleAnimationAdapter.setDuration(220);
         scaleAnimationAdapter.setOffsetDuration(32);

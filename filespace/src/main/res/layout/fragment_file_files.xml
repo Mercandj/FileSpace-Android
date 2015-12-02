@@ -15,25 +15,12 @@
             android:clickable="true"
             android:clipToPadding="false"
             android:focusable="true"
-            android:paddingTop="3dp"
+            android:paddingEnd="@dimen/horizontal_margin"
+            android:paddingStart="@dimen/horizontal_margin"
+            android:paddingTop="6dp"
             android:scrollbars="vertical" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
-
-    <GridView
-        android:id="@+id/gridView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:clipToPadding="false"
-        android:focusable="true"
-        android:horizontalSpacing="4dp"
-        android:numColumns="3"
-        android:paddingTop="20dp"
-        android:scrollbars="vertical"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="4dp"
-        android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/circularProgressBar"

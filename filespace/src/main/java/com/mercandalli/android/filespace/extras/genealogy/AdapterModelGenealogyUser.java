@@ -31,10 +31,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mercandalli.android.filespace.R;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.mercandalli.android.filespace.R;
 
 public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModelGenealogyUser.ViewHolder> {
 
@@ -97,7 +97,7 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
             item = (FrameLayout) itemLayoutView.findViewById(R.id.item);
             title = (TextView) itemLayoutView.findViewById(R.id.title);
             subtitle = (TextView) itemLayoutView.findViewById(R.id.subtitle);
-            icon = (ImageView) itemLayoutView.findViewById(R.id.icon);
+            icon = (ImageView) itemLayoutView.findViewById(R.id.tab_icon);
             more = (ImageButton) itemLayoutView.findViewById(R.id.more);
             itemLayoutView.setOnClickListener(this);
             itemLayoutView.setOnLongClickListener(this);

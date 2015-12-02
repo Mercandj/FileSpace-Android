@@ -19,27 +19,25 @@
  */
 package com.mercandalli.android.filespace.file.cloud;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mercandalli.android.filespace.R;
-import com.mercandalli.android.filespace.common.fragment.BackFragment;
 import com.mercandalli.android.filespace.common.fragment.InjectedFragment;
 import com.mercandalli.android.filespace.common.listener.IListener;
 import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
@@ -47,15 +45,12 @@ import com.mercandalli.android.filespace.common.listener.IStringListener;
 import com.mercandalli.android.filespace.common.listener.ResultCallback;
 import com.mercandalli.android.filespace.common.net.TaskPost;
 import com.mercandalli.android.filespace.common.util.DialogUtils;
-import com.mercandalli.android.filespace.common.util.FileUtils;
 import com.mercandalli.android.filespace.common.util.NetUtils;
 import com.mercandalli.android.filespace.common.util.StringPair;
 import com.mercandalli.android.filespace.file.FileAddDialog;
-import com.mercandalli.android.filespace.file.FileDivider;
 import com.mercandalli.android.filespace.file.FileManager;
 import com.mercandalli.android.filespace.file.FileModel;
 import com.mercandalli.android.filespace.file.FileModelAdapter;
-import com.mercandalli.android.filespace.file.FileModelGridAdapter;
 import com.mercandalli.android.filespace.file.FileModelListener;
 import com.mercandalli.android.filespace.file.FileTypeModelENUM;
 import com.mercandalli.android.filespace.main.AppComponent;
@@ -71,10 +66,10 @@ import java.util.Stack;
 
 import javax.inject.Inject;
 
-public class FileMyCloudFragment extends InjectedFragment implements BackFragment.IListViewMode, SwipeRefreshLayout.OnRefreshListener {
+public class FileMyCloudFragment extends InjectedFragment implements
+        SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView mRecyclerView;
-    private GridView mGridView;
     private FileModelAdapter mFileModelAdapter;
     private final ArrayList<FileModel> mFilesList = new ArrayList<>();
     private ProgressBar mProgressBar;
@@ -83,7 +78,6 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
     private final Stack<Integer> mIdFileDirectoryStack = new Stack<>();
     private final List<FileModel> mFilesToCutList = new ArrayList<>();
 
-    private int mViewMode = Constants.MODE_LIST;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Inject
@@ -96,6 +90,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_file_files, container, false);
+        final Activity activity = getActivity();
 
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         mMessageTextView = (TextView) rootView.findViewById(R.id.message);
@@ -109,10 +104,11 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        mGridView = (GridView) rootView.findViewById(R.id.gridView);
-        mGridView.setVisibility(View.GONE);
+        if (activity.getResources().getBoolean(R.bool.is_landscape)) {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(activity, 2));
+        } else {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        }
 
         resetPath();
 
@@ -282,7 +278,7 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
 
         mRecyclerView.setAdapter(mFileModelAdapter);
         mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
-        mRecyclerView.addItemDecoration(new FileDivider(ContextCompat.getColor(mActivity, R.color.file_divider)));
+        //mRecyclerView.addItemDecoration(new FileDivider(ContextCompat.getColor(mActivity, R.color.file_divider)));
 
         refreshList();
 
@@ -343,8 +339,6 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
     private void setListVisibility(boolean visible) {
         if (this.mRecyclerView != null)
             this.mRecyclerView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
-        if (this.mGridView != null)
-            this.mGridView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 
     public void updateAdapter() {
@@ -364,189 +358,6 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
             mFileModelAdapter.replaceList(mFilesList);
 
             refreshFab();
-
-            if (mViewMode == Constants.MODE_GRID) {
-                this.mGridView.setVisibility(View.VISIBLE);
-                this.mRecyclerView.setVisibility(View.GONE);
-
-                this.mGridView.setAdapter(new FileModelGridAdapter(mActivity, mFilesList));
-                this.mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        /*
-                        if (hasItemSelected()) {
-                            mFilesList.get(position).selected = !mFilesList.get(position).selected;
-                            mFileModelAdapter.notifyItemChanged(position);
-                        } else */
-                        if (mFilesList.get(position).isDirectory()) {
-                            FileMyCloudFragment.this.mIdFileDirectoryStack.add(mFilesList.get(position).getId());
-                            refreshList();
-                        } else {
-                            mFileManager.execute(mActivity, position, mFilesList, view);
-                        }
-                    }
-                });
-                this.mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                    @Override
-                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
-                        if (position >= mFilesList.size())
-                            return false;
-                        final FileModel fileModel = mFilesList.get(position);
-                        final AlertDialog.Builder menuAleart = new AlertDialog.Builder(mActivity);
-                        String[] menuList = {getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties)};
-                        if (!fileModel.isDirectory()) {
-                            if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
-                                menuList = new String[]{
-                                        getString(R.string.download),
-                                        getString(R.string.rename),
-                                        getString(R.string.delete),
-                                        getString(R.string.cut),
-                                        getString(R.string.properties),
-                                        fileModel.isPublic() ? "Become private" : "Become public", "Set as profile"};
-                            } else if (fileModel.getType().equals(FileTypeModelENUM.APK.type) && mApplicationCallback.getConfig().isUserAdmin()) {
-                                menuList = new String[]{
-                                        getString(R.string.download),
-                                        getString(R.string.rename),
-                                        getString(R.string.delete),
-                                        getString(R.string.cut),
-                                        getString(R.string.properties),
-                                        (fileModel.isPublic()) ? "Become private" : "Become public",
-                                        (fileModel.isApkUpdate()) ? "Remove the update" : "Set as update"};
-                            } else {
-                                menuList = new String[]{
-                                        getString(R.string.download),
-                                        getString(R.string.rename),
-                                        getString(R.string.delete),
-                                        getString(R.string.cut),
-                                        getString(R.string.properties),
-                                        (fileModel.isPublic()) ? "Become private" : "Become public"};
-                            }
-                        }
-                        menuAleart.setTitle(getString(R.string.action));
-                        menuAleart.setItems(menuList,
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int item) {
-                                        switch (item) {
-                                            case 0:
-                                                mFileManager.delete(fileModel, new IListener() {
-                                                    @Override
-                                                    public void execute() {
-                                                        Toast.makeText(mActivity, "Download finished.", Toast.LENGTH_SHORT).show();
-                                                        mApplicationCallback.refreshData();
-                                                    }
-                                                });
-                                                break;
-
-                                            case 1:
-                                                DialogUtils.prompt(mActivity, "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
-                                                    @Override
-                                                    public void execute(String text) {
-                                                        mFileManager.rename(fileModel, text, new IListener() {
-                                                            @Override
-                                                            public void execute() {
-                                                                if (mFilesToCutList.size() != 0) {
-                                                                    mFilesToCutList.clear();
-                                                                    refreshFab();
-                                                                }
-                                                                mApplicationCallback.refreshData();
-                                                            }
-                                                        });
-                                                    }
-                                                }, "Cancel", null, fileModel.getFullName());
-                                                break;
-
-                                            case 2:
-                                                DialogUtils.alert(mActivity, "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
-                                                    @Override
-                                                    public void execute() {
-                                                        mFileManager.delete(fileModel, new IListener() {
-                                                            @Override
-                                                            public void execute() {
-                                                                if (mFilesToCutList.size() != 0) {
-                                                                    mFilesToCutList.clear();
-                                                                    refreshFab();
-                                                                }
-                                                                mApplicationCallback.refreshData();
-                                                            }
-                                                        });
-                                                    }
-                                                }, "No", null);
-                                                break;
-
-                                            case 3:
-                                                mFilesToCutList.add(fileModel);
-                                                Toast.makeText(mActivity, "File ready to cut.", Toast.LENGTH_SHORT).show();
-                                                refreshFab();
-                                                break;
-
-                                            case 4:
-                                                DialogUtils.alert(mActivity,
-                                                        getString(R.string.properties) + " : " + fileModel.getName(),
-                                                        "Name : " + fileModel.getName() + "\nExtension : " + fileModel.getType() + "\nType : " + fileModel.getType().getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(fileModel.getSize()),
-                                                        "OK",
-                                                        null,
-                                                        null,
-                                                        null);
-                                                break;
-
-                                            case 5:
-                                                mFileManager.setPublic(fileModel, !fileModel.isPublic(), new IListener() {
-                                                    @Override
-                                                    public void execute() {
-                                                        mApplicationCallback.refreshData();
-                                                    }
-                                                });
-                                                break;
-
-                                            case 6:
-                                                // Picture set as profile
-                                                if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
-                                                    List<StringPair> parameters = new ArrayList<>();
-                                                    parameters.add(new StringPair("id_file_profile_picture", "" + fileModel.getId()));
-                                                    (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUserPut, new IPostExecuteListener() {
-                                                        @Override
-                                                        public void onPostExecute(JSONObject json, String body) {
-                                                            try {
-                                                                if (json != null && json.has("succeed"))
-                                                                    if (json.getBoolean("succeed"))
-                                                                        mApplicationCallback.getConfig().setUserIdFileProfilePicture(mActivity, fileModel.getId());
-                                                            } catch (JSONException e) {
-                                                                e.printStackTrace();
-                                                            }
-                                                        }
-                                                    }, parameters)).execute();
-                                                } else if (fileModel.getType().equals(FileTypeModelENUM.APK.type) && mApplicationCallback.getConfig().isUserAdmin()) {
-                                                    List<StringPair> parameters = new ArrayList<>();
-                                                    parameters.add(new StringPair("is_apk_update", "" + !fileModel.isApkUpdate()));
-                                                    (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile + "/" + fileModel.getId(), new IPostExecuteListener() {
-                                                        @Override
-                                                        public void onPostExecute(JSONObject json, String body) {
-                                                            try {
-                                                                if (json != null)
-                                                                    if (json.has("succeed"))
-                                                                        if (json.getBoolean("succeed"))
-                                                                            mApplicationCallback.refreshData();
-                                                            } catch (JSONException e) {
-                                                                e.printStackTrace();
-                                                            }
-                                                        }
-                                                    }, parameters)).execute();
-                                                }
-                                                break;
-                                        }
-                                    }
-                                });
-                        AlertDialog menuDrop = menuAleart.create();
-                        menuDrop.show();
-
-                        return false;
-                    }
-                });
-            } else {
-                this.mGridView.setVisibility(View.GONE);
-                this.mRecyclerView.setVisibility(View.VISIBLE);
-            }
         }
     }
 
@@ -653,14 +464,6 @@ public class FileMyCloudFragment extends InjectedFragment implements BackFragmen
                 return R.drawable.arrow_up;
         }
         return R.drawable.add;
-    }
-
-    @Override
-    public void setViewMode(int viewMode) {
-        if (viewMode != mViewMode) {
-            mViewMode = viewMode;
-            updateAdapter();
-        }
     }
 
     @Override

@@ -279,7 +279,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
             } else {
-                Pair<View, String> p1 = Pair.create(view.findViewById(R.id.icon), "transitionIcon");
+                Pair<View, String> p1 = Pair.create(view.findViewById(R.id.tab_icon), "transitionIcon");
                 Pair<View, String> p2 = Pair.create(view.findViewById(R.id.title), "transitionTitle");
                 ActivityOptionsCompat options = ActivityOptionsCompat.
                         makeSceneTransitionAnimation(activity, p1, p2);
@@ -300,7 +300,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
             } else {
-                Pair<View, String> p1 = Pair.create(view.findViewById(R.id.icon), "transitionIcon");
+                Pair<View, String> p1 = Pair.create(view.findViewById(R.id.tab_icon), "transitionIcon");
                 ActivityOptionsCompat options = ActivityOptionsCompat.
                         makeSceneTransitionAnimation(activity, p1);
                 activity.startActivity(intent, options.toBundle());
@@ -367,7 +367,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                     musicCurrentPosition--;
                 }
             }
-            FileAudioActivity.startLocal(activity, musicCurrentPosition, filesPath, view.findViewById(R.id.icon));
+            FileAudioActivity.startLocal(activity, musicCurrentPosition, filesPath, view);
 
 
             /*

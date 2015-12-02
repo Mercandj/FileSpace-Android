@@ -30,11 +30,26 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.mercandalli.android.filespace.R;
+import com.mercandalli.android.filespace.common.fragment.BackFragment;
+import com.mercandalli.android.filespace.common.fragment.InjectedFragment;
+import com.mercandalli.android.filespace.common.listener.IListener;
+import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
+import com.mercandalli.android.filespace.common.listener.IStringListener;
+import com.mercandalli.android.filespace.common.listener.ResultCallback;
+import com.mercandalli.android.filespace.common.net.TaskPost;
+import com.mercandalli.android.filespace.common.util.DialogUtils;
+import com.mercandalli.android.filespace.common.util.StringPair;
+import com.mercandalli.android.filespace.file.FileManager;
+import com.mercandalli.android.filespace.file.FileModel;
+import com.mercandalli.android.filespace.file.FileModelListener;
+import com.mercandalli.android.filespace.main.AppComponent;
+import com.mercandalli.android.filespace.main.Config;
+import com.mercandalli.android.filespace.main.Constants;
 
 import org.json.JSONObject;
 
@@ -44,30 +59,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.mercandalli.android.filespace.R;
-import com.mercandalli.android.filespace.main.AppComponent;
-import com.mercandalli.android.filespace.main.Config;
-import com.mercandalli.android.filespace.main.Constants;
-import com.mercandalli.android.filespace.file.FileModelListener;
-import com.mercandalli.android.filespace.common.listener.IListener;
-import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
-import com.mercandalli.android.filespace.common.listener.IStringListener;
-import com.mercandalli.android.filespace.common.listener.ResultCallback;
-import com.mercandalli.android.filespace.file.FileManager;
-import com.mercandalli.android.filespace.file.FileModel;
-import com.mercandalli.android.filespace.common.net.TaskPost;
-import com.mercandalli.android.filespace.file.FileModelGridAdapter;
-import com.mercandalli.android.filespace.common.fragment.BackFragment;
-import com.mercandalli.android.filespace.common.fragment.InjectedFragment;
-import com.mercandalli.android.filespace.common.util.DialogUtils;
-import com.mercandalli.android.filespace.common.util.FileUtils;
-import com.mercandalli.android.filespace.common.util.StringPair;
-
 public class FileAudioLocalFragment extends InjectedFragment
-        implements BackFragment.IListViewMode, BackFragment.ISortMode {
+        implements BackFragment.ISortMode {
 
-    private RecyclerView mRecyclerView; // http://nhaarman.github.io/ListViewAnimations/
-    private GridView mGridView;
+    private RecyclerView mRecyclerView;
     private List<FileAudioModel> files;
     private ProgressBar mProgressBar;
     private TextView message;
@@ -75,7 +70,6 @@ public class FileAudioLocalFragment extends InjectedFragment
     private FileAudioDragAdapter mAdapter;
 
     private int mSortMode = Constants.SORT_DATE_MODIFICATION;
-    private int mViewMode = Constants.MODE_LIST;
 
     private final IListener mRefreshActivityAdapterListener;
 
@@ -109,14 +103,11 @@ public class FileAudioLocalFragment extends InjectedFragment
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
         mRecyclerView.setHasFixedSize(true);
-        if (getResources().getBoolean(R.bool.is_tablet)) {
+        if (getResources().getBoolean(R.bool.is_landscape)) {
             mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         } else {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         }
-
-        mGridView = (GridView) rootView.findViewById(R.id.gridView);
-        mGridView.setVisibility(View.GONE);
 
         files = new ArrayList<>();
 
@@ -278,95 +269,6 @@ public class FileAudioLocalFragment extends InjectedFragment
             // Create an `ItemTouchHelper` and attach it to the `RecyclerView`
             ItemTouchHelper ith = new ItemTouchHelper(_ithCallback);
             ith.attachToRecyclerView(mRecyclerView);
-
-            if (mViewMode == Constants.MODE_GRID) {
-                this.mGridView.setVisibility(View.VISIBLE);
-                this.mRecyclerView.setVisibility(View.GONE);
-
-                List<FileModel> tmp = new ArrayList<>();
-                tmp.addAll(files);
-
-                this.mGridView.setAdapter(new FileModelGridAdapter(mActivity, tmp));
-                this.mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        mFileManager.execute(mActivity, position, files, view);
-                    }
-                });
-                this.mGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                    @Override
-                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                        if (position >= files.size())
-                            return false;
-                        final FileModel fileModel = files.get(position);
-
-                        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
-                        String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.properties)};
-                        if (mApplicationCallback.isLogged())
-                            menuList = new String[]{getString(R.string.upload), getString(R.string.rename), getString(R.string.delete), getString(R.string.properties)};
-                        menuAlert.setTitle("Action");
-                        menuAlert.setItems(menuList,
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int item) {
-                                        if (!mApplicationCallback.isLogged())
-                                            item--;
-                                        switch (item) {
-                                            case 0:
-                                                if (fileModel.isDirectory()) {
-                                                    Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-                                                } else
-                                                    DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + fileModel.getName(), getString(R.string.upload), new IListener() {
-                                                        @Override
-                                                        public void execute() {
-                                                            if (fileModel.getFile() != null) {
-                                                                List<StringPair> parameters = FileManager.getForUpload(fileModel);
-                                                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
-                                                                    @Override
-                                                                    public void onPostExecute(JSONObject json, String body) {
-
-                                                                    }
-                                                                }, parameters, fileModel.getFile())).execute();
-                                                            }
-                                                        }
-                                                    }, getString(R.string.cancel), null);
-                                                break;
-                                            case 1:
-                                                DialogUtils.prompt(mActivity, "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
-                                                    @Override
-                                                    public void execute(String text) {
-                                                        mFileManager.rename(fileModel, text, mRefreshActivityAdapterListener);
-                                                    }
-                                                }, "Cancel", null, fileModel.getFullName());
-                                                break;
-                                            case 2:
-                                                DialogUtils.alert(mActivity, "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
-                                                    @Override
-                                                    public void execute() {
-                                                        mFileManager.delete(fileModel, mRefreshActivityAdapterListener);
-                                                    }
-                                                }, "No", null);
-                                                break;
-                                            case 3:
-                                                DialogUtils.alert(mActivity,
-                                                        getString(R.string.properties) + " : " + fileModel.getName(),
-                                                        "Name : " + fileModel.getName() + "\nExtension : " + fileModel.getType() + "\nType : " + fileModel.getType().getTitle() + "\nSize : " + FileUtils.humanReadableByteCount(fileModel.getSize()),
-                                                        "OK",
-                                                        null,
-                                                        null,
-                                                        null);
-                                                break;
-                                        }
-                                    }
-                                });
-                        AlertDialog menuDrop = menuAlert.create();
-                        menuDrop.show();
-                        return false;
-                    }
-                });
-            } else {
-                this.mGridView.setVisibility(View.GONE);
-                this.mRecyclerView.setVisibility(View.VISIBLE);
-            }
         }
     }
 
@@ -401,14 +303,6 @@ public class FileAudioLocalFragment extends InjectedFragment
                 sortMode == Constants.SORT_SIZE) {
             mSortMode = sortMode;
             refreshList();
-        }
-    }
-
-    @Override
-    public void setViewMode(int viewMode) {
-        if (viewMode != mViewMode) {
-            mViewMode = viewMode;
-            updateAdapter();
         }
     }
 

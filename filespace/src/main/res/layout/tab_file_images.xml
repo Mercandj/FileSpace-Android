@@ -10,7 +10,7 @@
                 android:id="@+id/item">
 
     <com.mercandalli.android.filespace.common.view.SquareImageView
-        android:id="@+id/icon"
+        android:id="@+id/tab_icon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/image_description"
@@ -38,7 +38,7 @@
         android:textAlignment="center"
         android:gravity="center_vertical"
         android:background="#82000000"
-        android:layout_alignBottom="@+id/icon"
+        android:layout_alignBottom="@+id/tab_icon"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"/>
 

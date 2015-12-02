@@ -22,9 +22,9 @@
         android:singleLine="true"
         android:textColor="#000"
         android:textSize="16sp"
-        android:layout_toEndOf="@+id/icon"
+        android:layout_toEndOf="@+id/tab_icon"
         android:layout_toStartOf="@+id/more"
-        android:layout_alignTop="@+id/icon"
+        android:layout_alignTop="@+id/tab_icon"
         android:gravity="top"
         />
 
@@ -43,14 +43,14 @@
         android:textColor="#666"
         android:textSize="15sp"
         android:layout_alignEnd="@+id/title"
-        android:layout_toEndOf="@+id/icon"
-        android:layout_alignBottom="@+id/icon"
+        android:layout_toEndOf="@+id/tab_icon"
+        android:layout_alignBottom="@+id/tab_icon"
         android:gravity="bottom"
         android:layout_marginBottom="2dp"
         />
 
     <com.mercandalli.android.filespace.common.view.CircularImageView
-        android:id="@+id/icon"
+        android:id="@+id/tab_icon"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentLeft="true"

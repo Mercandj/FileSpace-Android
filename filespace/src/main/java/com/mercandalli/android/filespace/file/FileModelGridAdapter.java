@@ -68,7 +68,7 @@ public class FileModelGridAdapter extends BaseAdapter {
         RelativeLayout item = (RelativeLayout) itemLayoutView.findViewById(R.id.item);
         TextView title = (TextView) itemLayoutView.findViewById(R.id.title);
         TextView subtitle = (TextView) itemLayoutView.findViewById(R.id.subtitle);
-        ImageView icon = (ImageView) itemLayoutView.findViewById(R.id.icon);
+        ImageView icon = (ImageView) itemLayoutView.findViewById(R.id.tab_icon);
         ImageView more = (ImageView) itemLayoutView.findViewById(R.id.more);
 
         if (position < files.size()) {

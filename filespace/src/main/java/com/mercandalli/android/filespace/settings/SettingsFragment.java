@@ -42,7 +42,6 @@ import com.mercandalli.android.filespace.common.util.TimeUtils;
 import com.mercandalli.android.filespace.extras.ia.action.ENUM_Action;
 import com.mercandalli.android.filespace.main.Constants;
 import com.mercandalli.android.filespace.user.LoginRegisterActivity;
-import com.mercandalli.android.filespace.welcome.WelcomeActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -161,13 +160,6 @@ public class SettingsFragment extends BackFragment {
                 }
             }));
         }
-
-        list.add(new ModelSetting(mActivity.getString(R.string.tutorial), new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                WelcomeActivity.start(mActivity);
-            }
-        }));
 
         list.add(new ModelSetting(mActivity.getString(R.string.about), new View.OnClickListener() {
             @Override

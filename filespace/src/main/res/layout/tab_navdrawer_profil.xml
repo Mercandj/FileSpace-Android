@@ -10,7 +10,7 @@
     android:elevation="8dp">
 
     <com.mercandalli.android.filespace.common.view.CircularImageView
-        android:id="@+id/icon"
+        android:id="@+id/tab_icon"
         android:layout_width="52dp"
         android:layout_height="52dp"
         android:layout_alignParentLeft="true"
@@ -24,8 +24,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/icon"
-        android:layout_toRightOf="@+id/icon"
+        android:layout_alignTop="@+id/tab_icon"
+        android:layout_toRightOf="@+id/tab_icon"
         android:ellipsize="marquee"
         android:focusable="false"
         android:gravity="center_vertical"
@@ -45,10 +45,10 @@
         android:id="@+id/subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/icon"
+        android:layout_alignBottom="@+id/tab_icon"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="4dp"
-        android:layout_toEndOf="@+id/icon"
+        android:layout_toEndOf="@+id/tab_icon"
         android:ellipsize="marquee"
         android:focusable="false"
 
@@ -68,7 +68,7 @@
         android:id="@+id/imageStorage"
         android:layout_width="34dp"
         android:layout_height="34dp"
-        android:layout_alignStart="@+id/icon"
+        android:layout_alignStart="@+id/tab_icon"
         android:layout_centerVertical="true"
         android:layout_marginLeft="8dp"
         android:src="@drawable/ic_storage_usage_white" />

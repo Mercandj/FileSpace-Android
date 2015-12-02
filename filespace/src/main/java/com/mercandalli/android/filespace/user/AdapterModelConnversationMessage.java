@@ -73,7 +73,7 @@ public class AdapterModelConnversationMessage extends RecyclerView.Adapter<Adapt
             item = (RelativeLayout) itemLayoutView.findViewById(R.id.item);
             title = (TextView) itemLayoutView.findViewById(R.id.title);
             subtitle = (TextView) itemLayoutView.findViewById(R.id.subtitle);
-            icon = (ImageView) itemLayoutView.findViewById(R.id.icon);
+            icon = (ImageView) itemLayoutView.findViewById(R.id.tab_icon);
             more = (RelativeLayout) itemLayoutView.findViewById(R.id.more);
             itemLayoutView.setOnClickListener(this);
         }

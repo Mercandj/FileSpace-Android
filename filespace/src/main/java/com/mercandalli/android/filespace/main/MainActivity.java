@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -30,8 +30,6 @@ import com.mercandalli.android.filespace.common.listener.SetToolbarCallback;
 import com.mercandalli.android.filespace.file.FileFragment;
 import com.mercandalli.android.filespace.notificationpush.NotificationPush;
 import com.mercandalli.android.filespace.user.community.CommunityFragment;
-
-import static com.mercandalli.android.filespace.device.DeviceUtils.getDevice;
 
 /**
  * Main {@link Activity} launched by the xml.
@@ -58,7 +56,7 @@ public class MainActivity extends NavDrawerActivity implements SetToolbarCallbac
             NotificationPush.mainActNotif(this);
         }
 
-        getDevice(this);
+        // getDevice(this);
     }
 
     @Override

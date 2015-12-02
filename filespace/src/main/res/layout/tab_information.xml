@@ -17,7 +17,7 @@
     android:translationZ="2.0dp">
 
     <com.mercandalli.android.filespace.common.view.CircularImageView
-        android:id="@+id/icon"
+        android:id="@+id/tab_icon"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentLeft="true"
@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_toLeftOf="@+id/more"
-        android:layout_toRightOf="@+id/icon"
+        android:layout_toRightOf="@+id/tab_icon"
         android:ellipsize="marquee"
         android:focusable="false"
         android:gravity="center_vertical"
