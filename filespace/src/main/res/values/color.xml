@@ -31,7 +31,7 @@
     <color name="notifications_bar_robotics">#00695C</color>
 
     <color name="tab_selected">#e0e0e0</color>
-    <color name="tab_file">#fafafa</color>
+    <color name="tab_file">@android:color/white</color>
     <color name="file_divider">#e0e0e0</color>
 
     <color name="app_background">#ededed</color>

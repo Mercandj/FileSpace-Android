@@ -45,7 +45,7 @@ import javax.inject.Inject;
 public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFileClickListener {
 
     @Inject
-    FileManager mFileManager;
+    protected FileManager mFileManager;
 
     private Activity mActivity;
     private RecyclerView mRecyclerView;

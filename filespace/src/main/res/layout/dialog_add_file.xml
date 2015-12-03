@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-	Personal Project : Control server
-		MERCANDALLI Jonathan
--->
 <FrameLayout
-    android:id="@+id/root"
+    android:id="@+id/dialog_add_file_root"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -35,7 +31,7 @@
                 android:paddingLeft="20dp"
                 android:paddingStart="20dp"
                 android:text="New"
-                android:textColor="#666"/>
+                android:textColor="#666" />
         </FrameLayout>
 
         <RelativeLayout
@@ -45,7 +41,7 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:id="@+id/addDirectory"
+                android:id="@+id/dialog_add_file_add_directory"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_alignParentStart="true"
@@ -62,7 +58,7 @@
                     android:layout_height="50dp"
                     android:layout_centerHorizontal="true"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ic_createpanel_folder"/>
+                    android:src="@drawable/ic_createpanel_folder" />
 
                 <TextView
                     android:id="@+id/txt_addDirectory"
@@ -74,7 +70,7 @@
                     android:layout_marginBottom="3dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="Folder"
-                    android:textColor="#666"/>
+                    android:textColor="#666" />
 
             </RelativeLayout>
 
@@ -82,7 +78,7 @@
                 android:id="@+id/uploadFile"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:layout_alignTop="@+id/addDirectory"
+                android:layout_alignTop="@+id/dialog_add_file_add_directory"
                 android:layout_centerHorizontal="true"
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
@@ -95,7 +91,7 @@
                     android:layout_height="50dp"
                     android:layout_centerHorizontal="true"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ic_createpanel_upload"/>
+                    android:src="@drawable/ic_createpanel_upload" />
 
                 <TextView
                     android:id="@+id/txt_uploadFile"
@@ -107,7 +103,7 @@
                     android:layout_marginBottom="3dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="Upload"
-                    android:textColor="#666"/>
+                    android:textColor="#666" />
 
             </RelativeLayout>
 
@@ -116,7 +112,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/addDirectory"
+                android:layout_alignTop="@+id/dialog_add_file_add_directory"
                 android:layout_marginEnd="40dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
@@ -129,7 +125,7 @@
                     android:layout_height="50dp"
                     android:layout_centerHorizontal="true"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ic_createpanel_scan"/>
+                    android:src="@drawable/ic_createpanel_scan" />
 
                 <TextView
                     android:id="@+id/txt_scan"
@@ -141,7 +137,7 @@
                     android:layout_marginBottom="3dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="Scan"
-                    android:textColor="#666"/>
+                    android:textColor="#666" />
 
             </RelativeLayout>
 
@@ -172,7 +168,7 @@
                     android:layout_height="50dp"
                     android:layout_centerHorizontal="true"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ic_createpanel_doc"/>
+                    android:src="@drawable/ic_createpanel_doc" />
 
                 <TextView
                     android:id="@+id/txt_txtFile"
@@ -184,7 +180,7 @@
                     android:layout_marginBottom="3dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="Text"
-                    android:textColor="#666"/>
+                    android:textColor="#666" />
 
             </RelativeLayout>
 
@@ -206,7 +202,7 @@
                     android:layout_height="50dp"
                     android:layout_centerHorizontal="true"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ic_createpanel"/>
+                    android:src="@drawable/ic_createpanel" />
 
                 <TextView
                     android:id="@+id/txt_timer"
@@ -218,7 +214,7 @@
                     android:layout_marginBottom="3dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="Timer"
-                    android:textColor="#666"/>
+                    android:textColor="#666" />
 
                 <ProgressBar
                     android:id="@+id/progressBar"
@@ -226,7 +222,7 @@
                     android:layout_height="17dp"
                     android:layout_alignBottom="@+id/ic_timer"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="7dp"/>
+                    android:layout_marginBottom="7dp" />
 
             </RelativeLayout>
 
@@ -248,7 +244,7 @@
                     android:layout_height="50dp"
                     android:layout_centerHorizontal="true"
                     android:scaleType="fitXY"
-                    android:src="@drawable/ic_createpanel"/>
+                    android:src="@drawable/ic_createpanel" />
 
                 <TextView
                     android:id="@+id/txt_arcticle"
@@ -260,7 +256,7 @@
                     android:layout_marginBottom="3dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="Article"
-                    android:textColor="#666"/>
+                    android:textColor="#666" />
 
             </RelativeLayout>
 

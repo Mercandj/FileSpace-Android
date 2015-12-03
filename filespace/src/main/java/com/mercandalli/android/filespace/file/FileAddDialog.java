@@ -34,6 +34,20 @@ import android.widget.DatePicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.mercandalli.android.filespace.R;
+import com.mercandalli.android.filespace.common.dialog.DialogCreateArticle;
+import com.mercandalli.android.filespace.common.dialog.DialogDatePicker;
+import com.mercandalli.android.filespace.common.dialog.DialogTimePicker;
+import com.mercandalli.android.filespace.common.listener.IListener;
+import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
+import com.mercandalli.android.filespace.common.listener.IStringListener;
+import com.mercandalli.android.filespace.common.net.TaskPost;
+import com.mercandalli.android.filespace.common.util.DialogUtils;
+import com.mercandalli.android.filespace.common.util.StringPair;
+import com.mercandalli.android.filespace.main.ApplicationActivity;
+import com.mercandalli.android.filespace.main.ApplicationCallback;
+import com.mercandalli.android.filespace.main.Config;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,46 +59,32 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import com.mercandalli.android.filespace.R;
-import com.mercandalli.android.filespace.main.Config;
-import com.mercandalli.android.filespace.common.listener.IListener;
-import com.mercandalli.android.filespace.common.listener.IPostExecuteListener;
-import com.mercandalli.android.filespace.common.listener.IStringListener;
-import com.mercandalli.android.filespace.common.net.TaskPost;
-import com.mercandalli.android.filespace.main.ApplicationActivity;
-import com.mercandalli.android.filespace.main.ApplicationCallback;
-import com.mercandalli.android.filespace.common.dialog.DialogCreateArticle;
-import com.mercandalli.android.filespace.common.dialog.DialogDatePicker;
-import com.mercandalli.android.filespace.common.dialog.DialogTimePicker;
-import com.mercandalli.android.filespace.common.util.DialogUtils;
-import com.mercandalli.android.filespace.common.util.StringPair;
-
-public class FileAddDialog extends Dialog {
+public class FileAddDialog extends Dialog implements View.OnClickListener {
 
     private final Activity mActivity;
     private final ApplicationCallback mApplicationCallback;
-    private IListener dismissListener;
+    private IListener mDismissListener;
+    private final int mFileParentId;
+    private IListener mListener;
 
     public FileAddDialog(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final IListener listener, final IListener dismissListener) {
         super(activity, R.style.DialogFullscreen);
-        this.mActivity = activity;
-        this.mApplicationCallback = applicationCallback;
-        this.dismissListener = dismissListener;
+        mActivity = activity;
+        mApplicationCallback = applicationCallback;
+        mDismissListener = dismissListener;
+        mFileParentId = id_file_parent;
+        mListener = listener;
 
-        this.setContentView(R.layout.dialog_add_file);
-        this.setCancelable(true);
+        setContentView(R.layout.dialog_add_file);
+        setCancelable(true);
 
         Animation animOpen = AnimationUtils.loadAnimation(mActivity, R.anim.dialog_add_file_open);
-        (this.findViewById(R.id.root)).startAnimation(animOpen);
 
-        (this.findViewById(R.id.root)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FileAddDialog.this.dismiss();
-            }
-        });
+        final View rootView = findViewById(R.id.dialog_add_file_root);
+        rootView.startAnimation(animOpen);
+        rootView.setOnClickListener(this);
 
-        (this.findViewById(R.id.uploadFile)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.uploadFile).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new FileChooserDialog(mActivity, new FileModelListener() {
@@ -97,31 +97,9 @@ public class FileAddDialog extends Dialog {
             }
         });
 
-        (this.findViewById(R.id.addDirectory)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogUtils.prompt(mActivity, mActivity.getString(R.string.dialog_file_create_folder), mActivity.getString(R.string.dialog_file_name_interrogation), mActivity.getString(R.string.dialog_file_create), new IStringListener() {
-                    @Override
-                    public void execute(String text) {
-                        FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
-                        fileModelBuilder.name(text);
-                        fileModelBuilder.isDirectory(true);
-                        fileModelBuilder.idFileParent(id_file_parent);
-                        List<StringPair> parameters = FileManager.getForUpload(fileModelBuilder.build());
-                        (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
-                            @Override
-                            public void onPostExecute(JSONObject json, String body) {
-                                if (listener != null)
-                                    listener.execute();
-                            }
-                        }, parameters)).execute();
-                    }
-                }, mActivity.getString(R.string.cancel), null);
-                FileAddDialog.this.dismiss();
-            }
-        });
+        findViewById(R.id.dialog_add_file_add_directory).setOnClickListener(this);
 
-        (this.findViewById(R.id.txtFile)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.txtFile).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogUtils.prompt(mActivity, mActivity.getString(R.string.dialog_file_create_txt), mActivity.getString(R.string.dialog_file_name_interrogation), mActivity.getString(R.string.dialog_file_create), new IStringListener() {
@@ -135,7 +113,7 @@ public class FileAddDialog extends Dialog {
             }
         });
 
-        (this.findViewById(R.id.scan)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.scan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -155,7 +133,7 @@ public class FileAddDialog extends Dialog {
             }
         });
 
-        (this.findViewById(R.id.addTimer)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.addTimer).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -218,7 +196,7 @@ public class FileAddDialog extends Dialog {
             }
         });
 
-        (this.findViewById(R.id.addArticle)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.addArticle).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogCreateArticle dialogCreateArticle = new DialogCreateArticle(mActivity, mApplicationCallback, listener);
@@ -232,8 +210,39 @@ public class FileAddDialog extends Dialog {
 
     @Override
     public void dismiss() {
-        if (dismissListener != null)
-            dismissListener.execute();
+        if (mDismissListener != null)
+            mDismissListener.execute();
         super.dismiss();
+    }
+
+    @Override
+    public void onClick(View v) {
+        final int viewId = v.getId();
+        switch (viewId) {
+            case R.id.dialog_add_file_root:
+                FileAddDialog.this.dismiss();
+                break;
+            case R.id.dialog_add_file_add_directory:
+                DialogUtils.prompt(mActivity, mActivity.getString(R.string.dialog_file_create_folder), mActivity.getString(R.string.dialog_file_name_interrogation), mActivity.getString(R.string.dialog_file_create), new IStringListener() {
+                    @Override
+                    public void execute(String text) {
+                        FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
+                        fileModelBuilder.name(text);
+                        fileModelBuilder.isDirectory(true);
+                        fileModelBuilder.idFileParent(mFileParentId);
+                        List<StringPair> parameters = FileManager.getForUpload(fileModelBuilder.build());
+                        (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
+                            @Override
+                            public void onPostExecute(JSONObject json, String body) {
+                                if (mListener != null) {
+                                    mListener.execute();
+                                }
+                            }
+                        }, parameters)).execute();
+                    }
+                }, mActivity.getString(R.string.cancel), null);
+                FileAddDialog.this.dismiss();
+                break;
+        }
     }
 }
