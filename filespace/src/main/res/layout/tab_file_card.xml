@@ -13,7 +13,7 @@
     android:transitionName="transitionRoot"
     app:cardCornerRadius="2dp">
 
-    <com.mercandalli.android.filespace.common.view.CircularImageView
+    <com.mercandalli.android.apps.files.common.view.CircularImageView
         android:id="@+id/tab_file_card_icon"
         android:layout_width="42dp"
         android:layout_height="42dp"

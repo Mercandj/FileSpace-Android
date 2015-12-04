@@ -45,7 +45,7 @@
         android:textColor="#fff"
         android:textSize="15sp" />
 
-    <com.mercandalli.android.filespace.common.view.CircularImageView
+    <com.mercandalli.android.apps.files.common.view.CircularImageView
         android:id="@+id/view_nav_drawer_header_icon"
         android:layout_width="52dp"
         android:layout_height="52dp"

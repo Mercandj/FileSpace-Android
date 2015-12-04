@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.mercandalli.android.filespace.main.NavDrawerHeaderView
+        <com.mercandalli.android.apps.files.main.NavDrawerHeaderView
             android:id="@+id/view_nav_drawer_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

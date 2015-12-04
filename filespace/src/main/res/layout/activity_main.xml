@@ -19,7 +19,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true">
 
-        <com.mercandalli.android.filespace.main.NavDrawerView
+        <com.mercandalli.android.apps.files.main.NavDrawerView
             android:id="@+id/activity_main_nav_drawer_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />

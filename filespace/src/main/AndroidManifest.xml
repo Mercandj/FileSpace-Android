@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.mercandalli.android.filespace"
+<manifest package="com.mercandalli.android.apps.files"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <uses-permission android:name="com.mercandalli.android.filespace.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="com.mercandalli.android.apps.filespace.permission.MAPS_RECEIVE" />
 
     <!-- Required OpenGL ES 2.0. for Maps V2 -->
     <uses-feature
@@ -22,11 +22,11 @@
         android:required="true" />
 
     <permission
-        android:name="com.mercandalli.android.filespace.permission.MAPS_RECEIVE"
+        android:name="com.mercandalli.android.apps.files.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
 
     <permission
-        android:name="com.mercandalli.android.filespace.permission.C2D_MESSAGE"
+        android:name="com.mercandalli.android.apps.files.permission.C2D_MESSAGE"
         android:protectionLevel="signature"
         android:required="false" />
 
@@ -41,7 +41,7 @@
         android:required="false" />
 
     <application
-        android:name="com.mercandalli.android.filespace.main.App"
+        android:name="com.mercandalli.android.apps.files.main.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -56,7 +56,7 @@
             android:required="false" />
 
         <activity
-            android:name=".init.InitActivity"
+            android:name="com.mercandalli.android.apps.files.init.InitActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize">
@@ -72,29 +72,29 @@
         </activity>
 
         <activity
-            android:name=".main.MainActivity"
+            android:name="com.mercandalli.android.apps.files.main.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name="com.mercandalli.android.filespace.user.LoginRegisterActivity"
+            android:name="com.mercandalli.android.apps.files.user.LoginRegisterActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustNothing" />
         <activity
-            android:name="com.mercandalli.android.filespace.file.text.FileTextActivity"
+            android:name="com.mercandalli.android.apps.files.file.text.FileTextActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.mercandalli.android.filespace.file.image.FileImageActivity"
+            android:name="com.mercandalli.android.apps.files.file.image.FileImageActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeImage"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.mercandalli.android.filespace.file.audio.FileAudioActivity"
+            android:name="com.mercandalli.android.apps.files.file.audio.FileAudioActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme"
@@ -121,35 +121,35 @@
         </activity>
 
         <activity
-            android:name="com.mercandalli.android.filespace.file.filespace.FileTimerActivity"
+            android:name="com.mercandalli.android.apps.files.file.filespace.FileTimerActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name="com.mercandalli.android.filespace.search.SearchActivity"
+            android:name="com.mercandalli.android.apps.files.search.SearchActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name="com.mercandalli.android.filespace.user.ConversationActivity"
+            android:name="com.mercandalli.android.apps.files.user.ConversationActivity"
             android:label="@string/app_name"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden" />
 
         <receiver
-            android:name="com.mercandalli.android.filespace.notificationpush.GcmBroadcastReceiver"
+            android:name="com.mercandalli.android.apps.files.notificationpush.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <category android:name="com.mercandalli.android.filespace" />
+                <category android:name="com.mercandalli.android.apps.filespace" />
             </intent-filter>
         </receiver>
 
-        <service android:name="com.mercandalli.android.filespace.notificationpush.GCMNotificationIntentService" />
+        <service android:name="com.mercandalli.android.apps.files.notificationpush.GCMNotificationIntentService" />
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"

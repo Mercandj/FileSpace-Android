@@ -54,7 +54,7 @@
         android:textSize="15sp"
         tools:text="Subtitle" />
 
-    <com.mercandalli.android.filespace.common.view.CircularImageView
+    <com.mercandalli.android.apps.files.common.view.CircularImageView
         android:id="@+id/tab_icon"
         android:layout_width="46dp"
         android:layout_height="46dp"

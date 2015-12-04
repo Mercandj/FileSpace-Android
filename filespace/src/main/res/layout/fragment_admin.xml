@@ -40,12 +40,12 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <com.mercandalli.android.filespace.common.view.NonSwipeableViewPager
+    <com.mercandalli.android.apps.files.common.view.NonSwipeableViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/fragment_admin_app_bar_layout">
 
-    </com.mercandalli.android.filespace.common.view.NonSwipeableViewPager>
+    </com.mercandalli.android.apps.files.common.view.NonSwipeableViewPager>
 
 </RelativeLayout>
