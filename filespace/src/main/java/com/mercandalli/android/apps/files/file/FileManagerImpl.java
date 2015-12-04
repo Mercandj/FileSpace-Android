@@ -211,10 +211,10 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
     }
 
     @Override
-    public void setParent(final FileModel fileModel, final int id_file_parent, final IListener listener) {
+    public void setParent(final FileModel fileModel, final int newIdFileParent, final IListener listener) {
         Preconditions.checkNotNull(fileModel);
         if (fileModel.isOnline()) {
-            mFileOnlineApi.setParent(fileModel.getId(), new TypedString("" + id_file_parent), new Callback<FilesResponse>() {
+            mFileOnlineApi.setParent(fileModel.getId(), new TypedString("" + newIdFileParent), new Callback<FilesResponse>() {
                 @Override
                 public void success(FilesResponse filesResponse, Response response) {
                     filesResponse.getResult(mContextApp);

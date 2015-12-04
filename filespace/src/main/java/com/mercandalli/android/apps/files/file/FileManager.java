@@ -20,26 +20,50 @@ import java.util.List;
  */
 public abstract class FileManager {
 
+    /**
+     * Get the {@link FileModel}s from a parent. (Could be local or online.)
+     */
     public abstract void getFiles(final FileModel fileParent, final int sortMode, final ResultCallback<List<FileModel>> resultCallback);
 
+    /**
+     * Get the {@link FileModel}s from a parent and a search. (Could be local or online.)
+     */
     public abstract void getFiles(final FileModel fileParent, boolean areMyFiles, final String search, final int sortMode, final ResultCallback<List<FileModel>> resultCallback);
 
+    /**
+     * Download an online {@link FileModel}.
+     */
     public abstract void download(final Activity activity, final FileModel fileModel, final IListener listener);
 
     public abstract void upload(final FileModel fileModel, int idFileParent, final IListener listener);
 
+    /**
+     * Rename a {@link FileModel}.
+     */
     public abstract void rename(final FileModel fileModel, final String newName, final IListener listener);
 
     public abstract void renameLocalByPath(FileModel fileModel, String path);
 
+    /**
+     * Delete a {@link FileModel}.
+     */
     public abstract void delete(final FileModel fileModel, final IListener listener);
 
-    public abstract void setParent(final FileModel fileModel, final int id_file_parent, final IListener listener);
+    /**
+     * Cut a file.
+     */
+    public abstract void setParent(final FileModel fileModel, final int newIdFileParent, final IListener listener);
 
+    /**
+     * Set the file visibility (now online online files).
+     */
     public abstract void setPublic(final FileModel fileModel, final boolean isPublic, final IListener listener);
 
     public abstract void execute(final Activity activity, final int position, final List fileModelList, View view);
 
+    /**
+     * Open local file as... (Open a dialog to select).
+     */
     public abstract void openLocalAs(final Activity activity, final FileModel fileModel);
 
     public abstract Spanned toSpanned(final FileModel fileModel);
@@ -48,8 +72,14 @@ public abstract class FileManager {
 
     public abstract void copyLocalFile(final Activity activity, final FileModel fileModel, String outputPath, IPostExecuteListener listener);
 
+    /**
+     * Is this online file mine.
+     */
     public abstract boolean isMine(final FileModel fileModel);
 
+    /**
+     * Get all the {@link FileAudioModel} in the device.
+     */
     public abstract void getLocalMusic(final Context context, final int sortMode, final String search, final ResultCallback<List<FileAudioModel>> resultCallback);
 
     /**

@@ -28,7 +28,9 @@
                 android:layout_marginBottom="1dp"
                 android:background="#fff"
                 android:gravity="center_vertical"
+                android:paddingEnd="20dp"
                 android:paddingLeft="20dp"
+                android:paddingRight="20dp"
                 android:paddingStart="20dp"
                 android:text="New"
                 android:textColor="#666" />
@@ -40,7 +42,7 @@
             android:layout_height="120dp"
             android:orientation="vertical">
 
-            <RelativeLayout
+            <FrameLayout
                 android:id="@+id/dialog_add_file_add_directory"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
@@ -56,7 +58,7 @@
                     android:id="@+id/ic_addDirectory"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_createpanel_folder" />
 
@@ -64,17 +66,15 @@
                     android:id="@+id/txt_addDirectory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentStart="true"
+                    android:layout_gravity="bottom|center_horizontal"
                     android:layout_marginBottom="3dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="Folder"
                     android:textColor="#666" />
 
-            </RelativeLayout>
+            </FrameLayout>
 
-            <RelativeLayout
+            <FrameLayout
                 android:id="@+id/uploadFile"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
@@ -89,7 +89,7 @@
                     android:id="@+id/ic_uploadFile"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
                     android:scaleType="fitXY"
                     android:src="@drawable/ic_createpanel_upload" />
 
@@ -97,15 +97,12 @@
                     android:id="@+id/txt_uploadFile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentStart="true"
                     android:layout_marginBottom="3dp"
-                    android:gravity="center_vertical|center_horizontal"
+                    android:layout_gravity="bottom|center_horizontal"
                     android:text="Upload"
                     android:textColor="#666" />
 
-            </RelativeLayout>
+            </FrameLayout>
 
             <RelativeLayout
                 android:id="@+id/scan"

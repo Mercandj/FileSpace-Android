@@ -39,7 +39,7 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
     private final List<FileModel> mFiles;
     private final OnFileClickListener mOnFileClickListener;
     private final OnFileLongClickListener mOnFileLongClickListener;
-    private FileModelListener mMoreListener;
+    private final FileModelListener mMoreListener;
 
     public FileModelAdapter(
             final List<FileModel> files,
