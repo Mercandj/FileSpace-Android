@@ -92,7 +92,7 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
         mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_community_toolbar);
         mToolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(mToolbar);
-        setStatusBarColor(mActivity, R.color.notifications_bar);
+        setStatusBarColor(mActivity, R.color.status_bar);
         setHasOptionsMenu(true);
         mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager());
 

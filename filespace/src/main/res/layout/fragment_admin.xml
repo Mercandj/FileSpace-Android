@@ -29,7 +29,7 @@
             android:id="@+id/fragment_admin_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="42dip"
-            android:background="@color/actionbar"
+            android:background="@color/action_bar"
             app:tabTextAppearance="@style/TextAppearanceTabLayout"
             app:tabTextColor="@android:color/white"
             app:tabSelectedTextColor="@android:color/white"

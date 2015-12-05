@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="42dip"
             android:layout_alignParentTop="false"
-            android:background="@color/actionbar"
+            android:background="@color/action_bar"
             app:tabIndicatorColor="@android:color/white"
             app:tabIndicatorHeight="2dp"
             app:tabSelectedTextColor="@android:color/white"

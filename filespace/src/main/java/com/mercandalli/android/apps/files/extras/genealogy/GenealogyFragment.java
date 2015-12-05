@@ -106,7 +106,7 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
         mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_genealogy_toolbar);
         mToolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(mToolbar);
-        setStatusBarColor(mActivity, R.color.notifications_bar);
+        setStatusBarColor(mActivity, R.color.status_bar);
         setHasOptionsMenu(true);
 
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.fragment_genealogy_app_bar_layout);

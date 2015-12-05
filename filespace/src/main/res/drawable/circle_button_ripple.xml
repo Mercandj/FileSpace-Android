@@ -5,7 +5,7 @@
 
     <item>
         <shape android:shape="oval">
-            <solid android:color="@color/actionbar"/>
+            <solid android:color="@color/action_bar"/>
         </shape>
     </item>
 

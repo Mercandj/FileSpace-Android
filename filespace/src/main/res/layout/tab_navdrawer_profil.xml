@@ -6,7 +6,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:background="@color/notifications_bar"
+    android:background="@color/status_bar"
     android:elevation="8dp">
 
     <com.mercandalli.android.apps.files.common.view.CircularImageView

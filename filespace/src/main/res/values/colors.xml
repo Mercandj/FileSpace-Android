@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-	Personal Project : Control server
-		MERCANDALLI Jonathan
-
--->
 <resources>
+
     <!-- Classic color -->
+    <color name="primary">#455A64</color>
+    <color name="primary_dark">#37474F</color>
+    <color name="accent">#0d84c8</color>
+
+    <color name="app_background">#EAEAEA</color>
+    <color name="action_bar">@color/primary</color>
+    <color name="status_bar">@color/primary_dark</color>
+
+    <color name="tab_selected">#e0e0e0</color>
+    <color name="tab_file">@android:color/white</color>
+    <color name="file_divider">#e0e0e0</color>
+
     <color name="white_70">#B2FFFFFF</color>
 
-    <color name="primary">#26AEEE</color>
-
-    <color name="actionbar">#26AEEE</color>
-    <color name="notifications_bar">#01579b</color>
 
     <color name="actionbar_audio">#f57c00</color>
     <color name="notifications_bar_audio">#e65100</color>
@@ -30,10 +34,5 @@
     <color name="actionbar_robotics">#009688</color>
     <color name="notifications_bar_robotics">#00695C</color>
 
-    <color name="tab_selected">#e0e0e0</color>
-    <color name="tab_file">@android:color/white</color>
-    <color name="file_divider">#e0e0e0</color>
-
-    <color name="app_background">#ededed</color>
 
 </resources>

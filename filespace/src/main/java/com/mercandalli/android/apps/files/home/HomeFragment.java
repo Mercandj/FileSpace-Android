@@ -125,7 +125,7 @@ public class HomeFragment extends BackFragment implements TextToSpeech.OnInitLis
         mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_home_toolbar);
         mToolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(mToolbar);
-        setStatusBarColor(mActivity, R.color.notifications_bar);
+        setStatusBarColor(mActivity, R.color.status_bar);
 
         circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
 

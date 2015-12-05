@@ -103,7 +103,7 @@ public class SettingsFragment extends BackFragment {
         mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_settings_toolbar);
         mToolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(mToolbar);
-        setStatusBarColor(mActivity, R.color.notifications_bar);
+        setStatusBarColor(mActivity, R.color.status_bar);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);

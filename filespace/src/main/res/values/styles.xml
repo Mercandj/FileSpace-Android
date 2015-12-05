@@ -18,9 +18,10 @@
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:typeface">sans</item>
-        <item name="android:statusBarColor">@color/notifications_bar</item>
-        <item name="colorPrimary">@color/actionbar</item>
-        <item name="colorAccent">@color/actionbar</item>
+        <item name="android:statusBarColor">@color/status_bar</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -35,8 +36,8 @@
     <style name="AppThemeImage" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:typeface">sans</item>
         <item name="android:statusBarColor">@color/notifications_bar_picture</item>
-        <item name="colorPrimary">@color/actionbar</item>
-        <item name="colorAccent">@color/actionbar</item>
+        <item name="colorPrimary">@color/action_bar</item>
+        <item name="colorAccent">@color/action_bar</item>
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -55,7 +56,7 @@
     </style>
 
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/actionbar</item>
+        <item name="android:background">@color/action_bar</item>
     </style>
 
 

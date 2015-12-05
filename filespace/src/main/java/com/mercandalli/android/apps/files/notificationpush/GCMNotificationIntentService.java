@@ -97,7 +97,7 @@ public class GCMNotificationIntentService extends IntentService {
                 this).setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle("JARVIS")
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(serverMessage.getContent()))
-                .setLights(getResources().getColor(R.color.actionbar), 500, 2200)
+                .setLights(getResources().getColor(R.color.action_bar), 500, 2200)
                 .setContentText(serverMessage.getContent())
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 

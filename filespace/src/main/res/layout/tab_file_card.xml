@@ -8,9 +8,9 @@
     android:layout_marginLeft="@dimen/horizontal_card_margin"
     android:layout_marginRight="@dimen/horizontal_card_margin"
     android:layout_marginTop="@dimen/default_4"
-    android:background="@color/tab_file"
     android:foreground="?attr/selectableItemBackground"
     android:transitionName="transitionRoot"
+    app:cardBackgroundColor="@color/tab_file"
     app:cardCornerRadius="2dp">
 
     <com.mercandalli.android.apps.files.common.view.CircularImageView

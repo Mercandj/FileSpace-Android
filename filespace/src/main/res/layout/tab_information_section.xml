@@ -25,7 +25,7 @@
         android:scrollHorizontally="true"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:textColor="@color/actionbar"
+        android:textColor="@color/action_bar"
         android:textSize="22sp"
         android:text="Section"
         android:layout_alignParentTop="true"

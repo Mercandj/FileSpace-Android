@@ -302,14 +302,20 @@ public class FileLocalFragment extends InjectedFragment implements
             return;
         }
 
-        List<File> fs = Arrays.asList((search == null) ? mCurrentDirectory.listFiles() : mCurrentDirectory.listFiles(
+        final File[] files = (search == null) ? mCurrentDirectory.listFiles() : mCurrentDirectory.listFiles(
                 new FilenameFilter() {
                     @Override
                     public boolean accept(File dir, String name) {
                         return name.toLowerCase().contains(search.toLowerCase());
                     }
                 }
-        ));
+        );
+        List<File> fs;
+        if (files == null) {
+            fs = new ArrayList<>();
+        } else {
+            fs = Arrays.asList(files);
+        }
 
         if (mSortMode == Constants.SORT_ABC) {
             Collections.sort(fs, new Comparator<File>() {

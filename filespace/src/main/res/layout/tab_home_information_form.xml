@@ -33,7 +33,7 @@
             android:singleLine="true"
             android:text="Section"
             android:textAppearance="?android:attr/textAppearanceListItemSmall"
-            android:textColor="@color/actionbar"
+            android:textColor="@color/action_bar"
             android:textSize="22sp" />
 
         <RelativeLayout

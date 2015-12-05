@@ -114,7 +114,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.fragment_file_toolbar);
         toolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(toolbar);
-        setStatusBarColor(mActivity, R.color.notifications_bar);
+        setStatusBarColor(mActivity, R.color.status_bar);
         setHasOptionsMenu(true);
 
         coordinatorLayoutView = rootView.findViewById(R.id.fragment_file_coordinator_layout);
@@ -125,15 +125,7 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
 
-        if (savedInstanceState == null && mApplicationCallback.isLogged()) {
-            if (NetUtils.isInternetConnection(mActivity)) {
-                mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
-                mViewPager.setCurrentItem(INIT_FRAGMENT);
-            } else {
-                mViewPager.setOffscreenPageLimit(NB_FRAGMENT);
-                mViewPager.setCurrentItem(INIT_FRAGMENT + 1);
-            }
-        } else if (savedInstanceState == null) {
+        if (savedInstanceState == null) {
             mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
             mViewPager.setCurrentItem(0);
         }
@@ -247,8 +239,10 @@ public class FileFragment extends BackFragment implements ViewPager.OnPageChange
         menu.findItem(R.id.action_home).setVisible(false);
         menu.findItem(R.id.action_sort).setVisible(true);
 
-        if (getCurrentFragmentIndex() == (mApplicationCallback.isLogged() ? 2 : 0)) {
-            menu.findItem(R.id.action_home).setVisible(true);
+        if (mApplicationCallback != null) {
+            if (getCurrentFragmentIndex() == (mApplicationCallback.isLogged() ? 2 : 0)) {
+                menu.findItem(R.id.action_home).setVisible(true);
+            }
         }
     }
 

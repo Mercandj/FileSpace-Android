@@ -14,7 +14,7 @@
         android:id="@+id/rl_top"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:background="@color/actionbar"
+        android:background="@color/action_bar"
         android:orientation="vertical">
 
         <TextView
@@ -69,7 +69,7 @@
             android:id="@+id/activity_register_login_tabs"
             android:layout_width="match_parent"
             android:layout_height="42dip"
-            android:background="@color/actionbar"
+            android:background="@color/action_bar"
             android:elevation="4dp"
             custom:pstsIndicatorHeight="2dp"
             custom:pstsUnderlineHeight="0dp"/>
