@@ -1,66 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="82dp"
+    android:layout_height="140dp"
     android:background="@color/status_bar">
 
     <TextView
-        android:id="@+id/view_nav_drawer_header_title"
+        android:id="@+id/view_nav_drawer_header_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="12dp"
-        android:ellipsize="marquee"
-        android:focusable="false"
-        android:gravity="center_vertical"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:maxLines="1"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:scrollHorizontally="true"
-        android:singleLine="true"
-        android:text="@string/app_name"
-        android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:textColor="#fff"
-        android:textSize="20sp" />
+        android:layout_gravity="end"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/primary_dark_dark"
+        android:textSize="@dimen/default_text_16"
+        tools:text="v1.0.0" />
 
-    <TextView
-        android:id="@+id/view_nav_drawer_header_subtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="44dp"
-        android:ellipsize="marquee"
-        android:focusable="false"
-        android:gravity="center_vertical"
-        android:marqueeRepeatLimit="marquee_forever"
-        android:maxLines="1"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:scrollHorizontally="true"
-        android:singleLine="true"
-        android:text="@string/app_name_full"
-        android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:textColor="#fff"
-        android:textSize="15sp" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="82dp"
+        android:layout_gravity="bottom">
 
-    <com.mercandalli.android.apps.files.common.view.CircularImageView
-        android:id="@+id/view_nav_drawer_header_icon"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="15dp"
-        android:contentDescription="@string/image_description"
-        android:src="@drawable/ic_user" />
+        <TextView
+            android:id="@+id/view_nav_drawer_header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="12dp"
+            android:ellipsize="marquee"
+            android:focusable="false"
+            android:gravity="center_vertical"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:maxLines="1"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="@string/app_name"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textColor="#fff"
+            android:textSize="20sp" />
 
-    <ImageView
-        android:id="@+id/view_nav_drawer_header_image_storage"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="24dp"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_storage_usage_white" />
+        <TextView
+            android:id="@+id/view_nav_drawer_header_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="44dp"
+            android:ellipsize="marquee"
+            android:focusable="false"
+            android:gravity="center_vertical"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:maxLines="1"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="@string/app_name_full"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textColor="#fff"
+            android:textSize="15sp" />
+
+        <com.mercandalli.android.apps.files.common.view.CircularImageView
+            android:id="@+id/view_nav_drawer_header_icon"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="15dp"
+            android:contentDescription="@string/image_description"
+            android:src="@drawable/ic_user" />
+
+        <ImageView
+            android:id="@+id/view_nav_drawer_header_image_storage"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="24dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_storage_usage_white" />
+
+    </FrameLayout>
 
 </FrameLayout>

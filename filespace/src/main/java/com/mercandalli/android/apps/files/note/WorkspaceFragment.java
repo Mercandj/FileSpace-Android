@@ -17,11 +17,10 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package com.mercandalli.android.apps.files.workspace;
+package com.mercandalli.android.apps.files.note;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -34,24 +33,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
-import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 
 public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageChangeListener {
 
     private static final String BUNDLE_ARG_TITLE = "WorkspaceFragment.Args.BUNDLE_ARG_TITLE";
 
-    private static final int NB_FRAGMENT = 2;
+    private static final int NB_FRAGMENT = 1;
     private static final int INIT_FRAGMENT = 0;
     public static final BackFragment LIST_BACK_FRAGMENT[] = new BackFragment[NB_FRAGMENT];
     private ViewPager mViewPager;
-    private FileManagerFragmentPagerAdapter mPagerAdapter;
-    private TabLayout tabs;
 
     private String mTitle;
-    private Toolbar mToolbar;
     private SetToolbarCallback mSetToolbarCallback;
 
     public static WorkspaceFragment newInstance(String title) {
@@ -92,23 +88,20 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_workspace, container, false);
 
-        mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_workspace_toolbar);
-        mToolbar.setTitle(mTitle);
-        mSetToolbarCallback.setToolbar(mToolbar);
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.fragment_workspace_toolbar);
+        toolbar.setTitle(mTitle);
+        mSetToolbarCallback.setToolbar(toolbar);
         setStatusBarColor(mActivity, R.color.status_bar);
         setHasOptionsMenu(true);
 
-        mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager());
+        FileManagerFragmentPagerAdapter pagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager());
 
-        tabs = (TabLayout) rootView.findViewById(R.id.tabs);
         mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
-        mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.setAdapter(pagerAdapter);
         mViewPager.addOnPageChangeListener(this);
 
-        mViewPager.setOffscreenPageLimit(this.NB_FRAGMENT - 1);
-        mViewPager.setCurrentItem(this.INIT_FRAGMENT);
-
-        tabs.setupWithViewPager(mViewPager);
+        mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
+        mViewPager.setCurrentItem(INIT_FRAGMENT);
 
         return rootView;
     }
@@ -125,12 +118,10 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     @Override
     public boolean back() {
         int currentFragmentId = getCurrentFragmentIndex();
-        if (LIST_BACK_FRAGMENT == null || currentFragmentId == -1)
+        if (currentFragmentId == -1)
             return false;
         BackFragment backFragment = LIST_BACK_FRAGMENT[currentFragmentId];
-        if (backFragment == null)
-            return false;
-        return backFragment.back();
+        return backFragment != null && backFragment.back();
     }
 
     @Override
@@ -169,12 +160,6 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
                 case 0:
                     backFragment = NoteFragment.newInstance();
                     break;
-                case 1:
-                    backFragment = CryptFragment.newInstance();
-                    break;
-                default:
-                    backFragment = CryptFragment.newInstance();
-                    break;
             }
             LIST_BACK_FRAGMENT[i] = backFragment;
             return backFragment;
@@ -190,7 +175,7 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
             String title = "null";
             switch (i) {
                 case 0:
-                    title = "NOTE";
+                    title = "NOTES";
                     break;
                 case 1:
                     title = "CRYPT";
@@ -248,9 +233,6 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
                 switch (currentIndex) {
                     case 0:
                         ((NoteFragment) WorkspaceFragment.LIST_BACK_FRAGMENT[currentIndex]).delete();
-                        break;
-                    case 1:
-                        ((CryptFragment) WorkspaceFragment.LIST_BACK_FRAGMENT[currentIndex]).delete();
                         break;
                 }
                 return true;

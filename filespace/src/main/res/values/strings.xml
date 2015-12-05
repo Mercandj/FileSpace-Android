@@ -86,7 +86,8 @@
 
     <string name="tab_home">Home</string>
     <string name="tab_files">Files</string>
-    <string name="tab_workspace">Workspace</string>
+    <string name="tab_cloud">Cloud</string>
+    <string name="tab_notes">Notes</string>
     <string name="tab_community">Community</string>
     <string name="tab_robotics">Robotics</string>
     <string name="tab_genealogy">Genealogy</string>

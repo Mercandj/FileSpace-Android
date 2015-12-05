@@ -41,12 +41,12 @@ import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.extras.genealogy.GenealogyFragment;
 import com.mercandalli.android.apps.files.extras.robotics.RoboticsFragment;
-import com.mercandalli.android.apps.files.file.FileFragment;
-import com.mercandalli.android.apps.files.home.HomeFragment;
+import com.mercandalli.android.apps.files.file.cloud.FileCloudPagerFragment;
+import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.settings.SettingsFragment;
 import com.mercandalli.android.apps.files.user.ProfileFragment;
 import com.mercandalli.android.apps.files.user.community.CommunityFragment;
-import com.mercandalli.android.apps.files.workspace.WorkspaceFragment;
+import com.mercandalli.android.apps.files.note.WorkspaceFragment;
 
 import java.util.List;
 
@@ -193,14 +193,14 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
                         return;
                     }
                     break;
-                case HOME:
-                    fragment = HomeFragment.newInstance(getString(R.string.tab_home));
-                    break;
                 case FILES:
-                    fragment = FileFragment.newInstance(getString(R.string.tab_files));
+                    fragment = FileLocalPagerFragment.newInstance(getString(R.string.tab_files));
+                    break;
+                case CLOUD:
+                    fragment = FileCloudPagerFragment.newInstance(getString(R.string.tab_cloud));
                     break;
                 case WORKSPACE:
-                    fragment = WorkspaceFragment.newInstance(getString(R.string.tab_workspace));
+                    fragment = WorkspaceFragment.newInstance(getString(R.string.tab_notes));
                     break;
                 case COMMUNITY:
                     fragment = CommunityFragment.newInstance(getString(R.string.tab_community));

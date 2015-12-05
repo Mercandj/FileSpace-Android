@@ -75,7 +75,7 @@ public class FileTimerActivity extends ApplicationActivity {
         } else {
             this.url = extras.getString("URL_FILE");
             this.login = extras.getString("LOGIN");
-            this.online = extras.getBoolean("ONLINE");
+            this.online = extras.getBoolean("CLOUD");
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             try {

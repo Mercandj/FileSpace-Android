@@ -15,40 +15,9 @@
             android:layout_height="wrap_content" />
 
         <FrameLayout
-            android:id="@+id/view_nav_drawer_home"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:background="?attr/selectableItemBackground">
-
-            <ImageView
-                android:id="@+id/view_nav_drawer_home_icon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="28dp"
-                android:contentDescription="@string/image_description"
-                android:src="@drawable/q_ic_drawer_home" />
-
-            <TextView
-                android:id="@+id/view_nav_drawer_home_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="47dp"
-                android:layout_marginStart="78dp"
-                android:gravity="center_vertical"
-                android:minHeight="?android:attr/listPreferredItemHeightSmall"
-                android:text="@string/tab_home"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
-                android:textColor="#000"
-                android:textSize="24sp" />
-
-        </FrameLayout>
-
-        <FrameLayout
             android:id="@+id/view_nav_drawer_files"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
+            android:layout_height="72dp"
             android:background="?attr/selectableItemBackground">
 
             <ImageView
@@ -58,7 +27,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="28dp"
                 android:contentDescription="@string/image_description"
-                android:src="@drawable/q_ic_drawer_files" />
+                android:src="@drawable/q_ic_drawer_home" />
 
             <TextView
                 android:id="@+id/view_nav_drawer_files_title"
@@ -77,13 +46,44 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/view_nav_drawer_workspace"
+            android:id="@+id/view_nav_drawer_cloud"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
+            android:layout_height="72dp"
             android:background="?attr/selectableItemBackground">
 
             <ImageView
-                android:id="@+id/view_nav_drawer_workspace_icon"
+                android:id="@+id/view_nav_drawer_cloud_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="28dp"
+                android:contentDescription="@string/image_description"
+                android:src="@drawable/q_ic_drawer_files" />
+
+            <TextView
+                android:id="@+id/view_nav_drawer_cloud_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="47dp"
+                android:layout_marginStart="78dp"
+                android:gravity="center_vertical"
+                android:minHeight="?android:attr/listPreferredItemHeightSmall"
+                android:text="@string/tab_cloud"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                android:textColor="#000"
+                android:textSize="24sp" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/view_nav_drawer_workspace"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:id="@+id/view_nav_drawer_note_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center_vertical"
@@ -92,7 +92,7 @@
                 android:src="@drawable/q_ic_drawer_workspace" />
 
             <TextView
-                android:id="@+id/view_nav_drawer_workspace_title"
+                android:id="@+id/view_nav_drawer_note_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -100,7 +100,7 @@
                 android:layout_marginStart="78dp"
                 android:gravity="center_vertical"
                 android:minHeight="?android:attr/listPreferredItemHeightSmall"
-                android:text="@string/tab_workspace"
+                android:text="@string/tab_notes"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:textColor="#000"
                 android:textSize="24sp" />
@@ -110,7 +110,7 @@
         <FrameLayout
             android:id="@+id/view_nav_drawer_community"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
+            android:layout_height="72dp"
             android:background="?attr/selectableItemBackground">
 
             <ImageView
@@ -141,7 +141,7 @@
         <FrameLayout
             android:id="@+id/view_nav_drawer_robotics"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
+            android:layout_height="72dp"
             android:background="?attr/selectableItemBackground">
 
             <ImageView
@@ -172,7 +172,7 @@
         <FrameLayout
             android:id="@+id/view_nav_drawer_genealogy"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
+            android:layout_height="72dp"
             android:background="?attr/selectableItemBackground">
 
             <ImageView
@@ -203,7 +203,7 @@
         <FrameLayout
             android:id="@+id/view_nav_drawer_admin"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
+            android:layout_height="72dp"
             android:background="?attr/selectableItemBackground">
 
             <ImageView

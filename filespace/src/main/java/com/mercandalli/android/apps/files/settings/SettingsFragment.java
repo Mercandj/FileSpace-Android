@@ -38,8 +38,9 @@ import android.widget.Toast;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
+import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.common.util.TimeUtils;
-import com.mercandalli.android.apps.files.extras.ia.action.ENUM_Action;
+import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.user.LoginRegisterActivity;
 
@@ -50,16 +51,13 @@ public class SettingsFragment extends BackFragment {
 
     private static final String BUNDLE_ARG_TITLE = "HomeFragment.Args.BUNDLE_ARG_TITLE";
 
-    private View rootView;
-
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<ModelSetting> list;
     private int click_version;
-    private boolean isDevelopper = false;
+    private boolean isDeveloper = false;
     private SetToolbarCallback mSetToolbarCallback;
     private String mTitle;
-    private Toolbar mToolbar;
 
     public static SettingsFragment newInstance(String title) {
         final SettingsFragment fragment = new SettingsFragment();
@@ -98,11 +96,11 @@ public class SettingsFragment extends BackFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_settings, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_settings_toolbar);
-        mToolbar.setTitle(mTitle);
-        mSetToolbarCallback.setToolbar(mToolbar);
+        final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.fragment_settings_toolbar);
+        toolbar.setTitle(mTitle);
+        mSetToolbarCallback.setToolbar(toolbar);
         setStatusBarColor(mActivity, R.color.status_bar);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
@@ -119,7 +117,7 @@ public class SettingsFragment extends BackFragment {
     public void refreshList() {
         list = new ArrayList<>();
         list.add(new ModelSetting("Settings", Constants.TAB_VIEW_TYPE_SECTION));
-        if (mApplicationCallback.getConfig().isLogged()) {
+        if (Config.isLogged()) {
             list.add(new ModelSetting("Auto connection", new OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -129,18 +127,11 @@ public class SettingsFragment extends BackFragment {
             list.add(new ModelSetting("Web application", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ENUM_Action.WEB_SEARCH.action.action(mActivity, mApplicationCallback.getConfig().webApplication);
+                    NetUtils.search(mActivity, Config.webApplication);
                 }
             }));
         }
-        list.add(new ModelSetting("Welcome on home screen", new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(mActivity, "Welcome message enabled.", Toast.LENGTH_SHORT).show();
-                mApplicationCallback.getConfig().setHomeWelcomeMessage(mActivity, true);
-            }
-        }));
-        if (mApplicationCallback.getConfig().isLogged()) {
+        if (Config.isLogged()) {
             list.add(new ModelSetting("Change password", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -149,7 +140,7 @@ public class SettingsFragment extends BackFragment {
                 }
             }));
         }
-        if (isDevelopper) {
+        if (isDeveloper) {
             list.add(new ModelSetting("Login / Sign in", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -176,7 +167,7 @@ public class SettingsFragment extends BackFragment {
                 public void onClick(View view) {
                     if (click_version == 11) {
                         Toast.makeText(mActivity, "Development settings activated.", Toast.LENGTH_SHORT).show();
-                        isDevelopper = true;
+                        isDeveloper = true;
                         refreshList();
                     } else if (click_version < 11) {
                         if (click_version >= 1) {

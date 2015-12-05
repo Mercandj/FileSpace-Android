@@ -123,8 +123,13 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                 return;
             }
             String url = Constants.URL_DOMAIN_API + "/" + Config.routeFile + "/" + fileModel.getId();
-            String url_ouput = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.localFolderNameDefault + File.separator + fileModel.getFullName();
-            new TaskGetDownload(activity, url, url_ouput, fileModel, listener).execute();
+            String pathFolderDownloaded = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.localFolderNameDefault;
+            final File folder = new File(pathFolderDownloaded);
+            if (!folder.exists()) {
+                folder.mkdir();
+            }
+            String pathFileDownloaded = pathFolderDownloaded + File.separator + fileModel.getFullName();
+            new TaskGetDownload(activity, url, pathFileDownloaded, fileModel, listener).execute();
         }
     }
 
@@ -272,7 +277,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             intent.putExtra("ID", fileModel.getId());
             intent.putExtra("TITLE", "" + fileModel.getFullName());
             intent.putExtra("URL_FILE", "" + fileModel.getOnlineUrl());
-            intent.putExtra("ONLINE", true);
+            intent.putExtra("CLOUD", true);
             intent.putExtra("SIZE_FILE", fileModel.getSize());
             intent.putExtra("DATE_FILE", fileModel.getDateCreation());
             if (view == null) {
@@ -287,7 +292,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             }
         } else if (fileModel.getType().equals(FileTypeModelENUM.AUDIO.type)) {
             Intent intent = new Intent(activity, FileAudioActivity.class);
-            intent.putExtra("ONLINE", true);
+            intent.putExtra("CLOUD", true);
             intent.putExtra("FILE", fileModel);
             ArrayList<FileModel> tmpFiles = new ArrayList<>();
             for (FileModel f : fileModelList) {
@@ -311,7 +316,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                     Intent intent = new Intent(activity, FileTimerActivity.class);
                     intent.putExtra("URL_FILE", "" + this.onlineUrl);
                     intent.putExtra("LOGIN", "" + this.app.getConfig().getUser().getAccessLogin());
-                    intent.putExtra("ONLINE", true);
+                    intent.putExtra("CLOUD", true);
                     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     intent.putExtra("TIMER_DATE", "" + dateFormat.format(content.timer.timer_date));
                     activity.startActivity(intent);
@@ -372,7 +377,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
 
             /*
             Intent intent = new Intent(activity, FileAudioActivity.class);
-            intent.putExtra("ONLINE", false);
+            intent.putExtra("CLOUD", false);
             intent.putExtra("FILE", fileModel);
             ArrayList<FileModel> tmpFiles = new ArrayList<>();
             for (FileModel f : files)
@@ -627,14 +632,13 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
     }
 
 
-
     @Override
     public void getLocalMusicFolder(Context context, int sortMode, String search, final ResultCallback<List<FileModel>> resultCallback) {
         getLocalMusic(context, sortMode, search, new ResultCallback<List<FileAudioModel>>() {
             @Override
             public void success(final List<FileAudioModel> result) {
                 final Map<String, FileModel> directories = new HashMap<>();
-                for(FileAudioModel fileAudioModel : result) {
+                for (FileAudioModel fileAudioModel : result) {
                     File parent = fileAudioModel.getFile().getParentFile();
                     FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
                     fileModelBuilder.file(parent);

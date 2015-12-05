@@ -20,8 +20,10 @@
 package com.mercandalli.android.apps.files.common.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 
 import com.mercandalli.android.apps.files.common.Preconditions;
 
@@ -50,4 +52,10 @@ public class NetUtils {
         return url + parameters.get(parameters.size() - 1);
     }
 
+    public static void search(final Context context, final String url) {
+        Preconditions.checkNotNull(context);
+        Preconditions.checkNotNull(url);
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        context.startActivity(browserIntent);
+    }
 }

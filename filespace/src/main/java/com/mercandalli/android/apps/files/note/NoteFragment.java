@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.workspace;
+package com.mercandalli.android.apps.files.note;
 
 import android.os.Bundle;
 import android.text.Editable;

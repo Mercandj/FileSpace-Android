@@ -96,7 +96,7 @@ public class FileImageActivity extends ApplicationActivity {
             this.mId = extras.getInt("ID");
             this.mTitle = extras.getString("TITLE");
             this.mUrl = extras.getString("URL_FILE");
-            this.online = extras.getBoolean("ONLINE");
+            this.online = extras.getBoolean("CLOUD");
             this.sizeFile = extras.getLong("SIZE_FILE");
             this.date_creation = (Date) extras.getSerializable("DATE_FILE");
 

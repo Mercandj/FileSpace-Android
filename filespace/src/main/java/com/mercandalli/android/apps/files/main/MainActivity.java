@@ -27,7 +27,7 @@ import android.util.Log;
 
 import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
-import com.mercandalli.android.apps.files.file.FileFragment;
+import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.notificationpush.NotificationPush;
 import com.mercandalli.android.apps.files.user.community.CommunityFragment;
 
@@ -61,8 +61,8 @@ public class MainActivity extends NavDrawerActivity implements SetToolbarCallbac
 
     @Override
     public void updateAdapters() {
-        if (mBackFragment instanceof FileFragment) {
-            FileFragment fragmentFileManager = (FileFragment) mBackFragment;
+        if (mBackFragment instanceof FileLocalPagerFragment) {
+            FileLocalPagerFragment fragmentFileManager = (FileLocalPagerFragment) mBackFragment;
             fragmentFileManager.updateAdapterListServer();
         } else if (mBackFragment instanceof CommunityFragment) {
             CommunityFragment fragmentTalkManager = (CommunityFragment) mBackFragment;
@@ -72,8 +72,8 @@ public class MainActivity extends NavDrawerActivity implements SetToolbarCallbac
 
     @Override
     public void refreshData() {
-        if (mBackFragment instanceof FileFragment) {
-            FileFragment fragmentFileManager = (FileFragment) mBackFragment;
+        if (mBackFragment instanceof FileLocalPagerFragment) {
+            FileLocalPagerFragment fragmentFileManager = (FileLocalPagerFragment) mBackFragment;
             fragmentFileManager.refreshData();
         }
     }

@@ -159,9 +159,9 @@ public class NavDrawerView extends FrameLayout implements View.OnClickListener {
      */
     /* package */ enum NavDrawerRow {
         HEADER(R.id.view_nav_drawer_header, null, true, true),
-        HOME(R.id.view_nav_drawer_home, NavDrawerSimpleRow.HOME, true, true),
         FILES(R.id.view_nav_drawer_files, NavDrawerSimpleRow.FILES, true, true),
-        WORKSPACE(R.id.view_nav_drawer_workspace, NavDrawerSimpleRow.WORKSPACE, true, true),
+        CLOUD(R.id.view_nav_drawer_cloud, NavDrawerSimpleRow.CLOUD, false, true),
+        WORKSPACE(R.id.view_nav_drawer_workspace, NavDrawerSimpleRow.NOTES, true, true),
         COMMUNITY(R.id.view_nav_drawer_community, NavDrawerSimpleRow.COMMUNITY, false, true),
         ROBOTICS(R.id.view_nav_drawer_robotics, NavDrawerSimpleRow.ROBOTICS, false, false),
         GENEALOGY(R.id.view_nav_drawer_genealogy, NavDrawerSimpleRow.GENEALOGY, false, false),
@@ -186,8 +186,9 @@ public class NavDrawerView extends FrameLayout implements View.OnClickListener {
             mVisibleIfNotAdmin = visibleIfNotAdmin;
         }
 
+        @NonNull
         /* package */ String getTag() {
-            return mId + "" + NavDrawerSimpleRow.HOME + "" + mVisibleIfDisconnected + "" + mVisibleIfNotAdmin;
+            return mId + "" + mVisibleIfDisconnected + "" + mVisibleIfNotAdmin;
         }
     }
 
@@ -195,18 +196,18 @@ public class NavDrawerView extends FrameLayout implements View.OnClickListener {
      * The simple nav drawer items.
      */
     private enum NavDrawerSimpleRow {
-        HOME(R.id.view_nav_drawer_home_title,
-                R.id.view_nav_drawer_home_icon,
+        FILES(R.id.view_nav_drawer_files_title,
+                R.id.view_nav_drawer_files_icon,
                 R.drawable.q_ic_drawer_home,
                 R.drawable.q_ic_drawer_home_pressed),
 
-        FILES(R.id.view_nav_drawer_files_title,
-                R.id.view_nav_drawer_files_icon,
+        CLOUD(R.id.view_nav_drawer_cloud_title,
+                R.id.view_nav_drawer_cloud_icon,
                 R.drawable.q_ic_drawer_files,
                 R.drawable.q_ic_drawer_files_pressed),
 
-        WORKSPACE(R.id.view_nav_drawer_workspace_title,
-                R.id.view_nav_drawer_workspace_icon,
+        NOTES(R.id.view_nav_drawer_note_title,
+                R.id.view_nav_drawer_note_icon,
                 R.drawable.q_ic_drawer_workspace,
                 R.drawable.q_ic_drawer_workspace_pressed),
 

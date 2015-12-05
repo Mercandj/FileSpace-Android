@@ -48,12 +48,12 @@ import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
-import com.mercandalli.android.apps.files.file.FileFragment;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
 import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
+import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.main.AppComponent;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
@@ -67,7 +67,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
- * A {@link FabFragment} used by {@link FileFragment} to buildDisplay the public cloud {@link FileModel}.
+ * A {@link FabFragment} used by {@link FileLocalPagerFragment} to buildDisplay the public cloud {@link FileModel}.
  */
 public class FileCloudFragment extends InjectedFragment implements
         FileModelAdapter.OnFileClickListener,

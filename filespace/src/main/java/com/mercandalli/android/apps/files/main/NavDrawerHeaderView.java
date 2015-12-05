@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mercandalli.android.apps.files.BuildConfig;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.Preconditions;
 import com.mercandalli.android.apps.files.common.util.FileUtils;
@@ -28,6 +29,7 @@ public class NavDrawerHeaderView extends FrameLayout {
     private TextView mSubtitleTextView;
     private ImageView mIconImageView;
     private ImageView mStorageImageView;
+    private TextView mVersionTextView;
 
     public NavDrawerHeaderView(Context context) {
         super(context);
@@ -83,11 +85,14 @@ public class NavDrawerHeaderView extends FrameLayout {
             mSubtitleTextView.setText(String.format("Using %s of %s", FileUtils.humanReadableByteCount(totalSize - availableSize), FileUtils.humanReadableByteCount(totalSize)));
             mTitleTextView.setText(String.format("%d%% Full", (int) ((totalSize - availableSize) * 100.0 / totalSize)));
 
+            mVersionTextView.setText(String.format("v%s", BuildConfig.VERSION_NAME));
+
             setPadding(0, getStatusBarHeight(), 0, 0);
         }
     }
 
     private void findViews() {
+        mVersionTextView = (TextView) findViewById(R.id.view_nav_drawer_header_version);
         mTitleTextView = (TextView) findViewById(R.id.view_nav_drawer_header_title);
         mSubtitleTextView = (TextView) findViewById(R.id.view_nav_drawer_header_subtitle);
         mIconImageView = (ImageView) findViewById(R.id.view_nav_drawer_header_icon);

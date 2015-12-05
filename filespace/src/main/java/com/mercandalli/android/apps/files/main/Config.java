@@ -25,25 +25,20 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.mercandalli.android.apps.files.common.listener.IBitmapListener;
-import com.mercandalli.android.apps.files.common.model.Model;
 import com.mercandalli.android.apps.files.common.net.Base64;
 import com.mercandalli.android.apps.files.common.net.TaskGetDownloadImage;
 import com.mercandalli.android.apps.files.common.util.FileUtils;
 import com.mercandalli.android.apps.files.common.util.HashUtils;
 import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.file.FileModel;
-import com.mercandalli.android.apps.files.home.ModelServerMessage;
 import com.mercandalli.android.apps.files.user.UserModel;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.TimeZone;
 
 /**
@@ -52,7 +47,6 @@ import java.util.TimeZone;
 public class Config {
 
     private ApplicationCallback app;
-    private List<ModelServerMessage> listServerMessage_1;
 
     // Local routes
     public static final String localFolderNameDefault = "FileSpace";
@@ -99,8 +93,7 @@ public class Config {
      */
     private enum ENUM_Boolean {
         BOOLEAN_AUTO_CONNECTION(true, "boolean_auto_connection_1"),
-        BOOLEAN_USER_ADMIN(false, "boolean_user_admin_1"),
-        BOOLEAN_HOME_WELCOME_MESSAGE(true, "boolean_home_welcome_message_1"),;
+        BOOLEAN_USER_ADMIN(false, "boolean_user_admin_1");
 
         boolean value;
         String key;
@@ -146,14 +139,6 @@ public class Config {
                 tmp_settings_1.put(enum_boolean.key, enum_boolean.value);
             for (ENUM_String enum_string : ENUM_String.values())
                 tmp_settings_1.put(enum_string.key, enum_string.value);
-
-            if (listServerMessage_1 != null) {
-                JSONArray array_listServerMessage_1 = new JSONArray();
-                for (Model model : listServerMessage_1)
-                    array_listServerMessage_1.put(model.toJSONObject());
-                tmp_settings_1.put("listServerMessage_1", array_listServerMessage_1);
-            }
-
             tmp_json.put("settings_1", tmp_settings_1);
             FileUtils.writeStringFile(context, fileName, tmp_json.toString());
 
@@ -163,7 +148,6 @@ public class Config {
     }
 
     private void load(Activity activity) {
-        this.listServerMessage_1 = new ArrayList<>();
         try {
             JSONObject tmp_json = new JSONObject(FileUtils.readStringFile(activity, fileName));
             if (tmp_json.has("settings_1")) {
@@ -177,12 +161,6 @@ public class Config {
                 for (ENUM_String enum_string : ENUM_String.values())
                     if (tmp_settings_1.has(enum_string.key))
                         enum_string.value = tmp_settings_1.getString(enum_string.key);
-
-                if (tmp_settings_1.has("listServerMessage_1")) {
-                    JSONArray array_listServerMessage_1 = tmp_settings_1.getJSONArray("listServerMessage_1");
-                    for (int i = 0; i < array_listServerMessage_1.length(); i++)
-                        this.listServerMessage_1.add(new ModelServerMessage(activity, app, array_listServerMessage_1.getJSONObject(i)));
-                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -320,17 +298,6 @@ public class Config {
         }
     }
 
-    public boolean isHomeWelcomeMessage() {
-        return ENUM_Boolean.BOOLEAN_HOME_WELCOME_MESSAGE.value;
-    }
-
-    public void setHomeWelcomeMessage(Activity activity, boolean value) {
-        if (ENUM_Boolean.BOOLEAN_HOME_WELCOME_MESSAGE.value != value) {
-            ENUM_Boolean.BOOLEAN_HOME_WELCOME_MESSAGE.value = value;
-            save(activity);
-        }
-    }
-
     public boolean isAutoConncetion() {
         return ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value;
     }
@@ -346,29 +313,8 @@ public class Config {
         return new UserModel(getUserId(), getUserUsername(), getUserPassword(), getUserRegId(), isUserAdmin());
     }
 
-    public void removeServerMessage(Activity activity, ModelServerMessage serverMessage) {
-        if (listServerMessage_1 == null) {
-            listServerMessage_1 = new ArrayList<>();
-            return;
-        }
-        if (serverMessage == null)
-            return;
-        for (int i = 0; i < listServerMessage_1.size(); i++) {
-            if (listServerMessage_1.get(i).equals(serverMessage)) {
-                listServerMessage_1.remove(i);
-                save(activity);
-                return;
-            }
-        }
-    }
-
     public static String getFileName() {
         return fileName;
-    }
-
-    public List<ModelServerMessage> getListServerMessage_1(Activity activity) {
-        this.load(activity);
-        return listServerMessage_1;
     }
 
     /**
@@ -384,6 +330,5 @@ public class Config {
         setUserId(activity, -1);
         setUserAdmin(activity, false);
         setUserIdFileProfilePicture(activity, -1);
-        setHomeWelcomeMessage(activity, true);
     }
 }
