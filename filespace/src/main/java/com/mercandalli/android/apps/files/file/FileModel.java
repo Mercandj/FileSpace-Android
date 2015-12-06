@@ -33,7 +33,9 @@ public class FileModel implements Parcelable {
     // Local attrs
     protected File mFile;
     protected long mLastModified;
+    // Nb of files inside this folder
     protected long mCount;
+    private long mCountAudio;
 
     public static class FileModelBuilder {
 
@@ -55,6 +57,7 @@ public class FileModel implements Parcelable {
         protected File file;
         protected long lastModified;
         protected long count;
+        protected long countAudio;
 
         public FileModelBuilder id(int id) {
             this.id = id;
@@ -128,6 +131,12 @@ public class FileModel implements Parcelable {
                 lastModified = file.lastModified();
                 if (isDirectory && file.listFiles() != null) {
                     count = file.listFiles().length;
+                    countAudio = 0;
+                    for (File f : file.listFiles()) {
+                        if ((new FileTypeModel(FileUtils.getExtensionFromPath(f.getPath()))).equals(FileTypeModelENUM.AUDIO.type)) {
+                            countAudio++;
+                        }
+                    }
                 }
                 this.file = file;
             }
@@ -173,6 +182,7 @@ public class FileModel implements Parcelable {
             fileModel.mFile = file;
             fileModel.mLastModified = lastModified;
             fileModel.mCount = count;
+            fileModel.mCountAudio = countAudio;
             return fileModel;
         }
     }
@@ -290,6 +300,11 @@ public class FileModel implements Parcelable {
      */
     public long getCount() {
         return mCount;
+    }
+
+
+    public long getCountAudio() {
+        return mCountAudio;
     }
 
     public static final Creator<FileModel> CREATOR = new Creator<FileModel>() {

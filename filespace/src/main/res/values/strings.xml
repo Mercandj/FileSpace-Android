@@ -95,7 +95,7 @@
     <string name="tab_request">Request</string>
     <string name="tab_settings">Settings</string>
     <string name="tab_log_out">Log out</string>
-    <string name="tab_about">About Dev</string>
+    <string name="tab_support">Support</string>
 
     <string name="menu_action_search">Search</string>
     <string name="menu_action_delete">Delete</string>

@@ -83,6 +83,11 @@ public abstract class FileManager {
     public abstract void getLocalMusic(final Context context, final int sortMode, final String search, final ResultCallback<List<FileAudioModel>> resultCallback);
 
     /**
+     * Get all the {@link FileAudioModel} in a folder.
+     */
+    public abstract void getLocalMusic(final Context context, final FileModel fileModelDirectParent, final int sortMode, final String search, final ResultCallback<List<FileAudioModel>> resultCallback);
+
+    /**
      * Get all local folders that contain music.
      */
     public abstract void getLocalMusicFolder(final Context context, final int sortMode, final String search, final ResultCallback<List<FileModel>> resultCallback);

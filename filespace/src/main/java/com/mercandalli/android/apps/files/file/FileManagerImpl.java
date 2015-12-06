@@ -46,12 +46,19 @@ import com.mercandalli.android.apps.files.main.Constants;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.cmc.music.metadata.IMusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -491,6 +498,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         return HtmlUtils.createListItem(spl);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void copyLocalFile(final Activity activity, final FileModel fileModel, final String outputPath) {
         copyLocalFile(activity, fileModel, outputPath, null);
@@ -548,6 +558,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         return !fileModel.isOnline() || fileModel.getIdUser() == Config.getUserId();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void getLocalMusic(final Context context, final int sortMode, final String search, final ResultCallback<List<FileAudioModel>> resultCallback) {
 
@@ -555,42 +568,57 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
 
         final String[] STAR = {"*"};
 
-        final Uri allsongsuri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+        final Uri allsongsuri = MediaStore.Files.getContentUri("external");
+        final List<String> searchArray = new ArrayList<>();
 
-        String[] searchArray = null;
-        if (search != null) {
-            searchArray = new String[]{"%" + search + "%"};
-            selection += " AND " + MediaStore.Audio.Media.DISPLAY_NAME + " LIKE ?";
+        String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO;
+
+        for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
+            selection += " OR " + MediaStore.Files.FileColumns.DATA + " LIKE ?";
+            searchArray.add("%" + end + "%");
+        }
+        selection += " )";
+
+        if (search != null && !search.isEmpty()) {
+            searchArray.add("%" + search + "%");
+            selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + " LIKE ?";
         }
 
-        Cursor cursor = context.getContentResolver().query(allsongsuri, STAR, selection, searchArray, null);
+        Cursor cursor = context.getContentResolver().query(allsongsuri, STAR, selection, searchArray.toArray(new String[searchArray.size()]), null);
 
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
                     String song_name = cursor.getString(cursor
-                            .getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
-                    int song_id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+                            .getColumnIndex(MediaStore.Files.FileColumns.DISPLAY_NAME));
+                    int song_id = cursor.getInt(cursor.getColumnIndex(MediaStore.Files.FileColumns._ID));
 
-                    String fullpath = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+                    String fullpath = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
 
-                    String album_name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
-                    int album_id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
+                    final File file = new File(fullpath);
+                    if (file.exists() && !file.isDirectory()) {
 
-                    String artist_name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-                    int artist_id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID));
+                        FileAudioModel.FileMusicModelBuilder fileMusicModelBuilder = new FileAudioModel.FileMusicModelBuilder()
+                                .file(new File(fullpath));
 
-                    FileAudioModel.FileMusicModelBuilder fileMusicModelBuilder = new FileAudioModel.FileMusicModelBuilder();
-                    fileMusicModelBuilder.file(new File(fullpath));
-                    fileMusicModelBuilder.album(album_name);
-                    fileMusicModelBuilder.artist(artist_name);
+                        try {
+                            MusicMetadataSet src_set = new MyID3().read(file);
+                            try {
+                                IMusicMetadata metadata = src_set.getSimplified();
+                                fileMusicModelBuilder.album(metadata.getAlbum());
+                                fileMusicModelBuilder.artist(metadata.getArtist());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        } // read metadata
 
-                    /*
-                    if (mSortMode == Constants.SORT_SIZE)
-                        fileMusicModel.adapterTitleStart = FileUtils.humanReadableByteCount(fileMusicModel.getSize()) + " - ";
-                        */
-                    files.add(fileMusicModelBuilder.build());
+                        //if (mSortMode == Constants.SORT_SIZE)
+                        //    fileMusicModel.adapterTitleStart = FileUtils.humanReadableByteCount(fileMusicModel.getSize()) + " - ";
+
+                        files.add(fileMusicModelBuilder.build());
+                    }
 
                 } while (cursor.moveToNext());
 
@@ -631,6 +659,46 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         resultCallback.success(files);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void getLocalMusic(final Context context, final FileModel fileModelDirectParent, final int sortMode, final String search, final ResultCallback<List<FileAudioModel>> resultCallback) {
+        Preconditions.checkNotNull(fileModelDirectParent);
+        Preconditions.checkNotNull(resultCallback);
+        if (!fileModelDirectParent.isDirectory()) {
+            resultCallback.failure();
+            return;
+        }
+        final List<FileAudioModel> files = new ArrayList<>();
+        List<File> fs = Arrays.asList(fileModelDirectParent.getFile().listFiles(
+                new FilenameFilter() {
+                    @Override
+                    public boolean accept(File dir, String name) {
+                        return (new FileTypeModel(FileUtils.getExtensionFromPath(name))).equals(FileTypeModelENUM.AUDIO.type);
+                    }
+                }
+        ));
+        for (File file : fs) {
+            final FileAudioModel.FileMusicModelBuilder fileMusicModelBuilder = new FileAudioModel.FileMusicModelBuilder()
+                    .file(file);
+            try {
+                MusicMetadataSet src_set = new MyID3().read(file);
+                try {
+                    IMusicMetadata metadata = src_set.getSimplified();
+                    fileMusicModelBuilder.album(metadata.getAlbum());
+                    fileMusicModelBuilder.artist(metadata.getArtist());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } // read metadata
+            files.add(fileMusicModelBuilder.build());
+        }
+        resultCallback.success(files);
+    }
+
 
     @Override
     public void getLocalMusicFolder(Context context, int sortMode, String search, final ResultCallback<List<FileModel>> resultCallback) {
@@ -655,6 +723,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void getCover(final Context context, final FileAudioModel fileAudioModel, final ImageView imageView) {
 

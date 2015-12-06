@@ -22,6 +22,7 @@ package com.mercandalli.android.apps.files.file.audio;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -43,6 +44,7 @@ import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
@@ -53,16 +55,13 @@ import com.mercandalli.android.apps.files.main.Constants;
 
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
 
 public class FileAudioLocalFragment extends InjectedFragment
-        implements BackFragment.ISortMode {
+        implements BackFragment.ISortMode, FileModelCardAdapter.OnFileSubtitleAdapter {
 
     private RecyclerView mRecyclerView;
     private List<FileModel> mFileModels;
@@ -213,6 +212,7 @@ public class FileAudioLocalFragment extends InjectedFragment
                 refreshList(mFileModels.get(position));
             }
         }, null);
+        mFileModelCardAdapter.setOnFileSubtitleAdapter(this);
 
         mRecyclerView.setAdapter(mFileModelCardAdapter);
 
@@ -256,22 +256,21 @@ public class FileAudioLocalFragment extends InjectedFragment
 
     public void refreshList(final FileModel fileModel) {
         mIsInsideFolder = true;
-        List<File> fs = Arrays.asList(fileModel.getFile().listFiles(
-                new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        return name.toLowerCase().endsWith(".mp3");
-                    }
-                }
-        ));
         mFileModels.clear();
-        for (File file : fs) {
-            mFileModels.add(new FileAudioModel.FileMusicModelBuilder().file(file).build());
-        }
+        mFileManager.getLocalMusic(mActivity, fileModel, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
+            @Override
+            public void success(List<FileAudioModel> result) {
+                mFileModels.clear();
+                mFileModels.addAll(result);
+                mRecyclerView.setAdapter(mFileAudioDragAdapter);
+                updateAdapter();
+            }
 
-        mRecyclerView.setAdapter(mFileAudioDragAdapter);
-
-        updateAdapter();
+            @Override
+            public void failure() {
+                updateAdapter();
+            }
+        });
     }
 
     public void updateAdapter() {
@@ -374,5 +373,14 @@ public class FileAudioLocalFragment extends InjectedFragment
     @Override
     protected void inject(AppComponent appComponent) {
         appComponent.inject(this);
+    }
+
+    @Nullable
+    @Override
+    public String onFileSubtitleModify(FileModel fileModel) {
+        if (fileModel != null && fileModel.isDirectory() && fileModel.getCountAudio() != 0) {
+            return "Directory: " + StringUtils.longToShortString(fileModel.getCountAudio()) + " music" + (fileModel.getCountAudio() > 1 ? "s" : "");
+        }
+        return null;
     }
 }

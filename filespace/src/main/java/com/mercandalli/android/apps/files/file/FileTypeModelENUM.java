@@ -25,7 +25,7 @@ public enum FileTypeModelENUM {
     TEXT(new FileTypeModel("Text", new String[]{"txt", "csv", "rtf", "text", "json"})),
     HTML(new FileTypeModel("Html", new String[]{"html", "htm", "php", "xml"})),
     PICTURE(new FileTypeModel("Picture", new String[]{"jpeg", "jpg", "png", "gif", "raw", "psd", "bmp", "tiff", "tif"})),
-    AUDIO(new FileTypeModel("Audio", new String[]{"mp3", "wav", "m4a", "aiff", "wma", "caf", "flac", "m4p", "amr"})),
+    AUDIO(new FileTypeModel("Audio", new String[]{"mp3", "wav", "m4a", "aiff", "wma", "caf", "flac", "m4p", "amr", "ogg"})),
     VIDEO(new FileTypeModel("Video", new String[]{"m4v", "3gp", "wmv", "mp4", "mpeg", "mpg", "rm", "mov", "avi", "mkv", "flv", "ogg"})),
     ARCHIVE(new FileTypeModel("Archive", new String[]{"zip", "gzip", "rar", "tar", "tar.gz", "gz", "7z"})),
     FILESPACE(new FileTypeModel("FileSpace", new String[]{"filespace", "jarvis"})),

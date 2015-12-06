@@ -19,6 +19,7 @@
  */
 package com.mercandalli.android.apps.files.file;
 
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +41,7 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
     private final OnFileClickListener mOnFileClickListener;
     private final OnFileLongClickListener mOnFileLongClickListener;
     private FileModelListener mMoreListener;
+    private OnFileSubtitleAdapter mOnFileSubtitleAdapter;
 
     public FileModelCardAdapter(
             final List<FileModel> files,
@@ -170,6 +172,10 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
     }
 
     public String getAdapterSubtitle(FileModel fileModel) {
+        String result;
+        if (mOnFileSubtitleAdapter != null && (result = mOnFileSubtitleAdapter.onFileSubtitleModify(fileModel)) != null) {
+            return result;
+        }
         if (fileModel.isDirectory() && fileModel.getCount() != 0)
             return "Directory: " + StringUtils.longToShortString(fileModel.getCount()) + " file" + (fileModel.getCount() > 1 ? "s" : "");
         if (fileModel.isDirectory())
@@ -198,6 +204,16 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
     public interface OnFileLongClickListener {
 
         boolean onFileLongClick(View view, int position);
+    }
+
+    public void setOnFileSubtitleAdapter(OnFileSubtitleAdapter onFileSubtitleAdapter) {
+        mOnFileSubtitleAdapter = onFileSubtitleAdapter;
+    }
+
+    public interface OnFileSubtitleAdapter {
+
+        @Nullable
+        String onFileSubtitleModify(FileModel fileModel);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener, View.OnLongClickListener {

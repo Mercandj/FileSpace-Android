@@ -56,15 +56,13 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
 
     private static final String BUNDLE_ARG_TITLE = "FileOnlineFragment.Args.BUNDLE_ARG_TITLE";
 
-    private static final int NB_FRAGMENT = 2;
-    private static final int INIT_FRAGMENT = 1;
+    private static final int NB_FRAGMENT = 3;
     private ViewPager mViewPager;
     private FileManagerFragmentPagerAdapter mPagerAdapter;
 
     private FloatingActionButton mFab1;
     private FloatingActionButton mFab2;
-    private View coordinatorLayoutView;
-    private Snackbar mSnackbar;
+    private View mCoordinatorLayoutView;
 
     private String mTitle;
     private SetToolbarCallback mSetToolbarCallback;
@@ -114,18 +112,11 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
         setStatusBarColor(mActivity, R.color.status_bar);
         setHasOptionsMenu(true);
 
-        coordinatorLayoutView = rootView.findViewById(R.id.fragment_file_coordinator_layout);
+        mCoordinatorLayoutView = rootView.findViewById(R.id.fragment_file_coordinator_layout);
 
         mPagerAdapter = new FileManagerFragmentPagerAdapter(getChildFragmentManager(), mApplicationCallback);
-
         mViewPager = (ViewPager) rootView.findViewById(R.id.fragment_file_view_pager);
         mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.addOnPageChangeListener(this);
-
-        if (savedInstanceState == null) {
-            mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
-            mViewPager.setCurrentItem(0);
-        }
 
         ((TabLayout) rootView.findViewById(R.id.fragment_file_tab_layout)).setupWithViewPager(mViewPager);
 
@@ -133,6 +124,12 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
         mFab1.setVisibility(View.GONE);
         mFab2 = ((FloatingActionButton) rootView.findViewById(R.id.fragment_file_fab_2));
         mFab2.setVisibility(View.GONE);
+
+        if (savedInstanceState == null) {
+            //mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
+            mViewPager.setCurrentItem(1);
+        }
+        mViewPager.addOnPageChangeListener(this);
 
         return rootView;
     }
@@ -347,21 +344,25 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
 
     private void updateNoInternet() {
         if (!NetUtils.isInternetConnection(mActivity)) {
-            this.mSnackbar = Snackbar.make(this.coordinatorLayoutView, getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE)
-                    .setAction(getString(R.string.refresh), new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (NetUtils.isInternetConnection(mActivity)) {
-                                FabFragment fabFragment = getCurrentFragment();
-                                if (fabFragment != null) {
-                                    fabFragment.onFocus();
+            if (mCoordinatorLayoutView != null) {
+                Snackbar snackbar = Snackbar.make(mCoordinatorLayoutView, getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE)
+                        .setAction(getString(R.string.refresh), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (NetUtils.isInternetConnection(mActivity)) {
+                                    FabFragment fabFragment = getCurrentFragment();
+                                    if (fabFragment != null) {
+                                        fabFragment.onFocus();
+                                    }
+                                } else {
+                                    updateNoInternet();
                                 }
-                            } else {
-                                updateNoInternet();
                             }
-                        }
-                    });
-            this.mSnackbar.show();
+                        });
+                snackbar.show();
+            } else {
+                Toast.makeText(getContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -438,6 +439,8 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
                     return FileCloudFragment.newInstance();
                 case 1:
                     return FileMyCloudFragment.newInstance();
+                case 2:
+                    return FileCloudDownloadedFragment.newInstance();
                 default:
                     return FileCloudFragment.newInstance();
             }
@@ -457,6 +460,9 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
                     break;
                 case 1:
                     title = getString(R.string.file_fragment_my_cloud);
+                    break;
+                case 2:
+                    title = "DOWNLOADED";
                     break;
             }
             return title;

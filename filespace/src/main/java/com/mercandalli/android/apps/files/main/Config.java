@@ -325,7 +325,6 @@ public class Config {
         setUserRegId(activity, "");
         setUserUsername(activity, "");
         setUserPassword(activity, "");
-        setUserNoteWorkspace1(activity, "");
         setAutoConnection(activity, true);
         setUserId(activity, -1);
         setUserAdmin(activity, false);

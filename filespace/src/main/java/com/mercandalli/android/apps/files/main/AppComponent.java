@@ -2,21 +2,23 @@ package com.mercandalli.android.apps.files.main;
 
 import android.app.Application;
 
-import javax.inject.Singleton;
-
-import dagger.Component;
+import com.mercandalli.android.apps.files.file.FileChooserDialog;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModule;
+import com.mercandalli.android.apps.files.file.FileUploadDialog;
 import com.mercandalli.android.apps.files.file.audio.FileAudioDragAdapter;
 import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModule;
 import com.mercandalli.android.apps.files.file.audio.FileAudioPlayer;
-import com.mercandalli.android.apps.files.search.SearchActivity;
-import com.mercandalli.android.apps.files.file.FileChooserDialog;
-import com.mercandalli.android.apps.files.file.FileUploadDialog;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudFragment;
-import com.mercandalli.android.apps.files.file.local.FileLocalFragment;
+import com.mercandalli.android.apps.files.file.cloud.FileCloudDownloadedFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileMyCloudFragment;
+import com.mercandalli.android.apps.files.file.local.FileLocalFragment;
+import com.mercandalli.android.apps.files.search.SearchActivity;
+
+import javax.inject.Singleton;
+
+import dagger.Component;
 
 @Singleton
 @Component(
@@ -48,6 +50,8 @@ public interface AppComponent {
     void inject(SearchActivity searchActivity);
 
     void inject(FileAudioDragAdapter fileAudioDragAdapter);
+
+    void inject(FileCloudDownloadedFragment fileCloudDownloadedFragment);
 
     //void inject(HomeFragment homeFragment);
 

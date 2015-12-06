@@ -326,7 +326,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="47dp"
                 android:layout_marginStart="78dp"
-                android:text="@string/tab_about"
+                android:text="@string/tab_support"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:textColor="#444"
                 android:textSize="16sp" />

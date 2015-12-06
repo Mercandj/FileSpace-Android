@@ -1,32 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-	Personal Project : Control server
-		MERCANDALLI Jonathan
--->
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/fragment_workspace_toolbar"
+        android:id="@+id/fragment_support_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:titleTextAppearance="@style/ToolbarTitle" />
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:titleTextColor="@android:color/white" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="6dp"
         android:layout_marginTop="?attr/actionBarSize"
         android:background="@drawable/shadow_bottom" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="25dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/add" />
 
 </FrameLayout>

@@ -35,7 +35,6 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.admin.AdminFragment;
 import com.mercandalli.android.apps.files.common.Preconditions;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
-import com.mercandalli.android.apps.files.common.fragment.WebFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
@@ -43,10 +42,11 @@ import com.mercandalli.android.apps.files.extras.genealogy.GenealogyFragment;
 import com.mercandalli.android.apps.files.extras.robotics.RoboticsFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudPagerFragment;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
+import com.mercandalli.android.apps.files.note.WorkspaceFragment;
 import com.mercandalli.android.apps.files.settings.SettingsFragment;
+import com.mercandalli.android.apps.files.support.SupportFragment;
 import com.mercandalli.android.apps.files.user.ProfileFragment;
 import com.mercandalli.android.apps.files.user.community.CommunityFragment;
-import com.mercandalli.android.apps.files.note.WorkspaceFragment;
 
 import java.util.List;
 
@@ -220,7 +220,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
                 case LOGOUT:
                     break;
                 case ABOUT:
-                    fragment = WebFragment.newInstance();
+                    fragment = SupportFragment.newInstance(getString(R.string.tab_support));
                     break;
                 default:
                     throw new IllegalArgumentException("Wrong navDrawerRow in selectItem() " + navDrawerRow);
