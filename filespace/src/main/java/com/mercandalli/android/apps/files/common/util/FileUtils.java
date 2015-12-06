@@ -129,9 +129,18 @@ public class FileUtils {
     }
 
     public static String getExtensionFromPath(String path) {
-        if (!path.contains("."))
+        if (!path.contains(".")) {
             return "";
+        }
         return path.substring(path.lastIndexOf(".") + 1);
+    }
+
+    public static String getParentPathFromPath(String path) {
+        if (!path.contains("/"))
+            return "";
+        if (path.endsWith("/"))
+            return path.substring(0, path.length() - 1);
+        return path.substring(0, path.lastIndexOf("/"));
     }
 
     public static String getRealPathFromURI(Context context, Uri contentUri) {

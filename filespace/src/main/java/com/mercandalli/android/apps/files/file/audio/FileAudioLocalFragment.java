@@ -232,7 +232,7 @@ public class FileAudioLocalFragment extends InjectedFragment
         if (mFileManager == null) {
             return;
         }
-        mFileManager.getLocalMusicFolder(mActivity, mSortMode, search, new ResultCallback<List<FileModel>>() {
+        mFileManager.getLocalMusicFolders(mActivity, mSortMode, search, new ResultCallback<List<FileModel>>() {
             @Override
             public void success(List<FileModel> result) {
                 if (mFileModels == null) {

@@ -568,14 +568,14 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
 
         final String[] STAR = {"*"};
 
-        final Uri allsongsuri = MediaStore.Files.getContentUri("external");
+        final Uri allSongsUri = MediaStore.Files.getContentUri("external");
         final List<String> searchArray = new ArrayList<>();
 
         String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO;
 
         for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
             selection += " OR " + MediaStore.Files.FileColumns.DATA + " LIKE ?";
-            searchArray.add("%" + end + "%");
+            searchArray.add("%" + end);
         }
         selection += " )";
 
@@ -584,34 +584,23 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + " LIKE ?";
         }
 
-        Cursor cursor = context.getContentResolver().query(allsongsuri, STAR, selection, searchArray.toArray(new String[searchArray.size()]), null);
-
+        final Cursor cursor = context.getContentResolver().query(allSongsUri, STAR, selection, searchArray.toArray(new String[searchArray.size()]), null);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
-                    String song_name = cursor.getString(cursor
-                            .getColumnIndex(MediaStore.Files.FileColumns.DISPLAY_NAME));
-                    int song_id = cursor.getInt(cursor.getColumnIndex(MediaStore.Files.FileColumns._ID));
-
-                    String fullpath = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
-
-                    final File file = new File(fullpath);
+                    final File file = new File(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
                     if (file.exists() && !file.isDirectory()) {
-
                         FileAudioModel.FileMusicModelBuilder fileMusicModelBuilder = new FileAudioModel.FileMusicModelBuilder()
-                                .file(new File(fullpath));
-
+                                .file(file);
                         try {
-                            MusicMetadataSet src_set = new MyID3().read(file);
-                            try {
-                                IMusicMetadata metadata = src_set.getSimplified();
+                            MusicMetadataSet musicMetadataSet = new MyID3().read(file);
+                            if (musicMetadataSet != null) {
+                                IMusicMetadata metadata = musicMetadataSet.getSimplified();
                                 fileMusicModelBuilder.album(metadata.getAlbum());
                                 fileMusicModelBuilder.artist(metadata.getArtist());
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         } // read metadata
 
                         //if (mSortMode == Constants.SORT_SIZE)
@@ -621,7 +610,6 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                     }
 
                 } while (cursor.moveToNext());
-
             }
             cursor.close();
         }
@@ -701,26 +689,42 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
 
 
     @Override
-    public void getLocalMusicFolder(Context context, int sortMode, String search, final ResultCallback<List<FileModel>> resultCallback) {
-        getLocalMusic(context, sortMode, search, new ResultCallback<List<FileAudioModel>>() {
-            @Override
-            public void success(final List<FileAudioModel> result) {
-                final Map<String, FileModel> directories = new HashMap<>();
-                for (FileAudioModel fileAudioModel : result) {
-                    File parent = fileAudioModel.getFile().getParentFile();
-                    FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
-                    fileModelBuilder.file(parent);
-                    directories.put(parent.getPath(), fileModelBuilder.build());
-                }
+    public void getLocalMusicFolders(Context context, int sortMode, String search, final ResultCallback<List<FileModel>> resultCallback) {
+        final Map<String, FileModel> directories = new HashMap<>();
 
-                resultCallback.success(new ArrayList<>(directories.values()));
-            }
+        final String[] STAR = {"*"};
 
-            @Override
-            public void failure() {
-                resultCallback.failure();
+        final Uri allSongsUri = MediaStore.Files.getContentUri("external");
+        final List<String> searchArray = new ArrayList<>();
+
+        String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO;
+
+        for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
+            selection += " OR " + MediaStore.Files.FileColumns.DATA + " LIKE ?";
+            searchArray.add("%" + end);
+        }
+        selection += " )";
+
+        if (search != null && !search.isEmpty()) {
+            searchArray.add("%" + search + "%");
+            selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + " LIKE ?";
+        }
+
+        final Cursor cursor = context.getContentResolver().query(allSongsUri, STAR, selection, searchArray.toArray(new String[searchArray.size()]), null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    final String parentPath = FileUtils.getParentPathFromPath(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
+                    if (!directories.containsKey(parentPath)) {
+                        directories.put(parentPath,
+                                new FileModel.FileModelBuilder().file(new File(parentPath)).build());
+                    }
+                } while (cursor.moveToNext());
             }
-        });
+            cursor.close();
+        }
+
+        resultCallback.success(new ArrayList<>(directories.values()));
     }
 
     /**
