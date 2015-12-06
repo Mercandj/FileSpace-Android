@@ -40,7 +40,7 @@ import com.mercandalli.android.apps.files.common.listener.ILocationListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.common.util.FileUtils;
+import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.common.util.FontUtils;
 import com.mercandalli.android.apps.files.common.util.GpsUtils;
 import com.mercandalli.android.apps.files.common.util.ImageUtils;

@@ -2,16 +2,15 @@ package com.mercandalli.android.apps.files.file.cloud.response;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
+import com.mercandalli.android.apps.files.file.FileModel;
+import com.mercandalli.android.apps.files.file.FileTypeModel;
+import com.mercandalli.android.apps.files.file.filespace.FileSpaceModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-
-import com.mercandalli.android.apps.files.file.FileModel;
-import com.mercandalli.android.apps.files.file.filespace.FileSpaceModel;
-import com.mercandalli.android.apps.files.file.FileTypeModel;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
 
 public class FileResponse {
     @SerializedName("id")
@@ -83,6 +82,7 @@ public class FileResponse {
                 .dateCreation(dateCreation)
                 .isApkUpdate(mIsApkUpdate == 1)
                 .content(content)
+                .isOnline(true)
                 .build();
     }
 }

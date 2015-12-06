@@ -302,7 +302,7 @@ public class FileMyCloudFragment extends InjectedFragment implements
         if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
 
             mFileManager.getFiles(
-                    new FileModel.FileModelBuilder().id(mIdFileDirectoryStack.peek()).build(),
+                    new FileModel.FileModelBuilder().id(mIdFileDirectoryStack.peek()).isOnline(true).build(),
                     true,
                     search,
                     Constants.SORT_DATE_MODIFICATION,

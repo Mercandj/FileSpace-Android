@@ -37,7 +37,7 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.file.FileModel;
-import com.mercandalli.android.apps.files.common.util.FileUtils;
+import com.mercandalli.android.apps.files.file.FileUtils;
 
 /**
  * Global behavior : DDL file

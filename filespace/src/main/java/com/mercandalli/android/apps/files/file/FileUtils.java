@@ -17,7 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package com.mercandalli.android.apps.files.common.util;
+package com.mercandalli.android.apps.files.file;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -111,7 +111,6 @@ public class FileUtils {
      * Deletes a directory recursively.
      *
      * @param directory directory to delete
-     * @throws IOException in case deletion is unsuccessful
      */
     public static boolean deleteDirectory(File directory) {
         if (directory.isDirectory()) {
@@ -135,11 +134,23 @@ public class FileUtils {
         return path.substring(path.lastIndexOf(".") + 1);
     }
 
-    public static String getParentPathFromPath(String path) {
-        if (!path.contains("/"))
+    public static String getNameFromPath(String path) {
+        if (!path.contains("/")) {
             return "";
-        if (path.endsWith("/"))
-            return path.substring(0, path.length() - 1);
+        }
+        if (path.endsWith("/")) {
+            return getNameFromPath(path.substring(0, path.length() - 1));
+        }
+        return path.substring(path.lastIndexOf("/") + 1);
+    }
+
+    public static String getParentPathFromPath(String path) {
+        if (!path.contains("/")) {
+            return "";
+        }
+        if (path.endsWith("/")) {
+            return getParentPathFromPath(path.substring(0, path.length() - 1));
+        }
         return path.substring(0, path.lastIndexOf("/"));
     }
 

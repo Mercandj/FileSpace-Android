@@ -3,7 +3,6 @@ package com.mercandalli.android.apps.files.file;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.mercandalli.android.apps.files.common.util.FileUtils;
 import com.mercandalli.android.apps.files.file.filespace.FileSpaceModel;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
@@ -29,6 +28,7 @@ public class FileModel implements Parcelable {
     protected Date mDateCreation;
     protected boolean mIsApkUpdate;
     protected FileSpaceModel mContent;
+    protected boolean mIsOnline;
 
     // Local attrs
     protected File mFile;
@@ -51,6 +51,7 @@ public class FileModel implements Parcelable {
         protected boolean isDirectory;
         protected Date dateCreation;
         protected boolean isApkUpdate;
+        protected boolean isOnline;
         protected FileSpaceModel content;
 
         // Local attrs
@@ -120,21 +121,26 @@ public class FileModel implements Parcelable {
         }
 
         public FileModelBuilder file(final File file) {
+            isOnline = false;
             if (file != null && file.exists()) {
-                id = file.hashCode();
-                isDirectory = file.isDirectory();
-                size = file.length();
-                url = file.getAbsolutePath();
-                name = (file.getName().lastIndexOf(".") == -1) ? file.getName() : file.getName().substring(0, file.getName().lastIndexOf("."));
-                type = new FileTypeModel(FileUtils.getExtensionFromPath(url));
-                dateCreation = new Date(file.lastModified());
-                lastModified = file.lastModified();
-                if (isDirectory && file.listFiles() != null) {
-                    count = file.listFiles().length;
-                    countAudio = 0;
-                    for (File f : file.listFiles()) {
-                        if ((new FileTypeModel(FileUtils.getExtensionFromPath(f.getPath()))).equals(FileTypeModelENUM.AUDIO.type)) {
-                            countAudio++;
+                this.isDirectory = file.isDirectory();
+                this.size = file.length();
+                this.url = file.getAbsolutePath();
+                this.id = url.hashCode();
+                final String tmpName = file.getName();
+                this.name = (tmpName.lastIndexOf(".") == -1) ? tmpName : tmpName.substring(0, tmpName.lastIndexOf("."));
+                this.type = new FileTypeModel(FileUtils.getExtensionFromPath(this.url));
+                this.lastModified = file.lastModified();
+                this.dateCreation = new Date(this.lastModified);
+                if (this.isDirectory) {
+                    final File[] tmpListFiles = file.listFiles();
+                    if (tmpListFiles != null) {
+                        this.count = tmpListFiles.length;
+                        this.countAudio = 0;
+                        for (File f : tmpListFiles) {
+                            if ((new FileTypeModel(FileUtils.getExtensionFromPath(f.getPath()))).equals(FileTypeModelENUM.AUDIO.type)) {
+                                this.countAudio++;
+                            }
                         }
                     }
                 }
@@ -150,6 +156,16 @@ public class FileModel implements Parcelable {
 
         public FileModelBuilder count(long count) {
             this.count = count;
+            return this;
+        }
+
+        public FileModelBuilder countAudio(long countAudio) {
+            this.countAudio = countAudio;
+            return this;
+        }
+
+        public FileModelBuilder isOnline(boolean isOnline) {
+            this.isOnline = isOnline;
             return this;
         }
 
@@ -183,6 +199,7 @@ public class FileModel implements Parcelable {
             fileModel.mLastModified = lastModified;
             fileModel.mCount = count;
             fileModel.mCountAudio = countAudio;
+            fileModel.mIsOnline = isOnline;
             return fileModel;
         }
     }
@@ -212,7 +229,7 @@ public class FileModel implements Parcelable {
     }
 
     public boolean isOnline() {
-        return (mFile == null);
+        return mIsOnline;
     }
 
     public String getFullName() {
@@ -288,7 +305,13 @@ public class FileModel implements Parcelable {
     }
 
     public File getFile() {
-        return mFile;
+        if (mFile != null) {
+            return mFile;
+        } else if (!isOnline() && mUrl != null) {
+            mFile = new File(mUrl);
+            return mFile;
+        }
+        return null;
     }
 
     public long getLastModified() {

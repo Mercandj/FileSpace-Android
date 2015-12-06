@@ -26,7 +26,7 @@ import com.mercandalli.android.apps.files.common.listener.IBitmapListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGetDownloadImage;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.common.util.FileUtils;
+import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.common.util.HashUtils;
 import com.mercandalli.android.apps.files.common.util.ImageUtils;
 import com.mercandalli.android.apps.files.file.FileModel;

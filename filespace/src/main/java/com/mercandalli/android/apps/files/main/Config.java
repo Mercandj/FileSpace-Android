@@ -27,7 +27,7 @@ import android.graphics.BitmapFactory;
 import com.mercandalli.android.apps.files.common.listener.IBitmapListener;
 import com.mercandalli.android.apps.files.common.net.Base64;
 import com.mercandalli.android.apps.files.common.net.TaskGetDownloadImage;
-import com.mercandalli.android.apps.files.common.util.FileUtils;
+import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.common.util.HashUtils;
 import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.file.FileModel;

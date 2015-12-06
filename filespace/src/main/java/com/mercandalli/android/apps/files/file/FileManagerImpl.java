@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -26,7 +27,6 @@ import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.net.TaskGetDownload;
-import com.mercandalli.android.apps.files.common.util.FileUtils;
 import com.mercandalli.android.apps.files.common.util.HtmlUtils;
 import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
@@ -70,6 +70,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedString;
+
+import static com.mercandalli.android.apps.files.file.FileUtils.getNameFromPath;
 
 /**
  * A {@link FileModel} Manager.
@@ -687,44 +689,83 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         resultCallback.success(files);
     }
 
+    /**
+     * Class used to count.
+     * See {@link #getLocalMusicFolders(Context, int, String, ResultCallback)}.
+     * http://stackoverflow.com/questions/81346/most-efficient-way-to-increment-a-map-value-in-java
+     * Used to count with a map.
+     */
+    private class MutableInt {
+        int value = 1; // note that we start at 1 since we're counting
+
+        public void increment() {
+            ++value;
+        }
+    }
 
     @Override
-    public void getLocalMusicFolders(Context context, int sortMode, String search, final ResultCallback<List<FileModel>> resultCallback) {
-        final Map<String, FileModel> directories = new HashMap<>();
+    public void getLocalMusicFolders(final Context context, final int sortMode, final String search, final ResultCallback<List<FileModel>> resultCallback) {
+        new AsyncTask<Void, Void, List<FileModel>>() {
+            @Override
+            protected List<FileModel> doInBackground(Void... params) {
+                // Used to count the number of music inside.
+                final Map<String, MutableInt> directories = new HashMap<>();
 
-        final String[] STAR = {"*"};
+                final String[] STAR = {"*"};
 
-        final Uri allSongsUri = MediaStore.Files.getContentUri("external");
-        final List<String> searchArray = new ArrayList<>();
+                final Uri allSongsUri = MediaStore.Files.getContentUri("external");
+                final List<String> searchArray = new ArrayList<>();
 
-        String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO;
+                String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO;
 
-        for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
-            selection += " OR " + MediaStore.Files.FileColumns.DATA + " LIKE ?";
-            searchArray.add("%" + end);
-        }
-        selection += " )";
+                for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
+                    selection += " OR " + MediaStore.Files.FileColumns.DATA + " LIKE ?";
+                    searchArray.add("%" + end);
+                }
+                selection += " )";
 
-        if (search != null && !search.isEmpty()) {
-            searchArray.add("%" + search + "%");
-            selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + " LIKE ?";
-        }
+                if (search != null && !search.isEmpty()) {
+                    searchArray.add("%" + search + "%");
+                    selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + " LIKE ?";
+                }
 
-        final Cursor cursor = context.getContentResolver().query(allSongsUri, STAR, selection, searchArray.toArray(new String[searchArray.size()]), null);
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                do {
-                    final String parentPath = FileUtils.getParentPathFromPath(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
-                    if (!directories.containsKey(parentPath)) {
-                        directories.put(parentPath,
-                                new FileModel.FileModelBuilder().file(new File(parentPath)).build());
+                final Cursor cursor = context.getContentResolver().query(allSongsUri, STAR, selection, searchArray.toArray(new String[searchArray.size()]), null);
+                if (cursor != null) {
+                    if (cursor.moveToFirst()) {
+                        do {
+                            final String parentPath = FileUtils.getParentPathFromPath(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
+                            final MutableInt count = directories.get(parentPath);
+                            if (count == null) {
+                                directories.put(parentPath, new MutableInt());
+                            } else {
+                                count.increment();
+                            }
+                        } while (cursor.moveToNext());
                     }
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
-        }
+                    cursor.close();
+                }
 
-        resultCallback.success(new ArrayList<>(directories.values()));
+                final List<FileModel> result = new ArrayList<>();
+                for (String path : directories.keySet()) {
+                    result.add(new FileModel.FileModelBuilder()
+                            .id(path.hashCode())
+                            .url(path)
+                            .name(getNameFromPath(path))
+                            .isDirectory(true)
+                            .countAudio(directories.get(path).value)
+                            .isOnline(false)
+                            .build());
+                }
+
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(List<FileModel> fileModels) {
+                resultCallback.success(fileModels);
+                super.onPostExecute(fileModels);
+            }
+        }.execute();
     }
 
     /**
