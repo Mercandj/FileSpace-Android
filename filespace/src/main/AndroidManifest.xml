@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.mercandalli.android.apps.files"
+<manifest
+    package="com.mercandalli.android.apps.files"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -14,7 +15,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <uses-permission android:name="com.mercandalli.android.apps.filespace.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="com.mercandalli.android.apps.files.permission.MAPS_RECEIVE" />
 
     <!-- Required OpenGL ES 2.0. for Maps V2 -->
     <uses-feature
@@ -56,9 +57,9 @@
             android:required="false" />
 
         <activity
-            android:name="com.mercandalli.android.apps.files.init.InitActivity"
+            android:name=".splash.SplashActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme"
+            android:theme="@style/SplashTheme"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -145,7 +146,7 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <category android:name="com.mercandalli.android.apps.filespace" />
+                <category android:name="com.mercandalli.android.apps.files" />
             </intent-filter>
         </receiver>
 

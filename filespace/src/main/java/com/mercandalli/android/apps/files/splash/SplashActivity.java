@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.init;
+package com.mercandalli.android.apps.files.splash;
 
 import android.Manifest;
 import android.app.Activity;
@@ -15,7 +15,7 @@ import com.mercandalli.android.apps.files.main.Permission;
 /**
  * The first {@link Activity} launched.
  */
-public class InitActivity extends AppCompatActivity implements Permission.OnPermissionResult {
+public class SplashActivity extends AppCompatActivity implements Permission.OnPermissionResult {
 
     Permission mPermission;
 
@@ -25,15 +25,13 @@ public class InitActivity extends AppCompatActivity implements Permission.OnPerm
             Manifest.permission.ACCESS_FINE_LOCATION
     };
 
-    private boolean mStartedByIntent;
+    private static final String EXTRA_START_BY_INTENT = "SplashActivity.Extra.EXTRA_START_BY_INTENT";
 
-    private static final String EXTRA_START_BY_INTENT = "InitActivity.Extra.EXTRA_START_BY_INTENT";
-
-    private static final String SHARED_PREFERENCES_INIT = "InitActivity.Permission";
+    private static final String SHARED_PREFERENCES_INIT = "SplashActivity.Permission";
     private static final String KEY_IS_FIRST_LOGIN = "LoginPermission.Key.KEY_IS_FIRST_LOGIN";
 
     public static void start(Activity activity) {
-        final Intent intent = new Intent(activity, InitActivity.class);
+        final Intent intent = new Intent(activity, SplashActivity.class);
         intent.putExtra(EXTRA_START_BY_INTENT, true);
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
@@ -42,18 +40,15 @@ public class InitActivity extends AppCompatActivity implements Permission.OnPerm
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_init);
 
         boolean start = false;
         Bundle extras = getIntent().getExtras();
         if (isFirstLogin()) {
             start = true;
-            mStartedByIntent = false;
         } else if (extras != null &&
                 extras.containsKey(EXTRA_START_BY_INTENT) &&
                 extras.getBoolean(EXTRA_START_BY_INTENT)) {
             start = true;
-            mStartedByIntent = true;
         }
 
         if (start) {
@@ -66,10 +61,9 @@ public class InitActivity extends AppCompatActivity implements Permission.OnPerm
     }
 
     private boolean isFirstLogin() {
-        final SharedPreferences sharedPreferences = getSharedPreferences(InitActivity.SHARED_PREFERENCES_INIT, MODE_PRIVATE);
-        return sharedPreferences.getBoolean(InitActivity.KEY_IS_FIRST_LOGIN, true);
+        final SharedPreferences sharedPreferences = getSharedPreferences(SplashActivity.SHARED_PREFERENCES_INIT, MODE_PRIVATE);
+        return sharedPreferences.getBoolean(SplashActivity.KEY_IS_FIRST_LOGIN, true);
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

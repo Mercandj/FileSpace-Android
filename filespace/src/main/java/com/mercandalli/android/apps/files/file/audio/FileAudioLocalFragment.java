@@ -35,6 +35,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.InjectedFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
@@ -76,6 +77,8 @@ public class FileAudioLocalFragment extends InjectedFragment
     private final IListener mRefreshActivityAdapterListener;
 
     private boolean mIsInsideFolder = false;
+
+    ScaleAnimationAdapter mScaleAnimationAdapter;
 
     @Inject
     FileManager mFileManager;
@@ -214,7 +217,10 @@ public class FileAudioLocalFragment extends InjectedFragment
         }, null);
         mFileModelCardAdapter.setOnFileSubtitleAdapter(this);
 
-        mRecyclerView.setAdapter(mFileModelCardAdapter);
+        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
+        mScaleAnimationAdapter.setDuration(220);
+        mScaleAnimationAdapter.setOffsetDuration(32);
+        mRecyclerView.setAdapter(mScaleAnimationAdapter);
 
         refreshList();
 
@@ -242,7 +248,10 @@ public class FileAudioLocalFragment extends InjectedFragment
                 }
                 mFileModels.addAll(result);
 
-                mRecyclerView.setAdapter(mFileModelCardAdapter);
+                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
+                mScaleAnimationAdapter.setDuration(220);
+                mScaleAnimationAdapter.setOffsetDuration(32);
+                mRecyclerView.setAdapter(mScaleAnimationAdapter);
 
                 updateAdapter();
             }
@@ -262,7 +271,11 @@ public class FileAudioLocalFragment extends InjectedFragment
             public void success(List<FileAudioModel> result) {
                 mFileModels.clear();
                 mFileModels.addAll(result);
-                mRecyclerView.setAdapter(mFileAudioDragAdapter);
+
+                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioDragAdapter);
+                mScaleAnimationAdapter.setDuration(220);
+                mScaleAnimationAdapter.setOffsetDuration(32);
+                mRecyclerView.setAdapter(mScaleAnimationAdapter);
                 updateAdapter();
             }
 
