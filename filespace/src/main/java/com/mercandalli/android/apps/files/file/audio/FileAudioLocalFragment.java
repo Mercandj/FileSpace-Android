@@ -349,6 +349,10 @@ public class FileAudioLocalFragment extends InjectedFragment
 
     @Override
     public boolean back() {
+        if(mIsInsideFolder) {
+            refreshList();
+            return true;
+        }
         return false;
     }
 

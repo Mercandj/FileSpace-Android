@@ -60,11 +60,6 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
         }
     }
 
-    private boolean isFirstLogin() {
-        final SharedPreferences sharedPreferences = getSharedPreferences(SplashActivity.SHARED_PREFERENCES_INIT, MODE_PRIVATE);
-        return sharedPreferences.getBoolean(SplashActivity.KEY_IS_FIRST_LOGIN, true);
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -74,6 +69,11 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
     @Override
     public void onPermissionResult(boolean succeed) {
         end();
+    }
+
+    private boolean isFirstLogin() {
+        final SharedPreferences sharedPreferences = getSharedPreferences(SplashActivity.SHARED_PREFERENCES_INIT, MODE_PRIVATE);
+        return sharedPreferences.getBoolean(SplashActivity.KEY_IS_FIRST_LOGIN, true);
     }
 
     private void end() {
