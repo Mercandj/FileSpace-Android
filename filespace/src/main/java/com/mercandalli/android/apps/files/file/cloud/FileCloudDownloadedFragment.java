@@ -38,7 +38,7 @@ import android.widget.Toast;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
-import com.mercandalli.android.apps.files.common.fragment.InjectedFragment;
+import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
@@ -65,10 +65,10 @@ import java.util.Map;
 import javax.inject.Inject;
 
 /**
- * A {@link InjectedFragment} used to buildDisplay the local {@link FileModel} provide by the
+ * A {@link InjectedFabFragment} used to buildDisplay the local {@link FileModel} provide by the
  * {@link FileLocalApi}.
  */
-public class FileCloudDownloadedFragment extends InjectedFragment implements
+public class FileCloudDownloadedFragment extends InjectedFabFragment implements
         BackFragment.ISortMode,
         FileModelAdapter.OnFileClickListener,
         FileModelAdapter.OnFileLongClickListener, FileModelListener {

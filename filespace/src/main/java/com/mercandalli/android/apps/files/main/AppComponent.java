@@ -10,11 +10,14 @@ import com.mercandalli.android.apps.files.file.audio.FileAudioDragAdapter;
 import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModule;
 import com.mercandalli.android.apps.files.file.audio.FileAudioPlayer;
-import com.mercandalli.android.apps.files.file.cloud.FileCloudFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudDownloadedFragment;
+import com.mercandalli.android.apps.files.file.cloud.FileCloudFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileMyCloudFragment;
 import com.mercandalli.android.apps.files.file.local.FileLocalFragment;
 import com.mercandalli.android.apps.files.search.SearchActivity;
+import com.mercandalli.android.apps.files.support.SupportFragment;
+import com.mercandalli.android.apps.files.support.SupportManager;
+import com.mercandalli.android.apps.files.support.SupportModule;
 
 import javax.inject.Singleton;
 
@@ -25,7 +28,8 @@ import dagger.Component;
         modules = {
                 AppModule.class,
                 FileModule.class,
-                FileAudioModule.class
+                FileAudioModule.class,
+                SupportModule.class
         }
 )
 public interface AppComponent {
@@ -53,6 +57,8 @@ public interface AppComponent {
 
     void inject(FileCloudDownloadedFragment fileCloudDownloadedFragment);
 
+    void inject(SupportFragment supportFragment);
+
     //void inject(HomeFragment homeFragment);
 
     //Providers
@@ -61,4 +67,6 @@ public interface AppComponent {
     FileManager provideFileManager();
 
     FileAudioPlayer provideMusicPlayer();
+
+    SupportManager provideSupportManager();
 }

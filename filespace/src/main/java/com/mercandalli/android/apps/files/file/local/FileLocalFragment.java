@@ -38,7 +38,7 @@ import android.widget.Toast;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
-import com.mercandalli.android.apps.files.common.fragment.InjectedFragment;
+import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
@@ -63,10 +63,10 @@ import java.util.Map;
 import javax.inject.Inject;
 
 /**
- * A {@link InjectedFragment} used to buildDisplay the local {@link FileModel} provide by the
+ * A {@link InjectedFabFragment} used to buildDisplay the local {@link FileModel} provide by the
  * {@link FileLocalApi}.
  */
-public class FileLocalFragment extends InjectedFragment implements
+public class FileLocalFragment extends InjectedFabFragment implements
         BackFragment.ISortMode,
         FileModelAdapter.OnFileClickListener,
         FileModelAdapter.OnFileLongClickListener, FileModelListener {
@@ -104,10 +104,12 @@ public class FileLocalFragment extends InjectedFragment implements
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
         mRecyclerView.setHasFixedSize(true);
-        if (activity.getResources().getBoolean(R.bool.is_landscape)) {
-            mRecyclerView.setLayoutManager(new GridLayoutManager(activity, 2));
-        } else {
+
+        final int nbColumn = activity.getResources().getInteger(R.integer.column_number_card);
+        if (nbColumn <= 1) {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        } else {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(activity, nbColumn));
         }
         //mRecyclerView.addItemDecoration(new FileDivider(ContextCompat.getColor(mActivity, R.color.file_divider)));
 

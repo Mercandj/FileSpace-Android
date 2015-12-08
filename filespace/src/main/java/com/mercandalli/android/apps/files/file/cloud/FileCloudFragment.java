@@ -38,7 +38,7 @@ import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.FabFragment;
-import com.mercandalli.android.apps.files.common.fragment.InjectedFragment;
+import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.listener.IStringListener;
@@ -69,7 +69,7 @@ import javax.inject.Inject;
 /**
  * A {@link FabFragment} used by {@link FileLocalPagerFragment} to buildDisplay the public cloud {@link FileModel}.
  */
-public class FileCloudFragment extends InjectedFragment implements
+public class FileCloudFragment extends InjectedFabFragment implements
         FileModelAdapter.OnFileClickListener,
         FileModelAdapter.OnFileLongClickListener,
         FileModelListener, SwipeRefreshLayout.OnRefreshListener {
@@ -107,10 +107,12 @@ public class FileCloudFragment extends InjectedFragment implements
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
         mRecyclerView.setHasFixedSize(true);
-        if (activity.getResources().getBoolean(R.bool.is_landscape)) {
-            mRecyclerView.setLayoutManager(new GridLayoutManager(activity, 2));
-        } else {
+
+        final int nbColumn = getResources().getInteger(R.integer.column_number_card);
+        if (nbColumn <=1) {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        } else {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(activity, nbColumn));
         }
 
         mAdapterModelFile = new FileModelAdapter(mFilesList, this, this, this);

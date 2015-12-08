@@ -8,7 +8,7 @@ import com.mercandalli.android.apps.files.main.AppComponent;
 /**
  * A Dagger injected {@link FabFragment}.
  */
-public abstract class InjectedFragment extends FabFragment {
+public abstract class InjectedFabFragment extends FabFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

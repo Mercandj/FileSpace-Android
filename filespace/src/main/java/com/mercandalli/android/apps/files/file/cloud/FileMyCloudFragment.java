@@ -38,7 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.fragment.InjectedFragment;
+import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.listener.IStringListener;
@@ -66,7 +66,7 @@ import java.util.Stack;
 
 import javax.inject.Inject;
 
-public class FileMyCloudFragment extends InjectedFragment implements
+public class FileMyCloudFragment extends InjectedFabFragment implements
         SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView mRecyclerView;
@@ -104,10 +104,12 @@ public class FileMyCloudFragment extends InjectedFragment implements
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
         mRecyclerView.setHasFixedSize(true);
-        if (activity.getResources().getBoolean(R.bool.is_landscape)) {
-            mRecyclerView.setLayoutManager(new GridLayoutManager(activity, 2));
-        } else {
+
+        final int nbColumn = getResources().getInteger(R.integer.column_number_card);
+        if (nbColumn <= 1) {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        } else {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(activity, nbColumn));
         }
 
         resetPath();

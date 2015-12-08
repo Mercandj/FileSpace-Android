@@ -5,12 +5,20 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/fragment_support_toolbar"
+        android:id="@+id/fragment_support_tool_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:titleTextColor="@android:color/white" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_support_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:layout_marginBottom="100dp"
+        android:layout_marginTop="?attr/actionBarSize" />
 
     <View
         android:layout_width="match_parent"
@@ -18,12 +26,31 @@
         android:layout_marginTop="?attr/actionBarSize"
         android:background="@drawable/shadow_bottom" />
 
+    <EditText
+        android:id="@+id/fragment_support_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="66dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginStart="20dp"
+        android:background="#fff"
+        android:elevation="3dp"
+        android:gravity="top"
+        android:hint="Post a comment"
+        android:inputType="text"
+        android:maxLines="2"
+        android:padding="8dp"
+        android:singleLine="false"
+        android:textSize="@dimen/default_text_14" />
+
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fragment_support_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="25dp"
         android:scaleType="fitXY"
-        android:src="@drawable/add" />
+        android:src="@drawable/ic_menu_send_white" />
 
 </FrameLayout>

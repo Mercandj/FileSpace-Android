@@ -37,7 +37,7 @@ import android.widget.Toast;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
-import com.mercandalli.android.apps.files.common.fragment.InjectedFragment;
+import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.listener.IStringListener;
@@ -61,7 +61,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class FileAudioLocalFragment extends InjectedFragment
+public class FileAudioLocalFragment extends InjectedFabFragment
         implements BackFragment.ISortMode, FileModelCardAdapter.OnFileSubtitleAdapter {
 
     private RecyclerView mRecyclerView;
@@ -103,16 +103,13 @@ public class FileAudioLocalFragment extends InjectedFragment
 
     private void updateLayoutManager() {
         if (!mIsInsideFolder) {
-            if (getResources().getBoolean(R.bool.is_landscape)) {
-                mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-            } else {
-                mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-            }
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.column_number_small_card)));
         } else {
-            if (getResources().getBoolean(R.bool.is_landscape)) {
-                mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-            } else {
+            final int nbColumn = getResources().getInteger(R.integer.column_number_card);
+            if (nbColumn <= 1) {
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            } else {
+                mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), nbColumn));
             }
         }
     }
@@ -349,7 +346,7 @@ public class FileAudioLocalFragment extends InjectedFragment
 
     @Override
     public boolean back() {
-        if(mIsInsideFolder) {
+        if (mIsInsideFolder) {
             refreshList();
             return true;
         }
