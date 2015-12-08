@@ -1,48 +1,43 @@
-<!--
-	Personal Project : Control server
-		MERCANDALLI Jonathan
--->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/action_delete"
         android:icon="@android:drawable/ic_menu_delete"
-        app:showAsAction="ifRoom"
-        android:title="@string/menu_action_delete"/>
+        android:title="@string/menu_action_delete"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_add"
         android:icon="@android:drawable/ic_menu_add"
-        app:showAsAction="ifRoom"
-        android:title="@string/menu_action_add"/>
+        android:title="@string/menu_action_add"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_home"
         android:icon="@drawable/ic_home_white_24dp"
-        app:showAsAction="ifRoom"
-        android:title="@string/menu_action_home"/>
+        android:title="@string/menu_action_home"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_sort"
         android:icon="@drawable/ic_filter_list_white_24dp"
-        app:showAsAction="ifRoom"
-        android:title="@string/menu_action_sort"/>
+        android:title="@string/menu_action_sort"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_search"
         android:actionViewClass="android.widget.SearchView"
         android:icon="@drawable/ic_search_white_24dp"
-        app:showAsAction="ifRoom|collapseActionView"
-        android:title="@string/menu_action_search"/>
+        android:title="@string/menu_action_search"
+        app:showAsAction="ifRoom|collapseActionView" />
 
     <item
         android:id="@+id/action_filter"
         android:actionViewClass="android.widget.SearchView"
         android:icon="@drawable/ic_search_white_24dp"
-        app:showAsAction="ifRoom|collapseActionView"
         android:title="@string/menu_action_search"
-        app:actionViewClass="android.support.v7.widget.SearchView"/>
-
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView" />
 
 </menu>

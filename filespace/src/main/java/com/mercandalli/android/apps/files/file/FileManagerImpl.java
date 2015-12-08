@@ -95,11 +95,17 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         mFilePersistenceApi = filePersistenceApi;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void getFiles(final FileModel fileParent, final int sortMode, final ResultCallback<List<FileModel>> resultCallback) {
         getFiles(fileParent, true, null, sortMode, resultCallback);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void getFiles(final FileModel fileParent, boolean areMyFiles, final String search, final int sortMode, final ResultCallback<List<FileModel>> resultCallback) {
         if (fileParent.isOnline()) {
@@ -124,6 +130,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void download(final Activity activity, final FileModel fileModel, final IListener listener) {
         if (NetUtils.isInternetConnection(mContextApp) && fileModel.isOnline()) {
@@ -142,6 +151,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void upload(final FileModel fileModel, int idFileParent, final IListener listener) {
         if (NetUtils.isInternetConnection(mContextApp) && !fileModel.isOnline()) {
@@ -168,6 +180,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void rename(final FileModel fileModel, final String newName, final IListener listener) {
         if (fileModel.isOnline()) {
@@ -192,12 +207,18 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void renameLocalByPath(FileModel fileModel, String path) {
         File tmp = new File(path);
         fileModel.getFile().renameTo(tmp);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void delete(final FileModel fileModel, final IListener listener) {
         Preconditions.checkNotNull(fileModel);
@@ -224,6 +245,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setParent(final FileModel fileModel, final int newIdFileParent, final IListener listener) {
         Preconditions.checkNotNull(fileModel);
@@ -243,6 +267,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setPublic(final FileModel fileModel, final boolean isPublic, final IListener listener) {
         if (fileModel.isOnline()) {
@@ -261,6 +288,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute(final Activity activity, final int position, final List fileModelList, View view) {
         if (fileModelList == null || position >= fileModelList.size()) {
@@ -429,6 +459,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void openLocalAs(final Activity activity, final FileModel fileModel) {
         if (fileModel.isOnline()) {
@@ -471,6 +504,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         menuDrop.show();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Spanned toSpanned(final FileModel fileModel) {
         final FileTypeModel type = fileModel.getType();
@@ -508,6 +544,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         copyLocalFile(activity, fileModel, outputPath, null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void copyLocalFile(final Activity activity, final FileModel fileModel, String outputPath, IPostExecuteListener listener) {
         if (fileModel.isOnline()) {
@@ -555,6 +594,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isMine(final FileModel fileModel) {
         return !fileModel.isOnline() || fileModel.getIdUser() == Config.getUserId();
@@ -568,7 +610,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
 
         final List<FileAudioModel> files = new ArrayList<>();
 
-        final String[] STAR = {"*"};
+        final String[] PROJECTION = {MediaStore.Files.FileColumns.DATA};
 
         final Uri allSongsUri = MediaStore.Files.getContentUri("external");
         final List<String> searchArray = new ArrayList<>();
@@ -586,7 +628,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + " LIKE ?";
         }
 
-        final Cursor cursor = context.getContentResolver().query(allSongsUri, STAR, selection, searchArray.toArray(new String[searchArray.size()]), null);
+        final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
@@ -703,15 +745,21 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void getLocalMusicFolders(final Context context, final int sortMode, final String search, final ResultCallback<List<FileModel>> resultCallback) {
         new AsyncTask<Void, Void, List<FileModel>>() {
             @Override
             protected List<FileModel> doInBackground(Void... params) {
+
+                long t1 = System.currentTimeMillis();
+
                 // Used to count the number of music inside.
                 final Map<String, MutableInt> directories = new HashMap<>();
 
-                final String[] STAR = {"*"};
+                final String[] PROJECTION = new String[]{MediaStore.Files.FileColumns.DATA};
 
                 final Uri allSongsUri = MediaStore.Files.getContentUri("external");
                 final List<String> searchArray = new ArrayList<>();
@@ -728,8 +776,13 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                     searchArray.add("%" + search + "%");
                     selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + " LIKE ?";
                 }
+                
+                long t2 = System.currentTimeMillis();
 
-                final Cursor cursor = context.getContentResolver().query(allSongsUri, STAR, selection, searchArray.toArray(new String[searchArray.size()]), null);
+                final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
+
+                long t3 = System.currentTimeMillis();
+
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         do {
@@ -745,6 +798,8 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                     cursor.close();
                 }
 
+                long t4 = System.currentTimeMillis();
+
                 final List<FileModel> result = new ArrayList<>();
                 for (String path : directories.keySet()) {
                     result.add(new FileModel.FileModelBuilder()
@@ -756,6 +811,10 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                             .isOnline(false)
                             .build());
                 }
+
+                long t5 = System.currentTimeMillis();
+
+                Log.d("FileManager", "getLocalMusicFolders i:" + (t2 - t1) + " ii:" + (t3 - t2) + " iii:" + (t4 - t3) + " iv:" + (t5 - t4));
 
                 return result;
             }

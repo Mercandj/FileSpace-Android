@@ -59,6 +59,9 @@ public abstract class FileManager {
      */
     public abstract void setPublic(final FileModel fileModel, final boolean isPublic, final IListener listener);
 
+    /**
+     * Default click action. Call and {@link android.content.Intent} or a specific {@link Activity}.
+     */
     public abstract void execute(final Activity activity, final int position, final List fileModelList, View view);
 
     /**
