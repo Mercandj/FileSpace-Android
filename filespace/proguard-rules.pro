@@ -15,3 +15,21 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+# Crashlytics
+-keep class com.crashlytics.** { *; }
+-keep class com.crashlytics.android.**
+-keepattributes SourceFile,LineNumberTable
+
+# Keep the class.
+-keep class com.mercandalli.android.android.apps.files.** { *; }
+
+-keep class com.squareup.okhttp.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+-dontwarn com.squareup.okhttp.**
+
+-keep class retrofit.** { *; }
+-dontwarn retrofit.**
+
+-dontwarn okio.**
+
+-dontwarn org.apache.regexp.**

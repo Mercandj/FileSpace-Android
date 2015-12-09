@@ -22,6 +22,7 @@ package com.mercandalli.android.apps.files.file.audio;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
@@ -66,8 +67,12 @@ public class FileAudioLocalFragment extends InjectedFabFragment
 
     private RecyclerView mRecyclerView;
     private List<FileModel> mFileModels;
-    private ProgressBar mProgressBar;
     private TextView mMessageTextView;
+
+    /**
+     * A simple {@link ProgressBar}. Call {@link #showProgressBar()} or {@link #hideProgressBar()}.
+     */
+    private ProgressBar mProgressBar;
 
     private FileAudioDragAdapter mFileAudioDragAdapter;
     private FileModelCardAdapter mFileModelCardAdapter;
@@ -78,7 +83,17 @@ public class FileAudioLocalFragment extends InjectedFabFragment
 
     private boolean mIsInsideFolder = false;
 
-    ScaleAnimationAdapter mScaleAnimationAdapter;
+    private ScaleAnimationAdapter mScaleAnimationAdapter;
+
+    /**
+     * A simple {@link Handler}. Called by {@link #showProgressBar()} or {@link #hideProgressBar()}.
+     */
+    private final Handler mProgressBarActivationHandler;
+
+    /**
+     * A simple {@link Runnable}. Called by {@link #showProgressBar()} or {@link #hideProgressBar()}.
+     */
+    private final Runnable mProgressBarActivationRunnable;
 
     @Inject
     FileManager mFileManager;
@@ -90,6 +105,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment
         return fragment;
     }
 
+    /**
+     * Do not use this constructor. Call {@link #newInstance()} instead.
+     */
     public FileAudioLocalFragment() {
         mRefreshActivityAdapterListener = new IListener() {
             @Override
@@ -97,6 +115,14 @@ public class FileAudioLocalFragment extends InjectedFabFragment
                 if (mApplicationCallback != null) {
                     mApplicationCallback.refreshData();
                 }
+            }
+        };
+        mProgressBarActivationHandler = new Handler();
+        mProgressBarActivationRunnable = new Runnable() {
+            @Override
+            public void run() {
+                mProgressBar.setVisibility(View.VISIBLE);
+                mRecyclerView.setVisibility(View.GONE);
             }
         };
     }
@@ -235,14 +261,12 @@ public class FileAudioLocalFragment extends InjectedFabFragment
         if (mFileManager == null) {
             return;
         }
-        mProgressBar.setVisibility(View.VISIBLE);
-        mRecyclerView.setVisibility(View.GONE);
 
+        showProgressBar();
         mFileManager.getLocalMusicFolders(mActivity, mSortMode, search, new ResultCallback<List<FileModel>>() {
             @Override
             public void success(List<FileModel> result) {
-                mProgressBar.setVisibility(View.GONE);
-                mRecyclerView.setVisibility(View.VISIBLE);
+                hideProgressBar();
                 if (mFileModels == null) {
                     mFileModels = new ArrayList<>();
                 } else {
@@ -260,8 +284,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment
 
             @Override
             public void failure() {
-                mProgressBar.setVisibility(View.GONE);
-                mRecyclerView.setVisibility(View.VISIBLE);
+                hideProgressBar();
             }
         });
     }
@@ -403,5 +426,15 @@ public class FileAudioLocalFragment extends InjectedFabFragment
             return "Directory: " + StringUtils.longToShortString(fileModel.getCountAudio()) + " music" + (fileModel.getCountAudio() > 1 ? "s" : "");
         }
         return null;
+    }
+
+    private void showProgressBar() {
+        mProgressBarActivationHandler.postDelayed(mProgressBarActivationRunnable, 200);
+    }
+
+    private void hideProgressBar() {
+        mProgressBarActivationHandler.removeCallbacks(mProgressBarActivationRunnable);
+        mProgressBar.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 }
