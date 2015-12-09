@@ -110,4 +110,18 @@ public abstract class FileManager {
         }
         return parameters;
     }
+
+    /**
+     * Class used to count.
+     * See {@link #getLocalMusicFolders(Context, int, String, ResultCallback)}.
+     * http://stackoverflow.com/questions/81346/most-efficient-way-to-increment-a-map-value-in-java
+     * Used to count with a map.
+     */
+    protected class MutableInt {
+        int value = 1; // note that we start at 1 since we're counting
+
+        public void increment() {
+            ++value;
+        }
+    }
 }

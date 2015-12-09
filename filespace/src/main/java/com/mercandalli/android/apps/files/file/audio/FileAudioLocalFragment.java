@@ -67,7 +67,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment
     private RecyclerView mRecyclerView;
     private List<FileModel> mFileModels;
     private ProgressBar mProgressBar;
-    private TextView message;
+    private TextView mMessageTextView;
 
     private FileAudioDragAdapter mFileAudioDragAdapter;
     private FileModelCardAdapter mFileModelCardAdapter;
@@ -116,12 +116,12 @@ public class FileAudioLocalFragment extends InjectedFabFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_file_drag_drop, container, false);
-        mProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
-        mProgressBar.setVisibility(View.INVISIBLE);
-        message = (TextView) rootView.findViewById(R.id.message);
+        View rootView = inflater.inflate(R.layout.fragment_file_audio_local, container, false);
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.fragment_file_audio_local_progress_bar);
+        mProgressBar.setVisibility(View.GONE);
+        mMessageTextView = (TextView) rootView.findViewById(R.id.fragment_file_audio_local_message);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_file_audio_local_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         updateLayoutManager();
 
@@ -235,9 +235,14 @@ public class FileAudioLocalFragment extends InjectedFabFragment
         if (mFileManager == null) {
             return;
         }
+        mProgressBar.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.GONE);
+
         mFileManager.getLocalMusicFolders(mActivity, mSortMode, search, new ResultCallback<List<FileModel>>() {
             @Override
             public void success(List<FileModel> result) {
+                mProgressBar.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
                 if (mFileModels == null) {
                     mFileModels = new ArrayList<>();
                 } else {
@@ -255,7 +260,8 @@ public class FileAudioLocalFragment extends InjectedFabFragment
 
             @Override
             public void failure() {
-
+                mProgressBar.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -289,10 +295,11 @@ public class FileAudioLocalFragment extends InjectedFabFragment
             refreshFab();
 
             if (mFileModels.size() == 0) {
-                message.setText(getString(R.string.no_music));
-                message.setVisibility(View.VISIBLE);
-            } else
-                message.setVisibility(View.GONE);
+                mMessageTextView.setText(getString(R.string.no_music));
+                mMessageTextView.setVisibility(View.VISIBLE);
+            } else {
+                mMessageTextView.setVisibility(View.GONE);
+            }
 
             if (mIsInsideFolder) {
                 mFileAudioDragAdapter.setList(mFileModels);

@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/listView"
+        android:id="@+id/fragment_file_audio_local_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
@@ -15,16 +15,17 @@
         android:paddingEnd="@dimen/horizontal_margin"
         android:paddingStart="@dimen/horizontal_margin"
         android:paddingTop="6dp"
+        android:scrollbarStyle="outsideOverlay"
         android:scrollbars="vertical" />
 
     <ProgressBar
-        android:id="@+id/circularProgressBar"
+        android:id="@+id/fragment_file_audio_local_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
     <TextView
-        android:id="@+id/message"
+        android:id="@+id/fragment_file_audio_local_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

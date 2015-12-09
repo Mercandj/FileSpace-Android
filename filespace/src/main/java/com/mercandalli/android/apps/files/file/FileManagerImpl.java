@@ -17,6 +17,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.util.Pair;
 import android.text.Spanned;
 import android.util.Log;
+import android.util.MutableInt;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -732,20 +733,6 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
     }
 
     /**
-     * Class used to count.
-     * See {@link #getLocalMusicFolders(Context, int, String, ResultCallback)}.
-     * http://stackoverflow.com/questions/81346/most-efficient-way-to-increment-a-map-value-in-java
-     * Used to count with a map.
-     */
-    private class MutableInt {
-        int value = 1; // note that we start at 1 since we're counting
-
-        public void increment() {
-            ++value;
-        }
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -753,9 +740,6 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         new AsyncTask<Void, Void, List<FileModel>>() {
             @Override
             protected List<FileModel> doInBackground(Void... params) {
-
-                long t1 = System.currentTimeMillis();
-
                 // Used to count the number of music inside.
                 final Map<String, MutableInt> directories = new HashMap<>();
 
@@ -776,13 +760,8 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                     searchArray.add("%" + search + "%");
                     selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + " LIKE ?";
                 }
-                
-                long t2 = System.currentTimeMillis();
 
                 final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
-
-                long t3 = System.currentTimeMillis();
-
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         do {
@@ -798,8 +777,6 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                     cursor.close();
                 }
 
-                long t4 = System.currentTimeMillis();
-
                 final List<FileModel> result = new ArrayList<>();
                 for (String path : directories.keySet()) {
                     result.add(new FileModel.FileModelBuilder()
@@ -811,11 +788,6 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                             .isOnline(false)
                             .build());
                 }
-
-                long t5 = System.currentTimeMillis();
-
-                Log.d("FileManager", "getLocalMusicFolders i:" + (t2 - t1) + " ii:" + (t3 - t2) + " iii:" + (t4 - t3) + " iv:" + (t5 - t4));
-
                 return result;
             }
 

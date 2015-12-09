@@ -3,11 +3,11 @@ package com.mercandalli.android.apps.files.support;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SupportManagerMock extends SupportManager {
+public class SupportManagerMockImpl extends SupportManager {
 
     private final List<SupportComment> mSupportComments;
 
-    public SupportManagerMock() {
+    public SupportManagerMockImpl() {
         mSupportComments = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             mSupportComments.add(new SupportComment("Toto " + i, "Comment " + i));

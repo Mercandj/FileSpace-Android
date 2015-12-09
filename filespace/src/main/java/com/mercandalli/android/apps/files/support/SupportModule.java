@@ -14,7 +14,7 @@ public class SupportModule {
     @Provides
     @Singleton
     SupportManager provideSupportManager() {
-        return new SupportManagerMock();
+        return new SupportManagerMockImpl();
     }
 
 }
