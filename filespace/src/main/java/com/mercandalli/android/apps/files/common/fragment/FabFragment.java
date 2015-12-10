@@ -37,8 +37,9 @@ public abstract class FabFragment extends BackFragment {
     public abstract int getFabImageResource(int fab_id);
 
     public void refreshFab() {
-        if (mRefreshFabCallback != null)
+        if (mRefreshFabCallback != null) {
             mRefreshFabCallback.onRefreshFab();
+        }
     }
 
     public interface RefreshFabCallback {

@@ -31,6 +31,7 @@ import com.mercandalli.android.apps.files.common.util.HtmlUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
+import com.mercandalli.android.apps.files.main.Config;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -131,12 +132,10 @@ public class ModelGenealogyPerson extends Model {
     }
 
     public void delete(IPostExecuteListener listener) {
-        if (this.app != null) {
-            if (this.app.getConfig().isUserAdmin() && this.id != this.app.getConfig().getUserId()) {
-                String url = this.app.getConfig().getUrlServer() + this.app.getConfig().routeGenealogyDelete + "/" + this.id;
-                new TaskPost(mActivity, this.app, url, listener).execute();
-                return;
-            }
+        if (this.app != null && this.app.getConfig().isUserAdmin() && this.id != Config.getUserId()) {
+            String url = this.app.getConfig().getUrlServer() + Config.routeGenealogyDelete + "/" + this.id;
+            new TaskPost(mActivity, this.app, url, listener).execute();
+            return;
         }
         if (listener != null) {
             listener.onPostExecute(null, null);
@@ -150,8 +149,9 @@ public class ModelGenealogyPerson extends Model {
                 return;
             }
         }
-        if (listener != null)
+        if (listener != null) {
             listener.onPostExecute(null, null);
+        }
     }
 
     public String getAllFirstName() {
@@ -159,12 +159,15 @@ public class ModelGenealogyPerson extends Model {
     }
 
     public String getAdapterTitle() {
-        if (!valid)
+        if (!valid) {
             return "xxx xxx";
-        if (!StringUtils.isNullOrEmpty(getAllFirstName()) && !StringUtils.isNullOrEmpty(last_name))
+        }
+        if (!StringUtils.isNullOrEmpty(getAllFirstName()) && !StringUtils.isNullOrEmpty(last_name)) {
             return StringUtils.uppercase(last_name) + " " + getAllFirstName();
-        if (!StringUtils.isNullOrEmpty(last_name))
+        }
+        if (!StringUtils.isNullOrEmpty(last_name)) {
             return StringUtils.uppercase(last_name);
+        }
         return getAllFirstName();
     }
 
@@ -233,9 +236,10 @@ public class ModelGenealogyPerson extends Model {
         if (this.brothers_sisters_from_father != null) {
             for (ModelGenealogyPerson tmp_father : this.brothers_sisters_from_father) {
                 boolean bool = true;
-                for (ModelGenealogyPerson tmp_mother : this.brothers_sisters_from_mother) {
-                    if (tmp_mother.id == tmp_father.id)
+                for (ModelGenealogyPerson tmp_mother : brothers_sisters_from_mother) {
+                    if (tmp_mother.id == tmp_father.id) {
                         bool = false;
+                    }
                 }
                 if (bool) {
                     result.add(tmp_father);

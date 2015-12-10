@@ -222,10 +222,8 @@ public class FileLocalPagerFragment extends BackFragment implements ViewPager.On
         menu.findItem(R.id.action_home).setVisible(false);
         menu.findItem(R.id.action_sort).setVisible(true);
 
-        if (mApplicationCallback != null) {
-            if (getCurrentFragmentIndex() == 0) {
-                menu.findItem(R.id.action_home).setVisible(true);
-            }
+        if (mApplicationCallback != null && getCurrentFragmentIndex() == 0) {
+            menu.findItem(R.id.action_home).setVisible(true);
         }
     }
 
@@ -333,11 +331,9 @@ public class FileLocalPagerFragment extends BackFragment implements ViewPager.On
 
     public void goHome() {
         FabFragment fabFragment = getCurrentFragment();
-        if (fabFragment != null) {
-            if (fabFragment instanceof FileLocalFragment) {
-                FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fabFragment;
-                fragmentFileManagerFragment.goHome();
-            }
+        if (fabFragment != null && fabFragment instanceof FileLocalFragment) {
+            FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fabFragment;
+            fragmentFileManagerFragment.goHome();
         }
     }
 

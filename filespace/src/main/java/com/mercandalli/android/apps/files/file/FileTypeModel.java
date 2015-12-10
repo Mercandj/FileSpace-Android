@@ -37,15 +37,20 @@ public class FileTypeModel {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof FileTypeModel))
+        if (!(o instanceof FileTypeModel)) {
             return false;
+        }
         String[] objExtensions = ((FileTypeModel) o).getExtensions();
-        if (this.mExtensions == null || objExtensions == null)
+        if (this.mExtensions == null || objExtensions == null) {
             return false;
-        for (String myExt : this.mExtensions)
-            for (String objExt : objExtensions)
-                if (myExt.equals(objExt))
+        }
+        for (String myExt : this.mExtensions) {
+            for (String objExt : objExtensions) {
+                if (myExt.equals(objExt)) {
                     return true;
+                }
+            }
+        }
         return false;
     }
 

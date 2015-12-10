@@ -34,21 +34,21 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.common.fragment.FabFragment;
+import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
+import com.mercandalli.android.apps.files.common.net.TaskGet;
+import com.mercandalli.android.apps.files.common.util.NetUtils;
+import com.mercandalli.android.apps.files.common.util.StringPair;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
+import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.common.net.TaskGet;
-import com.mercandalli.android.apps.files.common.fragment.FabFragment;
-import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
-import com.mercandalli.android.apps.files.common.util.NetUtils;
-import com.mercandalli.android.apps.files.common.util.StringPair;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
 
 /**
  * Created by Jonathan on 28/08/2015.
@@ -135,8 +135,9 @@ public class GenealogyTreeFragment extends FabFragment {
                                                 listChildren.add(new ModelGenealogyPerson(mActivity, mApplicationCallback, array.getJSONObject(i)));
                                             }
                                         }
-                                    } else
+                                    } else {
                                         Toast.makeText(mActivity, getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -187,8 +188,9 @@ public class GenealogyTreeFragment extends FabFragment {
                         },
                         parameters
                 ).execute();
-            } else
+            } else {
                 Toast.makeText(mActivity, getString(R.string.waiting_for_response), Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(mActivity, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
         }
@@ -291,10 +293,12 @@ public class GenealogyTreeFragment extends FabFragment {
         if (genealogyPerson != null) {
             if (switch_brothers_sisters_marriages.isChecked()) {
                 this.list = genealogyPerson.getPartners();
-            } else
+            } else {
                 this.list = genealogyPerson.getBrothersSisters();
-        } else
+            }
+        } else {
             this.list = new ArrayList<>();
+        }
         updateAdapter();
     }
 
@@ -319,16 +323,15 @@ public class GenealogyTreeFragment extends FabFragment {
             this.mAdapter.setOnItemLongClickListener(new AdapterModelGenealogyUser.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(View view, int position) {
-
                     return false;
                 }
             });
         }
 
         int listVisible = genealogyPerson == null ? View.INVISIBLE : View.VISIBLE;
-        if (genealogyPerson != null)
-            if (genealogyPerson.getPartners().size() == 0 && genealogyPerson.getBrothersSisters().size() == 0)
-                listVisible = View.INVISIBLE;
+        if (genealogyPerson != null && genealogyPerson.getPartners().size() == 0 && genealogyPerson.getBrothersSisters().size() == 0) {
+            listVisible = View.INVISIBLE;
+        }
         this.tv_brothers_sisters_marriages.setVisibility(listVisible);
         this.switch_brothers_sisters_marriages.setVisibility(listVisible);
     }

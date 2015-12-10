@@ -17,7 +17,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.util.Pair;
 import android.text.Spanned;
 import android.util.Log;
-import android.util.MutableInt;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -532,8 +531,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                 spl.add(new StringPair("Last modification date", TimeUtils.getDate(dateCreation)));
             }
         }
-        if (fileModel.isOnline())
+        if (fileModel.isOnline()) {
             spl.add(new StringPair("Visibility", isPublic ? "Public" : "Private"));
+        }
         return HtmlUtils.createListItem(spl);
     }
 
@@ -558,8 +558,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             OutputStream out;
             try {
                 File dir = new File(outputPath);
-                if (!dir.exists())
+                if (!dir.exists()) {
                     dir.mkdirs();
+                }
 
                 String outputUrl = outputPath + fileModel.getFullName();
                 while ((new File(outputUrl)).exists()) {

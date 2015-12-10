@@ -84,11 +84,14 @@ public class Force {
     }
 
     public boolean isApplied(int idEntity) {
-        if (this.applyToObjectId == null)
+        if (this.applyToObjectId == null) {
             return true;
-        for (Integer i : this.applyToObjectId)
-            if (i == idEntity)
+        }
+        for (Integer i : this.applyToObjectId) {
+            if (i == idEntity) {
                 return true;
+            }
+        }
         return false;
     }
 }

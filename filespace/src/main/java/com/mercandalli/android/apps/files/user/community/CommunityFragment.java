@@ -239,11 +239,9 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
             UserFragment fragmentFileManagerFragment = (UserFragment) mBackFragmentArray[0];
             fragmentFileManagerFragment.refreshList();
         }
-        if (mBackFragmentArray.length > 1) {
-            if (mBackFragmentArray[1] != null && mBackFragmentArray[1] instanceof TalkFragment) {
-                TalkFragment fragmentFileManagerFragment = (TalkFragment) mBackFragmentArray[1];
-                fragmentFileManagerFragment.refreshList();
-            }
+        if (mBackFragmentArray.length > 1 && mBackFragmentArray[1] != null && mBackFragmentArray[1] instanceof TalkFragment) {
+            TalkFragment fragmentFileManagerFragment = (TalkFragment) mBackFragmentArray[1];
+            fragmentFileManagerFragment.refreshList();
         }
     }
 

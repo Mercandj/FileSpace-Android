@@ -78,9 +78,9 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
     private double car_direction = 0.5;
     private double car_speed = 0.5;
 
-    private boolean MODE_CONNECTION = false;
-    private boolean MODE_ACCELERO = false;
-    private boolean MODE_LED_1 = false;
+    private boolean mModeConnection = false;
+    private boolean mModeAccelero = false;
+    private boolean mModeLED1 = false;
 
     private DecimalFormat df;
 
@@ -148,7 +148,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
         this.toggleButton1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                MODE_CONNECTION = isChecked;
+                mModeConnection = isChecked;
             }
         });
 
@@ -156,7 +156,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
         this.toggleButton2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                MODE_ACCELERO = isChecked;
+                mModeAccelero = isChecked;
             }
         });
 
@@ -164,7 +164,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
         this.toggleButton3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                MODE_LED_1 = isChecked;
+                mModeLED1 = isChecked;
             }
         });
 
@@ -278,12 +278,14 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
             if ((curTime - lastUpdate2) > 50) {
                 lastUpdate2 = curTime;
 
-                if (MODE_ACCELERO) {
+                if (mModeAccelero) {
                     double tmp_y = y + 5;
-                    if (tmp_y < 0)
+                    if (tmp_y < 0) {
                         tmp_y = 0;
-                    if (tmp_y > 10)
+                    }
+                    if (tmp_y > 10) {
                         tmp_y = 10;
+                    }
                     int value = (int) (tmp_y * 10);
                     RoboticsFragment.this.car_direction = value;
                     this.seekBar_dir.setProgress(value);
@@ -296,7 +298,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
 
                 //log("x = " + x + "    y = " + y + "    z = " + z);
 
-                if (NetUtils.isInternetConnection(mActivity) && request_ready && MODE_CONNECTION) {
+                if (NetUtils.isInternetConnection(mActivity) && request_ready && mModeConnection) {
                     List<StringPair> parameters = new ArrayList<>();
 
                     SERVO_1.read = false; // write
@@ -306,7 +308,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
                     SERVO_2.value = "" + this.car_speed;
 
                     LED_1.read = false; // write
-                    LED_1.value = "" + (MODE_LED_1 ? 1 : 0);
+                    LED_1.value = "" + (mModeLED1 ? 1 : 0);
 
                     parameters.add(new StringPair("json", "" + RoboticsUtils.createProtocolHardware(SERVO_1, SERVO_2, LED_1).toString()));
 
