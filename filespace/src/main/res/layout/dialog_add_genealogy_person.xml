@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -19,17 +17,15 @@
             android:id="@+id/et_last_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/center"
             android:ems="10"
             android:hint="@string/genealogy_last_name"
-            android:padding="10dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/center"
             android:lines="1"
             android:maxLines="1"
-            android:singleLine="true">
-        </EditText>
-
+            android:padding="10dp"
+            android:singleLine="true"></EditText>
 
         <EditText
             android:id="@+id/et_first_name_1"
@@ -41,10 +37,10 @@
             android:ems="10"
             android:gravity="center_vertical"
             android:hint="@string/genealogy_first_name_1"
-            android:padding="10dp"
             android:lines="1"
             android:maxLines="1"
-            android:singleLine="true"/>
+            android:padding="10dp"
+            android:singleLine="true" />
 
         <EditText
             android:id="@+id/et_first_name_2"
@@ -56,45 +52,41 @@
             android:layout_marginTop="4dp"
             android:ems="10"
             android:hint="@string/genealogy_first_name_2"
-            android:padding="10dp"
             android:lines="1"
             android:maxLines="1"
-            android:singleLine="true">
-        </EditText>
+            android:padding="10dp"
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/et_first_name_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/genealogy_first_name_3"
-            android:padding="10dp"
-            android:layout_alignTop="@+id/et_first_name_2"
             android:layout_alignParentEnd="true"
             android:layout_alignStart="@+id/et_first_name_1"
+            android:layout_alignTop="@+id/et_first_name_2"
+            android:ems="10"
+            android:hint="@string/genealogy_first_name_3"
             android:lines="1"
             android:maxLines="1"
-            android:singleLine="true">
-        </EditText>
-
+            android:padding="10dp"
+            android:singleLine="true"></EditText>
 
         <Button
             android:id="@+id/add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_alignStart="@+id/et_first_name_3"
             android:layout_below="@+id/bt_father"
             android:layout_marginTop="2dp"
-            android:text="@string/add"
-            android:layout_alignStart="@+id/et_first_name_3"/>
+            android:text="@string/add" />
 
         <RelativeLayout
             android:id="@+id/center"
             android:layout_width="50px"
             android:layout_height="70px"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true">
-        </RelativeLayout>
+            android:layout_centerHorizontal="true"></RelativeLayout>
 
         <CheckBox
             android:id="@+id/sex"
@@ -103,8 +95,8 @@
             android:layout_alignBottom="@+id/add"
             android:layout_alignEnd="@+id/et_first_name_2"
             android:layout_alignParentStart="true"
-            android:text="Is woman"
-            android:layout_marginBottom="6dp"/>
+            android:layout_marginBottom="6dp"
+            android:text="Is woman" />
 
         <EditText
             android:id="@+id/et_date_birth"
@@ -119,7 +111,7 @@
             android:inputType="date"
             android:lines="1"
             android:maxLines="1"
-            android:singleLine="true"/>
+            android:singleLine="true" />
 
         <EditText
             android:id="@+id/et_date_death"
@@ -134,81 +126,81 @@
             android:inputType="date"
             android:lines="1"
             android:maxLines="1"
-            android:singleLine="true"/>
+            android:singleLine="true" />
 
         <EditText
             android:id="@+id/et_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/bt_marriage"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tv_marriage"
             android:layout_marginTop="23dp"
             android:ems="10"
-            android:hint="Notes"
-            android:maxLines="4"
-            android:lines="2"
-            android:minLines="2"
             android:gravity="left|top"
-            android:layout_below="@+id/tv_marriage"
-            android:layout_alignParentStart="true"
-            android:layout_alignEnd="@+id/bt_marriage"/>
+            android:hint="Notes"
+            android:lines="2"
+            android:maxLines="4"
+            android:minLines="2" />
 
         <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="42dp"
-            android:text="Father"
             android:id="@+id/bt_father"
-            android:layout_below="@+id/et_description"
-            android:layout_alignParentStart="true"
-            android:layout_alignEnd="@+id/sex"
-            android:layout_marginTop="5dp"/>
-
-        <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="42dp"
-            android:text="Mother"
+            android:layout_alignEnd="@+id/sex"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/et_description"
+            android:layout_marginTop="5dp"
+            android:text="Father" />
+
+        <Button
             android:id="@+id/bt_mother"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
             android:layout_above="@+id/add"
             android:layout_alignParentEnd="true"
-            android:layout_alignStart="@+id/add"/>
+            android:layout_alignStart="@+id/add"
+            android:text="Mother" />
 
         <TextView
+            android:id="@+id/tv_marriage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/tv_marriage"
-            android:layout_below="@+id/et_date_death"
             android:layout_alignParentStart="true"
+            android:layout_below="@+id/et_date_death"
             android:layout_marginTop="7dp"
             android:layout_toStartOf="@+id/bt_remove_marriage"
+            android:hint="Marriages"
             android:padding="5dp"
-            android:textSize="13sp"
-            android:hint="Marriages"/>
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textSize="13sp" />
 
         <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="34dp"
-            android:text="Add Marriage"
             android:id="@+id/bt_marriage"
-            android:layout_alignTop="@+id/tv_marriage"
-            android:layout_alignParentEnd="true"
-            android:textSize="10sp"
-            android:gravity="center"
-            android:layout_marginTop="-4dp"
-            android:layout_toEndOf="@+id/tv_marriage"/>
-
-        <Button
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="34dp"
-            android:text="Remove Marriage"
-            android:id="@+id/bt_remove_marriage"
-            android:textSize="10sp"
-            android:gravity="center"
-            android:layout_below="@+id/bt_marriage"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="-8dp"/>
+            android:layout_alignTop="@+id/tv_marriage"
+            android:layout_marginTop="-4dp"
+            android:layout_toEndOf="@+id/tv_marriage"
+            android:gravity="center"
+            android:text="Add Marriage"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/bt_remove_marriage"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/bt_marriage"
+            android:layout_marginTop="-8dp"
+            android:gravity="center"
+            android:text="Remove Marriage"
+            android:textSize="10sp" />
     </RelativeLayout>
 
 </ScrollView>
