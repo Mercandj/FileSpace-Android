@@ -42,8 +42,9 @@ public class ColorUtils {
     }
 
     public static boolean isBrightColor(int color) {
-        if (android.R.color.transparent == color)
+        if (android.R.color.transparent == color) {
             return true;
+        }
 
         int[] rgb = {Color.red(color), Color.green(color), Color.blue(color)};
 

@@ -24,6 +24,14 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
+import com.mercandalli.android.apps.files.common.util.NetUtils;
+import com.mercandalli.android.apps.files.common.util.StringPair;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
+import com.mercandalli.android.apps.files.main.ApplicationCallback;
+import com.mercandalli.android.apps.files.main.Config;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,14 +49,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
-
-import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
-import com.mercandalli.android.apps.files.common.util.NetUtils;
-import com.mercandalli.android.apps.files.common.util.StringPair;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
 
 /**
  * Global behavior : http Post
@@ -103,8 +103,9 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
 
         try {
             if (this.parameters != null) {
-                if (!StringUtils.isNullOrEmpty(Config.getUserRegId()))
+                if (!StringUtils.isNullOrEmpty(Config.getUserRegId())) {
                     parameters.add(new StringPair("android_id", "" + Config.getUserRegId()));
+                }
                 url = NetUtils.addUrlParameters(url, parameters);
             }
 
@@ -139,14 +140,15 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
             String resultString = convertInputStreamToString(inputStream);
 
             //int responseCode = response.getStatusLine().getStatusCode();
-            if (responseCode >= 300)
+            if (responseCode >= 300) {
                 resultString = "Status Code " + responseCode + ". " + resultString;
+            }
 
             conn.disconnect();
 
             return resultString;
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Failed to convert Json", e);
         }
         return null;
 
@@ -207,10 +209,11 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
         boolean first = true;
 
         for (StringPair pair : params) {
-            if (first)
+            if (first) {
                 first = false;
-            else
+            } else {
                 result.append("&");
+            }
 
             result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
             result.append("=");
@@ -229,10 +232,11 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
      */
     private String convertInputStreamToString(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = "";
+        String line;
         String result = "";
-        while ((line = bufferedReader.readLine()) != null)
+        while ((line = bufferedReader.readLine()) != null) {
             result += line;
+        }
 
         inputStream.close();
         return result;
@@ -242,21 +246,24 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String response) {
         Log.d("onPostExecute POST", "" + response);
         if (response == null) {
-            if (this.listener != null)
+            if (this.listener != null) {
                 this.listener.onPostExecute(null, null);
+            }
         } else {
             try {
                 JSONObject json = new JSONObject(response);
-                if (this.listener != null)
+                if (this.listener != null) {
                     this.listener.onPostExecute(json, response);
-                if (json.has("toast"))
-                    if (!json.getString("toast").equals(""))
-                        Toast.makeText(mActivity, json.getString("toast"), Toast.LENGTH_SHORT).show();
+                }
+                if (json.has("toast") && !json.getString("toast").equals("")) {
+                    Toast.makeText(mActivity, json.getString("toast"), Toast.LENGTH_SHORT).show();
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
                 Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
-                if (this.listener != null)
+                if (this.listener != null) {
                     this.listener.onPostExecute(null, response);
+                }
             }
         }
     }

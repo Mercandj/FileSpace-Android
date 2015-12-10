@@ -109,7 +109,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
         mRecyclerView.setHasFixedSize(true);
 
         final int nbColumn = getResources().getInteger(R.integer.column_number_card);
-        if (nbColumn <=1) {
+        if (nbColumn <= 1) {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
         } else {
             mRecyclerView.setLayoutManager(new GridLayoutManager(activity, nbColumn));
@@ -178,10 +178,11 @@ public class FileCloudFragment extends InjectedFabFragment implements
     public int getFabImageResource(int fab_id) {
         switch (fab_id) {
             case 0:
-                if (filesToCut != null && filesToCut.size() != 0)
+                if (filesToCut != null && filesToCut.size() != 0) {
                     return R.drawable.ic_menu_paste_holo_dark;
-                else
+                } else {
                     return R.drawable.add;
+                }
             case 1:
                 return R.drawable.arrow_up;
         }
@@ -224,7 +225,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
                         getString(R.string.cut),
                         getString(R.string.properties),
                         (fileModel.isPublic()) ? "Become private" : "Become public", "Set as profile"};
-            } else
+            } else {
                 menuList = new String[]{
                         getString(R.string.download),
                         getString(R.string.rename),
@@ -232,6 +233,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
                         getString(R.string.cut),
                         getString(R.string.properties),
                         (fileModel.isPublic()) ? "Become private" : "Become public"};
+            }
         }
         menuAlert.setTitle(getString(R.string.action));
         menuAlert.setItems(menuList,
@@ -316,9 +318,9 @@ public class FileCloudFragment extends InjectedFabFragment implements
                                     @Override
                                     public void onPostExecute(JSONObject json, String body) {
                                         try {
-                                            if (json != null && json.has("succeed"))
-                                                if (json.getBoolean("succeed"))
-                                                    mApplicationCallback.getConfig().setUserIdFileProfilePicture(mActivity, fileModel.getId());
+                                            if (json != null && json.has("succeed") && json.getBoolean("succeed")) {
+                                                mApplicationCallback.getConfig().setUserIdFileProfilePicture(mActivity, fileModel.getId());
+                                            }
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -374,8 +376,9 @@ public class FileCloudFragment extends InjectedFabFragment implements
         } else {
             mSwipeRefreshLayout.setRefreshing(false);
             this.mProgressBar.setVisibility(View.GONE);
-            if (isAdded())
+            if (isAdded()) {
                 this.mMessageTextView.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+            }
             this.mMessageTextView.setVisibility(View.VISIBLE);
 
             if (!NetUtils.isInternetConnection(mActivity)) {
@@ -390,9 +393,9 @@ public class FileCloudFragment extends InjectedFabFragment implements
 
             mProgressBar.setVisibility(View.GONE);
 
-            if (!NetUtils.isInternetConnection(mActivity))
+            if (!NetUtils.isInternetConnection(mActivity)) {
                 mMessageTextView.setText(getString(R.string.no_internet_connection));
-            else if (mFilesList.size() == 0) {
+            } else if (mFilesList.size() == 0) {
                 /*
                 if (this.url == null)
                     this.mMessageTextView.setText(getString(R.string.no_file_server));
@@ -403,8 +406,9 @@ public class FileCloudFragment extends InjectedFabFragment implements
                     */
                 mMessageTextView.setText(getString(R.string.no_file_server));
                 mMessageTextView.setVisibility(View.VISIBLE);
-            } else
+            } else {
                 this.mMessageTextView.setVisibility(View.GONE);
+            }
 
             this.mAdapterModelFile.replaceList(mFilesList);
 
@@ -430,7 +434,8 @@ public class FileCloudFragment extends InjectedFabFragment implements
     }
 
     private void setListVisibility(boolean visible) {
-        if (this.mRecyclerView != null)
+        if (this.mRecyclerView != null) {
             this.mRecyclerView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        }
     }
 }

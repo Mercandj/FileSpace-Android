@@ -68,8 +68,9 @@ public class CircularImageView extends ImageView {
             setBorderColor(attributes.getColor(R.styleable.CircularImageView_border_color, Color.WHITE));
         }
 
-        if (attributes.getBoolean(R.styleable.CircularImageView_shadow, false))
+        if (attributes.getBoolean(R.styleable.CircularImageView_shadow, false)) {
             addShadow();
+        }
     }
 
     public void setBorderWidth(int borderWidth) {
@@ -79,8 +80,9 @@ public class CircularImageView extends ImageView {
     }
 
     public void setBorderColor(int borderColor) {
-        if (paintBorder != null)
+        if (paintBorder != null) {
             paintBorder.setColor(borderColor);
+        }
         this.invalidate();
     }
 
@@ -98,8 +100,9 @@ public class CircularImageView extends ImageView {
         if (image != null) {
 
             canvasSize = canvas.getWidth();
-            if (canvas.getHeight() < canvasSize)
+            if (canvas.getHeight() < canvasSize) {
                 canvasSize = canvas.getHeight();
+            }
 
             BitmapShader shader = new BitmapShader(Bitmap.createScaledBitmap(image, canvasSize, canvasSize, false), Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
             paint.setShader(shader);
@@ -159,10 +162,11 @@ public class CircularImageView extends ImageView {
     }
 
     public Bitmap drawableToBitmap(Drawable drawable) {
-        if (drawable == null)
+        if (drawable == null) {
             return null;
-        else if (drawable instanceof BitmapDrawable)
+        } else if (drawable instanceof BitmapDrawable) {
             return ((BitmapDrawable) drawable).getBitmap();
+        }
 
         Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
                 drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);

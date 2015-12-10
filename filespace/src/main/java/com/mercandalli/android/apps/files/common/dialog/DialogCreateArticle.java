@@ -21,9 +21,16 @@ package com.mercandalli.android.apps.files.common.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+
+import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.common.listener.IListener;
+import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
+import com.mercandalli.android.apps.files.common.net.TaskPost;
+import com.mercandalli.android.apps.files.common.util.StringPair;
+import com.mercandalli.android.apps.files.main.ApplicationCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,15 +41,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.listener.IListener;
-import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
-import com.mercandalli.android.apps.files.common.util.StringPair;
-
 public class DialogCreateArticle extends Dialog {
 
+    private static final String TAG = "DialogCreateArticle";
     private Activity mActivity;
     private ApplicationCallback mApplicationCallback;
 
@@ -60,7 +61,7 @@ public class DialogCreateArticle extends Dialog {
         this.article_title_1 = (EditText) this.findViewById(R.id.title);
         this.article_content_1 = (EditText) this.findViewById(R.id.content);
 
-        ((Button) this.findViewById(R.id.request)).setOnClickListener(new View.OnClickListener() {
+        this.findViewById(R.id.request).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -89,13 +90,14 @@ public class DialogCreateArticle extends Dialog {
                             new IPostExecuteListener() {
                                 @Override
                                 public void onPostExecute(JSONObject json, String body) {
-                                    if (listener != null)
+                                    if (listener != null) {
                                         listener.execute();
+                                    }
                                 }
                             }
                             , parameters, "text/html; charset=utf-8").execute();
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "DialogCreateArticle: failed to convert Json", e);
                 }
 
 

@@ -8,6 +8,7 @@
 package com.mercandalli.android.apps.files.extras.physics.lib;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -61,13 +62,17 @@ public class lib {
                 lineTokenizer.close();
             }
             vertices = new float[verts.size()];
-            for (int i = 0; i < vertices.length; i++) vertices[i] = verts.get(i);
+            for (int i = 0; i < vertices.length; i++) {
+                vertices[i] = verts.get(i);
+            }
             indices = new short[inds.size()];
-            for (int i = 0; i < indices.length; i++) indices[i] = inds.get(i);
+            for (int i = 0; i < indices.length; i++) {
+                indices[i] = inds.get(i);
+            }
 
             vertices = normalize(vertices);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("lib", "IOException", e);
         }
         return new IndicesVertices(vertices, indices);
     }
@@ -79,14 +84,26 @@ public class lib {
         int n = vertices.length / 3;
 
         for (i = 0; i < n; i++) {
-            if (vertices[3 * i] < vertices[3 * tmpxmin]) tmpxmin = i;
-            if (vertices[3 * i] > vertices[3 * tmpxmax]) tmpxmax = i;
+            if (vertices[3 * i] < vertices[3 * tmpxmin]) {
+                tmpxmin = i;
+            }
+            if (vertices[3 * i] > vertices[3 * tmpxmax]) {
+                tmpxmax = i;
+            }
 
-            if (vertices[3 * i + 1] < vertices[3 * tmpymin + 1]) tmpymin = i;
-            if (vertices[3 * i + 1] > vertices[3 * tmpymax + 1]) tmpymax = i;
+            if (vertices[3 * i + 1] < vertices[3 * tmpymin + 1]) {
+                tmpymin = i;
+            }
+            if (vertices[3 * i + 1] > vertices[3 * tmpymax + 1]) {
+                tmpymax = i;
+            }
 
-            if (vertices[3 * i + 2] < vertices[3 * tmpzmin + 2]) tmpzmin = i;
-            if (vertices[3 * i + 2] > vertices[3 * tmpzmax + 2]) tmpzmax = i;
+            if (vertices[3 * i + 2] < vertices[3 * tmpzmin + 2]) {
+                tmpzmin = i;
+            }
+            if (vertices[3 * i + 2] > vertices[3 * tmpzmax + 2]) {
+                tmpzmax = i;
+            }
         }
 
         double xmin = vertices[3 * tmpxmin], xmax = vertices[3 * tmpxmax],
@@ -147,14 +164,23 @@ public class lib {
                     z = Float.parseFloat(u);
                     verts.addElement(z);
 
-                    if (x < xmin) xmin = verts.get(3 * i);
-                    else if (x > xmax) xmax = verts.get(3 * i);
+                    if (x < xmin) {
+                        xmin = verts.get(3 * i);
+                    } else if (x > xmax) {
+                        xmax = verts.get(3 * i);
+                    }
 
-                    if (y < ymin) ymin = verts.get(3 * i + 1);
-                    else if (y > ymax) ymax = verts.get(3 * i + 1);
+                    if (y < ymin) {
+                        ymin = verts.get(3 * i + 1);
+                    } else if (y > ymax) {
+                        ymax = verts.get(3 * i + 1);
+                    }
 
-                    if (z < zmin) zmin = verts.get(3 * i + 2);
-                    else if (z > zmax) zmax = verts.get(3 * i + 2);
+                    if (z < zmin) {
+                        zmin = verts.get(3 * i + 2);
+                    } else if (z > zmax) {
+                        zmax = verts.get(3 * i + 2);
+                    }
 
                     i++;
                 } else if (t.equals("f")) {
@@ -178,7 +204,9 @@ public class lib {
             }
 
             indices = new short[inds.size()];
-            for (i = 0; i < indices.length; i++) indices[i] = inds.get(i);
+            for (i = 0; i < indices.length; i++) {
+                indices[i] = inds.get(i);
+            }
 
             vertices = new float[verts.size()];
             int n = vertices.length / 3;

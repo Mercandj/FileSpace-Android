@@ -28,12 +28,12 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 
-import org.json.JSONObject;
-
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.dialog.DialogRequest;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
+import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
+
+import org.json.JSONObject;
 
 
 public class RequestFragment extends BackFragment {
@@ -57,10 +57,11 @@ public class RequestFragment extends BackFragment {
                 new DialogRequest(mActivity, mApplicationCallback, new IPostExecuteListener() {
                     @Override
                     public void onPostExecute(JSONObject json, String body) {
-                        if (json != null)
+                        if (json != null) {
                             ((EditText) rootView.findViewById(R.id.console)).setText(((EditText) rootView.findViewById(R.id.console)).getText().toString() + "JSON : " + json + "\n\n");
-                        else
+                        } else {
                             ((EditText) rootView.findViewById(R.id.console)).setText(((EditText) rootView.findViewById(R.id.console)).getText().toString() + "BODY : " + body + "\n\n");
+                        }
                     }
                 });
             }

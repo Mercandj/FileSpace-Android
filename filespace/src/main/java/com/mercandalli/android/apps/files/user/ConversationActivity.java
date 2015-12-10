@@ -167,15 +167,17 @@ public class ConversationActivity extends ApplicationActivity {
     public void updateAdapters() {
         if (this.listView != null && this.list != null) {
             if (this.list.size() == 0) {
-                if (this.url == null)
+                if (this.url == null) {
                     this.message.setText(getString(R.string.no_file_server));
-                else if (this.url.equals(""))
+                } else if (this.url.equals("")) {
                     this.message.setText(getString(R.string.no_file_server));
-                else
+                } else {
                     this.message.setText(getString(R.string.no_file_directory));
+                }
                 this.message.setVisibility(View.VISIBLE);
-            } else
+            } else {
                 this.message.setVisibility(View.GONE);
+            }
 
             this.adapter.remplaceList(this.list);
             listView.scrollToPosition(list.size() - 1);
@@ -214,8 +216,9 @@ public class ConversationActivity extends ApplicationActivity {
                                             list.add(modelFile);
                                         }
                                     }
-                                } else
+                                } else {
                                     Toast.makeText(ConversationActivity.this, ConversationActivity.this.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

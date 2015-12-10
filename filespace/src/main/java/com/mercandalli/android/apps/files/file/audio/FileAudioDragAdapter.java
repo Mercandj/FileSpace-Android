@@ -29,13 +29,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.FileTypeModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
+import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.main.App;
 
 import java.util.ArrayList;
@@ -96,35 +96,38 @@ public class FileAudioDragAdapter extends RecyclerView.Adapter<FileAudioDragAdap
             fileViewHolder.title.setText(getAdapterTitle(file));
             fileViewHolder.subtitle.setText(getAdapterSubtitle(file));
 
-            if (file.isDirectory())
+            if (file.isDirectory()) {
                 fileViewHolder.icon.setImageResource(R.drawable.directory);
-            else if (file.getType() != null) {
+            } else if (file.getType() != null) {
                 FileTypeModel type = file.getType();
-                if (type.equals(FileTypeModelENUM.AUDIO.type))
+                if (type.equals(FileTypeModelENUM.AUDIO.type)) {
                     fileViewHolder.icon.setImageResource(R.drawable.file_audio);
-                else if (type.equals(FileTypeModelENUM.PDF.type))
+                } else if (type.equals(FileTypeModelENUM.PDF.type)) {
                     fileViewHolder.icon.setImageResource(R.drawable.file_pdf);
-                else if (type.equals(FileTypeModelENUM.APK.type))
+                } else if (type.equals(FileTypeModelENUM.APK.type)) {
                     fileViewHolder.icon.setImageResource(R.drawable.file_apk);
-                else if (type.equals(FileTypeModelENUM.ARCHIVE.type))
+                } else if (type.equals(FileTypeModelENUM.ARCHIVE.type)) {
                     fileViewHolder.icon.setImageResource(R.drawable.file_archive);
-                else if (type.equals(FileTypeModelENUM.FILESPACE.type))
+                } else if (type.equals(FileTypeModelENUM.FILESPACE.type)) {
                     fileViewHolder.icon.setImageResource(R.drawable.file_space);
-                else
+                } else {
                     fileViewHolder.icon.setImageResource(R.drawable.file_default);
+                }
             } else {
                 fileViewHolder.icon.setImageResource(R.drawable.file_default);
             }
 
             //mFileManager.getCover(mActivity, file, fileViewHolder.icon);
 
-            if (moreListener == null)
+            if (moreListener == null) {
                 fileViewHolder.more.setVisibility(View.GONE);
+            }
             fileViewHolder.more.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (moreListener != null)
+                    if (moreListener != null) {
                         moreListener.executeFileModel(file);
+                    }
                 }
             });
         }
@@ -161,8 +164,9 @@ public class FileAudioDragAdapter extends RecyclerView.Adapter<FileAudioDragAdap
 
         @Override
         public void onClick(View v) {
-            if (mItemClickListener != null)
+            if (mItemClickListener != null) {
                 mItemClickListener.onItemClick(icon, getAdapterPosition());
+            }
         }
 
         @Override
@@ -283,8 +287,9 @@ public class FileAudioDragAdapter extends RecyclerView.Adapter<FileAudioDragAdap
                 return adapterTitleStart + fileAudioModel.getContent().getAdapterTitle();
             } else if (fileAudioModel.getName() != null)
                 return adapterTitleStart + fileAudioModel.getFullName();
-            else
+            else {
                 return adapterTitleStart + fileAudioModel.getUrl();
+            }
         }
         return "";
     }

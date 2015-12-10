@@ -31,10 +31,19 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.common.fragment.BackFragment;
+import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
+import com.mercandalli.android.apps.files.common.net.TaskGet;
+import com.mercandalli.android.apps.files.common.util.NetUtils;
+import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.user.AdapterModelUserConnection;
+import com.mercandalli.android.apps.files.user.UserConnectionModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,15 +51,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.user.UserConnectionModel;
-import com.mercandalli.android.apps.files.common.net.TaskGet;
-import com.mercandalli.android.apps.files.user.AdapterModelUserConnection;
-import com.mercandalli.android.apps.files.common.fragment.BackFragment;
-import com.mercandalli.android.apps.files.common.util.NetUtils;
 
 
 public class ServerLogsFragment extends BackFragment {
@@ -60,7 +60,7 @@ public class ServerLogsFragment extends BackFragment {
     private RecyclerView recyclerView;
     private AdapterModelUserConnection mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    List<UserConnectionModel> list;
+    private List<UserConnectionModel> list;
     private ProgressBar circularProgressBar;
     private TextView message;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -103,21 +103,22 @@ public class ServerLogsFragment extends BackFragment {
 
 
     public void refreshList() {
-        if (NetUtils.isInternetConnection(mActivity))
+        if (NetUtils.isInternetConnection(mActivity)) {
             new TaskGet(
                     mActivity,
-                    mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserConnection,
+                    mApplicationCallback.getConfig().getUrlServer() + Config.routeUserConnection,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
-                            list = new ArrayList<UserConnectionModel>();
+                            list = new ArrayList<>();
 
                             try {
                                 if (json != null) {
-                                    if (json.has("result_count_all"))
+                                    if (json.has("result_count_all")) {
                                         list.add(new UserConnectionModel("Server Logs (" + json.getInt("result_count_all") + ")", Constants.TAB_VIEW_TYPE_SECTION));
-                                    else
+                                    } else {
                                         list.add(new UserConnectionModel("Server Logs", Constants.TAB_VIEW_TYPE_SECTION));
+                                    }
 
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
@@ -127,8 +128,9 @@ public class ServerLogsFragment extends BackFragment {
                                         }
                                     }
 
-                                } else
+                                } else {
                                     Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -137,10 +139,11 @@ public class ServerLogsFragment extends BackFragment {
                     },
                     null
             ).execute();
-        else {
+        } else {
             this.circularProgressBar.setVisibility(View.GONE);
-            if (isAdded())
+            if (isAdded()) {
                 this.message.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+            }
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
         }
@@ -156,13 +159,13 @@ public class ServerLogsFragment extends BackFragment {
             this.recyclerView.setAdapter(mAdapter);
             this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
 
-            if (((ImageButton) rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
-                ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
+            if ((rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
+                (rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
                 Animation animOpen = AnimationUtils.loadAnimation(mActivity, R.anim.circle_button_bottom_open);
-                ((ImageButton) rootView.findViewById(R.id.circle)).startAnimation(animOpen);
+                (rootView.findViewById(R.id.circle)).startAnimation(animOpen);
             }
 
-            ((ImageButton) rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {
+            (rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mAdapter.addItem(new UserConnectionModel("Number", "" + i), 0);

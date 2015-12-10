@@ -29,7 +29,7 @@
     <rule ref="rulesets/java/clone.xml" />
     <rule ref="rulesets/java/finalizers.xml" />
     <rule ref="rulesets/java/imports.xml">
-        <!-- Espresso is designed this way !-->
+        <!-- Espresso is designed this gameWay !-->
         <exclude name="TooManyStaticImports" />
     </rule>
     <rule ref="rulesets/java/logging-java.xml" />

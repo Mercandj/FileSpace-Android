@@ -55,9 +55,9 @@ public class AdapterModelConnversationMessage extends RecyclerView.Adapter<Adapt
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         if (position < users.size()) {
             final UserConversationMessageModel userConversationMessageModel = users.get(position);
-            if (userConversationMessageModel.user != null)
-                if (userConversationMessageModel.user.bitmap != null)
-                    viewHolder.icon.setImageBitmap(userConversationMessageModel.user.bitmap);
+            if (userConversationMessageModel.user != null && userConversationMessageModel.user.bitmap != null) {
+                viewHolder.icon.setImageBitmap(userConversationMessageModel.user.bitmap);
+            }
             viewHolder.title.setText(userConversationMessageModel.getAdapterTitle());
             viewHolder.subtitle.setText(userConversationMessageModel.getAdapterSubtitle());
         }
@@ -80,15 +80,14 @@ public class AdapterModelConnversationMessage extends RecyclerView.Adapter<Adapt
 
         @Override
         public void onClick(View v) {
-            if (mItemClickListener != null)
+            if (mItemClickListener != null) {
                 mItemClickListener.onItemClick(v, getPosition());
+            }
         }
 
         @Override
         public boolean onLongClick(View v) {
-            if (mItemLongClickListener != null)
-                return mItemLongClickListener.onItemLongClick(v, getPosition());
-            return false;
+            return mItemLongClickListener != null && mItemLongClickListener.onItemLongClick(v, getPosition());
         }
     }
 
@@ -133,7 +132,7 @@ public class AdapterModelConnversationMessage extends RecyclerView.Adapter<Adapt
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
+        void onItemClick(View view, int position);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -141,7 +140,7 @@ public class AdapterModelConnversationMessage extends RecyclerView.Adapter<Adapt
     }
 
     public interface OnItemLongClickListener {
-        public boolean onItemLongClick(View view, int position);
+        boolean onItemLongClick(View view, int position);
     }
 
     public void setOnItemLongClickListener(final OnItemLongClickListener mItemLongClickListener) {

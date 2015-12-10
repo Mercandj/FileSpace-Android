@@ -8,7 +8,7 @@
 package com.mercandalli.android.apps.files.extras.physics.lib;
 
 public interface IFunction {
-    public boolean condition();
+    boolean condition();
 
-    public void execute();
+    void execute();
 }

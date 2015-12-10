@@ -31,10 +31,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
-import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 
 public class CommunityFragment extends BackFragment implements ViewPager.OnPageChangeListener {
 
@@ -102,8 +102,8 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
         mViewPager.addOnPageChangeListener(this);
 
 
-        mViewPager.setOffscreenPageLimit(this.NB_FRAGMENT - 1);
-        mViewPager.setCurrentItem(this.INIT_FRAGMENT);
+        mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
+        mViewPager.setCurrentItem(INIT_FRAGMENT);
 
         mTabLayout.setupWithViewPager(mViewPager);
 
@@ -111,23 +111,24 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public int getCurrentFragmentIndex() {
-        if (mViewPager == null)
+        if (mViewPager == null) {
             return -1;
+        }
         int result = mViewPager.getCurrentItem();
-        if (result >= mBackFragmentArray.length)
+        if (result >= mBackFragmentArray.length) {
             return -1;
+        }
         return mViewPager.getCurrentItem();
     }
 
     @Override
     public boolean back() {
         int currentFragmentId = getCurrentFragmentIndex();
-        if (mBackFragmentArray == null || currentFragmentId == -1)
+        if (mBackFragmentArray == null || currentFragmentId == -1) {
             return false;
+        }
         BackFragment backFragment = mBackFragmentArray[currentFragmentId];
-        if (backFragment == null)
-            return false;
-        return backFragment.back();
+        return backFragment != null && backFragment.back();
     }
 
     @Override
@@ -143,9 +144,9 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     @Override
     public void onPageSelected(int position) {
         mApplicationCallback.invalidateMenu();
-        if (position < NB_FRAGMENT)
-            if (mBackFragmentArray[position] != null)
-                mBackFragmentArray[position].onFocus();
+        if (position < NB_FRAGMENT && mBackFragmentArray[position] != null) {
+            mBackFragmentArray[position].onFocus();
+        }
     }
 
     @Override
@@ -212,44 +213,38 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public void refreshListServer(String search) {
-        if (mBackFragmentArray[0] != null)
-            if (mBackFragmentArray[0] instanceof UserFragment) {
-                UserFragment fragmentFileManagerFragment = (UserFragment) mBackFragmentArray[0];
-                fragmentFileManagerFragment.refreshList(search);
-            }
-        if (mBackFragmentArray[1] != null)
-            if (mBackFragmentArray[1] instanceof TalkFragment) {
-                TalkFragment fragmentFileManagerFragment = (TalkFragment) mBackFragmentArray[1];
-                fragmentFileManagerFragment.refreshList(search);
-            }
+        if (mBackFragmentArray[0] != null && mBackFragmentArray[0] instanceof UserFragment) {
+            UserFragment fragmentFileManagerFragment = (UserFragment) mBackFragmentArray[0];
+            fragmentFileManagerFragment.refreshList(search);
+        }
+        if (mBackFragmentArray[1] != null && mBackFragmentArray[1] instanceof TalkFragment) {
+            TalkFragment fragmentFileManagerFragment = (TalkFragment) mBackFragmentArray[1];
+            fragmentFileManagerFragment.refreshList(search);
+        }
     }
 
     public void updateAdapterListServer() {
-        if (mBackFragmentArray[0] != null)
-            if (mBackFragmentArray[0] instanceof UserFragment) {
-                UserFragment fragmentFileManagerFragment = (UserFragment) mBackFragmentArray[0];
-                fragmentFileManagerFragment.updateAdapter();
-            }
-        if (mBackFragmentArray.length > 1)
-            if (mBackFragmentArray[1] != null)
-                if (mBackFragmentArray[1] instanceof TalkFragment) {
-                    TalkFragment fragmentFileManagerFragment = (TalkFragment) mBackFragmentArray[1];
-                    fragmentFileManagerFragment.updateAdapter();
-                }
+        if (mBackFragmentArray[0] != null && mBackFragmentArray[0] instanceof UserFragment) {
+            UserFragment fragmentFileManagerFragment = (UserFragment) mBackFragmentArray[0];
+            fragmentFileManagerFragment.updateAdapter();
+        }
+        if (mBackFragmentArray.length > 1 && mBackFragmentArray[1] != null && mBackFragmentArray[1] instanceof TalkFragment) {
+            TalkFragment fragmentFileManagerFragment = (TalkFragment) mBackFragmentArray[1];
+            fragmentFileManagerFragment.updateAdapter();
+        }
     }
 
     public void refreshAdapterListServer() {
-        if (mBackFragmentArray[0] != null)
-            if (mBackFragmentArray[0] instanceof UserFragment) {
-                UserFragment fragmentFileManagerFragment = (UserFragment) mBackFragmentArray[0];
+        if (mBackFragmentArray[0] != null && mBackFragmentArray[0] instanceof UserFragment) {
+            UserFragment fragmentFileManagerFragment = (UserFragment) mBackFragmentArray[0];
+            fragmentFileManagerFragment.refreshList();
+        }
+        if (mBackFragmentArray.length > 1) {
+            if (mBackFragmentArray[1] != null && mBackFragmentArray[1] instanceof TalkFragment) {
+                TalkFragment fragmentFileManagerFragment = (TalkFragment) mBackFragmentArray[1];
                 fragmentFileManagerFragment.refreshList();
             }
-        if (mBackFragmentArray.length > 1)
-            if (mBackFragmentArray[1] != null)
-                if (mBackFragmentArray[1] instanceof TalkFragment) {
-                    TalkFragment fragmentFileManagerFragment = (TalkFragment) mBackFragmentArray[1];
-                    fragmentFileManagerFragment.refreshList();
-                }
+        }
     }
 
     public void add() {

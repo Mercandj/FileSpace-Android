@@ -3,6 +3,7 @@
 		MERCANDALLI Jonathan
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -62,12 +63,12 @@
             android:scaleType="fitCenter"
             android:src="@drawable/audio" />
 
-        <RelativeLayout
+        <FrameLayout
             android:id="@+id/play_position"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_above="@+id/rl_sliderNumber"
-            android:layout_centerHorizontal="true"></RelativeLayout>
+            android:layout_centerHorizontal="true" />
 
         <com.mercandalli.android.apps.files.common.view.PlayPauseView
             android:id="@+id/play"
@@ -115,9 +116,8 @@
             android:tint="@android:color/white" />
 
         <!-- SLIDER WITH NUMBER INDICATOR-->
-        <RelativeLayout
+        <FrameLayout
             android:id="@+id/rl_sliderNumber"
-            xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
             android:layout_width="fill_parent"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
@@ -130,12 +130,12 @@
                 android:id="@+id/sliderNumber"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:layout_gravity="center"
                 android:background="@color/actionbar_audio"
-                materialdesign:max="50"
-                materialdesign:min="0"
-                materialdesign:showNumberIndicator="true" />
-        </RelativeLayout>
+                app:max="50"
+                app:min="0"
+                app:showNumberIndicator="true" />
+        </FrameLayout>
 
     </RelativeLayout>
 

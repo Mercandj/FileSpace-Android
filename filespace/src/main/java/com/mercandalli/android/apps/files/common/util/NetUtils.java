@@ -40,15 +40,19 @@ public class NetUtils {
     }
 
     public static String addUrlParameters(String url, List<StringPair> parameters) {
-        if (parameters == null)
+        if (parameters == null) {
             return url;
-        if (parameters.size() < 1)
+        }
+        if (parameters.size() < 1) {
             return url;
-        if (parameters.size() == 1)
+        }
+        if (parameters.size() == 1) {
             return url + (url.endsWith("?") ? "" : "?") + parameters.get(0).getName() + "=" + parameters.get(0).getValue();
+        }
         url += url.endsWith("?") ? "" : "?";
-        for (int i = 0; i < parameters.size() - 1; i++)
+        for (int i = 0; i < parameters.size() - 1; i++) {
             url += parameters.get(i).getName() + "=" + parameters.get(i).getValue() + "&";
+        }
         return url + parameters.get(parameters.size() - 1);
     }
 

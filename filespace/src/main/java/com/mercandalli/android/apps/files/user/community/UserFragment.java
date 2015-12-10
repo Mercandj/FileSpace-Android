@@ -26,12 +26,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -94,7 +94,7 @@ public class UserFragment extends BackFragment {
         this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
         this.recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
-        ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.GONE);
+        rootView.findViewById(R.id.circle).setVisibility(View.GONE);
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(
@@ -121,7 +121,7 @@ public class UserFragment extends BackFragment {
 
     public void refreshList(String search) {
         List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged())
+        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
             new TaskGet(
                     mActivity,
                     mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUser,
@@ -138,17 +138,18 @@ public class UserFragment extends BackFragment {
                                             list.add(userModel);
                                         }
                                     }
-                                } else
+                                } else {
                                     Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                }
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                Log.e(getClass().getName(), "Failed to convert Json", e);
                             }
                             updateAdapter();
                         }
                     },
                     parameters
             ).execute();
-        else {
+        } else {
             this.circularProgressBar.setVisibility(View.GONE);
             this.message.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
@@ -165,16 +166,18 @@ public class UserFragment extends BackFragment {
             if (this.list.size() == 0) {
                 this.message.setText(getString(R.string.no_user));
                 this.message.setVisibility(View.VISIBLE);
-            } else
+            } else {
                 this.message.setVisibility(View.GONE);
+            }
 
             this.mAdapter = new AdapterModelUser(list, new IModelUserListener() {
                 @Override
                 public void execute(final UserModel userModel) {
                     final AlertDialog.Builder menuAleart = new AlertDialog.Builder(mActivity);
                     String[] menuList = {getString(R.string.talk)};
-                    if (mApplicationCallback.getConfig().isUserAdmin())
+                    if (mApplicationCallback.getConfig().isUserAdmin()) {
                         menuList = new String[]{getString(R.string.talk), getString(R.string.delete)};
+                    }
                     menuAleart.setTitle(getString(R.string.action));
                     menuAleart.setItems(menuList,
                             new DialogInterface.OnClickListener() {
@@ -201,15 +204,16 @@ public class UserFragment extends BackFragment {
                                             DialogUtils.alert(mActivity, "Delete " + userModel.username + "?", "This process cannot be undone.", getString(R.string.delete), new IListener() {
                                                 @Override
                                                 public void execute() {
-                                                    if (mApplicationCallback.getConfig().isUserAdmin())
+                                                    if (mApplicationCallback.getConfig().isUserAdmin()) {
                                                         userModel.delete(mActivity, mApplicationCallback, new IPostExecuteListener() {
                                                             @Override
                                                             public void onPostExecute(JSONObject json, String body) {
                                                                 UserFragment.this.refreshList();
                                                             }
                                                         });
-                                                    else
+                                                    } else {
                                                         Toast.makeText(getActivity(), "Not permitted.", Toast.LENGTH_SHORT).show();
+                                                    }
                                                 }
                                             }, getString(R.string.cancel), null);
                                             break;

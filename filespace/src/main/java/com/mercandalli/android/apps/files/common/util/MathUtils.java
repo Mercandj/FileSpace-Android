@@ -32,17 +32,23 @@ public class MathUtils {
     }
 
     public static int min(final int i, final int j) {
-        if (i > j) return j;
+        if (i > j) {
+            return j;
+        }
         return i;
     }
 
     public static int max(final int i, final int j) {
-        if (i < j) return j;
+        if (i < j) {
+            return j;
+        }
         return i;
     }
 
     public static int abs(final int i) {
-        if (i < 0) return -i;
+        if (i < 0) {
+            return -i;
+        }
         return i;
     }
 

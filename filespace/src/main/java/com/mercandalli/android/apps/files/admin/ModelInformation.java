@@ -19,14 +19,17 @@
  */
 package com.mercandalli.android.apps.files.admin;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.util.Log;
 
 import com.mercandalli.android.apps.files.common.model.Model;
 import com.mercandalli.android.apps.files.main.Constants;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class ModelInformation extends Model {
 
+    private static final String TAG = "ModelInformation";
     public String title;
     public String value;
     public int viewType = Constants.TAB_VIEW_TYPE_NORMAL;
@@ -50,12 +53,14 @@ public class ModelInformation extends Model {
     public ModelInformation(JSONObject json) {
         super();
         try {
-            if (json.has("title"))
+            if (json.has("title")) {
                 this.title = json.getString("title");
-            if (json.has("value"))
+            }
+            if (json.has("value")) {
                 this.value = json.getString("value");
+            }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, "ModelInformation: failed to convert Json", e);
         }
     }
 

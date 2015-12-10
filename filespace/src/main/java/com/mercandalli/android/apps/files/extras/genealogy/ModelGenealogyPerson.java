@@ -21,14 +21,16 @@ package com.mercandalli.android.apps.files.extras.genealogy;
 
 import android.app.Activity;
 import android.text.Spanned;
+import android.util.Log;
 
+import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.model.Model;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.common.util.HtmlUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
+import com.mercandalli.android.apps.files.main.ApplicationCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,8 +41,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.mercandalli.android.apps.files.R;
 
 public class ModelGenealogyPerson extends Model {
 
@@ -69,34 +69,48 @@ public class ModelGenealogyPerson extends Model {
         super(activity, app);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
-            if (json.has("id"))
+            if (json.has("id")) {
                 this.id = json.getInt("id");
-            if (json.has("first_name_1"))
+            }
+            if (json.has("first_name_1")) {
                 this.first_name_1 = json.getString("first_name_1");
-            if (json.has("first_name_2"))
+            }
+            if (json.has("first_name_2")) {
                 this.first_name_2 = json.getString("first_name_2");
-            if (json.has("first_name_3"))
+            }
+            if (json.has("first_name_3")) {
                 this.first_name_3 = json.getString("first_name_3");
-            if (json.has("last_name"))
+            }
+            if (json.has("last_name")) {
                 this.last_name = json.getString("last_name");
-            if (json.has("date_birth"))
+            }
+            if (json.has("date_birth")) {
                 this.date_birth = json.getString("date_birth");
-            if (json.has("date_death"))
+            }
+            if (json.has("date_death")) {
                 this.date_death = json.getString("date_death");
-            if (json.has("description"))
+            }
+            if (json.has("description")) {
                 this.description = json.getString("description");
-            if (json.has("date_creation") && !json.isNull("date_creation"))
+            }
+            if (json.has("date_creation") && !json.isNull("date_creation")) {
                 this.date_creation = dateFormat.parse(json.getString("date_creation"));
-            if (json.has("id_father"))
+            }
+            if (json.has("id_father")) {
                 this.id_father = json.getInt("id_father");
-            if (json.has("id_mother"))
+            }
+            if (json.has("id_mother")) {
                 this.id_mother = json.getInt("id_mother");
-            if (json.has("is_man"))
+            }
+            if (json.has("is_man")) {
                 this.is_man = json.getInt("is_man") != 0;
-            if (json.has("father"))
+            }
+            if (json.has("father")) {
                 this.father = new ModelGenealogyPerson(activity, app, json.getJSONObject("father"));
-            if (json.has("mother"))
+            }
+            if (json.has("mother")) {
                 this.mother = new ModelGenealogyPerson(activity, app, json.getJSONObject("mother"));
+            }
             if (json.has("brothers_sisters_from_mother")) {
                 this.brothers_sisters_from_mother = new ArrayList<>();
                 JSONArray json_b_s = json.getJSONArray("brothers_sisters_from_mother");
@@ -111,10 +125,8 @@ public class ModelGenealogyPerson extends Model {
                     this.brothers_sisters_from_father.add(new ModelGenealogyPerson(activity, app, json_b_s.getJSONObject(i)));
                 }
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
+        } catch (JSONException | ParseException e) {
+            Log.e(getClass().getName(), "Failed to convert Json or ParseException", e);
         }
     }
 
@@ -126,8 +138,9 @@ public class ModelGenealogyPerson extends Model {
                 return;
             }
         }
-        if (listener != null)
+        if (listener != null) {
             listener.onPostExecute(null, null);
+        }
     }
 
     public void modify(IPostExecuteListener listener) {
@@ -156,32 +169,42 @@ public class ModelGenealogyPerson extends Model {
     }
 
     public String getAdapterSubtitle() {
-        if (!StringUtils.isNullOrEmpty(this.date_birth) && !StringUtils.isNullOrEmpty(this.date_death))
+        if (!StringUtils.isNullOrEmpty(this.date_birth) && !StringUtils.isNullOrEmpty(this.date_death)) {
             return "(" + StringUtils.substring(this.date_birth, 10) + "  -  " + StringUtils.substring(this.date_death, 10) + ")";
-        if (!StringUtils.isNullOrEmpty(this.date_birth))
+        }
+        if (!StringUtils.isNullOrEmpty(this.date_birth)) {
             return "Born: " + StringUtils.substring(this.date_birth, 10);
-        if (!StringUtils.isNullOrEmpty(this.date_death))
+        }
+        if (!StringUtils.isNullOrEmpty(this.date_death)) {
             return "Death: " + StringUtils.substring(this.date_death, 10);
+        }
         return "";
     }
 
     public Spanned toSpanned() {
         List<StringPair> spl = new ArrayList<>();
-        if (!StringUtils.isNullOrEmpty(this.getAllFirstName()))
+        if (!StringUtils.isNullOrEmpty(this.getAllFirstName())) {
             spl.add(new StringPair("First names", this.getAllFirstName()));
-        if (!StringUtils.isNullOrEmpty(this.last_name))
+        }
+        if (!StringUtils.isNullOrEmpty(this.last_name)) {
             spl.add(new StringPair("Last name", StringUtils.uppercase(this.last_name)));
-        if (!StringUtils.isNullOrEmpty(this.date_birth))
+        }
+        if (!StringUtils.isNullOrEmpty(this.date_birth)) {
             spl.add(new StringPair("Born", StringUtils.substring(this.date_birth, 10)));
-        if (!StringUtils.isNullOrEmpty(this.date_death))
+        }
+        if (!StringUtils.isNullOrEmpty(this.date_death)) {
             spl.add(new StringPair("Death", StringUtils.substring(this.date_death, 10)));
+        }
         spl.add(new StringPair("Sexe", this.is_man ? "Man" : "Woman"));
-        if (this.father != null)
+        if (this.father != null) {
             spl.add(new StringPair("Father", father.getAdapterTitle()));
-        if (this.mother != null)
+        }
+        if (this.mother != null) {
             spl.add(new StringPair("Mother", mother.getAdapterTitle()));
-        if (!StringUtils.isNullOrEmpty(this.description))
+        }
+        if (!StringUtils.isNullOrEmpty(this.description)) {
             spl.add(new StringPair("Notes", this.description));
+        }
         return HtmlUtils.createListItem(spl);
     }
 
@@ -192,10 +215,12 @@ public class ModelGenealogyPerson extends Model {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null)
+        if (o == null) {
             return false;
-        if (!(o instanceof ModelGenealogyPerson))
+        }
+        if (!(o instanceof ModelGenealogyPerson)) {
             return false;
+        }
         ModelGenealogyPerson obj = (ModelGenealogyPerson) o;
         return obj.id == this.id;
     }
@@ -212,16 +237,18 @@ public class ModelGenealogyPerson extends Model {
                     if (tmp_mother.id == tmp_father.id)
                         bool = false;
                 }
-                if (bool)
+                if (bool) {
                     result.add(tmp_father);
+                }
             }
         }
         return result;
     }
 
     public List<ModelGenealogyPerson> getPartners() {
-        if (this.partners != null)
+        if (this.partners != null) {
             return this.partners;
+        }
         return new ArrayList<>();
     }
 

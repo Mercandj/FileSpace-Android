@@ -31,23 +31,23 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.admin.AdapterModelInformation;
+import com.mercandalli.android.apps.files.admin.ModelInformation;
+import com.mercandalli.android.apps.files.common.fragment.FabFragment;
+import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
+import com.mercandalli.android.apps.files.common.net.TaskGet;
+import com.mercandalli.android.apps.files.common.util.NetUtils;
+import com.mercandalli.android.apps.files.common.util.StringPair;
+import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.Constants;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.admin.ModelInformation;
-import com.mercandalli.android.apps.files.common.net.TaskGet;
-import com.mercandalli.android.apps.files.admin.AdapterModelInformation;
-import com.mercandalli.android.apps.files.common.fragment.FabFragment;
-import com.mercandalli.android.apps.files.common.util.NetUtils;
-import com.mercandalli.android.apps.files.common.util.StringPair;
 
 /**
  * Created by Jonathan on 28/08/2015.
@@ -113,7 +113,7 @@ public class GenealogyStatisticsFragment extends FabFragment {
 
     public void refreshList() {
         List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(mActivity))
+        if (NetUtils.isInternetConnection(mActivity)) {
             new TaskGet(
                     mActivity,
                     mApplicationCallback.getConfig().getUrlServer() + Config.routeGenealogyStatistics,
@@ -141,6 +141,7 @@ public class GenealogyStatisticsFragment extends FabFragment {
                     },
                     parameters
             ).execute();
+        }
     }
 
     public void updateAdapter() {

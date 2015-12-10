@@ -28,7 +28,7 @@ public enum ENUM_Obj {
     private int id;
     private IndicesVertices object;
 
-    private ENUM_Obj(int id) {
+    ENUM_Obj(int id) {
         this.id = id;
     }
 

@@ -10,7 +10,7 @@ package com.mercandalli.android.apps.files.extras.physics.lib;
 import com.mercandalli.android.apps.files.extras.physics.objects.Entity;
 
 public interface IFunctionEntity {
-    public boolean condition(Entity entity);
+    boolean condition(Entity entity);
 
-    public void execute(Entity entity);
+    void execute(Entity entity);
 }

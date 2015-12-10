@@ -107,19 +107,22 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public int getCurrentFragmentIndex() {
-        if (mViewPager == null)
+        if (mViewPager == null) {
             return -1;
+        }
         int result = mViewPager.getCurrentItem();
-        if (result >= LIST_BACK_FRAGMENT.length)
+        if (result >= LIST_BACK_FRAGMENT.length) {
             return -1;
+        }
         return mViewPager.getCurrentItem();
     }
 
     @Override
     public boolean back() {
         int currentFragmentId = getCurrentFragmentIndex();
-        if (currentFragmentId == -1)
+        if (currentFragmentId == -1) {
             return false;
+        }
         BackFragment backFragment = LIST_BACK_FRAGMENT[currentFragmentId];
         return backFragment != null && backFragment.back();
     }
@@ -137,9 +140,9 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     @Override
     public void onPageSelected(int position) {
         mApplicationCallback.invalidateMenu();
-        if (position < NB_FRAGMENT)
-            if (LIST_BACK_FRAGMENT[position] != null)
-                LIST_BACK_FRAGMENT[position].onFocus();
+        if (position < NB_FRAGMENT && LIST_BACK_FRAGMENT[position] != null) {
+            LIST_BACK_FRAGMENT[position].onFocus();
+        }
     }
 
     @Override

@@ -48,8 +48,9 @@ public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelIn
 
     @Override
     public AdapterModelInformation.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == Constants.TAB_VIEW_TYPE_SECTION)
+        if (viewType == Constants.TAB_VIEW_TYPE_SECTION) {
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_information_section, parent, false), viewType);
+        }
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_information, parent, false), viewType);
     }
 
@@ -89,8 +90,9 @@ public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelIn
 
         @Override
         public void onClick(View v) {
-            if (mItemClickListener != null)
+            if (mItemClickListener != null) {
                 mItemClickListener.onItemClick(v, getAdapterPosition());
+            }
         }
     }
 
@@ -105,8 +107,9 @@ public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelIn
     }
 
     public void removeItem(int position) {
-        if (mModelInformations.size() <= 0)
+        if (mModelInformations.size() <= 0) {
             return;
+        }
         mModelInformations.remove(position);
         notifyItemRemoved(position);
     }
@@ -117,8 +120,9 @@ public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelIn
 
     @Override
     public int getItemViewType(int position) {
-        if (position < mModelInformations.size())
+        if (position < mModelInformations.size()) {
             return mModelInformations.get(position).viewType;
+        }
         return 0;
     }
 

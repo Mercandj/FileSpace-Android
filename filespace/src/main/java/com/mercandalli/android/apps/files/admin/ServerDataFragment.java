@@ -25,6 +25,7 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,6 +35,14 @@ import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.common.fragment.BackFragment;
+import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
+import com.mercandalli.android.apps.files.common.net.TaskGet;
+import com.mercandalli.android.apps.files.common.util.NetUtils;
+import com.mercandalli.android.apps.files.common.util.StringPair;
+import com.mercandalli.android.apps.files.main.Constants;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,16 +50,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.common.net.TaskGet;
-import com.mercandalli.android.apps.files.common.fragment.BackFragment;
-import com.mercandalli.android.apps.files.common.util.NetUtils;
-import com.mercandalli.android.apps.files.common.util.StringPair;
-
 public class ServerDataFragment extends BackFragment {
 
+    private static final String TAG = "ServerDataFragment";
     private View rootView;
 
     private RecyclerView recyclerView;
@@ -97,7 +99,7 @@ public class ServerDataFragment extends BackFragment {
 
     public void refreshList() {
         List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(mActivity))
+        if (NetUtils.isInternetConnection(mActivity)) {
             new TaskGet(
                     mActivity,
                     mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeInformation,
@@ -115,16 +117,18 @@ public class ServerDataFragment extends BackFragment {
                                             list.add(modelFile);
                                         }
                                     }
-                                } else
+                                } else {
                                     Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                }
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                Log.e(TAG, "ServerDataFragment: failed to convert Json", e);
                             }
                             updateAdapter();
                         }
                     },
                     parameters
             ).execute();
+        }
     }
 
     int i;

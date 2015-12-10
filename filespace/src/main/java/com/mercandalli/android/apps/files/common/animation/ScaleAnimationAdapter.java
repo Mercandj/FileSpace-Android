@@ -83,7 +83,7 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
             LinearLayoutManager layoutManager = ((LinearLayoutManager) mRecyclerView.getLayoutManager());
             int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
 
-            if (!mAnimsInitialized && firstVisiblePosition <= 1)
+            if (!mAnimsInitialized && firstVisiblePosition <= 1) {
                 for (Animator anim : animators) {
                     anim.setDuration((long) this.mDuration);
                     anim.setInterpolator(this.mInterpolator);
@@ -97,7 +97,7 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
                     anim.addListener(this);
                     anim.start();
                 }
-            else {
+            } else {
                 holder.itemView.setScaleX(1);
                 holder.itemView.setScaleY(1);
             }
@@ -113,8 +113,9 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
 
     @Override
     public void onAnimationEnd(Animator animation) {
-        if (decreaseCounter())
+        if (decreaseCounter()) {
             mAnimsInitialized = true;
+        }
     }
 
     @Override

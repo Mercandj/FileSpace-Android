@@ -1,8 +1,5 @@
 package com.mercandalli.android.apps.files.common.util;
 
-/**
- * Created by Jonathan on 16/06/15.
- */
 public class StringPair {
     private String name, value;
 
@@ -24,12 +21,13 @@ public class StringPair {
     }
 
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof StringPair))
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof StringPair)) {
             return false;
+        }
         StringPair obj = (StringPair) o;
-        if (this.name == null && obj.name != null)
-            return false;
-        return this.name.equals(obj.name) && this.value.equals(obj.value);
+        return StringUtils.isEquals(this.name, obj.name) && StringUtils.isEquals(this.value, obj.value);
     }
 }

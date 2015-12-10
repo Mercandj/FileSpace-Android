@@ -127,9 +127,10 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
         tabs.setViewPager(mViewPager);
         tabs.setIndicatorColor(ContextCompat.getColor(this, android.R.color.white));
 
-        if (this.getConfig().isAutoConncetion() && this.getConfig().getUrlServer() != null && this.getConfig().getUserUsername() != null && this.getConfig().getUserPassword() != null)
-            if (!this.getConfig().getUserUsername().equals("") && !this.getConfig().getUserPassword().equals("") && Config.getUserId() != -1)
-                connectionSucceed();
+        if (this.getConfig().isAutoConncetion() && this.getConfig().getUrlServer() != null && this.getConfig().getUserUsername() != null && this.getConfig().getUserPassword() != null &&
+                !this.getConfig().getUserUsername().equals("") && !this.getConfig().getUserPassword().equals("") && Config.getUserId() != -1) {
+            connectionSucceed();
+        }
 
         findViewById(R.id.activity_register_login_signin).setOnClickListener(this);
         findViewById(R.id.activity_register_login_gg_sign).setOnClickListener(this);
@@ -361,8 +362,9 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
 
 
     private void googlePlusRegisterLogin(String username, String password) {
-        if (mRequestLaunched)
+        if (mRequestLaunched) {
             return;
+        }
         mRequestLaunched = true;
 
         final UserModel user = new UserModel();
@@ -379,47 +381,52 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
         parameters.add(new StringPair("google_plus", "true"));
         parameters.add(new StringPair("username", "" + user.username));
         parameters.add(new StringPair("password", "" + user.password));
-        if (NetUtils.isInternetConnection(this))
+        if (NetUtils.isInternetConnection(this)) {
             (new TaskPost(this, this, this.getConfig().getUrlServer() + Config.routeUser, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     try {
                         if (json != null) {
-                            if (json.has("succeed"))
-                                if (json.getBoolean("succeed")) {
-
-                                    if (!StringUtils.isNullOrEmpty(user.username))
-                                        LoginRegisterActivity.this.getConfig().setUserUsername(LoginRegisterActivity.this, user.username);
-
-                                    if (!StringUtils.isNullOrEmpty(user.password))
-                                        LoginRegisterActivity.this.getConfig().setUserPassword(LoginRegisterActivity.this, user.password);
-
-                                    connectionSucceed();
+                            if (json.has("succeed") && json.getBoolean("succeed")) {
+                                if (!StringUtils.isNullOrEmpty(user.username)) {
+                                    LoginRegisterActivity.this.getConfig().setUserUsername(LoginRegisterActivity.this, user.username);
                                 }
+
+                                if (!StringUtils.isNullOrEmpty(user.password)) {
+                                    LoginRegisterActivity.this.getConfig().setUserPassword(LoginRegisterActivity.this, user.password);
+                                }
+
+                                connectionSucceed();
+                            }
                             if (json.has("user")) {
                                 JSONObject user = json.getJSONObject("user");
-                                if (user.has("id"))
+                                if (user.has("id")) {
                                     LoginRegisterActivity.this.getConfig().setUserId(LoginRegisterActivity.this, user.getInt("id"));
+                                }
                                 if (user.has("admin")) {
                                     Object admin_obj = user.get("admin");
-                                    if (admin_obj instanceof Integer)
+                                    if (admin_obj instanceof Integer) {
                                         LoginRegisterActivity.this.getConfig().setUserAdmin(LoginRegisterActivity.this, user.getInt("admin") == 1);
-                                    else if (admin_obj instanceof Boolean)
+                                    } else if (admin_obj instanceof Boolean) {
                                         LoginRegisterActivity.this.getConfig().setUserAdmin(LoginRegisterActivity.this, user.getBoolean("admin"));
+                                    }
                                 }
-                                if (user.has("id_file_profile_picture"))
+                                if (user.has("id_file_profile_picture")) {
                                     LoginRegisterActivity.this.getConfig().setUserIdFileProfilePicture(LoginRegisterActivity.this, user.getInt("id_file_profile_picture"));
+                                }
                             }
-                        } else
+                        } else {
                             Toast.makeText(LoginRegisterActivity.this, LoginRegisterActivity.this.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     mRequestLaunched = false;
                 }
             }, parameters)).execute();
-        else
+        } else {
             mRequestLaunched = false;
+        }
     }
 
 

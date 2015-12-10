@@ -85,7 +85,7 @@ public class Slider extends SliderCustomView {
     }
 
     public void setValue(final int value) {
-        if (placedBall == false)
+        if (!placedBall) {
             post(new Runnable() {
 
                 @Override
@@ -93,7 +93,7 @@ public class Slider extends SliderCustomView {
                     setValue(value);
                 }
             });
-        else {
+        } else {
             this.value = value;
             float division = (ball.xFin - ball.xIni) / max;
             ViewHelper.setX(ball,
@@ -131,7 +131,7 @@ public class Slider extends SliderCustomView {
                     || event.getAction() == MotionEvent.ACTION_MOVE) {
 
                 if (numberIndicator != null
-                        && numberIndicator.isShowing() == false
+                        && !numberIndicator.isShowing()
                         && isNumberIndicator) {
                     numberIndicator.show();
                 }
@@ -151,8 +151,9 @@ public class Slider extends SliderCustomView {
 
                     if (value != newValue) {
                         value = newValue;
-                        if (onValueChangedListener != null)
+                        if (onValueChangedListener != null) {
                             onValueChangedListener.onValueChanged(newValue);
+                        }
                     }
 
                     // move ball indicator
@@ -175,20 +176,21 @@ public class Slider extends SliderCustomView {
                 } else {
                     press = false;
                     isLastTouch = false;
-                    if (numberIndicator != null)
+                    if (numberIndicator != null) {
                         numberIndicator.dismiss();
-
+                    }
                 }
 
             } else if (event.getAction() == MotionEvent.ACTION_UP ||
                     event.getAction() == MotionEvent.ACTION_CANCEL) {
 
-                if (event.getAction() == MotionEvent.ACTION_UP)
-                    if (onValueChangedListener != null)
-                        onValueChangedListener.onValueChangedUp(value);
+                if (event.getAction() == MotionEvent.ACTION_UP && onValueChangedListener != null) {
+                    onValueChangedListener.onValueChangedUp(value);
+                }
 
-                if (numberIndicator != null)
+                if (numberIndicator != null) {
                     numberIndicator.dismiss();
+                }
                 isLastTouch = false;
                 press = false;
 
@@ -339,9 +341,9 @@ public class Slider extends SliderCustomView {
 
     // Event when slider change value
     public interface OnValueChangedListener {
-        public void onValueChanged(int value);
+        void onValueChanged(int value);
 
-        public void onValueChangedUp(int value);
+        void onValueChangedUp(int value);
     }
 
     class Ball extends View {
@@ -413,8 +415,9 @@ public class Slider extends SliderCustomView {
             }
 
             if (animate) {
-                if (y == 0)
+                if (y == 0) {
                     y = finalY + finalSize * 2;
+                }
                 y -= SliderUtils.dpToPx(6, getResources());
                 size += SliderUtils.dpToPx(2, getResources());
             }
@@ -427,17 +430,19 @@ public class Slider extends SliderCustomView {
             canvas.drawCircle(cx, y, size / 1.6f, paintBorder);
             canvas.drawCircle(cx, y, size, paint);
 
-            if (animate && size >= finalSize)
+            if (animate && size >= finalSize) {
                 animate = false;
-            if (animate == false) {
+            }
+            if (!animate) {
                 ViewHelper.setX(numberIndicator.numberIndicator,
                         cx - size);
                 ViewHelper.setY(numberIndicator.numberIndicator, y - size);
 
-                if (valueToDisplay != null)
+                if (valueToDisplay != null) {
                     numberIndicator.numberIndicator.setText(valueToDisplay.convert(value));
-                else
+                } else {
                     numberIndicator.numberIndicator.setText(value + "");
+                }
             }
 
             invalidate();
@@ -499,7 +504,7 @@ public class Slider extends SliderCustomView {
     }
 
     public interface ValueToDisplay {
-        public String convert(int value);
+        String convert(int value);
     }
 
     public void setValueToDisplay(ValueToDisplay valueToDisplay) {

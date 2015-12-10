@@ -97,7 +97,7 @@ public class WebFragment extends BackFragment {
         return true;
     }
 
-    public void load_url(String string) {
+    public void loadUrl(String string) {
         try {
             webView.loadUrl(string);
         } catch (Exception e) {

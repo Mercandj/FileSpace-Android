@@ -60,8 +60,9 @@ public class Camera {
     }
 
     public void computeForward() {
-        if (mForward == null)
+        if (mForward == null) {
             return;
+        }
         mForward.dX = (float) Math.sin(vx) * (float) Math.cos(vy);
         mForward.dY = (float) Math.sin(vy);
         mForward.dZ = -(float) Math.cos(vx) * (float) Math.cos(vy);

@@ -130,18 +130,22 @@ public class myVector3D {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof myVector3D))
+        if (!(o instanceof myVector3D)) {
             return false;
+        }
         myVector3D obj = ((myVector3D) o);
         return obj.dX == this.dX && obj.dY == this.dY && obj.dZ == this.dZ;
     }
 
     public void resetAlmostNull(float bound) {
-        if (-bound < this.dX || this.dX < bound)
+        if (-bound < this.dX || this.dX < bound) {
             this.dX = 0;
-        if (-bound < this.dY || this.dY < bound)
+        }
+        if (-bound < this.dY || this.dY < bound) {
             this.dY = 0;
-        if (-bound < this.dZ || this.dZ < bound)
+        }
+        if (-bound < this.dZ || this.dZ < bound) {
             this.dZ = 0;
+        }
     }
 }

@@ -32,15 +32,17 @@ public class WayPosition {
     public myVector3D getCurrentPosition() {
         int res = currentID;
         if (!reverse) {
-            if (currentID + 1 >= size())
+            if (currentID + 1 >= size()) {
                 currentID = 0;
-            else
+            } else {
                 currentID++;
+            }
         } else {
-            if (currentID - 1 < 0)
+            if (currentID - 1 < 0) {
                 currentID = size() - 1;
-            else
+            } else {
                 currentID--;
+            }
         }
         return get(res);
     }
@@ -49,17 +51,21 @@ public class WayPosition {
         way = new ArrayList<myVector3D>();
         float divcote = size / 2;
 
-        for (float i = centerX - divcote; i <= centerX + divcote; i += foot)
+        for (float i = centerX - divcote; i <= centerX + divcote; i += foot) {
             add(new myVector3D(i, centerY, centerZ - divcote));
+        }
 
-        for (float i = centerZ - divcote; i <= centerZ + divcote; i += foot)
+        for (float i = centerZ - divcote; i <= centerZ + divcote; i += foot) {
             add(new myVector3D(centerX + divcote, centerY, i));
+        }
 
-        for (float i = centerX + divcote; i >= centerX - divcote; i -= foot)
+        for (float i = centerX + divcote; i >= centerX - divcote; i -= foot) {
             add(new myVector3D(i, centerY, centerZ + divcote));
+        }
 
-        for (float i = centerZ + divcote; i >= centerZ - divcote; i -= foot)
+        for (float i = centerZ + divcote; i >= centerZ - divcote; i -= foot) {
             add(new myVector3D(centerX - divcote, centerY, i));
+        }
 
         reverse = !right;
     }

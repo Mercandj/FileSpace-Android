@@ -26,6 +26,12 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
+import com.mercandalli.android.apps.files.common.util.NetUtils;
+import com.mercandalli.android.apps.files.common.util.StringPair;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
+import com.mercandalli.android.apps.files.main.Config;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,12 +44,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
-
-import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.common.util.NetUtils;
-import com.mercandalli.android.apps.files.common.util.StringPair;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
 
 /**
  * Global behavior : http Get
@@ -78,8 +78,9 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... urls) {
         try {
             if (this.parameters != null) {
-                if (!StringUtils.isNullOrEmpty(Config.getUserRegId()))
+                if (!StringUtils.isNullOrEmpty(Config.getUserRegId())) {
                     parameters.add(new StringPair("android_id", "" + Config.getUserRegId()));
+                }
                 url = NetUtils.addUrlParameters(url, parameters);
             }
 
@@ -90,8 +91,9 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
             conn.setReadTimeout(10000);
             conn.setConnectTimeout(15000);
             conn.setRequestMethod("GET");
-            if (isAuthentication)
+            if (isAuthentication) {
                 conn.setRequestProperty("Authorization", "Basic " + Config.getUserToken());
+            }
             conn.setUseCaches(false);
             conn.setDoInput(true);
 
@@ -103,8 +105,9 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
             String resultString = convertInputStreamToString(inputStream);
 
             //int responseCode = response.getStatusLine().getStatusCode();
-            if (responseCode >= 300)
+            if (responseCode >= 300) {
                 resultString = "Status Code " + responseCode + ". " + resultString;
+            }
 
             conn.disconnect();
 
@@ -126,8 +129,9 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         String line = "";
         String result = "";
-        while ((line = bufferedReader.readLine()) != null)
+        while ((line = bufferedReader.readLine()) != null) {
             result += line;
+        }
 
         inputStream.close();
         return result;
@@ -141,11 +145,12 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
         } else {
             try {
                 JSONObject json = new JSONObject(response);
-                if (this.listener != null)
+                if (this.listener != null) {
                     this.listener.onPostExecute(json, response);
-                if (json.has("toast"))
-                    if (!json.getString("toast").equals(""))
-                        Toast.makeText(mContext, json.getString("toast"), Toast.LENGTH_SHORT).show();
+                }
+                if (json.has("toast") && !json.getString("toast").equals("")) {
+                    Toast.makeText(mContext, json.getString("toast"), Toast.LENGTH_SHORT).show();
+                }
                 if (json.has("apk_update")) {
                     JSONArray array = json.getJSONArray("apk_update");
                     PackageManager packageManager = mContext.getPackageManager();
@@ -162,11 +167,12 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
                     */
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
-                if (this.listener != null)
+                Log.e(getClass().getName(), "Failed to convert Json", e);
+                if (this.listener != null) {
                     this.listener.onPostExecute(null, response);
+                }
             } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
+                Log.e(getClass().getName(), "NameNotFoundException", e);
             }
         }
     }

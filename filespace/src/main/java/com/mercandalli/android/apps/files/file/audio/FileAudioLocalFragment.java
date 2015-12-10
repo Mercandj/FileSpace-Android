@@ -158,8 +158,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment
             public void executeFileModel(final FileModel fileModel) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
                 String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties)};
-                if (mApplicationCallback.isLogged())
+                if (mApplicationCallback.isLogged()) {
                     menuList = new String[]{getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.properties)};
+                }
                 menuAlert.setTitle("Action");
                 menuAlert.setItems(menuList,
                         new DialogInterface.OnClickListener() {

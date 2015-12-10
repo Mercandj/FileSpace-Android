@@ -29,7 +29,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -91,7 +90,7 @@ public class TalkFragment extends BackFragment {
         this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
         this.recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
-        ((ImageButton) rootView.findViewById(R.id.circle)).setVisibility(View.GONE);
+        rootView.findViewById(R.id.circle).setVisibility(View.GONE);
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(
@@ -118,7 +117,7 @@ public class TalkFragment extends BackFragment {
 
     public void refreshList(String search) {
         List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged())
+        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
             new TaskGet(
                     mActivity,
                     mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserConversation,
@@ -135,8 +134,9 @@ public class TalkFragment extends BackFragment {
                                             list.add(modelUser);
                                         }
                                     }
-                                } else
+                                } else {
                                     Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -145,7 +145,7 @@ public class TalkFragment extends BackFragment {
                     },
                     parameters
             ).execute();
-        else {
+        } else {
             this.circularProgressBar.setVisibility(View.GONE);
             this.message.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
@@ -162,8 +162,9 @@ public class TalkFragment extends BackFragment {
             if (this.list.size() == 0) {
                 this.message.setText(getString(R.string.no_talk));
                 this.message.setVisibility(View.VISIBLE);
-            } else
+            } else {
                 this.message.setVisibility(View.GONE);
+            }
 
 
             this.mAdapter = new AdapterModelConnversationUser(list, new IModelUserListener() {

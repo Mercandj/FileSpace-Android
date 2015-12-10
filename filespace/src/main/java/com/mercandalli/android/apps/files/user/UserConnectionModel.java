@@ -45,14 +45,18 @@ public class UserConnectionModel {
     public UserConnectionModel(JSONObject json) {
         super();
         try {
-            if (json.has("date_creation"))
+            if (json.has("date_creation")) {
                 this.date_creation = json.getString("date_creation");
-            if (json.has("request_uri"))
+            }
+            if (json.has("request_uri")) {
                 this.url = json.getString("request_uri");
-            if (json.has("id_user"))
+            }
+            if (json.has("id_user")) {
                 this.id_user = json.getInt("id_user");
-            if (json.has("username"))
+            }
+            if (json.has("username")) {
                 this.username = json.getString("username");
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

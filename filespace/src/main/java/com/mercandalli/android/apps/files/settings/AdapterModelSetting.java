@@ -28,12 +28,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import java.util.List;
-
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.common.util.FontUtils;
+import com.mercandalli.android.apps.files.main.ApplicationCallback;
+import com.mercandalli.android.apps.files.main.Constants;
+
+import java.util.List;
 
 public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSetting.ViewHolder> {
     private List<ModelSetting> itemsData;
@@ -49,8 +49,9 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
 
     @Override
     public AdapterModelSetting.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == Constants.TAB_VIEW_TYPE_SECTION)
+        if (viewType == Constants.TAB_VIEW_TYPE_SECTION) {
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_setting_section, parent, false), viewType);
+        }
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_setting, parent, false), viewType);
     }
 
@@ -59,10 +60,10 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
         ModelSetting model = itemsData.get(position);
         switch (model.viewType) {
             case Constants.TAB_VIEW_TYPE_NORMAL:
-                viewHolder.title.setText("" + model.title);
-                if (model.toggleButtonListener == null)
+                viewHolder.title.setText(String.format("%s", model.title));
+                if (model.toggleButtonListener == null) {
                     viewHolder.toggleButton.setVisibility(View.GONE);
-                else {
+                } else {
                     viewHolder.toggleButton.setVisibility(View.VISIBLE);
                     viewHolder.toggleButton.setChecked(model.toggleButtonInitValue);
                     viewHolder.toggleButton.setOnCheckedChangeListener(model.toggleButtonListener);
@@ -70,11 +71,12 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
                 if (model.subtitle != null) {
                     viewHolder.subtitle.setVisibility(View.VISIBLE);
                     viewHolder.subtitle.setText(model.subtitle);
-                } else
+                } else {
                     viewHolder.subtitle.setVisibility(View.GONE);
+                }
                 break;
             case Constants.TAB_VIEW_TYPE_SECTION:
-                viewHolder.title.setText("" + model.title);
+                viewHolder.title.setText(String.format("%s", model.title));
                 FontUtils.applyFont(mActivity, viewHolder.title, "fonts/MYRIADAB.TTF");
                 break;
         }
@@ -103,8 +105,9 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
 
         @Override
         public void onClick(View v) {
-            if (mItemClickListener != null)
+            if (mItemClickListener != null) {
                 mItemClickListener.onItemClick(v, getPosition());
+            }
         }
     }
 
@@ -119,14 +122,15 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
     }
 
     public void removeItem(int position) {
-        if (itemsData.size() <= 0)
+        if (itemsData.size() <= 0) {
             return;
+        }
         itemsData.remove(position);
         notifyItemRemoved(position);
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
+        void onItemClick(View view, int position);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -135,8 +139,9 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
 
     @Override
     public int getItemViewType(int position) {
-        if (position < itemsData.size())
+        if (position < itemsData.size()) {
             return itemsData.get(position).viewType;
+        }
         return 0;
     }
 }

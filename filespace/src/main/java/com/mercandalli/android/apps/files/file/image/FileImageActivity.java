@@ -105,7 +105,7 @@ public class FileImageActivity extends ApplicationActivity {
                 FontUtils.applyFont(this, mTitleTextView, "fonts/Roboto-Regular.ttf");
             }
 
-            if (ImageUtils.is_image(this, this.mId)) {
+            if (ImageUtils.isImage(this, this.mId)) {
                 bitmap = ImageUtils.load_image(this, this.mId);
                 ((ImageView) this.findViewById(R.id.tab_icon)).setImageBitmap(bitmap);
                 int bgColor = ColorUtils.getMutedColor(bitmap);

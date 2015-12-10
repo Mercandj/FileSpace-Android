@@ -67,7 +67,7 @@ public class GenealogyBigTreeFragment extends FabFragment {
             }
         });
 
-        ((Button) this.rootView.findViewById(R.id.reset)).setOnClickListener(new View.OnClickListener() {
+        this.rootView.findViewById(R.id.reset).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bigTreeView.resetOffsetTouch();

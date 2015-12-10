@@ -7,16 +7,16 @@ import java.util.List;
 /**
  * Created by Jonathan on 02/09/2015.
  */
-public class Way implements Iterable<Case> {
+public class GameWay implements Iterable<GameCase> {
 
-    public List<Case> array;
+    public List<GameCase> array;
     private boolean revert = false;
 
-    public Way() {
+    public GameWay() {
         this.array = new ArrayList<>();
     }
 
-    public Way(List<Case> array) {
+    public GameWay(List<GameCase> array) {
         this.array = array;
     }
 
@@ -24,16 +24,16 @@ public class Way implements Iterable<Case> {
         this.revert = !this.revert;
     }
 
-    public void add(Case parm) {
+    public void add(GameCase parm) {
         this.array.add(parm);
     }
 
     @Override
-    public Iterator<Case> iterator() {
+    public Iterator<GameCase> iterator() {
         return new MyIterator();
     }
 
-    public class MyIterator implements Iterator<Case> {
+    public class MyIterator implements Iterator<GameCase> {
 
         private int pointer = 0;
 
@@ -43,7 +43,7 @@ public class Way implements Iterable<Case> {
         }
 
         @Override
-        public Case next() {
+        public GameCase next() {
             if (revert) {
                 pointer--;
                 return array.get(pointer + 1);

@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.extras.physics.MyGLSurfaceView;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
+import com.mercandalli.android.apps.files.extras.physics.MyGLSurfaceView;
 
 /**
  * Created by Jonathan on 02/09/2015.
@@ -51,10 +51,11 @@ public class StatisticsFragment extends BackFragment {
         forward.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP)
+                if (event.getAction() == MotionEvent.ACTION_UP) {
                     mGLView.mRenderer.camera.forward = false;
-                else if (event.getAction() == MotionEvent.ACTION_DOWN)
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     mGLView.mRenderer.camera.forward = true;
+                }
                 return false;
             }
         });
@@ -63,10 +64,11 @@ public class StatisticsFragment extends BackFragment {
         back.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP)
+                if (event.getAction() == MotionEvent.ACTION_UP) {
                     mGLView.mRenderer.camera.back = false;
-                else if (event.getAction() == MotionEvent.ACTION_DOWN)
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     mGLView.mRenderer.camera.back = true;
+                }
                 return false;
             }
         });
@@ -75,10 +77,11 @@ public class StatisticsFragment extends BackFragment {
         left.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP)
+                if (event.getAction() == MotionEvent.ACTION_UP) {
                     mGLView.mRenderer.camera.left = false;
-                else if (event.getAction() == MotionEvent.ACTION_DOWN)
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     mGLView.mRenderer.camera.left = true;
+                }
                 return false;
             }
         });
@@ -87,10 +90,11 @@ public class StatisticsFragment extends BackFragment {
         right.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP)
+                if (event.getAction() == MotionEvent.ACTION_UP) {
                     mGLView.mRenderer.camera.right = false;
-                else if (event.getAction() == MotionEvent.ACTION_DOWN)
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     mGLView.mRenderer.camera.right = true;
+                }
                 return false;
             }
         });

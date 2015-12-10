@@ -26,6 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.Timer;
 
 import com.mercandalli.android.apps.files.common.util.PointLong;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
@@ -133,9 +134,9 @@ public class FileSpaceModel {
         }
 
         public static FileSpaceTypeENUM create(String type_) {
-            for (FileSpaceTypeENUM var : values())
-                if (var.type.contentEquals(type_))
-                    return var;
+            for (FileSpaceTypeENUM var : values()){
+                if (var.type.contentEquals(type_)){
+                    return var;}}
             return UNKNOWN;
         }
 
@@ -155,12 +156,12 @@ public class FileSpaceModel {
 
     public static class FileSpaceModelBuilder {
 
-        private Date dateCreation, timerDate;
+        private Date mDateCreation, mTimerDate;
         private FileSpaceTypeENUM type;
-        private String articleTitle1, articleContent1;
+        private String mArticleTitle1, articleContent1;
 
         public FileSpaceModelBuilder dateCreation(final Date dateCreation) {
-            this.dateCreation = dateCreation;
+            this.mDateCreation = dateCreation;
             return this;
         }
 
@@ -170,12 +171,12 @@ public class FileSpaceModel {
         }
 
         public FileSpaceModelBuilder timerDate(Date timerDate) {
-            this.timerDate = timerDate;
+            this.mTimerDate = timerDate;
             return this;
         }
 
         public FileSpaceModelBuilder articleTitle1(final String articleTitle1) {
-            this.articleTitle1 = articleTitle1;
+            this.mArticleTitle1 = articleTitle1;
             return this;
         }
 
@@ -186,9 +187,9 @@ public class FileSpaceModel {
 
         public FileSpaceModel build() {
             FileSpaceModel fileSpaceModel = new FileSpaceModel();
-            fileSpaceModel.setDateCreation(dateCreation);
-            fileSpaceModel.setTimerDate(timerDate);
-            fileSpaceModel.setArticleTitle1(articleTitle1);
+            fileSpaceModel.setDateCreation(mDateCreation);
+            fileSpaceModel.setTimerDate(mTimerDate);
+            fileSpaceModel.setArticleTitle1(mArticleTitle1);
             fileSpaceModel.setArticleContent1(articleContent1);
             fileSpaceModel.setType(type);
             return fileSpaceModel;

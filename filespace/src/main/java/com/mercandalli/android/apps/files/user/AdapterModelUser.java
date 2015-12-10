@@ -59,8 +59,9 @@ public class AdapterModelUser extends RecyclerView.Adapter<AdapterModelUser.View
             viewHolder.title.setText(user.getAdapterTitle());
             viewHolder.subtitle.setText(user.getAdapterSubtitle());
 
-            if (user.bitmap != null)
+            if (user.bitmap != null) {
                 viewHolder.icon.setImageBitmap(user.bitmap);
+            }
 
             viewHolder.more.setOnClickListener(new OnClickListener() {
                 @Override
@@ -90,15 +91,14 @@ public class AdapterModelUser extends RecyclerView.Adapter<AdapterModelUser.View
 
         @Override
         public void onClick(View v) {
-            if (mItemClickListener != null)
+            if (mItemClickListener != null) {
                 mItemClickListener.onItemClick(v, getPosition());
+            }
         }
 
         @Override
         public boolean onLongClick(View v) {
-            if (mItemLongClickListener != null)
-                return mItemLongClickListener.onItemLongClick(v, getPosition());
-            return false;
+            return mItemLongClickListener != null && mItemLongClickListener.onItemLongClick(v, getPosition());
         }
     }
 
@@ -143,7 +143,7 @@ public class AdapterModelUser extends RecyclerView.Adapter<AdapterModelUser.View
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
+        void onItemClick(View view, int position);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -151,7 +151,7 @@ public class AdapterModelUser extends RecyclerView.Adapter<AdapterModelUser.View
     }
 
     public interface OnItemLongClickListener {
-        public boolean onItemLongClick(View view, int position);
+        boolean onItemLongClick(View view, int position);
     }
 
     public void setOnItemLongClickListener(final OnItemLongClickListener mItemLongClickListener) {

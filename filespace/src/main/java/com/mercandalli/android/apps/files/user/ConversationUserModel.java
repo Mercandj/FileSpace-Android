@@ -46,26 +46,33 @@ public class ConversationUserModel {
         this.users = new ArrayList<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
-            if (json.has("id"))
+            if (json.has("id")) {
                 this.id = json.getInt("id");
-            if (json.has("id_conversation"))
+            }
+            if (json.has("id_conversation")) {
                 this.id_conversation = json.getInt("id_conversation");
-            if (json.has("id_user"))
+            }
+            if (json.has("id_user")) {
                 this.id_user = json.getInt("id_user");
-            if (json.has("num_messages"))
+            }
+            if (json.has("num_messages")) {
                 this.num_messages = json.getInt("num_messages");
+            }
             if (json.has("users")) {
                 JSONArray users_json = json.getJSONArray("users");
                 for (int i = 0; i < users_json.length(); i++) {
                     this.users.add(new UserModel(activity, applicationCallback, users_json.getJSONObject(i)));
                 }
             }
-            if (json.has("to_all"))
+            if (json.has("to_all")) {
                 this.to_all = json.getBoolean("to_all");
-            if (json.has("to_yourself"))
+            }
+            if (json.has("to_yourself")) {
                 this.to_yourself = json.getBoolean("to_yourself");
-            if (json.has("date_creation") && !json.isNull("date_creation"))
+            }
+            if (json.has("date_creation") && !json.isNull("date_creation")) {
                 this.date_creation = dateFormat.parse(json.getString("date_creation"));
+            }
         } catch (JSONException | ParseException e) {
             e.printStackTrace();
         }
@@ -78,8 +85,9 @@ public class ConversationUserModel {
         } else if (this.to_yourself) {
             res += "yourself";
         } else {
-            for (UserModel user : users)
+            for (UserModel user : users) {
                 res += user.username + " ";
+            }
         }
         return res;
     }

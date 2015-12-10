@@ -55,7 +55,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
-        if (!hasWindowFocus) thread.pause();
+        if (!hasWindowFocus) {
+            thread.pause();
+        }
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -63,8 +65,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
-        if (thread.getState() == Thread.State.TERMINATED)
+        if (thread.getState() == Thread.State.TERMINATED) {
             thread = new GameThread(getHolder(), getContext(), getHandler());
+        }
         thread.setRunning(true);
         thread.start();
     }

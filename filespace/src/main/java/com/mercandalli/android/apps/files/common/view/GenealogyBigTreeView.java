@@ -9,12 +9,11 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.extras.genealogy.ModelGenealogyPerson;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.mercandalli.android.apps.files.R;
 
 public class GenealogyBigTreeView extends View {
 
@@ -361,8 +360,9 @@ public class GenealogyBigTreeView extends View {
             // --- --- affichage des noms
             coord_horizontale_nom_a_afficher = largeur / 2 + deltaX + deltaXmouv + deltaXcomp + longueur_courante - ((tableau_longueurs_lignes_horizontales.get(tableau_positions_vertical.get(i))) / 2);
             coord_verticale_nom_a_afficher = hauteur / 2 + deltaY + deltaYmouv + deltaYcomp + (paint.getTextSize() / 2) - DECALAGE_TEXTE_VERTICAL * coeff_taille * tableau_positions_vertical.get(i);
-            if (personne.isValid())
+            if (personne.isValid()) {
                 paint.setColor(getResources().getColor(personne.is_man ? R.color.genealogy_man : R.color.genealogy_woman));
+            }
             canvas.drawText(string_a_afficher, coord_horizontale_nom_a_afficher, coord_verticale_nom_a_afficher, paint);
             paint.setColor(Color.BLACK);
 
@@ -425,28 +425,32 @@ public class GenealogyBigTreeView extends View {
         ModelGenealogyPerson currentPerson = person;
 
         tableau_ascendants.add(currentPerson);
-        if (currentPerson.father != null)
+        if (currentPerson.father != null) {
             tableau_ascendants.add(currentPerson.father);
-        else
+        } else {
             tableau_ascendants.add(new ModelGenealogyPerson(false));
-        if (currentPerson.mother != null)
+        }
+        if (currentPerson.mother != null) {
             tableau_ascendants.add(currentPerson.mother);
-        else
+        } else {
             tableau_ascendants.add(new ModelGenealogyPerson(false));
+        }
 
         int i = 0;
         while (i < tableau_ascendants.size() - 1) {
             currentPerson = tableau_ascendants.get(i + 1);
 
             if (currentPerson.isValid()) {
-                if (currentPerson.father != null)
+                if (currentPerson.father != null) {
                     tableau_ascendants.add(currentPerson.father);
-                else
+                } else {
                     tableau_ascendants.add(new ModelGenealogyPerson(false));
-                if (currentPerson.mother != null)
+                }
+                if (currentPerson.mother != null) {
                     tableau_ascendants.add(currentPerson.mother);
-                else
+                } else {
                     tableau_ascendants.add(new ModelGenealogyPerson(false));
+                }
             }
             i++;
         }

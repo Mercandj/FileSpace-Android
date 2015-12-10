@@ -48,6 +48,7 @@ import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
+import com.mercandalli.android.apps.files.main.Config;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -150,12 +151,13 @@ public class GenealogyListFragment extends FabFragment {
 
     public void refreshList(String search) {
         List<StringPair> parameters = new ArrayList<>();
-        if (!StringUtils.isNullOrEmpty(search))
+        if (!StringUtils.isNullOrEmpty(search)) {
             parameters.add(new StringPair("search", search));
-        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged())
+        }
+        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
             new TaskGet(
                     mActivity,
-                    mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeGenealogy,
+                    mApplicationCallback.getConfig().getUrlServer() + Config.routeGenealogy,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -179,7 +181,7 @@ public class GenealogyListFragment extends FabFragment {
                     },
                     parameters
             ).execute();
-        else {
+        } else {
             this.circularProgressBar.setVisibility(View.GONE);
             this.message.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
@@ -202,8 +204,9 @@ public class GenealogyListFragment extends FabFragment {
             if (this.list.size() == 0) {
                 this.message.setText(getString(R.string.no_person));
                 this.message.setVisibility(View.VISIBLE);
-            } else
+            } else {
                 this.message.setVisibility(View.GONE);
+            }
 
             this.mAdapter = new AdapterModelGenealogyUser(mActivity, list, new IModelGenealogyUserListener() {
                 @Override
@@ -261,26 +264,19 @@ public class GenealogyListFragment extends FabFragment {
                 @Override
                 public void onItemClick(View view, int position) {
                     if (MODE_SELECTION_FATHER) {
-                        if (mDialog != null) {
-                            if (mDialog instanceof DialogAddGenealogyPerson) {
-                                ((DialogAddGenealogyPerson) mDialog).setFather(list.get(position));
-                                mDialog.show();
-                            }
+                        if (mDialog != null && mDialog instanceof DialogAddGenealogyPerson) {
+                            ((DialogAddGenealogyPerson) mDialog).setFather(list.get(position));
+                            mDialog.show();
                         }
-
                     } else if (MODE_SELECTION_MOTHER) {
-                        if (mDialog != null) {
-                            if (mDialog instanceof DialogAddGenealogyPerson) {
-                                ((DialogAddGenealogyPerson) mDialog).setMother(list.get(position));
-                                mDialog.show();
-                            }
+                        if (mDialog != null && mDialog instanceof DialogAddGenealogyPerson) {
+                            ((DialogAddGenealogyPerson) mDialog).setMother(list.get(position));
+                            mDialog.show();
                         }
                     } else if (MODE_SELECTION_PARTNER) {
-                        if (mDialog != null) {
-                            if (mDialog instanceof DialogAddGenealogyPerson) {
-                                ((DialogAddGenealogyPerson) mDialog).addPartner(list.get(position));
-                                mDialog.show();
-                            }
+                        if (mDialog != null && mDialog instanceof DialogAddGenealogyPerson) {
+                            ((DialogAddGenealogyPerson) mDialog).addPartner(list.get(position));
+                            mDialog.show();
                         }
                     } else {
                         DialogUtils.alert(mActivity,
@@ -305,8 +301,9 @@ public class GenealogyListFragment extends FabFragment {
 
                     onSelect.execute(list.get(position));
 
-                    if (tmp)
+                    if (tmp) {
                         Toast.makeText(mActivity, "Selected for tree", Toast.LENGTH_SHORT).show();
+                    }
                     return false;
                 }
             });
@@ -335,8 +332,9 @@ public class GenealogyListFragment extends FabFragment {
     }
 
     private void setListVisibility(boolean visible) {
-        if (this.recyclerView != null)
+        if (this.recyclerView != null) {
             this.recyclerView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        }
     }
 
     public void add() {

@@ -57,9 +57,7 @@ public class FileUtils {
         try {
             FileOutputStream output = context.openFileOutput(file, Context.MODE_PRIVATE);
             output.write((txt).getBytes());
-            if (output != null) output.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            output.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -71,19 +69,14 @@ public class FileUtils {
             FileInputStream input = context.openFileInput(file);
             int value;
             StringBuffer lu = new StringBuffer();
-            while ((value = input.read()) != -1)
+            while ((value = input.read()) != -1) {
                 lu.append((char) value);
-            if (input != null) {
-                input.close();
-                if (lu.toString() != null)
-                    res = lu.toString();
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            input.close();
+            res = lu.toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (res == null) return "";
         return res;
     }
 

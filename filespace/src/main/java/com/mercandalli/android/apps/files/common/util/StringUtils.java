@@ -19,6 +19,8 @@
  */
 package com.mercandalli.android.apps.files.common.util;
 
+import android.support.annotation.Nullable;
+
 import java.text.Normalizer;
 import java.util.StringTokenizer;
 
@@ -28,8 +30,9 @@ import java.util.StringTokenizer;
 public class StringUtils {
 
     public static String[] getWords(String sentence) {
-        if (sentence == null)
+        if (sentence == null) {
             return null;
+        }
         StringTokenizer stToken = new StringTokenizer(sentence, " ");
         int nbToken = stToken.countTokens();
         String[] messageTab = new String[nbToken];
@@ -42,14 +45,16 @@ public class StringUtils {
     }
 
     public static String nomalizeString(String message) {
-        if (message == null)
+        if (message == null) {
             return null;
+        }
         return replaceAccents(message.toLowerCase());
     }
 
     public static String replaceAccents(String message) {
-        if (message == null)
+        if (message == null) {
             return null;
+        }
         message = Normalizer.normalize(message, Normalizer.Form.NFD);
         message = message.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
         return message;
@@ -60,20 +65,25 @@ public class StringUtils {
     }
 
     public static String toEmptyIfNull(String str) {
-        if (str == null)
+        if (str == null) {
             return "";
+        }
         return str;
     }
 
     public static String intToShortString(int nb) {
-        if (nb < 1000) return nb + "";
+        if (nb < 1000) {
+            return nb + "";
+        }
         int exp = (int) (Math.log(nb) / Math.log(1000));
         String pre = "" + ("KMGTPE").charAt(exp - 1);
         return String.format("%.1f %s", nb / Math.pow(1000, exp), pre);
     }
 
     public static String longToShortString(long nb) {
-        if (nb < 1000) return nb + "";
+        if (nb < 1000) {
+            return nb + "";
+        }
         int exp = (int) (Math.log(nb) / Math.log(1000));
         String pre = "" + ("KMGTPE").charAt(exp - 1);
         return String.format("%.1f %s", nb / Math.pow(1000, exp), pre);
@@ -107,8 +117,9 @@ public class StringUtils {
     }
 
     public static String substring(final String str, final int nb_first) {
-        if (str == null)
+        if (str == null) {
             return "";
+        }
         return str.substring(0, nb_first);
     }
 
@@ -122,5 +133,9 @@ public class StringUtils {
             }
         }
         return false;
+    }
+
+    public static boolean isEquals(@Nullable final String s1, @Nullable final String s2) {
+        return s1 == null && s2 == null || !(s1 == null || s2 == null) && s1.equals(s2);
     }
 }

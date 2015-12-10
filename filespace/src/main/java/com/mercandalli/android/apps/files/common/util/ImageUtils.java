@@ -33,8 +33,8 @@ import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.common.listener.IBitmapListener;
+import com.mercandalli.android.apps.files.main.Constants;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,7 +53,9 @@ public class ImageUtils {
         images.put(fileId, bm);
 
         File file = new File(context.getFilesDir() + "/file_" + fileId);
-        if (file.exists()) return;
+        if (file.exists()) {
+            return;
+        }
 
         FileOutputStream fOut;
         try {
@@ -133,9 +135,10 @@ public class ImageUtils {
         return null;
     }
 
-    public synchronized static boolean is_image(Context context, int fileId) {
-        if (images.containsKey(fileId))
+    public synchronized static boolean isImage(Context context, int fileId) {
+        if (images.containsKey(fileId)) {
             return true;
+        }
         File file = new File(context.getFilesDir() + "/file_" + fileId);
         return file.exists();
     }

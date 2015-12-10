@@ -30,14 +30,12 @@ import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
+import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.util.FontUtils;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
-
+import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
-
-import com.mercandalli.android.apps.files.R;
 
 public class DialogAuthorLabel extends Dialog {
 
@@ -62,7 +60,7 @@ public class DialogAuthorLabel extends Dialog {
 
         getShimmer(myShimmerTextView).start(myShimmerTextView);
 
-        ((Button) this.findViewById(R.id.dismiss)).setOnClickListener(new View.OnClickListener() {
+        this.findViewById(R.id.dismiss).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismiss();
@@ -77,7 +75,7 @@ public class DialogAuthorLabel extends Dialog {
             tv.setText(""); //Note: the TextView will be visible again here.
             return;
         }
-        tv.setText("" + count);
+        tv.setText(String.format("%d", count));
         AlphaAnimation animation = new AlphaAnimation(1.0f, 0.0f);
         animation.setDuration(1000);
         animation.setAnimationListener(new Animation.AnimationListener() {
@@ -115,7 +113,7 @@ public class DialogAuthorLabel extends Dialog {
             tv.setText(text); //Note: the TextView will be visible again here.
             return;
         }
-        tv.setText("" + StringUtils.substring(text, rec));
+        tv.setText(String.format("%s", StringUtils.substring(text, rec)));
         AlphaAnimation animation = new AlphaAnimation(1.0f, 1.0f);
         animation.setDuration(75);
         animation.setAnimationListener(new Animation.AnimationListener() {
@@ -125,8 +123,9 @@ public class DialogAuthorLabel extends Dialog {
             }
 
             public void onAnimationEnd(Animation anim) {
-                if (rec < text.length() + 1)
+                if (rec < text.length() + 1) {
                     version(tv, text, rec + 1);
+                }
             }
 
             @Override

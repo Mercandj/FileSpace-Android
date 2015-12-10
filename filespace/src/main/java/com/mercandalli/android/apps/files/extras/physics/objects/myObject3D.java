@@ -12,6 +12,7 @@ import android.opengl.GLES30;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.extras.physics.lib.IFunctionEntity;
 import com.mercandalli.android.apps.files.extras.physics.lib.IndicesVertices;
 import com.mercandalli.android.apps.files.extras.physics.lib.myVector3D;
@@ -29,8 +30,6 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import com.mercandalli.android.apps.files.R;
 
 /**
  * "Real" object
@@ -70,10 +69,12 @@ public class myObject3D extends Entity {
     public myObject3D(Context context, IFunctionEntity contactFlourListener) {
         this.context = context;
         this.id = ++count;
-        if (vertexShaderCode == null)
+        if (vertexShaderCode == null) {
             vertexShaderCode = readShaderFromRawResource(R.raw.shader_vertex);
-        if (fragmentShaderCode == null)
+        }
+        if (fragmentShaderCode == null) {
             fragmentShaderCode = readShaderFromRawResource(R.raw.shader_fragment);
+        }
         Matrix.setIdentityM(transformationMatrix, 0);
         this.contactFloorListener = contactFlourListener;
     }
@@ -81,10 +82,12 @@ public class myObject3D extends Entity {
     public myObject3D(Context context) {
         this.context = context;
         this.id = ++count;
-        if (vertexShaderCode == null)
+        if (vertexShaderCode == null) {
             vertexShaderCode = readShaderFromRawResource(R.raw.shader_vertex);
-        if (fragmentShaderCode == null)
+        }
+        if (fragmentShaderCode == null) {
             fragmentShaderCode = readShaderFromRawResource(R.raw.shader_fragment);
+        }
         Matrix.setIdentityM(transformationMatrix, 0);
     }
 
@@ -119,8 +122,12 @@ public class myObject3D extends Entity {
 
         tangents = new float[3 * n];
         int[] incidences = new int[n];
-        for (i = 0; i < 3 * n; i++) tangents[i] = 0.0f;
-        for (i = 0; i < n; i++) incidences[i] = 0;
+        for (i = 0; i < 3 * n; i++) {
+            tangents[i] = 0.0f;
+        }
+        for (i = 0; i < n; i++) {
+            incidences[i] = 0;
+        }
 
         for (j = 0; j < m; j++) {
             myVector3D v = computeTangent(indices[3 * j], indices[3 * j + 1], indices[3 * j + 2]);
@@ -183,8 +190,7 @@ public class myObject3D extends Entity {
         texturecoordsBuffer.position(0);
         GLES30.glBufferData(GLES30.GL_ARRAY_BUFFER, texturecoordsBuffer.capacity() * 4, texturecoordsBuffer, GLES30.GL_STATIC_DRAW);
 
-        if (tangents != null) {//TODO
-
+        if (tangents != null) { //TODO
 
             GLES30.glBindBuffer(GLES30.GL_ARRAY_BUFFER, buffers[4]);
             bb = ByteBuffer.allocateDirect(tangents.length * 4);
@@ -326,8 +332,9 @@ public class myObject3D extends Entity {
             incidences[indices[3 * j + 2]]++;
         }
         for (i = 0; i < n; i++) {
-            if (incidences[i] != 0)
+            if (incidences[i] != 0) {
                 normals[3 * i] /= incidences[i];
+            }
             normals[3 * i + 1] /= incidences[i];
             normals[3 * i + 2] /= incidences[i];
 
@@ -353,17 +360,25 @@ public class myObject3D extends Entity {
             x = vertices[3 * i];
             y = vertices[3 * i + 1];
             z = vertices[3 * i + 2];
-            if (x == 0 && y == 0 && z == 0) continue;
+            if (x == 0 && y == 0 && z == 0) {
+                continue;
+            }
             double l = Math.sqrt(x * x + y * y + z * z);
             x = x / l;
             y = y / l;
             z = z / l;
 
-            if (-z >= 0.0) texturecoords[2 * i] = (float) (Math.atan2(-z, x) / (2 * Math.PI));
-            else texturecoords[2 * i] = (float) ((2 * Math.PI + Math.atan2(-z, x)) / (2 * Math.PI));
+            if (-z >= 0.0) {
+                texturecoords[2 * i] = (float) (Math.atan2(-z, x) / (2 * Math.PI));
+            } else {
+                texturecoords[2 * i] = (float) ((2 * Math.PI + Math.atan2(-z, x)) / (2 * Math.PI));
+            }
 
-            if (y >= 0.0) texturecoords[2 * i + 1] = (float) (Math.acos(y) / Math.PI);
-            else texturecoords[2 * i + 1] = (float) ((Math.PI - Math.acos(-y)) / Math.PI);
+            if (y >= 0.0) {
+                texturecoords[2 * i + 1] = (float) (Math.acos(y) / Math.PI);
+            } else {
+                texturecoords[2 * i + 1] = (float) ((Math.PI - Math.acos(-y)) / Math.PI);
+            }
         }
     }
 
@@ -387,20 +402,23 @@ public class myObject3D extends Entity {
                 vertices[3 * ((num + 1) * i + j) + 1] = (float) s * j / (float) num - s / 2;
                 vertices[3 * ((num + 1) * i + j) + 2] = (float) 0.0;
 
-                if (vertices[3 * ((num + 1) * i + j)] < edgeVerticeMin.dX)
+                if (vertices[3 * ((num + 1) * i + j)] < edgeVerticeMin.dX) {
                     edgeVerticeMin.dX = vertices[3 * ((num + 1) * i + j)];
-                else if (vertices[3 * ((num + 1) * i + j)] > edgeVerticeMin.dX)
+                } else if (vertices[3 * ((num + 1) * i + j)] > edgeVerticeMin.dX) {
                     edgeVerticeMax.dX = vertices[3 * ((num + 1) * i + j)];
+                }
 
-                if (vertices[3 * ((num + 1) * i + j) + 1] < edgeVerticeMin.dY)
+                if (vertices[3 * ((num + 1) * i + j) + 1] < edgeVerticeMin.dY) {
                     edgeVerticeMin.dY = vertices[3 * ((num + 1) * i + j) + 1];
-                else if (vertices[3 * ((num + 1) * i + j) + 1] > edgeVerticeMin.dY)
+                } else if (vertices[3 * ((num + 1) * i + j) + 1] > edgeVerticeMin.dY) {
                     edgeVerticeMax.dY = vertices[3 * ((num + 1) * i + j) + 1];
+                }
 
-                if (vertices[3 * ((num + 1) * i + j) + 2] < edgeVerticeMin.dZ)
+                if (vertices[3 * ((num + 1) * i + j) + 2] < edgeVerticeMin.dZ) {
                     edgeVerticeMin.dZ = vertices[3 * ((num + 1) * i + j) + 2];
-                else if (vertices[3 * ((num + 1) * i + j) + 2] > edgeVerticeMin.dZ)
+                } else if (vertices[3 * ((num + 1) * i + j) + 2] > edgeVerticeMin.dZ) {
                     edgeVerticeMax.dZ = vertices[3 * ((num + 1) * i + j) + 2];
+                }
 
                 texturecoords[2 * ((num + 1) * i + j)] = (float) i / (float) (num + 1);
                 texturecoords[2 * ((num + 1) * i + j) + 1] = (float) j / (float) (num + 1);
@@ -430,11 +448,12 @@ public class myObject3D extends Entity {
         texturecoords = new float[2 * n];
         int num = (int) Math.sqrt((float) n);
 
-        for (int i = 0; i < num; i++)
+        for (int i = 0; i < num; i++) {
             for (int j = 0; j < num; j++) {
                 texturecoords[2 * (i * num + j)] = (float) i / num;
                 texturecoords[2 * (i * num + j) + 1] = (float) (1.0 - (float) j / num);
             }
+        }
     }
 
     public int loadShader(int type, String shaderCode) {
@@ -451,8 +470,9 @@ public class myObject3D extends Entity {
                 shader = 0;
             }
         }
-        if (shader == 0)
+        if (shader == 0) {
             throw new RuntimeException("Error creating shader.");
+        }
         return shader;
     }
 
@@ -518,8 +538,9 @@ public class myObject3D extends Entity {
 
     @Override
     public void scale(float rate) {
-        for (int i = 0; i < vertices.length; i++)
+        for (int i = 0; i < vertices.length; i++) {
             vertices[i] *= rate;
+        }
 
         myVector3D tmp_dim_div_2 = (this.edgeVerticeMax.add(this.edgeVerticeMin)).div(2.0f);
 
@@ -536,33 +557,41 @@ public class myObject3D extends Entity {
     public Entity isInside(final Entity object) {
         // TODO Use the cube made by the extreme point : easier
 
-        if (object.physic.noContact || this.physic.noContact)
+        if (object.physic.noContact || this.physic.noContact) {
             return null;
+        }
 
-        if (object.edgeVerticeMin.dX + object.position.dX > this.edgeVerticeMax.dX + this.position.dX)
+        if (object.edgeVerticeMin.dX + object.position.dX > this.edgeVerticeMax.dX + this.position.dX) {
             return null;
-        if (this.edgeVerticeMin.dX + this.position.dX > object.edgeVerticeMax.dX + object.position.dX)
+        }
+        if (this.edgeVerticeMin.dX + this.position.dX > object.edgeVerticeMax.dX + object.position.dX) {
             return null;
+        }
 
-        if (object.edgeVerticeMin.dY + object.position.dY > this.edgeVerticeMax.dY + this.position.dY)
+        if (object.edgeVerticeMin.dY + object.position.dY > this.edgeVerticeMax.dY + this.position.dY) {
             return null;
-        if (this.edgeVerticeMin.dY + this.position.dY > object.edgeVerticeMax.dY + object.position.dY)
+        }
+        if (this.edgeVerticeMin.dY + this.position.dY > object.edgeVerticeMax.dY + object.position.dY) {
             return null;
+        }
 
-        if (object.edgeVerticeMin.dZ + object.position.dZ > this.edgeVerticeMax.dZ + this.position.dZ)
+        if (object.edgeVerticeMin.dZ + object.position.dZ > this.edgeVerticeMax.dZ + this.position.dZ) {
             return null;
-        if (this.edgeVerticeMin.dZ + this.position.dZ > object.edgeVerticeMax.dZ + object.position.dZ)
+        }
+        if (this.edgeVerticeMin.dZ + this.position.dZ > object.edgeVerticeMax.dZ + object.position.dZ) {
             return null;
+        }
 
         return object;
     }
 
     public boolean isInside(final EntityGroup contacts) {
         entitiesContact = new ArrayList<>();
-        for (Entity entity : contacts.entities) // Check contact
-            if (entity.id != this.id)
-                if (this.isInside(entity) != null)
-                    entitiesContact.add(entity);
+        for (Entity entity : contacts.entities) {// Check contact
+            if (entity.id != this.id && this.isInside(entity) != null) {
+                entitiesContact.add(entity);
+            }
+        }
 
         if (entitiesContact.size() != 0 && id == 4444) {
             int i = 0;
@@ -576,9 +605,10 @@ public class myObject3D extends Entity {
     @Override
     public void translateRepetedWayPosition() {
         if (repetedWayPosition != null) {
-            myVector3D tmp = null;
-            if ((tmp = repetedWayPosition.getCurrentPosition()) != null)
+            myVector3D tmp;
+            if ((tmp = repetedWayPosition.getCurrentPosition()) != null) {
                 translate(tmp.dX - this.position.dX, tmp.dY - this.position.dY, tmp.dZ - this.position.dZ);
+            }
         }
     }
 
@@ -620,20 +650,22 @@ public class myObject3D extends Entity {
                 boolean isInside = this.isInside(contacts);
 
                 if ((this.position.dY <= 0.0f + Math.abs(this.edgeVerticeMin.dY)) && this.velocity.dY < 0) { // Cheat Contact with floor : contact force
-                    if (contactFloorListener != null)
-                        if (contactFloorListener.condition(this))
-                            contactFloorListener.execute(this);
+                    if (contactFloorListener != null && contactFloorListener.condition(this)) {
+                        contactFloorListener.execute(this);
+                    }
                     this.velocity.dY = -this.velocity.dY * 0.65f;
                 } else if (insideLastLoop && isInside) {
                     // Spring force : thanks teacher idea
                     if (entitiesContact != null) {
                         for (Entity entityContact : entitiesContact) {
                             if (entityContact.edgeVerticeMin.dY + entityContact.position.dY < this.edgeVerticeMin.dY + this.position.dY && this.edgeVerticeMin.dY + this.position.dY < entityContact.edgeVerticeMax.dY + entityContact.position.dY) {
-                                if ((entityContact.edgeVerticeMax.dY + entityContact.position.dY) - (this.edgeVerticeMin.dY + this.position.dY) + this.position.dY > 0)
+                                if ((entityContact.edgeVerticeMax.dY + entityContact.position.dY) - (this.edgeVerticeMin.dY + this.position.dY) + this.position.dY > 0) {
                                     sum_force.dY += 0.000003f * ((entityContact.edgeVerticeMax.dY + entityContact.position.dY) - (this.edgeVerticeMin.dY + this.position.dY)) / Math.abs(entityContact.edgeVerticeMax.dY - entityContact.edgeVerticeMin.dY);
+                                }
                             } else {
-                                if ((entityContact.edgeVerticeMin.dY + entityContact.position.dY) - (this.edgeVerticeMax.dY + this.position.dY) + this.position.dY > 0)
+                                if ((entityContact.edgeVerticeMin.dY + entityContact.position.dY) - (this.edgeVerticeMax.dY + this.position.dY) + this.position.dY > 0) {
                                     sum_force.dY += 0.000003f * ((entityContact.edgeVerticeMin.dY + entityContact.position.dY) - (this.edgeVerticeMax.dY + this.position.dY)) / Math.abs(entityContact.edgeVerticeMax.dY - entityContact.edgeVerticeMin.dY);
+                                }
                             }
                         }
                     }
@@ -679,10 +711,11 @@ public class myObject3D extends Entity {
                 translate(PhysicsConst.REAL_LOOP_TIME * (this.velocity.dX + PhysicsConst.REAL_LOOP_TIME * this.acceleration.dX / 2),
                         0,
                         PhysicsConst.REAL_LOOP_TIME * (this.velocity.dZ + PhysicsConst.REAL_LOOP_TIME * this.acceleration.dZ / 2));
-            } else
+            } else {
                 translate(PhysicsConst.REAL_LOOP_TIME * (this.velocity.dX + PhysicsConst.REAL_LOOP_TIME * this.acceleration.dX / 2),
                         PhysicsConst.REAL_LOOP_TIME * (this.velocity.dY + PhysicsConst.REAL_LOOP_TIME * this.acceleration.dY / 2),
                         PhysicsConst.REAL_LOOP_TIME * (this.velocity.dZ + PhysicsConst.REAL_LOOP_TIME * this.acceleration.dZ / 2));
+            }
 
 
             this.velocity.dX += PhysicsConst.REAL_LOOP_TIME * this.acceleration.dX;

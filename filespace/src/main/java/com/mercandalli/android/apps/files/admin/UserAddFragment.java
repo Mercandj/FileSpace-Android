@@ -126,17 +126,18 @@ public class UserAddFragment extends BackFragment {
                         public void onPostExecute(JSONObject json, String body) {
                             try {
                                 if (json != null) {
-                                    if (json.has("succeed")) {
-                                        if (json.getBoolean("succeed"))
-                                            Toast.makeText(getActivity(), "User added", Toast.LENGTH_SHORT).show();
+                                    if (json.has("succeed") && json.getBoolean("succeed")) {
+                                        Toast.makeText(getActivity(), "User added", Toast.LENGTH_SHORT).show();
                                     }
                                     if (json.has("user")) {
                                         JSONObject user = json.getJSONObject("user");
-                                        if (user.has("id"))
+                                        if (user.has("id")) {
                                             mApplicationCallback.getConfig().setUserId(mActivity, user.getInt("id"));
+                                        }
                                     }
-                                } else
+                                } else {
                                     Toast.makeText(mActivity, mActivity.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

@@ -28,11 +28,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.List;
-
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.common.util.FontUtils;
+import com.mercandalli.android.apps.files.main.Constants;
+
+import java.util.List;
 
 public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterModelUserConnection.ViewHolder> {
     private List<UserConnectionModel> itemsData;
@@ -46,8 +46,9 @@ public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterMode
 
     @Override
     public AdapterModelUserConnection.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == Constants.TAB_VIEW_TYPE_SECTION)
+        if (viewType == Constants.TAB_VIEW_TYPE_SECTION) {
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_information_section, parent, false), viewType);
+        }
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_user_connection, parent, false), viewType);
     }
 
@@ -60,7 +61,7 @@ public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterMode
                 viewHolder.value.setText(model.getAdapterSubtitle());
                 break;
             case Constants.TAB_VIEW_TYPE_SECTION:
-                viewHolder.title.setText("" + model.title);
+                viewHolder.title.setText(String.format("%s", model.title));
                 FontUtils.applyFont(mActivity, viewHolder.title, "fonts/MYRIADAB.TTF");
                 break;
         }
@@ -89,8 +90,9 @@ public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterMode
 
         @Override
         public void onClick(View v) {
-            if (mItemClickListener != null)
+            if (mItemClickListener != null) {
                 mItemClickListener.onItemClick(v, getPosition());
+            }
         }
     }
 
@@ -105,14 +107,15 @@ public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterMode
     }
 
     public void removeItem(int position) {
-        if (itemsData.size() <= 0)
+        if (itemsData.size() <= 0) {
             return;
+        }
         itemsData.remove(position);
         notifyItemRemoved(position);
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
+        void onItemClick(View view, int position);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -121,8 +124,9 @@ public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterMode
 
     @Override
     public int getItemViewType(int position) {
-        if (position < itemsData.size())
+        if (position < itemsData.size()) {
             return itemsData.get(position).viewType;
+        }
         return 0;
     }
 }

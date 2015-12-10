@@ -1,16 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include
         android:id="@+id/my_toolbar"
-        layout="@layout/toolbar"/>
+        layout="@layout/toolbar" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -27,7 +26,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginBottom="10dp"
             android:text="Title"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/size"
@@ -38,7 +37,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginBottom="5dp"
             android:text="Size"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <SeekBar
             android:id="@+id/seekBar"
@@ -47,7 +46,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp" />
 
         <SurfaceView
             android:id="@+id/videoView"
@@ -56,7 +55,7 @@
             android:layout_above="@+id/title"
             android:layout_alignParentEnd="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"/>
+            android:layout_alignParentTop="true" />
 
         <!--
         <ImageButton
@@ -73,13 +72,12 @@
             android:stateListAnimator="@anim/circle_button_elevation"
             android:tint="@android:color/white" />
             -->
-        <RelativeLayout
+        <FrameLayout
             android:id="@+id/play_position"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_above="@+id/seekBar"
-            android:layout_centerHorizontal="true">
-        </RelativeLayout>
+            android:layout_centerHorizontal="true"/>
 
         <com.mercandalli.android.apps.files.common.view.PlayPauseView
             android:id="@+id/play"
@@ -92,7 +90,7 @@
             android:elevation="@dimen/circle_button_elevation_high"
             android:foreground="?android:selectableItemBackground"
             android:stateListAnimator="@anim/circle_button_elevation"
-            android:transitionName="transitionIcon"/>
+            android:transitionName="transitionIcon" />
 
         <ImageButton
             android:id="@+id/next"
@@ -108,7 +106,7 @@
             android:padding="15dp"
             android:src="@android:drawable/ic_media_next"
             android:stateListAnimator="@anim/circle_button_elevation"
-            android:tint="@android:color/white"/>
+            android:tint="@android:color/white" />
 
         <ImageButton
             android:id="@+id/previous"
@@ -124,7 +122,7 @@
             android:padding="15dp"
             android:src="@android:drawable/ic_media_previous"
             android:stateListAnimator="@anim/circle_button_elevation"
-            android:tint="@android:color/white"/>
+            android:tint="@android:color/white" />
 
 
     </RelativeLayout>

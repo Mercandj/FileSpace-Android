@@ -27,14 +27,15 @@ public class EntityGroup extends Entity {
 
     public EntityGroup(final Context context) {
         this.context = context;
-        this.entities = new ArrayList<Entity>();
+        this.entities = new ArrayList<>();
     }
 
     public EntityGroup(final Context context, List<Entity> entities) {
         this.context = context;
         this.entities = entities;
-        if (this.entities == null)
-            this.entities = new ArrayList<Entity>();
+        if (this.entities == null) {
+            this.entities = new ArrayList<>();
+        }
     }
 
     public void init() {
@@ -46,15 +47,18 @@ public class EntityGroup extends Entity {
     }
 
     public Entity getEntity(int id) {
-        if (id < entities.size())
+        if (id < entities.size()) {
             return entities.get(id);
+        }
         return null;
     }
 
     public Entity getEntityById(int id) {
-        for (Entity ent : entities)
-            if (ent.id == id)
+        for (Entity ent : entities) {
+            if (ent.id == id) {
                 return ent;
+            }
+        }
         return null;
     }
 
@@ -62,22 +66,26 @@ public class EntityGroup extends Entity {
     public Entity isInside(Entity object) {
         Entity res = null;
         l:
-        for (Entity entity : this.entities)
-            if ((res = entity.isInside(object)) != null)
+        for (Entity entity : this.entities) {
+            if ((res = entity.isInside(object)) != null) {
                 break l;
+            }
+        }
         return res;
     }
 
     @Override
     public void teleport(float x, float y, float z) {
-        for (Entity entity : this.entities)
+        for (Entity entity : this.entities) {
             entity.teleport(x, y, z);
+        }
     }
 
     @Override
     public void translate(float x, float y, float z) {
-        for (Entity entity : this.entities)
+        for (Entity entity : this.entities) {
             entity.translate(x, y, z);
+        }
     }
 
     @Override
@@ -87,38 +95,44 @@ public class EntityGroup extends Entity {
 
     @Override
     public void draw(float[] _mpMatrix, float[] _mvMatrix) {
-        for (Entity entity : this.entities)
+        for (Entity entity : this.entities) {
             entity.draw(_mpMatrix, _mvMatrix);
+        }
     }
 
     @Override
     public void scale(float rate) {
-        for (Entity entity : this.entities)
+        for (Entity entity : this.entities) {
             entity.scale(rate);
+        }
     }
 
     @Override
     public void translateRepetedWayPosition() {
-        for (Entity entity : this.entities)
+        for (Entity entity : this.entities) {
             entity.translateRepetedWayPosition();
+        }
     }
 
     @Override
     public void computeForces(EntityGroup contacts) {
-        for (Entity entity : this.entities)
+        for (Entity entity : this.entities) {
             entity.computeForces(contacts);
+        }
     }
 
     @Override
     public void applySumForces(EntityGroup contacts) {
-        for (Entity entity : this.entities)
+        for (Entity entity : this.entities) {
             entity.applySumForces(contacts);
+        }
     }
 
     @Override
     public void addForce(Force force) {
-        for (Entity entity : this.entities)
+        for (Entity entity : this.entities) {
             entity.forces.add(force);
+        }
     }
 
     public void separeObject() {

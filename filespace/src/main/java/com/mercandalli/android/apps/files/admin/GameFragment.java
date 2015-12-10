@@ -4,13 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.admin.game.GameView;
-import com.mercandalli.android.apps.files.admin.game.Way;
+import com.mercandalli.android.apps.files.admin.game.GameWay;
+import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 
 /**
  * Created by Jonathan on 02/09/2015.
@@ -30,24 +29,25 @@ public class GameFragment extends BackFragment {
 
         gameView = (GameView) rootView.findViewById(R.id.game_view);
 
-        ((Button) rootView.findViewById(R.id.gps)).setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.gps).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Way way = gameView.thread.grille.findWay();
-                for (int i = way.array.size() - 1; i >= 0; i--)
-                    gameView.thread.grille.setValeurCase(way.array.get(i).x, way.array.get(i).y, 8);
+                GameWay gameWay = gameView.thread.grille.findWay();
+                for (int i = gameWay.array.size() - 1; i >= 0; i--) {
+                    gameView.thread.grille.setValeurCase(gameWay.array.get(i).x, gameWay.array.get(i).y, 8);
+                }
             }
         });
 
-        ((Button) rootView.findViewById(R.id.reset_map)).setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.reset_map).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 gameView.thread.grille.resetMap();
             }
         });
 
-        ((Button) rootView.findViewById(R.id.reset_way)).setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.reset_way).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 gameView.thread.grille.resetWay();

@@ -159,16 +159,18 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
         String adapterTitleStart = "";
 
         if (fileModel.getType() == null) {
-            if (fileModel.getName() != null)
+            if (fileModel.getName() != null) {
                 return adapterTitleStart + fileModel.getFullName();
-            else
+            } else {
                 return adapterTitleStart + fileModel.getUrl();
+            }
         } else if (fileModel.getType().equals(FileTypeModelENUM.FILESPACE.type) && fileModel.getContent() != null) {
             return adapterTitleStart + fileModel.getContent().getAdapterTitle();
-        } else if (fileModel.getName() != null)
+        } else if (fileModel.getName() != null) {
             return adapterTitleStart + fileModel.getFullName();
-        else
+        } else {
             return adapterTitleStart + fileModel.getUrl();
+        }
     }
 
     public String getAdapterSubtitle(FileModel fileModel) {
@@ -176,16 +178,20 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
         if (mOnFileSubtitleAdapter != null && (result = mOnFileSubtitleAdapter.onFileSubtitleModify(fileModel)) != null) {
             return result;
         }
-        if (fileModel.isDirectory() && fileModel.getCount() != 0)
+        if (fileModel.isDirectory() && fileModel.getCount() != 0) {
             return "Directory: " + StringUtils.longToShortString(fileModel.getCount()) + " file" + (fileModel.getCount() > 1 ? "s" : "");
-        if (fileModel.isDirectory())
+        }
+        if (fileModel.isDirectory()) {
             return "Directory";
+        }
 
-        if (FileTypeModelENUM.FILESPACE.type.equals(fileModel.getType()) && fileModel.getContent() != null)
+        if (FileTypeModelENUM.FILESPACE.type.equals(fileModel.getType()) && fileModel.getContent() != null) {
             return fileModel.getType().getTitle() + " " + StringUtils.capitalize(fileModel.getContent().getType().toString());
+        }
 
-        if (fileModel.getType() != null)
+        if (fileModel.getType() != null) {
             return fileModel.getType().getTitle();
+        }
         return "";
     }
 

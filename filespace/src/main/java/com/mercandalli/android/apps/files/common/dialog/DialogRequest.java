@@ -26,18 +26,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
+import com.mercandalli.android.apps.files.common.net.TaskGet;
+import com.mercandalli.android.apps.files.common.net.TaskPost;
+import com.mercandalli.android.apps.files.file.FileChooserDialog;
+import com.mercandalli.android.apps.files.file.FileModel;
+import com.mercandalli.android.apps.files.file.FileModelListener;
+import com.mercandalli.android.apps.files.main.ApplicationCallback;
+
 import org.json.JSONObject;
 
 import java.io.File;
-
-import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.file.FileChooserDialog;
-import com.mercandalli.android.apps.files.file.FileModelListener;
-import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.file.FileModel;
-import com.mercandalli.android.apps.files.common.net.TaskGet;
-import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 
 public class DialogRequest extends Dialog {
 
@@ -70,14 +70,16 @@ public class DialogRequest extends Dialog {
                 switch (currentMethod) {
 
                     case POST:
-                        if (!((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString().equals(""))
+                        if (!((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString().equals("")) {
                             (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + ((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString(), new IPostExecuteListener() {
                                 @Override
                                 public void onPostExecute(JSONObject json, String body) {
-                                    if (listener != null)
+                                    if (listener != null) {
                                         listener.onPostExecute(json, body);
+                                    }
                                 }
                             })).execute();
+                        }
                         break;
 
                     case PUT:
@@ -91,16 +93,18 @@ public class DialogRequest extends Dialog {
                         break;
 
                     default: //GET
-                        if (!((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString().equals(""))
+                        if (!((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString().equals("")) {
                             (new TaskGet(mActivity,
                                     mApplicationCallback.getConfig().getUrlServer() + ((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString(),
                                     new IPostExecuteListener() {
                                         @Override
                                         public void onPostExecute(JSONObject json, String body) {
-                                            if (listener != null)
+                                            if (listener != null) {
                                                 listener.onPostExecute(json, body);
+                                            }
                                         }
                                     }, null)).execute();
+                        }
                 }
                 DialogRequest.this.dismiss();
             }
@@ -124,8 +128,9 @@ public class DialogRequest extends Dialog {
             @Override
             public void onClick(View v) {
                 currentMethod++;
-                if (currentMethod >= nbMethod)
+                if (currentMethod >= nbMethod) {
                     currentMethod = 0;
+                }
                 refreshButtonMethod();
             }
         });

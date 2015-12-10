@@ -3,23 +3,23 @@ package com.mercandalli.android.apps.files.admin.game;
 /**
  * Created by Jonathan on 02/09/2015.
  */
-public class Case {
+public class GameCase {
 
     public int value;
     public final int x, y;
 
-    public Case() {
+    public GameCase() {
         x = -1;
         y = -1;
     }
 
-    public Case(int x, int y) {
+    public GameCase(int x, int y) {
         this.x = x;
         this.y = y;
         this.value = 0;
     }
 
-    public Case(int x, int y, int value) {
+    public GameCase(int x, int y, int value) {
         this.x = x;
         this.y = y;
         this.value = value;
@@ -27,11 +27,13 @@ public class Case {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null)
+        if (o == null) {
             return false;
-        if (!(o instanceof Case))
+        }
+        if (!(o instanceof GameCase)) {
             return false;
-        Case obj = (Case) o;
+        }
+        GameCase obj = (GameCase) o;
         return obj.x == this.x && obj.y == this.y && obj.value == this.value;
     }
 }

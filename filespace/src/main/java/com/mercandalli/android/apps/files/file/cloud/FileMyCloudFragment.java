@@ -216,10 +216,9 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
                                                     try {
-                                                        if (json != null)
-                                                            if (json.has("succeed"))
-                                                                if (json.getBoolean("succeed"))
-                                                                    mApplicationCallback.getConfig().setUserIdFileProfilePicture(mActivity, fileModel.getId());
+                                                        if (json != null && json.has("succeed") && json.getBoolean("succeed")) {
+                                                            mApplicationCallback.getConfig().setUserIdFileProfilePicture(mActivity, fileModel.getId());
+                                                        }
                                                     } catch (JSONException e) {
                                                         e.printStackTrace();
                                                     }
@@ -232,10 +231,9 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
                                                     try {
-                                                        if (json != null)
-                                                            if (json.has("succeed"))
-                                                                if (json.getBoolean("succeed"))
-                                                                    mApplicationCallback.refreshData();
+                                                        if (json != null && json.has("succeed") && json.getBoolean("succeed")) {
+                                                            mApplicationCallback.refreshData();
+                                                        }
                                                     } catch (JSONException e) {
                                                         e.printStackTrace();
                                                     }
@@ -349,13 +347,15 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
             this.mProgressBar.setVisibility(View.GONE);
 
             if (mFilesList.size() == 0) {
-                if (this.mIdFileDirectoryStack.peek() == -1)
+                if (this.mIdFileDirectoryStack.peek() == -1) {
                     this.mMessageTextView.setText(getString(R.string.no_file_server));
-                else
+                } else {
                     this.mMessageTextView.setText(getString(R.string.no_file_directory));
+                }
                 this.mMessageTextView.setVisibility(View.VISIBLE);
-            } else
+            } else {
                 this.mMessageTextView.setVisibility(View.GONE);
+            }
 
             mFileModelAdapter.replaceList(mFilesList);
 
@@ -376,8 +376,9 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
             mFilesToCutList.clear();
             refreshFab();
             return true;
-        } else
+        } else {
             return false;
+        }
     }
 
     public boolean hasItemSelected() {

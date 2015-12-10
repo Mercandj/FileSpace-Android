@@ -56,15 +56,15 @@ public class LoginFragment extends BackFragment {
         this.username = (EditText) rootView.findViewById(R.id.fragment_log_in_username);
         this.password = (EditText) rootView.findViewById(R.id.fragment_log_in_password);
 
-        if (this.mApplicationCallback.getConfig().getUserUsername() != null)
-            if (!this.mApplicationCallback.getConfig().getUserUsername().equals("")) {
-                this.username.setText(this.mApplicationCallback.getConfig().getUserUsername());
-            }
+        if (this.mApplicationCallback.getConfig().getUserUsername() != null &&
+                !this.mApplicationCallback.getConfig().getUserUsername().equals("")) {
+            this.username.setText(this.mApplicationCallback.getConfig().getUserUsername());
+        }
 
-        if (this.mApplicationCallback.getConfig().getUserPassword() != null)
-            if (!this.mApplicationCallback.getConfig().getUserPassword().equals("")) {
-                this.password.setHint(Html.fromHtml("&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"));
-            }
+        if (this.mApplicationCallback.getConfig().getUserPassword() != null &&
+                !this.mApplicationCallback.getConfig().getUserPassword().equals("")) {
+            this.password.setHint(Html.fromHtml("&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"));
+        }
 
         ((CheckBox) rootView.findViewById(R.id.autoconnection)).setChecked(mApplicationCallback.getConfig().isAutoConncetion());
         ((CheckBox) rootView.findViewById(R.id.autoconnection)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -107,30 +107,35 @@ public class LoginFragment extends BackFragment {
     public void login() {
         UserModel user = new UserModel();
 
-        if (!StringUtils.isNullOrEmpty(username.getText().toString()))
+        if (!StringUtils.isNullOrEmpty(username.getText().toString())) {
             user.username = username.getText().toString();
+        }
 
-        if (!StringUtils.isNullOrEmpty(password.getText().toString()))
+        if (!StringUtils.isNullOrEmpty(password.getText().toString())) {
             user.password = HashUtils.sha1(password.getText().toString());
+        }
 
         login(user);
     }
 
     public void login(UserModel user) {
         Log.d("LoginFragment", "login requestLaunched=" + requestLaunched);
-        if (requestLaunched)
+        if (requestLaunched) {
             return;
+        }
         requestLaunched = true;
 
-        if (!StringUtils.isNullOrEmpty(user.username))
+        if (!StringUtils.isNullOrEmpty(user.username)) {
             mApplicationCallback.getConfig().setUserUsername(mActivity, user.username);
-        else
+        } else {
             user.username = mApplicationCallback.getConfig().getUserUsername();
+        }
 
-        if (!StringUtils.isNullOrEmpty(user.password))
+        if (!StringUtils.isNullOrEmpty(user.password)) {
             mApplicationCallback.getConfig().setUserPassword(mActivity, user.password);
-        else
+        } else {
             user.password = mApplicationCallback.getConfig().getUserPassword();
+        }
 
         if (StringUtils.isNullOrEmpty(mApplicationCallback.getConfig().getUrlServer())) {
             requestLaunched = false;
@@ -148,40 +153,44 @@ public class LoginFragment extends BackFragment {
             parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
         }
         Log.d("LoginFragment", "login " + mApplicationCallback.getConfig().getUserPassword() + mApplicationCallback.getConfig().getUserUsername() + " isInternetConnection=" + NetUtils.isInternetConnection(mActivity));
-        if (NetUtils.isInternetConnection(mActivity))
+        if (NetUtils.isInternetConnection(mActivity)) {
             (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUser, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     requestLaunched = false;
                     try {
                         if (json != null) {
-                            if (json.has("succeed"))
-                                if (json.getBoolean("succeed")) {
-                                    connectionSucceed();
-                                }
+                            if (json.has("succeed") && json.getBoolean("succeed")) {
+                                connectionSucceed();
+                            }
                             if (json.has("user")) {
                                 JSONObject user = json.getJSONObject("user");
-                                if (user.has("id"))
+                                if (user.has("id")) {
                                     mApplicationCallback.getConfig().setUserId(mActivity, user.getInt("id"));
+                                }
                                 if (user.has("admin")) {
                                     Object admin_obj = user.get("admin");
-                                    if (admin_obj instanceof Integer)
+                                    if (admin_obj instanceof Integer) {
                                         mApplicationCallback.getConfig().setUserAdmin(mActivity, user.getInt("admin") == 1);
-                                    else if (admin_obj instanceof Boolean)
+                                    } else if (admin_obj instanceof Boolean) {
                                         mApplicationCallback.getConfig().setUserAdmin(mActivity, user.getBoolean("admin"));
+                                    }
                                 }
-                                if (user.has("id_file_profile_picture"))
+                                if (user.has("id_file_profile_picture")) {
                                     mApplicationCallback.getConfig().setUserIdFileProfilePicture(mActivity, user.getInt("id_file_profile_picture"));
+                                }
                             }
-                        } else
+                        } else {
                             Toast.makeText(mActivity, getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             }, parameters)).execute();
-        else
+        } else {
             requestLaunched = false;
+        }
     }
 
     @Override

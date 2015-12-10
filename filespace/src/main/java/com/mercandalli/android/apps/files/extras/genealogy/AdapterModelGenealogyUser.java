@@ -54,8 +54,9 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
 
     @Override
     public AdapterModelGenealogyUser.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (!isTree)
+        if (!isTree) {
             return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file, parent, false), viewType);
+        }
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_genealogy_small, parent, false), viewType);
     }
 
@@ -69,20 +70,23 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
             viewHolder.more.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (moreListener != null)
+                    if (moreListener != null) {
                         moreListener.execute(user);
+                    }
                 }
             });
 
-            if (!user.is_man)
+            if (!user.is_man) {
                 viewHolder.icon.setImageResource(R.drawable.file_video);
-            else
+            } else {
                 viewHolder.icon.setImageResource(R.drawable.file_default);
+            }
 
-            if (user.selected)
+            if (user.selected) {
                 viewHolder.item.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.tab_selected));
-            else
+            } else {
                 viewHolder.item.setBackground(null);
+            }
         }
     }
 

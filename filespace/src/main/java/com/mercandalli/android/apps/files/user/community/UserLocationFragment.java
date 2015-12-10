@@ -44,8 +44,8 @@ import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.GpsUtils;
 import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
-import com.mercandalli.android.apps.files.user.UserModel;
 import com.mercandalli.android.apps.files.user.UserLocationModel;
+import com.mercandalli.android.apps.files.user.UserModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -166,7 +166,7 @@ public class UserLocationFragment extends BackFragment {
 
     public void refreshMap() {
         List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged())
+        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
             new TaskGet(
                     mActivity,
                     mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUser,
@@ -183,8 +183,9 @@ public class UserLocationFragment extends BackFragment {
                                             locations.add(userModel.userLocation);
                                         }
                                     }
-                                } else
+                                } else {
                                     Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -193,22 +194,26 @@ public class UserLocationFragment extends BackFragment {
                     },
                     parameters
             ).execute();
+        }
     }
 
     public void addLocations(List<UserLocationModel> locations) {
         int nbLocation = 0;
         for (UserLocationModel userLocation : locations) {
-            if (addLocation(userLocation))
+            if (addLocation(userLocation)) {
                 nbLocation++;
+            }
         }
         text.setText(nbLocation + " user location" + ((nbLocation > 1) ? "s" : ""));
     }
 
     public boolean addLocation(UserLocationModel userLocation) {
-        if (map == null || userLocation == null)
+        if (map == null || userLocation == null) {
             return false;
-        if (userLocation.latitude == 0 && userLocation.longitude == 0)
+        }
+        if (userLocation.latitude == 0 && userLocation.longitude == 0) {
             return false;
+        }
         // create marker
         MarkerOptions marker = new MarkerOptions().position(new LatLng(userLocation.latitude, userLocation.longitude)).title(userLocation.title);
         // Changing marker icon
@@ -220,30 +225,34 @@ public class UserLocationFragment extends BackFragment {
 
     @Override
     public void onPause() {
-        if (mapView != null)
+        if (mapView != null) {
             mapView.onPause();
+        }
         super.onPause();
     }
 
     @Override
     public void onResume() {
-        if (mapView != null)
+        if (mapView != null) {
             mapView.onResume();
+        }
         super.onResume();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mapView != null)
+        if (mapView != null) {
             mapView.onDestroy();
+        }
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        if (mapView != null)
+        if (mapView != null) {
             mapView.onLowMemory();
+        }
     }
 
     @Override

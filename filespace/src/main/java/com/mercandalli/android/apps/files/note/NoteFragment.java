@@ -3,6 +3,7 @@ package com.mercandalli.android.apps.files.note;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,14 +43,15 @@ public class NoteFragment extends BackFragment {
         FontUtils.applyFont(mActivity, this.input, "fonts/Roboto-Light.ttf");
 
         String txt = mApplicationCallback.getConfig().getUserNoteWorkspace1();
-        if (!StringUtils.isNullOrEmpty(txt))
+        if (!StringUtils.isNullOrEmpty(txt)) {
             try {
                 String txt_tmp = new String(txt.getBytes("ISO-8859-1"), "UTF-8");
                 this.input.setText(txt_tmp);
                 mFileSpaceModel.getArticle().article_content_1 = txt_tmp;
             } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
+                Log.e(getClass().getName(), "Failed UnsupportedEncodingException", e);
             }
+        }
 
         this.input.addTextChangedListener(new TextWatcher() {
             @Override

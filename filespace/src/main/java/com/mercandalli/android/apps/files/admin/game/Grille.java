@@ -10,9 +10,9 @@ import java.util.List;
  */
 public class Grille {
 
-    private Case[][] matrice;
+    private GameCase[][] matrice;
 
-    public Case getCase(int i, int j) {
+    public GameCase getCase(int i, int j) {
         return matrice[i][j];
     }
 
@@ -30,10 +30,12 @@ public class Grille {
 
     public Grille(final int size) {
         this.size = size;
-        this.matrice = new Case[size][size];
-        for (int i = 0; i < size; i++)
-            for (int j = 0; j < size; j++)
-                matrice[i][j] = new Case(i, j, 0);
+        this.matrice = new GameCase[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                matrice[i][j] = new GameCase(i, j, 0);
+            }
+        }
 
         wallValues = new ArrayList<>();
         wallValues.add(-1);
@@ -42,29 +44,37 @@ public class Grille {
     }
 
     public void resetMap() {
-        for (int i = 0; i < size; i++)
-            for (int j = 0; j < size; j++)
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 this.matrice[i][j].value = 0;
+            }
+        }
         addWalls();
     }
 
     public void resetWay() {
-        for (int i = 0; i < size; i++)
-            for (int j = 0; j < size; j++)
-                if (this.matrice[i][j].value == 8)
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (this.matrice[i][j].value == 8) {
                     this.matrice[i][j].value = 0;
+                }
+            }
+        }
     }
 
     public void addWalls() {
-        for (int i = 0; i < size; i++)
-            for (int j = 0; j < size; j++)
-                if (MathUtils.random(0, 4) == 1)
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (MathUtils.random(0, 4) == 1) {
                     this.matrice[i][j].value = wallValues.get(0);
+                }
+            }
+        }
     }
 
-    public Way findWay() {
+    public GameWay findWay() {
         // find start
-        Case start = null;
+        GameCase start = null;
         while (true) {
             int rdm = MathUtils.random(0, size - 1);
             if (getValeurCase(rdm, 0) == 0) {
@@ -75,7 +85,7 @@ public class Grille {
         start.value = 8;
 
         // find end
-        Case end = null;
+        GameCase end = null;
         while (true) {
             int rdm = MathUtils.random(0, size - 1);
             if (getValeurCase(rdm, size - 1) == 0) {
@@ -88,59 +98,62 @@ public class Grille {
         return dijkstra(start, end);
     }
 
-    public Way dijkstra(Case start, Case end) {
-        Way result = new Way();
+    public GameWay dijkstra(GameCase start, GameCase end) {
+        GameWay result = new GameWay();
 
 
         // Create distances
         int[][] distance = new int[size][size];
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++)
-                for (Integer wallValue : wallValues)
-                    if (getValeurCase(i, j) == wallValue)
+                for (Integer wallValue : wallValues) {
+                    if (getValeurCase(i, j) == wallValue) {
                         distance[i][j] = -1;
+                    }
+                }
+        }
         distance[start.x][start.y] = 1;
 
-        List<Case> currentCases = new ArrayList<>();
-        currentCases.add(start);
+        List<GameCase> currentGameCases = new ArrayList<>();
+        currentGameCases.add(start);
 
-        while (currentCases.size() != 0) {
+        while (currentGameCases.size() != 0) {
 
-            List<Case> tmp = new ArrayList<>();
-            for (Case currentCase : currentCases) {
-                List<Case> neighbors = neighbors(currentCase);
-                for (Case neighbor : neighbors) {
-                    if (distance[neighbor.x][neighbor.y] != -1 && (distance[currentCase.x][currentCase.y] + 1 < distance[neighbor.x][neighbor.y] || distance[neighbor.x][neighbor.y] == 0)) {
-                        distance[neighbor.x][neighbor.y] = distance[currentCase.x][currentCase.y] + 1;
+            List<GameCase> tmp = new ArrayList<>();
+            for (GameCase currentGameCase : currentGameCases) {
+                List<GameCase> neighbors = neighbors(currentGameCase);
+                for (GameCase neighbor : neighbors) {
+                    if (distance[neighbor.x][neighbor.y] != -1 && (distance[currentGameCase.x][currentGameCase.y] + 1 < distance[neighbor.x][neighbor.y] || distance[neighbor.x][neighbor.y] == 0)) {
+                        distance[neighbor.x][neighbor.y] = distance[currentGameCase.x][currentGameCase.y] + 1;
                         tmp.add(neighbor);
                     }
                 }
             }
 
-            currentCases.clear();
-            for (Case tmpCase : tmp)
-                currentCases.add(tmpCase);
-
+            currentGameCases.clear();
+            for (GameCase tmpGameCase : tmp) {
+                currentGameCases.add(tmpGameCase);
+            }
         }
 
         // No way
-        if (distance[end.x][end.y] == 0)
+        if (distance[end.x][end.y] == 0) {
             return result;
-
+        }
 
         // Read distance from the end
-        Case currentCase = end;
+        GameCase currentGameCase = end;
 
 
         int security = 0;
 
-        while (!currentCase.equals(start) && security < size * size) {
+        while (!currentGameCase.equals(start) && security < size * size) {
 
-            List<Case> neighbors = neighbors(currentCase);
-            for (Case neighbor : neighbors) {
-                if (distance[neighbor.x][neighbor.y] == distance[currentCase.x][currentCase.y] - 1) {
+            List<GameCase> neighbors = neighbors(currentGameCase);
+            for (GameCase neighbor : neighbors) {
+                if (distance[neighbor.x][neighbor.y] == distance[currentGameCase.x][currentGameCase.y] - 1) {
                     result.add(neighbor);
-                    currentCase = neighbor;
+                    currentGameCase = neighbor;
                     break;
                 }
             }
@@ -154,16 +167,20 @@ public class Grille {
         return result;
     }
 
-    public List<Case> neighbors(Case target) {
-        List<Case> result = new ArrayList<>();
-        if (target.x - 1 >= 0)
+    public List<GameCase> neighbors(GameCase target) {
+        List<GameCase> result = new ArrayList<>();
+        if (target.x - 1 >= 0) {
             result.add(getCase(target.x - 1, target.y));
-        if (target.y - 1 >= 0)
+        }
+        if (target.y - 1 >= 0) {
             result.add(getCase(target.x, target.y - 1));
-        if (target.x + 1 < size)
+        }
+        if (target.x + 1 < size) {
             result.add(getCase(target.x + 1, target.y));
-        if (target.y + 1 < size)
+        }
+        if (target.y + 1 < size) {
             result.add(getCase(target.x, target.y + 1));
+        }
         return result;
     }
 }

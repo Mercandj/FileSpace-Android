@@ -21,8 +21,9 @@ public class DialogUtils {
         if (positive != null) {
             builder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    if (positiveListener != null)
+                    if (positiveListener != null) {
                         positiveListener.execute();
+                    }
                     dialog.dismiss();
                 }
             });
@@ -31,8 +32,9 @@ public class DialogUtils {
             builder.setNegativeButton(negative, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if (negativeListener != null)
+                    if (negativeListener != null) {
                         negativeListener.execute();
+                    }
                     dialog.dismiss();
                 }
             });
@@ -48,8 +50,9 @@ public class DialogUtils {
         if (positive != null) {
             builder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    if (positiveListener != null)
+                    if (positiveListener != null) {
                         positiveListener.execute();
+                    }
                     dialog.dismiss();
                 }
             });
@@ -58,8 +61,9 @@ public class DialogUtils {
             builder.setNegativeButton(negative, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if (negativeListener != null)
+                    if (negativeListener != null) {
                         negativeListener.execute();
+                    }
                     dialog.dismiss();
                 }
             });
@@ -87,10 +91,12 @@ public class DialogUtils {
         // Set an EditText view to get user input
         final EditText input = new EditText(context);
 
-        if (preText != null)
+        if (preText != null) {
             input.setText(preText);
-        if (hint != null)
+        }
+        if (hint != null) {
             input.setHint(hint);
+        }
 
         alert.setPositiveButton(positive,
                 new DialogInterface.OnClickListener() {

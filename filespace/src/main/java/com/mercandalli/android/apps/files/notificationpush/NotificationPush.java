@@ -28,10 +28,7 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-
 import com.mercandalli.android.apps.files.main.ApplicationActivity;
-
-import java.io.IOException;
 
 public class NotificationPush {
     public static GoogleCloudMessaging gcm;
@@ -42,11 +39,7 @@ public class NotificationPush {
 
     public static AsyncTask<Void, Void, String> shareRegidTask;
 
-    ApplicationActivity app;
-
     public static void mainActNotif(final ApplicationActivity app) {
-
-        final Context context = app;
         shareRegidTask = new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
@@ -66,22 +59,25 @@ public class NotificationPush {
         gcm = GoogleCloudMessaging.getInstance(app);
         regId = getRegistrationId(app);
 
-        if (TextUtils.isEmpty(regId))
+        if (TextUtils.isEmpty(regId)) {
             registerInBackground(app);
-        else
+        } else {
             mainActNotif(app);
+        }
         return regId;
     }
 
     public static String getRegistrationId(Activity activity) {
         final SharedPreferences prefs = activity.getSharedPreferences(ApplicationActivity.class.getSimpleName(), Context.MODE_PRIVATE);
         String registrationId = prefs.getString(REG_ID, "");
-        if (registrationId.isEmpty())
+        if (registrationId.isEmpty()) {
             return "";
+        }
         int registeredVersion = prefs.getInt(APP_VERSION, Integer.MIN_VALUE);
         int currentVersion = getAppVersion(activity);
-        if (registeredVersion != currentVersion)
+        if (registeredVersion != currentVersion) {
             return "";
+        }
         return registrationId;
     }
 
@@ -99,16 +95,15 @@ public class NotificationPush {
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
-                String msg = "";
+                String msg;
                 try {
-                    if (gcm == null)
+                    if (gcm == null) {
                         gcm = GoogleCloudMessaging.getInstance(app);
+                    }
                     regId = gcm.register(Config.GOOGLE_PROJECT_ID);
                     msg = "Device registered, registration ID=" + regId;
 
                     storeRegistrationId(app, regId);
-                } catch (IOException ex) {
-                    msg = "Error :" + ex.getMessage();
                 } catch (Exception ex) {
                     msg = "Error :" + ex.getMessage();
                 }

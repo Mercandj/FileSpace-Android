@@ -110,12 +110,12 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
     public Bitmap drawable_from_url_Authorization() {
         Log.d("TaskGetDownloadImage", "id:" + idFile + "  url:" + url);
 
-        if (isModelFile)
-            if (ImageUtils.is_image(mActivity, this.idFile))
-                return ImageUtils.load_image(mActivity, this.idFile);
-        if (this.sizeLimit > 0)
-            if (this.sizeLimit < this.sizeFile)
-                return null;
+        if (isModelFile && ImageUtils.isImage(mActivity, this.idFile)) {
+            return ImageUtils.load_image(mActivity, this.idFile);
+        }
+        if (this.sizeLimit > 0 && this.sizeLimit < this.sizeFile) {
+            return null;
+        }
 
         Bitmap x = null;
         try {
@@ -123,15 +123,17 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
             String result = Base64.encodeBytes(authentication.toString().getBytes());
 
             HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
-            if (isAuthentication)
+            if (isAuthentication) {
                 conn.setRequestProperty("Authorization", "Basic " + result);
+            }
             conn.setRequestMethod("GET");
 
             InputStream inputStream = conn.getInputStream();
 
             String contentLength = conn.getHeaderField("Content-Length");
-            if (contentLength == null)
+            if (contentLength == null) {
                 return x;
+            }
 
             long lengthOfFile = Long.parseLong(contentLength);
 
@@ -141,20 +143,22 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
             options.inJustDecodeBounds = false;
             options.inDither = false;
             options.inScaled = false;
-            if (this.sizeFile > 3000000)
+            if (this.sizeFile > 3000000) {
                 options.inSampleSize = 16;
-            else if (this.sizeFile > 2000000)
+            } else if (this.sizeFile > 2000000) {
                 options.inSampleSize = 8;
-            else if (this.sizeFile > 500000)
+            } else if (this.sizeFile > 500000) {
                 options.inSampleSize = 4;
+            }
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
             x = BitmapFactory.decodeStream(new FlushedInputStream(inputStream, lengthOfFile), null, options);
 
             conn.disconnect();
 
-            if (isModelFile)
+            if (isModelFile) {
                 ImageUtils.save_image(mActivity, this.idFile, x);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -182,10 +186,11 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
                 long bytesSkipped = in.skip(n - totalBytesSkipped);
                 if (bytesSkipped == 0L) {
                     int bytet = read();
-                    if (bytet < 0)
+                    if (bytet < 0) {
                         break;  // we reached EOF
-                    else
+                    } else {
                         bytesSkipped = 1; // we read one byte
+                    }
                 }
                 totalBytesSkipped += bytesSkipped;
             }
@@ -196,8 +201,9 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         public int read(byte[] buffer, int offset, int count) throws IOException {
             int result = super.read(buffer, offset, count);
             counter += result;
-            if (progressListener != null)
+            if (progressListener != null) {
                 publishProgress((long) (((counter * 1.0) / lenghtOfFile) * 100));
+            }
             return result;
         }
     }
@@ -205,7 +211,8 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
     @Override
     protected void onProgressUpdate(Long... values) {
         super.onProgressUpdate(values);
-        if (progressListener != null && values.length > 0)
+        if (progressListener != null && values.length > 0) {
             progressListener.execute(values[0]);
+        }
     }
 }

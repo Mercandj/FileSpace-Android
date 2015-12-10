@@ -27,10 +27,10 @@ import android.graphics.BitmapFactory;
 import com.mercandalli.android.apps.files.common.listener.IBitmapListener;
 import com.mercandalli.android.apps.files.common.net.Base64;
 import com.mercandalli.android.apps.files.common.net.TaskGetDownloadImage;
-import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.common.util.HashUtils;
 import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.file.FileModel;
+import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.user.UserModel;
 
 import org.json.JSONException;
@@ -133,12 +133,15 @@ public class Config {
         try {
             JSONObject tmp_json = new JSONObject();
             JSONObject tmp_settings_1 = new JSONObject();
-            for (ENUM_Int enum_int : ENUM_Int.values())
+            for (ENUM_Int enum_int : ENUM_Int.values()) {
                 tmp_settings_1.put(enum_int.key, enum_int.value);
-            for (ENUM_Boolean enum_boolean : ENUM_Boolean.values())
+            }
+            for (ENUM_Boolean enum_boolean : ENUM_Boolean.values()) {
                 tmp_settings_1.put(enum_boolean.key, enum_boolean.value);
-            for (ENUM_String enum_string : ENUM_String.values())
+            }
+            for (ENUM_String enum_string : ENUM_String.values()) {
                 tmp_settings_1.put(enum_string.key, enum_string.value);
+            }
             tmp_json.put("settings_1", tmp_settings_1);
             FileUtils.writeStringFile(context, fileName, tmp_json.toString());
 
@@ -152,15 +155,21 @@ public class Config {
             JSONObject tmp_json = new JSONObject(FileUtils.readStringFile(activity, fileName));
             if (tmp_json.has("settings_1")) {
                 JSONObject tmp_settings_1 = tmp_json.getJSONObject("settings_1");
-                for (ENUM_Int enum_int : ENUM_Int.values())
-                    if (tmp_settings_1.has(enum_int.key))
+                for (ENUM_Int enum_int : ENUM_Int.values()) {
+                    if (tmp_settings_1.has(enum_int.key)) {
                         enum_int.value = tmp_settings_1.getInt(enum_int.key);
-                for (ENUM_Boolean enum_boolean : ENUM_Boolean.values())
-                    if (tmp_settings_1.has(enum_boolean.key))
+                    }
+                }
+                for (ENUM_Boolean enum_boolean : ENUM_Boolean.values()) {
+                    if (tmp_settings_1.has(enum_boolean.key)) {
                         enum_boolean.value = tmp_settings_1.getBoolean(enum_boolean.key);
-                for (ENUM_String enum_string : ENUM_String.values())
-                    if (tmp_settings_1.has(enum_string.key))
+                    }
+                }
+                for (ENUM_String enum_string : ENUM_String.values()) {
+                    if (tmp_settings_1.has(enum_string.key)) {
                         enum_string.value = tmp_settings_1.getString(enum_string.key);
+                    }
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();

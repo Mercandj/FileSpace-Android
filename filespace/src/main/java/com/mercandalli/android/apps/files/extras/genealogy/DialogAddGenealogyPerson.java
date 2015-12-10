@@ -29,16 +29,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
+import com.mercandalli.android.apps.files.main.ApplicationCallback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DialogAddGenealogyPerson extends Dialog {
 
@@ -104,39 +104,50 @@ public class DialogAddGenealogyPerson extends Dialog {
                 if (NetUtils.isInternetConnection(mActivity) && !isFormEmpty) {
                     List<StringPair> parameters = new ArrayList<>();
 
-                    if (!StringUtils.isNullOrEmpty(et_first_name_1.getText().toString()))
+                    if (!StringUtils.isNullOrEmpty(et_first_name_1.getText().toString())) {
                         parameters.add(new StringPair("first_name_1", et_first_name_1.getText().toString()));
-                    if (!StringUtils.isNullOrEmpty(et_first_name_2.getText().toString()))
+                    }
+                    if (!StringUtils.isNullOrEmpty(et_first_name_2.getText().toString())) {
                         parameters.add(new StringPair("first_name_2", et_first_name_2.getText().toString()));
-                    if (!StringUtils.isNullOrEmpty(et_first_name_3.getText().toString()))
+                    }
+                    if (!StringUtils.isNullOrEmpty(et_first_name_3.getText().toString())) {
                         parameters.add(new StringPair("first_name_3", et_first_name_3.getText().toString()));
-                    if (!StringUtils.isNullOrEmpty(et_last_name.getText().toString()))
+                    }
+                    if (!StringUtils.isNullOrEmpty(et_last_name.getText().toString())) {
                         parameters.add(new StringPair("last_name", et_last_name.getText().toString()));
-                    if (!StringUtils.isNullOrEmpty(et_description.getText().toString()))
+                    }
+                    if (!StringUtils.isNullOrEmpty(et_description.getText().toString())) {
                         parameters.add(new StringPair("description", et_description.getText().toString()));
-                    if (!StringUtils.isNullOrEmpty(et_date_birth.getText().toString()))
-                        if (et_date_birth.getText().toString().length() == 10)
-                            parameters.add(new StringPair("date_birth", et_date_birth.getText().toString() + " 12:00:00"));
-                    if (!StringUtils.isNullOrEmpty(et_date_death.getText().toString()))
-                        if (et_date_death.getText().toString().length() == 10)
-                            parameters.add(new StringPair("date_death", et_date_death.getText().toString() + " 12:00:00"));
-                    if (father != null)
+                    }
+                    if (!StringUtils.isNullOrEmpty(et_date_birth.getText().toString()) &&
+                            et_date_birth.getText().toString().length() == 10) {
+                        parameters.add(new StringPair("date_birth", et_date_birth.getText().toString() + " 12:00:00"));
+                    }
+                    if (!StringUtils.isNullOrEmpty(et_date_death.getText().toString()) &&
+                            et_date_death.getText().toString().length() == 10) {
+                        parameters.add(new StringPair("date_death", et_date_death.getText().toString() + " 12:00:00"));
+                    }
+                    if (father != null) {
                         parameters.add(new StringPair("id_father", "" + father.id));
-                    if (mother != null)
+                    }
+                    if (mother != null) {
                         parameters.add(new StringPair("id_mother", "" + mother.id));
+                    }
 
                     parameters.add(new StringPair("is_man", "" + sex.isChecked()));
 
-                    if (genealogyUser == null)
+                    if (genealogyUser == null) {
                         (new TaskPost(mActivity, app, app.getConfig().getUrlServer() + app.getConfig().routeGenealogy, listener, parameters)).execute();
-                    else
+                    } else {
                         (new TaskPost(mActivity, app, app.getConfig().getUrlServer() + app.getConfig().routeGenealogyPut + "/" + genealogyUser.id, listener, parameters)).execute();
+                    }
 
                     DialogAddGenealogyPerson.this.dismiss();
-                } else if (isFormEmpty)
+                } else if (isFormEmpty) {
                     Toast.makeText(mActivity, "No name or first name", Toast.LENGTH_SHORT).show();
-                else
+                } else {
                     Toast.makeText(mActivity, mActivity.getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -182,20 +193,27 @@ public class DialogAddGenealogyPerson extends Dialog {
 
         if (genealogyUser != null) {
             this.bt_add.setText(R.string.modify);
-            if (!StringUtils.isNullOrEmpty(genealogyUser.first_name_1))
+            if (!StringUtils.isNullOrEmpty(genealogyUser.first_name_1)) {
                 this.et_first_name_1.setText(genealogyUser.first_name_1);
-            if (!StringUtils.isNullOrEmpty(genealogyUser.first_name_2))
+            }
+            if (!StringUtils.isNullOrEmpty(genealogyUser.first_name_2)) {
                 this.et_first_name_2.setText(genealogyUser.first_name_2);
-            if (!StringUtils.isNullOrEmpty(genealogyUser.first_name_3))
+            }
+            if (!StringUtils.isNullOrEmpty(genealogyUser.first_name_3)) {
                 this.et_first_name_3.setText(genealogyUser.first_name_3);
-            if (!StringUtils.isNullOrEmpty(genealogyUser.last_name))
+            }
+            if (!StringUtils.isNullOrEmpty(genealogyUser.last_name)) {
                 this.et_last_name.setText(genealogyUser.last_name);
-            if (!StringUtils.isNullOrEmpty(genealogyUser.date_birth))
+            }
+            if (!StringUtils.isNullOrEmpty(genealogyUser.date_birth)) {
                 this.et_date_birth.setText(StringUtils.substring(genealogyUser.date_birth, 10));
-            if (!StringUtils.isNullOrEmpty(genealogyUser.date_death))
+            }
+            if (!StringUtils.isNullOrEmpty(genealogyUser.date_death)) {
                 this.et_date_death.setText(StringUtils.substring(genealogyUser.date_death, 10));
-            if (!StringUtils.isNullOrEmpty(genealogyUser.description))
+            }
+            if (!StringUtils.isNullOrEmpty(genealogyUser.description)) {
                 this.et_description.setText(genealogyUser.description);
+            }
             this.sex.setChecked(genealogyUser.is_man);
         }
 
@@ -213,25 +231,30 @@ public class DialogAddGenealogyPerson extends Dialog {
     }
 
     public void addPartner(ModelGenealogyPerson genealogyPerson) {
-        if (this.marriages == null)
+        if (this.marriages == null) {
             this.marriages = new ArrayList<>();
+        }
         if (genealogyPerson != null) {
             boolean addPerson = true;
             for (ModelGenealogyPerson person : this.marriages) {
-                if (person.id == genealogyPerson.id)
+                if (person.id == genealogyPerson.id) {
                     addPerson = false;
+                }
             }
-            if (addPerson)
+            if (addPerson) {
                 this.marriages.add(genealogyPerson);
+            }
         }
         refresh();
     }
 
     private void refresh() {
-        if (this.mother != null)
-            this.bt_mother.setText("" + this.mother.first_name_1);
-        if (this.father != null)
-            this.bt_father.setText("" + this.father.first_name_1);
+        if (this.mother != null) {
+            this.bt_mother.setText(String.format("%s", this.mother.first_name_1));
+        }
+        if (this.father != null) {
+            this.bt_father.setText(String.format("%s", this.father.first_name_1));
+        }
         this.tv_marriage.setText(null);
         if (this.marriages != null) {
             if (this.marriages.size() != 0) {

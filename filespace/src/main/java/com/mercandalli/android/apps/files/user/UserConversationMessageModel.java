@@ -42,28 +42,33 @@ public class UserConversationMessageModel {
     public UserConversationMessageModel(Activity activity, ApplicationCallback app, JSONObject json) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
-            if (json.has("id"))
+            if (json.has("id")) {
                 this.id = json.getInt("id");
-            if (json.has("id_conversation"))
+            }
+            if (json.has("id_conversation")) {
                 this.id_conversation = json.getInt("id_conversation");
-            if (json.has("id_user"))
+            }
+            if (json.has("id_user")) {
                 this.id_user = json.getInt("id_user");
-            if (json.has("content"))
+            }
+            if (json.has("content")) {
                 this.content = json.getString("content");
-            if (json.has("user"))
+            }
+            if (json.has("user")) {
                 this.user = new UserModel(activity, app, json.getJSONObject("user"));
-            if (json.has("date_creation") && !json.isNull("date_creation"))
+            }
+            if (json.has("date_creation") && !json.isNull("date_creation")) {
                 this.date_creation = dateFormat.parse(json.getString("date_creation"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
+            }
+        } catch (JSONException | ParseException e) {
             e.printStackTrace();
         }
     }
 
     public String getUsername() {
-        if (this.user == null)
+        if (this.user == null) {
             return "";
+        }
         return (this.user.username == null) ? "" : this.user.username;
     }
 

@@ -1,9 +1,5 @@
 package com.mercandalli.android.apps.files.admin.game;
 
-/**
- * Created by Jonathan on 02/09/2015.
- */
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -127,12 +123,14 @@ public class GameThread extends Thread {
         paint.setColor(couleur_non_brouillon_);
         paint.setTextSize(hauteur_txt);
         paint.setFakeBoldText(true);
-        for (int i = 0; i < grille.size; i++)
-            for (int j = 0; j < grille.size; j++)
+        for (int i = 0; i < grille.size; i++) {
+            for (int j = 0; j < grille.size; j++) {
                 if (-10 < getValeurCase(i, j) && getValeurCase(i, j) < 10 && getValeurCase(i, j) != 0) {
                     paint.setColor(getValeurCase(i, j) < 0 ? couleur_brouillon_ : couleur_non_brouillon_);
                     canvas.drawText("" + getValeurCase(i, j), i * coteCarreau + coteCarreau / 2 - (int) paint.measureText("" + getValeurCase(i, j)) / 2 + decalageX, j * coteCarreau + coteCarreau / 2 + hauteur_txt / 2 + decalageY, paint);
                 }
+            }
+        }
     }
 
     private void dessineTableau(Canvas canvas) {
@@ -148,8 +146,11 @@ public class GameThread extends Thread {
     private void dessineTableau(Canvas canvas, int coteCarreau, int decalageX, int decalageY) {
         paint.setColor(Color.BLACK);
         for (int i = 0; i < grille.size + 1; i++) {
-            if ((i) % 3 == 0) paint.setStrokeWidth(4);
-            else paint.setStrokeWidth(2);
+            if ((i) % 3 == 0) {
+                paint.setStrokeWidth(4);
+            } else {
+                paint.setStrokeWidth(2);
+            }
             canvas.drawLine(decalageX, i * coteCarreau + decalageY, largeurPixel - decalageX, i * coteCarreau + decalageY, paint);
             canvas.drawLine(i * coteCarreau + decalageX, decalageY, i * coteCarreau + decalageX, hauteurPixel - decalageY, paint);
         }

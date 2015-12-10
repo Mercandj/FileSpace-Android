@@ -26,10 +26,10 @@ import com.mercandalli.android.apps.files.common.listener.IBitmapListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGetDownloadImage;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.common.util.HashUtils;
 import com.mercandalli.android.apps.files.common.util.ImageUtils;
 import com.mercandalli.android.apps.files.file.FileModel;
+import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
@@ -71,36 +71,47 @@ public class UserModel {
     public UserModel(final Activity activity, final ApplicationCallback applicationCallback, JSONObject json) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
-            if (json.has("id"))
+            if (json.has("id")) {
                 this.id = json.getInt("id");
-            if (json.has("username"))
+            }
+            if (json.has("username")) {
                 this.username = json.getString("username");
-            if (json.has("password"))
+            }
+            if (json.has("password")) {
                 this.password = json.getString("password");
-            if (json.has("regId"))
+            }
+            if (json.has("regId")) {
                 this.regId = json.getString("regId");
-            if (json.has("date_creation") && !json.isNull("date_creation"))
+            }
+            if (json.has("date_creation") && !json.isNull("date_creation")) {
                 this.date_creation = dateFormat.parse(json.getString("date_creation"));
-            if (json.has("date_last_connection") && !json.isNull("date_last_connection"))
+            }
+            if (json.has("date_last_connection") && !json.isNull("date_last_connection")) {
                 this.date_last_connection = dateFormat.parse(json.getString("date_last_connection"));
-            if (json.has("size_files") && !json.isNull("size_files"))
+            }
+            if (json.has("size_files") && !json.isNull("size_files")) {
                 this.size_files = json.getLong("size_files");
-            if (json.has("server_max_size_end_user") && !json.isNull("server_max_size_end_user"))
+            }
+            if (json.has("server_max_size_end_user") && !json.isNull("server_max_size_end_user")) {
                 this.server_max_size_end_user = json.getLong("server_max_size_end_user");
+            }
             if (json.has("admin")) {
                 Object admin_obj = json.get("admin");
-                if (admin_obj instanceof Integer)
+                if (admin_obj instanceof Integer) {
                     this.admin = json.getInt("admin") == 1;
-                else if (admin_obj instanceof Boolean)
+                } else if (admin_obj instanceof Boolean) {
                     this.admin = json.getBoolean("admin");
+                }
             }
 
             if (json.has("id_file_profile_picture"))
                 this.id_file_profile_picture = json.getInt("id_file_profile_picture");
-            if (json.has("file_profile_picture_size"))
+            if (json.has("file_profile_picture_size")) {
                 this.file_profile_picture_size = json.getLong("file_profile_picture_size");
-            if (json.has("num_files") && !json.isNull("num_files"))
+            }
+            if (json.has("num_files") && !json.isNull("num_files")) {
                 this.num_files = json.getLong("num_files");
+            }
 
             userLocation = new UserLocationModel(json);
 
@@ -109,7 +120,7 @@ public class UserModel {
         }
 
         if (hasPicture()) {
-            if (ImageUtils.is_image(activity, this.id_file_profile_picture)) {
+            if (ImageUtils.isImage(activity, this.id_file_profile_picture)) {
                 UserModel.this.bitmap = ImageUtils.load_image(activity, this.id_file_profile_picture);
                 applicationCallback.updateAdapters();
             } else {
@@ -168,7 +179,8 @@ public class UserModel {
                 return;
             }
         }
-        if (listener != null)
+        if (listener != null) {
             listener.onPostExecute(null, null);
+        }
     }
 }

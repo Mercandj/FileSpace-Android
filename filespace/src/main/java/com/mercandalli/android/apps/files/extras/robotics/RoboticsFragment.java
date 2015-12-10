@@ -37,12 +37,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import org.json.JSONObject;
-
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
@@ -51,6 +45,12 @@ import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.view.slider.Slider;
+
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RoboticsFragment extends BackFragment implements SensorEventListener {
 
@@ -227,8 +227,9 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
     }
 
     private String valueToStr(int value) {
-        if (df == null || value - 50.0 == 0)
+        if (df == null || value - 50.0 == 0) {
             return "0.00";
+        }
         double res = Math.round(value - 50.0) / 100.0;
         return "" + df.format(res) + (res % 0.1 == 0 || Math.abs(res) == 0.3 || Math.abs(res) == 0.5 ? "0" : "");
     }

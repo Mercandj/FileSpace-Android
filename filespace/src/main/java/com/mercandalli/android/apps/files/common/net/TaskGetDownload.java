@@ -26,18 +26,18 @@ import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.common.listener.IListener;
+import com.mercandalli.android.apps.files.file.FileModel;
+import com.mercandalli.android.apps.files.file.FileUtils;
+import com.mercandalli.android.apps.files.main.Config;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.apps.files.common.listener.IListener;
-import com.mercandalli.android.apps.files.file.FileModel;
-import com.mercandalli.android.apps.files.file.FileUtils;
 
 /**
  * Global behavior : DDL file
@@ -147,12 +147,14 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
         super.onProgressUpdate(values);
 
         long incr = 0;
-        if (values.length > 0)
+        if (values.length > 0) {
             incr = values[0];
+        }
         mBuilder.setProgress(100, (int) incr, false);
         mBuilder.setContentText("Download in progress " + incr + "%");
-        if (values.length > 1)
+        if (values.length > 1) {
             mBuilder.setContentText("Download in progress : " + FileUtils.humanReadableByteCount(values[1]) + " / " + FileUtils.humanReadableByteCount(mFileSize) + " : " + incr + "%");
+        }
 
         mNotifyManager.notify(id, mBuilder.build());
     }

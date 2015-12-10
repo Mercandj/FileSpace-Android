@@ -34,10 +34,12 @@ public class IndicesVertices {
         indices = new short[indicesVertices.indices.length];
         int max = Math.max(indicesVertices.vertices.length, indicesVertices.indices.length);
         for (int i = 0; i < max; i++) {
-            if (i < indicesVertices.vertices.length)
+            if (i < indicesVertices.vertices.length) {
                 vertices[i] = indicesVertices.vertices[i];
-            if (i < indicesVertices.indices.length)
+            }
+            if (i < indicesVertices.indices.length) {
                 indices[i] = indicesVertices.indices[i];
+            }
         }
         this.edgeVerticeMin = new myVector3D(indicesVertices.edgeVerticeMin);
         this.edgeVerticeMax = new myVector3D(indicesVertices.edgeVerticeMax);

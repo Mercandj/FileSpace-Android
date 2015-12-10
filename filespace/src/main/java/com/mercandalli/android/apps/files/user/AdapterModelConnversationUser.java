@@ -78,14 +78,16 @@ public class AdapterModelConnversationUser extends RecyclerView.Adapter<AdapterM
 
         @Override
         public void onClick(View v) {
-            if (mItemClickListener != null)
+            if (mItemClickListener != null) {
                 mItemClickListener.onItemClick(v, getPosition());
+            }
         }
 
         @Override
         public boolean onLongClick(View v) {
-            if (mItemLongClickListener != null)
+            if (mItemLongClickListener != null) {
                 return mItemLongClickListener.onItemLongClick(v, getPosition());
+            }
             return false;
         }
     }
@@ -131,7 +133,7 @@ public class AdapterModelConnversationUser extends RecyclerView.Adapter<AdapterM
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
+        void onItemClick(View view, int position);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -139,7 +141,7 @@ public class AdapterModelConnversationUser extends RecyclerView.Adapter<AdapterM
     }
 
     public interface OnItemLongClickListener {
-        public boolean onItemLongClick(View view, int position);
+        boolean onItemLongClick(View view, int position);
     }
 
     public void setOnItemLongClickListener(final OnItemLongClickListener mItemLongClickListener) {

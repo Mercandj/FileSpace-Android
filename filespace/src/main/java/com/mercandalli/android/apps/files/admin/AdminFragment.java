@@ -35,9 +35,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.EmptyFragment;
+import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.common.view.NonSwipeableViewPager;
 
 
@@ -122,23 +122,24 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
     }
 
     public int getCurrentFragmentIndex() {
-        if (mViewPager == null)
+        if (mViewPager == null) {
             return -1;
+        }
         int result = mViewPager.getCurrentItem();
-        if (result >= LIST_BACK_FRAGMENT.length)
+        if (result >= LIST_BACK_FRAGMENT.length) {
             return -1;
+        }
         return mViewPager.getCurrentItem();
     }
 
     @Override
     public boolean back() {
         int currentFragmentId = getCurrentFragmentIndex();
-        if (LIST_BACK_FRAGMENT == null || currentFragmentId == -1)
+        if (currentFragmentId == -1) {
             return false;
+        }
         BackFragment backFragment = LIST_BACK_FRAGMENT[currentFragmentId];
-        if (backFragment == null)
-            return false;
-        return backFragment.back();
+        return backFragment != null && backFragment.back();
     }
 
     @Override
@@ -155,9 +156,9 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
     public void onPageSelected(int position) {
         mApplicationCallback.invalidateMenu();
         mAppBarLayout.setExpanded(true);
-        if (position < NB_FRAGMENT)
-            if (LIST_BACK_FRAGMENT[position] != null)
-                LIST_BACK_FRAGMENT[position].onFocus();
+        if (position < NB_FRAGMENT && LIST_BACK_FRAGMENT[position] != null) {
+            LIST_BACK_FRAGMENT[position].onFocus();
+        }
     }
 
     @Override
@@ -261,8 +262,9 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-                if (getCurrentFragmentIndex() == 5)
+                if (getCurrentFragmentIndex() == 5) {
                     ((RequestFragment) AdminFragment.LIST_BACK_FRAGMENT[getCurrentFragmentIndex()]).delete();
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);
