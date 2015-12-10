@@ -11,7 +11,7 @@ import android.content.Context;
 
 import com.mercandalli.android.apps.files.extras.physics.Const;
 import com.mercandalli.android.apps.files.extras.physics.MyGLSurfaceView;
-import com.mercandalli.android.apps.files.extras.physics.lib.myVector3D;
+import com.mercandalli.android.apps.files.extras.physics.lib.MyVector3D;
 
 /**
  * Define the physic's thread behavior
@@ -82,7 +82,7 @@ public class PhysicsEngine {
                     mGLView.mRenderer.camera.computeForward();
                 } else if (mGLView.mRenderer.camera.right) {
 
-                    myVector3D tmp = mGLView.mRenderer.camera.mForward.cross(mGLView.mRenderer.camera.mUp);
+                    MyVector3D tmp = mGLView.mRenderer.camera.mForward.cross(mGLView.mRenderer.camera.mUp);
 
                     float moveX = tmp.dX / (PhysicsConst.HIGH_CAMERA_SPEED_TRANSLATION ? 1.5f : 6.5f);
                     if ((moveX < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dX) || (moveX > 0 && mGLView.mRenderer.camera.mEye.dX < Const.LIMIT)) {
@@ -100,7 +100,7 @@ public class PhysicsEngine {
                     }
                 } else if (mGLView.mRenderer.camera.left) {
 
-                    myVector3D tmp = mGLView.mRenderer.camera.mUp.cross(mGLView.mRenderer.camera.mForward);
+                    MyVector3D tmp = mGLView.mRenderer.camera.mUp.cross(mGLView.mRenderer.camera.mForward);
 
                     float moveX = tmp.dX / (PhysicsConst.HIGH_CAMERA_SPEED_TRANSLATION ? 1.5f : 6.5f);
                     if ((moveX < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dX) || (moveX > 0 && mGLView.mRenderer.camera.mEye.dX < Const.LIMIT)) {

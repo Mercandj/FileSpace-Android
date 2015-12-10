@@ -25,18 +25,17 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
+
+import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.common.fragment.FabFragment;
+import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
+import com.mercandalli.android.apps.files.common.net.TaskGet;
+import com.mercandalli.android.apps.files.common.util.NetUtils;
+import com.mercandalli.android.apps.files.common.view.GenealogyBigTreeView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.common.net.TaskGet;
-import com.mercandalli.android.apps.files.common.fragment.FabFragment;
-import com.mercandalli.android.apps.files.common.view.GenealogyBigTreeView;
-import com.mercandalli.android.apps.files.common.util.NetUtils;
 
 /**
  * Created by Jonathan on 28/08/2015.
@@ -103,8 +102,9 @@ public class GenealogyBigTreeFragment extends FabFragment {
                                         genealogyPerson = new ModelGenealogyPerson(mActivity, mApplicationCallback, json.getJSONObject("result"));
                                         bigTreeView.select(genealogyPerson);
                                     }
-                                } else
+                                } else {
                                     Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

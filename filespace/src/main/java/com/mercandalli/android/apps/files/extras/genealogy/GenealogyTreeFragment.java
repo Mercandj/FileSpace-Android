@@ -152,8 +152,9 @@ public class GenealogyTreeFragment extends FabFragment {
                         },
                         parameters
                 ).execute();
-            } else
+            } else {
                 Toast.makeText(mActivity, getString(R.string.waiting_for_response), Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(mActivity, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
         }
@@ -204,7 +205,7 @@ public class GenealogyTreeFragment extends FabFragment {
         this.et_father_description.setText("");
         this.et_mother_description.setText("");
 
-        if (genealogyPerson != null)
+        if (genealogyPerson != null) {
             if (genealogyPerson.selected) {
                 this.et_user.setText(genealogyPerson.getAdapterTitle());
                 this.et_user.setTextColor(Color.parseColor(genealogyPerson.is_man ? "#1976D2" : "#E91E63"));
@@ -286,6 +287,7 @@ public class GenealogyTreeFragment extends FabFragment {
                     });
                 }
             }
+        }
         refreshList();
     }
 

@@ -9,5 +9,5 @@ public abstract class Predicat {
     public List<Integer> list_int = new ArrayList<Integer>();
     public Entity entity = null;
 
-    public abstract myVector3D isTrue(Entity entity);
+    public abstract MyVector3D isTrue(Entity entity);
 }

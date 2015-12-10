@@ -35,14 +35,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.view.PlayPauseView;
 import com.mercandalli.android.apps.files.common.view.slider.Slider;
 import com.mercandalli.android.apps.files.main.App;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileAudioActivity extends AppCompatActivity implements View.OnClickListener, FileAudioPlayer.OnPlayerStatusChangeListener {
 
@@ -203,8 +203,9 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             finishActivity();
+        }
         return super.onKeyDown(keyCode, event);
     }
 

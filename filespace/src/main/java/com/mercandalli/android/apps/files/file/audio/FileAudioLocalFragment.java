@@ -165,13 +165,14 @@ public class FileAudioLocalFragment extends InjectedFabFragment
                 menuAlert.setItems(menuList,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int item) {
-                                if (!mApplicationCallback.isLogged())
+                                if (!mApplicationCallback.isLogged()) {
                                     item += 2;
+                                }
                                 switch (item) {
                                     case 0:
                                         if (fileModel.isDirectory()) {
                                             Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-                                        } else
+                                        } else {
                                             DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + fileModel.getName(), getString(R.string.upload), new IListener() {
                                                 @Override
                                                 public void execute() {
@@ -186,6 +187,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment
                                                     }
                                                 }
                                             }, getString(R.string.cancel), null);
+                                        }
                                         break;
                                     case 1:
                                         mFileManager.openLocalAs(mActivity, fileModel);

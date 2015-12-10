@@ -36,8 +36,9 @@ public class TimeUtils {
         //milliseconds
         long different = endDate.getTime() - startDate.getTime();
 
-        if (different < 0)
+        if (different < 0) {
             return "Finished";
+        }
 
         long elapsedDays = different / DAY;
         different = different % DAY;
@@ -61,8 +62,9 @@ public class TimeUtils {
         //milliseconds
         long different = startDate.getTime() - endDate.getTime();
 
-        if (different < 0)
+        if (different < 0) {
             return "Future";
+        }
 
         long elapsedDays = different / DAY;
         different = different % DAY;
@@ -95,8 +97,9 @@ public class TimeUtils {
     }
 
     public static String getDate(Date date) {
-        if (date == null)
+        if (date == null) {
             return null;
+        }
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return dateFormat.format(date).toString();
     }

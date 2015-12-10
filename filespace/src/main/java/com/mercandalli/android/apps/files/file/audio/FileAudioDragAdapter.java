@@ -285,9 +285,9 @@ public class FileAudioDragAdapter extends RecyclerView.Adapter<FileAudioDragAdap
                 }
             } else if (fileAudioModel.getType().equals(FileTypeModelENUM.FILESPACE.type) && fileAudioModel.getContent() != null) {
                 return adapterTitleStart + fileAudioModel.getContent().getAdapterTitle();
-            } else if (fileAudioModel.getName() != null)
+            } else if (fileAudioModel.getName() != null) {
                 return adapterTitleStart + fileAudioModel.getFullName();
-            else {
+            } else {
                 return adapterTitleStart + fileAudioModel.getUrl();
             }
         }

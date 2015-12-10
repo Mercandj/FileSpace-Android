@@ -31,15 +31,17 @@ import android.widget.TextView;
  */
 public class FontUtils {
     public static void applyFont(Context context, TextView tv, String police) {
-        if (context == null || tv == null || police == null)
+        if (context == null || tv == null || police == null) {
             return;
+        }
         Typeface font = Typeface.createFromAsset(context.getAssets(), police);
         tv.setTypeface(font);
     }
 
     public static void applyFont(Context context, Button bt, String police) {
-        if (context == null || bt == null || police == null)
+        if (context == null || bt == null || police == null) {
             return;
+        }
         Typeface font = Typeface.createFromAsset(context.getAssets(), police);
         bt.setTypeface(font);
     }

@@ -397,13 +397,14 @@ public class GenealogyBigTreeView extends View {
                         paint);
                 // --- --- ... qui relient les parents aux enfants
 
-                if ((position_ds_ligne_courante - 1) / 2 < tableau_coord_horizontales_noms_old.size())
+                if ((position_ds_ligne_courante - 1) / 2 < tableau_coord_horizontales_noms_old.size()) {
                     canvas.drawLine(
                             tableau_coord_horizontales_noms_old.get((position_ds_ligne_courante - 1) / 2),
                             coord_verticale_en_dessous,
                             ligne_parents_coord_horizontale_point_droite,
                             coord_verticale_en_dessous,
                             paint);
+                }
 
             }
             // --- --- affichage des lignes verticales en dessous des noms

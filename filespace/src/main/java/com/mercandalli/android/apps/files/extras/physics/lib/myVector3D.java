@@ -14,71 +14,71 @@ import java.text.DecimalFormat;
  *
  * @author Jonathan
  */
-public class myVector3D {
+public class MyVector3D {
 
     public float dX;
     public float dY;
     public float dZ;
 
-    public myVector3D() {
+    public MyVector3D() {
     }
 
-    public myVector3D(final myVector3D v) {
+    public MyVector3D(final MyVector3D v) {
         this.dX = v.dX;
         this.dY = v.dY;
         this.dZ = v.dZ;
     }
 
-    public myVector3D(float dx, float dy, float dz) {
+    public MyVector3D(float dx, float dy, float dz) {
         this.dX = dx;
         this.dY = dy;
         this.dZ = dz;
     }
 
-    float dot(myVector3D v1) {
+    float dot(MyVector3D v1) {
         return (v1.dX * dX + v1.dY * dY + v1.dZ * dZ);
     }
 
-    public myVector3D add(myVector3D v1) {
+    public MyVector3D add(MyVector3D v1) {
         return this.plus(v1);
     }
 
-    public myVector3D plus(myVector3D v1) {
-        return new myVector3D(dX + v1.dX, dY + v1.dY, dZ + v1.dZ);
+    public MyVector3D plus(MyVector3D v1) {
+        return new MyVector3D(dX + v1.dX, dY + v1.dY, dZ + v1.dZ);
     }
 
-    public myVector3D sub(myVector3D v1) {
-        return new myVector3D(dX - v1.dX, dY - v1.dY, dZ - v1.dZ);
+    public MyVector3D sub(MyVector3D v1) {
+        return new MyVector3D(dX - v1.dX, dY - v1.dY, dZ - v1.dZ);
     }
 
-    public myVector3D minus() {
-        return new myVector3D(-dX, -dY, -dZ);
+    public MyVector3D minus() {
+        return new MyVector3D(-dX, -dY, -dZ);
     }
 
-    public myVector3D div(float s) {
-        return new myVector3D(dX / s, dY / s, dZ / s);
+    public MyVector3D div(float s) {
+        return new MyVector3D(dX / s, dY / s, dZ / s);
     }
 
-    public myVector3D mult(float s) {
-        return new myVector3D(dX * s, dY * s, dZ * s);
+    public MyVector3D mult(float s) {
+        return new MyVector3D(dX * s, dY * s, dZ * s);
     }
 
-    public myVector3D mult(myVector3D s) {
-        return new myVector3D(dX * s.dX, dY * s.dY, dZ * s.dZ);
+    public MyVector3D mult(MyVector3D s) {
+        return new MyVector3D(dX * s.dX, dY * s.dY, dZ * s.dZ);
     }
 
-    public myVector3D mult(float x, float y, float z) {
-        return new myVector3D(dX * x, dY * y, dZ * z);
+    public MyVector3D mult(float x, float y, float z) {
+        return new MyVector3D(dX * x, dY * y, dZ * z);
     }
 
-    void cross(myVector3D v1, myVector3D v2) {
+    void cross(MyVector3D v1, MyVector3D v2) {
         dX = v1.dY * v2.dZ - v1.dZ * v2.dY;
         dY = v1.dZ * v2.dX - v1.dX * v2.dZ;
         dZ = v1.dX * v2.dY - v1.dY * v2.dX;
     }
 
-    public myVector3D cross(myVector3D v1) {
-        myVector3D result = new myVector3D();
+    public MyVector3D cross(MyVector3D v1) {
+        MyVector3D result = new MyVector3D();
         result.cross(this, v1);
         return result;
     }
@@ -94,16 +94,16 @@ public class myVector3D {
         dZ = dZ / l;
     }
 
-    public myVector3D normalizeVector() {
+    public MyVector3D normalizeVector() {
         float l = length();
-        return new myVector3D(dX / l, dY = dY / l, dZ = dZ / l);
+        return new MyVector3D(dX / l, dY = dY / l, dZ = dZ / l);
     }
 
-    public void rotate(myVector3D lp, float theta) {
+    public void rotate(MyVector3D lp, float theta) {
         //rotate vector this around the line defined by lp through the origin by theta degrees.
         float cos_theta = (float) Math.cos(theta);
         float dot = this.dot(lp);
-        myVector3D cross = this.cross(lp);
+        MyVector3D cross = this.cross(lp);
         dX *= cos_theta;
         dY *= cos_theta;
         dZ *= cos_theta;
@@ -129,11 +129,13 @@ public class myVector3D {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof myVector3D)) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof MyVector3D)) {
             return false;
         }
-        myVector3D obj = ((myVector3D) o);
+        MyVector3D obj = ((MyVector3D) o);
         return obj.dX == this.dX && obj.dY == this.dY && obj.dZ == this.dZ;
     }
 

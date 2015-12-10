@@ -224,6 +224,6 @@ public class lib {
             e.printStackTrace();
         }
 
-        return new IndicesVertices(vertices, indices, new myVector3D((xmin - (xmax + xmin) / 2) / scale, (ymin - (ymax + ymin) / 2) / scale, (zmin - (zmax + zmin) / 2) / scale), new myVector3D((xmax - (xmax + xmin) / 2) / scale, (ymax - (ymax + ymin) / 2) / scale, (zmax - (zmax + zmin) / 2) / scale));
+        return new IndicesVertices(vertices, indices, new MyVector3D((xmin - (xmax + xmin) / 2) / scale, (ymin - (ymax + ymin) / 2) / scale, (zmin - (zmax + zmin) / 2) / scale), new MyVector3D((xmax - (xmax + xmin) / 2) / scale, (ymax - (ymax + ymin) / 2) / scale, (zmax - (zmax + zmin) / 2) / scale));
     }
 }

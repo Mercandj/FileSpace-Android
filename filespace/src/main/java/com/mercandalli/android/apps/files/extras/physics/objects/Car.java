@@ -2,14 +2,14 @@ package com.mercandalli.android.apps.files.extras.physics.objects;
 
 import android.content.Context;
 
-import com.mercandalli.android.apps.files.extras.physics.lib.myVector3D;
+import com.mercandalli.android.apps.files.extras.physics.lib.MyVector3D;
 
-public class Car extends myObject3D {
+public class Car extends MyObject3D {
 
-    public myVector3D forward;
+    public MyVector3D forward;
     public float angleY = 0;
 
-    public Car(Context context, myVector3D forward) {
+    public Car(Context context, MyVector3D forward) {
         super(context);
         this.forward = forward;
     }

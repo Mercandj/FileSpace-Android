@@ -62,10 +62,11 @@ public class GLFragment extends Fragment implements SensorEventListener {
         forward.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP)
+                if (event.getAction() == MotionEvent.ACTION_UP) {
                     mGLView.mRenderer.camera.forward = false;
-                else if (event.getAction() == MotionEvent.ACTION_DOWN)
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     mGLView.mRenderer.camera.forward = true;
+                }
                 return false;
             }
         });
@@ -75,10 +76,11 @@ public class GLFragment extends Fragment implements SensorEventListener {
         back.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP)
+                if (event.getAction() == MotionEvent.ACTION_UP) {
                     mGLView.mRenderer.camera.back = false;
-                else if (event.getAction() == MotionEvent.ACTION_DOWN)
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     mGLView.mRenderer.camera.back = true;
+                }
                 return false;
             }
         });
@@ -88,10 +90,11 @@ public class GLFragment extends Fragment implements SensorEventListener {
         left.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP)
+                if (event.getAction() == MotionEvent.ACTION_UP) {
                     mGLView.mRenderer.camera.left = false;
-                else if (event.getAction() == MotionEvent.ACTION_DOWN)
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     mGLView.mRenderer.camera.left = true;
+                }
                 return false;
             }
         });
@@ -101,10 +104,11 @@ public class GLFragment extends Fragment implements SensorEventListener {
         right.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP)
+                if (event.getAction() == MotionEvent.ACTION_UP) {
                     mGLView.mRenderer.camera.right = false;
-                else if (event.getAction() == MotionEvent.ACTION_DOWN)
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     mGLView.mRenderer.camera.right = true;
+                }
                 return false;
             }
         });

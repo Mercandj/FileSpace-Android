@@ -10,10 +10,10 @@ package com.mercandalli.android.apps.files.extras.physics.implementation;
 import android.content.Context;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.extras.physics.lib.myVector3D;
+import com.mercandalli.android.apps.files.extras.physics.lib.MyVector3D;
 import com.mercandalli.android.apps.files.extras.physics.objects.Camera;
 import com.mercandalli.android.apps.files.extras.physics.objects.EntityGroup;
-import com.mercandalli.android.apps.files.extras.physics.objects.myObject3D;
+import com.mercandalli.android.apps.files.extras.physics.objects.MyObject3D;
 import com.mercandalli.android.apps.files.extras.physics.objects.myTexture;
 import com.mercandalli.android.apps.files.extras.physics.physics.Force;
 import com.mercandalli.android.apps.files.extras.physics.physics.ForceToEntity;
@@ -37,11 +37,11 @@ public class World extends EntityGroup {
     }
 
     public class Planet {
-        public myVector3D position;
+        public MyVector3D position;
         public float vZ;
         public int resourceId;
 
-        public Planet(myVector3D position, float vZ, int resourceId) {
+        public Planet(MyVector3D position, float vZ, int resourceId) {
             this.position = position;
             this.vZ = vZ;
             this.resourceId = resourceId;
@@ -86,7 +86,7 @@ public class World extends EntityGroup {
         List<Integer> objSunGravityId = new ArrayList<>();
 
 
-        myObject3D sun = new myObject3D(context);
+        MyObject3D sun = new MyObject3D(context);
         sun.readMeshLocal(ENUM_Obj.SPHERE.getIndicesVertices(context));
         sun.scale(10.0f);
         sun.computeNormals();
@@ -99,15 +99,15 @@ public class World extends EntityGroup {
 
 
         List<Planet> planets = new ArrayList<>();
-        planets.add(new Planet(new myVector3D(32.0f, 30.0f, 25.0f), -0.020f, R.drawable.color_green));
-        planets.add(new Planet(new myVector3D(35.0f, 30.0f, 5.0f), -0.025f, R.drawable.color_blue));
-        planets.add(new Planet(new myVector3D(30.0f, 30.0f, 33.0f), -0.029f, R.drawable.color_red));
-        planets.add(new Planet(new myVector3D(32.0f, 30.0f, 26.0f), -0.012f, R.drawable.color_white));
-        planets.add(new Planet(new myVector3D(34.0f, 30.0f, 28.0f), -0.01f, R.drawable.color_yellow));
-        planets.add(new Planet(new myVector3D(33.0f, 30.0f, 0.0f), -0.007f, R.drawable.color_purple));
+        planets.add(new Planet(new MyVector3D(32.0f, 30.0f, 25.0f), -0.020f, R.drawable.color_green));
+        planets.add(new Planet(new MyVector3D(35.0f, 30.0f, 5.0f), -0.025f, R.drawable.color_blue));
+        planets.add(new Planet(new MyVector3D(30.0f, 30.0f, 33.0f), -0.029f, R.drawable.color_red));
+        planets.add(new Planet(new MyVector3D(32.0f, 30.0f, 26.0f), -0.012f, R.drawable.color_white));
+        planets.add(new Planet(new MyVector3D(34.0f, 30.0f, 28.0f), -0.01f, R.drawable.color_yellow));
+        planets.add(new Planet(new MyVector3D(33.0f, 30.0f, 0.0f), -0.007f, R.drawable.color_purple));
 
         for (Planet planet : planets) {
-            myObject3D earth = new myObject3D(context);
+            MyObject3D earth = new MyObject3D(context);
             earth.readMeshLocal(ENUM_Obj.SPHERE.getIndicesVertices(context));
             earth.scale(1.5f);
             earth.computeNormals();
@@ -116,7 +116,7 @@ public class World extends EntityGroup {
             earth.translate(planet.position);
             earth.texture = new myTexture(context, planet.resourceId);
             earth.physic.mass = 3f;
-            earth.velocity = new myVector3D(0, 0, planet.vZ);
+            earth.velocity = new MyVector3D(0, 0, planet.vZ);
             objSunGravityId.add(this.addEntity(earth));
         }
 
@@ -148,7 +148,7 @@ public class World extends EntityGroup {
         this.addEntity(apple);
         */
 
-        myObject3D floor = new myObject3D(context);
+        MyObject3D floor = new MyObject3D(context);
         floor.generateGrid(100, 100);
         floor.scale(50f);
         floor.computeNormals();

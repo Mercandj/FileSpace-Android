@@ -86,50 +86,50 @@ public class ImageUtils {
     }
 
     public synchronized static Bitmap loadImage(Context context, int fileId) {
-        if (images.containsKey(fileId))
+        if (images.containsKey(fileId)) {
             return images.get(fileId);
+        }
         File file = new File(context.getFilesDir() + "/file_" + fileId);
-        if (file != null) {
-            if (file.exists()) {
+        if (file.exists()) {
 
-                int desiredWidth = Constants.WIDTH_MAX_ONLINE_PICTURE_BITMAP;
+            int desiredWidth = Constants.WIDTH_MAX_ONLINE_PICTURE_BITMAP;
 
-                // Get the source image's dimensions
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(file.getPath(), options);
+            // Get the source image's dimensions
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(file.getPath(), options);
 
-                int srcWidth = options.outWidth;
+            int srcWidth = options.outWidth;
 
-                // Only scale if the source is big enough. This code is just trying to fit a image into a certain width.
-                if (desiredWidth > srcWidth)
-                    desiredWidth = srcWidth;
-
-                // Calculate the correct inSampleSize/scale value. This helps reduce memory use. It should be a power of 2
-                // from: http://stackoverflow.com/questions/477572/android-strange-out-of-memory-issue/823966#823966
-                int inSampleSize = 1;
-                while (srcWidth / 2 > desiredWidth) {
-                    srcWidth /= 2;
-                    inSampleSize *= 2;
-                }
-
-                float desiredScale = (float) desiredWidth / srcWidth;
-
-                // Decode with inSampleSize
-                options.inJustDecodeBounds = false;
-                options.inDither = false;
-                options.inSampleSize = inSampleSize;
-                options.inScaled = false;
-                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                Bitmap sampledSrcBitmap = BitmapFactory.decodeFile(file.getPath(), options);
-
-                // Resize
-                Matrix matrix = new Matrix();
-                matrix.postScale(desiredScale, desiredScale);
-                return Bitmap.createBitmap(sampledSrcBitmap, 0, 0, sampledSrcBitmap.getWidth(), sampledSrcBitmap.getHeight(), matrix, true);
-
-                //return BitmapFactory.decodeFile(file.getPath(), options);
+            // Only scale if the source is big enough. This code is just trying to fit a image into a certain width.
+            if (desiredWidth > srcWidth) {
+                desiredWidth = srcWidth;
             }
+
+            // Calculate the correct inSampleSize/scale value. This helps reduce memory use. It should be a power of 2
+            // from: http://stackoverflow.com/questions/477572/android-strange-out-of-memory-issue/823966#823966
+            int inSampleSize = 1;
+            while (srcWidth / 2 > desiredWidth) {
+                srcWidth /= 2;
+                inSampleSize *= 2;
+            }
+
+            float desiredScale = (float) desiredWidth / srcWidth;
+
+            // Decode with inSampleSize
+            options.inJustDecodeBounds = false;
+            options.inDither = false;
+            options.inSampleSize = inSampleSize;
+            options.inScaled = false;
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            Bitmap sampledSrcBitmap = BitmapFactory.decodeFile(file.getPath(), options);
+
+            // Resize
+            Matrix matrix = new Matrix();
+            matrix.postScale(desiredScale, desiredScale);
+            return Bitmap.createBitmap(sampledSrcBitmap, 0, 0, sampledSrcBitmap.getWidth(), sampledSrcBitmap.getHeight(), matrix, true);
+
+            //return BitmapFactory.decodeFile(file.getPath(), options);
         }
         Log.e("TaskGetDownloadImage", "loadImage(String url) return null");
         return null;

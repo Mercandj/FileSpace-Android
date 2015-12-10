@@ -230,8 +230,9 @@ public class RoboticsUtils {
             return result;
         }
         try {
-            if (!json.has("raspberry-content"))
+            if (!json.has("raspberry-content")) {
                 return result;
+            }
 
             json = new JSONObject(json.getString("raspberry-content"));
 
