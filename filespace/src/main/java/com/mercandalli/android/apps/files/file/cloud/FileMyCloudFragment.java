@@ -325,8 +325,9 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
         } else {
             mSwipeRefreshLayout.setRefreshing(false);
             this.mProgressBar.setVisibility(View.GONE);
-            if (this.isAdded())
+            if (this.isAdded()) {
                 this.mMessageTextView.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+            }
             this.mMessageTextView.setVisibility(View.VISIBLE);
 
             if (!NetUtils.isInternetConnection(mActivity)) {
@@ -337,8 +338,9 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
     }
 
     private void setListVisibility(boolean visible) {
-        if (this.mRecyclerView != null)
+        if (this.mRecyclerView != null) {
             this.mRecyclerView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        }
     }
 
     public void updateAdapter() {
@@ -408,13 +410,14 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
         switch (fab_id) {
             case 0:
                 if (mFilesToCutList.size() != 0) {
-                    for (FileModel file : mFilesToCutList)
+                    for (FileModel file : mFilesToCutList) {
                         mFileManager.setParent(file, FileMyCloudFragment.this.mIdFileDirectoryStack.peek(), new IListener() {
                             @Override
                             public void execute() {
                                 mApplicationCallback.refreshData();
                             }
                         });
+                    }
                     mFilesToCutList.clear();
                 } else {
                     fab.hide();
@@ -443,8 +446,9 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
 
     @Override
     public boolean isFabVisible(int fab_id) {
-        if (mActivity != null && mApplicationCallback != null && (!NetUtils.isInternetConnection(mActivity) || !mApplicationCallback.isLogged()))
+        if (mActivity != null && mApplicationCallback != null && (!NetUtils.isInternetConnection(mActivity) || !mApplicationCallback.isLogged())) {
             return false;
+        }
         switch (fab_id) {
             case 0:
                 return true;

@@ -111,11 +111,13 @@ public class RegistrationFragment extends BackFragment {
     public void inscription() {
         UserModel user = new UserModel();
 
-        if (!StringUtils.isNullOrEmpty(mUsername.getText().toString()))
+        if (!StringUtils.isNullOrEmpty(mUsername.getText().toString())) {
             user.username = mUsername.getText().toString();
+        }
 
-        if (!StringUtils.isNullOrEmpty(mPassword.getText().toString()))
+        if (!StringUtils.isNullOrEmpty(mPassword.getText().toString())) {
             user.password = HashUtils.sha1(mPassword.getText().toString());
+        }
 
         inscription(user);
     }

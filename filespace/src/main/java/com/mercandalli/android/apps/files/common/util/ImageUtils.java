@@ -49,7 +49,7 @@ public class ImageUtils {
 
     private static Map<Integer, Bitmap> images = new WeakHashMap<Integer, Bitmap>();
 
-    public synchronized static void save_image(Context context, int fileId, Bitmap bm) {
+    public synchronized static void saveImage(Context context, int fileId, Bitmap bm) {
         images.put(fileId, bm);
 
         File file = new File(context.getFilesDir() + "/file_" + fileId);
@@ -67,15 +67,15 @@ public class ImageUtils {
         }
     }
 
-    public static Bitmap load_image_thumbnail(String path, int desiredWidth, int desiredHeight) {
+    public static Bitmap loadImageThumbnail(String path, int desiredWidth, int desiredHeight) {
         return ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(path), desiredWidth, desiredHeight);
     }
 
-    public static Bitmap load_image_thumbnail(File file, int desiredWidth, int desiredHeight) {
-        return load_image_thumbnail(file.getAbsolutePath(), desiredWidth, desiredHeight);
+    public static Bitmap loadImageThumbnail(File file, int desiredWidth, int desiredHeight) {
+        return loadImageThumbnail(file.getAbsolutePath(), desiredWidth, desiredHeight);
     }
 
-    public static Bitmap load_image(File file) {
+    public static Bitmap loadImage(File file) {
         try {
             FileInputStream fis = new FileInputStream(file);
             Bitmap imageBitmap = BitmapFactory.decodeStream(fis);
@@ -85,7 +85,7 @@ public class ImageUtils {
         return null;
     }
 
-    public synchronized static Bitmap load_image(Context context, int fileId) {
+    public synchronized static Bitmap loadImage(Context context, int fileId) {
         if (images.containsKey(fileId))
             return images.get(fileId);
         File file = new File(context.getFilesDir() + "/file_" + fileId);
@@ -131,7 +131,7 @@ public class ImageUtils {
                 //return BitmapFactory.decodeFile(file.getPath(), options);
             }
         }
-        Log.e("TaskGetDownloadImage", "load_image(String url) return null");
+        Log.e("TaskGetDownloadImage", "loadImage(String url) return null");
         return null;
     }
 
@@ -538,7 +538,7 @@ public class ImageUtils {
 
         @Override
         protected Bitmap doInBackground(Void... params) {
-            return ImageUtils.load_image_thumbnail(this.file, width, height);
+            return ImageUtils.loadImageThumbnail(this.file, width, height);
         }
 
         @Override

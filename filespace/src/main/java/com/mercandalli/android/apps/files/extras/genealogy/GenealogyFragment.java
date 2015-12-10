@@ -299,10 +299,11 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
                     .setAction(getString(R.string.refresh), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (NetUtils.isInternetConnection(mActivity))
+                            if (NetUtils.isInternetConnection(mActivity)) {
                                 listFragment[getCurrentFragmentIndex()].onFocus();
-                            else
+                            } else {
                                 updateNoInternet();
+                            }
                         }
                     });
             this.snackbar.show();
@@ -365,7 +366,6 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         return super.onOptionsItemSelected(item);
     }
 }

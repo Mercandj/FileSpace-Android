@@ -106,7 +106,7 @@ public class FileImageActivity extends ApplicationActivity {
             }
 
             if (ImageUtils.isImage(this, this.mId)) {
-                bitmap = ImageUtils.load_image(this, this.mId);
+                bitmap = ImageUtils.loadImage(this, this.mId);
                 ((ImageView) this.findViewById(R.id.tab_icon)).setImageBitmap(bitmap);
                 int bgColor = ColorUtils.getMutedColor(bitmap);
                 if (bgColor != 0) {

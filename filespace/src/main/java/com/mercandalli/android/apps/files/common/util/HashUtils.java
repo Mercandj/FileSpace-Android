@@ -39,8 +39,9 @@ public class HashUtils {
     }
 
     public static String sha1(String text) {
-        if (text == null)
+        if (text == null) {
             return null;
+        }
         MessageDigest md;
         byte[] sha1hash = null;
         try {

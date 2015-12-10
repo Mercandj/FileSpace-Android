@@ -29,13 +29,13 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.common.util.PointLong;
+import com.mercandalli.android.apps.files.main.ApplicationActivity;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.main.ApplicationActivity;
-import com.mercandalli.android.apps.files.common.util.PointLong;
 
 /**
  * Created by Jonathan on 09/05/2015.
@@ -93,8 +93,9 @@ public class FileTimerActivity extends ApplicationActivity {
                     if (mFileSpaceModel != null) {
                         txt.setText(mFileSpaceModel.toString());
                         PointLong diff = mFileSpaceModel.diffSecond();
-                        if (diff.y < 0)
+                        if (diff.y < 0) {
                             diff.y = -diff.y;
+                        }
                         second.setText(diff.x + " : " + ((diff.y < 10) ? "0" : "") + diff.y);
                     }
 
@@ -120,8 +121,9 @@ public class FileTimerActivity extends ApplicationActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                if (runnable != null)
+                if (runnable != null) {
                     handler.removeCallbacksAndMessages(runnable);
+                }
                 this.finish();
                 this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 return true;
@@ -132,8 +134,9 @@ public class FileTimerActivity extends ApplicationActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            if (runnable != null)
+            if (runnable != null) {
                 handler.removeCallbacksAndMessages(runnable);
+            }
             this.finish();
             this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
         }

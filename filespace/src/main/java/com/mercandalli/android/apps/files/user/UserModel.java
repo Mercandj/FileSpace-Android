@@ -104,8 +104,9 @@ public class UserModel {
                 }
             }
 
-            if (json.has("id_file_profile_picture"))
+            if (json.has("id_file_profile_picture")) {
                 this.id_file_profile_picture = json.getInt("id_file_profile_picture");
+            }
             if (json.has("file_profile_picture_size")) {
                 this.file_profile_picture_size = json.getLong("file_profile_picture_size");
             }
@@ -121,7 +122,7 @@ public class UserModel {
 
         if (hasPicture()) {
             if (ImageUtils.isImage(activity, this.id_file_profile_picture)) {
-                UserModel.this.bitmap = ImageUtils.load_image(activity, this.id_file_profile_picture);
+                UserModel.this.bitmap = ImageUtils.loadImage(activity, this.id_file_profile_picture);
                 applicationCallback.updateAdapters();
             } else {
                 FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();

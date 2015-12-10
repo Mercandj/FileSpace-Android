@@ -198,9 +198,8 @@ public class SettingsFragment extends BackFragment {
             adapter.setOnItemClickListener(new AdapterModelSetting.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    if (position < list.size()) {
-                        if (list.get(position).onClickListener != null)
-                            list.get(position).onClickListener.onClick(view);
+                    if (position < list.size() && list.get(position).onClickListener != null) {
+                        list.get(position).onClickListener.onClick(view);
                     }
                 }
             });

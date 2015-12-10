@@ -123,8 +123,9 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
                     ApplicationActivity.mPhotoFile = mApplicationCallback.createImageFile();
                     // Continue only if the File was successfully created
                     if (ApplicationActivity.mPhotoFile != null) {
-                        if (listener != null)
+                        if (listener != null) {
                             ApplicationActivity.mPhotoFileListener = listener;
+                        }
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(ApplicationActivity.mPhotoFile.getFile()));
                         mActivity.startActivityForResult(takePictureIntent, ApplicationActivity.REQUEST_TAKE_PHOTO);
                     }
@@ -175,8 +176,9 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
                                             new IPostExecuteListener() {
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
-                                                    if (listener != null)
+                                                    if (listener != null) {
                                                         listener.execute();
+                                                    }
                                                 }
                                             }
                                             , parameters).execute();
@@ -210,8 +212,9 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
 
     @Override
     public void dismiss() {
-        if (mDismissListener != null)
+        if (mDismissListener != null) {
             mDismissListener.execute();
+        }
         super.dismiss();
     }
 

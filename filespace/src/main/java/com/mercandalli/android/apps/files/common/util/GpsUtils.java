@@ -44,22 +44,25 @@ public class GpsUtils {
 
     public static double getLongitude(Context context) {
         Location location = getLocation(context);
-        if (location != null)
+        if (location != null) {
             return location.getLongitude();
+        }
         return 0;
     }
 
     public static double getLatitude(Context context) {
         Location location = getLocation(context);
-        if (location != null)
+        if (location != null) {
             return location.getLatitude();
+        }
         return 0;
     }
 
     public static double getAltitude(Context context) {
         Location location = getLocation(context);
-        if (location != null)
+        if (location != null) {
             return location.getAltitude();
+        }
         return 0;
     }
 
@@ -100,22 +103,25 @@ public class GpsUtils {
 
     public static double getGpsLongitude(Context context, final ILocationListener locationListener) {
         Location location = getGpsLocation(context, locationListener);
-        if (location != null)
+        if (location != null) {
             return location.getLongitude();
+        }
         return 0;
     }
 
     public static double getGpsLatitude(Context context, final ILocationListener locationListener) {
         Location location = getGpsLocation(context, locationListener);
-        if (location != null)
+        if (location != null) {
             return location.getLatitude();
+        }
         return 0;
     }
 
     public static double getGpsAltitude(Context context, final ILocationListener locationListener) {
         Location location = getGpsLocation(context, locationListener);
-        if (location != null)
+        if (location != null) {
             return location.getAltitude();
+        }
         return 0;
     }
 

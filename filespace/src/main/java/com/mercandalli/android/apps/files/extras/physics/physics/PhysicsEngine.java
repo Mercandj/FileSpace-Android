@@ -47,31 +47,37 @@ public class PhysicsEngine {
                 if (mGLView.mRenderer.camera.forward) {
 
                     float moveX = mGLView.mRenderer.camera.mForward.dX / (PhysicsConst.HIGH_CAMERA_SPEED_TRANSLATION ? 1.6f : 6.0f);
-                    if ((moveX < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dX) || (moveX > 0 && mGLView.mRenderer.camera.mEye.dX < Const.LIMIT))
+                    if ((moveX < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dX) || (moveX > 0 && mGLView.mRenderer.camera.mEye.dX < Const.LIMIT)) {
                         mGLView.mRenderer.camera.mEye.dX += moveX;
+                    }
 
                     float moveY = mGLView.mRenderer.camera.mForward.dY / (PhysicsConst.HIGH_CAMERA_SPEED_TRANSLATION ? 1.6f : 6.0f);
-                    if ((moveY < 0 && 0 < mGLView.mRenderer.camera.mEye.dY + moveY) || (moveY > 0 && mGLView.mRenderer.camera.mEye.dY < Const.LIMIT))
+                    if ((moveY < 0 && 0 < mGLView.mRenderer.camera.mEye.dY + moveY) || (moveY > 0 && mGLView.mRenderer.camera.mEye.dY < Const.LIMIT)) {
                         mGLView.mRenderer.camera.mEye.dY += moveY;
+                    }
 
                     float moveZ = mGLView.mRenderer.camera.mForward.dZ / (PhysicsConst.HIGH_CAMERA_SPEED_TRANSLATION ? 1.6f : 6.0f);
-                    if ((moveZ < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dZ) || (moveZ > 0 && mGLView.mRenderer.camera.mEye.dZ < Const.LIMIT))
+                    if ((moveZ < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dZ) || (moveZ > 0 && mGLView.mRenderer.camera.mEye.dZ < Const.LIMIT)) {
                         mGLView.mRenderer.camera.mEye.dZ += moveZ;
+                    }
 
                     mGLView.mRenderer.camera.computeForward();
                 } else if (mGLView.mRenderer.camera.back) {
 
                     float moveX = -mGLView.mRenderer.camera.mForward.dX / (PhysicsConst.HIGH_CAMERA_SPEED_TRANSLATION ? 1.6f : 6.0f);
-                    if ((moveX < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dX) || (moveX > 0 && mGLView.mRenderer.camera.mEye.dX < Const.LIMIT))
+                    if ((moveX < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dX) || (moveX > 0 && mGLView.mRenderer.camera.mEye.dX < Const.LIMIT)) {
                         mGLView.mRenderer.camera.mEye.dX += moveX;
+                    }
 
                     float moveY = -mGLView.mRenderer.camera.mForward.dY / (PhysicsConst.HIGH_CAMERA_SPEED_TRANSLATION ? 1.6f : 6.0f);
-                    if ((moveY < 0 && 0 < mGLView.mRenderer.camera.mEye.dY + moveY) || (moveY > 0 && mGLView.mRenderer.camera.mEye.dY < Const.LIMIT))
+                    if ((moveY < 0 && 0 < mGLView.mRenderer.camera.mEye.dY + moveY) || (moveY > 0 && mGLView.mRenderer.camera.mEye.dY < Const.LIMIT)) {
                         mGLView.mRenderer.camera.mEye.dY += moveY;
+                    }
 
                     float moveZ = -mGLView.mRenderer.camera.mForward.dZ / (PhysicsConst.HIGH_CAMERA_SPEED_TRANSLATION ? 1.6f : 6.0f);
-                    if ((moveZ < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dZ) || (moveZ > 0 && mGLView.mRenderer.camera.mEye.dZ < Const.LIMIT))
+                    if ((moveZ < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dZ) || (moveZ > 0 && mGLView.mRenderer.camera.mEye.dZ < Const.LIMIT)) {
                         mGLView.mRenderer.camera.mEye.dZ += moveZ;
+                    }
 
                     mGLView.mRenderer.camera.computeForward();
                 } else if (mGLView.mRenderer.camera.right) {
@@ -79,31 +85,37 @@ public class PhysicsEngine {
                     myVector3D tmp = mGLView.mRenderer.camera.mForward.cross(mGLView.mRenderer.camera.mUp);
 
                     float moveX = tmp.dX / (PhysicsConst.HIGH_CAMERA_SPEED_TRANSLATION ? 1.5f : 6.5f);
-                    if ((moveX < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dX) || (moveX > 0 && mGLView.mRenderer.camera.mEye.dX < Const.LIMIT))
+                    if ((moveX < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dX) || (moveX > 0 && mGLView.mRenderer.camera.mEye.dX < Const.LIMIT)) {
                         mGLView.mRenderer.camera.mEye.dX += moveX;
+                    }
 
                     float moveY = tmp.dY / (PhysicsConst.HIGH_CAMERA_SPEED_TRANSLATION ? 1.5f : 6.5f);
-                    if ((moveY < 0 && 0 < mGLView.mRenderer.camera.mEye.dY + moveY) || (moveY > 0 && mGLView.mRenderer.camera.mEye.dY < Const.LIMIT))
+                    if ((moveY < 0 && 0 < mGLView.mRenderer.camera.mEye.dY + moveY) || (moveY > 0 && mGLView.mRenderer.camera.mEye.dY < Const.LIMIT)) {
                         mGLView.mRenderer.camera.mEye.dY += moveY;
+                    }
 
                     float moveZ = tmp.dZ / (PhysicsConst.HIGH_CAMERA_SPEED_TRANSLATION ? 1.5f : 6.5f);
-                    if ((moveZ < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dZ) || (moveZ > 0 && mGLView.mRenderer.camera.mEye.dZ < Const.LIMIT))
+                    if ((moveZ < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dZ) || (moveZ > 0 && mGLView.mRenderer.camera.mEye.dZ < Const.LIMIT)) {
                         mGLView.mRenderer.camera.mEye.dZ += moveZ;
+                    }
                 } else if (mGLView.mRenderer.camera.left) {
 
                     myVector3D tmp = mGLView.mRenderer.camera.mUp.cross(mGLView.mRenderer.camera.mForward);
 
                     float moveX = tmp.dX / (PhysicsConst.HIGH_CAMERA_SPEED_TRANSLATION ? 1.5f : 6.5f);
-                    if ((moveX < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dX) || (moveX > 0 && mGLView.mRenderer.camera.mEye.dX < Const.LIMIT))
+                    if ((moveX < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dX) || (moveX > 0 && mGLView.mRenderer.camera.mEye.dX < Const.LIMIT)) {
                         mGLView.mRenderer.camera.mEye.dX += moveX;
+                    }
 
                     float moveY = tmp.dY / (PhysicsConst.HIGH_CAMERA_SPEED_TRANSLATION ? 1.5f : 6.5f);
-                    if ((moveY < 0 && 0 < mGLView.mRenderer.camera.mEye.dY + moveY) || (moveY > 0 && mGLView.mRenderer.camera.mEye.dY < Const.LIMIT))
+                    if ((moveY < 0 && 0 < mGLView.mRenderer.camera.mEye.dY + moveY) || (moveY > 0 && mGLView.mRenderer.camera.mEye.dY < Const.LIMIT)) {
                         mGLView.mRenderer.camera.mEye.dY += moveY;
+                    }
 
                     float moveZ = tmp.dZ / (PhysicsConst.HIGH_CAMERA_SPEED_TRANSLATION ? 1.5f : 6.5f);
-                    if ((moveZ < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dZ) || (moveZ > 0 && mGLView.mRenderer.camera.mEye.dZ < Const.LIMIT))
+                    if ((moveZ < 0 && -Const.LIMIT < mGLView.mRenderer.camera.mEye.dZ) || (moveZ > 0 && mGLView.mRenderer.camera.mEye.dZ < Const.LIMIT)) {
                         mGLView.mRenderer.camera.mEye.dZ += moveZ;
+                    }
                 }
 
                 mGLView.requestRender();

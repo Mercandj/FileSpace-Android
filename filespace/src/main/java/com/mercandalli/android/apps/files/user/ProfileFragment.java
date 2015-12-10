@@ -40,7 +40,6 @@ import com.mercandalli.android.apps.files.common.listener.ILocationListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.common.util.FontUtils;
 import com.mercandalli.android.apps.files.common.util.GpsUtils;
 import com.mercandalli.android.apps.files.common.util.ImageUtils;
@@ -48,6 +47,8 @@ import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.common.util.TimeUtils;
+import com.mercandalli.android.apps.files.file.FileUtils;
+import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.settings.AdapterModelSetting;
 import com.mercandalli.android.apps.files.settings.ModelSetting;
 
@@ -131,12 +132,13 @@ public class ProfileFragment extends BackFragment {
             List<StringPair> parameters = null;
             new TaskGet(
                     mActivity,
-                    mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUser + "/" + mApplicationCallback.getConfig().getUserId(),
+                    mApplicationCallback.getConfig().getUrlServer() + Config.routeUser + "/" + Config.getUserId(),
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
-                            if (!isAdded())
+                            if (!isAdded()) {
                                 return;
+                            }
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
@@ -172,7 +174,7 @@ public class ProfileFragment extends BackFragment {
                                                         parameters.add(new StringPair("longitude", "" + longitude));
                                                         parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                        (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                        (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUserPut, new IPostExecuteListener() {
                                                             @Override
                                                             public void onPostExecute(JSONObject json, String body) {
 
@@ -195,7 +197,7 @@ public class ProfileFragment extends BackFragment {
                                                 parameters.add(new StringPair("longitude", "" + longitude));
                                                 parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUserPut, new IPostExecuteListener() {
                                                     @Override
                                                     public void onPostExecute(JSONObject json, String body) {
 
@@ -204,8 +206,9 @@ public class ProfileFragment extends BackFragment {
                                             }
                                         }
                                     }
-                                } else
+                                } else {
                                     Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -228,7 +231,6 @@ public class ProfileFragment extends BackFragment {
                     if (position < list.size()) {
                         switch (position) {
                         }
-
                     }
                 }
             });

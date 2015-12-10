@@ -66,8 +66,9 @@ public class AdapterModelUser extends RecyclerView.Adapter<AdapterModelUser.View
             viewHolder.more.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (moreListener != null)
+                    if (moreListener != null) {
                         moreListener.execute(user);
+                    }
                 }
             });
         }

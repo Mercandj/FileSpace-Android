@@ -111,7 +111,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         Log.d("TaskGetDownloadImage", "id:" + idFile + "  url:" + url);
 
         if (isModelFile && ImageUtils.isImage(mActivity, this.idFile)) {
-            return ImageUtils.load_image(mActivity, this.idFile);
+            return ImageUtils.loadImage(mActivity, this.idFile);
         }
         if (this.sizeLimit > 0 && this.sizeLimit < this.sizeFile) {
             return null;
@@ -157,7 +157,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
             conn.disconnect();
 
             if (isModelFile) {
-                ImageUtils.save_image(mActivity, this.idFile, x);
+                ImageUtils.saveImage(mActivity, this.idFile, x);
             }
         } catch (IOException e) {
             e.printStackTrace();
