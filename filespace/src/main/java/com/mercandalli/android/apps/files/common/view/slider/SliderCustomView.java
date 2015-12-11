@@ -27,10 +27,11 @@ public class SliderCustomView extends RelativeLayout {
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
-        if (enabled)
+        if (enabled) {
             setBackgroundColor(beforeBackground);
-        else
+        } else {
             setBackgroundColor(disabledBackgroundColor);
+        }
         invalidate();
     }
 
@@ -51,7 +52,8 @@ public class SliderCustomView extends RelativeLayout {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (animation)
+        if (animation) {
             invalidate();
+        }
     }
 }

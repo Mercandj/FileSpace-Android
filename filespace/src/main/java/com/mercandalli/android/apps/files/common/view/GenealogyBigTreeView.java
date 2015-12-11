@@ -209,7 +209,9 @@ public class GenealogyBigTreeView extends View {
             if (multi_touch != 0) {
                 if (ecart - ecart_old + coeff_taille > TAILLE_MINI) {
                     coeff_taille = ecart - ecart_old + coeff_taille;
-                } else coeff_taille = TAILLE_MINI;
+                } else {
+                    coeff_taille = TAILLE_MINI;
+                }
             }
             multi_touch = 1;
         }

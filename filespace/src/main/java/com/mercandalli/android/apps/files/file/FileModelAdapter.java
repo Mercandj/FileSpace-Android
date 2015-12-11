@@ -72,9 +72,9 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
                 FileTypeModel type = fileModel.getType();
                 if (type.equals(FileTypeModelENUM.AUDIO.type)) {
                     viewHolder.mIconImageView.setImageResource(R.drawable.file_audio);
-                } else if (type.equals(FileTypeModelENUM.PDF.type))
+                } else if (type.equals(FileTypeModelENUM.PDF.type)) {
                     viewHolder.mIconImageView.setImageResource(R.drawable.file_pdf);
-                else if (type.equals(FileTypeModelENUM.APK.type)) {
+                } else if (type.equals(FileTypeModelENUM.APK.type)) {
                     viewHolder.mIconImageView.setImageResource(R.drawable.file_apk);
                 } else if (type.equals(FileTypeModelENUM.ARCHIVE.type)) {
                     viewHolder.mIconImageView.setImageResource(R.drawable.file_archive);

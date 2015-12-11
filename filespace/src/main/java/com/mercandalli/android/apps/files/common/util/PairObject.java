@@ -3,11 +3,11 @@ package com.mercandalli.android.apps.files.common.util;
 /**
  * Created by Jonathan on 21/09/2015.
  */
-public class Pair<F, S> {
+public class PairObject<F, S> {
     private F first; //first member of pair
     private S second; //second member of pair
 
-    public Pair(F first, S second) {
+    public PairObject(F first, S second) {
         this.first = first;
         this.second = second;
     }

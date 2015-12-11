@@ -125,7 +125,9 @@ public class MyGLSurfaceView extends GLSurfaceView implements SensorEventListene
             mScaleFactor = detector.getScaleFactor();
 
             Log.v("mydebugger", Float.toString(mScaleFactor));
-            if (mScaleFactor > 1) mScaleFactor = -1 / mScaleFactor;
+            if (mScaleFactor > 1) {
+                mScaleFactor = -1 / mScaleFactor;
+            }
             mScaleFactor /= -4;
             mScaleFactor *= Math.sqrt(mRenderer.camera.mEye.length()) / 10;
 
@@ -163,10 +165,9 @@ public class MyGLSurfaceView extends GLSurfaceView implements SensorEventListene
 
             if ((curTime - lastUpdate) > 100) {
                 lastUpdate = curTime;
-                if (mRenderer != null)
-                    if (mRenderer.world != null) {
+                if (mRenderer != null && mRenderer.world != null) {
 
-                    }
+                }
             }
         }
     }

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class WayPosition {
 
-    public List<MyVector3D> way = new ArrayList<MyVector3D>();
+    public List<Vector3D> way = new ArrayList<Vector3D>();
     private int currentID = 0;
     public boolean reverse = false;
 
@@ -13,11 +13,11 @@ public class WayPosition {
 
     }
 
-    public WayPosition(List<MyVector3D> way) {
+    public WayPosition(List<Vector3D> way) {
         this.way = way;
     }
 
-    public void add(MyVector3D v) {
+    public void add(Vector3D v) {
         way.add(v);
     }
 
@@ -25,11 +25,11 @@ public class WayPosition {
         return way.size();
     }
 
-    public MyVector3D get(int i) {
+    public Vector3D get(int i) {
         return way.get(i);
     }
 
-    public MyVector3D getCurrentPosition() {
+    public Vector3D getCurrentPosition() {
         int res = currentID;
         if (!reverse) {
             if (currentID + 1 >= size()) {
@@ -48,23 +48,23 @@ public class WayPosition {
     }
 
     public void initCubeWabHorizontal(float centerX, float centerY, float centerZ, float size, float foot, boolean right) {
-        way = new ArrayList<MyVector3D>();
+        way = new ArrayList<Vector3D>();
         float divcote = size / 2;
 
-        for (float i = centerX - divcote; i <= centerX + divcote; i += foot) {
-            add(new MyVector3D(i, centerY, centerZ - divcote));
+        for (double i = centerX - divcote; i <= centerX + divcote; i += foot) {
+            add(new Vector3D((float) i, centerY, centerZ - divcote));
         }
 
-        for (float i = centerZ - divcote; i <= centerZ + divcote; i += foot) {
-            add(new MyVector3D(centerX + divcote, centerY, i));
+        for (double i = centerZ - divcote; i <= centerZ + divcote; i += foot) {
+            add(new Vector3D(centerX + divcote, centerY, (float) i));
         }
 
-        for (float i = centerX + divcote; i >= centerX - divcote; i -= foot) {
-            add(new MyVector3D(i, centerY, centerZ + divcote));
+        for (double i = centerX + divcote; i >= centerX - divcote; i -= foot) {
+            add(new Vector3D((float) i, centerY, centerZ + divcote));
         }
 
-        for (float i = centerZ + divcote; i >= centerZ - divcote; i -= foot) {
-            add(new MyVector3D(centerX - divcote, centerY, i));
+        for (double i = centerZ + divcote; i >= centerZ - divcote; i -= foot) {
+            add(new Vector3D(centerX - divcote, centerY, (float) i));
         }
 
         reverse = !right;

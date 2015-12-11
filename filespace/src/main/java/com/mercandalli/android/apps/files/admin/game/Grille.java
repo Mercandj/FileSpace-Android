@@ -105,12 +105,13 @@ public class Grille {
         // Create distances
         int[][] distance = new int[size][size];
         for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++)
+            for (int j = 0; j < size; j++) {
                 for (Integer wallValue : wallValues) {
                     if (getValeurCase(i, j) == wallValue) {
                         distance[i][j] = -1;
                     }
                 }
+            }
         }
         distance[start.x][start.y] = 1;
 

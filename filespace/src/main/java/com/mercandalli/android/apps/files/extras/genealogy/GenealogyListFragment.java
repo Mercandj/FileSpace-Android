@@ -171,8 +171,9 @@ public class GenealogyListFragment extends FabFragment {
                                             list.add(modelUser);
                                         }
                                     }
-                                } else
+                                } else {
                                     Toast.makeText(mActivity, getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

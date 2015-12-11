@@ -15,7 +15,7 @@ import android.util.Log;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.extras.physics.lib.IFunctionEntity;
 import com.mercandalli.android.apps.files.extras.physics.lib.IndicesVertices;
-import com.mercandalli.android.apps.files.extras.physics.lib.MyVector3D;
+import com.mercandalli.android.apps.files.extras.physics.lib.Vector3D;
 import com.mercandalli.android.apps.files.extras.physics.physics.Force;
 import com.mercandalli.android.apps.files.extras.physics.physics.ForceToEntity;
 import com.mercandalli.android.apps.files.extras.physics.physics.PhysicsConst;
@@ -36,7 +36,7 @@ import java.util.Arrays;
  *
  * @author Jonathan
  */
-public class MyObject3D extends Entity {
+public class Object3D extends Entity {
     private final String TAG = "myObject3D";
 
     Context context;
@@ -66,7 +66,7 @@ public class MyObject3D extends Entity {
 
     IFunctionEntity contactFloorListener;
 
-    public MyObject3D(Context context, IFunctionEntity contactFlourListener) {
+    public Object3D(Context context, IFunctionEntity contactFlourListener) {
         this.context = context;
         this.id = ++count;
         if (vertexShaderCode == null) {
@@ -79,7 +79,7 @@ public class MyObject3D extends Entity {
         this.contactFloorListener = contactFlourListener;
     }
 
-    public MyObject3D(Context context) {
+    public Object3D(Context context) {
         this.context = context;
         this.id = ++count;
         if (vertexShaderCode == null) {
@@ -91,7 +91,7 @@ public class MyObject3D extends Entity {
         Matrix.setIdentityM(transformationMatrix, 0);
     }
 
-    private MyVector3D computeTangent(int v0, int v1, int v2) {
+    private Vector3D computeTangent(int v0, int v1, int v2) {
         float du1 = texturecoords[2 * v1] - texturecoords[2 * v0];
         float dv1 = texturecoords[2 * v1 + 1] - texturecoords[2 * v0 + 1];
         float du2 = texturecoords[2 * v2] - texturecoords[2 * v0];
@@ -99,7 +99,7 @@ public class MyObject3D extends Entity {
 
         float f = 1.0f / (du1 * dv2 - du2 * dv1);
         if ((du1 * dv2 - du2 * dv1) == 0) {
-            return new MyVector3D(0, 0, 0);
+            return new Vector3D(0, 0, 0);
         }
 
         float e1x = vertices[3 * v1] - vertices[3 * v0];
@@ -110,7 +110,7 @@ public class MyObject3D extends Entity {
         float e2y = vertices[3 * v2 + 1] - vertices[3 * v0 + 1];
         float e2z = vertices[3 * v2 + 2] - vertices[3 * v0 + 2];
 
-        return new MyVector3D(f * (dv2 * e1x - dv1 * e2x), f * (dv2 * e1y - dv1 * e2y), f * (dv2 * e1z - dv1 * e2z));
+        return new Vector3D(f * (dv2 * e1x - dv1 * e2x), f * (dv2 * e1y - dv1 * e2y), f * (dv2 * e1z - dv1 * e2z));
     }
 
     public void computeTangents() {
@@ -130,7 +130,7 @@ public class MyObject3D extends Entity {
         }
 
         for (j = 0; j < m; j++) {
-            MyVector3D v = computeTangent(indices[3 * j], indices[3 * j + 1], indices[3 * j + 2]);
+            Vector3D v = computeTangent(indices[3 * j], indices[3 * j + 1], indices[3 * j + 2]);
             x1 = v.dX;
             y1 = v.dY;
             z1 = v.dZ;
@@ -396,8 +396,8 @@ public class MyObject3D extends Entity {
         indices = new short[3 * m];
         texturecoords = new float[2 * n];
 
-        this.edgeVerticeMin = new MyVector3D(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
-        this.edgeVerticeMax = new MyVector3D(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
+        this.edgeVerticeMin = new Vector3D(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+        this.edgeVerticeMax = new Vector3D(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
 
         k = 0;
         for (i = 0; i <= num; i++) {
@@ -513,7 +513,7 @@ public class MyObject3D extends Entity {
         //Matrix.translateM(transformationMatrix, 0, x, y, z);
     }
 
-    public void translate(final MyVector3D pos) {
+    public void translate(final Vector3D pos) {
         translate(pos.dX, pos.dY, pos.dZ);
     }
 
@@ -546,7 +546,7 @@ public class MyObject3D extends Entity {
             vertices[i] *= rate;
         }
 
-        MyVector3D tmp_dim_div_2 = (this.edgeVerticeMax.add(this.edgeVerticeMin)).div(2.0f);
+        Vector3D tmp_dim_div_2 = (this.edgeVerticeMax.add(this.edgeVerticeMin)).div(2.0f);
 
         this.edgeVerticeMin.dX = (this.edgeVerticeMin.dX - tmp_dim_div_2.dX) * rate;
         this.edgeVerticeMin.dY = (this.edgeVerticeMin.dY - tmp_dim_div_2.dY) * rate;
@@ -609,7 +609,7 @@ public class MyObject3D extends Entity {
     @Override
     public void translateRepetedWayPosition() {
         if (repetedWayPosition != null) {
-            MyVector3D tmp;
+            Vector3D tmp;
             if ((tmp = repetedWayPosition.getCurrentPosition()) != null) {
                 translate(tmp.dX - this.position.dX, tmp.dY - this.position.dY, tmp.dZ - this.position.dZ);
             }
@@ -635,14 +635,14 @@ public class MyObject3D extends Entity {
                         ForceToEntity forceToEntity = (ForceToEntity) force;
                         Entity dirEntity = contacts.getEntityById(forceToEntity.directionEntityId);
                         if (dirEntity != null) {
-                            MyVector3D forceV = forceToEntity.getForceV(this);
+                            Vector3D forceV = forceToEntity.getForceV(this);
                             forceV = ((dirEntity.position.sub(this.position)).normalizeVector()).mult(forceV.length());
                             sum_force.dX += forceV.dX * ((force.dotMass) ? physic.mass : 1);
                             sum_force.dY += forceV.dY * ((force.dotMass) ? physic.mass : 1);
                             sum_force.dZ += forceV.dZ * ((force.dotMass) ? physic.mass : 1);
                         }
                     } else {
-                        MyVector3D forceV = force.getForceV(this);
+                        Vector3D forceV = force.getForceV(this);
                         sum_force.dX += forceV.dX * ((force.dotMass) ? physic.mass : 1);
                         sum_force.dY += forceV.dY * ((force.dotMass) ? physic.mass : 1);
                         sum_force.dZ += forceV.dZ * ((force.dotMass) ? physic.mass : 1);

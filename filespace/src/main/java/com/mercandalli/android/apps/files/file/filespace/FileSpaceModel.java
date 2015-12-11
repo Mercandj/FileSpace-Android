@@ -19,6 +19,10 @@
  */
 package com.mercandalli.android.apps.files.file.filespace;
 
+import com.mercandalli.android.apps.files.common.util.PointLong;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
+import com.mercandalli.android.apps.files.common.util.TimeUtils;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,11 +30,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.Timer;
-
-import com.mercandalli.android.apps.files.common.util.PointLong;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
-import com.mercandalli.android.apps.files.common.util.TimeUtils;
 
 import static com.mercandalli.android.apps.files.file.filespace.FileSpaceModel.FileSpaceTypeENUM.create;
 
@@ -81,8 +80,9 @@ public class FileSpaceModel {
                 e.printStackTrace();
             }
         }
-        if (mDateCreation != null)
+        if (mDateCreation != null) {
             return mDateCreation.toString();
+        }
         return "null";
     }
 
@@ -134,9 +134,11 @@ public class FileSpaceModel {
         }
 
         public static FileSpaceTypeENUM create(String type_) {
-            for (FileSpaceTypeENUM var : values()){
-                if (var.type.contentEquals(type_)){
-                    return var;}}
+            for (FileSpaceTypeENUM var : values()) {
+                if (var.type.contentEquals(type_)) {
+                    return var;
+                }
+            }
             return UNKNOWN;
         }
 

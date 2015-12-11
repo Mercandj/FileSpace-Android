@@ -37,8 +37,9 @@ public class PhysicsThread extends Thread {
                 tmp_time = System.currentTimeMillis() - tmp_time;
 
                 // World Speed
-                if ((time_sleep = timeLoop - tmp_time) > 0)
+                if ((time_sleep = timeLoop - tmp_time) > 0) {
                     sleep(time_sleep);
+                }
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

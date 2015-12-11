@@ -42,6 +42,7 @@ import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
+import com.mercandalli.android.apps.files.main.Config;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -121,7 +122,7 @@ public class GenealogyTreeFragment extends FabFragment {
                 requestReady = false;
                 new TaskGet(
                         mActivity,
-                        mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeGenealogyChildren + "/" + id_user,
+                        mApplicationCallback.getConfig().getUrlServer() + Config.routeGenealogyChildren + "/" + id_user,
                         new IPostExecuteListener() {
                             @Override
                             public void onPostExecute(JSONObject json, String body) {
@@ -168,7 +169,7 @@ public class GenealogyTreeFragment extends FabFragment {
                 requestReady = false;
                 new TaskGet(
                         mActivity,
-                        mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeGenealogy + "/" + id_user,
+                        mApplicationCallback.getConfig().getUrlServer() + Config.routeGenealogy + "/" + id_user,
                         new IPostExecuteListener() {
                             @Override
                             public void onPostExecute(JSONObject json, String body) {
@@ -179,8 +180,9 @@ public class GenealogyTreeFragment extends FabFragment {
                                             GenealogyTreeFragment.this.genealogyPerson = new ModelGenealogyPerson(mActivity, mApplicationCallback, json.getJSONObject("result"));
                                             GenealogyTreeFragment.this.genealogyPerson.selected = true;
                                         }
-                                    } else
+                                    } else {
                                         Toast.makeText(mActivity, getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

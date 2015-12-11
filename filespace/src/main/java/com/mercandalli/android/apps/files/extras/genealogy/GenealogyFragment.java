@@ -176,8 +176,9 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
         if (currentFragment.isFabVisible(0)) {
             this.circle.show();
             int imageResource = currentFragment.getFabImageResource(0);
-            if (imageResource == -1)
+            if (imageResource == -1) {
                 imageResource = android.R.drawable.ic_input_add;
+            }
             this.circle.setImageResource(imageResource);
             this.circle.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -8,7 +8,7 @@
 package com.mercandalli.android.apps.files.extras.physics.objects;
 
 import com.mercandalli.android.apps.files.extras.physics.lib.WayPosition;
-import com.mercandalli.android.apps.files.extras.physics.lib.MyVector3D;
+import com.mercandalli.android.apps.files.extras.physics.lib.Vector3D;
 import com.mercandalli.android.apps.files.extras.physics.physics.Force;
 import com.mercandalli.android.apps.files.extras.physics.physics.PhysicsObjStats;
 
@@ -28,12 +28,12 @@ public abstract class Entity {
 
     public PhysicsObjStats physic = new PhysicsObjStats();
 
-    public MyVector3D edgeVerticeMin = null;
-    public MyVector3D edgeVerticeMax = null;
+    public Vector3D edgeVerticeMin = null;
+    public Vector3D edgeVerticeMax = null;
 
-    public MyVector3D position = new MyVector3D(0, 0, 0);
-    public MyVector3D velocity = new MyVector3D(0, 0, 0);
-    public MyVector3D acceleration = new MyVector3D(0, 0, 0);
+    public Vector3D position = new Vector3D(0, 0, 0);
+    public Vector3D velocity = new Vector3D(0, 0, 0);
+    public Vector3D acceleration = new Vector3D(0, 0, 0);
 
     public abstract void teleport(float x, float y, float z);
 
@@ -54,7 +54,7 @@ public abstract class Entity {
 
     // Physics
     public boolean contactEnable = true;
-    protected MyVector3D sum_force = new MyVector3D(0, 0, 0);
+    protected Vector3D sum_force = new Vector3D(0, 0, 0);
 
     public abstract void computeForces(EntityGroup contacts);
 

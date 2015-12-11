@@ -10,7 +10,7 @@ package com.mercandalli.android.apps.files.extras.physics.objects;
 import android.content.Context;
 import android.opengl.Matrix;
 
-import com.mercandalli.android.apps.files.extras.physics.lib.MyVector3D;
+import com.mercandalli.android.apps.files.extras.physics.lib.Vector3D;
 
 /**
  * "Main" Camera used as the principal view
@@ -26,9 +26,9 @@ public class Camera {
     public boolean left = false;
     public boolean right = false;
 
-    public MyVector3D mEye;
-    public MyVector3D mForward;
-    public MyVector3D mUp;
+    public Vector3D mEye;
+    public Vector3D mForward;
+    public Vector3D mUp;
     public float fovy, zNear, zFar;
 
     public Camera(Context context) {
@@ -36,9 +36,9 @@ public class Camera {
     }
 
     public void init() {
-        mEye = new MyVector3D(0, 35, 35);
-        mForward = new MyVector3D(0, 0, -1);
-        mUp = new MyVector3D(0, 1, 0);
+        mEye = new Vector3D(0, 35, 35);
+        mForward = new Vector3D(0, 0, -1);
+        mUp = new Vector3D(0, 1, 0);
         fovy = 90;
         zNear = 0.1f;
         zFar = 150;

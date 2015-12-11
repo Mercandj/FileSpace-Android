@@ -109,15 +109,14 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
 
         @Override
         public void onClick(View v) {
-            if (mItemClickListener != null)
+            if (mItemClickListener != null) {
                 mItemClickListener.onItemClick(v, getAdapterPosition());
+            }
         }
 
         @Override
         public boolean onLongClick(View v) {
-            if (mItemLongClickListener != null)
-                return mItemLongClickListener.onItemLongClick(v, getAdapterPosition());
-            return false;
+            return mItemLongClickListener != null && mItemLongClickListener.onItemLongClick(v, getAdapterPosition());
         }
     }
 
@@ -158,13 +157,14 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
 
     @Override
     public int getItemViewType(int position) {
-        if (position < users.size())
+        if (position < users.size()) {
             return users.get(position).viewType;
+        }
         return 0;
     }
 
     public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
+        void onItemClick(View view, int position);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
@@ -172,7 +172,7 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
     }
 
     public interface OnItemLongClickListener {
-        public boolean onItemLongClick(View view, int position);
+        boolean onItemLongClick(View view, int position);
     }
 
     public void setOnItemLongClickListener(final OnItemLongClickListener mItemLongClickListener) {

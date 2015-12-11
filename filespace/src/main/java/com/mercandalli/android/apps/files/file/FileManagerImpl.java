@@ -427,7 +427,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
             } else {
-                Pair<View, String> p1 = Pair.create(view.findViewById(R.id.icon), "transitionIcon");
+                PairObject<View, String> p1 = PairObject.create(view.findViewById(R.id.icon), "transitionIcon");
                 ActivityOptionsCompat options = ActivityOptionsCompat.
                         makeSceneTransitionAnimation(activity, p1);
                 activity.startActivity(intent, options.toBundle());

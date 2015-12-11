@@ -203,8 +203,9 @@ public class Slider extends SliderCustomView {
     @Override
     public void setBackgroundColor(int color) {
         backgroundColor = color;
-        if (isEnabled())
+        if (isEnabled()) {
             beforeBackground = backgroundColor;
+        }
     }
 
     /**
@@ -295,8 +296,9 @@ public class Slider extends SliderCustomView {
         } else {
             // Color by hexadecimal
             int background = attrs.getAttributeIntValue(ANDROIDXML, "background", -1);
-            if (background != -1)
+            if (background != -1) {
                 setBackgroundColor(background);
+            }
         }
 
         showNumberIndicator = attrs.getAttributeBooleanValue(MATERIALDESIGNXML,
