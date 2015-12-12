@@ -14,7 +14,7 @@ import com.mercandalli.android.apps.files.extras.physics.lib.Vector3D;
 import com.mercandalli.android.apps.files.extras.physics.objects.Camera;
 import com.mercandalli.android.apps.files.extras.physics.objects.EntityGroup;
 import com.mercandalli.android.apps.files.extras.physics.objects.Object3D;
-import com.mercandalli.android.apps.files.extras.physics.objects.myTexture;
+import com.mercandalli.android.apps.files.extras.physics.objects.ObjectTexture;
 import com.mercandalli.android.apps.files.extras.physics.physics.Force;
 import com.mercandalli.android.apps.files.extras.physics.physics.ForceToEntity;
 
@@ -93,7 +93,7 @@ public class World extends EntityGroup {
         sun.computeSphereTexture();
         sun.createBuffers();
         sun.translate(0.0f, 30.0f, -30.0f);
-        sun.texture = new myTexture(context, R.drawable.color_yellow);
+        sun.texture = new ObjectTexture(context, R.drawable.color_yellow);
         sun.physic.mass = 0f;
         this.addEntity(sun);
 
@@ -114,7 +114,7 @@ public class World extends EntityGroup {
             earth.computeSphereTexture();
             earth.createBuffers();
             earth.translate(planet.position);
-            earth.texture = new myTexture(context, planet.resourceId);
+            earth.texture = new ObjectTexture(context, planet.resourceId);
             earth.physic.mass = 3f;
             earth.velocity = new Vector3D(0, 0, planet.vZ);
             objSunGravityId.add(this.addEntity(earth));
@@ -155,7 +155,7 @@ public class World extends EntityGroup {
         floor.computePlaneTexture();
         floor.createBuffers();
         floor.rotate(-90, 1, 0, 0);
-        floor.texture = new myTexture(context, R.drawable.color_white);
+        floor.texture = new ObjectTexture(context, R.drawable.color_white);
         this.addEntity(floor);
 
 

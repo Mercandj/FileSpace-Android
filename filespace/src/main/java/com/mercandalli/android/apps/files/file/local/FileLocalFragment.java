@@ -46,7 +46,7 @@ import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
 import com.mercandalli.android.apps.files.file.FileModelListener;
-import com.mercandalli.android.apps.files.main.AppComponent;
+import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.apps.files.main.Constants;
 
 import java.io.File;
@@ -246,8 +246,8 @@ public class FileLocalFragment extends InjectedFabFragment implements
     }
 
     @Override
-    protected void inject(AppComponent appComponent) {
-        appComponent.inject(this);
+    protected void inject(FileAppComponent fileAppComponent) {
+        fileAppComponent.inject(this);
     }
 
     @Override

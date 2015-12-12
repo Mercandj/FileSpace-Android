@@ -87,6 +87,8 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
     private static final String KEY_IS_FIRST_ACCOUNT_PERMISSION_REQUEST = "AccountPermission.Key.KEY_1";
     private static final int RC_SIGN_IN = 28757;
 
+    private static final String ADMIN = "admin";
+
     private final int NB_FRAGMENT = 2;
     private int INIT_FRAGMENT = 1;
 
@@ -403,12 +405,12 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
                                 if (user.has("id")) {
                                     LoginRegisterActivity.this.getConfig().setUserId(LoginRegisterActivity.this, user.getInt("id"));
                                 }
-                                if (user.has("admin")) {
-                                    Object admin_obj = user.get("admin");
+                                if (user.has(ADMIN)) {
+                                    Object admin_obj = user.get(ADMIN);
                                     if (admin_obj instanceof Integer) {
-                                        LoginRegisterActivity.this.getConfig().setUserAdmin(LoginRegisterActivity.this, user.getInt("admin") == 1);
+                                        LoginRegisterActivity.this.getConfig().setUserAdmin(LoginRegisterActivity.this, user.getInt(ADMIN) == 1);
                                     } else if (admin_obj instanceof Boolean) {
-                                        LoginRegisterActivity.this.getConfig().setUserAdmin(LoginRegisterActivity.this, user.getBoolean("admin"));
+                                        LoginRegisterActivity.this.getConfig().setUserAdmin(LoginRegisterActivity.this, user.getBoolean(ADMIN));
                                     }
                                 }
                                 if (user.has("id_file_profile_picture")) {

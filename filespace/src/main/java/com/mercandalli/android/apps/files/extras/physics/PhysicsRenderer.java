@@ -26,7 +26,7 @@ import javax.microedition.khronos.opengles.GL10;
  *
  * @author Jonathan
  */
-public class myRenderer implements GLSurfaceView.Renderer {
+public class PhysicsRenderer implements GLSurfaceView.Renderer {
 
     Context context;
     MyGLSurfaceView mGLView;
@@ -41,7 +41,7 @@ public class myRenderer implements GLSurfaceView.Renderer {
     public Camera camera;
     public long time, fps, tmp_time, tmp_fps; // fps measure
 
-    public myRenderer(Context context, MyGLSurfaceView mGLView) {
+    public PhysicsRenderer(Context context, MyGLSurfaceView mGLView) {
         this.context = context;
         this.mGLView = mGLView;
         this.camera = new Camera(context);

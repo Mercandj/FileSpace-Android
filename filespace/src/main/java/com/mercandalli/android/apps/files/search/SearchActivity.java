@@ -17,7 +17,7 @@ import com.mercandalli.android.apps.files.common.view.divider.SpacesItemDecorati
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
-import com.mercandalli.android.apps.files.main.App;
+import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.Constants;
 
 import java.io.File;
@@ -48,7 +48,7 @@ public class SearchActivity extends AppCompatActivity implements FileModelAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        App.get(this).getAppComponent().inject(this);
+        FileApp.get(this).getFileAppComponent().inject(this);
 
         mFileModelList = new ArrayList<>();
 

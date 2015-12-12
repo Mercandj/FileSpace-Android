@@ -1,8 +1,8 @@
 package com.mercandalli.android.apps.files.file.audio;
 
-import java.io.File;
-
 import com.mercandalli.android.apps.files.file.FileModel;
+
+import java.io.File;
 
 public class FileAudioModel extends FileModel {
 
@@ -50,8 +50,8 @@ public class FileAudioModel extends FileModel {
         @Override
         public FileAudioModel build() {
             FileAudioModel fileAudioModel = new FileAudioModel();
-            fileAudioModel.mId = id;
-            fileAudioModel.mIdUser = idUser;
+            fileAudioModel.mId = mId;
+            fileAudioModel.mIdUser = mIdUser;
             fileAudioModel.mIdFileParent = idFileParent;
             fileAudioModel.mName = name;
             fileAudioModel.mUrl = url;

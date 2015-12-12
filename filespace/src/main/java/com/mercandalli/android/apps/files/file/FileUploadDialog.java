@@ -28,7 +28,7 @@ import android.widget.Toast;
 import javax.inject.Inject;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.main.App;
+import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
 
@@ -54,7 +54,7 @@ public class FileUploadDialog extends Dialog {
     public FileUploadDialog(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final IListener listener) {
         super(activity);
 
-        App.get(activity).getAppComponent().inject(this);
+        FileApp.get(activity).getFileAppComponent().inject(this);
 
         mActivity = activity;
         mApplicationCallback = applicationCallback;

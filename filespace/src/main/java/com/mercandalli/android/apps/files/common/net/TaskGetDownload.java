@@ -47,7 +47,7 @@ import java.net.URL;
 public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
 
     String url;
-    String url_ouput;
+    String mUrlOuput;
     IListener listener;
     Activity mActivity;
 
@@ -58,10 +58,10 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
     NotificationManager mNotifyManager;
     NotificationCompat.Builder mBuilder;
 
-    public TaskGetDownload(Activity activity, String url, String url_ouput, FileModel fileModel, IListener listener) {
+    public TaskGetDownload(Activity activity, String url, String mUrlOuput, FileModel fileModel, IListener listener) {
         mActivity = activity;
         this.url = url;
-        this.url_ouput = url_ouput;
+        this.mUrlOuput = mUrlOuput;
         this.mFileSize = fileModel.getSize();
         this.mFileTypeTitle = fileModel.getType().getTitle();
         this.listener = listener;
@@ -79,7 +79,7 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
 
     @Override
     protected Void doInBackground(Void... urls) {
-        file_from_url_Authorization(this.url);
+        fileFromUrlAuthorization(this.url);
         return null;
     }
 
@@ -96,7 +96,7 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
         this.listener.execute();
     }
 
-    public void file_from_url_Authorization(String url) {
+    public void fileFromUrlAuthorization(String url) {
         try {
             HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
             conn.setRequestProperty("Authorization", "Basic " + Config.getUserToken());
@@ -104,7 +104,7 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
 
             InputStream inputStream = conn.getInputStream();
             long lengthOfFile = Long.parseLong(conn.getHeaderField("Content-Length"));
-            OutputStream outputStream = new FileOutputStream(url_ouput);
+            OutputStream outputStream = new FileOutputStream(mUrlOuput);
 
             byte data[] = new byte[1024];
             long total = 0;

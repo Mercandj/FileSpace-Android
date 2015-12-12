@@ -17,7 +17,7 @@ import java.io.InputStreamReader;
 import java.util.Scanner;
 import java.util.Vector;
 
-public class lib {
+public class Library {
 
     /* OLD : New way to read from raw (not like RollingBall : files include on apk) */
     public static IndicesVertices readMeshLocal(Context ctxt, int id_raw) {

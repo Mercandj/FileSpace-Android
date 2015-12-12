@@ -38,7 +38,7 @@ import android.widget.TextView;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.view.PlayPauseView;
 import com.mercandalli.android.apps.files.common.view.slider.Slider;
-import com.mercandalli.android.apps.files.main.App;
+import com.mercandalli.android.apps.files.main.FileApp;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -107,7 +107,7 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.notifications_bar_audio));
         }
 
-        mFileAudioPlayer = App.get(this).getAppComponent().provideMusicPlayer();
+        mFileAudioPlayer = FileApp.get(this).getFileAppComponent().provideMusicPlayer();
 
         mTitleTextView = (TextView) this.findViewById(R.id.title);
         mSizeTextView = (TextView) this.findViewById(R.id.size);

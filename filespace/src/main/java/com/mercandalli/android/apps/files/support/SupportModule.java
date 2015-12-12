@@ -1,12 +1,14 @@
 package com.mercandalli.android.apps.files.support;
 
+import com.mercandalli.android.apps.files.main.FileAppComponent;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 
 /**
- * A Dagger module used by the {@link com.mercandalli.android.apps.files.main.AppComponent}.
+ * A Dagger module used by the {@link FileAppComponent}.
  */
 @Module
 public class SupportModule {

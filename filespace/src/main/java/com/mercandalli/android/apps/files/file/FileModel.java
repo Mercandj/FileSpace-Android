@@ -40,8 +40,8 @@ public class FileModel implements Parcelable {
     public static class FileModelBuilder {
 
         // Online & Local attrs
-        protected int id;
-        protected int idUser;
+        protected int mId;
+        protected int mIdUser;
         protected int idFileParent;
         protected String name;
         protected String url;
@@ -61,12 +61,12 @@ public class FileModel implements Parcelable {
         protected long countAudio;
 
         public FileModelBuilder id(int id) {
-            this.id = id;
+            this.mId = id;
             return this;
         }
 
         public FileModelBuilder idUser(int idUser) {
-            this.idUser = idUser;
+            this.mIdUser = idUser;
             return this;
         }
 
@@ -126,9 +126,9 @@ public class FileModel implements Parcelable {
                 this.isDirectory = file.isDirectory();
                 this.size = file.length();
                 this.url = file.getAbsolutePath();
-                this.id = url.hashCode();
+                this.mId = url.hashCode();
                 final String tmpName = file.getName();
-                this.name = (tmpName.lastIndexOf(".") == -1) ? tmpName : tmpName.substring(0, tmpName.lastIndexOf("."));
+                this.name = (tmpName.lastIndexOf('.') == -1) ? tmpName : tmpName.substring(0, tmpName.lastIndexOf('.'));
                 this.type = new FileTypeModel(FileUtils.getExtensionFromPath(this.url));
                 this.lastModified = file.lastModified();
                 this.dateCreation = new Date(this.lastModified);
@@ -170,7 +170,7 @@ public class FileModel implements Parcelable {
         }
 
         public FileModelBuilder parcel(Parcel in) {
-            id = in.readInt();
+            mId = in.readInt();
             url = in.readString();
             name = in.readString();
             size = in.readLong();
@@ -183,8 +183,8 @@ public class FileModel implements Parcelable {
 
         public FileModel build() {
             FileModel fileModel = new FileModel();
-            fileModel.mId = id;
-            fileModel.mIdUser = idUser;
+            fileModel.mId = mId;
+            fileModel.mIdUser = mIdUser;
             fileModel.mIdFileParent = idFileParent;
             fileModel.mName = name;
             fileModel.mUrl = url;

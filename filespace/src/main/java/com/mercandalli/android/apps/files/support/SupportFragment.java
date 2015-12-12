@@ -13,7 +13,7 @@ import android.widget.EditText;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
-import com.mercandalli.android.apps.files.main.AppComponent;
+import com.mercandalli.android.apps.files.main.FileAppComponent;
 
 import java.util.List;
 
@@ -67,8 +67,8 @@ public class SupportFragment extends InjectedBackFragment implements View.OnClic
     }
 
     @Override
-    protected void inject(AppComponent appComponent) {
-        appComponent.inject(this);
+    protected void inject(FileAppComponent fileAppComponent) {
+        fileAppComponent.inject(this);
     }
 
     @Override

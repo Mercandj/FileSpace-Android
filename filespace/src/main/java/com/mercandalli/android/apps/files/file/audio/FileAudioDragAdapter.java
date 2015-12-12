@@ -36,7 +36,7 @@ import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.FileTypeModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.FileUtils;
-import com.mercandalli.android.apps.files.main.App;
+import com.mercandalli.android.apps.files.main.FileApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +65,7 @@ public class FileAudioDragAdapter extends RecyclerView.Adapter<FileAudioDragAdap
         this.moreListener = moreListener;
         this.mHasHeader = hasHeader;
 
-        App.get(activity).getAppComponent().inject(this);
+        FileApp.get(activity).getFileAppComponent().inject(this);
     }
 
     @Override

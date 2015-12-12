@@ -256,15 +256,13 @@ public class DialogAddGenealogyPerson extends Dialog {
             this.bt_father.setText(String.format("%s", this.father.first_name_1));
         }
         this.tv_marriage.setText(null);
-        if (this.marriages != null) {
-            if (this.marriages.size() != 0) {
-                String tv_marriage_str = "Partner" + (this.marriages.size() > 1 ? "s: " : ": ");
-                int marriages_size = this.marriages.size();
-                for (int i = 0; i < marriages_size; i++) {
-                    tv_marriage_str += this.marriages.get(i).first_name_1 + (i < marriages_size - 1 ? ", " : "");
-                }
-                this.tv_marriage.setText(tv_marriage_str);
+        if (this.marriages != null && this.marriages.size() != 0) {
+            String tv_marriage_str = "Partner" + (this.marriages.size() > 1 ? "s: " : ": ");
+            int marriages_size = this.marriages.size();
+            for (int i = 0; i < marriages_size; i++) {
+                tv_marriage_str += this.marriages.get(i).first_name_1 + (i < marriages_size - 1 ? ", " : "");
             }
+            this.tv_marriage.setText(tv_marriage_str);
         }
     }
 

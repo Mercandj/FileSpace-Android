@@ -98,7 +98,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
 
     @Override
     protected Void doInBackground(Void... urls) {
-        bitmap = drawable_from_url_Authorization();
+        bitmap = drawableFromUrlAuthorization();
         return null;
     }
 
@@ -107,7 +107,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         this.listener.execute(bitmap);
     }
 
-    public Bitmap drawable_from_url_Authorization() {
+    public Bitmap drawableFromUrlAuthorization() {
         Log.d("TaskGetDownloadImage", "id:" + idFile + "  url:" + url);
 
         if (isModelFile && ImageUtils.isImage(mActivity, this.idFile)) {

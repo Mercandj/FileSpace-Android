@@ -11,7 +11,7 @@ import android.content.Context;
 
 import com.mercandalli.android.apps.files.extras.physics.GLFragment;
 import com.mercandalli.android.apps.files.extras.physics.lib.IndicesVertices;
-import com.mercandalli.android.apps.files.extras.physics.lib.lib;
+import com.mercandalli.android.apps.files.extras.physics.lib.Library;
 
 import com.mercandalli.android.apps.files.R;
 
@@ -34,7 +34,7 @@ public enum ENUM_Obj {
 
     public IndicesVertices getIndicesVertices(Context context) {
         if (object == null) {
-            object = lib.readMeshLocalNomalizedOpti(context, id);
+            object = Library.readMeshLocalNomalizedOpti(context, id);
             GLFragment.progress = GLFragment.progress + 1;
         }
         return new IndicesVertices(object);

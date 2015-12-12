@@ -26,6 +26,11 @@ public class GameCase {
     }
 
     @Override
+    public int hashCode() {
+        return (value + " " + x + " " + y).hashCode();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == null) {
             return false;

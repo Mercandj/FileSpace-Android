@@ -20,6 +20,11 @@ public class StringPair {
         return name + "=" + value;
     }
 
+    @Override
+    public int hashCode() {
+        return (name.hashCode() + " " + value.hashCode()).hashCode();
+    }
+
     public boolean equals(Object o) {
         if (this == o) {
             return true;

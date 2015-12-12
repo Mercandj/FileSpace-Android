@@ -217,6 +217,11 @@ public class ModelGenealogyPerson extends Model {
     }
 
     @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == null) {
             return false;

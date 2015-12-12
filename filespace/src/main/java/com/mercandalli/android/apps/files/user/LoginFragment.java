@@ -40,6 +40,8 @@ import java.util.List;
 
 public class LoginFragment extends BackFragment {
 
+    private static final String ADMIN = "admin";
+
     private boolean requestLaunched = false; // Block the second task if one launch
     private EditText username, password;
 
@@ -168,12 +170,12 @@ public class LoginFragment extends BackFragment {
                                 if (user.has("id")) {
                                     mApplicationCallback.getConfig().setUserId(mActivity, user.getInt("id"));
                                 }
-                                if (user.has("admin")) {
-                                    Object admin_obj = user.get("admin");
+                                if (user.has(ADMIN)) {
+                                    Object admin_obj = user.get(ADMIN);
                                     if (admin_obj instanceof Integer) {
-                                        mApplicationCallback.getConfig().setUserAdmin(mActivity, user.getInt("admin") == 1);
+                                        mApplicationCallback.getConfig().setUserAdmin(mActivity, user.getInt(ADMIN) == 1);
                                     } else if (admin_obj instanceof Boolean) {
-                                        mApplicationCallback.getConfig().setUserAdmin(mActivity, user.getBoolean("admin"));
+                                        mApplicationCallback.getConfig().setUserAdmin(mActivity, user.getBoolean(ADMIN));
                                     }
                                 }
                                 if (user.has("id_file_profile_picture")) {

@@ -145,10 +145,10 @@ public class GenealogyBigTreeView extends View {
                 tableau_positions_vertical.add(ligne_courante);
                 tableau_positions_horizontal.add(2 * position_ds_ligne_courante);
                 nbre_noms_ligne_courante++;
-                Log.d("ArbreView_Constructeur", "position pere : " + String.valueOf(ligne_courante) + " " + String.valueOf(2 * position_ds_ligne_courante));
+                Log.d("ArbreView_Constructeur", "position pere : " + ligne_courante + " " + (2 * position_ds_ligne_courante));
                 tableau_positions_vertical.add(ligne_courante);
                 tableau_positions_horizontal.add(2 * position_ds_ligne_courante + 1);
-                Log.d("ArbreView_Constructeur", "position mere : " + String.valueOf(ligne_courante) + " " + String.valueOf(2 * position_ds_ligne_courante + 1));
+                Log.d("ArbreView_Constructeur", "position mere : " + ligne_courante + " " + (2 * position_ds_ligne_courante + 1));
                 nbre_noms_ligne_courante++;
                 position_ds_ligne_courante++;
             }
@@ -163,10 +163,10 @@ public class GenealogyBigTreeView extends View {
         // --- voir les tableaux des ascendants et des positions dans les log
         for (int i = 0; i < tableau_ascendants.size(); i++) {
             personne = tableau_ascendants.get(i);
-            Log.d("ArbreView_Constructeur", "tableau_ascendants : " + String.valueOf(personne.id) + " " + personne.getAdapterTitle());
+            Log.d("ArbreView_Constructeur", "tableau_ascendants : " + personne.id + " " + personne.getAdapterTitle());
         }
         for (int i = 0; i < tableau_positions_vertical.size(); i++) {
-            Log.d("ArbreView_Constructeur", "tableau_positions : " + String.valueOf(tableau_positions_vertical.get(i)) + " " + String.valueOf(tableau_positions_horizontal.get(i)));
+            Log.d("ArbreView_Constructeur", "tableau_positions : " + tableau_positions_vertical.get(i) + " " + tableau_positions_horizontal.get(i));
         }
 
         // --- init des tableaux des longueurs des lignes de l arbre et coordonnees horizontales des points milieu des noms a afficher

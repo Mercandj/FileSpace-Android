@@ -26,16 +26,16 @@ import dagger.Component;
 @Singleton
 @Component(
         modules = {
-                AppModule.class,
+                FileAppModule.class,
                 FileModule.class,
                 FileAudioModule.class,
                 SupportModule.class
         }
 )
-public interface AppComponent {
+public interface FileAppComponent {
 
     //Injections
-    void inject(App app);
+    void inject(FileApp fileApp);
 
     void inject(MainActivity mainActivity);
 

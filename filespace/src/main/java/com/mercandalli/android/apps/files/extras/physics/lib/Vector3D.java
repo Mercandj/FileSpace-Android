@@ -128,6 +128,11 @@ public class Vector3D {
     }
 
     @Override
+    public int hashCode() {
+        return (dX + " " + dY + " " + dZ).hashCode();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

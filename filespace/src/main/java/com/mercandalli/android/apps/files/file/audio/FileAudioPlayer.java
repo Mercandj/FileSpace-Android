@@ -12,17 +12,17 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 
+import com.mercandalli.android.apps.files.R;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mercandalli.android.apps.files.R;
-
 public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
 
-    int STATUS_PAUSED = 0;
-    int STATUS_PLAYING = 1;
-    int STATUS_PREPARING = 3;
+    private static final int STATUS_PAUSED = 0;
+    private static final int STATUS_PLAYING = 1;
+    private static final int STATUS_PREPARING = 3;
 
     private int mCurrentStatus;
 

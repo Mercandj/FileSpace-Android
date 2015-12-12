@@ -45,7 +45,7 @@ public class MainActivity extends NavDrawerActivity implements SetToolbarCallbac
         super.onCreate(savedInstanceState);
 
         // Dagger
-        App.get(this).getAppComponent().inject(this);
+        FileApp.get(this).getFileAppComponent().inject(this);
 
         // Notification
         if (TextUtils.isEmpty(NotificationPush.regId)) {

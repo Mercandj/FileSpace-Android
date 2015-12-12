@@ -125,7 +125,7 @@ public class FileUtils {
         if (!path.contains(".")) {
             return "";
         }
-        return path.substring(path.lastIndexOf(".") + 1);
+        return path.substring(path.lastIndexOf('.') + 1);
     }
 
     public static String getNameFromPath(String path) {
@@ -135,7 +135,7 @@ public class FileUtils {
         if (path.endsWith("/")) {
             return getNameFromPath(path.substring(0, path.length() - 1));
         }
-        return path.substring(path.lastIndexOf("/") + 1);
+        return path.substring(path.lastIndexOf('/') + 1);
     }
 
     public static String getParentPathFromPath(String path) {
@@ -145,7 +145,7 @@ public class FileUtils {
         if (path.endsWith("/")) {
             return getParentPathFromPath(path.substring(0, path.length() - 1));
         }
-        return path.substring(0, path.lastIndexOf("/"));
+        return path.substring(0, path.lastIndexOf('/'));
     }
 
     public static String getRealPathFromURI(Context context, Uri contentUri) {

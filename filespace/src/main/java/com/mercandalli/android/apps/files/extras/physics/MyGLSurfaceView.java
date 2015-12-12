@@ -26,7 +26,7 @@ import android.view.ScaleGestureDetector;
  */
 public class MyGLSurfaceView extends GLSurfaceView implements SensorEventListener {
 
-    public final myRenderer mRenderer;
+    public final PhysicsRenderer mRenderer;
 
     public MyGLSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -35,7 +35,7 @@ public class MyGLSurfaceView extends GLSurfaceView implements SensorEventListene
         setEGLContextClientVersion(2);
 
         // Set the Renderer for drawing on the GLSurfaceView
-        mRenderer = new myRenderer(context, this);
+        mRenderer = new PhysicsRenderer(context, this);
 
         setEGLConfigChooser(8, 8, 8, 8, 16, 0);
         setRenderer(mRenderer);

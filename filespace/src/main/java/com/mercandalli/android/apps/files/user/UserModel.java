@@ -46,6 +46,8 @@ import java.util.TimeZone;
 
 public class UserModel {
 
+    private static final String ADMIN = "admin";
+
     public int id, id_file_profile_picture = -1;
     public String username;
     public String password;
@@ -95,12 +97,12 @@ public class UserModel {
             if (json.has("server_max_size_end_user") && !json.isNull("server_max_size_end_user")) {
                 this.server_max_size_end_user = json.getLong("server_max_size_end_user");
             }
-            if (json.has("admin")) {
-                Object admin_obj = json.get("admin");
+            if (json.has(ADMIN)) {
+                Object admin_obj = json.get(ADMIN);
                 if (admin_obj instanceof Integer) {
-                    this.admin = json.getInt("admin") == 1;
+                    this.admin = json.getInt(ADMIN) == 1;
                 } else if (admin_obj instanceof Boolean) {
-                    this.admin = json.getBoolean("admin");
+                    this.admin = json.getBoolean(ADMIN);
                 }
             }
 
@@ -173,12 +175,11 @@ public class UserModel {
     }
 
     public void delete(Activity activity, ApplicationCallback applicationCallback, IPostExecuteListener listener) {
-        if (applicationCallback != null) {
-            if (applicationCallback.getConfig().isUserAdmin() && this.id != Config.getUserId()) {
-                String url = applicationCallback.getConfig().getUrlServer() + Config.routeUserDelete + "/" + this.id;
-                new TaskPost(activity, applicationCallback, url, listener).execute();
-                return;
-            }
+        if (applicationCallback != null &&
+                applicationCallback.getConfig().isUserAdmin() && this.id != Config.getUserId()) {
+            String url = applicationCallback.getConfig().getUrlServer() + Config.routeUserDelete + "/" + this.id;
+            new TaskPost(activity, applicationCallback, url, listener).execute();
+            return;
         }
         if (listener != null) {
             listener.onPostExecute(null, null);

@@ -42,7 +42,7 @@
         android:required="false" />
 
     <application
-        android:name="com.mercandalli.android.apps.files.main.App"
+        android:name=".main.FileApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

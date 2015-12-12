@@ -29,7 +29,7 @@ import com.mercandalli.android.apps.files.R;
 public class Slider extends SliderCustomView {
 
     private int backgroundColor = Color.parseColor("#4CAF50");
-    private Ball ball;
+    private SliderBall mSliderBall;
     private Bitmap bitmap;
     private int max = 100;
     private int min = 0;
@@ -95,17 +95,17 @@ public class Slider extends SliderCustomView {
             });
         } else {
             this.value = value;
-            float division = (ball.xFin - ball.xIni) / max;
-            ViewHelper.setX(ball,
-                    value * division + getHeight() / 2 - ball.getWidth() / 2);
-            ball.changeBackground();
+            float division = (mSliderBall.xFin - mSliderBall.xIni) / max;
+            ViewHelper.setX(mSliderBall,
+                    value * division + getHeight() / 2 - mSliderBall.getWidth() / 2);
+            mSliderBall.changeBackground();
         }
 
     }
 
     @Override
     public void invalidate() {
-        ball.invalidate();
+        mSliderBall.invalidate();
         super.invalidate();
     }
 
@@ -140,13 +140,13 @@ public class Slider extends SliderCustomView {
                     press = true;
                     // calculate value
                     int newValue = 0;
-                    float division = (ball.xFin - ball.xIni) / (max - min);
-                    if (event.getX() > ball.xFin) {
+                    float division = (mSliderBall.xFin - mSliderBall.xIni) / (max - min);
+                    if (event.getX() > mSliderBall.xFin) {
                         newValue = max;
-                    } else if (event.getX() < ball.xIni) {
+                    } else if (event.getX() < mSliderBall.xIni) {
                         newValue = min;
                     } else {
-                        newValue = min + (int) ((event.getX() - ball.xIni) / division);
+                        newValue = min + (int) ((event.getX() - mSliderBall.xIni) / division);
                     }
 
                     if (value != newValue) {
@@ -158,10 +158,10 @@ public class Slider extends SliderCustomView {
 
                     // move ball indicator
                     float x = event.getX();
-                    x = (x < ball.xIni) ? ball.xIni : x;
-                    x = (x > ball.xFin) ? ball.xFin : x;
-                    ViewHelper.setX(ball, x);
-                    ball.changeBackground();
+                    x = (x < mSliderBall.xIni) ? mSliderBall.xIni : x;
+                    x = (x > mSliderBall.xFin) ? mSliderBall.xFin : x;
+                    ViewHelper.setX(mSliderBall, x);
+                    mSliderBall.changeBackground();
 
                     // If slider has number indicator
                     if (numberIndicator != null && isNumberIndicator) {
@@ -250,9 +250,9 @@ public class Slider extends SliderCustomView {
                     android.R.color.transparent));
             transparentPaint.setXfermode(new PorterDuffXfermode(
                     PorterDuff.Mode.CLEAR));
-            temp.drawCircle(ViewHelper.getX(ball) + ball.getWidth() / 2,
-                    ViewHelper.getY(ball) + ball.getHeight() / 2,
-                    ball.getWidth() / 2, transparentPaint);
+            temp.drawCircle(ViewHelper.getX(mSliderBall) + mSliderBall.getWidth() / 2,
+                    ViewHelper.getY(mSliderBall) + mSliderBall.getHeight() / 2,
+                    mSliderBall.getWidth() / 2, transparentPaint);
 
             canvas.drawBitmap(bitmap, 0, 0, new Paint());
         } else {
@@ -261,7 +261,7 @@ public class Slider extends SliderCustomView {
             canvas.drawLine(getHeight() / 2, getHeight() / 2, getWidth()
                     - getHeight() / 2, getHeight() / 2, paint);
             paint.setColor(backgroundColor);
-            float division = (ball.xFin - ball.xIni) / (max - min);
+            float division = (mSliderBall.xFin - mSliderBall.xIni) / (max - min);
             int value = this.value - min;
 
             canvas.drawLine(getHeight() / 2, getHeight() / 2, value * division
@@ -272,7 +272,7 @@ public class Slider extends SliderCustomView {
         if (press && !showNumberIndicator) {
             paint.setColor(backgroundColor);
             paint.setAntiAlias(true);
-            canvas.drawCircle(ViewHelper.getX(ball) + ball.getWidth() / 2,
+            canvas.drawCircle(ViewHelper.getX(mSliderBall) + mSliderBall.getWidth() / 2,
                     getHeight() / 2, getHeight() / 3, paint);
         }
         invalidate();
@@ -307,12 +307,12 @@ public class Slider extends SliderCustomView {
         max = attrs.getAttributeIntValue(MATERIALDESIGNXML, "max", 0);
         value = attrs.getAttributeIntValue(MATERIALDESIGNXML, "value", min);
 
-        ball = new Ball(getContext());
+        mSliderBall = new SliderBall(getContext());
         RelativeLayout.LayoutParams params = new LayoutParams(SliderUtils.dpToPx(20,
                 getResources()), SliderUtils.dpToPx(20, getResources()));
         params.addRule(CENTER_VERTICAL, TRUE);
-        ball.setLayoutParams(params);
-        addView(ball);
+        mSliderBall.setLayoutParams(params);
+        addView(mSliderBall);
 
         initialValue = min;
 
@@ -330,14 +330,14 @@ public class Slider extends SliderCustomView {
     }
 
     public void updateAfterRotation() {
-        ball.xFin = getWidth() - getHeight() / 2 - ball.getWidth() / 2;
+        mSliderBall.xFin = getWidth() - getHeight() / 2 - mSliderBall.getWidth() / 2;
     }
 
     private void placeBall() {
-        ViewHelper.setX(ball, getHeight() / 2 - ball.getWidth() / 2);
-        ball.xIni = ViewHelper.getX(ball);
-        ball.xFin = getWidth() - getHeight() / 2 - ball.getWidth() / 2;
-        ball.xCen = getWidth() / 2 - ball.getWidth() / 2;
+        ViewHelper.setX(mSliderBall, getHeight() / 2 - mSliderBall.getWidth() / 2);
+        mSliderBall.xIni = ViewHelper.getX(mSliderBall);
+        mSliderBall.xFin = getWidth() - getHeight() / 2 - mSliderBall.getWidth() / 2;
+        mSliderBall.xCen = getWidth() / 2 - mSliderBall.getWidth() / 2;
         placedBall = true;
     }
 
@@ -348,11 +348,11 @@ public class Slider extends SliderCustomView {
         void onValueChangedUp(int value);
     }
 
-    class Ball extends View {
+    class SliderBall extends View {
 
         float xIni, xFin, xCen;
 
-        public Ball(Context context) {
+        public SliderBall(Context context) {
             super(context);
             setBackgroundResource(R.drawable.background_switch_ball_uncheck);
         }
@@ -424,8 +424,8 @@ public class Slider extends SliderCustomView {
                 size += SliderUtils.dpToPx(2, getResources());
             }
 
-            float cx = ViewHelper.getX(ball) + SliderUtils.getRelativeLeft((View) ball.getParent())
-                    + ball.getWidth() / 2;
+            float cx = ViewHelper.getX(mSliderBall) + SliderUtils.getRelativeLeft((View) mSliderBall.getParent())
+                    + mSliderBall.getWidth() / 2;
 
             paintBorder.setShadowLayer(size / 1.6f, 0.0f, size / 4.0f, Color.BLACK);
 

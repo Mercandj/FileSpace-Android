@@ -52,7 +52,7 @@ public class Object3D extends Entity {
     private float color[] = {0.8f, 0.409803922f, 0.498039216f, 1.0f};
     public float[] transformationMatrix = new float[16];
 
-    public myTexture texture, texture_bump;
+    public ObjectTexture texture, texture_bump;
 
     private int mProgram;
     private int mPositionHandle;
