@@ -21,6 +21,7 @@ package com.mercandalli.android.apps.files.user;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.mercandalli.android.apps.files.common.listener.IBitmapListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
@@ -119,7 +120,7 @@ public class UserModel {
             userLocation = new UserLocationModel(json);
 
         } catch (JSONException | ParseException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Failed to convert Json", e);
         }
 
         if (hasPicture()) {

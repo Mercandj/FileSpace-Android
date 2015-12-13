@@ -75,17 +75,17 @@ public class GenealogyListFragment extends FabFragment {
 
     private View coordinatorLayoutView;
 
-    public static boolean MODE_SELECTION_FATHER = false;
-    public static boolean MODE_SELECTION_MOTHER = false;
-    public static boolean MODE_SELECTION_PARTNER = false;
+    public static boolean mModeSelectionFather = false;
+    public static boolean mModeSelectionMother = false;
+    public static boolean mModeSelectionPartner = false;
 
     private Activity mActivity;
     private ApplicationCallback mApplicationCallback;
 
     public static void resetMode() {
-        MODE_SELECTION_FATHER = false;
-        MODE_SELECTION_MOTHER = false;
-        MODE_SELECTION_PARTNER = false;
+        mModeSelectionFather = false;
+        mModeSelectionMother = false;
+        mModeSelectionPartner = false;
     }
 
     public static GenealogyListFragment newInstance() {
@@ -264,17 +264,17 @@ public class GenealogyListFragment extends FabFragment {
             this.mAdapter.setOnItemClickListener(new AdapterModelGenealogyUser.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    if (MODE_SELECTION_FATHER) {
+                    if (mModeSelectionFather) {
                         if (mDialog != null && mDialog instanceof DialogAddGenealogyPerson) {
                             ((DialogAddGenealogyPerson) mDialog).setFather(list.get(position));
                             mDialog.show();
                         }
-                    } else if (MODE_SELECTION_MOTHER) {
+                    } else if (mModeSelectionMother) {
                         if (mDialog != null && mDialog instanceof DialogAddGenealogyPerson) {
                             ((DialogAddGenealogyPerson) mDialog).setMother(list.get(position));
                             mDialog.show();
                         }
-                    } else if (MODE_SELECTION_PARTNER) {
+                    } else if (mModeSelectionPartner) {
                         if (mDialog != null && mDialog instanceof DialogAddGenealogyPerson) {
                             ((DialogAddGenealogyPerson) mDialog).addPartner(list.get(position));
                             mDialog.show();

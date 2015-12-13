@@ -22,6 +22,7 @@ package com.mercandalli.android.apps.files.admin;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -139,7 +140,7 @@ public class UserAddFragment extends BackFragment {
                                     Toast.makeText(mActivity, mActivity.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                Log.e(getClass().getName(), "Failed to convert Json", e);
                             }
                             requestLaunched = false;
                         }

@@ -160,13 +160,13 @@ public class Base64 {
     /**
      * Specify encoding in first bit. Value is one.
      */
-    public final static int ENCODE = 1;
+    public final static int ENCODE_INT = 1;
 
 
     /**
      * Specify decoding in first bit. Value is zero.
      */
-    public final static int DECODE = 0;
+    public final static int DECODE_INT = 0;
 
 
     /**
@@ -684,7 +684,7 @@ public class Base64 {
         try {
             // ObjectOutputStream -> (GZIP) -> Base64 -> ByteArrayOutputStream
             baos = new java.io.ByteArrayOutputStream();
-            b64os = new Base64.OutputStream(baos, ENCODE | options);
+            b64os = new Base64.OutputStream(baos, ENCODE_INT | options);
             if ((options & GZIP) != 0) {
                 // Gzip
                 gzos = new java.util.zip.GZIPOutputStream(b64os);
@@ -932,7 +932,7 @@ public class Base64 {
             try {
                 // GZip -> Base64 -> ByteArray
                 baos = new java.io.ByteArrayOutputStream();
-                b64os = new Base64.OutputStream(baos, ENCODE | options);
+                b64os = new Base64.OutputStream(baos, ENCODE_INT | options);
                 gzos = new java.util.zip.GZIPOutputStream(b64os);
 
                 gzos.write(source, off, len);
@@ -1443,7 +1443,7 @@ public class Base64 {
         Base64.OutputStream bos = null;
         try {
             bos = new Base64.OutputStream(
-                    new java.io.FileOutputStream(filename), Base64.ENCODE);
+                    new java.io.FileOutputStream(filename), Base64.ENCODE_INT);
             bos.write(dataToEncode);
         }   // end try
         catch (java.io.IOException e) {
@@ -1478,7 +1478,7 @@ public class Base64 {
         Base64.OutputStream bos = null;
         try {
             bos = new Base64.OutputStream(
-                    new java.io.FileOutputStream(filename), Base64.DECODE);
+                    new java.io.FileOutputStream(filename), Base64.DECODE_INT);
             bos.write(dataToDecode.getBytes(PREFERRED_ENCODING));
         }   // end try
         catch (java.io.IOException e) {
@@ -1529,7 +1529,7 @@ public class Base64 {
             // Open a stream
             bis = new Base64.InputStream(
                     new java.io.BufferedInputStream(
-                            new java.io.FileInputStream(file)), Base64.DECODE);
+                            new java.io.FileInputStream(file)), Base64.DECODE_INT);
 
             // Read until done
             while ((numBytes = bis.read(buffer, length, 4096)) >= 0) {
@@ -1584,7 +1584,7 @@ public class Base64 {
             // Open a stream
             bis = new Base64.InputStream(
                     new java.io.BufferedInputStream(
-                            new java.io.FileInputStream(file)), Base64.ENCODE);
+                            new java.io.FileInputStream(file)), Base64.ENCODE_INT);
 
             // Read until done
             while ((numBytes = bis.read(buffer, length, 4096)) >= 0) {
@@ -1693,32 +1693,32 @@ public class Base64 {
 
 
         /**
-         * Constructs a {@link Base64.InputStream} in DECODE mode.
+         * Constructs a {@link Base64.InputStream} in DECODE_INT mode.
          *
          * @param in the <tt>java.io.InputStream</tt> from which to read data.
          * @since 1.3
          */
         public InputStream(java.io.InputStream in) {
-            this(in, DECODE);
+            this(in, DECODE_INT);
         }   // end constructor
 
 
         /**
          * Constructs a {@link Base64.InputStream} in
-         * either ENCODE or DECODE mode.
+         * either ENCODE_INT or DECODE_INT mode.
          * <p/>
          * Valid options:<pre>
-         *   ENCODE or DECODE: Encode or Decode as data is read.
+         *   ENCODE_INT or DECODE_INT: Encode or Decode as data is read.
          *   DO_BREAK_LINES: break lines at 76 characters
          *     (only meaningful when encoding)</i>
          * </pre>
          * <p/>
-         * Example: <code>new Base64.InputStream( in, Base64.DECODE )</code>
+         * Example: <code>new Base64.InputStream( in, Base64.DECODE_INT )</code>
          *
          * @param in      the <tt>java.io.InputStream</tt> from which to read data.
          * @param options Specified options
-         * @see Base64#ENCODE
-         * @see Base64#DECODE
+         * @see Base64#ENCODE_INT
+         * @see Base64#DECODE_INT
          * @see Base64#DO_BREAK_LINES
          * @since 2.0
          */
@@ -1727,7 +1727,7 @@ public class Base64 {
             super(in);
             this.options = options; // Record for later
             this.breakLines = (options & DO_BREAK_LINES) > 0;
-            this.encode = (options & ENCODE) > 0;
+            this.encode = (options & ENCODE_INT) > 0;
             this.bufferLength = encode ? 4 : 3;
             this.buffer = new byte[bufferLength];
             this.position = -1;
@@ -1899,49 +1899,49 @@ public class Base64 {
         private int lineLength;
         private boolean breakLines;
         private byte[] b4;         // Scratch used in a few places
-        private boolean suspendEncoding;
+        private boolean mSuspendEncoding;
         private int options;    // Record for later
         private byte[] decodabet;  // Local copies to avoid extra method calls
 
         /**
-         * Constructs a {@link Base64.OutputStream} in ENCODE mode.
+         * Constructs a {@link Base64.OutputStream} in ENCODE_INT mode.
          *
          * @param out the <tt>java.io.OutputStream</tt> to which data will be written.
          * @since 1.3
          */
         public OutputStream(java.io.OutputStream out) {
-            this(out, ENCODE);
+            this(out, ENCODE_INT);
         }   // end constructor
 
 
         /**
          * Constructs a {@link Base64.OutputStream} in
-         * either ENCODE or DECODE mode.
+         * either ENCODE_INT or DECODE_INT mode.
          * <p/>
          * Valid options:<pre>
-         *   ENCODE or DECODE: Encode or Decode as data is read.
+         *   ENCODE_INT or DECODE_INT: Encode or Decode as data is read.
          *   DO_BREAK_LINES: don't break lines at 76 characters
          *     (only meaningful when encoding)</i>
          * </pre>
          * <p/>
-         * Example: <code>new Base64.OutputStream( out, Base64.ENCODE )</code>
+         * Example: <code>new Base64.OutputStream( out, Base64.ENCODE_INT )</code>
          *
          * @param out     the <tt>java.io.OutputStream</tt> to which data will be written.
          * @param options Specified options.
-         * @see Base64#ENCODE
-         * @see Base64#DECODE
+         * @see Base64#ENCODE_INT
+         * @see Base64#DECODE_INT
          * @see Base64#DO_BREAK_LINES
          * @since 1.3
          */
         public OutputStream(java.io.OutputStream out, int options) {
             super(out);
             this.breakLines = (options & DO_BREAK_LINES) != 0;
-            this.encode = (options & ENCODE) != 0;
+            this.encode = (options & ENCODE_INT) != 0;
             this.bufferLength = encode ? 3 : 4;
             this.buffer = new byte[bufferLength];
             this.position = 0;
             this.lineLength = 0;
-            this.suspendEncoding = false;
+            this.mSuspendEncoding = false;
             this.b4 = new byte[4];
             this.options = options;
             this.decodabet = getDecodabet(options);
@@ -1964,7 +1964,7 @@ public class Base64 {
         public void write(int theByte)
                 throws java.io.IOException {
             // Encoding suspended?
-            if (suspendEncoding) {
+            if (mSuspendEncoding) {
                 this.out.write(theByte);
                 return;
             }   // end if: supsended
@@ -2018,7 +2018,7 @@ public class Base64 {
         public void write(byte[] theBytes, int off, int len)
                 throws java.io.IOException {
             // Encoding suspended?
-            if (suspendEncoding) {
+            if (mSuspendEncoding) {
                 this.out.write(theBytes, off, len);
                 return;
             }   // end if: supsended
@@ -2079,7 +2079,7 @@ public class Base64 {
          */
         public void suspendEncoding() throws java.io.IOException {
             flushBase64();
-            this.suspendEncoding = true;
+            this.mSuspendEncoding = true;
         }   // end suspendEncoding
 
 
@@ -2091,7 +2091,7 @@ public class Base64 {
          * @since 1.5.1
          */
         public void resumeEncoding() {
-            this.suspendEncoding = false;
+            this.mSuspendEncoding = false;
         }   // end resumeEncoding
 
 

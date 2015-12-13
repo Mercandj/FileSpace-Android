@@ -10,16 +10,16 @@ public class FileAudioModel extends FileModel {
     protected String mArtist;
 
     public static class FileMusicModelBuilder extends FileModelBuilder {
-        private String album;
-        private String artist;
+        private String mAlbum;
+        private String mArtist;
 
         public FileMusicModelBuilder album(String album) {
-            this.album = album;
+            this.mAlbum = album;
             return this;
         }
 
         public FileMusicModelBuilder artist(String artist) {
-            this.artist = artist;
+            this.mArtist = artist;
             return this;
         }
 
@@ -52,22 +52,22 @@ public class FileAudioModel extends FileModel {
             FileAudioModel fileAudioModel = new FileAudioModel();
             fileAudioModel.mId = mId;
             fileAudioModel.mIdUser = mIdUser;
-            fileAudioModel.mIdFileParent = idFileParent;
-            fileAudioModel.mName = name;
-            fileAudioModel.mUrl = url;
-            fileAudioModel.mSize = size;
-            fileAudioModel.mIsPublic = isPublic;
-            fileAudioModel.mType = type;
-            fileAudioModel.mIsDirectory = isDirectory;
-            fileAudioModel.mDateCreation = dateCreation;
-            fileAudioModel.mIsApkUpdate = isApkUpdate;
-            fileAudioModel.mContent = content;
-            fileAudioModel.mFile = file;
-            fileAudioModel.mLastModified = lastModified;
-            fileAudioModel.mCount = count;
+            fileAudioModel.mIdFileParent = mIdFileParent;
+            fileAudioModel.mName = mName;
+            fileAudioModel.mUrl = mUrl;
+            fileAudioModel.mSize = mSize;
+            fileAudioModel.mIsPublic = mIsPublic;
+            fileAudioModel.mType = mType;
+            fileAudioModel.mIsDirectory = mIsDirectory;
+            fileAudioModel.mDateCreation = mDateCreation;
+            fileAudioModel.mIsApkUpdate = mIsApkUpdate;
+            fileAudioModel.mContent = mContent;
+            fileAudioModel.mFile = mFile;
+            fileAudioModel.mLastModified = mLastModified;
+            fileAudioModel.mCount = mCount;
 
-            fileAudioModel.mAlbum = album;
-            fileAudioModel.mArtist = artist;
+            fileAudioModel.mAlbum = mAlbum;
+            fileAudioModel.mArtist = mArtist;
             return fileAudioModel;
         }
     }

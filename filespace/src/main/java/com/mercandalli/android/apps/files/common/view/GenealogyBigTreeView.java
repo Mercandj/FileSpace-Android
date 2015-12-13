@@ -17,6 +17,8 @@ import java.util.List;
 
 public class GenealogyBigTreeView extends View {
 
+    private static final String TAG = "GenealogyBigTreeView";
+
     private ModelGenealogyPerson personne;
     List<ModelGenealogyPerson> tableau_ascendants;
     List<Integer> tableau_positions_horizontal;                // position sur la ligne de l arbre (de la gauche vers la droite)
@@ -141,14 +143,14 @@ public class GenealogyBigTreeView extends View {
         for (int i = 0; i < tableau_ascendants.size(); i++) {
             personne = tableau_ascendants.get(i);
             if (personne.isValid()) {
-                Log.d("ArbreView_Constructeur", "analyse : " + personne.getAdapterTitle());
+                Log.d(TAG, "analyse : " + personne.getAdapterTitle());
                 tableau_positions_vertical.add(ligne_courante);
                 tableau_positions_horizontal.add(2 * position_ds_ligne_courante);
                 nbre_noms_ligne_courante++;
-                Log.d("ArbreView_Constructeur", "position pere : " + ligne_courante + " " + (2 * position_ds_ligne_courante));
+                Log.d(TAG, "position pere : " + ligne_courante + " " + (2 * position_ds_ligne_courante));
                 tableau_positions_vertical.add(ligne_courante);
                 tableau_positions_horizontal.add(2 * position_ds_ligne_courante + 1);
-                Log.d("ArbreView_Constructeur", "position mere : " + ligne_courante + " " + (2 * position_ds_ligne_courante + 1));
+                Log.d(TAG, "position mere : " + ligne_courante + " " + (2 * position_ds_ligne_courante + 1));
                 nbre_noms_ligne_courante++;
                 position_ds_ligne_courante++;
             }
@@ -163,10 +165,10 @@ public class GenealogyBigTreeView extends View {
         // --- voir les tableaux des ascendants et des positions dans les log
         for (int i = 0; i < tableau_ascendants.size(); i++) {
             personne = tableau_ascendants.get(i);
-            Log.d("ArbreView_Constructeur", "tableau_ascendants : " + personne.id + " " + personne.getAdapterTitle());
+            Log.d(TAG, "tableau_ascendants : " + personne.id + " " + personne.getAdapterTitle());
         }
         for (int i = 0; i < tableau_positions_vertical.size(); i++) {
-            Log.d("ArbreView_Constructeur", "tableau_positions : " + tableau_positions_vertical.get(i) + " " + tableau_positions_horizontal.get(i));
+            Log.d(TAG, "tableau_positions : " + tableau_positions_vertical.get(i) + " " + tableau_positions_horizontal.get(i));
         }
 
         // --- init des tableaux des longueurs des lignes de l arbre et coordonnees horizontales des points milieu des noms a afficher

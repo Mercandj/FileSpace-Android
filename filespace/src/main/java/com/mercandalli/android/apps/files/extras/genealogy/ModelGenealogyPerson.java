@@ -143,11 +143,9 @@ public class ModelGenealogyPerson extends Model {
     }
 
     public void modify(IPostExecuteListener listener) {
-        if (this.app != null) {
-            if (this.app.getConfig().isUserAdmin() && this.id != this.app.getConfig().getUserId()) {
-                new DialogAddGenealogyPerson(mActivity, app, listener, mActivity.getString(R.string.modify), this);
-                return;
-            }
+        if (this.app != null && this.app.getConfig().isUserAdmin() && this.id != Config.getUserId()) {
+            new DialogAddGenealogyPerson(mActivity, app, listener, mActivity.getString(R.string.modify), this);
+            return;
         }
         if (listener != null) {
             listener.onPostExecute(null, null);

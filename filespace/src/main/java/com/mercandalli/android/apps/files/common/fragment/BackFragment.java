@@ -32,7 +32,6 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
-import com.mercandalli.android.apps.files.main.Constants;
 
 /**
  * A simple {@link Fragment} that forwards the back button click.
@@ -79,10 +78,13 @@ public abstract class BackFragment extends Fragment {
     public abstract void onFocus();
 
     public interface ISortMode {
+
         /**
          * Define the list sort.
          *
-         * @param sortMode {@link Constants#SORT_ABC}, {@link Constants#SORT_SIZE} or {@link Constants#SORT_DATE_MODIFICATION}
+         * @param sortMode {@link com.mercandalli.android.apps.files.main.Constants#SORT_ABC},
+         *                 {@link com.mercandalli.android.apps.files.main.Constants#SORT_SIZE} or
+         *                 {@link com.mercandalli.android.apps.files.main.Constants#SORT_DATE_MODIFICATION}
          */
         void setSortMode(int sortMode);
     }

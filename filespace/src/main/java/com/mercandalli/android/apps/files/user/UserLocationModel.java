@@ -1,5 +1,7 @@
 package com.mercandalli.android.apps.files.user;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,7 +26,7 @@ public class UserLocationModel {
                 this.altitude = json.getDouble("altitude");
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Failed to convert Json", e);
         }
     }
 

@@ -19,6 +19,8 @@
  */
 package com.mercandalli.android.apps.files.user;
 
+import android.util.Log;
+
 import com.mercandalli.android.apps.files.main.Constants;
 
 import org.json.JSONException;
@@ -58,7 +60,7 @@ public class UserConnectionModel {
                 this.username = json.getString("username");
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Failed to convert Json", e);
         }
     }
 

@@ -207,15 +207,42 @@ public class GenealogyTreeFragment extends FabFragment {
         this.et_father_description.setText("");
         this.et_mother_description.setText("");
 
-        if (genealogyPerson != null) {
-            if (genealogyPerson.selected) {
-                this.et_user.setText(genealogyPerson.getAdapterTitle());
-                this.et_user.setTextColor(Color.parseColor(genealogyPerson.is_man ? "#1976D2" : "#E91E63"));
-                this.et_user.setOnLongClickListener(new View.OnLongClickListener() {
+        if (genealogyPerson != null && genealogyPerson.selected) {
+            this.et_user.setText(genealogyPerson.getAdapterTitle());
+            this.et_user.setTextColor(Color.parseColor(genealogyPerson.is_man ? "#1976D2" : "#E91E63"));
+            this.et_user.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (genealogyPerson != null) {
+                        genealogyPerson.modify(new IPostExecuteListener() {
+                            @Override
+                            public void onPostExecute(JSONObject json, String body) {
+                                update();
+                            }
+                        });
+                    }
+                    return false;
+                }
+            });
+            this.et_user.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (genealogyPerson != null) {
+                        getChildren(genealogyPerson.id);
+                    }
+                }
+            });
+
+            this.et_user_description.setText(genealogyPerson.getAdapterSubtitle() + (StringUtils.isNullOrEmpty(genealogyPerson.description) ? "" : ("\n" + genealogyPerson.description)));
+
+            if (genealogyPerson.father != null) {
+                this.et_father.setText(genealogyPerson.father.getAdapterTitle());
+                this.et_father_description.setText(genealogyPerson.father.getAdapterSubtitle());
+                this.et_father.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        if (genealogyPerson != null) {
-                            genealogyPerson.modify(new IPostExecuteListener() {
+                        if (genealogyPerson.father != null) {
+                            genealogyPerson.father.modify(new IPostExecuteListener() {
                                 @Override
                                 public void onPostExecute(JSONObject json, String body) {
                                     update();
@@ -225,69 +252,40 @@ public class GenealogyTreeFragment extends FabFragment {
                         return false;
                     }
                 });
-                this.et_user.setOnClickListener(new View.OnClickListener() {
+                this.et_father.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (genealogyPerson != null) {
-                            getChildren(genealogyPerson.id);
+                        if (genealogyPerson.father != null) {
+                            changeUser(genealogyPerson.id_father);
                         }
                     }
                 });
-
-                this.et_user_description.setText(genealogyPerson.getAdapterSubtitle() + (StringUtils.isNullOrEmpty(genealogyPerson.description) ? "" : ("\n" + genealogyPerson.description)));
-
-                if (genealogyPerson.father != null) {
-                    this.et_father.setText(genealogyPerson.father.getAdapterTitle());
-                    this.et_father_description.setText(genealogyPerson.father.getAdapterSubtitle());
-                    this.et_father.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View v) {
-                            if (genealogyPerson.father != null) {
-                                genealogyPerson.father.modify(new IPostExecuteListener() {
-                                    @Override
-                                    public void onPostExecute(JSONObject json, String body) {
-                                        update();
-                                    }
-                                });
-                            }
-                            return false;
+            }
+            if (genealogyPerson.mother != null) {
+                this.et_mother.setText(genealogyPerson.mother.getAdapterTitle());
+                this.et_mother_description.setText(genealogyPerson.mother.getAdapterSubtitle());
+                this.et_mother.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        if (genealogyPerson.mother != null) {
+                            genealogyPerson.mother.modify(new IPostExecuteListener() {
+                                @Override
+                                public void onPostExecute(JSONObject json, String body) {
+                                    update();
+                                }
+                            });
                         }
-                    });
-                    this.et_father.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (genealogyPerson.father != null) {
-                                changeUser(genealogyPerson.id_father);
-                            }
+                        return false;
+                    }
+                });
+                this.et_mother.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (genealogyPerson.mother != null) {
+                            changeUser(genealogyPerson.id_mother);
                         }
-                    });
-                }
-                if (genealogyPerson.mother != null) {
-                    this.et_mother.setText(genealogyPerson.mother.getAdapterTitle());
-                    this.et_mother_description.setText(genealogyPerson.mother.getAdapterSubtitle());
-                    this.et_mother.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View v) {
-                            if (genealogyPerson.mother != null) {
-                                genealogyPerson.mother.modify(new IPostExecuteListener() {
-                                    @Override
-                                    public void onPostExecute(JSONObject json, String body) {
-                                        update();
-                                    }
-                                });
-                            }
-                            return false;
-                        }
-                    });
-                    this.et_mother.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (genealogyPerson.mother != null) {
-                                changeUser(genealogyPerson.id_mother);
-                            }
-                        }
-                    });
-                }
+                    }
+                });
             }
         }
         refreshList();

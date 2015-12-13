@@ -62,9 +62,9 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
     static final int ID_SERVO_1 = 4;
     static final int ID_SERVO_2 = 5;
 
-    ModelHardware LED_1;
-    ModelHardware SERVO_1;
-    ModelHardware SERVO_2;
+    ModelHardware mLED1;
+    ModelHardware mServo1;
+    ModelHardware mServo2;
 
     private View rootView;
     private ToggleButton toggleButton1, toggleButton2, toggleButton3;
@@ -132,17 +132,17 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
         setStatusBarColor(mActivity, R.color.notifications_bar_robotics);
 
         // Create hardware
-        this.SERVO_1 = new ModelHardware();
-        this.SERVO_1.id = ID_SERVO_1;
-        this.SERVO_1.value = "" + this.car_direction;
+        this.mServo1 = new ModelHardware();
+        this.mServo1.id = ID_SERVO_1;
+        this.mServo1.value = "" + this.car_direction;
 
-        this.SERVO_2 = new ModelHardware();
-        this.SERVO_2.id = ID_SERVO_2;
-        this.SERVO_2.value = "0.5";
+        this.mServo2 = new ModelHardware();
+        this.mServo2.id = ID_SERVO_2;
+        this.mServo2.value = "0.5";
 
-        this.LED_1 = new ModelHardware();
-        this.LED_1.id = ID_LED_1;
-        this.LED_1.value = "0";
+        this.mLED1 = new ModelHardware();
+        this.mLED1.id = ID_LED_1;
+        this.mLED1.value = "0";
 
         this.toggleButton1 = (ToggleButton) this.rootView.findViewById(R.id.toggleButton1);
         this.toggleButton1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -301,16 +301,16 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
                 if (NetUtils.isInternetConnection(mActivity) && request_ready && mModeConnection) {
                     List<StringPair> parameters = new ArrayList<>();
 
-                    SERVO_1.read = false; // write
-                    SERVO_1.value = "" + this.car_direction;
+                    mServo1.read = false; // write
+                    mServo1.value = "" + this.car_direction;
 
-                    SERVO_2.read = false; // write
-                    SERVO_2.value = "" + this.car_speed;
+                    mServo2.read = false; // write
+                    mServo2.value = "" + this.car_speed;
 
-                    LED_1.read = false; // write
-                    LED_1.value = "" + (mModeLED1 ? 1 : 0);
+                    mLED1.read = false; // write
+                    mLED1.value = "" + (mModeLED1 ? 1 : 0);
 
-                    parameters.add(new StringPair("json", "" + RoboticsUtils.createProtocolHardware(SERVO_1, SERVO_2, LED_1).toString()));
+                    parameters.add(new StringPair("json", "" + RoboticsUtils.createProtocolHardware(mServo1, mServo2, mLED1).toString()));
 
                     request_ready = false;
 

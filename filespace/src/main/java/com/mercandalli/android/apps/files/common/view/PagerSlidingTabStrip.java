@@ -46,9 +46,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Locale;
-
 import com.mercandalli.android.apps.files.R;
+
+import java.util.Locale;
 
 public class PagerSlidingTabStrip extends HorizontalScrollView {
 
@@ -477,7 +477,7 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         requestLayout();
     }
 
-    public boolean getShouldExpand() {
+    public boolean isShouldExpand() {
         return shouldExpand;
     }
 

@@ -170,7 +170,7 @@ public class Slider extends SliderCustomView {
                         numberIndicator.indicator.finalY = SliderUtils
                                 .getRelativeTop(this) - getHeight() / 2;
                         numberIndicator.indicator.finalSize = getHeight() / 2;
-                        numberIndicator.numberIndicator.setText("");
+                        numberIndicator.mNumberIndicator.setText("");
                     }
 
                 } else {
@@ -408,12 +408,12 @@ public class Slider extends SliderCustomView {
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
 
-            if (numberIndicatorResize == false) {
-                LayoutParams params = (LayoutParams) numberIndicator.numberIndicator
+            if (!numberIndicatorResize) {
+                LayoutParams params = (LayoutParams) numberIndicator.mNumberIndicator
                         .getLayoutParams();
                 params.height = (int) finalSize * 2;
                 params.width = (int) finalSize * 2;
-                numberIndicator.numberIndicator.setLayoutParams(params);
+                numberIndicator.mNumberIndicator.setLayoutParams(params);
             }
 
             if (animate) {
@@ -436,14 +436,14 @@ public class Slider extends SliderCustomView {
                 animate = false;
             }
             if (!animate) {
-                ViewHelper.setX(numberIndicator.numberIndicator,
+                ViewHelper.setX(numberIndicator.mNumberIndicator,
                         cx - size);
-                ViewHelper.setY(numberIndicator.numberIndicator, y - size);
+                ViewHelper.setY(numberIndicator.mNumberIndicator, y - size);
 
                 if (valueToDisplay != null) {
-                    numberIndicator.numberIndicator.setText(valueToDisplay.convert(value));
+                    numberIndicator.mNumberIndicator.setText(valueToDisplay.convert(value));
                 } else {
-                    numberIndicator.numberIndicator.setText(value + "");
+                    numberIndicator.mNumberIndicator.setText(value + "");
                 }
             }
 
@@ -455,7 +455,7 @@ public class Slider extends SliderCustomView {
     class NumberIndicator extends Dialog {
 
         Indicator indicator;
-        TextView numberIndicator;
+        TextView mNumberIndicator;
 
         public NumberIndicator(Context context) {
             //super(context, android.R.style.Theme_Translucent);
@@ -488,11 +488,11 @@ public class Slider extends SliderCustomView {
             indicator = new Indicator(this.getContext());
             content.addView(indicator);
 
-            numberIndicator = new TextView(getContext());
-            numberIndicator.setTextColor(Color.WHITE);
-            numberIndicator.setTypeface(null, Typeface.BOLD);
-            numberIndicator.setGravity(Gravity.CENTER);
-            content.addView(numberIndicator);
+            mNumberIndicator = new TextView(getContext());
+            mNumberIndicator.setTextColor(Color.WHITE);
+            mNumberIndicator.setTypeface(null, Typeface.BOLD);
+            mNumberIndicator.setGravity(Gravity.CENTER);
+            content.addView(mNumberIndicator);
 
             indicator.setLayoutParams(new RelativeLayout.LayoutParams(
                     RelativeLayout.LayoutParams.FILL_PARENT,

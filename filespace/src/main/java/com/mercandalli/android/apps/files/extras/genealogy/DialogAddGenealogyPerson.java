@@ -157,7 +157,7 @@ public class DialogAddGenealogyPerson extends Dialog {
             public void onClick(View v) {
                 Toast.makeText(mActivity, "Select the mother", Toast.LENGTH_SHORT).show();
                 GenealogyListFragment.resetMode();
-                GenealogyListFragment.MODE_SELECTION_MOTHER = true;
+                GenealogyListFragment.mModeSelectionMother = true;
                 hide();
             }
         });
@@ -168,7 +168,7 @@ public class DialogAddGenealogyPerson extends Dialog {
             public void onClick(View v) {
                 Toast.makeText(mActivity, "Select the father", Toast.LENGTH_SHORT).show();
                 GenealogyListFragment.resetMode();
-                GenealogyListFragment.MODE_SELECTION_FATHER = true;
+                GenealogyListFragment.mModeSelectionFather = true;
                 hide();
             }
         });
@@ -178,7 +178,7 @@ public class DialogAddGenealogyPerson extends Dialog {
             public void onClick(View v) {
                 Toast.makeText(mActivity, "Select a partner", Toast.LENGTH_SHORT).show();
                 GenealogyListFragment.resetMode();
-                GenealogyListFragment.MODE_SELECTION_PARTNER = true;
+                GenealogyListFragment.mModeSelectionPartner = true;
                 hide();
             }
         });

@@ -10,7 +10,7 @@ import java.util.List;
 public class GameWay implements Iterable<GameCase> {
 
     public List<GameCase> array;
-    private boolean revert = false;
+    private boolean mRevert = false;
 
     public GameWay() {
         this.array = new ArrayList<>();
@@ -21,7 +21,7 @@ public class GameWay implements Iterable<GameCase> {
     }
 
     public void revert() {
-        this.revert = !this.revert;
+        this.mRevert = !this.mRevert;
     }
 
     public void add(GameCase parm) {
@@ -39,12 +39,12 @@ public class GameWay implements Iterable<GameCase> {
 
         @Override
         public boolean hasNext() {
-            return revert ? pointer > 0 : pointer < array.size();
+            return mRevert ? pointer > 0 : pointer < array.size();
         }
 
         @Override
         public GameCase next() {
-            if (revert) {
+            if (mRevert) {
                 pointer--;
                 return array.get(pointer + 1);
             }
