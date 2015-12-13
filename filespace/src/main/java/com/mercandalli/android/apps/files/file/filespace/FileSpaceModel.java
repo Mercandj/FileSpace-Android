@@ -159,7 +159,7 @@ public class FileSpaceModel {
     public static class FileSpaceModelBuilder {
 
         private Date mDateCreation, mTimerDate;
-        private FileSpaceTypeENUM type;
+        private FileSpaceTypeENUM mType;
         private String mArticleTitle1, articleContent1;
 
         public FileSpaceModelBuilder dateCreation(final Date dateCreation) {
@@ -168,7 +168,7 @@ public class FileSpaceModel {
         }
 
         public FileSpaceModelBuilder type(final String type) {
-            this.type = create(type);
+            this.mType = create(type);
             return this;
         }
 
@@ -193,7 +193,7 @@ public class FileSpaceModel {
             fileSpaceModel.setTimerDate(mTimerDate);
             fileSpaceModel.setArticleTitle1(mArticleTitle1);
             fileSpaceModel.setArticleContent1(articleContent1);
-            fileSpaceModel.setType(type);
+            fileSpaceModel.setType(mType);
             return fileSpaceModel;
         }
 

@@ -4,12 +4,12 @@ import android.content.Context;
 
 import com.mercandalli.android.apps.files.extras.physics.lib.Vector3D;
 
-public class Car extends Object3D {
+public class ObjectCar extends Object3D {
 
     public Vector3D forward;
     public float angleY = 0;
 
-    public Car(Context context, Vector3D forward) {
+    public ObjectCar(Context context, Vector3D forward) {
         super(context);
         this.forward = forward;
     }

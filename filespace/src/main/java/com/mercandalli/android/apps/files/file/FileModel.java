@@ -42,23 +42,23 @@ public class FileModel implements Parcelable {
         // Online & Local attrs
         protected int mId;
         protected int mIdUser;
-        protected int idFileParent;
-        protected String name;
-        protected String url;
-        protected long size;
-        protected boolean isPublic;
-        protected FileTypeModel type;
-        protected boolean isDirectory;
-        protected Date dateCreation;
-        protected boolean isApkUpdate;
-        protected boolean isOnline;
-        protected FileSpaceModel content;
+        protected int mIdFileParent;
+        protected String mName;
+        protected String mUrl;
+        protected long mSize;
+        protected boolean mIsPublic;
+        protected FileTypeModel mType;
+        protected boolean mIsDirectory;
+        protected Date mDateCreation;
+        protected boolean mIsApkUpdate;
+        protected boolean mIsOnline;
+        protected FileSpaceModel mContent;
 
         // Local attrs
-        protected File file;
-        protected long lastModified;
-        protected long count;
-        protected long countAudio;
+        protected File mFile;
+        protected long mLastModified;
+        protected long mCount;
+        protected long mCountAudio;
 
         public FileModelBuilder id(int id) {
             this.mId = id;
@@ -71,113 +71,113 @@ public class FileModel implements Parcelable {
         }
 
         public FileModelBuilder idFileParent(int idFileParent) {
-            this.idFileParent = idFileParent;
+            this.mIdFileParent = idFileParent;
             return this;
         }
 
         public FileModelBuilder name(String name) {
-            this.name = name;
+            this.mName = name;
             return this;
         }
 
         public FileModelBuilder url(String url) {
-            this.url = url;
+            this.mUrl = url;
             return this;
         }
 
         public FileModelBuilder size(long size) {
-            this.size = size;
+            this.mSize = size;
             return this;
         }
 
         public FileModelBuilder isPublic(boolean isPublic) {
-            this.isPublic = isPublic;
+            this.mIsPublic = isPublic;
             return this;
         }
 
         public FileModelBuilder type(FileTypeModel type) {
-            this.type = type;
+            this.mType = type;
             return this;
         }
 
         public FileModelBuilder isDirectory(boolean isDirectory) {
-            this.isDirectory = isDirectory;
+            this.mIsDirectory = isDirectory;
             return this;
         }
 
         public FileModelBuilder dateCreation(Date dateCreation) {
-            this.dateCreation = dateCreation;
+            this.mDateCreation = dateCreation;
             return this;
         }
 
         public FileModelBuilder isApkUpdate(boolean isApkUpdate) {
-            this.isApkUpdate = isApkUpdate;
+            this.mIsApkUpdate = isApkUpdate;
             return this;
         }
 
         public FileModelBuilder content(final FileSpaceModel content) {
-            this.content = content;
+            this.mContent = content;
             return this;
         }
 
         public FileModelBuilder file(final File file) {
-            isOnline = false;
+            mIsOnline = false;
             if (file != null && file.exists()) {
-                this.isDirectory = file.isDirectory();
-                this.size = file.length();
-                this.url = file.getAbsolutePath();
-                this.mId = url.hashCode();
+                this.mIsDirectory = file.isDirectory();
+                this.mSize = file.length();
+                this.mUrl = file.getAbsolutePath();
+                this.mId = mUrl.hashCode();
                 final String tmpName = file.getName();
-                this.name = (tmpName.lastIndexOf('.') == -1) ? tmpName : tmpName.substring(0, tmpName.lastIndexOf('.'));
-                this.type = new FileTypeModel(FileUtils.getExtensionFromPath(this.url));
-                this.lastModified = file.lastModified();
-                this.dateCreation = new Date(this.lastModified);
-                if (this.isDirectory) {
+                this.mName = (tmpName.lastIndexOf('.') == -1) ? tmpName : tmpName.substring(0, tmpName.lastIndexOf('.'));
+                this.mType = new FileTypeModel(FileUtils.getExtensionFromPath(this.mUrl));
+                this.mLastModified = file.lastModified();
+                this.mDateCreation = new Date(this.mLastModified);
+                if (this.mIsDirectory) {
                     final File[] tmpListFiles = file.listFiles();
                     if (tmpListFiles != null) {
-                        this.count = tmpListFiles.length;
-                        this.countAudio = 0;
+                        this.mCount = tmpListFiles.length;
+                        this.mCountAudio = 0;
                         for (File f : tmpListFiles) {
                             if ((new FileTypeModel(FileUtils.getExtensionFromPath(f.getPath()))).equals(FileTypeModelENUM.AUDIO.type)) {
-                                this.countAudio++;
+                                this.mCountAudio++;
                             }
                         }
                     }
                 }
-                this.file = file;
+                this.mFile = file;
             }
             return this;
         }
 
         public FileModelBuilder lastModified(long lastModified) {
-            this.lastModified = lastModified;
+            this.mLastModified = lastModified;
             return this;
         }
 
         public FileModelBuilder count(long count) {
-            this.count = count;
+            this.mCount = count;
             return this;
         }
 
         public FileModelBuilder countAudio(long countAudio) {
-            this.countAudio = countAudio;
+            this.mCountAudio = countAudio;
             return this;
         }
 
         public FileModelBuilder isOnline(boolean isOnline) {
-            this.isOnline = isOnline;
+            this.mIsOnline = isOnline;
             return this;
         }
 
         public FileModelBuilder parcel(Parcel in) {
             mId = in.readInt();
-            url = in.readString();
-            name = in.readString();
-            size = in.readLong();
+            mUrl = in.readString();
+            mName = in.readString();
+            mSize = in.readLong();
             boolean[] b = new boolean[1];
             in.readBooleanArray(b);
-            isDirectory = b[0];
-            type = new FileTypeModel(in.readString());
+            mIsDirectory = b[0];
+            mType = new FileTypeModel(in.readString());
             return this;
         }
 
@@ -185,21 +185,21 @@ public class FileModel implements Parcelable {
             FileModel fileModel = new FileModel();
             fileModel.mId = mId;
             fileModel.mIdUser = mIdUser;
-            fileModel.mIdFileParent = idFileParent;
-            fileModel.mName = name;
-            fileModel.mUrl = url;
-            fileModel.mSize = size;
-            fileModel.mIsPublic = isPublic;
-            fileModel.mType = type;
-            fileModel.mIsDirectory = isDirectory;
-            fileModel.mDateCreation = dateCreation;
-            fileModel.mIsApkUpdate = isApkUpdate;
-            fileModel.mContent = content;
-            fileModel.mFile = file;
-            fileModel.mLastModified = lastModified;
-            fileModel.mCount = count;
-            fileModel.mCountAudio = countAudio;
-            fileModel.mIsOnline = isOnline;
+            fileModel.mIdFileParent = mIdFileParent;
+            fileModel.mName = mName;
+            fileModel.mUrl = mUrl;
+            fileModel.mSize = mSize;
+            fileModel.mIsPublic = mIsPublic;
+            fileModel.mType = mType;
+            fileModel.mIsDirectory = mIsDirectory;
+            fileModel.mDateCreation = mDateCreation;
+            fileModel.mIsApkUpdate = mIsApkUpdate;
+            fileModel.mContent = mContent;
+            fileModel.mFile = mFile;
+            fileModel.mLastModified = mLastModified;
+            fileModel.mCount = mCount;
+            fileModel.mCountAudio = mCountAudio;
+            fileModel.mIsOnline = mIsOnline;
             return fileModel;
         }
     }

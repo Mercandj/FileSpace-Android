@@ -189,11 +189,10 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
 
     @Override
     public void onAudioFocusChange(int focusChange) {
-        if (mCurrentStatus == STATUS_PLAYING) {
-            if (focusChange == AudioManager.AUDIOFOCUS_LOSS
-                    || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-                pause();
-            }
+        if ((mCurrentStatus == STATUS_PLAYING) &&
+                (focusChange == AudioManager.AUDIOFOCUS_LOSS ||
+                        focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT)) {
+            pause();
         }
     }
 

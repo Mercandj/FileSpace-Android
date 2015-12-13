@@ -89,8 +89,8 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
 
     private static final String ADMIN = "admin";
 
-    private final int NB_FRAGMENT = 2;
-    private int INIT_FRAGMENT = 1;
+    private static final int NB_FRAGMENT = 2;
+    private int mInitialFragment = 1;
 
     public Fragment mListFragment[] = new Fragment[NB_FRAGMENT];
     private ViewPager mViewPager;
@@ -119,12 +119,12 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
         mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
 
         if (this.getConfig().getUserUsername() == null || this.getConfig().getUserPassword() == null) {
-            this.INIT_FRAGMENT = 0;
+            mInitialFragment = 0;
         } else if (this.getConfig().getUserUsername().equals("") || this.getConfig().getUserPassword().equals("")) {
-            this.INIT_FRAGMENT = 0;
+            mInitialFragment = 0;
         }
 
-        mViewPager.setCurrentItem(this.INIT_FRAGMENT);
+        mViewPager.setCurrentItem(this.mInitialFragment);
 
         tabs.setViewPager(mViewPager);
         tabs.setIndicatorColor(ContextCompat.getColor(this, android.R.color.white));

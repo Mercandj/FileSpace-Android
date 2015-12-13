@@ -133,12 +133,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            if (backPressed()) {
-                return true;
-            }
-        }
-        return super.onKeyDown(keyCode, event);
+        return keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0 && backPressed() || super.onKeyDown(keyCode, event);
     }
 
     @Override
