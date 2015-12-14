@@ -44,11 +44,19 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The {@link AppCompatActivity} to play/pause an audio file.
+ */
 public class FileAudioActivity extends AppCompatActivity implements View.OnClickListener, FileAudioPlayer.OnPlayerStatusChangeListener {
 
-    public static final String EXTRA_IS_ONLINE = "FileAudioActivity.Extra.EXTRA_IS_ONLINE";
-    public static final String EXTRA_FILE_CURRENT_POSITION = "FileAudioActivity.Extra.EXTRA_FILE_CURRENT_POSITION";
-    public static final String EXTRA_FILES_PATH = "FileAudioActivity.Extra.EXTRA_FILES_PATH";
+    /* package */ static final String EXTRA_IS_ONLINE = "FileAudioActivity.Extra.EXTRA_IS_ONLINE";
+    /* package */ static final String EXTRA_FILE_CURRENT_POSITION = "FileAudioActivity.Extra.EXTRA_FILE_CURRENT_POSITION";
+    /* package */ static final String EXTRA_FILES_PATH = "FileAudioActivity.Extra.EXTRA_FILES_PATH";
+    /* package */ static final String EXTRA_NOTIFICATION_DO_ACTION = "FileAudioActivity.Extra.EXTRA_NOTIFICATION_DO_ACTION";
+    /* package */ static final int EXTRA_NOTIFICATION_DO_ACTION_NOTHING = 0;
+    /* package */ static final int EXTRA_NOTIFICATION_DO_ACTION_NEXT = 1;
+    /* package */ static final int EXTRA_NOTIFICATION_DO_ACTION_PREV = 2;
+    /* package */ static final int EXTRA_NOTIFICATION_DO_ACTION_PLAY_PAUSE = 3;
 
     private boolean mIsOnline;
 
@@ -60,10 +68,13 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
     private TextView mSizeTextView;
     private PlayPauseView mPlayPauseView;
 
-    FileAudioPlayer mFileAudioPlayer;
+    private FileAudioPlayer mFileAudioPlayer;
 
-    static boolean firstStart;
+    private boolean mFirstStart;
 
+    /**
+     * Start this {@link AppCompatActivity}.
+     */
     public static void startLocal(Activity activity, final int currentPosition, final List<String> fileMusicPath, final View animationView) {
         Bundle args = new Bundle();
         final Intent intent = new Intent(activity, FileAudioActivity.class);
@@ -77,8 +88,6 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
             args = options.toBundle();
         }
 
-        firstStart = true;
-
         activity.startActivity(intent, args);
         activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
@@ -86,7 +95,39 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final Bundle bundle = getIntent().getExtras();
+        mFileAudioPlayer = FileApp.get(this).getFileAppComponent().provideMusicPlayer();
+        if (bundle != null && bundle.containsKey(EXTRA_NOTIFICATION_DO_ACTION)) {
+            final int action = bundle.getInt(EXTRA_NOTIFICATION_DO_ACTION, EXTRA_NOTIFICATION_DO_ACTION_NOTHING);
+            switch (action) {
+                case EXTRA_NOTIFICATION_DO_ACTION_NOTHING:
+                    // Nothing here.
+                    break;
+                case EXTRA_NOTIFICATION_DO_ACTION_NEXT:
+                    mFileAudioPlayer.next();
+                    break;
+                case EXTRA_NOTIFICATION_DO_ACTION_PREV:
+                    mFileAudioPlayer.previous();
+                    break;
+                case EXTRA_NOTIFICATION_DO_ACTION_PLAY_PAUSE:
+                    if (mFileAudioPlayer.isPlaying()) {
+                        mFileAudioPlayer.pause();
+                    } else {
+                        mFileAudioPlayer.play();
+                    }
+                    break;
+            }
+
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_file_audio);
+
+        if (savedInstanceState == null) {
+            mFirstStart = true;
+        }
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         if (toolbar != null) {
@@ -100,14 +141,12 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
             }
         }
 
-        Window window = this.getWindow();
+        final Window window = this.getWindow();
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.notifications_bar_audio));
         }
-
-        mFileAudioPlayer = FileApp.get(this).getFileAppComponent().provideMusicPlayer();
 
         mTitleTextView = (TextView) this.findViewById(R.id.title);
         mSizeTextView = (TextView) this.findViewById(R.id.size);
@@ -137,7 +176,6 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
         findViewById(R.id.next).setOnClickListener(this);
         findViewById(R.id.previous).setOnClickListener(this);
 
-        Bundle bundle = getIntent().getExtras();
         if (bundle != null &&
                 bundle.containsKey(EXTRA_IS_ONLINE) &&
                 bundle.containsKey(EXTRA_FILE_CURRENT_POSITION) &&
@@ -153,15 +191,14 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
                 }
             }
 
-            if (firstStart) {
+            if (mFirstStart) {
                 mFileAudioPlayer.startMusic(mCurrentPosition, mFileAudioModelList);
             }
-
         } else {
             throw new IllegalArgumentException("Use static start() method");
         }
 
-        firstStart = false;
+        mFirstStart = false;
     }
 
     @Override
@@ -185,12 +222,6 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private String getTimeStr(long milliseconds) {
-        long minutes = milliseconds / 60000;
-        long seconds = (milliseconds - (minutes * 60000)) / 1000;
-        return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -208,11 +239,6 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
         }
         return super.onKeyDown(keyCode, event);
     }
-
-    public void finishActivity() {
-        supportFinishAfterTransition();
-    }
-
 
     @Override
     public void onPlayerStatusChanged(int status) {
@@ -239,5 +265,15 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
     protected void onPause() {
         super.onPause();
         mFileAudioPlayer.unregisterOnPreviewPlayerStatusChangeListener(this);
+    }
+
+    public void finishActivity() {
+        supportFinishAfterTransition();
+    }
+
+    private String getTimeStr(long milliseconds) {
+        final long minutes = milliseconds / 60000;
+        final long seconds = (milliseconds - (minutes * 60000)) / 1000;
+        return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
     }
 }

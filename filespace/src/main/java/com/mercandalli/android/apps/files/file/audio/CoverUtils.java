@@ -3,6 +3,11 @@ package com.mercandalli.android.apps.files.file.audio;
 import android.content.Context;
 import android.util.Log;
 
+import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
+import com.mercandalli.android.apps.files.common.listener.ResultCallback;
+import com.mercandalli.android.apps.files.common.net.TaskGet;
+import com.mercandalli.android.apps.files.common.util.StringPair;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,16 +15,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.common.listener.ResultCallback;
-import com.mercandalli.android.apps.files.common.net.TaskGet;
-import com.mercandalli.android.apps.files.common.util.StringPair;
-
 /**
- * Created by Jonathan on 05/11/2015.
+ * The file audio cover util.
  */
 public class CoverUtils {
 
+    /**
+     * Get the cover from an album.
+     */
     public static void getCoverUrl(final Context context, final String album, final ResultCallback<String> resultUrl) {
         final String albumSearch = album.replaceAll("\\s", "+");
 
@@ -35,7 +38,7 @@ public class CoverUtils {
                             JSONArray res = json.getJSONArray("results");
                             if (res.length() >= 1) {
                                 JSONObject track = res.getJSONObject(0);
-                                if(track.has("artworkUrl100")) {
+                                if (track.has("artworkUrl100")) {
                                     resultUrl.success(track.getString("artworkUrl100"));
                                     return;
                                 }
