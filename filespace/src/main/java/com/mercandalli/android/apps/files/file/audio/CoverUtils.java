@@ -1,6 +1,7 @@
 package com.mercandalli.android.apps.files.file.audio;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,7 +42,7 @@ public class CoverUtils {
                             }
                         }
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e(getClass().getName(), "Failed to convert Json", e);
                     }
                 }
                 resultUrl.failure();

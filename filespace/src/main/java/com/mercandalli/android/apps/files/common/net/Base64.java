@@ -1,5 +1,7 @@
 package com.mercandalli.android.apps.files.common.net;
 
+import android.util.Log;
+
 /**
  * <p>Encodes and decodes to and from Base64 notation.</p>
  * <p>Homepage: <a href="http://iharder.net/base64">http://iharder.net/base64</a>.</p>
@@ -205,6 +207,8 @@ public class Base64 {
     
 /* ********  P R I V A T E   F I E L D S  ******** */
 
+
+    private static final String TAG = "Base64";
 
     /**
      * Maximum line length (76) of Base64 output.
@@ -1301,7 +1305,7 @@ public class Base64 {
 
                 }   // end try
                 catch (java.io.IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "IOException", e);
                     // Just return originally-decoded bytes
                 }   // end catch
                 finally {

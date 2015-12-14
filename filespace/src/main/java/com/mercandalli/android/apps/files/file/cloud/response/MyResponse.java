@@ -3,6 +3,7 @@ package com.mercandalli.android.apps.files.file.cloud.response;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.gson.annotations.SerializedName;
@@ -36,7 +37,7 @@ public abstract class MyResponse<T> {
                     }
                 }
             } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
+                Log.e(getClass().getName(), "Exception", e);
             }
         }
         return mResult;

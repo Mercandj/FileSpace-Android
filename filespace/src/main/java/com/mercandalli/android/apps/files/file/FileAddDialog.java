@@ -67,6 +67,7 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
     private final int mFileParentId;
     private IListener mListener;
 
+    @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
     public FileAddDialog(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final IListener listener, final IListener dismissListener) {
         super(activity, R.style.DialogFullscreen);
         mActivity = activity;
@@ -172,7 +173,7 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
                                     parameters.add(new StringPair("name", "TIMER_" + nowAsISO));
                                     parameters.add(new StringPair("id_file_parent", "" + id_file_parent));
                                     new TaskPost(mActivity, mApplicationCallback,
-                                            mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeFile,
+                                            mApplicationCallback.getConfig().getUrlServer() + Config.routeFile,
                                             new IPostExecuteListener() {
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
@@ -183,7 +184,7 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
                                             }
                                             , parameters).execute();
                                 } catch (JSONException | ParseException e) {
-                                    e.printStackTrace();
+                                    Log.e(getClass().getName(), "Failed to convert Json", e);
                                 }
 
                             }

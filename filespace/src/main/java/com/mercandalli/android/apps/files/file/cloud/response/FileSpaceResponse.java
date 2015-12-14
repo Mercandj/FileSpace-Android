@@ -1,5 +1,7 @@
 package com.mercandalli.android.apps.files.file.cloud.response;
 
+import android.util.Log;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.text.ParseException;
@@ -40,7 +42,7 @@ public class FileSpaceResponse {
                 timerDate = dateFormatGmt.parse(mTimerDate);
             }
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Exception", e);
         }
 
         return new FileSpaceModel.FileSpaceModelBuilder()

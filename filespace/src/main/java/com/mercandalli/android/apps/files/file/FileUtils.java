@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -39,6 +40,8 @@ import java.io.Writer;
  * Created by Jonathan on 15/05/2015.
  */
 public class FileUtils {
+
+    private static final String TAG = "FileUtils";
 
     public static String humanReadableByteCount(long bytes) {
         return humanReadableByteCount(bytes, true);
@@ -60,7 +63,7 @@ public class FileUtils {
             output.write((txt).getBytes());
             output.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Exception", e);
         }
     }
 
@@ -76,7 +79,7 @@ public class FileUtils {
             input.close();
             res = lu.toString();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Exception", e);
         }
         return res;
     }
@@ -96,7 +99,7 @@ public class FileUtils {
                 is.close();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Exception", e);
         }
         return writer.toString();
     }

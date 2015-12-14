@@ -421,7 +421,7 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
                             Toast.makeText(LoginRegisterActivity.this, LoginRegisterActivity.this.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e(getClass().getName(), "Failed to convert Json", e);
                     }
                     mRequestLaunched = false;
                 }

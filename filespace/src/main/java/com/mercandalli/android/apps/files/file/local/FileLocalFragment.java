@@ -28,6 +28,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -408,7 +409,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
                     return true;
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(getClass().getName(), "Exception", e);
                 return false;
             }
         }

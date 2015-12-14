@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.file.cloud.FileOnlineApi;
@@ -87,7 +88,7 @@ public class FileManagerMockImpl extends FileManagerImpl {
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Log.e(getClass().getName(), "Exception", e);
                 }
 
                 return result;

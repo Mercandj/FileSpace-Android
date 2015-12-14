@@ -19,6 +19,8 @@
  */
 package com.mercandalli.android.apps.files.file.filespace;
 
+import android.util.Log;
+
 import com.mercandalli.android.apps.files.common.util.PointLong;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.common.util.TimeUtils;
@@ -38,6 +40,10 @@ import static com.mercandalli.android.apps.files.file.filespace.FileSpaceModel.F
  */
 public class FileSpaceModel {
 
+    public static final String UTC = "UTC";
+    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String DATE_FORMAT_MS = "yyyy-MM-dd HH:mm:ss:SSS";
+
     public FileSpaceTypeENUM mType;
     public Date mDateCreation;
 
@@ -50,13 +56,13 @@ public class FileSpaceModel {
 
     public String getAdapterTitle() {
         if (this.mTimer.timer_date != null) {
-            SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
-            SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat dateFormatGmt = new SimpleDateFormat(DATE_FORMAT);
+            dateFormatGmt.setTimeZone(TimeZone.getTimeZone(UTC));
+            SimpleDateFormat dateFormatLocal = new SimpleDateFormat(DATE_FORMAT);
             try {
                 return TimeUtils.printDifferenceFuture(this.mTimer.timer_date, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
             } catch (ParseException e) {
-                e.printStackTrace();
+                Log.e(getClass().getName(), "Exception", e);
             }
         }
         if (!StringUtils.isNullOrEmpty(mArticle.article_content_1)) {
@@ -71,13 +77,13 @@ public class FileSpaceModel {
     @Override
     public String toString() {
         if (this.mTimer.timer_date != null) {
-            SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
-            SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat dateFormatGmt = new SimpleDateFormat(DATE_FORMAT);
+            dateFormatGmt.setTimeZone(TimeZone.getTimeZone(UTC));
+            SimpleDateFormat dateFormatLocal = new SimpleDateFormat(DATE_FORMAT);
             try {
                 return TimeUtils.printDifferenceFuture(this.mTimer.timer_date, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
             } catch (ParseException e) {
-                e.printStackTrace();
+                Log.e(getClass().getName(), "Exception", e);
             }
         }
         if (mDateCreation != null) {
@@ -87,21 +93,21 @@ public class FileSpaceModel {
     }
 
     public PointLong diffSecond() {
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat(DATE_FORMAT_MS);
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
-        SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+        SimpleDateFormat dateFormatLocal = new SimpleDateFormat(DATE_FORMAT_MS);
         long diff = 0;
         try {
             diff = this.mTimer.timer_date.getTime() - dateFormatLocal.parse(dateFormatGmt.format(new Date())).getTime();
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Exception", e);
         }
         return new PointLong(diff / 1000, (diff / 10) % 100);
     }
 
     public JSONObject toJSONObject() {
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat(DATE_FORMAT);
+        dateFormatGmt.setTimeZone(TimeZone.getTimeZone(UTC));
         JSONObject json = new JSONObject();
         try {
             json.put("type", "timer");
@@ -117,7 +123,7 @@ public class FileSpaceModel {
             }
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Failed to convert Json", e);
         }
         return json;
     }

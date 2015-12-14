@@ -205,22 +205,20 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
     }
 
     private String getQuery(List<StringPair> params) throws UnsupportedEncodingException {
-        StringBuilder result = new StringBuilder();
+        String result = "";
         boolean first = true;
 
         for (StringPair pair : params) {
             if (first) {
                 first = false;
             } else {
-                result.append("&");
+                result += "&";
             }
-
-            result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
+            result += URLEncoder.encode(pair.getName(), "UTF-8") +
+                    "=" + URLEncoder.encode(pair.getValue(), "UTF-8");
         }
 
-        return result.toString();
+        return result;
     }
 
     /**
@@ -259,7 +257,7 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
                     Toast.makeText(mActivity, json.getString("toast"), Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                Log.e(getClass().getName(), "Failed to convert Json", e);
                 Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                 if (this.listener != null) {
                     this.listener.onPostExecute(null, response);

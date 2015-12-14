@@ -26,6 +26,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -210,7 +211,7 @@ public class ProfileFragment extends BackFragment {
                                     Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                Log.e(getClass().getName(), "Failed to convert Json", e);
                             }
                             updateView();
                         }

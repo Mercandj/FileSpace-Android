@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.mercandalli.android.apps.files.common.listener.IBitmapListener;
 import com.mercandalli.android.apps.files.common.net.Base64;
@@ -146,7 +147,7 @@ public class Config {
             FileUtils.writeStringFile(context, fileName, tmp_json.toString());
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Failed to convert Json", e);
         }
     }
 
@@ -172,7 +173,7 @@ public class Config {
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Failed to convert Json", e);
         }
     }
 

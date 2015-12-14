@@ -160,7 +160,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
                 ImageUtils.saveImage(mActivity, this.idFile, x);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "IOException", e);
         }
         return x;
     }

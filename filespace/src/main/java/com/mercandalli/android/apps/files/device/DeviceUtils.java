@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+import android.util.Log;
 
 import com.mercandalli.android.apps.files.common.Preconditions;
 
@@ -39,7 +40,7 @@ public class DeviceUtils {
             device.versionName = packageInfo.versionName;
             device.packageName = packageInfo.packageName;
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            Log.e("DeviceUtils", "NameNotFoundException", e);
         }
         ActivityManager actManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();

@@ -36,29 +36,29 @@ public interface FileOnlineApi {
             Callback<FilesResponse> result);
 
     @Multipart
-    @POST("/" + Config.routeFile + "/{id}")
+    @POST("/" + Config.routeFile + "/{id_file_to_rename}")
     void rename(
-            @Path("id") int fileId,
+            @Path("id_file_to_rename") int fileId,
             @Part("url") TypedString newFullName,
             Callback<FilesResponse> result);
 
-    @POST("/" + Config.routeFileDelete + "/{id}")
+    @POST("/" + Config.routeFileDelete + "/{id_file_to_delete}")
     void delete(
-            @Path("id") int fileId,
+            @Path("id_file_to_delete") int fileId,
             @Body String body,
             Callback<FilesResponse> result);
 
     @Multipart
-    @POST("/" + Config.routeFile + "/{id}")
+    @POST("/" + Config.routeFile + "/{id_file}")
     void setParent(
-            @Path("id") int fileId,
+            @Path("id_file") int fileId,
             @Part("id_file_parent") TypedString idFileParent,
             Callback<FilesResponse> result);
 
     @Multipart
-    @POST("/" + Config.routeFile + "/{id}")
+    @POST("/" + Config.routeFile + "/{id_file}")
     void setPublic(
-            @Path("id") int fileId,
+            @Path("id_file") int fileId,
             @Part("public") TypedString isPublic,
             Callback<FilesResponse> result);
 }

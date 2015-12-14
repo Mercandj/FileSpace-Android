@@ -24,6 +24,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -92,7 +93,7 @@ public class DialogAuthorLabel extends Dialog {
                         PackageInfo pInfo = mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0);
                         version(tv, "Version: " + pInfo.versionName, 0);
                     } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
+                        Log.e(getClass().getName(), "Exception", e);
                     }
 
                 }

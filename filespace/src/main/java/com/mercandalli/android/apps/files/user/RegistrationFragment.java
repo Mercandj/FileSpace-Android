@@ -21,6 +21,7 @@ package com.mercandalli.android.apps.files.user;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -172,7 +173,7 @@ public class RegistrationFragment extends BackFragment {
                             Toast.makeText(mActivity, getString(R.string.server_error), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e(getClass().getName(), "Failed to convert Json", e);
                     }
                     mRequestLaunched = false;
                 }

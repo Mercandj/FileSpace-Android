@@ -186,7 +186,7 @@ public class LoginFragment extends BackFragment {
                             Toast.makeText(mActivity, getString(R.string.server_error), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e(getClass().getName(), "Failed to convert Json", e);
                     }
                 }
             }, parameters)).execute();

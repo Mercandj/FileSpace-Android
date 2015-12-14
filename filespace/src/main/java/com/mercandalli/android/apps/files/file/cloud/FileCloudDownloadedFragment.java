@@ -28,6 +28,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,9 +48,9 @@ import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
 import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.local.FileLocalApi;
-import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.main.FileAppComponent;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -408,7 +409,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
                     return true;
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.e(getClass().getName(), "Exception", e);
                 return false;
             }
         }

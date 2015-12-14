@@ -113,7 +113,7 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 
             return resultString;
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "IOException", e);
         }
         return null;
     }

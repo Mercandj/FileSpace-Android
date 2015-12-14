@@ -1,5 +1,7 @@
 package com.mercandalli.android.apps.files.file.cloud.response;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
@@ -57,7 +59,7 @@ public class FileResponse {
         try {
             dateCreation = dateFormatGmt.parse(mDateCreation);
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Exception", e);
         }
 
         FileSpaceModel content = null;

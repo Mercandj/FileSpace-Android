@@ -19,6 +19,8 @@
  */
 package com.mercandalli.android.apps.files.common.util;
 
+import android.util.Log;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -49,7 +51,7 @@ public class HashUtils {
             md.update(text.getBytes("iso-8859-1"), 0, text.length());
             sha1hash = md.digest();
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            e.printStackTrace();
+            Log.e("HashUtils sha1", "NoSuchAlgorithmException or UnsupportedEncodingException", e);
         }
         return convertToHex(sha1hash);
     }

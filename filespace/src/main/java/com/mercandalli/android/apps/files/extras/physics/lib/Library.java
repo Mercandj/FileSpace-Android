@@ -221,7 +221,7 @@ public class Library {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("Library", "Exception", e);
         }
 
         return new IndicesVertices(vertices, indices, new Vector3D((xmin - (xmax + xmin) / 2) / scale, (ymin - (ymax + ymin) / 2) / scale, (zmin - (zmax + zmin) / 2) / scale), new Vector3D((xmax - (xmax + xmin) / 2) / scale, (ymax - (ymax + ymin) / 2) / scale, (zmax - (zmax + zmin) / 2) / scale));

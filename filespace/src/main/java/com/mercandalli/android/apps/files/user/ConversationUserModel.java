@@ -21,6 +21,7 @@ package com.mercandalli.android.apps.files.user;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
@@ -74,7 +75,7 @@ public class ConversationUserModel {
                 this.date_creation = dateFormat.parse(json.getString("date_creation"));
             }
         } catch (JSONException | ParseException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Failed to convert Json", e);
         }
     }
 

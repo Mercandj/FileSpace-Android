@@ -25,6 +25,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,7 @@ import java.util.List;
  */
 public class GenealogyTreeFragment extends FabFragment {
 
+    private static final String RESULT = "result";
     private View rootView;
 
     private ModelGenealogyPerson genealogyPerson = null;
@@ -130,8 +132,8 @@ public class GenealogyTreeFragment extends FabFragment {
                                 List<ModelGenealogyPerson> listChildren = new ArrayList<>();
                                 try {
                                     if (json != null) {
-                                        if (json.has("result")) {
-                                            JSONArray array = json.getJSONArray("result");
+                                        if (json.has(RESULT)) {
+                                            JSONArray array = json.getJSONArray(RESULT);
                                             for (int i = 0; i < array.length(); i++) {
                                                 listChildren.add(new ModelGenealogyPerson(mActivity, mApplicationCallback, array.getJSONObject(i)));
                                             }
@@ -140,7 +142,7 @@ public class GenealogyTreeFragment extends FabFragment {
                                         Toast.makeText(mActivity, getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                                     }
                                 } catch (JSONException e) {
-                                    e.printStackTrace();
+                                    Log.e(getClass().getName(), "Failed to convert Json", e);
                                 }
                                 if (listChildren.size() != 0) {
                                     genealogyPerson = listChildren.get(0);
@@ -176,15 +178,15 @@ public class GenealogyTreeFragment extends FabFragment {
                                 requestReady = true;
                                 try {
                                     if (json != null) {
-                                        if (json.has("result")) {
-                                            GenealogyTreeFragment.this.genealogyPerson = new ModelGenealogyPerson(mActivity, mApplicationCallback, json.getJSONObject("result"));
+                                        if (json.has(RESULT)) {
+                                            GenealogyTreeFragment.this.genealogyPerson = new ModelGenealogyPerson(mActivity, mApplicationCallback, json.getJSONObject(RESULT));
                                             GenealogyTreeFragment.this.genealogyPerson.selected = true;
                                         }
                                     } else {
                                         Toast.makeText(mActivity, getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                                     }
                                 } catch (JSONException e) {
-                                    e.printStackTrace();
+                                    Log.e(getClass().getName(), "Failed to convert Json", e);
                                 }
                                 update();
                             }

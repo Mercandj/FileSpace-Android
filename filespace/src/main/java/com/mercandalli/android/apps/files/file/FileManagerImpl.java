@@ -78,6 +78,8 @@ import static com.mercandalli.android.apps.files.file.FileUtils.getNameFromPath;
  */
 public class FileManagerImpl extends FileManager implements FileUploadTypedFile.FileUploadListener {
 
+    private static final String LIKE = " LIKE ?";
+
     private Context mContextApp;
     private FileOnlineApi mFileOnlineApi;
     private FileLocalApi mFileLocalApi;
@@ -609,7 +611,6 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
      */
     @Override
     public void getLocalMusic(final Context context, final int sortMode, final String search, final ResultCallback<List<FileAudioModel>> resultCallback) {
-
         final List<FileAudioModel> files = new ArrayList<>();
 
         final String[] PROJECTION = {MediaStore.Files.FileColumns.DATA};
@@ -620,14 +621,14 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO;
 
         for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
-            selection += " OR " + MediaStore.Files.FileColumns.DATA + " LIKE ?";
+            selection += " OR " + MediaStore.Files.FileColumns.DATA + LIKE;
             searchArray.add("%" + end);
         }
         selection += " )";
 
         if (search != null && !search.isEmpty()) {
             searchArray.add("%" + search + "%");
-            selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + " LIKE ?";
+            selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
         }
 
         final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
@@ -646,7 +647,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                                 fileMusicModelBuilder.artist(metadata.getArtist());
                             }
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            Log.e(getClass().getName(), "Exception", e);
                         } // read metadata
 
                         //if (mSortMode == Constants.SORT_SIZE)
@@ -723,10 +724,10 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                     fileMusicModelBuilder.album(metadata.getAlbum());
                     fileMusicModelBuilder.artist(metadata.getArtist());
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e(getClass().getName(), "Exception", e);
                 }
             } catch (IOException e1) {
-                e1.printStackTrace();
+                Log.e(getClass().getName(), "Exception", e1);
             } // read metadata
             files.add(fileMusicModelBuilder.build());
         }
@@ -752,14 +753,14 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                 String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO;
 
                 for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
-                    selection += " OR " + MediaStore.Files.FileColumns.DATA + " LIKE ?";
+                    selection += " OR " + MediaStore.Files.FileColumns.DATA + LIKE;
                     searchArray.add("%" + end);
                 }
                 selection += " )";
 
                 if (search != null && !search.isEmpty()) {
                     searchArray.add("%" + search + "%");
-                    selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + " LIKE ?";
+                    selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
                 }
 
                 final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);

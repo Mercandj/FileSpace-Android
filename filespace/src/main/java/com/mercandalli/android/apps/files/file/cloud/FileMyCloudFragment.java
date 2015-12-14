@@ -30,6 +30,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,6 +92,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_file_files, container, false);
         final Activity activity = getActivity();
+        final String succeed = "succeed";
 
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         mMessageTextView = (TextView) rootView.findViewById(R.id.message);
@@ -216,11 +218,11 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
                                                     try {
-                                                        if (json != null && json.has("succeed") && json.getBoolean("succeed")) {
+                                                        if (json != null && json.has(succeed) && json.getBoolean(succeed)) {
                                                             mApplicationCallback.getConfig().setUserIdFileProfilePicture(mActivity, fileModel.getId());
                                                         }
                                                     } catch (JSONException e) {
-                                                        e.printStackTrace();
+                                                        Log.e(getClass().getName(), "Failed to convert Json", e);
                                                     }
                                                 }
                                             }, parameters)).execute();
@@ -231,11 +233,11 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
                                                     try {
-                                                        if (json != null && json.has("succeed") && json.getBoolean("succeed")) {
+                                                        if (json != null && json.has(succeed) && json.getBoolean(succeed)) {
                                                             mApplicationCallback.refreshData();
                                                         }
                                                     } catch (JSONException e) {
-                                                        e.printStackTrace();
+                                                        Log.e(getClass().getName(), "Failed to convert Json", e);
                                                     }
                                                 }
                                             }, parameters)).execute();

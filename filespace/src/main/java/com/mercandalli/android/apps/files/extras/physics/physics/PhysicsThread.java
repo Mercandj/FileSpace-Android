@@ -7,6 +7,8 @@
 
 package com.mercandalli.android.apps.files.extras.physics.physics;
 
+import android.util.Log;
+
 /**
  * Define thread behavior with time regulation
  *
@@ -42,7 +44,7 @@ public class PhysicsThread extends Thread {
                 }
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Exception", e);
         }
     }
 }

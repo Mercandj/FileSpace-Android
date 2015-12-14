@@ -19,6 +19,8 @@
  */
 package com.mercandalli.android.apps.files.extras.robotics;
 
+import android.util.Log;
+
 import com.mercandalli.android.apps.files.common.util.TimeUtils;
 
 import org.json.JSONArray;
@@ -33,6 +35,10 @@ import java.util.List;
  */
 public class RoboticsUtils {
 
+    private static final String TAG = "RoboticsUtils";
+    private static final String SUCCEED = "succeed";
+    private static final String FAILED_JSON = "Failed to convert Json";
+
     public static JSONObject createUser(int id, String username) {
         JSONObject result = new JSONObject();
         try {
@@ -43,7 +49,7 @@ public class RoboticsUtils {
                 result.put("username", username);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, FAILED_JSON, e);
         }
         return result;
     }
@@ -61,9 +67,9 @@ public class RoboticsUtils {
             if (type != null) {
                 result.put("type", type);
             }
-            result.put("succeed", succeed);
+            result.put(SUCCEED, succeed);
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, FAILED_JSON, e);
         }
         return result;
     }
@@ -95,7 +101,7 @@ public class RoboticsUtils {
                 result.put("ai_mode", ai_mode);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, FAILED_JSON, e);
         }
         return result;
     }
@@ -103,7 +109,7 @@ public class RoboticsUtils {
     public static JSONObject createProtocol(boolean succeed, String toast, String debug, JSONObject content) {
         JSONObject result = new JSONObject();
         try {
-            result.put("succeed", succeed);
+            result.put(SUCCEED, succeed);
             if (toast != null) {
                 result.put("toast", toast);
             }
@@ -114,7 +120,7 @@ public class RoboticsUtils {
                 result.put("content", content);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, FAILED_JSON, e);
         }
         return result;
     }
@@ -243,8 +249,8 @@ public class RoboticsUtils {
                     for (int i = 0; i < hardware.length(); i++) {
                         JSONObject hard_json = hardware.getJSONObject(i);
                         ModelHardware hard = new ModelHardware();
-                        if (hard_json.has("succeed")) {
-                            hard.succeed = hard_json.getBoolean("succeed");
+                        if (hard_json.has(SUCCEED)) {
+                            hard.succeed = hard_json.getBoolean(SUCCEED);
                         }
                         if (hard_json.has("id")) {
                             hard.id = hard_json.getInt("id");
@@ -261,7 +267,7 @@ public class RoboticsUtils {
 
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, FAILED_JSON, e);
         }
 
         return result;

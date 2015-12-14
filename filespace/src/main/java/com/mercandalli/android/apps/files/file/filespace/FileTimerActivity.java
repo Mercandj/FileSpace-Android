@@ -83,7 +83,7 @@ public class FileTimerActivity extends ApplicationActivity {
                 mFileSpaceModel = new FileSpaceModel.FileSpaceModelBuilder().type("timer").build();
                 mFileSpaceModel.getTimer().timer_date = timer_date;
             } catch (ParseException e) {
-                e.printStackTrace();
+                Log.e(getClass().getName(), "Exception", e);
             }
 
             handler = new Handler();

@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -133,7 +134,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
         try {
             fileModelBuilder.file(File.createTempFile(imageFileName, ".jpg", storageDir));
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Exception", e);
         }
         return fileModelBuilder.build();
     }

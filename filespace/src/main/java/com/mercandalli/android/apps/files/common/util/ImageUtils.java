@@ -47,19 +47,21 @@ import java.util.WeakHashMap;
  */
 public class ImageUtils {
 
+    private static final String FILE_NAME_PREFIX = "/file_";
+
     private static Map<Integer, Bitmap> images = new WeakHashMap<Integer, Bitmap>();
 
     public synchronized static void saveImage(Context context, int fileId, Bitmap bm) {
         images.put(fileId, bm);
 
-        File file = new File(context.getFilesDir() + "/file_" + fileId);
+        File file = new File(context.getFilesDir() + FILE_NAME_PREFIX + fileId);
         if (file.exists()) {
             return;
         }
 
         FileOutputStream fOut;
         try {
-            fOut = new FileOutputStream(context.getFilesDir() + "/file_" + fileId);
+            fOut = new FileOutputStream(context.getFilesDir() + FILE_NAME_PREFIX + fileId);
             bm.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
             fOut.flush();
             fOut.close();
@@ -89,7 +91,7 @@ public class ImageUtils {
         if (images.containsKey(fileId)) {
             return images.get(fileId);
         }
-        File file = new File(context.getFilesDir() + "/file_" + fileId);
+        File file = new File(context.getFilesDir() + FILE_NAME_PREFIX + fileId);
         if (file.exists()) {
 
             int desiredWidth = Constants.WIDTH_MAX_ONLINE_PICTURE_BITMAP;
@@ -139,7 +141,7 @@ public class ImageUtils {
         if (images.containsKey(fileId)) {
             return true;
         }
-        File file = new File(context.getFilesDir() + "/file_" + fileId);
+        File file = new File(context.getFilesDir() + FILE_NAME_PREFIX + fileId);
         return file.exists();
     }
 

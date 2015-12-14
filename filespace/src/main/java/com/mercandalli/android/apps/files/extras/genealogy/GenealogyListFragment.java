@@ -30,6 +30,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -175,7 +176,7 @@ public class GenealogyListFragment extends FabFragment {
                                     Toast.makeText(mActivity, getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                Log.e(getClass().getName(), "Failed to convert Json", e);
                             }
                             updateAdapter();
                         }

@@ -20,6 +20,7 @@
 package com.mercandalli.android.apps.files.user;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.mercandalli.android.apps.files.common.util.TimeUtils;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
@@ -61,7 +62,7 @@ public class UserConversationMessageModel {
                 this.date_creation = dateFormat.parse(json.getString("date_creation"));
             }
         } catch (JSONException | ParseException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Failed to convert Json", e);
         }
     }
 
@@ -84,7 +85,7 @@ public class UserConversationMessageModel {
         try {
             date = TimeUtils.printDifferencePast(date_creation, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
         } catch (ParseException e) {
-            e.printStackTrace();
+            Log.e(getClass().getName(), "Exception", e);
         }
         return getUsername() + "  " + date + " ago";
     }

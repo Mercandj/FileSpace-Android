@@ -220,7 +220,7 @@ public class ConversationActivity extends ApplicationActivity {
                                     Toast.makeText(ConversationActivity.this, ConversationActivity.this.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
-                                e.printStackTrace();
+                                Log.e(getClass().getName(), "Failed to convert Json", e);
                             }
                             updateAdapters();
                         }
