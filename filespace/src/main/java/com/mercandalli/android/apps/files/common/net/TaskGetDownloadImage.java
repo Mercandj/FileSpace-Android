@@ -29,7 +29,7 @@ import com.mercandalli.android.apps.files.common.listener.IBitmapListener;
 import com.mercandalli.android.apps.files.common.listener.ILongListener;
 import com.mercandalli.android.apps.files.common.util.ImageUtils;
 import com.mercandalli.android.apps.files.file.FileModel;
-import com.mercandalli.android.apps.files.main.ConfigCallback;
+import com.mercandalli.android.apps.files.main.Config;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
@@ -47,7 +47,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
     String url;
     Bitmap bitmap;
     IBitmapListener listener;
-    ConfigCallback app;
+    Config.ConfigCallback app;
     Activity mActivity;
     int idFile;
     long sizeLimit, sizeFile;
@@ -55,7 +55,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
     private boolean isAuthentication = true;
     private boolean isModelFile = true;
 
-    public TaskGetDownloadImage(Activity activity, ConfigCallback app, String url, long sizeLimit, IBitmapListener listener, boolean isAuthentication, boolean isModelFile) {
+    public TaskGetDownloadImage(Activity activity, Config.ConfigCallback app, String url, long sizeLimit, IBitmapListener listener, boolean isAuthentication, boolean isModelFile) {
         mActivity = activity;
         this.app = app;
         this.url = url;
@@ -65,7 +65,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         this.isModelFile = isModelFile;
     }
 
-    public TaskGetDownloadImage(Activity activity, ConfigCallback app, FileModel fileModel, long sizeLimit, IBitmapListener listener) {
+    public TaskGetDownloadImage(Activity activity, Config.ConfigCallback app, FileModel fileModel, long sizeLimit, IBitmapListener listener) {
         mActivity = activity;
         this.app = app;
         this.url = fileModel.getOnlineUrl();
@@ -75,7 +75,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         this.sizeLimit = sizeLimit;
     }
 
-    public TaskGetDownloadImage(Activity activity, ConfigCallback app, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener) {
+    public TaskGetDownloadImage(Activity activity, Config.ConfigCallback app, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener) {
         mActivity = activity;
         this.app = app;
         this.url = onlineUrl;
@@ -85,7 +85,7 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         this.sizeLimit = sizeLimit;
     }
 
-    public TaskGetDownloadImage(Activity activity, ConfigCallback app, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener, ILongListener progressListener) {
+    public TaskGetDownloadImage(Activity activity, Config.ConfigCallback app, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener, ILongListener progressListener) {
         mActivity = activity;
         this.app = app;
         this.url = onlineUrl;

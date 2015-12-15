@@ -153,6 +153,9 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
         }
     }
 
+    /**
+     * Return the file title.
+     */
     private String getAdapterTitle(FileModel fileModel) {
         String adapterTitleStart = "";
 

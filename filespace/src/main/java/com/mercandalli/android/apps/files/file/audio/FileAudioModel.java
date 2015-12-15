@@ -1,5 +1,7 @@
 package com.mercandalli.android.apps.files.file.audio;
 
+import android.os.Parcel;
+
 import com.mercandalli.android.apps.files.file.FileModel;
 
 import java.io.File;
@@ -88,4 +90,18 @@ public class FileAudioModel extends FileModel {
         }
         return null;
     }
+
+    /* Parcelable */
+
+    public static final Creator<FileModel> CREATOR = new Creator<FileModel>() {
+        @Override
+        public FileModel createFromParcel(Parcel in) {
+            return new FileModelBuilder().parcel(in).build();
+        }
+
+        @Override
+        public FileModel[] newArray(int size) {
+            return new FileModel[size];
+        }
+    };
 }

@@ -5,7 +5,7 @@ import com.mercandalli.android.apps.files.file.FileModel;
 /**
  * Created by Jonathan on 21/10/2015.
  */
-public interface ApplicationCallback extends ConfigCallback {
+public interface ApplicationCallback extends Config.ConfigCallback {
     boolean isLogged();
 
     void invalidateMenu();

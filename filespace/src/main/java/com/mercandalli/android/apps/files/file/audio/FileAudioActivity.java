@@ -95,35 +95,9 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        final Bundle bundle = getIntent().getExtras();
-        mFileAudioPlayer = FileApp.get(this).getFileAppComponent().provideMusicPlayer();
-        if (bundle != null && bundle.containsKey(EXTRA_NOTIFICATION_DO_ACTION)) {
-            final int action = bundle.getInt(EXTRA_NOTIFICATION_DO_ACTION, EXTRA_NOTIFICATION_DO_ACTION_NOTHING);
-            switch (action) {
-                case EXTRA_NOTIFICATION_DO_ACTION_NOTHING:
-                    // Nothing here.
-                    break;
-                case EXTRA_NOTIFICATION_DO_ACTION_NEXT:
-                    mFileAudioPlayer.next();
-                    break;
-                case EXTRA_NOTIFICATION_DO_ACTION_PREV:
-                    mFileAudioPlayer.previous();
-                    break;
-                case EXTRA_NOTIFICATION_DO_ACTION_PLAY_PAUSE:
-                    if (mFileAudioPlayer.isPlaying()) {
-                        mFileAudioPlayer.pause();
-                    } else {
-                        mFileAudioPlayer.play();
-                    }
-                    break;
-            }
-
-            finish();
-            return;
-        }
-
         setContentView(R.layout.activity_file_audio);
+
+        mFileAudioPlayer = FileApp.get(this).getFileAppComponent().provideMusicPlayer();
 
         if (savedInstanceState == null) {
             mFirstStart = true;
@@ -176,6 +150,7 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
         findViewById(R.id.next).setOnClickListener(this);
         findViewById(R.id.previous).setOnClickListener(this);
 
+        final Bundle bundle = getIntent().getExtras();
         if (bundle != null &&
                 bundle.containsKey(EXTRA_IS_ONLINE) &&
                 bundle.containsKey(EXTRA_FILE_CURRENT_POSITION) &&

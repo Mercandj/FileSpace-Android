@@ -3,7 +3,6 @@ package com.mercandalli.android.apps.files.file.audio;
 import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -77,6 +76,9 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         }
     }
 
+    /**
+     * Play the element #{@link #mCurrentMusicIndex} in {@link #mFileAudioModelList}.
+     */
     public void play() {
         if (STATUS_PAUSED == mCurrentStatus) {
             final int request = mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
@@ -87,6 +89,17 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
                 setCurrentStatus(STATUS_PAUSED);
             }
         }
+    }
+
+    /**
+     * Pause the element #{@link #mCurrentMusicIndex} in {@link #mFileAudioModelList}.
+     */
+    public void pause() {
+        if (STATUS_PLAYING == mCurrentStatus) {
+            mMediaPlayer.pause();
+            setCurrentStatus(STATUS_PAUSED);
+        }
+        mAudioManager.abandonAudioFocus(this);
     }
 
     public void next() {
@@ -111,14 +124,6 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         if (mCurrentMusic == null || !currentMusic.getPath().equals(mCurrentMusic.getPath())) {
             prepare(currentMusic);
         }
-    }
-
-    public void pause() {
-        if (STATUS_PLAYING == mCurrentStatus) {
-            mMediaPlayer.pause();
-            setCurrentStatus(STATUS_PAUSED);
-        }
-        mAudioManager.abandonAudioFocus(this);
     }
 
     public boolean isPlaying() {
@@ -241,33 +246,21 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         }
     }
 
+    /**
+     * Display or hide the notification.
+     */
     private void setNotification(boolean activated) {
         if (activated) {
 
             Intent intent = new Intent(mAppContext, FileAudioActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-            Intent buttonsIntent_close = new Intent(mAppContext, FileAudioActivity.class);
-            buttonsIntent_close.putExtra(FileAudioActivity.EXTRA_NOTIFICATION_DO_ACTION, "close");
-            buttonsIntent_close.putExtra(FileAudioActivity.EXTRA_FILE_CURRENT_POSITION, mCurrentMusicIndex);
-            buttonsIntent_close.putExtra(FileAudioActivity.EXTRA_IS_ONLINE, mCurrentMusic.isOnline());
-
-            Intent buttonsIntent_next = new Intent(mAppContext, FileAudioActivity.class);
-            buttonsIntent_next.putExtra(FileAudioActivity.EXTRA_NOTIFICATION_DO_ACTION, FileAudioActivity.EXTRA_NOTIFICATION_DO_ACTION_NEXT);
-            buttonsIntent_next.putExtra(FileAudioActivity.EXTRA_FILE_CURRENT_POSITION, mCurrentMusicIndex);
-            buttonsIntent_next.putExtra(FileAudioActivity.EXTRA_IS_ONLINE, mCurrentMusic.isOnline());
-
-            Intent buttonsIntent_prev = new Intent(mAppContext, FileAudioActivity.class);
-            buttonsIntent_prev.putExtra(FileAudioActivity.EXTRA_NOTIFICATION_DO_ACTION, FileAudioActivity.EXTRA_NOTIFICATION_DO_ACTION_PREV);
-            buttonsIntent_prev.putExtra(FileAudioActivity.EXTRA_FILE_CURRENT_POSITION, mCurrentMusicIndex);
-            buttonsIntent_prev.putExtra(FileAudioActivity.EXTRA_IS_ONLINE, mCurrentMusic.isOnline());
-
             RemoteViews remoteViews = new RemoteViews(mAppContext.getPackageName(), R.layout.notification_musique);
             remoteViews.setTextViewText(R.id.titre_notif, mCurrentMusic.getName());
-            remoteViews.setOnClickPendingIntent(R.id.close, PendingIntent.getActivity(mAppContext, 0, buttonsIntent_close, 0));
-            remoteViews.setOnClickPendingIntent(R.id.play, PendingIntent.getActivity(mAppContext, 0, buttonsIntent_close, 0));
-            remoteViews.setOnClickPendingIntent(R.id.next, PendingIntent.getActivity(mAppContext, 0, buttonsIntent_next, 0));
-            remoteViews.setOnClickPendingIntent(R.id.prev, PendingIntent.getActivity(mAppContext, 0, buttonsIntent_prev, 0));
+            remoteViews.setOnClickPendingIntent(R.id.close, NotificationAudioPlayerReceiver.getNotificationIntentClose(mAppContext));
+            remoteViews.setOnClickPendingIntent(R.id.play, NotificationAudioPlayerReceiver.getNotificationIntentPlayPause(mAppContext));
+            remoteViews.setOnClickPendingIntent(R.id.next, NotificationAudioPlayerReceiver.getNotificationIntentNext(mAppContext));
+            remoteViews.setOnClickPendingIntent(R.id.prev, NotificationAudioPlayerReceiver.getNotificationIntentPrevious(mAppContext));
 
             Notification.Builder mNotifyBuilder = new Notification.Builder(mAppContext);
             Notification foregroundNote = mNotifyBuilder.setSmallIcon(R.drawable.audio)

@@ -38,8 +38,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -212,16 +214,14 @@ public class Config {
     }
 
     public static String getUserToken() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String currentDate = dateFormatGmt.format(calendar.getTime());
+        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        df.setTimeZone(TimeZone.getTimeZone("gmt"));
+        final String currentDate = df.format(new Date());
 
         String log = ENUM_String.STRING_USER_USERNAME.value;
         String pass = HashUtils.sha1(HashUtils.sha1(ENUM_String.STRING_USER_PASSWORD.value) + currentDate);
 
-        String authentication = log + ":" + pass;
+        String authentication = String.format("%s:%s", log, pass);
         return Base64.encodeBytes(authentication.getBytes());
     }
 
@@ -339,5 +339,9 @@ public class Config {
         setUserId(activity, -1);
         setUserAdmin(activity, false);
         setUserIdFileProfilePicture(activity, -1);
+    }
+
+    public interface ConfigCallback {
+        Config getConfig();
     }
 }

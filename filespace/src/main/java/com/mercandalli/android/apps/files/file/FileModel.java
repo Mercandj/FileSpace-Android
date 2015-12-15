@@ -330,6 +330,9 @@ public class FileModel implements Parcelable {
         return mCountAudio;
     }
 
+
+    /* Parcelable */
+
     public static final Creator<FileModel> CREATOR = new Creator<FileModel>() {
         @Override
         public FileModel createFromParcel(Parcel in) {
