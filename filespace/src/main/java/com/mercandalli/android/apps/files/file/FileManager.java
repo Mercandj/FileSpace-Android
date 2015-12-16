@@ -95,6 +95,8 @@ public abstract class FileManager {
      */
     public abstract void getLocalMusicFolders(final Context context, final int sortMode, final String search, final ResultCallback<List<FileModel>> resultCallback);
 
+    public abstract void searchLocal(final Context context, final String search, final ResultCallback<List<FileModel>> resultCallback);
+
     public abstract void getCover(final Context context, final FileAudioModel fileAudioModel, final ImageView imageView);
 
     public static List<StringPair> getForUpload(final FileModel fileModel) {

@@ -801,6 +801,48 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         }.execute();
     }
 
+    @Override
+    public void searchLocal(final Context context, final String search, final ResultCallback<List<FileModel>> resultCallback) {
+        new AsyncTask<Void, Void, List<FileModel>>() {
+            @Override
+            protected List<FileModel> doInBackground(Void... params) {
+                // Used to count the number of music inside.
+                final Map<String, MutableInt> directories = new HashMap<>();
+
+                final String[] PROJECTION = new String[]{MediaStore.Files.FileColumns.DATA};
+
+                final Uri allSongsUri = MediaStore.Files.getContentUri("external");
+                final List<String> searchArray = new ArrayList<>();
+
+                String selection = MediaStore.Files.FileColumns.DATA + LIKE;
+                searchArray.add("%" + search + "%");
+
+                final List<FileModel> result = new ArrayList<>();
+
+                final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
+                if (cursor != null) {
+                    if (cursor.moveToFirst()) {
+                        do {
+                            result.add(new FileModel.FileModelBuilder()
+                                    .file(new File(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))))
+                                    .isOnline(false)
+                                    .build());
+
+                        } while (cursor.moveToNext());
+                    }
+                    cursor.close();
+                }
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(List<FileModel> fileModels) {
+                resultCallback.success(fileModels);
+                super.onPostExecute(fileModels);
+            }
+        }.execute();
+    }
+
     /**
      * {@inheritDoc}
      */

@@ -49,7 +49,7 @@ import com.mercandalli.android.apps.files.common.util.StringPair;
 /**
  * Mother class of the {@link Activity} MainActivity.
  */
-public abstract class ApplicationActivity extends AppCompatActivity implements ApplicationCallback, ConfigCallback {
+public abstract class ApplicationActivity extends AppCompatActivity implements ApplicationCallback, Config.ConfigCallback {
 
     public static FileModel mPhotoFile = null;
     public static IListener mPhotoFileListener = null;
