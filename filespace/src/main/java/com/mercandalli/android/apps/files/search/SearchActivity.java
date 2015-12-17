@@ -3,19 +3,23 @@ package com.mercandalli.android.apps.files.search;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
@@ -26,30 +30,28 @@ import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
 import com.mercandalli.android.apps.files.main.FileApp;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class SearchActivity extends AppCompatActivity implements FileModelAdapter.OnFileClickListener, ResultCallback<List<FileModel>> {
+public class SearchActivity extends AppCompatActivity implements FileModelAdapter.OnFileClickListener, ResultCallback<List<FileModel>>, View.OnClickListener {
 
     @Inject
     FileManager mFileManager;
 
-    String mRootPath;
-
-    File mCurrentFile;
-
     private EditText mSearchEditText;
 
-    private List<FileModel> mFileModelList;
+    private final List<FileModel> mFileModelList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private FileModelAdapter mFileModelAdapter;
 
     private final Handler mSearchDelayHandler = new Handler();
 
     private Runnable mSearchDelayRunnable;
+    private ProgressBar mProgressBar;
+    private ImageView mClearImageView;
+    private TextView mEmptyTextView;
 
     public static void start(final Context context) {
         final Intent intent = new Intent(context, SearchActivity.class);
@@ -77,10 +79,10 @@ public class SearchActivity extends AppCompatActivity implements FileModelAdapte
             }
         };
 
-        mFileModelList = new ArrayList<>();
-
         findViews();
 
+        final Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.activity_search_toolbar);
+        setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -97,15 +99,10 @@ public class SearchActivity extends AppCompatActivity implements FileModelAdapte
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, nbColumn));
         }
 
-        ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
+        final ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
         scaleAnimationAdapter.setDuration(220);
         scaleAnimationAdapter.setOffsetDuration(32);
         mRecyclerView.setAdapter(scaleAnimationAdapter);
-
-        mRecyclerView.setAdapter(mFileModelAdapter);
-
-        mRootPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mCurrentFile = new File(mRootPath);
 
         mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -119,6 +116,29 @@ public class SearchActivity extends AppCompatActivity implements FileModelAdapte
                 return false;
             }
         });
+        mSearchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                final String search = mSearchEditText.getText().toString();
+                if (search.isEmpty()) {
+                    mClearImageView.setVisibility(View.GONE);
+                } else {
+                    mClearImageView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Nothing here.
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Nothing here.
+            }
+        });
+
+        mClearImageView.setOnClickListener(this);
     }
 
     @Override
@@ -130,8 +150,43 @@ public class SearchActivity extends AppCompatActivity implements FileModelAdapte
         return false;
     }
 
-    private void performSearch(String search) {
-        mFileManager.searchLocal(this, search, this);
+    @Override
+    public void success(List<FileModel> result) {
+        mFileModelList.clear();
+        mFileModelList.addAll(result);
+        mRecyclerView.setVisibility(View.VISIBLE);
+        mProgressBar.setVisibility(View.GONE);
+        mFileModelAdapter.setList(result);
+
+        if (result.isEmpty()) {
+            mEmptyTextView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void failure() {
+        mFileModelList.clear();
+        mFileModelAdapter.setList(mFileModelList);
+        mProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onFileClick(View view, int position) {
+        if (mFileModelList.get(position).isDirectory()) {
+            // TODO - Click folder search
+        } else {
+            mFileManager.execute(this, position, mFileModelList, view);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        final int viewId = v.getId();
+        switch (viewId) {
+            case R.id.activity_search_toolbar_btn_clear:
+                clearSearch();
+                break;
+        }
     }
 
     /**
@@ -140,20 +195,27 @@ public class SearchActivity extends AppCompatActivity implements FileModelAdapte
     private void findViews() {
         mRecyclerView = (RecyclerView) findViewById(R.id.activity_search_recycler_view);
         mSearchEditText = (EditText) findViewById(R.id.activity_search_edit_text);
+        mProgressBar = (ProgressBar) findViewById(R.id.activity_search_progress_bar);
+        mClearImageView = (ImageView) findViewById(R.id.activity_search_toolbar_btn_clear);
+        mEmptyTextView = (TextView) findViewById(R.id.activity_search_empty_view);
     }
 
-    @Override
-    public void success(List<FileModel> result) {
-        mFileModelAdapter.setList(result);
+    /**
+     * Call the {@link #mFileManager} to perform the search.
+     */
+    private void performSearch(String search) {
+        mRecyclerView.setVisibility(View.GONE);
+        mEmptyTextView.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
+        mFileManager.searchLocal(this, search, this);
     }
 
-    @Override
-    public void failure() {
-
-    }
-
-    @Override
-    public void onFileClick(View view, int position) {
-
+    /**
+     * Clear the search.
+     */
+    private void clearSearch() {
+        mSearchEditText.setText("");
+        mFileModelList.clear();
+        mFileModelAdapter.setList(mFileModelList);
     }
 }

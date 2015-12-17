@@ -118,4 +118,7 @@
     <string name="genealogy_last_name">Last name</string>
     <string name="genealogy_add_person">Add person</string>
 
+
+    <string name="activity_search_empty">No result.</string>
+
 </resources>

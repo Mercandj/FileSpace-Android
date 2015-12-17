@@ -1,9 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-	Personal Project : Control server
-		MERCANDALLI Jonathan
--->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -12,7 +9,9 @@
         android:id="@+id/activity_search_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/primary">
+        android:background="@color/primary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:titleTextColor="@android:color/white">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -30,7 +29,7 @@
                 android:minLines="1"
                 android:singleLine="true"
                 android:textColor="@android:color/white"
-                android:textColorHint="@color/white_70"/>
+                android:textColorHint="@color/white_70" />
 
             <ImageButton
                 android:id="@+id/activity_search_toolbar_btn_clear"
@@ -38,8 +37,9 @@
                 android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="end"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="@dimen/default_24"
                 android:src="@drawable/ic_close"
-                android:visibility="invisible"/>
+                android:visibility="gone" />
         </FrameLayout>
 
     </android.support.v7.widget.Toolbar>
@@ -48,7 +48,30 @@
         android:id="@+id/activity_search_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
         android:clickable="true"
         android:focusable="true"
-        android:scrollbars="vertical"/>
-</LinearLayout>
+        android:scrollbars="vertical" />
+
+    <ProgressBar
+        android:id="@+id/activity_search_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/activity_search_empty_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/activity_search_empty"
+        android:visibility="gone" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:background="@drawable/shadow_bottom" />
+
+</FrameLayout>
