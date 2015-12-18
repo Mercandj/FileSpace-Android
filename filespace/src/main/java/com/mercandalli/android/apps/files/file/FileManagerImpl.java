@@ -806,9 +806,6 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         new AsyncTask<Void, Void, List<FileModel>>() {
             @Override
             protected List<FileModel> doInBackground(Void... params) {
-                // Used to count the number of music inside.
-                final Map<String, MutableInt> directories = new HashMap<>();
-
                 final String[] PROJECTION = new String[]{MediaStore.Files.FileColumns.DATA};
 
                 final Uri allSongsUri = MediaStore.Files.getContentUri("external");
@@ -827,7 +824,6 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                                     .file(new File(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))))
                                     .isOnline(false)
                                     .build());
-
                         } while (cursor.moveToNext());
                     }
                     cursor.close();
@@ -848,7 +844,6 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
      */
     @Override
     public void getCover(final Context context, final FileAudioModel fileAudioModel, final ImageView imageView) {
-
         if (!StringUtils.isNullOrEmpty(fileAudioModel.getAlbum())) {
             CoverUtils.getCoverUrl(context, fileAudioModel.getAlbum(), new ResultCallback<String>() {
                 @Override

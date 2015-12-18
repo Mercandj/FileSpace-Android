@@ -180,7 +180,7 @@ public class FileLocalPagerFragment extends BackFragment implements ViewPager.On
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.action_filter);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView mSearchView = (SearchView) searchItem.getActionView();
 
         SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
@@ -215,7 +215,6 @@ public class FileLocalPagerFragment extends BackFragment implements ViewPager.On
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_filter).setVisible(false);
         menu.findItem(R.id.action_search).setVisible(true);
         menu.findItem(R.id.action_delete).setVisible(false);
         menu.findItem(R.id.action_add).setVisible(false);

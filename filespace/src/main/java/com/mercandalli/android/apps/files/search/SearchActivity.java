@@ -40,9 +40,16 @@ public class SearchActivity extends AppCompatActivity implements FileModelAdapte
     @Inject
     FileManager mFileManager;
 
+    /**
+     * The search {@link EditText}.
+     */
     private EditText mSearchEditText;
 
+    /**
+     * A {@link List} of result.
+     */
     private final List<FileModel> mFileModelList = new ArrayList<>();
+
     private RecyclerView mRecyclerView;
     private FileModelAdapter mFileModelAdapter;
 
@@ -104,6 +111,16 @@ public class SearchActivity extends AppCompatActivity implements FileModelAdapte
         scaleAnimationAdapter.setOffsetDuration(32);
         mRecyclerView.setAdapter(scaleAnimationAdapter);
 
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy != 0) {
+                    SoftInputUtils.hideSoftInput(mSearchEditText);
+                }
+            }
+        });
+
         mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -118,23 +135,26 @@ public class SearchActivity extends AppCompatActivity implements FileModelAdapte
         });
         mSearchEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void afterTextChanged(Editable s) {
-                final String search = mSearchEditText.getText().toString();
-                if (search.isEmpty()) {
-                    mClearImageView.setVisibility(View.GONE);
-                } else {
-                    mClearImageView.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 // Nothing here.
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Nothing here.
+                mSearchDelayHandler.removeCallbacks(mSearchDelayRunnable);
+                if (TextUtils.isEmpty(mSearchEditText.getText())) {
+                    mClearImageView.setVisibility(View.GONE);
+                    mRecyclerView.setVisibility(View.GONE);
+                } else {
+                    mClearImageView.setVisibility(View.VISIBLE);
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mSearchDelayHandler.removeCallbacks(mSearchDelayRunnable);
+                mSearchDelayHandler.postDelayed(mSearchDelayRunnable, 400);
             }
         });
 
@@ -214,8 +234,8 @@ public class SearchActivity extends AppCompatActivity implements FileModelAdapte
      * Clear the search.
      */
     private void clearSearch() {
-        mSearchEditText.setText("");
         mFileModelList.clear();
         mFileModelAdapter.setList(mFileModelList);
+        mSearchEditText.setText("");
     }
 }
