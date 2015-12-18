@@ -135,7 +135,7 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".search.SearchActivity"
+            android:name=".file.local.SearchActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme" />
 

@@ -14,7 +14,7 @@ import com.mercandalli.android.apps.files.file.cloud.FileCloudDownloadedFragment
 import com.mercandalli.android.apps.files.file.cloud.FileCloudFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileMyCloudFragment;
 import com.mercandalli.android.apps.files.file.local.FileLocalFragment;
-import com.mercandalli.android.apps.files.search.SearchActivity;
+import com.mercandalli.android.apps.files.file.local.SearchActivity;
 import com.mercandalli.android.apps.files.support.SupportFragment;
 import com.mercandalli.android.apps.files.support.SupportManager;
 import com.mercandalli.android.apps.files.support.SupportModule;

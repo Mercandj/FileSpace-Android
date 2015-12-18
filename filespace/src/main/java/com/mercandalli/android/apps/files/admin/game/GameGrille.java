@@ -5,10 +5,7 @@ import com.mercandalli.android.apps.files.common.util.MathUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Jonathan on 02/09/2015.
- */
-public class Grille {
+public class GameGrille {
 
     private GameCase[][] matrice;
 
@@ -16,11 +13,11 @@ public class Grille {
         return matrice[i][j];
     }
 
-    public int getValeurCase(int i, int j) {
+    public int getCaseValue(int i, int j) {
         return matrice[i][j].value;
     }
 
-    public void setValeurCase(int i, int j, int value) {
+    public void setCaseValue(int i, int j, int value) {
         matrice[i][j].value = value;
     }
 
@@ -28,7 +25,7 @@ public class Grille {
 
     public final int size;
 
-    public Grille(final int size) {
+    public GameGrille(final int size) {
         this.size = size;
         this.matrice = new GameCase[size][size];
         for (int i = 0; i < size; i++) {
@@ -77,7 +74,7 @@ public class Grille {
         GameCase start = null;
         while (true) {
             int rdm = MathUtils.random(0, size - 1);
-            if (getValeurCase(rdm, 0) == 0) {
+            if (getCaseValue(rdm, 0) == 0) {
                 start = getCase(rdm, 0);
                 break;
             }
@@ -88,7 +85,7 @@ public class Grille {
         GameCase end = null;
         while (true) {
             int rdm = MathUtils.random(0, size - 1);
-            if (getValeurCase(rdm, size - 1) == 0) {
+            if (getCaseValue(rdm, size - 1) == 0) {
                 end = getCase(rdm, size - 1);
                 break;
             }
@@ -107,7 +104,7 @@ public class Grille {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 for (Integer wallValue : wallValues) {
-                    if (getValeurCase(i, j) == wallValue) {
+                    if (getCaseValue(i, j) == wallValue) {
                         distance[i][j] = -1;
                     }
                 }

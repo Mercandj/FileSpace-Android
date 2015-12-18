@@ -35,6 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.admin.game.GameFragment;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.EmptyFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;

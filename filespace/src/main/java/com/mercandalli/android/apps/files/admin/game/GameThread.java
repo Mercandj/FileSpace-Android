@@ -13,10 +13,10 @@ import java.util.TimerTask;
 
 public class GameThread extends Thread {
 
-    public Grille grille = new Grille(30);
+    public GameGrille mGameGrille = new GameGrille(30);
 
     public int getValeurCase(int i, int j) {
-        return this.grille.getValeurCase(i, j);
+        return this.mGameGrille.getCaseValue(i, j);
     }
 
     private int couleur_non_brouillon_ = Color.rgb(10, 83, 180);
@@ -111,10 +111,10 @@ public class GameThread extends Thread {
     private void dessineMatrices(Canvas canvas) {
         if (largeurPixel < hauteurPixel) { // Portrait
             int decalageY = (hauteurPixel - largeurPixel) / 2;
-            dessineMatrice(canvas, largeurPixel / grille.size, 0, decalageY);
+            dessineMatrice(canvas, largeurPixel / mGameGrille.size, 0, decalageY);
         } else { // Landscape
             int decalageX = (largeurPixel - hauteurPixel) / 2;
-            dessineMatrice(canvas, hauteurPixel / grille.size, decalageX, 0);
+            dessineMatrice(canvas, hauteurPixel / mGameGrille.size, decalageX, 0);
         }
     }
 
@@ -123,8 +123,8 @@ public class GameThread extends Thread {
         paint.setColor(couleur_non_brouillon_);
         paint.setTextSize(hauteur_txt);
         paint.setFakeBoldText(true);
-        for (int i = 0; i < grille.size; i++) {
-            for (int j = 0; j < grille.size; j++) {
+        for (int i = 0; i < mGameGrille.size; i++) {
+            for (int j = 0; j < mGameGrille.size; j++) {
                 if (-10 < getValeurCase(i, j) && getValeurCase(i, j) < 10 && getValeurCase(i, j) != 0) {
                     paint.setColor(getValeurCase(i, j) < 0 ? couleur_brouillon_ : couleur_non_brouillon_);
                     canvas.drawText("" + getValeurCase(i, j), i * coteCarreau + coteCarreau / 2 - (int) paint.measureText("" + getValeurCase(i, j)) / 2 + decalageX, j * coteCarreau + coteCarreau / 2 + hauteur_txt / 2 + decalageY, paint);
@@ -136,16 +136,16 @@ public class GameThread extends Thread {
     private void dessineTableau(Canvas canvas) {
         if (largeurPixel < hauteurPixel) { // Portrait
             int decalageY = (hauteurPixel - largeurPixel) / 2;
-            dessineTableau(canvas, largeurPixel / grille.size, 0, decalageY);
+            dessineTableau(canvas, largeurPixel / mGameGrille.size, 0, decalageY);
         } else { // Landscape
             int decalageX = (largeurPixel - hauteurPixel) / 2;
-            dessineTableau(canvas, hauteurPixel / grille.size, decalageX, 0);
+            dessineTableau(canvas, hauteurPixel / mGameGrille.size, decalageX, 0);
         }
     }
 
     private void dessineTableau(Canvas canvas, int coteCarreau, int decalageX, int decalageY) {
         paint.setColor(Color.BLACK);
-        for (int i = 0; i < grille.size + 1; i++) {
+        for (int i = 0; i < mGameGrille.size + 1; i++) {
             if ((i) % 3 == 0) {
                 paint.setStrokeWidth(4);
             } else {

@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.admin;
+package com.mercandalli.android.apps.files.admin.game;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.admin.game.GameView;
-import com.mercandalli.android.apps.files.admin.game.GameWay;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 
 /**
@@ -33,9 +31,9 @@ public class GameFragment extends BackFragment {
             @Override
             public void onClick(View v) {
 
-                GameWay gameWay = gameView.thread.grille.findWay();
+                GameWay gameWay = gameView.thread.mGameGrille.findWay();
                 for (int i = gameWay.array.size() - 1; i >= 0; i--) {
-                    gameView.thread.grille.setValeurCase(gameWay.array.get(i).x, gameWay.array.get(i).y, 8);
+                    gameView.thread.mGameGrille.setCaseValue(gameWay.array.get(i).x, gameWay.array.get(i).y, 8);
                 }
             }
         });
@@ -43,14 +41,14 @@ public class GameFragment extends BackFragment {
         rootView.findViewById(R.id.reset_map).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gameView.thread.grille.resetMap();
+                gameView.thread.mGameGrille.resetMap();
             }
         });
 
         rootView.findViewById(R.id.reset_way).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gameView.thread.grille.resetWay();
+                gameView.thread.mGameGrille.resetWay();
             }
         });
 

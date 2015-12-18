@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.search;
+package com.mercandalli.android.apps.files.file.local;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +28,7 @@ import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
+import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.main.FileApp;
 
 import java.util.ArrayList;
@@ -116,7 +117,7 @@ public class SearchActivity extends AppCompatActivity implements FileModelAdapte
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (dy != 0) {
-                    SoftInputUtils.hideSoftInput(mSearchEditText);
+                    FileUtils.hideSoftInput(mSearchEditText);
                 }
             }
         });
@@ -144,10 +145,8 @@ public class SearchActivity extends AppCompatActivity implements FileModelAdapte
                 mSearchDelayHandler.removeCallbacks(mSearchDelayRunnable);
                 if (TextUtils.isEmpty(mSearchEditText.getText())) {
                     mClearImageView.setVisibility(View.GONE);
-                    mRecyclerView.setVisibility(View.GONE);
                 } else {
                     mClearImageView.setVisibility(View.VISIBLE);
-                    mRecyclerView.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -234,8 +233,7 @@ public class SearchActivity extends AppCompatActivity implements FileModelAdapte
      * Clear the search.
      */
     private void clearSearch() {
-        mFileModelList.clear();
-        mFileModelAdapter.setList(mFileModelList);
+        mRecyclerView.setVisibility(View.GONE);
         mSearchEditText.setText("");
     }
 }

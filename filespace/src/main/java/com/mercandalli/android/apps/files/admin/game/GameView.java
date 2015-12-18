@@ -8,9 +8,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-/**
- * Created by Jonathan on 02/09/2015.
- */
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public GameThread thread;

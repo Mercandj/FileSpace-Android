@@ -50,7 +50,7 @@ import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.apps.files.search.SearchActivity;
+import com.mercandalli.android.apps.files.file.local.SearchActivity;
 
 public class FileCloudPagerFragment extends BackFragment implements ViewPager.OnPageChangeListener, FabFragment.RefreshFabCallback {
 

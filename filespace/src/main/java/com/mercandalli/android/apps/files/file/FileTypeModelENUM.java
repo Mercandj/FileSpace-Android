@@ -38,6 +38,8 @@ public enum FileTypeModelENUM {
     SOURCE(new FileTypeModel("Source code", new String[]{"java", "c", "cs", "cpp", "sql", "php", "html", "js", "css"})),
     THREE_D(new FileTypeModel("3d buildModel", new String[]{"3ds", "obj", "max"})),
     ISO(new FileTypeModel("Optical disc", new String[]{"iso"})),
+    TEMPORARY(new FileTypeModel("Temporary", new String[]{"tmp"})),
+    INDEX(new FileTypeModel("Index", new String[]{"idx"})),
     KEYSTORE(new FileTypeModel("KeyStore", new String[]{"keystore", "jdk"})),
     DIRECTORY(new FileTypeModel("Directory", new String[]{"dir", ""}));
 

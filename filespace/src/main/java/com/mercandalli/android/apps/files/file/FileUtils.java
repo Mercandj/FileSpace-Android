@@ -24,6 +24,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+
+import com.mercandalli.android.apps.files.common.Preconditions;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -164,5 +168,27 @@ public class FileUtils {
                 cursor.close();
             }
         }
+    }
+
+    /**
+     * Manage the soft input (keyboard).
+     */
+    public static void hideSoftInput(EditText editText) {
+        Preconditions.checkNotNull(editText);
+        final Context context = editText.getContext();
+        final InputMethodManager inputMethodManager = (InputMethodManager)
+                context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+    }
+
+    /**
+     * Manage the soft input (keyboard).
+     */
+    public static void showSoftInput(EditText editText) {
+        Preconditions.checkNotNull(editText);
+        final Context context = editText.getContext();
+        final InputMethodManager inputMethodManager = (InputMethodManager)
+                context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
     }
 }

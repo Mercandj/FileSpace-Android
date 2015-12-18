@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by Jonathan on 02/09/2015.
- */
 public class GameWay implements Iterable<GameCase> {
 
     public List<GameCase> array;

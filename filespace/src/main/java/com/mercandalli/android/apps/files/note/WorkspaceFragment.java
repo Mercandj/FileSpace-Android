@@ -221,8 +221,8 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_search).setVisible(true);
         menu.findItem(R.id.action_delete).setVisible(true);
+        menu.findItem(R.id.action_search).setVisible(false);
         menu.findItem(R.id.action_add).setVisible(false);
         menu.findItem(R.id.action_home).setVisible(false);
         menu.findItem(R.id.action_sort).setVisible(false);
