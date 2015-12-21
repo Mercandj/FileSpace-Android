@@ -2,6 +2,7 @@ package com.mercandalli.android.apps.files.main;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -103,6 +104,7 @@ public class NavDrawerView extends FrameLayout implements View.OnClickListener {
 
     private void initView(@NonNull Context context) {
         inflate(context, R.layout.view_nav_drawer, this);
+        setBackgroundColor(Color.WHITE);
 
         mNavDrawerHeaderView = (NavDrawerHeaderView) findViewById(R.id.view_nav_drawer_header);
 

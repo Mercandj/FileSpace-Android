@@ -74,7 +74,7 @@ public class GCMNotificationIntentService extends IntentService {
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
                 this).setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle("JARVIS")
+                .setContentTitle("FILESPACE")
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                 .setLights(getResources().getColor(R.color.action_bar), 500, 2200)
                 .setContentText(message)

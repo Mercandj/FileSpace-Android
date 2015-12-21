@@ -19,8 +19,10 @@
  */
 package com.mercandalli.android.apps.files.main;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -57,6 +59,15 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
         SetToolbarCallback,
         NavDrawerView.OnNavDrawerClickCallback {
 
+    /**
+     * Per the design guidelines, you should show the drawer on launch until the
+     * user manually expands it. This shared preference tracks this.
+     */
+    private static final String PREF_USER_LEARNED_DRAWER = "NavDrawerActivity.navigation_drawer_learned";
+
+    /**
+     * The current fragment displayed.
+     */
     protected BackFragment mBackFragment;
 
     private DrawerLayout mDrawerLayout;
@@ -65,10 +76,27 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
 
     private final FragmentManager mFragmentManager = getSupportFragmentManager();
 
+    /**
+     * True if returns from a saved instance state, false otherwise.
+     */
+    private boolean mFromSavedInstanceState;
+
+    /**
+     * True if the user has already learned to user the navigation drawer, false otherwise.
+     * <p/>
+     * In this implementation, we consider that the user learns the navigation drawer when she closes it.
+     */
+    private boolean mUserLearnedDrawer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Read in the flag indicating whether or not the user has demonstrated awareness of the
+        // drawer. See PREF_USER_LEARNED_DRAWER for details.
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
         mNavigationView = (NavigationView) findViewById(R.id.activity_main_navigation_view);
@@ -87,6 +115,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
         if (savedInstanceState == null) {
             selectItem(getInitFragmentId());
         } else {
+            mFromSavedInstanceState = true;
             FragmentManager fragmentManager = getSupportFragmentManager();
             List<Fragment> fragments = fragmentManager.getFragments();
             for (Fragment fragment : fragments) {
@@ -99,6 +128,17 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name) {
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
+
+                if (!mUserLearnedDrawer) {
+                    // The user manually closed the drawer; store this flag to prevent auto-showing
+                    // the navigation drawer automatically in the future.
+                    mUserLearnedDrawer = true;
+                    SharedPreferences sp = PreferenceManager
+                            .getDefaultSharedPreferences(NavDrawerActivity.this);
+                    sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true)
+                            .apply();
+                }
+
                 invalidateOptionsMenu();
             }
 
@@ -109,6 +149,12 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+        // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
+        // per the navigation drawer design guidelines.
+        if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
+            mDrawerLayout.openDrawer(GravityCompat.START);
+        }
     }
 
     /**
@@ -147,20 +193,6 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
 
     public BackFragment getBackFragment() {
         return mBackFragment;
-    }
-
-    /**
-     * TODO - Need to be removed.
-     */
-    public void selectItem(int position) {
-        switch (position) {
-            case 3:
-                selectItem(NavDrawerView.NavDrawerRow.FILES);
-                break;
-            case 4:
-                selectItem(NavDrawerView.NavDrawerRow.WORKSPACE);
-                break;
-        }
     }
 
     /* package */ void selectItem(NavDrawerView.NavDrawerRow navDrawerRow) {
@@ -228,6 +260,11 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
         }
     }
 
+    /**
+     * Close the nav drawer or follow back to fragment.
+     *
+     * @return true if action done, false will finish.
+     */
     private boolean backPressed() {
         if (mDrawerLayout.isDrawerOpen(mNavigationView)) {
             mDrawerLayout.closeDrawer(mNavigationView);
