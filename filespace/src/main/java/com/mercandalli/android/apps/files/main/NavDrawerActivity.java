@@ -57,6 +57,7 @@ import java.util.List;
  */
 public abstract class NavDrawerActivity extends ApplicationActivity implements
         SetToolbarCallback,
+        DrawerLayout.DrawerListener,
         NavDrawerView.OnNavDrawerClickCallback {
 
     /**
@@ -71,7 +72,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
     protected BackFragment mBackFragment;
 
     private DrawerLayout mDrawerLayout;
-    private ActionBarDrawerToggle mDrawerToggle;
+    private ActionBarDrawerToggle mActionBarDrawerToggle;
     private NavigationView mNavigationView;
 
     private final FragmentManager mFragmentManager = getSupportFragmentManager();
@@ -125,30 +126,8 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
             }
         }
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name) {
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-
-                if (!mUserLearnedDrawer) {
-                    // The user manually closed the drawer; store this flag to prevent auto-showing
-                    // the navigation drawer automatically in the future.
-                    mUserLearnedDrawer = true;
-                    SharedPreferences sp = PreferenceManager
-                            .getDefaultSharedPreferences(NavDrawerActivity.this);
-                    sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true)
-                            .apply();
-                }
-
-                invalidateOptionsMenu();
-            }
-
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu();
-            }
-        };
-
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name);
+        mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
 
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
         // per the navigation drawer design guidelines.
@@ -168,13 +147,13 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mDrawerToggle.syncState();
+        mActionBarDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        mActionBarDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -185,10 +164,50 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
     @Override
     public void setToolbar(Toolbar toolbar) {
         setSupportActionBar(toolbar);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawerLayout.setDrawerListener(toggle);
-        toggle.syncState();
+        mDrawerLayout.setDrawerListener(this);
+        mActionBarDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onDrawerSlide(View drawerView, float slideOffset) {
+        if (mActionBarDrawerToggle != null) {
+            mActionBarDrawerToggle.onDrawerSlide(drawerView, slideOffset);
+        }
+    }
+
+    @Override
+    public void onDrawerOpened(View drawerView) {
+        if (mActionBarDrawerToggle != null) {
+            mActionBarDrawerToggle.onDrawerOpened(drawerView);
+        }
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onDrawerClosed(View drawerView) {
+        if (mActionBarDrawerToggle != null) {
+            mActionBarDrawerToggle.onDrawerClosed(drawerView);
+        }
+        if (!mUserLearnedDrawer) {
+            // The user manually closed the drawer; store this flag to prevent auto-showing
+            // the navigation drawer automatically in the future.
+            mUserLearnedDrawer = true;
+            SharedPreferences sp = PreferenceManager
+                    .getDefaultSharedPreferences(NavDrawerActivity.this);
+            sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true)
+                    .apply();
+        }
+
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onDrawerStateChanged(int newState) {
+        if (mActionBarDrawerToggle != null) {
+            mActionBarDrawerToggle.onDrawerStateChanged(newState);
+        }
     }
 
     public BackFragment getBackFragment() {
