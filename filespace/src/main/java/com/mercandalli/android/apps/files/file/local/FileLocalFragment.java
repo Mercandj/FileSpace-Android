@@ -91,6 +91,17 @@ public class FileLocalFragment extends InjectedFabFragment implements
         return new FileLocalFragment();
     }
 
+    /**
+     * Default Constructor.
+     * <p/>
+     * <p/>
+     * lint [ValidFragment]
+     * http://developer.android.com/reference/android/app/Fragment.html#Fragment()
+     * Every fragment must have an empty constructor, so it can be instantiated when restoring its activity's state.
+     */
+    public FileLocalFragment() {
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_file_files, container, false);

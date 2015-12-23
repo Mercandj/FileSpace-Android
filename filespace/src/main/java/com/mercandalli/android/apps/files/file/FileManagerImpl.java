@@ -811,18 +811,18 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                 final Uri allSongsUri = MediaStore.Files.getContentUri("external");
                 final List<String> searchArray = new ArrayList<>();
 
-                String selection = MediaStore.Files.FileColumns.DATA + LIKE;
+                String selection = MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
                 searchArray.add("%" + search + "%");
 
                 final List<FileModel> result = new ArrayList<>();
 
-                final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
+                final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection,
+                        searchArray.toArray(new String[searchArray.size()]), null);
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         do {
                             result.add(new FileModel.FileModelBuilder()
                                     .file(new File(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))))
-                                    .isOnline(false)
                                     .build());
                         } while (cursor.moveToNext());
                     }

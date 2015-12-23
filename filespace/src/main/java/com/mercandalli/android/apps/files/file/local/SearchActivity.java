@@ -39,7 +39,7 @@ import javax.inject.Inject;
 public class SearchActivity extends AppCompatActivity implements FileModelAdapter.OnFileClickListener, ResultCallback<List<FileModel>>, View.OnClickListener {
 
     @Inject
-    FileManager mFileManager;
+    protected FileManager mFileManager;
 
     /**
      * The search {@link EditText}.
