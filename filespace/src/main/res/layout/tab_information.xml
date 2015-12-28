@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
-<RelativeLayout
-    android:id="@+id/item"
+<RelativeLayout android:id="@+id/item"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="70dp"
@@ -13,7 +11,7 @@
     android:layout_marginRight="5dp"
     android:layout_marginTop="3dp"
     android:background="#fff"
-    android:stateListAnimator="@anim/tab_user_elevation"
+    android:stateListAnimator="@drawable/tab_user_elevation"
     android:translationZ="2.0dp">
 
     <com.mercandalli.android.apps.files.common.view.CircularImageView
@@ -24,7 +22,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="20dp"
         android:contentDescription="@string/image_description"
-        android:src="@drawable/file_default"/>
+        android:src="@drawable/file_default" />
 
     <RelativeLayout
         android:id="@+id/more"
@@ -41,7 +39,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"/>
+            android:src="@drawable/ic_menu_moreoverflow_normal_holo_light" />
     </RelativeLayout>
 
     <TextView
@@ -63,7 +61,7 @@
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="#000"
-        android:textSize="18sp"/>
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/value"
@@ -84,6 +82,6 @@
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="#000"
-        android:textSize="12sp"/>
+        android:textSize="12sp" />
 
 </RelativeLayout>
