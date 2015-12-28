@@ -1,53 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-	Personal Project : Control server
-		MERCANDALLI Jonathan
--->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <com.romainpiel.shimmer.ShimmerTextView
         android:id="@+id/shimmer_tv"
-        android:text="@string/author_full_name"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:textColor="#555"
-        android:textSize="35sp"
-        app:reflectionColor="#ccc"
-        android:gravity="center"
-        android:layout_marginTop="28dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="18dp"/>
+        android:layout_marginBottom="18dp"
+        android:layout_marginTop="28dp"
+        android:gravity="center"
+        android:text="@string/author_full_name"
+        android:textColor="#555"
+        android:textSize="35sp"
+        app:reflectionColor="#ccc" />
 
     <Button
+        android:id="@+id/dismiss"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/ok"
-        android:id="@+id/dismiss"
-        android:layout_below="@+id/version_tv"
         android:layout_alignParentEnd="true"
+        android:layout_below="@+id/version_tv"
+        android:layout_margin="16dp"
         android:paddingLeft="26dp"
         android:paddingRight="26sp"
-        android:layout_margin="16dp"/>
+        android:text="@string/ok" />
 
     <com.romainpiel.shimmer.ShimmerTextView
+        android:id="@+id/version_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/ok"
-        android:id="@+id/version_tv"
-        android:layout_below="@+id/shimmer_tv"
-        android:layout_alignStart="@+id/shimmer_tv"
         android:layout_alignEnd="@+id/shimmer_tv"
+        android:layout_alignStart="@+id/shimmer_tv"
+        android:layout_below="@+id/shimmer_tv"
+        android:layout_marginBottom="12dp"
         android:gravity="center"
+        android:text="@string/ok"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#555"
         android:textSize="22sp"
-        android:layout_marginBottom="12dp"
-        app:reflectionColor="#ccc"/>
+        app:reflectionColor="#ccc" />
 
 </RelativeLayout>

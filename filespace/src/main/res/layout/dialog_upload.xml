@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-	Personal Project : Control server
-		MERCANDALLI Jonathan
--->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="10dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <RelativeLayout
         android:id="@+id/file"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
         android:layout_marginTop="15dp">
 
         <TextView
@@ -28,7 +24,7 @@
             android:padding="10dp"
             android:text="@string/no_file"
             android:textColor="#000"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/fileButton"
@@ -36,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="@string/file"/>
+            android:text="@string/file" />
     </RelativeLayout>
 
     <Button
@@ -47,6 +43,6 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/file"
         android:layout_marginTop="10dp"
-        android:text="@string/request"/>
+        android:text="@string/request" />
 
 </RelativeLayout>

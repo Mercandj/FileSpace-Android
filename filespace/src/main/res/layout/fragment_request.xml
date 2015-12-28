@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <EditText
         android:id="@+id/console"
@@ -19,10 +18,10 @@
         android:layout_margin="10dp"
         android:hint="@string/console"
         android:inputType="text|textMultiLine"
-        android:textIsSelectable="true"
         android:maxLines="999999"
         android:scrollbars="vertical"
-        android:textSize="12sp"/>
+        android:textIsSelectable="true"
+        android:textSize="12sp" />
 
     <ImageButton
         android:id="@+id/circle"
@@ -36,7 +35,7 @@
         android:padding="12dp"
         android:scaleType="fitXY"
         android:src="@android:drawable/ic_input_add"
-        android:stateListAnimator="@anim/circle_button_elevation"
-        android:tint="@android:color/white"/>
+        android:stateListAnimator="@drawable/circle_button_elevation"
+        android:tint="@android:color/white" />
 
 </RelativeLayout>

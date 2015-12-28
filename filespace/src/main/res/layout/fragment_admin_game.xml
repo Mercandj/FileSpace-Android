@@ -1,43 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-	Personal Project : Control server
-		MERCANDALLI Jonathan
--->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <com.mercandalli.android.apps.files.admin.game.GameView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/game_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="GPS"
         android:id="@+id/gps"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"/>
-
-    <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="RESET WAY"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:text="GPS" />
+
+    <Button
         android:id="@+id/reset_way"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/gps"/>
-
-    <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="RESET MAP"
-        android:id="@+id/reset_map"
         android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/reset_way"/>
+        android:layout_toStartOf="@+id/gps"
+        android:text="RESET WAY" />
+
+    <Button
+        android:id="@+id/reset_map"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/reset_way"
+        android:text="RESET MAP" />
 
 </RelativeLayout>

@@ -89,7 +89,7 @@ public class SearchActivity extends AppCompatActivity implements FileModelAdapte
 
         findViews();
 
-        final Toolbar toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.activity_search_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.activity_search_toolbar);
         setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

@@ -37,16 +37,8 @@
         <item name="android:windowBackground">@drawable/background_splash</item>
     </style>
 
-    <style name="AppThemeImage" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:typeface">sans</item>
+    <style name="AppThemeImage" parent="AppTheme">
         <item name="android:statusBarColor">@color/notifications_bar_picture</item>
-        <item name="colorPrimary">@color/action_bar</item>
-        <item name="colorAccent">@color/action_bar</item>
-
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-
-        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">

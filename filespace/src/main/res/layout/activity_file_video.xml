@@ -77,7 +77,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_above="@+id/seekBar"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true" />
 
         <com.mercandalli.android.apps.files.common.view.PlayPauseView
             android:id="@+id/play"
@@ -89,7 +89,7 @@
             android:clickable="true"
             android:elevation="@dimen/circle_button_elevation_high"
             android:foreground="?android:selectableItemBackground"
-            android:stateListAnimator="@anim/circle_button_elevation"
+            android:stateListAnimator="@drawable/circle_button_elevation"
             android:transitionName="transitionIcon" />
 
         <ImageButton
@@ -105,7 +105,7 @@
             android:elevation="@dimen/circle_button_elevation_high"
             android:padding="15dp"
             android:src="@android:drawable/ic_media_next"
-            android:stateListAnimator="@anim/circle_button_elevation"
+            android:stateListAnimator="@drawable/circle_button_elevation"
             android:tint="@android:color/white" />
 
         <ImageButton
@@ -121,7 +121,7 @@
             android:elevation="@dimen/circle_button_elevation_high"
             android:padding="15dp"
             android:src="@android:drawable/ic_media_previous"
-            android:stateListAnimator="@anim/circle_button_elevation"
+            android:stateListAnimator="@drawable/circle_button_elevation"
             android:tint="@android:color/white" />
 
 

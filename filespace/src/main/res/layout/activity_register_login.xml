@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-	Personal Project : Control server
-		MERCANDALLI Jonathan
--->
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -29,7 +24,7 @@
             android:singleLine="true"
             android:text="@string/app_name"
             android:textColor="#fff"
-            android:textSize="42sp"/>
+            android:textSize="42sp" />
 
         <ImageView
             android:id="@+id/activity_register_login_signin"
@@ -40,7 +35,7 @@
             android:layout_marginRight="15dp"
             android:layout_marginTop="25dp"
             android:contentDescription="@string/image_description"
-            android:src="@drawable/ic_circle_button"/>
+            android:src="@drawable/ic_circle_button" />
 
         <ImageView
             android:id="@+id/circle_ic"
@@ -53,7 +48,7 @@
             android:contentDescription="@string/image_description"
             android:paddingLeft="19dp"
             android:paddingRight="16dp"
-            android:src="@drawable/ic_menu_send"/>
+            android:src="@drawable/ic_menu_send" />
 
     </RelativeLayout>
 
@@ -72,14 +67,13 @@
             android:background="@color/action_bar"
             android:elevation="4dp"
             custom:pstsIndicatorHeight="2dp"
-            custom:pstsUnderlineHeight="0dp"/>
+            custom:pstsUnderlineHeight="0dp" />
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
+        <android.support.v4.view.ViewPager android:id="@+id/pager"
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/activity_register_login_tabs"/>
+            android:layout_below="@+id/activity_register_login_tabs" />
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/activity_register_login_gg_sign"
@@ -87,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/app_description"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"/>
+            android:layout_marginBottom="20dp" />
 
         <TextView
             android:id="@+id/app_description"
@@ -96,7 +90,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="15dp"
-            android:text="@string/app_description"/>
+            android:text="@string/app_description" />
 
     </RelativeLayout>
 

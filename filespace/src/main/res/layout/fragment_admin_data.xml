@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
@@ -19,7 +18,7 @@
             android:layout_height="match_parent"
             android:clickable="true"
             android:focusable="true"
-            android:scrollbars="vertical"/>
+            android:scrollbars="vertical" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <ProgressBar
@@ -27,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true" />
 
     <TextView
         android:id="@+id/message"
@@ -35,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <ImageButton
         android:id="@+id/circle"
@@ -49,7 +48,7 @@
         android:padding="15dp"
         android:scaleType="fitXY"
         android:src="@android:drawable/ic_input_add"
-        android:stateListAnimator="@anim/circle_button_elevation"
-        android:tint="@android:color/white"/>
+        android:stateListAnimator="@drawable/circle_button_elevation"
+        android:tint="@android:color/white" />
 
 </RelativeLayout>

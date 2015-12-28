@@ -80,7 +80,7 @@
             android:clickable="true"
             android:elevation="@dimen/circle_button_elevation_high"
             android:foreground="?android:selectableItemBackground"
-            android:stateListAnimator="@anim/circle_button_elevation"
+            android:stateListAnimator="@drawable/circle_button_elevation"
             android:transitionName="transitionIcon" />
 
         <ImageButton
@@ -96,7 +96,7 @@
             android:elevation="@dimen/circle_button_elevation_high"
             android:padding="15dp"
             android:src="@android:drawable/ic_media_next"
-            android:stateListAnimator="@anim/circle_button_elevation"
+            android:stateListAnimator="@drawable/circle_button_elevation"
             android:tint="@android:color/white" />
 
         <ImageButton
@@ -112,7 +112,7 @@
             android:elevation="@dimen/circle_button_elevation_high"
             android:padding="15dp"
             android:src="@android:drawable/ic_media_previous"
-            android:stateListAnimator="@anim/circle_button_elevation"
+            android:stateListAnimator="@drawable/circle_button_elevation"
             android:tint="@android:color/white" />
 
         <!-- SLIDER WITH NUMBER INDICATOR-->

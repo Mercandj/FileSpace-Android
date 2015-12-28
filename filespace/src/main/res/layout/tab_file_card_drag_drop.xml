@@ -13,7 +13,7 @@
     android:layout_marginTop="@dimen/default_4"
     android:background="@color/tab_file"
     android:foreground="?attr/selectableItemBackground"
-    android:stateListAnimator="@anim/tab_music_elevation"
+    android:stateListAnimator="@drawable/tab_music_elevation"
     android:transitionName="transitionRoot"
     app:cardCornerRadius="2dp">
 

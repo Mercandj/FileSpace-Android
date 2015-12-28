@@ -1,9 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-	Personal Project : Control server
-		MERCANDALLI Jonathan
--->
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -15,7 +11,7 @@
         android:layout_marginTop="10dp"
         android:clickable="true"
         android:focusable="true"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical" />
 
     <Button
         android:id="@+id/up"
@@ -23,5 +19,5 @@
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal|bottom"
         android:padding="10dp"
-        android:text="@string/up"/>
+        android:text="@string/up" />
 </FrameLayout>
