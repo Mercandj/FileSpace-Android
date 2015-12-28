@@ -43,7 +43,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class FileAudioDragAdapter extends RecyclerView.Adapter<FileAudioDragAdapter.ViewHolder> {
+public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapter.ViewHolder> {
 
     private List<FileModel> files;
     private OnItemClickListener mItemClickListener;
@@ -59,7 +59,7 @@ public class FileAudioDragAdapter extends RecyclerView.Adapter<FileAudioDragAdap
     @Inject
     FileManager mFileManager;
 
-    public FileAudioDragAdapter(Activity activity, List<FileModel> files, boolean hasHeader, FileModelListener moreListener) {
+    public FileAudioRowAdapter(Activity activity, List<FileModel> files, boolean hasHeader, FileModelListener moreListener) {
         this.files = new ArrayList<>();
         this.files.addAll(files);
         this.moreListener = moreListener;

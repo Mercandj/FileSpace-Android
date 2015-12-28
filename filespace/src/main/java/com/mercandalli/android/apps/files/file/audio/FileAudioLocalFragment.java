@@ -50,10 +50,11 @@ import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
+import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
 import com.mercandalli.android.apps.files.file.FileModelListener;
-import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.main.FileAppComponent;
 
 import org.json.JSONObject;
 
@@ -63,10 +64,11 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class FileAudioLocalFragment extends InjectedFabFragment
-        implements BackFragment.ISortMode, FileModelCardAdapter.OnFileSubtitleAdapter {
+        implements BackFragment.ISortMode, FileModelCardAdapter.OnFileSubtitleAdapter, FileModelCardAdapter.OnHeaderLongClickListener {
 
     private RecyclerView mRecyclerView;
     private List<FileModel> mFileModels;
+    private List<FileModelCardHeaderItem> mHeaderItems;
     private TextView mMessageTextView;
 
     /**
@@ -74,7 +76,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment
      */
     private ProgressBar mProgressBar;
 
-    private FileAudioDragAdapter mFileAudioDragAdapter;
+    private FileAudioRowAdapter mFileAudioRowAdapter;
     private FileModelCardAdapter mFileModelCardAdapter;
 
     private int mSortMode = Constants.SORT_DATE_MODIFICATION;
@@ -129,7 +131,14 @@ public class FileAudioLocalFragment extends InjectedFabFragment
 
     private void updateLayoutManager() {
         if (!mIsInsideFolder) {
-            mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.column_number_small_card)));
+            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.column_number_small_card));
+            mRecyclerView.setLayoutManager(gridLayoutManager);
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    return mFileModelCardAdapter.isHeader(position) ? gridLayoutManager.getSpanCount() : 1;
+                }
+            });
         } else {
             final int nbColumn = getResources().getInteger(R.integer.column_number_card);
             if (nbColumn <= 1) {
@@ -153,7 +162,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment
 
         mFileModels = new ArrayList<>();
 
-        mFileAudioDragAdapter = new FileAudioDragAdapter(mActivity, mFileModels, false, new FileModelListener() {
+        mFileAudioRowAdapter = new FileAudioRowAdapter(mActivity, mFileModels, false, new FileModelListener() {
             @Override
             public void executeFileModel(final FileModel fileModel) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
@@ -224,7 +233,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment
                 menuDrop.show();
             }
         });
-        mFileAudioDragAdapter.setOnItemClickListener(new FileAudioDragAdapter.OnItemClickListener() {
+        mFileAudioRowAdapter.setOnItemClickListener(new FileAudioRowAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 if (mFileModels.get(position).isDirectory()) {
@@ -235,7 +244,11 @@ public class FileAudioLocalFragment extends InjectedFabFragment
             }
         });
 
-        mFileModelCardAdapter = new FileModelCardAdapter(mFileModels, null, new FileModelCardAdapter.OnFileClickListener() {
+        mHeaderItems = new ArrayList<>();
+        mHeaderItems.add(new FileModelCardHeaderItem("Folder", true));
+        mHeaderItems.add(new FileModelCardHeaderItem("All", false));
+
+        mFileModelCardAdapter = new FileModelCardAdapter(mHeaderItems, this, mFileModels, null, new FileModelCardAdapter.OnFileClickListener() {
             @Override
             public void onFileClick(View view, int position) {
                 refreshList(mFileModels.get(position));
@@ -301,7 +314,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment
                 mFileModels.clear();
                 mFileModels.addAll(result);
 
-                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioDragAdapter);
+                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
                 mScaleAnimationAdapter.setDuration(220);
                 mScaleAnimationAdapter.setOffsetDuration(32);
                 mRecyclerView.setAdapter(mScaleAnimationAdapter);
@@ -328,52 +341,12 @@ public class FileAudioLocalFragment extends InjectedFabFragment
             }
 
             if (mIsInsideFolder) {
-                mFileAudioDragAdapter.setList(mFileModels);
+                mFileAudioRowAdapter.setList(mFileModels);
             } else {
                 mFileModelCardAdapter.setList(mFileModels);
             }
 
             updateLayoutManager();
-
-            /*
-            // Extend the Callback class
-            ItemTouchHelper.Callback _ithCallback = new ItemTouchHelper.Callback() {
-                //and in your imlpementaion of
-                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                    if (viewHolder.getAdapterPosition() >= 0 && target.getAdapterPosition() >= 0) {
-                        // get the viewHolder's and target's positions in your adapter data, swap them
-                        Collections.swap(mFileModels, viewHolder.getAdapterPosition(), target.getAdapterPosition());
-                        // and notify the adapter that its dataset has changed
-                        if (mIsInsideFolder) {
-                            mFileAudioDragAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-                        } else {
-                            mFileModelCardAdapter.notifyItemMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-                        }
-                    }
-                    return true;
-                }
-
-                @Override
-                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                    //TODO
-                }
-
-                //defines the enabled move directions in each state (idle, swiping, dragging).
-                @Override
-                public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                    if (viewHolder instanceof FileAudioDragAdapter.HeaderViewHolder) {
-                        return makeFlag(ItemTouchHelper.ACTION_STATE_IDLE,
-                                ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
-                    }
-                    return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
-                            ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
-                }
-            };
-
-            // Create an `ItemTouchHelper` and attach it to the `RecyclerView`
-            ItemTouchHelper ith = new ItemTouchHelper(_ithCallback);
-            ith.attachToRecyclerView(mRecyclerView);
-            */
         }
     }
 
@@ -439,5 +412,10 @@ public class FileAudioLocalFragment extends InjectedFabFragment
         mProgressBarActivationHandler.removeCallbacks(mProgressBarActivationRunnable);
         mProgressBar.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public boolean onHeaderClick(View view, int position) {
+        return false;
     }
 }

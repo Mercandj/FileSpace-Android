@@ -6,7 +6,7 @@ import com.mercandalli.android.apps.files.file.FileChooserDialog;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModule;
 import com.mercandalli.android.apps.files.file.FileUploadDialog;
-import com.mercandalli.android.apps.files.file.audio.FileAudioDragAdapter;
+import com.mercandalli.android.apps.files.file.audio.FileAudioRowAdapter;
 import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModule;
 import com.mercandalli.android.apps.files.file.audio.FileAudioPlayer;
@@ -53,7 +53,7 @@ public interface FileAppComponent {
 
     void inject(SearchActivity searchActivity);
 
-    void inject(FileAudioDragAdapter fileAudioDragAdapter);
+    void inject(FileAudioRowAdapter fileAudioRowAdapter);
 
     void inject(FileCloudDownloadedFragment fileCloudDownloadedFragment);
 

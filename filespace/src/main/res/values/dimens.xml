@@ -17,6 +17,7 @@
     <dimen name="default_32">32dp</dimen>
     <dimen name="default_64">64dp</dimen>
 
+    <dimen name="default_text_12">12sp</dimen>
     <dimen name="default_text_14">14sp</dimen>
     <dimen name="default_text_16">16sp</dimen>
     <dimen name="default_text_18">18sp</dimen>
