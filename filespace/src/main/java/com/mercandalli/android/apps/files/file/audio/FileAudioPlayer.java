@@ -8,24 +8,44 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.Wearable;
 import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.common.Preconditions;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The {@link FileAudioModel} player.
  */
 public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
 
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({STATUS_PAUSED, STATUS_PLAYING, STATUS_PREPARING})
+    public @interface Status {
+    }
+
     private static final int STATUS_PAUSED = 0;
     private static final int STATUS_PLAYING = 1;
     private static final int STATUS_PREPARING = 3;
 
+    private static final long CONNECTION_TIME_OUT_MS = 5000;
+
+    @Status
     private int mCurrentStatus;
 
     private FileAudioModel mCurrentMusic;
@@ -41,6 +61,7 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
     private final List<OnPlayerStatusChangeListener> mOnPlayerStatusChangeListeners;
 
     private final Handler mHandler = new Handler();
+    private String mWatchNodeId;
 
     public FileAudioPlayer(Application application) {
         mAppContext = application.getApplicationContext();
@@ -51,6 +72,7 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         mCurrentStatus = STATUS_PAUSED;
         mAudioManager = (AudioManager) mAppContext.getSystemService(Context.AUDIO_SERVICE);
         updatePosition();
+        retrieveDeviceNode(mAppContext);
     }
 
     @Override
@@ -214,6 +236,7 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
     }
 
     private void prepare(@NonNull FileAudioModel fileAudioModel) {
+        Preconditions.checkNotNull(fileAudioModel);
         if (STATUS_PREPARING == mCurrentStatus) {
             return;
         }
@@ -238,6 +261,8 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
     private void setCurrentStatus(int currentStatus) {
         mCurrentStatus = currentStatus;
         setNotification(currentStatus == STATUS_PLAYING);
+
+        sendToast(mAppContext, currentStatus, mFileAudioModelList.get(mCurrentMusicIndex));
 
         synchronized (mOnPlayerStatusChangeListeners) {
             for (int i = 0, size = mOnPlayerStatusChangeListeners.size(); i < size; i++) {
@@ -284,6 +309,59 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         }
     }
 
+    private GoogleApiClient getGoogleApiClient(Context context) {
+        Preconditions.checkNotNull(context);
+        return new GoogleApiClient.Builder(context)
+                .addApi(Wearable.API)
+                .build();
+    }
+
+    private void retrieveDeviceNode(Context context) {
+        Preconditions.checkNotNull(context);
+        final GoogleApiClient client = getGoogleApiClient(context);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                client.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
+                NodeApi.GetConnectedNodesResult result =
+                        Wearable.NodeApi.getConnectedNodes(client).await();
+                List<Node> nodes = result.getNodes();
+                if (nodes.size() > 0) {
+                    mWatchNodeId = nodes.get(0).getId();
+                }
+                client.disconnect();
+            }
+        }).start();
+    }
+
+    private void sendToast(Context context, int currentStatus, final FileAudioModel fileAudioModel) {
+        Preconditions.checkNotNull(context);
+        Preconditions.checkNotNull(fileAudioModel);
+        final JSONObject jsonObject = new JSONObject();
+        try {
+            final JSONObject file = new JSONObject();
+            file.put("id", fileAudioModel.getId());
+            file.put("album", fileAudioModel.getAlbum());
+            file.put("artist", fileAudioModel.getArtist());
+            jsonObject.put("file", file);
+            jsonObject.put("audio_status", currentStatus);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        final GoogleApiClient client = getGoogleApiClient(context);
+        if (mWatchNodeId != null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    client.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
+                    Wearable.MessageApi.sendMessage(client, mWatchNodeId, jsonObject.toString(), null);
+                    client.disconnect();
+                }
+            }).start();
+        }
+    }
+
 
     /* INNER */
 
@@ -295,7 +373,7 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
     }
 
     public interface OnPlayerStatusChangeListener {
-        void onPlayerStatusChanged(int status);
+        void onPlayerStatusChanged(@Status int status);
 
         void onPlayerProgressChanged(int progress, int duration, int musicPosition, FileAudioModel music);
     }

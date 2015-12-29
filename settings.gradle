@@ -1,1 +1,1 @@
-include ':filespace'
+include ':filespace', ':wearable'

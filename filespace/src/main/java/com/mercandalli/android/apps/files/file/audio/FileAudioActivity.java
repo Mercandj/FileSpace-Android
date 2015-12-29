@@ -216,7 +216,7 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
-    public void onPlayerStatusChanged(int status) {
+    public void onPlayerStatusChanged(@FileAudioPlayer.Status int status) {
 
     }
 

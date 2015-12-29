@@ -43,7 +43,6 @@ import java.util.List;
  */
 public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdapter.ViewHolder> {
 
-
     /**
      * The view type of the header.
      */
@@ -236,18 +235,18 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
     }
 
     public interface OnFileClickListener {
-        void onFileClick(View v, int position);
-
+        void onFileCardClick(View v, int position);
     }
 
     public interface OnFileLongClickListener {
-        boolean onFileLongClick(View v, int position);
-
+        boolean onFileCardLongClick(View v, int position);
     }
 
     public interface OnHeaderClickListener {
+        /**
+         * The header is clicked.
+         */
         boolean onHeaderClick(View v, List<FileModelCardHeaderItem> fileModelCardHeaderItems);
-
     }
 
     public interface OnFileSubtitleAdapter {
@@ -311,7 +310,6 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
             if (isElementAlreadySelected) {
                 return;
             }
-            mOnHeaderClickListener.onHeaderClick(v, mFileModelCardHeaderItems);
             for (FileModelCardHeaderItem f : mFileModelCardHeaderItems) {
                 if (f.getId() == viewId) {
                     f.setSelected(true);
@@ -319,6 +317,8 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
                     f.setSelected(false);
                 }
             }
+            mOnHeaderClickListener.onHeaderClick(v, mFileModelCardHeaderItems);
+            updateView();
         }
     }
 
@@ -349,13 +349,13 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
         @Override
         public void onClick(View v) {
             if (mOnFileClickListener != null) {
-                mOnFileClickListener.onFileClick(icon, getAdapterPosition() - (mHasHeader ? 1 : 0));
+                mOnFileClickListener.onFileCardClick(icon, getAdapterPosition() - (mHasHeader ? 1 : 0));
             }
         }
 
         @Override
         public boolean onLongClick(View v) {
-            return mOnFileLongClickListener != null && mOnFileLongClickListener.onFileLongClick(v, getAdapterPosition() - (mHasHeader ? 1 : 0));
+            return mOnFileLongClickListener != null && mOnFileLongClickListener.onFileCardLongClick(v, getAdapterPosition() - (mHasHeader ? 1 : 0));
         }
     }
 }

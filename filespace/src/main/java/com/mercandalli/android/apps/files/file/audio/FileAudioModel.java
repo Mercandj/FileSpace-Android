@@ -4,6 +4,8 @@ import android.os.Parcel;
 
 import com.mercandalli.android.apps.files.file.FileModel;
 
+import org.json.JSONObject;
+
 import java.io.File;
 
 public class FileAudioModel extends FileModel {
