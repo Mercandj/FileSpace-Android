@@ -47,7 +47,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class UserAddFragment extends BackFragment {
 
     private View rootView;

@@ -24,16 +24,16 @@ package com.mercandalli.android.apps.files.file;
  */
 public class FileModelCardHeaderItem {
 
-    private final String mTitle;
+    private final int mId;
     private boolean mSelected;
 
-    public FileModelCardHeaderItem(final String title, final boolean selected) {
-        mTitle = title;
+    public FileModelCardHeaderItem(final int id, final boolean selected) {
+        mId = id;
         mSelected = selected;
     }
 
-    public String getTitle() {
-        return mTitle;
+    public int getId() {
+        return mId;
     }
 
     public boolean isSelected() {

@@ -63,13 +63,19 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class FileAudioLocalFragment extends InjectedFabFragment
-        implements BackFragment.ISortMode, FileModelCardAdapter.OnFileSubtitleAdapter, FileModelCardAdapter.OnHeaderLongClickListener {
+/**
+ * A {@link android.support.v4.app.Fragment} that displays the local {@link FileAudioModel}s.
+ */
+public class FileAudioLocalFragment extends InjectedFabFragment implements
+        BackFragment.ISortMode,
+        FileModelCardAdapter.OnFileSubtitleAdapter,
+        FileModelCardAdapter.OnHeaderClickListener {
 
     private RecyclerView mRecyclerView;
     private List<FileModel> mFileModels;
-    private List<FileModelCardHeaderItem> mHeaderItems;
     private TextView mMessageTextView;
+
+    private List<FileModelCardHeaderItem> mHeaderIds;
 
     /**
      * A simple {@link ProgressBar}. Call {@link #showProgressBar()} or {@link #hideProgressBar()}.
@@ -244,11 +250,14 @@ public class FileAudioLocalFragment extends InjectedFabFragment
             }
         });
 
-        mHeaderItems = new ArrayList<>();
-        mHeaderItems.add(new FileModelCardHeaderItem("Folder", true));
-        mHeaderItems.add(new FileModelCardHeaderItem("All", false));
+        mHeaderIds = new ArrayList<>();
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.header_audio_recent, true));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.header_audio_folder, false));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.header_audio_artist, false));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.header_audio_album, false));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.header_audio_all, false));
 
-        mFileModelCardAdapter = new FileModelCardAdapter(mHeaderItems, this, mFileModels, null, new FileModelCardAdapter.OnFileClickListener() {
+        mFileModelCardAdapter = new FileModelCardAdapter(mHeaderIds, this, mFileModels, null, new FileModelCardAdapter.OnFileClickListener() {
             @Override
             public void onFileClick(View view, int position) {
                 refreshList(mFileModels.get(position));
@@ -415,7 +424,15 @@ public class FileAudioLocalFragment extends InjectedFabFragment
     }
 
     @Override
-    public boolean onHeaderClick(View view, int position) {
+    public boolean onHeaderClick(View v, List<FileModelCardHeaderItem> fileModelCardHeaderItems) {
+        mHeaderIds.clear();
+        mHeaderIds.addAll(fileModelCardHeaderItems);
+        final int viewId = v.getId();
+        switch (viewId) {
+            case R.id.header_audio_recent:
+                //TODO
+                break;
+        }
         return false;
     }
 }

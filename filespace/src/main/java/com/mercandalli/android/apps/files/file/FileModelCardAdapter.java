@@ -19,7 +19,10 @@
  */
 package com.mercandalli.android.apps.files.file;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +38,11 @@ import com.mercandalli.android.apps.files.common.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The {@link FileModel} card {@link android.support.v7.widget.RecyclerView.Adapter}.
+ */
 public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdapter.ViewHolder> {
+
 
     /**
      * The view type of the header.
@@ -47,20 +54,24 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
      */
     private static final int TYPE_CARD_ITEM = 1;
 
-    private final List<FileModelCardHeaderItem> mHeaderItems;
     private final List<FileModel> mFiles;
     private final OnFileClickListener mOnFileClickListener;
     private final OnFileLongClickListener mOnFileLongClickListener;
     private FileModelListener mMoreListener;
     private OnFileSubtitleAdapter mOnFileSubtitleAdapter;
-    private OnHeaderLongClickListener mOnHeaderLongClickListener;
 
+    /* Header */
+    private List<FileModelCardHeaderItem> mHeaderIds;
+    private OnHeaderClickListener mOnHeaderClickListener;
+
+    /**
+     * Adapter without header.
+     */
     public FileModelCardAdapter(
             final List<FileModel> files,
             final FileModelListener moreListener,
             final OnFileClickListener onFileClickListener,
             final OnFileLongClickListener onFileLongClickListener) {
-        mHeaderItems = new ArrayList<>();
         mFiles = new ArrayList<>();
         mFiles.addAll(files);
         mMoreListener = moreListener;
@@ -68,16 +79,20 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
         mOnFileLongClickListener = onFileLongClickListener;
     }
 
+    /**
+     * Adapter with header.
+     */
     public FileModelCardAdapter(
-            final List<FileModelCardHeaderItem> headerItems,
-            final OnHeaderLongClickListener onHeaderLongClickListener,
+            final List<FileModelCardHeaderItem> headerIds,
+            final OnHeaderClickListener onHeaderClickListener,
             final List<FileModel> files,
             final FileModelListener moreListener,
             final OnFileClickListener onFileClickListener,
             final OnFileLongClickListener onFileLongClickListener) {
         this(files, moreListener, onFileClickListener, onFileLongClickListener);
-        mOnHeaderLongClickListener = onHeaderLongClickListener;
-        mHeaderItems.addAll(headerItems);
+        mHeaderIds = new ArrayList<>();
+        mHeaderIds.addAll(headerIds);
+        mOnHeaderClickListener = onHeaderClickListener;
     }
 
     @Override
@@ -85,11 +100,13 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
         if (viewType == TYPE_HEADER) {
             return new HeaderViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(R.layout.header_audio, parent, false),
-                    mOnHeaderLongClickListener
+                    mHeaderIds,
+                    mOnHeaderClickListener
             );
         } else if (viewType == TYPE_CARD_ITEM) {
             return new CardViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(R.layout.card_file, parent, false),
+                    hasHeader(),
                     mOnFileClickListener,
                     mOnFileLongClickListener
             );
@@ -98,12 +115,11 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
 
         if (viewHolder instanceof HeaderViewHolder) {
             final HeaderViewHolder headerViewHolder = (HeaderViewHolder) viewHolder;
-
-
+            headerViewHolder.setFileModelCardHeaderItems(mHeaderIds);
             return;
         }
 
@@ -112,7 +128,7 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
             final CardViewHolder cardViewHolder = (CardViewHolder) viewHolder;
             final FileModel fileModel = mFiles.get(filesPosition);
 
-            cardViewHolder.title.setText(getAdapterTitle(fileModel));
+            cardViewHolder.mTitle.setText(getAdapterTitle(fileModel));
             cardViewHolder.subtitle.setText(getAdapterSubtitle(fileModel));
 
             if (fileModel.isDirectory()) {
@@ -176,7 +192,7 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
     }
 
     public boolean hasHeader() {
-        return !mHeaderItems.isEmpty();
+        return mOnHeaderClickListener != null;
     }
 
     private String getAdapterTitle(FileModel fileModel) {
@@ -220,17 +236,17 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
     }
 
     public interface OnFileClickListener {
-        void onFileClick(View view, int position);
+        void onFileClick(View v, int position);
 
     }
 
     public interface OnFileLongClickListener {
-        boolean onFileLongClick(View view, int position);
+        boolean onFileLongClick(View v, int position);
 
     }
 
-    public interface OnHeaderLongClickListener {
-        boolean onHeaderClick(View view, int position);
+    public interface OnHeaderClickListener {
+        boolean onHeaderClick(View v, List<FileModelCardHeaderItem> fileModelCardHeaderItems);
 
     }
 
@@ -248,52 +264,79 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
 
     private static class HeaderViewHolder extends ViewHolder implements OnClickListener {
 
-        private final OnHeaderLongClickListener mOnHeaderLongClickListener;
+        private final OnHeaderClickListener mOnHeaderClickListener;
+        private final List<FileModelCardHeaderItem> mFileModelCardHeaderItems;
 
-        public HeaderViewHolder(View itemView, OnHeaderLongClickListener onHeaderLongClickListener) {
+        public HeaderViewHolder(View itemView, List<FileModelCardHeaderItem> headerIds, OnHeaderClickListener onHeaderClickListener) {
             super(itemView);
-            Preconditions.checkNotNull(onHeaderLongClickListener);
-            mOnHeaderLongClickListener = onHeaderLongClickListener;
-            itemView.findViewById(R.id.header_audio_folder).setOnClickListener(this);
-            itemView.findViewById(R.id.header_audio_album).setOnClickListener(this);
-            itemView.findViewById(R.id.header_audio_artist).setOnClickListener(this);
-            itemView.findViewById(R.id.header_audio_all).setOnClickListener(this);
+            Preconditions.checkNotNull(onHeaderClickListener);
+            mOnHeaderClickListener = onHeaderClickListener;
+            mFileModelCardHeaderItems = new ArrayList<>();
+            mFileModelCardHeaderItems.addAll(headerIds);
+            updateView();
+        }
+
+        public void setFileModelCardHeaderItems(List<FileModelCardHeaderItem> fileModelCardHeaderItems) {
+            mFileModelCardHeaderItems.clear();
+            mFileModelCardHeaderItems.addAll(fileModelCardHeaderItems);
+            updateView();
+        }
+
+        private void updateView() {
+            final Context context = itemView.getContext();
+            for (FileModelCardHeaderItem i : mFileModelCardHeaderItems) {
+                final TextView tv = (TextView) itemView.findViewById(i.getId());
+                tv.setOnClickListener(this);
+                if (i.isSelected()) {
+                    tv.setTextColor(ContextCompat.getColor(context, R.color.primary));
+                    tv.setBackgroundResource(R.drawable.file_local_audio_rounded_bg_selected);
+                } else {
+                    tv.setTextColor(Color.WHITE);
+                    tv.setBackgroundResource(R.drawable.file_local_audio_rounded_bg);
+                }
+            }
         }
 
         @Override
         public void onClick(View v) {
             final int viewId = v.getId();
-            switch (viewId) {
-                case R.id.header_audio_folder:
-                    mOnHeaderLongClickListener.onHeaderClick(v, 0);
+
+            boolean isElementAlreadySelected = false;
+            for (FileModelCardHeaderItem f : mFileModelCardHeaderItems) {
+                if (f.getId() == viewId && f.isSelected()) {
+                    isElementAlreadySelected = true;
                     break;
-                case R.id.header_audio_album:
-                    mOnHeaderLongClickListener.onHeaderClick(v, 1);
-                    break;
-                case R.id.header_audio_artist:
-                    mOnHeaderLongClickListener.onHeaderClick(v, 2);
-                    break;
-                case R.id.header_audio_all:
-                    mOnHeaderLongClickListener.onHeaderClick(v, 3);
-                    break;
-                default:
-                    throw new RuntimeException("HeaderViewHolder bad click id.");
+                }
+            }
+            if (isElementAlreadySelected) {
+                return;
+            }
+            mOnHeaderClickListener.onHeaderClick(v, mFileModelCardHeaderItems);
+            for (FileModelCardHeaderItem f : mFileModelCardHeaderItems) {
+                if (f.getId() == viewId) {
+                    f.setSelected(true);
+                } else {
+                    f.setSelected(false);
+                }
             }
         }
     }
 
     private static class CardViewHolder extends ViewHolder implements OnClickListener, View.OnLongClickListener {
-        public final TextView title, subtitle;
+        public final TextView mTitle;
+        public final TextView subtitle;
         public final ImageView icon;
         public final View item;
         public final View more;
         private final OnFileClickListener mOnFileClickListener;
         private final OnFileLongClickListener mOnFileLongClickListener;
+        private final boolean mHasHeader;
 
-        public CardViewHolder(View itemLayoutView, OnFileClickListener onFileClickListener, OnFileLongClickListener onFileLongClickListener) {
+        public CardViewHolder(View itemLayoutView, boolean hasHeader, OnFileClickListener onFileClickListener, OnFileLongClickListener onFileLongClickListener) {
             super(itemLayoutView);
+            mHasHeader = hasHeader;
             item = itemLayoutView.findViewById(R.id.card_file_item);
-            title = (TextView) itemLayoutView.findViewById(R.id.card_file_title);
+            mTitle = (TextView) itemLayoutView.findViewById(R.id.card_file_title);
             subtitle = (TextView) itemLayoutView.findViewById(R.id.card_file_subtitle);
             icon = (ImageView) itemLayoutView.findViewById(R.id.card_file_icon);
             more = itemLayoutView.findViewById(R.id.card_file_more);
@@ -306,13 +349,13 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
         @Override
         public void onClick(View v) {
             if (mOnFileClickListener != null) {
-                mOnFileClickListener.onFileClick(icon, getAdapterPosition());
+                mOnFileClickListener.onFileClick(icon, getAdapterPosition() - (mHasHeader ? 1 : 0));
             }
         }
 
         @Override
         public boolean onLongClick(View v) {
-            return mOnFileLongClickListener != null && mOnFileLongClickListener.onFileLongClick(v, getAdapterPosition());
+            return mOnFileLongClickListener != null && mOnFileLongClickListener.onFileLongClick(v, getAdapterPosition() - (mHasHeader ? 1 : 0));
         }
     }
 }

@@ -64,7 +64,38 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
         mRecyclerView = recyclerView;
         mAdapter = adapter;
         mViewHolderPerLine = cardPerLine;
-        this.mFrom = from;
+        mFrom = from;
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                notifyDataSetChanged();
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount) {
+                notifyItemRangeChanged(positionStart, itemCount);
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
+                notifyItemRangeChanged(positionStart, itemCount, payload);
+            }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                notifyItemRangeInserted(positionStart, itemCount);
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                notifyItemRangeRemoved(positionStart, itemCount);
+            }
+
+            @Override
+            public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
