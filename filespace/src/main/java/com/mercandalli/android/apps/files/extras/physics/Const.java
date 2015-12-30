@@ -10,7 +10,7 @@ package com.mercandalli.android.apps.files.extras.physics;
 import com.mercandalli.android.apps.files.extras.physics.lib.Quadruplet;
 
 /**
- * App global Constants
+ * App global AudioPlayerUtils
  *
  * @author Jonathan
  */

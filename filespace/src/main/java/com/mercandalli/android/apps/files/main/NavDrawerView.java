@@ -170,7 +170,7 @@ public class NavDrawerView extends FrameLayout implements View.OnClickListener {
         ADMIN(R.id.view_nav_drawer_admin, NavDrawerSimpleRow.ADMIN, false, false),
         SETTINGS(R.id.view_nav_drawer_settings, NavDrawerSimpleRow.SETTINGS, true, true),
         LOGOUT(R.id.view_nav_drawer_logout, NavDrawerSimpleRow.LOGOUT, false, true),
-        ABOUT(R.id.view_nav_drawer_about, NavDrawerSimpleRow.ABOUT, true, true);
+        SUPPORT(R.id.view_nav_drawer_support, NavDrawerSimpleRow.SUPPORT, true, true);
 
         private final int mId;
 
@@ -243,8 +243,8 @@ public class NavDrawerView extends FrameLayout implements View.OnClickListener {
                 R.drawable.ic_log_out,
                 null),
 
-        ABOUT(R.id.view_nav_drawer_about_title,
-                R.id.view_nav_drawer_about_icon,
+        SUPPORT(R.id.view_nav_drawer_support_title,
+                R.id.view_nav_drawer_support_icon,
                 R.drawable.ic_help_grey,
                 null);
 

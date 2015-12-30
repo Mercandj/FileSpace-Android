@@ -274,7 +274,7 @@ public class FileLocalPagerFragment extends BackFragment implements ViewPager.On
                 fragmentFileManagerFragment.refreshList(search);
             } else if (fabFragment instanceof FileAudioLocalFragment) {
                 FileAudioLocalFragment fragmentFileManagerFragment = (FileAudioLocalFragment) fabFragment;
-                fragmentFileManagerFragment.refreshList(search);
+                fragmentFileManagerFragment.refreshListFolders(search);
             }
         }
     }

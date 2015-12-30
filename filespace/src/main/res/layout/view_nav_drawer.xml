@@ -313,13 +313,13 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/view_nav_drawer_about"
+            android:id="@+id/view_nav_drawer_support"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackground">
 
             <TextView
-                android:id="@+id/view_nav_drawer_about_title"
+                android:id="@+id/view_nav_drawer_support_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -331,7 +331,7 @@
                 android:textSize="16sp" />
 
             <ImageView
-                android:id="@+id/view_nav_drawer_about_icon"
+                android:id="@+id/view_nav_drawer_support_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center_vertical"

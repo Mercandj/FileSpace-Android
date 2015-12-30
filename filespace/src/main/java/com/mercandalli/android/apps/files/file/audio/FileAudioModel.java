@@ -1,10 +1,12 @@
 package com.mercandalli.android.apps.files.file.audio;
 
 import android.os.Parcel;
+import android.util.Log;
 
 import com.mercandalli.android.apps.files.file.FileModel;
 
-import org.json.JSONObject;
+import org.cmc.music.metadata.IMusicMetadata;
+import org.cmc.music.myid3.MyID3;
 
 import java.io.File;
 
@@ -48,6 +50,16 @@ public class FileAudioModel extends FileModel {
 
         public FileMusicModelBuilder file(final File file) {
             super.file(file);
+            if (!file.getName().toLowerCase().endsWith(".mp3")) {
+                return this;
+            }
+            try {
+                IMusicMetadata metadata = (new MyID3().read(file)).getSimplified();
+                album(metadata.getAlbum());
+                artist(metadata.getArtist());
+            } catch (Exception e) {
+                Log.e(getClass().getName(), "Exception", e);
+            }
             return this;
         }
 

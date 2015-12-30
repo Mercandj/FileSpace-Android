@@ -330,7 +330,7 @@ public class GenealogyListFragment extends FabFragment {
 
     @Override
     public void onFocus() {
-        //refreshList();
+        //refreshListFolders();
     }
 
     private void setListVisibility(boolean visible) {

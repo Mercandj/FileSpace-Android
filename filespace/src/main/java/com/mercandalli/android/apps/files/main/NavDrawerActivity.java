@@ -265,7 +265,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
                     break;
                 case LOGOUT:
                     break;
-                case ABOUT:
+                case SUPPORT:
                     fragment = SupportFragment.newInstance(getString(R.string.tab_support));
                     break;
                 default:

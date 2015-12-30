@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">FileSpace</string>
-    <string name="hello_world">Hello World test!</string>
+    <string name="activity_main_title">FileSpace</string>
 </resources>

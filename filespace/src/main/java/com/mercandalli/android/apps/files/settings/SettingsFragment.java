@@ -36,6 +36,9 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
@@ -59,6 +62,8 @@ public class SettingsFragment extends BackFragment {
     private boolean isDeveloper = false;
     private SetToolbarCallback mSetToolbarCallback;
     private String mTitle;
+
+    private InterstitialAd mInterstitialAd;
 
     public static SettingsFragment newInstance(String title) {
         final SettingsFragment fragment = new SettingsFragment();
@@ -110,6 +115,22 @@ public class SettingsFragment extends BackFragment {
         recyclerView.setLayoutManager(mLayoutManager);
         click_version = 0;
 
+        // Create an InterstitialAd object. This same object can be re-used whenever you want to
+        // show an interstitial.
+        mInterstitialAd = new InterstitialAd(getContext());
+        mInterstitialAd.setAdUnitId("ca-app-pub-4616471093567176/3476162047");
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                if (isAdded()) {
+                    Toast.makeText(getContext(), "Thank you", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        if (!mInterstitialAd.isLoaded()) {
+            requestNewInterstitial();
+        }
+
         refreshList();
 
         return rootView;
@@ -149,6 +170,19 @@ public class SettingsFragment extends BackFragment {
                     mActivity.startActivity(intent);
                     mActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
                     mActivity.finish();
+                }
+            }));
+        }
+        if (Config.isLogged()) {
+            list.add(new ModelSetting("Help developer", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mInterstitialAd.isLoaded()) {
+                        mInterstitialAd.show();
+                    } else {
+                        requestNewInterstitial();
+                        Toast.makeText(getContext(), "Not loaded", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }));
         }
@@ -216,5 +250,15 @@ public class SettingsFragment extends BackFragment {
     @Override
     public void onFocus() {
 
+    }
+
+    /**
+     * Load a new interstitial ad asynchronously.
+     */
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
     }
 }

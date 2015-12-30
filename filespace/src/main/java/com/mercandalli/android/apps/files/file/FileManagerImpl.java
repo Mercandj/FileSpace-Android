@@ -611,87 +611,98 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
      */
     @Override
     public void getLocalMusic(final Context context, final int sortMode, final String search, final ResultCallback<List<FileAudioModel>> resultCallback) {
-        final List<FileAudioModel> files = new ArrayList<>();
+        new AsyncTask<Void, Void, List<FileAudioModel>>() {
+            @Override
+            protected List<FileAudioModel> doInBackground(Void... params) {
+                final List<FileAudioModel> files = new ArrayList<>();
 
-        final String[] PROJECTION = {MediaStore.Files.FileColumns.DATA};
+                final String[] PROJECTION = {MediaStore.Files.FileColumns.DATA};
 
-        final Uri allSongsUri = MediaStore.Files.getContentUri("external");
-        final List<String> searchArray = new ArrayList<>();
+                final Uri allSongsUri = MediaStore.Files.getContentUri("external");
+                final List<String> searchArray = new ArrayList<>();
 
-        String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO;
+                String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO;
 
-        for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
-            selection += " OR " + MediaStore.Files.FileColumns.DATA + LIKE;
-            searchArray.add("%" + end);
-        }
-        selection += " )";
+                for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
+                    selection += " OR " + MediaStore.Files.FileColumns.DATA + LIKE;
+                    searchArray.add("%" + end);
+                }
+                selection += " )";
 
-        if (search != null && !search.isEmpty()) {
-            searchArray.add("%" + search + "%");
-            selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
-        }
+                if (search != null && !search.isEmpty()) {
+                    searchArray.add("%" + search + "%");
+                    selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
+                }
 
-        final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                do {
-                    final File file = new File(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
-                    if (file.exists() && !file.isDirectory()) {
-                        FileAudioModel.FileMusicModelBuilder fileMusicModelBuilder = new FileAudioModel.FileMusicModelBuilder()
-                                .file(file);
-                        try {
-                            MusicMetadataSet musicMetadataSet = new MyID3().read(file);
-                            if (musicMetadataSet != null) {
-                                IMusicMetadata metadata = musicMetadataSet.getSimplified();
-                                fileMusicModelBuilder.album(metadata.getAlbum());
-                                fileMusicModelBuilder.artist(metadata.getArtist());
+                final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
+                if (cursor != null) {
+                    if (cursor.moveToFirst()) {
+                        do {
+                            final File file = new File(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
+                            if (file.exists() && !file.isDirectory()) {
+                                FileAudioModel.FileMusicModelBuilder fileMusicModelBuilder = new FileAudioModel.FileMusicModelBuilder()
+                                        .file(file);
+                                try {
+                                    MusicMetadataSet musicMetadataSet = new MyID3().read(file);
+                                    if (musicMetadataSet != null) {
+                                        IMusicMetadata metadata = musicMetadataSet.getSimplified();
+                                        fileMusicModelBuilder.album(metadata.getAlbum());
+                                        fileMusicModelBuilder.artist(metadata.getArtist());
+                                    }
+                                } catch (IOException e) {
+                                    Log.e(getClass().getName(), "Exception", e);
+                                } // read metadata
+
+                                //if (mSortMode == AudioPlayerUtils.SORT_SIZE)
+                                //    fileMusicModel.adapterTitleStart = FileUtils.humanReadableByteCount(fileMusicModel.getSize()) + " - ";
+
+                                files.add(fileMusicModelBuilder.build());
                             }
-                        } catch (IOException e) {
-                            Log.e(getClass().getName(), "Exception", e);
-                        } // read metadata
 
-                        //if (mSortMode == Constants.SORT_SIZE)
-                        //    fileMusicModel.adapterTitleStart = FileUtils.humanReadableByteCount(fileMusicModel.getSize()) + " - ";
-
-                        files.add(fileMusicModelBuilder.build());
+                        } while (cursor.moveToNext());
                     }
+                    cursor.close();
+                }
 
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
-        }
-
-        if (sortMode == Constants.SORT_ABC) {
-            Collections.sort(files, new Comparator<FileAudioModel>() {
-                @Override
-                public int compare(final FileAudioModel f1, final FileAudioModel f2) {
-                    if (f1.getName() == null || f2.getName() == null) {
-                        return 0;
+                if (sortMode == Constants.SORT_ABC) {
+                    Collections.sort(files, new Comparator<FileAudioModel>() {
+                        @Override
+                        public int compare(final FileAudioModel f1, final FileAudioModel f2) {
+                            if (f1.getName() == null || f2.getName() == null) {
+                                return 0;
+                            }
+                            return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
+                        }
+                    });
+                } else if (sortMode == Constants.SORT_SIZE) {
+                    Collections.sort(files, new Comparator<FileAudioModel>() {
+                        @Override
+                        public int compare(final FileAudioModel f1, final FileAudioModel f2) {
+                            return (new Long(f2.getSize())).compareTo(f1.getSize());
+                        }
+                    });
+                } else {
+                    final Map<FileModel, Long> staticLastModifiedTimes = new HashMap<>();
+                    for (FileModel f : files) {
+                        staticLastModifiedTimes.put(f, f.getLastModified());
                     }
-                    return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
+                    Collections.sort(files, new Comparator<FileAudioModel>() {
+                        @Override
+                        public int compare(final FileAudioModel f1, final FileAudioModel f2) {
+                            return staticLastModifiedTimes.get(f2).compareTo(staticLastModifiedTimes.get(f1));
+                        }
+                    });
                 }
-            });
-        } else if (sortMode == Constants.SORT_SIZE) {
-            Collections.sort(files, new Comparator<FileAudioModel>() {
-                @Override
-                public int compare(final FileAudioModel f1, final FileAudioModel f2) {
-                    return (new Long(f2.getSize())).compareTo(f1.getSize());
-                }
-            });
-        } else {
-            final Map<FileModel, Long> staticLastModifiedTimes = new HashMap<>();
-            for (FileModel f : files) {
-                staticLastModifiedTimes.put(f, f.getLastModified());
+                
+                return files;
             }
-            Collections.sort(files, new Comparator<FileAudioModel>() {
-                @Override
-                public int compare(final FileAudioModel f1, final FileAudioModel f2) {
-                    return staticLastModifiedTimes.get(f2).compareTo(staticLastModifiedTimes.get(f1));
-                }
-            });
-        }
 
-        resultCallback.success(files);
+            @Override
+            protected void onPostExecute(List<FileAudioModel> fileModels) {
+                resultCallback.success(fileModels);
+                super.onPostExecute(fileModels);
+            }
+        }.execute();
     }
 
     /**
@@ -715,20 +726,17 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                 }
         ));
         for (File file : fs) {
-            final FileAudioModel.FileMusicModelBuilder fileMusicModelBuilder = new FileAudioModel.FileMusicModelBuilder()
-                    .file(file);
-            try {
-                MusicMetadataSet src_set = new MyID3().read(file);
+            final FileAudioModel.FileMusicModelBuilder fileMusicModelBuilder =
+                    new FileAudioModel.FileMusicModelBuilder().file(file);
+            if (file.getName().toLowerCase().endsWith(".mp3")) {
                 try {
-                    IMusicMetadata metadata = src_set.getSimplified();
+                    IMusicMetadata metadata = (new MyID3().read(file)).getSimplified();
                     fileMusicModelBuilder.album(metadata.getAlbum());
                     fileMusicModelBuilder.artist(metadata.getArtist());
                 } catch (Exception e) {
                     Log.e(getClass().getName(), "Exception", e);
                 }
-            } catch (IOException e1) {
-                Log.e(getClass().getName(), "Exception", e1);
-            } // read metadata
+            }
             files.add(fileMusicModelBuilder.build());
         }
         resultCallback.success(files);

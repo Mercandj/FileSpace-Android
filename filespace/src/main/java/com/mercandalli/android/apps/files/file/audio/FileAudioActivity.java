@@ -39,6 +39,7 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.view.PlayPauseView;
 import com.mercandalli.android.apps.files.common.view.slider.Slider;
 import com.mercandalli.android.apps.files.main.FileApp;
+import com.mercandalli.android.apps.files.shared.AudioPlayerUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -52,11 +53,6 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
     /* package */ static final String EXTRA_IS_ONLINE = "FileAudioActivity.Extra.EXTRA_IS_ONLINE";
     /* package */ static final String EXTRA_FILE_CURRENT_POSITION = "FileAudioActivity.Extra.EXTRA_FILE_CURRENT_POSITION";
     /* package */ static final String EXTRA_FILES_PATH = "FileAudioActivity.Extra.EXTRA_FILES_PATH";
-    /* package */ static final String EXTRA_NOTIFICATION_DO_ACTION = "FileAudioActivity.Extra.EXTRA_NOTIFICATION_DO_ACTION";
-    /* package */ static final int EXTRA_NOTIFICATION_DO_ACTION_NOTHING = 0;
-    /* package */ static final int EXTRA_NOTIFICATION_DO_ACTION_NEXT = 1;
-    /* package */ static final int EXTRA_NOTIFICATION_DO_ACTION_PREV = 2;
-    /* package */ static final int EXTRA_NOTIFICATION_DO_ACTION_PLAY_PAUSE = 3;
 
     private boolean mIsOnline;
 
@@ -216,7 +212,7 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
-    public void onPlayerStatusChanged(@FileAudioPlayer.Status int status) {
+    public void onPlayerStatusChanged(@AudioPlayerUtils.Status int status) {
 
     }
 

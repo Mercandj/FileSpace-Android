@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_16"
             android:layout_marginEnd="@dimen/default_8"
-            android:layout_marginStart="@dimen/default_8"
+            android:layout_marginStart="@dimen/default_16"
             android:layout_marginTop="@dimen/default_16"
             android:background="@drawable/file_local_audio_rounded_bg_selected"
             android:paddingBottom="@dimen/default_8"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_16"
             android:layout_marginEnd="@dimen/default_8"
-            android:layout_marginStart="@dimen/default_16"
+            android:layout_marginStart="@dimen/default_8"
             android:layout_marginTop="@dimen/default_16"
             android:background="@drawable/file_local_audio_rounded_bg"
             android:paddingBottom="@dimen/default_8"
@@ -45,7 +45,8 @@
             android:text="RECENT"
             android:textColor="@android:color/white"
             android:textSize="@dimen/default_text_12"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/header_audio_artist"
@@ -64,7 +65,8 @@
             android:text="ARTIST"
             android:textColor="@android:color/white"
             android:textSize="@dimen/default_text_12"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/header_audio_album"
@@ -83,7 +85,8 @@
             android:text="ALBUM"
             android:textColor="@android:color/white"
             android:textSize="@dimen/default_text_12"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/header_audio_all"

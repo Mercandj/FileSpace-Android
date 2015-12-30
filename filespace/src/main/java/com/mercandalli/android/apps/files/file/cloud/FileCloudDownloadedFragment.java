@@ -351,7 +351,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
         for (File file : fs) {
             FileModel tmpFileModel = new FileModel.FileModelBuilder().file(file).build();
             /*
-            if (mSortMode == Constants.SORT_SIZE)
+            if (mSortMode == AudioPlayerUtils.SORT_SIZE)
                 tmpFileModel.adapterTitleStart = FileUtils.humanReadableByteCount(tmpFileModel.size) + " - ";
             */
             mFilesList.add(tmpFileModel);
