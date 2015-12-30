@@ -12,8 +12,10 @@
         android:id="@+id/activity_main_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginEnd="6dp"
+        android:layout_marginStart="6dp"
         android:text="@string/activity_main_title"
-        android:textColor="#555"
+        android:textColor="#777"
         app:layout_box="all" />
 
     <TextView
@@ -24,19 +26,60 @@
         android:textColor="@android:color/white"
         app:layout_box="all" />
 
-    <ImageView
-        android:id="@+id/activity_main_play_pause"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
-        android:layout_gravity="center"
-        android:src="@drawable/ic_pause_white_18dp"
-        android:visibility="gone" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_box="all">
 
-    <ProgressBar
-        android:id="@+id/activity_main_progress_bar"
-        android:layout_width="34dp"
-        android:layout_height="34dp"
-        android:layout_gravity="center"
-        android:padding="8dp" />
+        <com.mercandalli.android.apps.files.shared.ForegroundImageView
+            android:id="@+id/activity_main_previous"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_skip_previous_white_18dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <FrameLayout
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp">
+
+            <com.mercandalli.android.apps.files.shared.ForegroundImageView
+                android:id="@+id/activity_main_play_pause"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:src="@drawable/ic_pause_white_18dp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <ProgressBar
+                android:id="@+id/activity_main_progress_bar"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="8dp" />
+
+        </FrameLayout>
+
+        <com.mercandalli.android.apps.files.shared.ForegroundImageView
+            android:id="@+id/activity_main_next"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_skip_next_white_18dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </LinearLayout>
 
 </android.support.wearable.view.BoxInsetLayout>

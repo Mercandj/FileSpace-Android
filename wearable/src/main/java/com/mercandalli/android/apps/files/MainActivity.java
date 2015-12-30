@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainActivity extends WearableActivity {
+public class MainActivity extends WearableActivity implements View.OnClickListener {
 
     private static final SimpleDateFormat AMBIENT_DATE_FORMAT =
             new SimpleDateFormat("HH:mm", Locale.US);
@@ -34,18 +34,15 @@ public class MainActivity extends WearableActivity {
     private TextView mClockView;
     private ProgressBar mProgressBar;
     private ImageView mPlayPauseImageView;
+    private ImageView mNextImageView;
+    private ImageView mPreviousImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setAmbientEnabled();
-
-        mContainerView = (BoxInsetLayout) findViewById(R.id.activity_main_container);
-        mTextView = (TextView) findViewById(R.id.activity_main_title);
-        mClockView = (TextView) findViewById(R.id.activity_main_clock);
-        mProgressBar = (ProgressBar) findViewById(R.id.activity_main_progress_bar);
-        mPlayPauseImageView = (ImageView) findViewById(R.id.activity_main_play_pause);
+        findViews();
 
         // Register the local broadcast receiver, defined in step 3.
         IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
@@ -71,6 +68,36 @@ public class MainActivity extends WearableActivity {
         super.onExitAmbient();
     }
 
+    @Override
+    public void onClick(View v) {
+        final int viewId = v.getId();
+        switch (viewId) {
+            case R.id.activity_main_play_pause:
+                //TODO
+                break;
+            case R.id.activity_main_previous:
+                //TODO
+                break;
+            case R.id.activity_main_next:
+                //TODO
+                break;
+        }
+    }
+
+    private void findViews() {
+        mContainerView = (BoxInsetLayout) findViewById(R.id.activity_main_container);
+        mTextView = (TextView) findViewById(R.id.activity_main_title);
+        mClockView = (TextView) findViewById(R.id.activity_main_clock);
+        mProgressBar = (ProgressBar) findViewById(R.id.activity_main_progress_bar);
+        mPlayPauseImageView = (ImageView) findViewById(R.id.activity_main_play_pause);
+        mPreviousImageView = (ImageView) findViewById(R.id.activity_main_previous);
+        mNextImageView = (ImageView) findViewById(R.id.activity_main_next);
+
+        mPlayPauseImageView.setOnClickListener(this);
+        mPreviousImageView.setOnClickListener(this);
+        mNextImageView.setOnClickListener(this);
+    }
+
     private void updateDisplay() {
         if (isAmbient()) {
             mContainerView.setBackgroundColor(getResources().getColor(android.R.color.black));
@@ -82,6 +109,20 @@ public class MainActivity extends WearableActivity {
             mContainerView.setBackground(null);
             mTextView.setTextColor(Color.BLACK);
             mClockView.setVisibility(View.GONE);
+        }
+    }
+
+    private void syncControlVisibility(boolean visible) {
+        if (visible) {
+            mProgressBar.setVisibility(View.GONE);
+            mPlayPauseImageView.setVisibility(View.VISIBLE);
+            mPreviousImageView.setVisibility(View.VISIBLE);
+            mNextImageView.setVisibility(View.VISIBLE);
+        } else {
+            mProgressBar.setVisibility(View.VISIBLE);
+            mPlayPauseImageView.setVisibility(View.GONE);
+            mPreviousImageView.setVisibility(View.GONE);
+            mNextImageView.setVisibility(View.GONE);
         }
     }
 
@@ -104,18 +145,15 @@ public class MainActivity extends WearableActivity {
 
             switch (audioStatus) {
                 case AudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED:
-                    mProgressBar.setVisibility(View.GONE);
-                    mPlayPauseImageView.setVisibility(View.VISIBLE);
                     mPlayPauseImageView.setImageResource(R.drawable.ic_play_arrow_white_18dp);
+                    syncControlVisibility(true);
                     break;
                 case AudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING:
-                    mProgressBar.setVisibility(View.GONE);
-                    mPlayPauseImageView.setVisibility(View.VISIBLE);
                     mPlayPauseImageView.setImageResource(R.drawable.ic_pause_white_18dp);
+                    syncControlVisibility(true);
                     break;
                 default:
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    mPlayPauseImageView.setVisibility(View.GONE);
+                    syncControlVisibility(false);
             }
         }
     }
