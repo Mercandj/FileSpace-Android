@@ -136,6 +136,10 @@ public class PlayPauseDrawable extends Drawable {
         return mIsPlay;
     }
 
+    public boolean isAnimationPlaying() {
+        return mProgress > 0 && mProgress < 1;
+    }
+
     private void setProgress(float progress) {
         mProgress = progress;
         invalidateSelf();

@@ -179,10 +179,15 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
             case R.id.play:
                 if (mFileAudioPlayer.isPlaying()) {
                     mFileAudioPlayer.pause();
+                    if (mPlayPauseView.isPlay() && !mPlayPauseView.isAnimationPlaying()) {
+                        mPlayPauseView.toggle();
+                    }
                 } else {
                     mFileAudioPlayer.play();
+                    if (!mPlayPauseView.isPlay() && !mPlayPauseView.isAnimationPlaying()) {
+                        mPlayPauseView.toggle();
+                    }
                 }
-                mPlayPauseView.toggle();
                 break;
             case R.id.next:
                 mFileAudioPlayer.next();
@@ -213,7 +218,22 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onPlayerStatusChanged(@SharedAudioPlayerUtils.Status int status) {
-
+        switch (status) {
+            case SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED:
+                if (!mPlayPauseView.isPlay() && !mPlayPauseView.isAnimationPlaying()) {
+                    mPlayPauseView.toggle();
+                }
+                break;
+            case SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING:
+                if (mPlayPauseView.isPlay() && !mPlayPauseView.isAnimationPlaying()) {
+                    mPlayPauseView.toggle();
+                }
+                break;
+            case SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PREPARING:
+                break;
+            case SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_UNKNOWN:
+                break;
+        }
     }
 
     @Override
