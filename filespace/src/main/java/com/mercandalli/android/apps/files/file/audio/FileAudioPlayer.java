@@ -3,12 +3,15 @@ package com.mercandalli.android.apps.files.file.audio;
 import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.widget.RemoteViews;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -17,6 +20,7 @@ import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.Preconditions;
+import com.mercandalli.android.apps.files.shared.SharedAudioData;
 import com.mercandalli.android.apps.files.shared.SharedAudioPlayerUtils;
 
 import java.io.IOException;
@@ -57,6 +61,11 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         mAudioManager = (AudioManager) mAppContext.getSystemService(Context.AUDIO_SERVICE);
         updatePosition();
         retrieveDeviceNode(mAppContext);
+
+        // Register the local broadcast receiver, defined in step 3.
+        IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
+        MessageReceiver messageReceiver = new MessageReceiver();
+        LocalBroadcastManager.getInstance(mAppContext).registerReceiver(messageReceiver, messageFilter);
     }
 
     @Override
@@ -338,6 +347,30 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         void onPlayerStatusChanged(@SharedAudioPlayerUtils.Status int status);
 
         void onPlayerProgressChanged(int progress, int duration, int musicPosition, FileAudioModel music);
+    }
+
+    public class MessageReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String message = intent.getStringExtra("message");
+            final SharedAudioData sharedAudioData = new SharedAudioData(message);
+            switch (sharedAudioData.getOrder()) {
+                case SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_PAUSE:
+                    pause();
+                    break;
+                case SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_PLAY:
+                    play();
+                    break;
+                case SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_NEXT:
+                    next();
+                    break;
+                case SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_PREVIOUS:
+                    previous();
+                    break;
+                case SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_UNKNOWN:
+                    break;
+            }
+        }
     }
 }
 

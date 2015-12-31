@@ -56,6 +56,7 @@ public class MainActivity extends WearableActivity implements View.OnClickListen
                 .addApi(Wearable.API)
                 .build();
         mGoogleApiClient.connect();
+        retrieveDeviceNode();
 
         // Register the local broadcast receiver, defined in step 3.
         IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
@@ -83,23 +84,26 @@ public class MainActivity extends WearableActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
+        if (mSharedAudioData == null) {
+            return;
+        }
         final int viewId = v.getId();
         switch (viewId) {
             case R.id.activity_main_play_pause:
-                mSharedAudioData.togglePlayPause();
-                sendToPhone();
+                sendToPhone(mSharedAudioData.getTogglePlayPauseOrder());
                 break;
             case R.id.activity_main_previous:
-                //TODO
+                sendToPhone(SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_PREVIOUS);
                 break;
             case R.id.activity_main_next:
-                //TODO
+                sendToPhone(SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_NEXT);
                 break;
         }
     }
 
-    private void sendToPhone() {
+    private void sendToPhone(@SharedAudioPlayerUtils.Order int order) {
         if (mSharedAudioData != null) {
+            mSharedAudioData.setOrder(order);
             WearableService.sendPhoneMessage(mGoogleApiClient, mTelNodeId, mSharedAudioData);
         }
     }
@@ -170,8 +174,8 @@ public class MainActivity extends WearableActivity implements View.OnClickListen
             // Display message in UI
             mTextView.setText(message);
 
-            final SharedAudioData sharedAudioData = new SharedAudioData(message);
-            switch (sharedAudioData.getStatus()) {
+            mSharedAudioData = new SharedAudioData(message);
+            switch (mSharedAudioData.getStatus()) {
                 case SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED:
                     mPlayPauseImageView.setImageResource(R.drawable.ic_play_arrow_white_18dp);
                     syncControlVisibility(true);
@@ -180,11 +184,11 @@ public class MainActivity extends WearableActivity implements View.OnClickListen
                     mPlayPauseImageView.setImageResource(R.drawable.ic_pause_white_18dp);
                     syncControlVisibility(true);
                     break;
-                default:
-                    syncControlVisibility(false);
                 case SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PREPARING:
+                    syncControlVisibility(false);
                     break;
                 case SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_UNKNOWN:
+                    syncControlVisibility(false);
                     break;
             }
         }
