@@ -353,6 +353,12 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         @Override
         public void onReceive(Context context, Intent intent) {
             final String message = intent.getStringExtra("message");
+
+            if (message.isEmpty() || message.replaceAll(" ", "").isEmpty()) {
+                sendWearMessage(mAppContext, mCurrentStatus, mFileAudioModelList.get(mCurrentMusicIndex));
+                return;
+            }
+
             final SharedAudioData sharedAudioData = new SharedAudioData(message);
             switch (sharedAudioData.getAction()) {
                 case SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_PAUSE:

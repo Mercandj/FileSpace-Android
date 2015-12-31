@@ -19,7 +19,7 @@ public class WearableService extends WearableListenerService {
 
     public static final long CONNECTION_TIME_OUT_MS = 5000;
 
-    public static void sendPhoneMessage(final GoogleApiClient client, final String telNodeId, final SharedAudioData sharedAudioData) {
+    public static void sendPhoneAudioData(final GoogleApiClient client, final String telNodeId, final SharedAudioData sharedAudioData) {
         if (telNodeId != null) {
             new Thread(new Runnable() {
                 @Override
@@ -34,11 +34,32 @@ public class WearableService extends WearableListenerService {
         }
     }
 
+    /**
+     * Ask to Phone/Tablet to be notified. Then will call {@link #onMessageReceived(MessageEvent)} if
+     * the Phone/Tablet is connected.
+     *
+     * @param client    The {@link GoogleApiClient}.
+     * @param telNodeId The Phone/Tablet id.
+     */
+    public static void askPhoneToBeNotified(final GoogleApiClient client, final String telNodeId) {
+        if (telNodeId != null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    client.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
+                    Wearable.MessageApi.sendMessage(client, telNodeId,
+                            " ",
+                            null);
+                    client.disconnect();
+                }
+            }).start();
+        }
+    }
+
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         showToast(messageEvent.getPath());
     }
-
 
     private void showToast(String message) {
         //Toast.makeText(this, message, Toast.LENGTH_SHORT).show();

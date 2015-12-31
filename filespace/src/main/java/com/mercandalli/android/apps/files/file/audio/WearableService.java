@@ -7,7 +7,7 @@ import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
 
 /**
- * The listener to communicate with the phone or tablet.
+ * The listener to communicate with the wearable.
  */
 public class WearableService extends WearableListenerService {
 

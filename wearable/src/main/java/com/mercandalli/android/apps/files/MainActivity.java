@@ -104,7 +104,7 @@ public class MainActivity extends WearableActivity implements View.OnClickListen
     private void sendToPhone(@SharedAudioPlayerUtils.Action int order) {
         if (mSharedAudioData != null) {
             mSharedAudioData.setAction(order);
-            WearableService.sendPhoneMessage(mGoogleApiClient, mTelNodeId, mSharedAudioData);
+            WearableService.sendPhoneAudioData(mGoogleApiClient, mTelNodeId, mSharedAudioData);
         }
     }
 
@@ -163,6 +163,8 @@ public class MainActivity extends WearableActivity implements View.OnClickListen
                     mTelNodeId = nodes.get(0).getId();
                 }
                 mGoogleApiClient.disconnect();
+
+                WearableService.askPhoneToBeNotified(mGoogleApiClient, mTelNodeId);
             }
         }).start();
     }

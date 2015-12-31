@@ -20,6 +20,9 @@ import com.mercandalli.android.apps.files.user.UserModel;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The all NavDrawer {@link FrameLayout}.
+ */
 public class NavDrawerView extends FrameLayout implements View.OnClickListener {
 
     private NavDrawerRow mLastClicked;
@@ -170,7 +173,7 @@ public class NavDrawerView extends FrameLayout implements View.OnClickListener {
         ADMIN(R.id.view_nav_drawer_admin, NavDrawerSimpleRow.ADMIN, false, false),
         SETTINGS(R.id.view_nav_drawer_settings, NavDrawerSimpleRow.SETTINGS, true, true),
         LOGOUT(R.id.view_nav_drawer_logout, NavDrawerSimpleRow.LOGOUT, false, true),
-        SUPPORT(R.id.view_nav_drawer_support, NavDrawerSimpleRow.SUPPORT, true, true);
+        SUPPORT(R.id.view_nav_drawer_support, NavDrawerSimpleRow.SUPPORT, false, true);
 
         private final int mId;
 
