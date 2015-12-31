@@ -17,7 +17,7 @@ import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.Preconditions;
-import com.mercandalli.android.apps.files.shared.AudioPlayerUtils;
+import com.mercandalli.android.apps.files.shared.SharedAudioPlayerUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,8 +29,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
 
-    @AudioPlayerUtils.Status
-    private int mCurrentStatus;
+    @SharedAudioPlayerUtils.Status
+    private int mCurrentStatus = SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_UNKNOWN;
 
     private FileAudioModel mCurrentMusic;
     private FileAudioModel mPreparingMusic;
@@ -53,7 +53,7 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setOnPreparedListener(this);
         mMediaPlayer.setOnCompletionListener(this);
-        mCurrentStatus = AudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED;
+        mCurrentStatus = SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED;
         mAudioManager = (AudioManager) mAppContext.getSystemService(Context.AUDIO_SERVICE);
         updatePosition();
         retrieveDeviceNode(mAppContext);
@@ -61,7 +61,7 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        setCurrentStatus(AudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED);
+        setCurrentStatus(SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED);
         next();
     }
 
@@ -69,13 +69,13 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
     public void onPrepared(MediaPlayer mp) {
         mCurrentMusic = mPreparingMusic;
         mPreparingMusic = null;
-        setCurrentStatus(AudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED);
+        setCurrentStatus(SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED);
         play();
     }
 
     @Override
     public void onAudioFocusChange(int focusChange) {
-        if ((mCurrentStatus == AudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING) &&
+        if ((mCurrentStatus == SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING) &&
                 (focusChange == AudioManager.AUDIOFOCUS_LOSS ||
                         focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT)) {
             pause();
@@ -86,13 +86,13 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
      * Play the element #{@link #mCurrentMusicIndex} in {@link #mFileAudioModelList}.
      */
     public void play() {
-        if (AudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED == mCurrentStatus) {
+        if (SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED == mCurrentStatus) {
             final int request = mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
             if (request == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                 mMediaPlayer.start();
-                setCurrentStatus(AudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING);
+                setCurrentStatus(SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING);
             } else {
-                setCurrentStatus(AudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED);
+                setCurrentStatus(SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED);
             }
         }
     }
@@ -101,9 +101,9 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
      * Pause the element #{@link #mCurrentMusicIndex} in {@link #mFileAudioModelList}.
      */
     public void pause() {
-        if (AudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING == mCurrentStatus) {
+        if (SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING == mCurrentStatus) {
             mMediaPlayer.pause();
-            setCurrentStatus(AudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED);
+            setCurrentStatus(SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED);
         }
         mAudioManager.abandonAudioFocus(this);
     }
@@ -133,7 +133,7 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
     }
 
     public boolean isPlaying() {
-        return mCurrentStatus == AudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING;
+        return mCurrentStatus == SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING;
     }
 
     public void startMusic(final int currentMusicIndex, List<FileAudioModel> musics) {
@@ -144,7 +144,7 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
 
         if (mCurrentMusic == null || !currentMusic.getPath().equals(mCurrentMusic.getPath())) {
             prepare(currentMusic);
-        } else if (mCurrentStatus == AudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED) {
+        } else if (mCurrentStatus == SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED) {
             play();
         }
     }
@@ -170,10 +170,10 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
     }
 
     public void stopPreview() {
-        if (AudioPlayerUtils.AUDIO_PLAYER_STATUS_PREPARING == mCurrentStatus) {
+        if (SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PREPARING == mCurrentStatus) {
             mMediaPlayer.reset();
             mCurrentMusic = null;
-            setCurrentStatus(AudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED);
+            setCurrentStatus(SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED);
         } else {
             pause();
         }
@@ -221,12 +221,12 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
 
     private void prepare(@NonNull FileAudioModel fileAudioModel) {
         Preconditions.checkNotNull(fileAudioModel);
-        if (AudioPlayerUtils.AUDIO_PLAYER_STATUS_PREPARING == mCurrentStatus) {
+        if (SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PREPARING == mCurrentStatus) {
             return;
         }
 
         mPreparingMusic = fileAudioModel;
-        setCurrentStatus(AudioPlayerUtils.AUDIO_PLAYER_STATUS_PREPARING);
+        setCurrentStatus(SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PREPARING);
 
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.stop();
@@ -238,13 +238,13 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
             mMediaPlayer.prepareAsync();
         } catch (IOException e) {
             mMediaPlayer.reset();
-            setCurrentStatus(AudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED);
+            setCurrentStatus(SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED);
         }
     }
 
     private void setCurrentStatus(int currentStatus) {
         mCurrentStatus = currentStatus;
-        setNotification(currentStatus == AudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING);
+        setNotification(currentStatus == SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING);
 
         sendWearMessage(mAppContext, currentStatus, mFileAudioModelList.get(mCurrentMusicIndex));
 
@@ -318,7 +318,7 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         }).start();
     }
 
-    private void sendWearMessage(Context context, final @AudioPlayerUtils.Status int currentStatus, final FileAudioModel fileAudioModel) {
+    private void sendWearMessage(Context context, final @SharedAudioPlayerUtils.Status int currentStatus, final FileAudioModel fileAudioModel) {
         Preconditions.checkNotNull(context);
         Preconditions.checkNotNull(fileAudioModel);
         FileAudioWearUtils.sendWearMessage(getGoogleApiClient(context), mWatchNodeId, currentStatus, fileAudioModel);
@@ -335,7 +335,7 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
     }
 
     public interface OnPlayerStatusChangeListener {
-        void onPlayerStatusChanged(@AudioPlayerUtils.Status int status);
+        void onPlayerStatusChanged(@SharedAudioPlayerUtils.Status int status);
 
         void onPlayerProgressChanged(int progress, int duration, int musicPosition, FileAudioModel music);
     }

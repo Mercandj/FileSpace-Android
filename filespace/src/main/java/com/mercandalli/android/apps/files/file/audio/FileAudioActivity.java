@@ -39,7 +39,7 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.view.PlayPauseView;
 import com.mercandalli.android.apps.files.common.view.slider.Slider;
 import com.mercandalli.android.apps.files.main.FileApp;
-import com.mercandalli.android.apps.files.shared.AudioPlayerUtils;
+import com.mercandalli.android.apps.files.shared.SharedAudioPlayerUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -212,7 +212,7 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
-    public void onPlayerStatusChanged(@AudioPlayerUtils.Status int status) {
+    public void onPlayerStatusChanged(@SharedAudioPlayerUtils.Status int status) {
 
     }
 

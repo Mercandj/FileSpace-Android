@@ -653,7 +653,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                                     Log.e(getClass().getName(), "Exception", e);
                                 } // read metadata
 
-                                //if (mSortMode == AudioPlayerUtils.SORT_SIZE)
+                                //if (mSortMode == SharedAudioPlayerUtils.SORT_SIZE)
                                 //    fileMusicModel.adapterTitleStart = FileUtils.humanReadableByteCount(fileMusicModel.getSize()) + " - ";
 
                                 files.add(fileMusicModelBuilder.build());

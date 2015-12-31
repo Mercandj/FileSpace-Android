@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">FileSpace</string>
-    <string name="activity_main_title">FileSpace</string>
+    <string name="activity_main_title">FileSpace: Waiting audio…</string>
 </resources>

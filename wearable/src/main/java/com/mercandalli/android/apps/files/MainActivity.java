@@ -9,20 +9,23 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.mercandalli.android.apps.files.shared.AudioPlayerUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
+import com.google.android.gms.wearable.Wearable;
+import com.mercandalli.android.apps.files.shared.SharedAudioData;
+import com.mercandalli.android.apps.files.shared.SharedAudioPlayerUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends WearableActivity implements View.OnClickListener {
 
@@ -37,12 +40,22 @@ public class MainActivity extends WearableActivity implements View.OnClickListen
     private ImageView mNextImageView;
     private ImageView mPreviousImageView;
 
+    private GoogleApiClient mGoogleApiClient;
+    private String mTelNodeId;
+
+    private SharedAudioData mSharedAudioData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setAmbientEnabled();
         findViews();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Wearable.API)
+                .build();
+        mGoogleApiClient.connect();
 
         // Register the local broadcast receiver, defined in step 3.
         IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
@@ -73,7 +86,8 @@ public class MainActivity extends WearableActivity implements View.OnClickListen
         final int viewId = v.getId();
         switch (viewId) {
             case R.id.activity_main_play_pause:
-                //TODO
+                mSharedAudioData.togglePlayPause();
+                sendToPhone();
                 break;
             case R.id.activity_main_previous:
                 //TODO
@@ -81,6 +95,12 @@ public class MainActivity extends WearableActivity implements View.OnClickListen
             case R.id.activity_main_next:
                 //TODO
                 break;
+        }
+    }
+
+    private void sendToPhone() {
+        if (mSharedAudioData != null) {
+            WearableService.sendPhoneMessage(mGoogleApiClient, mTelNodeId, mSharedAudioData);
         }
     }
 
@@ -126,34 +146,46 @@ public class MainActivity extends WearableActivity implements View.OnClickListen
         }
     }
 
+    private void retrieveDeviceNode() {
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                mGoogleApiClient.blockingConnect(WearableService.CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
+                NodeApi.GetConnectedNodesResult result =
+                        Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
+                List<Node> nodes = result.getNodes();
+                if (nodes.size() > 0) {
+                    mTelNodeId = nodes.get(0).getId();
+                }
+                mGoogleApiClient.disconnect();
+            }
+        }).start();
+    }
+
     public class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            String message = intent.getStringExtra("message");
+            final String message = intent.getStringExtra("message");
             // Display message in UI
             mTextView.setText(message);
 
-            int audioStatus = -1;
-            try {
-                JSONObject jsonObject = new JSONObject(message);
-                if (jsonObject.has(AudioPlayerUtils.WEAR_COMMUNICATION_KEY_STATUS)) {
-                    audioStatus = jsonObject.getInt(AudioPlayerUtils.WEAR_COMMUNICATION_KEY_STATUS);
-                }
-            } catch (JSONException e) {
-                Log.e(MainActivity.class.getName(), "Failed to convert Json", e);
-            }
-
-            switch (audioStatus) {
-                case AudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED:
+            final SharedAudioData sharedAudioData = new SharedAudioData(message);
+            switch (sharedAudioData.getStatus()) {
+                case SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED:
                     mPlayPauseImageView.setImageResource(R.drawable.ic_play_arrow_white_18dp);
                     syncControlVisibility(true);
                     break;
-                case AudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING:
+                case SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING:
                     mPlayPauseImageView.setImageResource(R.drawable.ic_pause_white_18dp);
                     syncControlVisibility(true);
                     break;
                 default:
                     syncControlVisibility(false);
+                case SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PREPARING:
+                    break;
+                case SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_UNKNOWN:
+                    break;
             }
         }
     }
