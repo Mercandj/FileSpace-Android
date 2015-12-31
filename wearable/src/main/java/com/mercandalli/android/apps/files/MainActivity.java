@@ -93,17 +93,17 @@ public class MainActivity extends WearableActivity implements View.OnClickListen
                 sendToPhone(mSharedAudioData.getTogglePlayPauseOrder());
                 break;
             case R.id.activity_main_previous:
-                sendToPhone(SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_PREVIOUS);
+                sendToPhone(SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_PREVIOUS);
                 break;
             case R.id.activity_main_next:
-                sendToPhone(SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_NEXT);
+                sendToPhone(SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_NEXT);
                 break;
         }
     }
 
-    private void sendToPhone(@SharedAudioPlayerUtils.Order int order) {
+    private void sendToPhone(@SharedAudioPlayerUtils.Action int order) {
         if (mSharedAudioData != null) {
-            mSharedAudioData.setOrder(order);
+            mSharedAudioData.setAction(order);
             WearableService.sendPhoneMessage(mGoogleApiClient, mTelNodeId, mSharedAudioData);
         }
     }
@@ -170,11 +170,7 @@ public class MainActivity extends WearableActivity implements View.OnClickListen
     public class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            final String message = intent.getStringExtra("message");
-            // Display message in UI
-            mTextView.setText(message);
-
-            mSharedAudioData = new SharedAudioData(message);
+            mSharedAudioData = new SharedAudioData(intent.getStringExtra("message"));
             switch (mSharedAudioData.getStatus()) {
                 case SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED:
                     mPlayPauseImageView.setImageResource(R.drawable.ic_play_arrow_white_18dp);
@@ -191,6 +187,17 @@ public class MainActivity extends WearableActivity implements View.OnClickListen
                     syncControlVisibility(false);
                     break;
             }
+            String text = "";
+            if (mSharedAudioData.getTitle() != null) {
+                text += mSharedAudioData.getTitle() + "\n";
+            }
+            if (mSharedAudioData.getArtist() != null) {
+                text += mSharedAudioData.getArtist() + "\n";
+            }
+            if (mSharedAudioData.getAlbum() != null) {
+                text += mSharedAudioData.getAlbum() + "\n";
+            }
+            mTextView.setText(text);
         }
     }
 }

@@ -356,7 +356,7 @@
     </module>
     <module name="TreeWalker">
 
-        <!-- Checks that the order of modifiers conforms to the suggestions in the Java Language specification, !-->
+        <!-- Checks that the action of modifiers conforms to the suggestions in the Java Language specification, !-->
         <!-- sections 8.1.1, 8.3.1 and 8.4.3. !-->
         <!-- See http://checkstyle.sf.net/config_modifiers.html !-->
         <module name="ModifierOrder"/>
@@ -392,7 +392,7 @@
         <!-- See http://checkstyle.sf.net/config_coding.html !-->
         <module name="CovariantEquals"/>
 
-        <!-- Checks declaration order according to Code Conventions for the Java Programming Language. !-->
+        <!-- Checks declaration action according to Code Conventions for the Java Programming Language. !-->
         <!-- See http://checkstyle.sf.net/config_coding.html !-->
         <module name="DeclarationOrder">
             <property name="ignoreConstructors" value="false"/>

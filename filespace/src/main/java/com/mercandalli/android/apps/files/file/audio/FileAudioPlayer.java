@@ -354,20 +354,20 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         public void onReceive(Context context, Intent intent) {
             final String message = intent.getStringExtra("message");
             final SharedAudioData sharedAudioData = new SharedAudioData(message);
-            switch (sharedAudioData.getOrder()) {
-                case SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_PAUSE:
+            switch (sharedAudioData.getAction()) {
+                case SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_PAUSE:
                     pause();
                     break;
-                case SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_PLAY:
+                case SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_PLAY:
                     play();
                     break;
-                case SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_NEXT:
+                case SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_NEXT:
                     next();
                     break;
-                case SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_PREVIOUS:
+                case SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_PREVIOUS:
                     previous();
                     break;
-                case SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_UNKNOWN:
+                case SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_UNKNOWN:
                     break;
             }
         }

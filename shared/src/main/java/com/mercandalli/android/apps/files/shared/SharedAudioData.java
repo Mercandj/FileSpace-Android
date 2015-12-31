@@ -8,7 +8,14 @@ import org.json.JSONObject;
 public class SharedAudioData {
 
     private static final String TAG = "SharedAudioData";
-    public static final String WEAR_COMMUNICATION_KEY_STATUS = "audio_status";
+
+    private static final String WEAR_KEY_STATUS = "s";
+    private static final String WEAR_KEY_ACTION = "a";
+    private static final String WEAR_KEY_FILE = "f";
+    private static final String WEAR_KEY_FILE_ID = "id";
+    private static final String WEAR_KEY_FILE_TITLE = "ti";
+    private static final String WEAR_KEY_FILE_ALBUM = "al";
+    private static final String WEAR_KEY_FILE_ARTIST = "at";
 
     private int mId;
     private String mTitle;
@@ -18,31 +25,31 @@ public class SharedAudioData {
     @SharedAudioPlayerUtils.Status
     private int mStatus;
 
-    @SharedAudioPlayerUtils.Order
-    private int mOrder = SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_UNKNOWN;
+    @SharedAudioPlayerUtils.Action
+    private int mAction = SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_UNKNOWN;
 
     public SharedAudioData(final String json) {
         try {
             final JSONObject jsonObject = new JSONObject(json);
-            if (jsonObject.has(WEAR_COMMUNICATION_KEY_STATUS)) {
-                updateStatus(jsonObject.getInt(WEAR_COMMUNICATION_KEY_STATUS));
+            if (jsonObject.has(WEAR_KEY_STATUS)) {
+                updateStatus(jsonObject.getInt(WEAR_KEY_STATUS));
             }
-            if (jsonObject.has("order")) {
-                updateOrder(jsonObject.getInt("order"));
+            if (jsonObject.has(WEAR_KEY_ACTION)) {
+                updateOrder(jsonObject.getInt(WEAR_KEY_ACTION));
             }
-            if (jsonObject.has("file")) {
-                JSONObject file = jsonObject.getJSONObject("file");
-                if (file.has("id")) {
-                    mId = file.getInt("id");
+            if (jsonObject.has(WEAR_KEY_FILE)) {
+                JSONObject file = jsonObject.getJSONObject(WEAR_KEY_FILE);
+                if (file.has(WEAR_KEY_FILE_ID)) {
+                    mId = file.getInt(WEAR_KEY_FILE_ID);
                 }
-                if (file.has("title")) {
-                    mTitle = file.getString("title");
+                if (file.has(WEAR_KEY_FILE_TITLE)) {
+                    mTitle = file.getString(WEAR_KEY_FILE_TITLE);
                 }
-                if (file.has("artist")) {
-                    mArtist = file.getString("artist");
+                if (file.has(WEAR_KEY_FILE_ARTIST)) {
+                    mArtist = file.getString(WEAR_KEY_FILE_ARTIST);
                 }
-                if (file.has("album")) {
-                    mAlbum = file.getString("album");
+                if (file.has(WEAR_KEY_FILE_ALBUM)) {
+                    mAlbum = file.getString(WEAR_KEY_FILE_ALBUM);
                 }
             }
         } catch (JSONException e) {
@@ -82,21 +89,21 @@ public class SharedAudioData {
         this.mStatus = status;
     }
 
-    @SharedAudioPlayerUtils.Order
-    public int getOrder() {
-        return mOrder;
+    @SharedAudioPlayerUtils.Action
+    public int getAction() {
+        return mAction;
     }
 
-    public void setOrder(@SharedAudioPlayerUtils.Order int order) {
-        mOrder = order;
+    public void setAction(@SharedAudioPlayerUtils.Action int action) {
+        mAction = action;
     }
 
-    @SharedAudioPlayerUtils.Order
+    @SharedAudioPlayerUtils.Action
     public int getTogglePlayPauseOrder() {
         if (mStatus == SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED) {
-            return SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_PLAY;
+            return SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_PLAY;
         } else {
-            return SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_PAUSE;
+            return SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_PAUSE;
         }
     }
 
@@ -104,13 +111,13 @@ public class SharedAudioData {
         final JSONObject jsonObject = new JSONObject();
         try {
             final JSONObject file = new JSONObject();
-            file.put("id", mId);
-            file.put("title", mTitle);
-            file.put("album", mAlbum);
-            file.put("artist", mArtist);
-            jsonObject.put("file", file);
-            jsonObject.put(WEAR_COMMUNICATION_KEY_STATUS, mStatus);
-            jsonObject.put("order", mOrder);
+            file.put(WEAR_KEY_FILE_ID, mId);
+            file.put(WEAR_KEY_FILE_TITLE, mTitle);
+            file.put(WEAR_KEY_FILE_ALBUM, mAlbum);
+            file.put(WEAR_KEY_FILE_ARTIST, mArtist);
+            jsonObject.put(WEAR_KEY_FILE, file);
+            jsonObject.put(WEAR_KEY_STATUS, mStatus);
+            jsonObject.put(WEAR_KEY_ACTION, mAction);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -135,20 +142,20 @@ public class SharedAudioData {
 
     private void updateOrder(int order) {
         switch (order) {
-            case SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_NEXT:
-                mOrder = SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_NEXT;
+            case SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_NEXT:
+                mAction = SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_NEXT;
                 break;
-            case SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_PAUSE:
-                mOrder = SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_PAUSE;
+            case SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_PAUSE:
+                mAction = SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_PAUSE;
                 break;
-            case SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_PLAY:
-                mOrder = SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_PLAY;
+            case SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_PLAY:
+                mAction = SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_PLAY;
                 break;
-            case SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_PREVIOUS:
-                mOrder = SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_PREVIOUS;
+            case SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_PREVIOUS:
+                mAction = SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_PREVIOUS;
                 break;
             default:
-                mOrder = SharedAudioPlayerUtils.AUDIO_PLAYER_ORDER_UNKNOWN;
+                mAction = SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_UNKNOWN;
         }
     }
 }
