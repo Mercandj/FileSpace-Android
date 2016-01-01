@@ -19,6 +19,7 @@
  */
 package com.mercandalli.android.apps.files.file;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +42,12 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
     private final OnFileLongClickListener mOnFileLongClickListener;
     private final FileModelListener mMoreListener;
 
+    private final String mStringDirectory;
+    private final String mStringFile;
+    private final String mStringFiles;
+
     public FileModelAdapter(
+            final Context context,
             final List<FileModel> files,
             final FileModelListener moreListener,
             final OnFileClickListener onFileClickListener,
@@ -51,6 +57,9 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
         mMoreListener = moreListener;
         mOnFileClickListener = onFileClickListener;
         mOnFileLongClickListener = onFileLongClickListener;
+        mStringDirectory = context.getString(R.string.file_model_adapter_directory);
+        mStringFile = context.getString(R.string.file_model_adapter_file);
+        mStringFiles = context.getString(R.string.file_model_adapter_files);
     }
 
     @Override
@@ -176,10 +185,10 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
 
     public String getAdapterSubtitle(FileModel fileModel) {
         if (fileModel.isDirectory() && fileModel.getCount() != 0) {
-            return "Directory: " + StringUtils.longToShortString(fileModel.getCount()) + " file" + (fileModel.getCount() > 1 ? "s" : "");
+            return mStringDirectory + ": " + StringUtils.longToShortString(fileModel.getCount()) + " " + (fileModel.getCount() > 1 ? mStringFiles : mStringFile);
         }
         if (fileModel.isDirectory()) {
-            return "Directory";
+            return mStringDirectory;
         }
 
         if (FileTypeModelENUM.FILESPACE.type.equals(fileModel.getType()) && fileModel.getContent() != null) {

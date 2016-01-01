@@ -377,7 +377,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
             mMessageTextView.setVisibility(View.GONE);
         }
 
-        mFileModelAdapter = new FileModelAdapter(mFilesList, this, this, this);
+        mFileModelAdapter = new FileModelAdapter(getContext(), mFilesList, this, this, this);
 
         ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
         scaleAnimationAdapter.setDuration(220);

@@ -48,9 +48,9 @@ import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
+import com.mercandalli.android.apps.files.file.local.SearchActivity;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.apps.files.file.local.SearchActivity;
 
 public class FileCloudPagerFragment extends BackFragment implements ViewPager.OnPageChangeListener, FabFragment.RefreshFabCallback {
 
@@ -319,8 +319,9 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
     }
 
     public void sort() {
+        final Context context = getContext();
         final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
-        String[] menuList = {"Sort by name (A-Z)", "Sort by size", "Sort by date"};
+        String[] menuList = {context.getString(R.string.sort_abc), context.getString(R.string.sort_size), context.getString(R.string.sort_date)};
         menuAlert.setTitle(getString(R.string.view));
         menuAlert.setItems(menuList,
                 new DialogInterface.OnClickListener() {

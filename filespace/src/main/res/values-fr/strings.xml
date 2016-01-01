@@ -1,4 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="action">Action</string>
+    <string name="download">Télécharger</string>
+    <string name="upload">Upload</string>
+    <string name="open_as">Ouvrir comme…</string>
+    <string name="rename">Renommer</string>
+    <string name="delete">Supprimer</string>
+    <string name="modify">Modifier</string>
+    <string name="copy">Copier</string>
+    <string name="cut">Couper</string>
+    <string name="properties">Propriétés</string>
+    <string name="data">Données</string>
+    <string name="talk">Talk</string>
+    <string name="sort">Trie</string>
+    <string name="view">Vue</string>
+
+    <string name="file_fragment_public_cloud">CLOUD</string>
+    <string name="file_fragment_my_cloud">MON CLOUD</string>
+    <string name="file_fragment_local">LOCAL</string>
+    <string name="file_fragment_music">MUSIQUE</string>
+
+    <!-- NEW tags -->
+
+    <!-- NavDrawer -->
+    <string name="tab_files">Fichiers</string>
+    <string name="tab_cloud">Cloud</string>
+    <string name="tab_notes">Notes</string>
+    <string name="tab_community">Communauté</string>
+    <string name="tab_robotics">Robotique</string>
+    <string name="tab_genealogy">Genealogie</string>
+    <string name="tab_admin">Administration</string>
+    <string name="tab_request">Requête</string>
+    <string name="tab_other">Autre</string>
+    <string name="tab_settings">Paramètres</string>
+    <string name="tab_log_out">Déconnexion</string>
+    <string name="tab_support">Support</string>
+
+    <!-- FileModel Adapter -->
+    <string name="file_model_adapter_directory">Dossier</string>
+    <string name="file_model_adapter_file">fichier</string>
+    <string name="file_model_adapter_files">fichiers</string>
+
+    <!-- Sort -->
+    <string name="sort_abc">Trie par nom (A-Z)</string>
+    <string name="sort_size">Trie par taille</string>
+    <string name="sort_date">Trie par date</string>
+
 </resources>

@@ -336,8 +336,9 @@ public class FileLocalPagerFragment extends BackFragment implements ViewPager.On
     }
 
     public void sort() {
+        final Context context = getContext();
         final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
-        String[] menuList = {"Sort by name (A-Z)", "Sort by size", "Sort by date"};
+        String[] menuList = {context.getString(R.string.sort_abc), context.getString(R.string.sort_size), context.getString(R.string.sort_date)};
         menuAlert.setTitle(getString(R.string.view));
         menuAlert.setItems(menuList,
                 new DialogInterface.OnClickListener() {

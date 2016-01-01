@@ -116,7 +116,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
             mRecyclerView.setLayoutManager(new GridLayoutManager(activity, nbColumn));
         }
 
-        mAdapterModelFile = new FileModelAdapter(mFilesList, this, this, this);
+        mAdapterModelFile = new FileModelAdapter(getContext(), mFilesList, this, this, this);
         mRecyclerView.setAdapter(mAdapterModelFile);
         mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
         //mRecyclerView.addItemDecoration(new FileDivider(ContextCompat.getColor(mActivity, R.color.file_divider)));

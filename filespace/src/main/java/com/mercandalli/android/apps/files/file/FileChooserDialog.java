@@ -33,8 +33,8 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.view.divider.SpacesItemDecoration;
-import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.main.FileApp;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,7 +47,6 @@ public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFile
     @Inject
     protected FileManager mFileManager;
 
-    private Activity mActivity;
     private RecyclerView mRecyclerView;
     private List<FileModel> mFileModelList;
     private File mCurrentFile;
@@ -59,7 +58,6 @@ public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFile
 
         FileApp.get(activity).getFileAppComponent().inject(this);
 
-        mActivity = activity;
         mFileModelListener = listener;
         mFileModelList = new ArrayList<>();
 
@@ -100,7 +98,7 @@ public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFile
     }
 
     private void updateAdapter() {
-        FileModelAdapter adapter = new FileModelAdapter(mFileModelList, null, this, null);
+        FileModelAdapter adapter = new FileModelAdapter(getContext(), mFileModelList, null, this, null);
         ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, adapter);
         scaleAnimationAdapter.setDuration(220);
         scaleAnimationAdapter.setOffsetDuration(32);
@@ -133,7 +131,7 @@ public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFile
             FileModel file = mFileModelList.get(position);
             if (file.isDirectory()) {
                 if (file.getCount() == 0) {
-                    Toast.makeText(mActivity, "No files", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "No files", Toast.LENGTH_SHORT).show();
                 } else {
                     mCurrentFile = file.getFile();
                     refreshList();

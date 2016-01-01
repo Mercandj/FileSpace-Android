@@ -247,7 +247,7 @@
                 android:layout_marginTop="14dp"
                 android:gravity="center_vertical"
                 android:paddingTop="5dp"
-                android:text="Other"
+                android:text="@string/tab_other"
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:textColor="#545454"
                 android:textSize="14sp" />

@@ -116,7 +116,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
 
         resetPath();
 
-        mFileModelAdapter = new FileModelAdapter(mFilesList, new FileModelListener() {
+        mFileModelAdapter = new FileModelAdapter(getContext(), mFilesList, new FileModelListener() {
             @Override
             public void executeFileModel(final FileModel fileModel) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);

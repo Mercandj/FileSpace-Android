@@ -97,7 +97,7 @@ public class SearchActivity extends AppCompatActivity implements FileModelAdapte
             actionBar.setTitle("");
         }
 
-        mFileModelAdapter = new FileModelAdapter(mFileModelList, null, this, null);
+        mFileModelAdapter = new FileModelAdapter(this, mFileModelList, null, this, null);
 
         mRecyclerView.setHasFixedSize(true);
         final int nbColumn = getResources().getInteger(R.integer.column_number_card);
