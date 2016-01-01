@@ -179,14 +179,8 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
             case R.id.play:
                 if (mFileAudioPlayer.isPlaying()) {
                     mFileAudioPlayer.pause();
-                    if (mPlayPauseView.isPlay() && !mPlayPauseView.isAnimationPlaying()) {
-                        mPlayPauseView.toggle();
-                    }
                 } else {
                     mFileAudioPlayer.play();
-                    if (!mPlayPauseView.isPlay() && !mPlayPauseView.isAnimationPlaying()) {
-                        mPlayPauseView.toggle();
-                    }
                 }
                 break;
             case R.id.next:

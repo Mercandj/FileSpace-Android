@@ -78,7 +78,7 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
     public void onPrepared(MediaPlayer mp) {
         mCurrentMusic = mPreparingMusic;
         mPreparingMusic = null;
-        setCurrentStatus(SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED);
+        setCurrentStatus(SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED, false);
         play();
     }
 
@@ -251,15 +251,21 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         }
     }
 
-    private void setCurrentStatus(int currentStatus) {
+    private void setCurrentStatus(final int currentStatus) {
+        setCurrentStatus(currentStatus, true);
+    }
+
+    private void setCurrentStatus(final int currentStatus, final boolean notifyListeners) {
         mCurrentStatus = currentStatus;
         setNotification(currentStatus == SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING);
 
         sendWearMessage(mAppContext, currentStatus, mFileAudioModelList.get(mCurrentMusicIndex));
 
-        synchronized (mOnPlayerStatusChangeListeners) {
-            for (int i = 0, size = mOnPlayerStatusChangeListeners.size(); i < size; i++) {
-                mOnPlayerStatusChangeListeners.get(i).onPlayerStatusChanged(mCurrentStatus);
+        if (notifyListeners) {
+            synchronized (mOnPlayerStatusChangeListeners) {
+                for (int i = 0, size = mOnPlayerStatusChangeListeners.size(); i < size; i++) {
+                    mOnPlayerStatusChangeListeners.get(i).onPlayerStatusChanged(mCurrentStatus);
+                }
             }
         }
     }
