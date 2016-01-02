@@ -86,6 +86,7 @@
     <string name="dialog_file_name_interrogation">Name ?</string>
 
     <string name="menu_action_search">Search</string>
+    <string name="menu_action_share">Share</string>
     <string name="menu_action_delete">Delete</string>
     <string name="menu_action_add">Add</string>
     <string name="menu_action_home">Home</string>
