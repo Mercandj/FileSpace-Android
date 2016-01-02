@@ -24,7 +24,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="?attr/actionBarSize"
                 android:background="@android:color/transparent"
-                android:hint="Search"
+                android:hint="@string/search_title_hint"
                 android:imeOptions="actionSearch"
                 android:maxLines="1"
                 android:minLines="1"

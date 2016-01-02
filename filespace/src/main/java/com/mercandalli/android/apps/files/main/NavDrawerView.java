@@ -52,19 +52,18 @@ public class NavDrawerView extends FrameLayout implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        setSelectedRow(getContext(), getNavDrawerRowById(v.getId()));
+        final NavDrawerRow navDrawerRow = setSelectedRow(getContext(), getNavDrawerRowById(v.getId()));
         if (mOnNavDrawerClickCallback != null) {
-            mOnNavDrawerClickCallback.onNavDrawerClicked(mLastClicked, v);
+            mOnNavDrawerClickCallback.onNavDrawerClicked(navDrawerRow, v);
         }
     }
 
-    /* package */ void setSelectedRow(final Context context, final NavDrawerRow navDrawerRow) {
+    /* package */ NavDrawerRow setSelectedRow(final Context context, @NonNull final NavDrawerRow navDrawerRow) {
         Preconditions.checkNotNull(context);
         Preconditions.checkNotNull(navDrawerRow);
 
         if (!navDrawerRow.mIsSelectable) {
-            mLastClicked = navDrawerRow;
-            return;
+            return navDrawerRow;
         }
 
         if (mLastClicked != null && mLastClicked.mNavDrawerSimpleRow != null) {
@@ -81,6 +80,7 @@ public class NavDrawerView extends FrameLayout implements View.OnClickListener {
             }
             mLastClicked = navDrawerRow;
         }
+        return mLastClicked;
     }
 
     @Nullable
@@ -168,7 +168,7 @@ public class NavDrawerView extends FrameLayout implements View.OnClickListener {
      * The nav drawer items.
      */
     /* package */ enum NavDrawerRow {
-        HEADER(R.id.view_nav_drawer_header, null, true, true),
+        HEADER(R.id.view_nav_drawer_header, null, true, true, false),
         FILES(R.id.view_nav_drawer_files, NavDrawerSimpleRow.FILES, true, true),
         CLOUD(R.id.view_nav_drawer_cloud, NavDrawerSimpleRow.CLOUD, false, true),
         WORKSPACE(R.id.view_nav_drawer_workspace, NavDrawerSimpleRow.NOTES, true, true),
@@ -177,7 +177,7 @@ public class NavDrawerView extends FrameLayout implements View.OnClickListener {
         GENEALOGY(R.id.view_nav_drawer_genealogy, NavDrawerSimpleRow.GENEALOGY, false, false),
         ADMIN(R.id.view_nav_drawer_admin, NavDrawerSimpleRow.ADMIN, false, false),
         SETTINGS(R.id.view_nav_drawer_settings, NavDrawerSimpleRow.SETTINGS, true, true),
-        LOYALTY(R.id.view_nav_drawer_loyalty, NavDrawerSimpleRow.SETTINGS, true, true, false),
+        LOYALTY(R.id.view_nav_drawer_loyalty, NavDrawerSimpleRow.LOYALTY, true, true, false),
         LOGOUT(R.id.view_nav_drawer_logout, NavDrawerSimpleRow.LOGOUT, false, true),
         SUPPORT(R.id.view_nav_drawer_support, NavDrawerSimpleRow.SUPPORT, false, true);
 

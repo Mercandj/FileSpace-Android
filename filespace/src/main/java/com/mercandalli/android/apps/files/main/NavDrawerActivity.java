@@ -252,7 +252,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
         return mBackFragment;
     }
 
-    /* package */ void selectItem(NavDrawerView.NavDrawerRow navDrawerRow) {
+    /* package */ void selectItem(final NavDrawerView.NavDrawerRow navDrawerRow) {
         Preconditions.checkNotNull(navDrawerRow);
 
         if (navDrawerRow.equals(NavDrawerView.NavDrawerRow.LOGOUT)) {

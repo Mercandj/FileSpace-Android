@@ -16,6 +16,11 @@
     <string name="sort">Trie</string>
     <string name="view">Vue</string>
 
+    <string name="cancel">Annuler</string>
+    <string name="no">Non</string>
+    <string name="add">Ajouter</string>
+    <string name="name">Nom</string>
+
     <string name="file_fragment_public_cloud">CLOUD</string>
     <string name="file_fragment_my_cloud">MON CLOUD</string>
     <string name="file_fragment_local">LOCAL</string>
@@ -37,6 +42,9 @@
     <string name="tab_loyalty">Rendre le développeur content</string>
     <string name="tab_log_out">Déconnexion</string>
     <string name="tab_support">Support</string>
+    <!-- NavDrawer Header -->
+    <string name="tab_header_title">%1$d%% plein</string>
+    <string name="tab_header_subtitle">Utilisation %1$s sur %2$s</string>
 
     <!-- File -->
     <!-- FileModel Adapter -->
@@ -66,6 +74,10 @@
     <string name="file_model_type_index">Index</string>
     <string name="file_model_type_keystore">KeyStore</string>
     <string name="file_model_type_directory">Dossier</string>
+    <!-- FileModel Local New File -->
+    <string name="file_model_local_new_title">Action</string>
+    <string name="file_model_local_new_folder_file">Nouveau dossier ou fichier</string>
+    <string name="file_model_local_new_folder_file_description">Choisis un nom de fichier avec une extension ou un nom de dossier.</string>
 
     <!-- Sort -->
     <string name="sort_abc">Trie par nom (A-Z)</string>
@@ -81,5 +93,8 @@
     <string name="settings_ad_thank_you_2">Merci. Le développeur est très content =)</string>
     <string name="settings_ad_thank_you_3">Merci. Le développeur est très très content =)</string>
     <string name="settings_ad_thank_you_4">Merci. Le développeur est très très très content =)</string>
+
+    <!-- Search -->
+    <string name="search_title_hint">Recherche</string>
 
 </resources>

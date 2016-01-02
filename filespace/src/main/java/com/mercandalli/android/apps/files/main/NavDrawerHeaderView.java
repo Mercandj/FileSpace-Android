@@ -15,8 +15,8 @@ import android.widget.TextView;
 import com.mercandalli.android.apps.files.BuildConfig;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.Preconditions;
-import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.common.util.FontUtils;
+import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.user.UserModel;
 
 /**
@@ -82,8 +82,8 @@ public class NavDrawerHeaderView extends FrameLayout {
 
             mIconImageView.setVisibility(View.GONE);
             mStorageImageView.setVisibility(View.VISIBLE);
-            mSubtitleTextView.setText(String.format("Using %s of %s", FileUtils.humanReadableByteCount(totalSize - availableSize), FileUtils.humanReadableByteCount(totalSize)));
-            mTitleTextView.setText(String.format("%d%% Full", (int) ((totalSize - availableSize) * 100.0 / totalSize)));
+            mTitleTextView.setText(context.getString(R.string.tab_header_title, (int) ((totalSize - availableSize) * 100.0 / totalSize)));
+            mSubtitleTextView.setText(context.getString(R.string.tab_header_subtitle, FileUtils.humanReadableByteCount(totalSize - availableSize), FileUtils.humanReadableByteCount(totalSize)));
 
             mVersionTextView.setText(String.format("v%s", BuildConfig.VERSION_NAME));
 

@@ -46,6 +46,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="add">Add</string>
+    <string name="name">Name</string>
     <string name="waiting_for_response">Waiting for response</string>
     <string name="refresh">Refresh</string>
     <string name="back">Back</string>
@@ -123,6 +124,9 @@
     <string name="tab_loyalty">Make the developer happy</string>
     <string name="tab_log_out">Log out</string>
     <string name="tab_support">Support</string>
+    <!-- NavDrawer Header -->
+    <string name="tab_header_title">%1$d Full</string>
+    <string name="tab_header_subtitle">Using %1$s of %2$s</string>
 
     <!-- File -->
     <!-- FileModel Adapter -->
@@ -152,6 +156,10 @@
     <string name="file_model_type_index">Index</string>
     <string name="file_model_type_keystore">KeyStore</string>
     <string name="file_model_type_directory">Directory</string>
+    <!-- FileModel Local New File -->
+    <string name="file_model_local_new_title">Action</string>
+    <string name="file_model_local_new_folder_file">New Folder or File</string>
+    <string name="file_model_local_new_folder_file_description">Choose a file name with ext or a folder name.</string>
 
     <!-- Sort -->
     <string name="sort_abc">Sort by name (A-Z)</string>
@@ -167,5 +175,8 @@
     <string name="settings_ad_thank_you_2">Thank you. You make the developer very happy =)</string>
     <string name="settings_ad_thank_you_3">Thank you. You make the developer very very happy =)</string>
     <string name="settings_ad_thank_you_4">Thank you. You make the developer very very very happy =)</string>
+
+    <!-- Search -->
+    <string name="search_title_hint">Search</string>
 
 </resources>

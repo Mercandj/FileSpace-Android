@@ -21,6 +21,7 @@ package com.mercandalli.android.apps.files.file.local;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
@@ -167,6 +168,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
 
     @Override
     public void onFabClick(int fab_id, FloatingActionButton fab) {
+        final Context context = getContext();
         switch (fab_id) {
             case 0:
                 if ((mFilesToCopyList != null && mFilesToCopyList.size() != 0) || (mFilesToCutList != null && mFilesToCutList.size() != 0)) {
@@ -185,20 +187,23 @@ public class FileLocalFragment extends InjectedFabFragment implements
                     refreshList();
                 } else {
                     final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
-                    final String[] menuList = {"New Folder or File"};
-                    menuAlert.setTitle("Action");
+                    final String[] menuList = {context.getString(R.string.file_model_local_new_folder_file)};
+                    menuAlert.setTitle(context.getString(R.string.file_model_local_new_title));
                     menuAlert.setItems(menuList,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int item) {
                                     switch (item) {
                                         case 0:
-                                            DialogUtils.prompt(mActivity, "New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
-                                                @Override
-                                                public void execute(String text) {
-                                                    createFile(mCurrentDirectory.getPath() + File.separator, text);
-                                                    refreshList();
-                                                }
-                                            }, getString(R.string.cancel), null, null, "Name");
+                                            DialogUtils.prompt(mActivity,
+                                                    context.getString(R.string.file_model_local_new_folder_file),
+                                                    context.getString(R.string.file_model_local_new_folder_file_description),
+                                                    getString(R.string.ok), new IStringListener() {
+                                                        @Override
+                                                        public void execute(String text) {
+                                                            createFile(mCurrentDirectory.getPath() + File.separator, text);
+                                                            refreshList();
+                                                        }
+                                                    }, getString(R.string.cancel), null, null, context.getString(R.string.name));
                                             break;
                                     }
                                 }
