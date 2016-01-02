@@ -62,6 +62,11 @@ public class NavDrawerView extends FrameLayout implements View.OnClickListener {
         Preconditions.checkNotNull(context);
         Preconditions.checkNotNull(navDrawerRow);
 
+        if (!navDrawerRow.mIsSelectable) {
+            mLastClicked = navDrawerRow;
+            return;
+        }
+
         if (mLastClicked != null && mLastClicked.mNavDrawerSimpleRow != null) {
             applyFont(context, mTextViews.get(mLastClicked.mId), mLastClicked, false);
             mImageViews.get(mLastClicked.mId).setImageResource(mLastClicked.mNavDrawerSimpleRow.mDrawableId);
@@ -172,6 +177,7 @@ public class NavDrawerView extends FrameLayout implements View.OnClickListener {
         GENEALOGY(R.id.view_nav_drawer_genealogy, NavDrawerSimpleRow.GENEALOGY, false, false),
         ADMIN(R.id.view_nav_drawer_admin, NavDrawerSimpleRow.ADMIN, false, false),
         SETTINGS(R.id.view_nav_drawer_settings, NavDrawerSimpleRow.SETTINGS, true, true),
+        LOYALTY(R.id.view_nav_drawer_loyalty, NavDrawerSimpleRow.SETTINGS, true, true, false),
         LOGOUT(R.id.view_nav_drawer_logout, NavDrawerSimpleRow.LOGOUT, false, true),
         SUPPORT(R.id.view_nav_drawer_support, NavDrawerSimpleRow.SUPPORT, false, true);
 
@@ -182,13 +188,20 @@ public class NavDrawerView extends FrameLayout implements View.OnClickListener {
 
         private final boolean mVisibleIfDisconnected;
         private final boolean mVisibleIfNotAdmin;
+        private final boolean mIsSelectable;
 
         NavDrawerRow(final int id, @Nullable NavDrawerSimpleRow navDrawerSimpleRow,
                      boolean visibleIfDisconnected, boolean visibleIfNotAdmin) {
+            this(id, navDrawerSimpleRow, visibleIfDisconnected, visibleIfNotAdmin, true);
+        }
+
+        NavDrawerRow(final int id, @Nullable NavDrawerSimpleRow navDrawerSimpleRow,
+                     boolean visibleIfDisconnected, boolean visibleIfNotAdmin, boolean isSelectable) {
             mId = id;
             mNavDrawerSimpleRow = navDrawerSimpleRow;
             mVisibleIfDisconnected = visibleIfDisconnected;
             mVisibleIfNotAdmin = visibleIfNotAdmin;
+            mIsSelectable = isSelectable;
         }
 
         @NonNull
@@ -239,6 +252,11 @@ public class NavDrawerView extends FrameLayout implements View.OnClickListener {
         SETTINGS(R.id.view_nav_drawer_settings_title,
                 R.id.view_nav_drawer_settings_icon,
                 R.drawable.ic_settings_grey,
+                null),
+
+        LOYALTY(R.id.view_nav_drawer_loyalty_title,
+                R.id.view_nav_drawer_loyalty_icon,
+                R.drawable.ic_loyalty,
                 null),
 
         LOGOUT(R.id.view_nav_drawer_logout_title,

@@ -63,7 +63,7 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
         this.url = url;
         this.mUrlOuput = mUrlOuput;
         this.mFileSize = fileModel.getSize();
-        this.mFileTypeTitle = fileModel.getType().getTitle();
+        this.mFileTypeTitle = fileModel.getType().getTitle(activity);
         this.listener = listener;
     }
 

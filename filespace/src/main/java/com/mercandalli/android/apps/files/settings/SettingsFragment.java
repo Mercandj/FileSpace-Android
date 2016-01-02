@@ -64,6 +64,7 @@ public class SettingsFragment extends BackFragment {
     private String mTitle;
 
     private InterstitialAd mInterstitialAd;
+    private int mThanhYou;
 
     public static SettingsFragment newInstance(String title) {
         final SettingsFragment fragment = new SettingsFragment();
@@ -123,7 +124,21 @@ public class SettingsFragment extends BackFragment {
             @Override
             public void onAdClosed() {
                 if (isAdded()) {
-                    Toast.makeText(getContext(), "Thank you", Toast.LENGTH_SHORT).show();
+                    switch (mThanhYou) {
+                        case 0:
+                            Toast.makeText(getContext(), R.string.settings_ad_thank_you_1, Toast.LENGTH_SHORT).show();
+                            break;
+                        case 1:
+                            Toast.makeText(getContext(), R.string.settings_ad_thank_you_2, Toast.LENGTH_SHORT).show();
+                            break;
+                        case 2:
+                            Toast.makeText(getContext(), R.string.settings_ad_thank_you_3, Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            Toast.makeText(getContext(), R.string.settings_ad_thank_you_4, Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                    mThanhYou++;
                 }
             }
         });
@@ -137,8 +152,9 @@ public class SettingsFragment extends BackFragment {
     }
 
     public void refreshList() {
+        final Context context = getContext();
         list = new ArrayList<>();
-        list.add(new ModelSetting("Settings", Constants.TAB_VIEW_TYPE_SECTION));
+        list.add(new ModelSetting(context.getString(R.string.settings_title), Constants.TAB_VIEW_TYPE_SECTION));
         if (Config.isLogged()) {
             list.add(new ModelSetting("Auto connection", new OnCheckedChangeListener() {
                 @Override
@@ -173,24 +189,21 @@ public class SettingsFragment extends BackFragment {
                 }
             }));
         }
-        if (Config.isLogged()) {
-            list.add(new ModelSetting("Help developer", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mInterstitialAd.isLoaded()) {
-                        mInterstitialAd.show();
-                    } else {
-                        requestNewInterstitial();
-                        Toast.makeText(getContext(), "Not loaded", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }));
-        }
-
-        list.add(new ModelSetting(mActivity.getString(R.string.about), new View.OnClickListener() {
+        list.add(new ModelSetting(mActivity.getString(R.string.settings_about), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new DialogAuthorLabel(mActivity, mApplicationCallback);
+            }
+        }));
+        list.add(new ModelSetting(context.getString(R.string.settings_ad), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                } else {
+                    requestNewInterstitial();
+                    Toast.makeText(getContext(), R.string.settings_ad_is_loading, Toast.LENGTH_SHORT).show();
+                }
             }
         }));
 

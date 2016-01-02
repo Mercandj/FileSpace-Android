@@ -32,7 +32,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.admin.AdminFragment;
 import com.mercandalli.android.apps.files.common.Preconditions;
@@ -89,6 +93,9 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
      */
     private boolean mUserLearnedDrawer;
 
+    private InterstitialAd mInterstitialAd;
+    private int mThanhYou;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,6 +140,37 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
         // per the navigation drawer design guidelines.
         if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
             mDrawerLayout.openDrawer(GravityCompat.START);
+        }
+
+        // Ads
+        // Create an InterstitialAd object. This same object can be re-used whenever you want to
+        // show an interstitial.
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-4616471093567176/1180013643");
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                if (!isFinishing()) {
+                    switch (mThanhYou) {
+                        case 0:
+                            Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_1, Toast.LENGTH_SHORT).show();
+                            break;
+                        case 1:
+                            Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_2, Toast.LENGTH_SHORT).show();
+                            break;
+                        case 2:
+                            Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_3, Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_4, Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                    mThanhYou++;
+                }
+            }
+        });
+        if (!mInterstitialAd.isLoaded()) {
+            requestNewInterstitial();
         }
     }
 
@@ -263,6 +301,14 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
                 case SETTINGS:
                     fragment = SettingsFragment.newInstance(getString(R.string.tab_settings));
                     break;
+                case LOYALTY:
+                    if (mInterstitialAd.isLoaded()) {
+                        mInterstitialAd.show();
+                    } else {
+                        requestNewInterstitial();
+                        Toast.makeText(this, R.string.settings_ad_is_loading, Toast.LENGTH_SHORT).show();
+                    }
+                    return;
                 case LOGOUT:
                     break;
                 case SUPPORT:
@@ -294,6 +340,16 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
 
     private NavDrawerView.NavDrawerRow getInitFragmentId() {
         return NavDrawerView.NavDrawerRow.FILES;
+    }
+
+    /**
+     * Load a new interstitial ad asynchronously.
+     */
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
     }
 
     public abstract void updateAdapters();

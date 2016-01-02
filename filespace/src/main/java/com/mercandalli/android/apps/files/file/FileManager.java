@@ -69,7 +69,7 @@ public abstract class FileManager {
      */
     public abstract void openLocalAs(final Activity activity, final FileModel fileModel);
 
-    public abstract Spanned toSpanned(final FileModel fileModel);
+    public abstract Spanned toSpanned(final Context context, final FileModel fileModel);
 
     public abstract void copyLocalFile(final Activity activity, final FileModel fileModel, final String outputPath);
 

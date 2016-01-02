@@ -241,7 +241,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
                                     case 4:
                                         DialogUtils.alert(mActivity,
                                                 getString(R.string.properties) + " : " + fileModel.getName(),
-                                                mFileManager.toSpanned(fileModel),
+                                                mFileManager.toSpanned(mActivity, fileModel),
                                                 "OK",
                                                 null,
                                                 null,
@@ -265,7 +265,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
             }
         });
 
-        mFileModelCardAdapter = new FileModelCardAdapter(mHeaderIds, this, mFileModels, null, new FileModelCardAdapter.OnFileClickListener() {
+        mFileModelCardAdapter = new FileModelCardAdapter(getContext(), mHeaderIds, this, mFileModels, null, new FileModelCardAdapter.OnFileClickListener() {
             @Override
             public void onFileCardClick(View view, int position) {
                 refreshListFoldersInside(mFileModels.get(position));

@@ -519,7 +519,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
                             case 6:
                                 DialogUtils.alert(mActivity,
                                         getString(R.string.properties) + " : " + fileModel.getName(),
-                                        mFileManager.toSpanned(fileModel),
+                                        mFileManager.toSpanned(mActivity, fileModel),
                                         "OK",
                                         null,
                                         null,

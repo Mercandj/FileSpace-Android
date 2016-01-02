@@ -120,17 +120,52 @@
     <string name="tab_request">Request</string>
     <string name="tab_other">Other</string>
     <string name="tab_settings">Settings</string>
+    <string name="tab_loyalty">Make the developer happy</string>
     <string name="tab_log_out">Log out</string>
     <string name="tab_support">Support</string>
 
+    <!-- File -->
     <!-- FileModel Adapter -->
     <string name="file_model_adapter_directory">Directory</string>
     <string name="file_model_adapter_file">file</string>
     <string name="file_model_adapter_files">files</string>
+    <!-- FileModel Type -->
+    <string name="file_model_type_unknown"> </string>
+    <string name="file_model_type_apk">Android application</string>
+    <string name="file_model_type_text">Text</string>
+    <string name="file_model_type_html">Html</string>
+    <string name="file_model_type_picture">Picture</string>
+    <string name="file_model_type_audio">Audio</string>
+    <string name="file_model_type_video">Video</string>
+    <string name="file_model_type_archive">Archive</string>
+    <string name="file_model_type_file_space">FileSpace</string>
+    <string name="file_model_type_word">Word</string>
+    <string name="file_model_type_open_document">OpenDocument</string>
+    <string name="file_model_type_power_point">Power Point</string>
+    <string name="file_model_type_excel">Excel</string>
+    <string name="file_model_type_vcf">Business card</string>
+    <string name="file_model_type_pdf">Pdf</string>
+    <string name="file_model_type_source">Source code</string>
+    <string name="file_model_type_3d">3d buildModel</string>
+    <string name="file_model_type_iso">Optical disc</string>
+    <string name="file_model_type_tmp">Temporary</string>
+    <string name="file_model_type_index">Index</string>
+    <string name="file_model_type_keystore">KeyStore</string>
+    <string name="file_model_type_directory">Directory</string>
 
     <!-- Sort -->
     <string name="sort_abc">Sort by name (A-Z)</string>
     <string name="sort_size">Sort by size</string>
     <string name="sort_date">Sort by date</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_about">About</string>
+    <string name="settings_ad">Make the developer happy</string>
+    <string name="settings_ad_is_loading">Is loading…</string>
+    <string name="settings_ad_thank_you_1">Thank you. You make the developer happy =)</string>
+    <string name="settings_ad_thank_you_2">Thank you. You make the developer very happy =)</string>
+    <string name="settings_ad_thank_you_3">Thank you. You make the developer very very happy =)</string>
+    <string name="settings_ad_thank_you_4">Thank you. You make the developer very very very happy =)</string>
 
 </resources>

@@ -470,7 +470,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             return;
         }
         final AlertDialog.Builder menuAlert = new AlertDialog.Builder(activity);
-        String[] menuList = {
+        final String[] menuList = {
                 activity.getString(R.string.text),
                 activity.getString(R.string.image),
                 activity.getString(R.string.audio),
@@ -481,7 +481,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         menuAlert.setItems(menuList,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        String type_mime = "";
+                        String type_mime = "*/*";
                         switch (item) {
                             case 0:
                                 type_mime = "text/plain";
@@ -510,19 +510,19 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
      * {@inheritDoc}
      */
     @Override
-    public Spanned toSpanned(final FileModel fileModel) {
+    public Spanned toSpanned(final Context context, final FileModel fileModel) {
         final FileTypeModel type = fileModel.getType();
         final boolean isDirectory = fileModel.isDirectory();
         final long size = fileModel.getSize();
         final boolean isPublic = fileModel.isPublic();
         final Date dateCreation = fileModel.getDateCreation();
 
-        List<StringPair> spl = new ArrayList<>();
+        final List<StringPair> spl = new ArrayList<>();
         spl.add(new StringPair("Name", fileModel.getName()));
         if (!fileModel.isDirectory()) {
             spl.add(new StringPair("Extension", type.toString()));
         }
-        spl.add(new StringPair("Type", type.getTitle()));
+        spl.add(new StringPair("Type", type.getTitle(context)));
         if (!isDirectory || size != 0) {
             spl.add(new StringPair("Size", FileUtils.humanReadableByteCount(size)));
         }
@@ -559,7 +559,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             InputStream in;
             OutputStream out;
             try {
-                File dir = new File(outputPath);
+                final File dir = new File(outputPath);
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
@@ -570,9 +570,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                 }
 
                 if (fileModel.isDirectory()) {
-                    File copy = new File(outputUrl);
+                    final File copy = new File(outputUrl);
                     copy.mkdirs();
-                    File[] children = fileModel.getFile().listFiles();
+                    final File[] children = fileModel.getFile().listFiles();
                     for (File aChildren : children) {
                         copyLocalFile(activity, new FileModel.FileModelBuilder().file(aChildren).build(), copy.getAbsolutePath() + File.separator);
                     }
@@ -693,7 +693,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                         }
                     });
                 }
-                
+
                 return files;
             }
 

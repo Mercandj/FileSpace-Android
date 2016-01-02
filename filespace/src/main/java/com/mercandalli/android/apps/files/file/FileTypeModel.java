@@ -1,10 +1,17 @@
 package com.mercandalli.android.apps.files.file;
 
+import android.content.Context;
+import android.support.annotation.StringRes;
+
+import com.mercandalli.android.apps.files.R;
+
 /**
  * Created by Jonathan on 24/10/2015.
  */
 public class FileTypeModel {
 
+    @StringRes
+    private int mTitleId = R.string.file_model_type_unknown;
     private String mTitle;
     private String[] mExtensions;
 
@@ -13,19 +20,19 @@ public class FileTypeModel {
         for (FileTypeModelENUM t : FileTypeModelENUM.values()) {
             for (String ext : t.type.getExtensions()) {
                 if (value.equals(ext)) {
-                    mTitle = t.type.getTitle();
+                    mTitleId = t.type.getTitleId();
                 }
             }
         }
     }
 
-    public FileTypeModel(String title, String value) {
-        mTitle = title;
+    public FileTypeModel(@StringRes int title, String value) {
+        mTitleId = title;
         mExtensions = new String[]{value};
     }
 
-    public FileTypeModel(String title, String[] extensions) {
-        mTitle = title;
+    public FileTypeModel(@StringRes int title, String[] extensions) {
+        mTitleId = title;
         mExtensions = extensions;
     }
 
@@ -58,11 +65,19 @@ public class FileTypeModel {
 
     @Override
     public int hashCode() {
-        return mTitle.hashCode();
+        return mTitleId;
     }
 
-    public String getTitle() {
-        return this.mTitle != null ? this.mTitle : "";
+    public String getTitle(final Context context) {
+        if (mTitle != null) {
+            return mTitle;
+        }
+        return mTitle = context.getString(mTitleId);
+    }
+
+    @StringRes
+    public int getTitleId() {
+        return mTitleId;
     }
 
     public String[] getExtensions() {

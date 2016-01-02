@@ -53,6 +53,7 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
      */
     private static final int TYPE_CARD_ITEM = 1;
 
+    private final Context mContext;
     private final List<FileModel> mFiles;
     private final OnFileClickListener mOnFileClickListener;
     private final OnFileLongClickListener mOnFileLongClickListener;
@@ -67,10 +68,12 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
      * Adapter without header.
      */
     public FileModelCardAdapter(
+            final Context context,
             final List<FileModel> files,
             final FileModelListener moreListener,
             final OnFileClickListener onFileClickListener,
             final OnFileLongClickListener onFileLongClickListener) {
+        mContext = context;
         mFiles = new ArrayList<>();
         mFiles.addAll(files);
         mMoreListener = moreListener;
@@ -82,13 +85,14 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
      * Adapter with header.
      */
     public FileModelCardAdapter(
+            final Context context,
             final List<FileModelCardHeaderItem> headerIds,
             final OnHeaderClickListener onHeaderClickListener,
             final List<FileModel> files,
             final FileModelListener moreListener,
             final OnFileClickListener onFileClickListener,
             final OnFileLongClickListener onFileLongClickListener) {
-        this(files, moreListener, onFileClickListener, onFileLongClickListener);
+        this(context, files, moreListener, onFileClickListener, onFileLongClickListener);
         mHeaderIds = new ArrayList<>();
         mHeaderIds.addAll(headerIds);
         mOnHeaderClickListener = onHeaderClickListener;
@@ -225,11 +229,11 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
         }
 
         if (FileTypeModelENUM.FILESPACE.type.equals(fileModel.getType()) && fileModel.getContent() != null) {
-            return fileModel.getType().getTitle() + " " + StringUtils.capitalize(fileModel.getContent().getType().toString());
+            return fileModel.getType().getTitle(mContext) + " " + StringUtils.capitalize(fileModel.getContent().getType().toString());
         }
 
         if (fileModel.getType() != null) {
-            return fileModel.getType().getTitle();
+            return fileModel.getType().getTitle(mContext);
         }
         return "";
     }

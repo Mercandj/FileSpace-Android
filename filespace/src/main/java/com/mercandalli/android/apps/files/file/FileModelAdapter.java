@@ -37,6 +37,7 @@ import java.util.List;
 
 public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.ViewHolder> {
 
+    private final Context mContext;
     private final List<FileModel> mFiles;
     private final OnFileClickListener mOnFileClickListener;
     private final OnFileLongClickListener mOnFileLongClickListener;
@@ -52,6 +53,7 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
             final FileModelListener moreListener,
             final OnFileClickListener onFileClickListener,
             final OnFileLongClickListener onFileLongClickListener) {
+        mContext = context;
         mFiles = new ArrayList<>();
         mFiles.addAll(files);
         mMoreListener = moreListener;
@@ -192,11 +194,11 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
         }
 
         if (FileTypeModelENUM.FILESPACE.type.equals(fileModel.getType()) && fileModel.getContent() != null) {
-            return fileModel.getType().getTitle() + " " + StringUtils.capitalize(fileModel.getContent().getType().toString());
+            return fileModel.getType().getTitle(mContext) + " " + StringUtils.capitalize(fileModel.getContent().getType().toString());
         }
 
         if (fileModel.getType() != null) {
-            return fileModel.getType().getTitle();
+            return fileModel.getType().getTitle(mContext);
         }
         return "";
     }

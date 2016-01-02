@@ -34,17 +34,52 @@
     <string name="tab_request">Requête</string>
     <string name="tab_other">Autre</string>
     <string name="tab_settings">Paramètres</string>
+    <string name="tab_loyalty">Rendre le développeur content</string>
     <string name="tab_log_out">Déconnexion</string>
     <string name="tab_support">Support</string>
 
+    <!-- File -->
     <!-- FileModel Adapter -->
     <string name="file_model_adapter_directory">Dossier</string>
     <string name="file_model_adapter_file">fichier</string>
     <string name="file_model_adapter_files">fichiers</string>
+    <!-- FileModel Type -->
+    <string name="file_model_type_unknown"> </string>
+    <string name="file_model_type_apk">Application Android</string>
+    <string name="file_model_type_text">Texte</string>
+    <string name="file_model_type_html">Html</string>
+    <string name="file_model_type_picture">Photo</string>
+    <string name="file_model_type_audio">Audio</string>
+    <string name="file_model_type_video">Vidéo</string>
+    <string name="file_model_type_archive">Archive</string>
+    <string name="file_model_type_file_space">FileSpace</string>
+    <string name="file_model_type_word">Word</string>
+    <string name="file_model_type_open_document">OpenDocument</string>
+    <string name="file_model_type_power_point">Power Point</string>
+    <string name="file_model_type_excel">Excel</string>
+    <string name="file_model_type_vcf">Business card</string>
+    <string name="file_model_type_pdf">Pdf</string>
+    <string name="file_model_type_source">Code Source</string>
+    <string name="file_model_type_3d">3d buildModel</string>
+    <string name="file_model_type_iso">Optical disc</string>
+    <string name="file_model_type_tmp">Temporaire</string>
+    <string name="file_model_type_index">Index</string>
+    <string name="file_model_type_keystore">KeyStore</string>
+    <string name="file_model_type_directory">Dossier</string>
 
     <!-- Sort -->
     <string name="sort_abc">Trie par nom (A-Z)</string>
     <string name="sort_size">Trie par taille</string>
     <string name="sort_date">Trie par date</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Paramètres</string>
+    <string name="settings_about">À propos</string>
+    <string name="settings_ad">Rendre le développeur content</string>
+    <string name="settings_ad_is_loading">En cours de chargement…</string>
+    <string name="settings_ad_thank_you_1">Merci. Le développeur est content =)</string>
+    <string name="settings_ad_thank_you_2">Merci. Le développeur est très content =)</string>
+    <string name="settings_ad_thank_you_3">Merci. Le développeur est très très content =)</string>
+    <string name="settings_ad_thank_you_4">Merci. Le développeur est très très très content =)</string>
 
 </resources>

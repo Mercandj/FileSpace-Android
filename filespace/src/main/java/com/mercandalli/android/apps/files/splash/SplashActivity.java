@@ -20,9 +20,9 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
     Permission mPermission;
 
     private static final String[] PERMISSIONS = new String[]{
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION
+            Manifest.permission.WRITE_EXTERNAL_STORAGE//,
+            //Manifest.permission.ACCESS_COARSE_LOCATION,
+            //Manifest.permission.ACCESS_FINE_LOCATION
     };
 
     private static final String EXTRA_START_BY_INTENT = "SplashActivity.Extra.EXTRA_START_BY_INTENT";
