@@ -1,12 +1,16 @@
 package com.mercandalli.android.apps.files.main;
 
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 
 import com.mercandalli.android.apps.files.common.Preconditions;
 
+/**
+ * The permission manager.
+ */
 public class Permission {
 
     public static final int REQUEST_CODE = 26;
@@ -22,7 +26,9 @@ public class Permission {
     }
 
     /**
-     * @return True if ask request.
+     * Ask permission and call {@link OnPermissionResult}.
+     *
+     * @param onPermissionResult The callback.
      */
     public void askPermissions(OnPermissionResult onPermissionResult) {
         Preconditions.checkNotNull(onPermissionResult);
@@ -36,11 +42,17 @@ public class Permission {
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (REQUEST_CODE == requestCode) {
-            mOnPermissionResult.onPermissionResult(true);
+            boolean allSucceed = true;
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                    allSucceed = false;
+                }
+            }
+            mOnPermissionResult.onPermissionResult(allSucceed);
         }
     }
 
     public interface OnPermissionResult {
-        void onPermissionResult(boolean succeed);
+        void onPermissionResult(boolean addSucceed);
     }
 }

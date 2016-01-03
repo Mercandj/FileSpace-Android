@@ -67,8 +67,12 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
     }
 
     @Override
-    public void onPermissionResult(boolean succeed) {
-        end();
+    public void onPermissionResult(boolean allSucceed) {
+        if (allSucceed) {
+            end();
+        } else {
+            finish();
+        }
     }
 
     private boolean isFirstLogin() {
