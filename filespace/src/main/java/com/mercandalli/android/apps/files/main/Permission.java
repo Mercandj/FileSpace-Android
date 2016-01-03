@@ -15,9 +15,8 @@ public class Permission {
 
     public static final int REQUEST_CODE = 26;
 
-    final Activity mActivity;
-    final String[] mPermissions;
-
+    private final Activity mActivity;
+    private final String[] mPermissions;
     private OnPermissionResult mOnPermissionResult;
 
     public Permission(Activity activity, String[] permissions) {
@@ -53,6 +52,11 @@ public class Permission {
     }
 
     public interface OnPermissionResult {
-        void onPermissionResult(boolean addSucceed);
+        /**
+         * Notify that all permissions succeeded.
+         *
+         * @param allSucceed True if all the permissions asked suceeded.
+         */
+        void onPermissionResult(boolean allSucceed);
     }
 }

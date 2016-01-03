@@ -17,8 +17,6 @@ import com.mercandalli.android.apps.files.main.Permission;
  */
 public class SplashActivity extends AppCompatActivity implements Permission.OnPermissionResult {
 
-    Permission mPermission;
-
     private static final String[] PERMISSIONS = new String[]{
             Manifest.permission.WRITE_EXTERNAL_STORAGE//,
             //Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -26,7 +24,6 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
     };
 
     private static final String EXTRA_START_BY_INTENT = "SplashActivity.Extra.EXTRA_START_BY_INTENT";
-
     private static final String SHARED_PREFERENCES_INIT = "SplashActivity.Permission";
     private static final String KEY_IS_FIRST_LOGIN = "LoginPermission.Key.KEY_IS_FIRST_LOGIN";
 
@@ -36,6 +33,8 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
+
+    private Permission mPermission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

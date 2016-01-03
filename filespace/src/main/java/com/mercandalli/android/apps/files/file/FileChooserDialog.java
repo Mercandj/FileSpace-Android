@@ -48,7 +48,7 @@ public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFile
     protected FileManager mFileManager;
 
     private RecyclerView mRecyclerView;
-    private List<FileModel> mFileModelList;
+    private final List<FileModel> mFileModelList;
     private File mCurrentFile;
     private FileModelListener mFileModelListener;
     private final String mRootPath;
@@ -97,13 +97,22 @@ public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFile
         FileChooserDialog.this.show();
     }
 
-    private void updateAdapter() {
-        FileModelAdapter adapter = new FileModelAdapter(getContext(), mFileModelList, null, this, null);
-        ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, adapter);
-        scaleAnimationAdapter.setDuration(220);
-        scaleAnimationAdapter.setOffsetDuration(32);
-
-        mRecyclerView.setAdapter(scaleAnimationAdapter);
+    @Override
+    public void onFileClick(View view, int position) {
+        if (position < mFileModelList.size()) {
+            FileModel file = mFileModelList.get(position);
+            if (file.isDirectory()) {
+                if (file.getCount() == 0) {
+                    Toast.makeText(getContext(), "No files", Toast.LENGTH_SHORT).show();
+                } else {
+                    mCurrentFile = file.getFile();
+                    refreshList();
+                }
+            } else {
+                mFileModelListener.executeFileModel(file);
+                dismiss();
+            }
+        }
     }
 
     private void refreshList() {
@@ -125,21 +134,12 @@ public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFile
                 });
     }
 
-    @Override
-    public void onFileClick(View view, int position) {
-        if (position < mFileModelList.size()) {
-            FileModel file = mFileModelList.get(position);
-            if (file.isDirectory()) {
-                if (file.getCount() == 0) {
-                    Toast.makeText(getContext(), "No files", Toast.LENGTH_SHORT).show();
-                } else {
-                    mCurrentFile = file.getFile();
-                    refreshList();
-                }
-            } else {
-                mFileModelListener.executeFileModel(file);
-                dismiss();
-            }
-        }
+    private void updateAdapter() {
+        FileModelAdapter adapter = new FileModelAdapter(getContext(), mFileModelList, null, this, null);
+        ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, adapter);
+        scaleAnimationAdapter.setDuration(220);
+        scaleAnimationAdapter.setOffsetDuration(32);
+
+        mRecyclerView.setAdapter(scaleAnimationAdapter);
     }
 }
