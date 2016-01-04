@@ -16,8 +16,8 @@ android {
         applicationId "com.mercandalli.android.apps.files"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 6
-        versionName "1.0.5"
+        versionCode 7
+        versionName "1.0.6"
     }
     buildTypes {
         release {
@@ -74,4 +74,6 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
+
+    wearApp project(':wearable')
 }
