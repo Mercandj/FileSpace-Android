@@ -274,7 +274,7 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
      * Display or hide the notification.
      */
     private void setNotification(boolean activated) {
-        if (activated) {
+        if (activated && mCurrentMusic != null) {
 
             Intent intent = new Intent(mAppContext, FileAudioActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);

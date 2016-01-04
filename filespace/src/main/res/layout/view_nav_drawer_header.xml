@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="140dp"
-    android:background="@color/status_bar">
+    android:fitsSystemWindows="true"
+    tools:background="@color/status_bar">
 
     <TextView
         android:id="@+id/view_nav_drawer_header_version"

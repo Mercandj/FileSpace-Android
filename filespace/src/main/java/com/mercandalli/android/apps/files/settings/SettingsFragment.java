@@ -195,6 +195,7 @@ public class SettingsFragment extends BackFragment {
                 new DialogAuthorLabel(mActivity, mApplicationCallback);
             }
         }));
+        /*
         list.add(new ModelSetting(context.getString(R.string.settings_ad), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -206,6 +207,7 @@ public class SettingsFragment extends BackFragment {
                 }
             }
         }));
+        */
 
         try {
             PackageInfo pInfo = mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0);

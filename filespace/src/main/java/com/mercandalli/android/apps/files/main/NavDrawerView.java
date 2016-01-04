@@ -177,7 +177,7 @@ public class NavDrawerView extends FrameLayout implements View.OnClickListener {
         GENEALOGY(R.id.view_nav_drawer_genealogy, NavDrawerSimpleRow.GENEALOGY, false, false),
         ADMIN(R.id.view_nav_drawer_admin, NavDrawerSimpleRow.ADMIN, false, false),
         SETTINGS(R.id.view_nav_drawer_settings, NavDrawerSimpleRow.SETTINGS, true, true),
-        LOYALTY(R.id.view_nav_drawer_loyalty, NavDrawerSimpleRow.LOYALTY, true, true, false),
+        LOYALTY(R.id.view_nav_drawer_loyalty, NavDrawerSimpleRow.LOYALTY, false, false, false),
         LOGOUT(R.id.view_nav_drawer_logout, NavDrawerSimpleRow.LOGOUT, false, true),
         SUPPORT(R.id.view_nav_drawer_support, NavDrawerSimpleRow.SUPPORT, false, true);
 

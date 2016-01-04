@@ -11,7 +11,8 @@
         <com.mercandalli.android.apps.files.main.NavDrawerHeaderView
             android:id="@+id/view_nav_drawer_header"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="@color/status_bar" />
 
         <FrameLayout
             android:id="@+id/view_nav_drawer_files"

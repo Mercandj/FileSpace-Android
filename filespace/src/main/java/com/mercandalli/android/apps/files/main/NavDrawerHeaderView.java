@@ -67,6 +67,7 @@ public class NavDrawerHeaderView extends FrameLayout {
 
     private void initView(@NonNull Context context, @Nullable AttributeSet attrs) {
         inflate(context, R.layout.view_nav_drawer_header, this);
+        setFitsSystemWindows(true);
 
         findViews();
 
