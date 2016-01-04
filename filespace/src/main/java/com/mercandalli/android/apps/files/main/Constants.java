@@ -36,4 +36,6 @@ public class Constants {
     public static final int SORT_DATE_MODIFICATION = 0;
     public static final int SORT_ABC = 1;
     public static final int SORT_SIZE = 2;
+
+    public static final boolean ADS_VISIBLE = false;
 }

@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * The wear main {@link WearableActivity}.
+ */
 public class MainActivity extends WearableActivity implements View.OnClickListener {
 
     private static final SimpleDateFormat AMBIENT_DATE_FORMAT =

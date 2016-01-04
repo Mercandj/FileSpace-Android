@@ -142,35 +142,37 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
             mDrawerLayout.openDrawer(GravityCompat.START);
         }
 
-        // Ads
-        // Create an InterstitialAd object. This same object can be re-used whenever you want to
-        // show an interstitial.
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-4616471093567176/1180013643");
-        mInterstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                if (!isFinishing()) {
-                    switch (mThanhYou) {
-                        case 0:
-                            Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_1, Toast.LENGTH_SHORT).show();
-                            break;
-                        case 1:
-                            Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_2, Toast.LENGTH_SHORT).show();
-                            break;
-                        case 2:
-                            Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_3, Toast.LENGTH_SHORT).show();
-                            break;
-                        default:
-                            Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_4, Toast.LENGTH_SHORT).show();
-                            break;
+        if (Constants.ADS_VISIBLE) {
+            // Ads
+            // Create an InterstitialAd object. This same object can be re-used whenever you want to
+            // show an interstitial.
+            mInterstitialAd = new InterstitialAd(this);
+            mInterstitialAd.setAdUnitId("ca-app-pub-4616471093567176/1180013643");
+            mInterstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    if (!isFinishing()) {
+                        switch (mThanhYou) {
+                            case 0:
+                                Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_1, Toast.LENGTH_SHORT).show();
+                                break;
+                            case 1:
+                                Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_2, Toast.LENGTH_SHORT).show();
+                                break;
+                            case 2:
+                                Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_3, Toast.LENGTH_SHORT).show();
+                                break;
+                            default:
+                                Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_4, Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                        mThanhYou++;
                     }
-                    mThanhYou++;
                 }
+            });
+            if (!mInterstitialAd.isLoaded()) {
+                requestNewInterstitial();
             }
-        });
-        if (!mInterstitialAd.isLoaded()) {
-            requestNewInterstitial();
         }
     }
 
@@ -302,11 +304,13 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
                     fragment = SettingsFragment.newInstance(getString(R.string.tab_settings));
                     break;
                 case LOYALTY:
-                    if (mInterstitialAd.isLoaded()) {
-                        mInterstitialAd.show();
-                    } else {
-                        requestNewInterstitial();
-                        Toast.makeText(this, R.string.settings_ad_is_loading, Toast.LENGTH_SHORT).show();
+                    if (Constants.ADS_VISIBLE) {
+                        if (mInterstitialAd.isLoaded()) {
+                            mInterstitialAd.show();
+                        } else {
+                            requestNewInterstitial();
+                            Toast.makeText(this, R.string.settings_ad_is_loading, Toast.LENGTH_SHORT).show();
+                        }
                     }
                     return;
                 case LOGOUT:

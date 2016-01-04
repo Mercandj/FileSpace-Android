@@ -58,13 +58,15 @@ public class WearableService extends WearableListenerService {
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
-        showToast(messageEvent.getPath());
+        forwardMessageToActivity(messageEvent.getPath());
     }
 
-    private void showToast(String message) {
-        //Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-
-        // Broadcast message to wearable activity for display
+    /**
+     * Broadcast message to wearable activity.
+     *
+     * @param message The message.
+     */
+    private void forwardMessageToActivity(String message) {
         Intent messageIntent = new Intent();
         messageIntent.setAction(Intent.ACTION_SEND);
         messageIntent.putExtra("message", message);

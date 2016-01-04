@@ -116,34 +116,36 @@ public class SettingsFragment extends BackFragment {
         recyclerView.setLayoutManager(mLayoutManager);
         click_version = 0;
 
-        // Create an InterstitialAd object. This same object can be re-used whenever you want to
-        // show an interstitial.
-        mInterstitialAd = new InterstitialAd(getContext());
-        mInterstitialAd.setAdUnitId("ca-app-pub-4616471093567176/3476162047");
-        mInterstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                if (isAdded()) {
-                    switch (mThanhYou) {
-                        case 0:
-                            Toast.makeText(getContext(), R.string.settings_ad_thank_you_1, Toast.LENGTH_SHORT).show();
-                            break;
-                        case 1:
-                            Toast.makeText(getContext(), R.string.settings_ad_thank_you_2, Toast.LENGTH_SHORT).show();
-                            break;
-                        case 2:
-                            Toast.makeText(getContext(), R.string.settings_ad_thank_you_3, Toast.LENGTH_SHORT).show();
-                            break;
-                        default:
-                            Toast.makeText(getContext(), R.string.settings_ad_thank_you_4, Toast.LENGTH_SHORT).show();
-                            break;
+        if (Constants.ADS_VISIBLE) {
+            // Create an InterstitialAd object. This same object can be re-used whenever you want to
+            // show an interstitial.
+            mInterstitialAd = new InterstitialAd(getContext());
+            mInterstitialAd.setAdUnitId("ca-app-pub-4616471093567176/3476162047");
+            mInterstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    if (isAdded()) {
+                        switch (mThanhYou) {
+                            case 0:
+                                Toast.makeText(getContext(), R.string.settings_ad_thank_you_1, Toast.LENGTH_SHORT).show();
+                                break;
+                            case 1:
+                                Toast.makeText(getContext(), R.string.settings_ad_thank_you_2, Toast.LENGTH_SHORT).show();
+                                break;
+                            case 2:
+                                Toast.makeText(getContext(), R.string.settings_ad_thank_you_3, Toast.LENGTH_SHORT).show();
+                                break;
+                            default:
+                                Toast.makeText(getContext(), R.string.settings_ad_thank_you_4, Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                        mThanhYou++;
                     }
-                    mThanhYou++;
                 }
+            });
+            if (!mInterstitialAd.isLoaded()) {
+                requestNewInterstitial();
             }
-        });
-        if (!mInterstitialAd.isLoaded()) {
-            requestNewInterstitial();
         }
 
         refreshList();
@@ -195,19 +197,19 @@ public class SettingsFragment extends BackFragment {
                 new DialogAuthorLabel(mActivity, mApplicationCallback);
             }
         }));
-        /*
-        list.add(new ModelSetting(context.getString(R.string.settings_ad), new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mInterstitialAd.isLoaded()) {
-                    mInterstitialAd.show();
-                } else {
-                    requestNewInterstitial();
-                    Toast.makeText(getContext(), R.string.settings_ad_is_loading, Toast.LENGTH_SHORT).show();
+        if (Constants.ADS_VISIBLE) {
+            list.add(new ModelSetting(context.getString(R.string.settings_ad), new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mInterstitialAd.isLoaded()) {
+                        mInterstitialAd.show();
+                    } else {
+                        requestNewInterstitial();
+                        Toast.makeText(getContext(), R.string.settings_ad_is_loading, Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        }));
-        */
+            }));
+        }
 
         try {
             PackageInfo pInfo = mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0);
