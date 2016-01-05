@@ -104,6 +104,8 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
      */
     private final Runnable mProgressBarActivationRunnable;
 
+    private FileModel mCurrentFolder;
+
     @Inject
     FileManager mFileManager;
 
@@ -290,6 +292,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     }
 
     public void refreshListFolders(final String search) {
+        mCurrentFolder = null;
         mIsInsideFolder = false;
         mIsCard = true;
         if (mFileManager == null) {
@@ -357,6 +360,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     }
 
     public void refreshListFoldersInside(final FileModel fileModel) {
+        mCurrentFolder = fileModel;
         mIsInsideFolder = true;
         mIsCard = false;
         mFileModels.clear();
@@ -438,7 +442,15 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
                 sortMode == Constants.SORT_DATE_MODIFICATION ||
                 sortMode == Constants.SORT_SIZE) {
             mSortMode = sortMode;
-            refreshListFolders();
+            if(!mIsInsideFolder && mIsCard) {
+                refreshListFolders();
+            }
+            if(!mIsInsideFolder && !mIsCard) {
+                refreshListAllMusic();
+            }
+            if(mIsInsideFolder && mCurrentFolder != null) {
+                refreshListFoldersInside(mCurrentFolder);
+            }
         }
     }
 
