@@ -120,7 +120,7 @@ public class SettingsFragment extends BackFragment {
             // Create an InterstitialAd object. This same object can be re-used whenever you want to
             // show an interstitial.
             mInterstitialAd = new InterstitialAd(getContext());
-            mInterstitialAd.setAdUnitId("ca-app-pub-4616471093567176/3476162047");
+            mInterstitialAd.setAdUnitId(Constants.AD_MOB_KEY_SETTINGS);
             mInterstitialAd.setAdListener(new AdListener() {
                 @Override
                 public void onAdClosed() {

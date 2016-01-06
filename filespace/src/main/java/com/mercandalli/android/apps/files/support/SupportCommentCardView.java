@@ -8,7 +8,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.Preconditions;
+import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 public class SupportCommentCardView extends CardView {
 

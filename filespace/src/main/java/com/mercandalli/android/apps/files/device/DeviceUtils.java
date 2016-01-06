@@ -9,7 +9,7 @@ import android.os.Environment;
 import android.os.StatFs;
 import android.util.Log;
 
-import com.mercandalli.android.apps.files.common.Preconditions;
+import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 import java.util.Locale;
 

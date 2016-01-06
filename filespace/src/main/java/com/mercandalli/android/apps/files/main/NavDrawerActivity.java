@@ -39,7 +39,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.admin.AdminFragment;
-import com.mercandalli.android.apps.files.common.Preconditions;
+import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
@@ -147,7 +147,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
             // Create an InterstitialAd object. This same object can be re-used whenever you want to
             // show an interstitial.
             mInterstitialAd = new InterstitialAd(this);
-            mInterstitialAd.setAdUnitId("ca-app-pub-4616471093567176/1180013643");
+            mInterstitialAd.setAdUnitId(Constants.AD_MOB_KEY_NAV_DRAWER);
             mInterstitialAd.setAdListener(new AdListener() {
                 @Override
                 public void onAdClosed() {

@@ -25,7 +25,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 
-import com.mercandalli.android.apps.files.common.Preconditions;
+import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 import java.util.List;
 

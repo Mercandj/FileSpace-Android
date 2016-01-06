@@ -37,7 +37,6 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.common.util.GpsUtils;
 import com.mercandalli.android.apps.files.common.util.HashUtils;
 import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
@@ -150,9 +149,9 @@ public class RegistrationFragment extends BackFragment {
         List<StringPair> parameters = new ArrayList<>();
         parameters.add(new StringPair("username", "" + user.username));
         parameters.add(new StringPair("password", "" + user.password));
-        parameters.add(new StringPair("latitude", "" + GpsUtils.getLatitude(getActivity())));
-        parameters.add(new StringPair("longitude", "" + GpsUtils.getLongitude(getActivity())));
-        parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
+        //parameters.add(new StringPair("latitude", "" + GpsUtils.getLatitude(getActivity())));
+        //parameters.add(new StringPair("longitude", "" + GpsUtils.getLongitude(getActivity())));
+        //parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
 
         if (NetUtils.isInternetConnection(mActivity)) {
             (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUser, new IPostExecuteListener() {

@@ -19,7 +19,7 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.Preconditions;
+import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.shared.SharedAudioData;
 import com.mercandalli.android.apps.files.shared.SharedAudioPlayerUtils;
 

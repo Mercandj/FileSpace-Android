@@ -25,11 +25,11 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.common.util.GpsUtils;
 import com.mercandalli.android.apps.files.common.util.HashUtils;
 import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
+import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.MainActivity;
 
 import org.json.JSONException;
@@ -146,17 +146,17 @@ public class LoginFragment extends BackFragment {
 
         // Login : POST /user
         List<StringPair> parameters = new ArrayList<>();
-        double latitude = GpsUtils.getLatitude(getActivity()),
-                longitude = GpsUtils.getLongitude(getActivity());
+        //double latitude = GpsUtils.getLatitude(getActivity()),
+        //        longitude = GpsUtils.getLongitude(getActivity());
         parameters.add(new StringPair("login", "true"));
-        if (latitude != 0 && longitude != 0) {
+        /*if (latitude != 0 && longitude != 0) {
             parameters.add(new StringPair("latitude", "" + latitude));
             parameters.add(new StringPair("longitude", "" + longitude));
             parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
-        }
+        }*/
         Log.d("LoginFragment", "login " + mApplicationCallback.getConfig().getUserPassword() + mApplicationCallback.getConfig().getUserUsername() + " isInternetConnection=" + NetUtils.isInternetConnection(mActivity));
         if (NetUtils.isInternetConnection(mActivity)) {
-            (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUser, new IPostExecuteListener() {
+            (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUser, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     requestLaunched = false;

@@ -19,23 +19,27 @@
  */
 package com.mercandalli.android.apps.files.main;
 
+import com.mercandalli.android.apps.files.BuildConfig;
+
 public class Constants {
 
     public static final String URL_DOMAIN_API = "http://mercandalli.com/FileSpace-API";
 
     public static final int TAB_VIEW_TYPE_NORMAL = 0;
     public static final int TAB_VIEW_TYPE_SECTION = 1;
-    public static final int TAB_VIEW_TYPE_TWO_BUTTONS = 2;
-    public static final int TAB_VIEW_TYPE_HOME_INFORMATION = 3;
-    public static final int TAB_VIEW_TYPE_HOME_INFORMATION_FORM = 4;
-    public static final int TAB_VIEW_TYPE_HOME_IMAGE = 5;
 
-    public static final long SIZE_MAX_ONLINE_PICTURE_ICON = 100000;
+    public static final long SIZE_MAX_ONLINE_PICTURE_ICON = 100_000;
     public static final int WIDTH_MAX_ONLINE_PICTURE_BITMAP = 500;
 
     public static final int SORT_DATE_MODIFICATION = 0;
     public static final int SORT_ABC = 1;
     public static final int SORT_SIZE = 2;
 
-    public static final boolean ADS_VISIBLE = false;
+    public static final boolean ADS_VISIBLE = true;
+
+    public static final String AD_MOB_KEY_NAV_DRAWER = BuildConfig.DEBUG ?
+            "ca-app-pub-3940256099942544/1033173712" : "ca-app-pub-4616471093567176/1180013643";
+
+    public static final String AD_MOB_KEY_SETTINGS = BuildConfig.DEBUG ?
+            "ca-app-pub-3940256099942544/1033173712" : "ca-app-pub-4616471093567176/3476162047";
 }

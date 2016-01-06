@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.common;
+package com.mercandalli.android.apps.files.precondition;
 
 public class Preconditions {
 

@@ -143,11 +143,11 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
             options.inJustDecodeBounds = false;
             options.inDither = false;
             options.inScaled = false;
-            if (this.sizeFile > 3000000) {
+            if (this.sizeFile > 3_000_000) {
                 options.inSampleSize = 16;
-            } else if (this.sizeFile > 2000000) {
+            } else if (this.sizeFile > 2_000_000) {
                 options.inSampleSize = 8;
-            } else if (this.sizeFile > 500000) {
+            } else if (this.sizeFile > 500_000) {
                 options.inSampleSize = 4;
             }
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;

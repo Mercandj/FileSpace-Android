@@ -141,6 +141,6 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
 
     @Override
     public boolean isLogged() {
-        return mConfig != null && mConfig.isLogged();
+        return mConfig != null && Config.isLogged();
     }
 }

@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.BuildConfig;
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.Preconditions;
+import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.common.util.FontUtils;
 import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.user.UserModel;
