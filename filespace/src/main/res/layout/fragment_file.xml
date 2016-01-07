@@ -18,7 +18,7 @@
     <android.support.design.widget.TabLayout
         android:id="@+id/fragment_file_tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="42dip"
+        android:layout_height="?attr/actionBarSize"
         android:background="@color/primary"
         app:tabIndicatorColor="@android:color/white"
         app:tabIndicatorHeight="2dp"

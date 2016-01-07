@@ -22,17 +22,21 @@ package com.mercandalli.android.apps.files.file.local;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -65,10 +69,18 @@ public class FileLocalPagerFragment extends BackFragment implements ViewPager.On
     private FloatingActionButton mFab1;
     private FloatingActionButton mFab2;
     private View coordinatorLayoutView;
-    private Snackbar mSnackbar;
 
     private String mTitle;
     private SetToolbarCallback mSetToolbarCallback;
+
+    private int[] mImageResId = {
+            R.drawable.ic_folder_open_white_24dp,
+            R.drawable.ic_music_note_white_24dp,
+            R.drawable.ic_photo_white_24dp,
+            R.drawable.ic_video_library_white_24dp
+    };
+
+    private Drawable[] mImageDrawable = new Drawable[mImageResId.length];
 
     public static FileLocalPagerFragment newInstance(String title) {
         final FileLocalPagerFragment fragment = new FileLocalPagerFragment();
@@ -85,6 +97,9 @@ public class FileLocalPagerFragment extends BackFragment implements ViewPager.On
             mSetToolbarCallback = (SetToolbarCallback) context;
         } else {
             throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+        }
+        for (int i = 0, size = mImageResId.length; i < size; i++) {
+            mImageDrawable[i] = ContextCompat.getDrawable(context, mImageResId[i]);
         }
     }
 
@@ -107,9 +122,9 @@ public class FileLocalPagerFragment extends BackFragment implements ViewPager.On
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_file, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_file, container, false);
 
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.fragment_file_toolbar);
+        final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.fragment_file_toolbar);
         toolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(toolbar);
         setStatusBarColor(mActivity, R.color.status_bar);
@@ -445,16 +460,14 @@ public class FileLocalPagerFragment extends BackFragment implements ViewPager.On
 
         @Override
         public CharSequence getPageTitle(int i) {
-            String title = "null";
-            switch (i) {
-                case 0:
-                    title = getString(R.string.file_fragment_local);
-                    break;
-                case 1:
-                    title = getString(R.string.file_fragment_music);
-                    break;
-            }
-            return title;
+            // Generate title based on item position
+            // return tabTitles[position];
+            final Drawable image = mImageDrawable[i];
+            image.setBounds(0, 0, image.getIntrinsicWidth(), image.getIntrinsicHeight());
+            SpannableString sb = new SpannableString(" ");
+            ImageSpan imageSpan = new ImageSpan(image, ImageSpan.ALIGN_BOTTOM);
+            sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            return sb;
         }
     }
 }
