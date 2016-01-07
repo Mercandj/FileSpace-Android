@@ -23,8 +23,8 @@ Remote and secure file manager.
 
 ## ANDROID DESCRIPTION
 
-* Android : SDK supported : 21 (Lollipop)
-* Theme : Before Android 5.0 Lollipop Holo.Light, after Material.Light !!!!
+* Android : SDK supported : min 16 (Jelly Bean), max 23 (Marshmallow)
+* Material design app
 
 
 ## REQUIRED
