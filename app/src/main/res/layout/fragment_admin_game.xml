@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:text="GPS" />
 
     <Button
@@ -23,6 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/gps"
         android:layout_toStartOf="@+id/gps"
         android:text="RESET WAY" />
 
@@ -32,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/reset_way"
         android:layout_toStartOf="@+id/reset_way"
         android:text="RESET MAP" />
 

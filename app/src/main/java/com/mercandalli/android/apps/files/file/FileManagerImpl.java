@@ -22,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
@@ -43,6 +42,7 @@ import com.mercandalli.android.apps.files.file.local.FileLocalApi;
 import com.mercandalli.android.apps.files.file.text.FileTextActivity;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -611,6 +611,12 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
      */
     @Override
     public void getLocalMusic(final Context context, final int sortMode, final String search, final ResultCallback<List<FileAudioModel>> resultCallback) {
+        final List<FileAudioModel> cachedLocalMusics = mFilePersistenceApi.getLocalMusics();
+        if (!cachedLocalMusics.isEmpty()) {
+            resultCallback.success(cachedLocalMusics);
+            return;
+        }
+
         new AsyncTask<Void, Void, List<FileAudioModel>>() {
             @Override
             protected List<FileAudioModel> doInBackground(Void... params) {
@@ -700,6 +706,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             @Override
             protected void onPostExecute(List<FileAudioModel> fileModels) {
                 resultCallback.success(fileModels);
+                mFilePersistenceApi.setLocalMusics(fileModels);
                 super.onPostExecute(fileModels);
             }
         }.execute();
@@ -747,6 +754,12 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
      */
     @Override
     public void getLocalMusicFolders(final Context context, final int sortMode, final String search, final ResultCallback<List<FileModel>> resultCallback) {
+        final List<FileModel> cachedLocalMusicFolders = mFilePersistenceApi.getLocalMusicFolders();
+        if (!cachedLocalMusicFolders.isEmpty()) {
+            resultCallback.success(cachedLocalMusicFolders);
+            return;
+        }
+
         new AsyncTask<Void, Void, List<FileModel>>() {
             @Override
             protected List<FileModel> doInBackground(Void... params) {
@@ -804,6 +817,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             @Override
             protected void onPostExecute(List<FileModel> fileModels) {
                 resultCallback.success(fileModels);
+                mFilePersistenceApi.setLocalMusicFolders(fileModels);
                 super.onPostExecute(fileModels);
             }
         }.execute();
