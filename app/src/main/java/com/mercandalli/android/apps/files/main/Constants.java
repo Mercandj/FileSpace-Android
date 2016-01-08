@@ -35,7 +35,7 @@ public class Constants {
     public static final int SORT_ABC = 1;
     public static final int SORT_SIZE = 2;
 
-    public static final boolean ADS_VISIBLE = true;
+    public static final boolean ADS_VISIBLE = false;
 
     public static final String AD_MOB_KEY_NAV_DRAWER = BuildConfig.DEBUG ?
             "ca-app-pub-3940256099942544/1033173712" : "ca-app-pub-4616471093567176/1180013643";
