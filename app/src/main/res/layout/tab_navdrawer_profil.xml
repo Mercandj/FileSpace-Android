@@ -44,8 +44,10 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/tab_icon"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="4dp"
         android:layout_toEndOf="@+id/tab_icon"
+        android:layout_toRightOf="@+id/tab_icon"
         android:ellipsize="marquee"
         android:focusable="false"
 
@@ -65,9 +67,11 @@
         android:id="@+id/imageStorage"
         android:layout_width="34dp"
         android:layout_height="34dp"
+        android:layout_alignLeft="@+id/tab_icon"
         android:layout_alignStart="@+id/tab_icon"
         android:layout_centerVertical="true"
         android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:src="@drawable/ic_storage_usage_white" />
 
 </RelativeLayout>

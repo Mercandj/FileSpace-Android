@@ -10,8 +10,10 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:gravity="center_vertical"
+        android:paddingEnd="47dp"
         android:paddingLeft="25dp"
         android:paddingRight="47dp"
+        android:paddingStart="25dp"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="#000"
         android:textSize="17sp" />
