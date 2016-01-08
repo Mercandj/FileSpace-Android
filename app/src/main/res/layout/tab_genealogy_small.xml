@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-	Personal Project : Control server
-		MERCANDALLI Jonathan
--->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:transitionName="transitionRoot"
-                android:id="@+id/item">
+<RelativeLayout android:id="@+id/item"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="52dp"
+    android:transitionName="transitionRoot">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,11 +13,16 @@
 
         <TextView
             android:id="@+id/title"
-            android:transitionName="transitionTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/tab_icon"
+            android:layout_toEndOf="@+id/tab_icon"
+            android:layout_toLeftOf="@+id/more"
+            android:layout_toRightOf="@+id/tab_icon"
+            android:layout_toStartOf="@+id/more"
             android:ellipsize="marquee"
             android:focusable="false"
+            android:gravity="top"
             android:marqueeRepeatLimit="marquee_forever"
             android:maxLines="1"
             android:paddingLeft="20dp"
@@ -30,18 +31,21 @@
             android:singleLine="true"
             android:textColor="#000"
             android:textSize="13sp"
-            android:layout_toEndOf="@+id/tab_icon"
-            android:layout_toStartOf="@+id/more"
-            android:layout_alignTop="@+id/tab_icon"
-            android:gravity="top"
-            />
+            android:transitionName="transitionTitle" />
 
         <TextView
             android:id="@+id/subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/tab_icon"
+            android:layout_marginBottom="2dp"
+            android:layout_toEndOf="@+id/tab_icon"
+            android:layout_toLeftOf="@+id/more"
+            android:layout_toRightOf="@+id/tab_icon"
+            android:layout_toStartOf="@+id/more"
             android:ellipsize="marquee"
             android:focusable="false"
+            android:gravity="bottom"
             android:marqueeRepeatLimit="marquee_forever"
             android:maxLines="1"
             android:paddingLeft="20dp"
@@ -49,13 +53,7 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColor="#666"
-            android:textSize="12sp"
-            android:layout_alignBottom="@+id/tab_icon"
-            android:gravity="bottom"
-            android:layout_marginBottom="2dp"
-            android:layout_toEndOf="@+id/tab_icon"
-            android:layout_toStartOf="@+id/more"
-            />
+            android:textSize="12sp" />
 
         <com.mercandalli.android.apps.files.common.view.CircularImageView
             android:id="@+id/tab_icon"
@@ -65,26 +63,26 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:contentDescription="@string/image_description"
-            android:transitionName="transitionIcon"
-            android:src="@drawable/file_default"/>
+            android:src="@drawable/file_default"
+            android:transitionName="transitionIcon" />
 
         <RelativeLayout
             android:id="@+id/more"
             android:layout_width="55dp"
             android:layout_height="match_parent"
-            android:paddingRight="10dp"
-            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
             android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:visibility="invisible">
 
             <ImageView
                 android:layout_width="35dp"
                 android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentBottom="true"/>
+                android:src="@drawable/ic_menu_moreoverflow_normal_holo_light" />
         </RelativeLayout>
 
     </RelativeLayout>

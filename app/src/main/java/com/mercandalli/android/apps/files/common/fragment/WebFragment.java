@@ -61,7 +61,7 @@ public class WebFragment extends BackFragment {
         progress_web.setMax(100);
 
         try {
-            webView = (WebView) rootView.findViewById(R.id.webView1);
+            webView = (WebView) rootView.findViewById(R.id.fragment_web_web_view);
             webView.getSettings().setJavaScriptEnabled(true);
 
             webView.setWebChromeClient(new WebChromeClient() {

@@ -1,46 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-	Personal Project : Control server
-		MERCANDALLI Jonathan
--->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:transitionName="transitionRoot"
-                android:id="@+id/item">
+<RelativeLayout android:id="@+id/item"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:transitionName="transitionRoot">
 
     <com.mercandalli.android.apps.files.common.view.SquareImageView
         android:id="@+id/tab_icon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/image_description"
-        android:transitionName="transitionIcon"
-        android:src="@drawable/file_default"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:scaleType="centerCrop"/>
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/image_description"
+        android:scaleType="centerCrop"
+        android:src="@drawable/file_default"
+        android:transitionName="transitionIcon" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
+        android:layout_alignBottom="@+id/tab_icon"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:background="#82000000"
         android:ellipsize="marquee"
         android:focusable="false"
+        android:gravity="center_vertical"
         android:marqueeRepeatLimit="marquee_forever"
         android:maxLines="1"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
         android:scrollHorizontally="true"
         android:singleLine="true"
-        android:textColor="#fff"
-        android:textSize="12sp"
         android:text="Title"
         android:textAlignment="center"
-        android:gravity="center_vertical"
-        android:background="#82000000"
-        android:layout_alignBottom="@+id/tab_icon"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"/>
+        android:textColor="#fff"
+        android:textSize="12sp" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -48,13 +47,14 @@
         android:layout_margin="5dp"
         android:visibility="gone">
 
-
         <TextView
             android:id="@+id/subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
             android:ellipsize="marquee"
             android:focusable="false"
+            android:gravity="bottom"
             android:marqueeRepeatLimit="marquee_forever"
             android:maxLines="1"
             android:paddingLeft="20dp"
@@ -62,20 +62,17 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColor="#666"
-            android:textSize="12sp"
-            android:gravity="bottom"
-            android:layout_marginBottom="2dp"/>
+            android:textSize="12sp" />
 
         <ImageView
             android:id="@+id/more"
             android:layout_width="35dp"
             android:layout_height="35dp"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_menu_moreoverflow_normal_holo_light"
             android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"/>
+            android:src="@drawable/ic_menu_moreoverflow_normal_holo_light" />
 
     </RelativeLayout>
-
 
 </RelativeLayout>

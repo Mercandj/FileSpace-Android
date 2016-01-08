@@ -14,8 +14,10 @@
             android:id="@+id/et_last_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/center"
             android:layout_toStartOf="@+id/center"
             android:ems="10"
             android:hint="@string/genealogy_last_name"
@@ -66,7 +68,7 @@
             android:lines="1"
             android:maxLines="1"
             android:padding="10dp"
-            android:singleLine="true"/>
+            android:singleLine="true" />
 
         <Button
             android:id="@+id/add"
@@ -83,7 +85,7 @@
             android:layout_width="50px"
             android:layout_height="70px"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"/>
+            android:layout_centerHorizontal="true" />
 
         <CheckBox
             android:id="@+id/sex"
@@ -180,9 +182,11 @@
             android:layout_width="wrap_content"
             android:layout_height="34dp"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/tv_marriage"
             android:layout_marginTop="-4dp"
             android:layout_toEndOf="@+id/tv_marriage"
+            android:layout_toRightOf="@+id/tv_marriage"
             android:gravity="center"
             android:text="Add Marriage"
             android:textSize="10sp" />
@@ -193,6 +197,7 @@
             android:layout_width="wrap_content"
             android:layout_height="34dp"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_below="@+id/bt_marriage"
             android:layout_marginTop="-8dp"
             android:gravity="center"

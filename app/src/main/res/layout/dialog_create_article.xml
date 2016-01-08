@@ -10,7 +10,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/content"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/content"
         android:layout_below="@+id/content"
         android:text="Add article" />
 
@@ -19,6 +21,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:hint="Title"
@@ -29,7 +33,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/title"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/title"
         android:layout_below="@+id/title"
         android:hint="Content"
         android:maxLines="6"

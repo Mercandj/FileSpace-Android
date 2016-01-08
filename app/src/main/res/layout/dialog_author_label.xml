@@ -25,10 +25,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/version_tv"
         android:layout_margin="16dp"
         android:paddingLeft="26dp"
-        android:paddingRight="26sp"
+        android:paddingRight="26dp"
         android:text="@string/ok" />
 
     <com.romainpiel.shimmer.ShimmerTextView
@@ -36,6 +37,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/shimmer_tv"
+        android:layout_alignLeft="@+id/shimmer_tv"
+        android:layout_alignRight="@+id/shimmer_tv"
         android:layout_alignStart="@+id/shimmer_tv"
         android:layout_below="@+id/shimmer_tv"
         android:layout_marginBottom="12dp"
