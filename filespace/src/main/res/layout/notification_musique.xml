@@ -37,7 +37,7 @@
         android:layout_toStartOf="@+id/prev"/>
 
     <ImageView
-        android:id="@+id/next"
+        android:id="@+id/activity_file_audio_next"
         android:layout_width="40dp"
         android:layout_height="50dp"
         android:padding="3dp"
@@ -46,19 +46,19 @@
         android:layout_toStartOf="@+id/close" />
 
     <ImageView
-        android:id="@+id/play"
+        android:id="@+id/activity_file_audio_play"
         android:layout_width="40dp"
         android:layout_height="50dp"
         android:padding="3dp"
         android:src="@drawable/ic_music_pause"
         android:layout_centerVertical="true"
-        android:layout_toStartOf="@+id/next" />
+        android:layout_toStartOf="@+id/activity_file_audio_next" />
 
     <ImageView
         android:id="@+id/prev"
         android:layout_width="40dp"
         android:layout_height="50dp"
-        android:layout_toStartOf="@+id/play"
+        android:layout_toStartOf="@+id/activity_file_audio_play"
         android:padding="3dp"
         android:src="@drawable/ic_music_previous" />
 

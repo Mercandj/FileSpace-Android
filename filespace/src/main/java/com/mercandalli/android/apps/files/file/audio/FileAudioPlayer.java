@@ -282,8 +282,8 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
             RemoteViews remoteViews = new RemoteViews(mAppContext.getPackageName(), R.layout.notification_musique);
             remoteViews.setTextViewText(R.id.titre_notif, mCurrentMusic.getName());
             remoteViews.setOnClickPendingIntent(R.id.close, NotificationAudioPlayerReceiver.getNotificationIntentClose(mAppContext));
-            remoteViews.setOnClickPendingIntent(R.id.play, NotificationAudioPlayerReceiver.getNotificationIntentPlayPause(mAppContext));
-            remoteViews.setOnClickPendingIntent(R.id.next, NotificationAudioPlayerReceiver.getNotificationIntentNext(mAppContext));
+            remoteViews.setOnClickPendingIntent(R.id.activity_file_audio_play, NotificationAudioPlayerReceiver.getNotificationIntentPlayPause(mAppContext));
+            remoteViews.setOnClickPendingIntent(R.id.activity_file_audio_next, NotificationAudioPlayerReceiver.getNotificationIntentNext(mAppContext));
             remoteViews.setOnClickPendingIntent(R.id.prev, NotificationAudioPlayerReceiver.getNotificationIntentPrevious(mAppContext));
 
             Notification.Builder mNotifyBuilder = new Notification.Builder(mAppContext);
@@ -342,17 +342,17 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
 
     /* INNER */
 
+    public interface OnPlayerStatusChangeListener {
+        void onPlayerStatusChanged(@SharedAudioPlayerUtils.Status int status);
+
+        void onPlayerProgressChanged(int progress, int duration, int musicPosition, FileAudioModel music);
+    }
+
     private class UpdaterPosition implements Runnable {
         @Override
         public void run() {
             updatePosition();
         }
-    }
-
-    public interface OnPlayerStatusChangeListener {
-        void onPlayerStatusChanged(@SharedAudioPlayerUtils.Status int status);
-
-        void onPlayerProgressChanged(int progress, int duration, int musicPosition, FileAudioModel music);
     }
 
     public class MessageReceiver extends BroadcastReceiver {
@@ -362,6 +362,11 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
 
             if (message.isEmpty() || message.replaceAll(" ", "").isEmpty()) {
                 sendWearMessage(mAppContext, mCurrentStatus, mFileAudioModelList.get(mCurrentMusicIndex));
+                return;
+            }
+
+            if (mFileAudioModelList.isEmpty()) {
+                setNotification(false);
                 return;
             }
 

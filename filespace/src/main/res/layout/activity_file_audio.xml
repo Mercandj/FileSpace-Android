@@ -30,6 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/size"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
             android:layout_alignParentStart="true"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="16dp"
@@ -41,8 +43,10 @@
             android:id="@+id/size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/play"
+            android:layout_above="@+id/activity_file_audio_play"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
             android:layout_alignParentStart="true"
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
@@ -56,6 +60,8 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/title"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:adjustViewBounds="true"
@@ -67,15 +73,17 @@
             android:id="@+id/play_position"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_above="@+id/rl_sliderNumber"
+            android:layout_above="@+id/activity_file_audio_rl_sliderNumber"
             android:layout_centerHorizontal="true" />
 
         <com.mercandalli.android.apps.files.common.view.PlayPauseView
-            android:id="@+id/play"
+            android:id="@+id/activity_file_audio_play"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_above="@+id/rl_sliderNumber"
+            android:layout_above="@+id/activity_file_audio_rl_sliderNumber"
             android:layout_alignEnd="@+id/play_position"
+            android:layout_alignLeft="@+id/play_position"
+            android:layout_alignRight="@+id/play_position"
             android:layout_alignStart="@+id/play_position"
             android:clickable="true"
             android:elevation="@dimen/circle_button_elevation_high"
@@ -84,13 +92,15 @@
             android:transitionName="transitionIcon" />
 
         <ImageButton
-            android:id="@+id/next"
+            android:id="@+id/activity_file_audio_next"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignTop="@+id/play_position"
+            android:layout_marginLeft="38dp"
             android:layout_marginStart="38dp"
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@+id/play_position"
+            android:layout_toRightOf="@+id/play_position"
             android:background="@drawable/circle_button_ripple_music"
             android:elevation="@dimen/circle_button_elevation_high"
             android:padding="15dp"
@@ -99,12 +109,14 @@
             android:tint="@android:color/white" />
 
         <ImageButton
-            android:id="@+id/previous"
+            android:id="@+id/activity_file_audio_previous"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignTop="@+id/play_position"
             android:layout_marginEnd="38dp"
+            android:layout_marginRight="38dp"
             android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@+id/play_position"
             android:layout_toStartOf="@+id/play_position"
             android:background="@drawable/circle_button_ripple_music"
             android:elevation="@dimen/circle_button_elevation_high"
@@ -115,11 +127,13 @@
 
         <!-- SLIDER WITH NUMBER INDICATOR-->
         <FrameLayout
-            android:id="@+id/rl_sliderNumber"
+            android:id="@+id/activity_file_audio_rl_sliderNumber"
             android:layout_width="fill_parent"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
             android:layout_alignParentStart="true"
             android:layout_marginBottom="6dp"
             android:layout_marginTop="16dp">

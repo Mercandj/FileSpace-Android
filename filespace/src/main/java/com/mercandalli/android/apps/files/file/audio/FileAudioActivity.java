@@ -141,10 +141,10 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
-        mPlayPauseView = (PlayPauseView) findViewById(R.id.play);
+        mPlayPauseView = (PlayPauseView) findViewById(R.id.activity_file_audio_play);
         mPlayPauseView.setOnClickListener(this);
-        findViewById(R.id.next).setOnClickListener(this);
-        findViewById(R.id.previous).setOnClickListener(this);
+        findViewById(R.id.activity_file_audio_next).setOnClickListener(this);
+        findViewById(R.id.activity_file_audio_previous).setOnClickListener(this);
 
         final Bundle bundle = getIntent().getExtras();
         if (bundle != null &&
@@ -176,17 +176,17 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         final int idView = v.getId();
         switch (idView) {
-            case R.id.play:
+            case R.id.activity_file_audio_play:
                 if (mFileAudioPlayer.isPlaying()) {
                     mFileAudioPlayer.pause();
                 } else {
                     mFileAudioPlayer.play();
                 }
                 break;
-            case R.id.next:
+            case R.id.activity_file_audio_next:
                 mFileAudioPlayer.next();
                 break;
-            case R.id.previous:
+            case R.id.activity_file_audio_previous:
                 mFileAudioPlayer.previous();
                 break;
         }

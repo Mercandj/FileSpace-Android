@@ -32,7 +32,7 @@
             android:id="@+id/size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/play"
+            android:layout_above="@+id/activity_file_audio_play"
             android:layout_alignParentEnd="true"
             android:layout_alignParentStart="true"
             android:layout_marginBottom="5dp"
@@ -80,7 +80,7 @@
             android:layout_centerHorizontal="true" />
 
         <com.mercandalli.android.apps.files.common.view.PlayPauseView
-            android:id="@+id/play"
+            android:id="@+id/activity_file_audio_play"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_above="@+id/seekBar"
@@ -93,7 +93,7 @@
             android:transitionName="transitionIcon" />
 
         <ImageButton
-            android:id="@+id/next"
+            android:id="@+id/activity_file_audio_next"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignTop="@+id/play_position"
@@ -109,7 +109,7 @@
             android:tint="@android:color/white" />
 
         <ImageButton
-            android:id="@+id/previous"
+            android:id="@+id/activity_file_audio_previous"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignTop="@+id/play_position"
