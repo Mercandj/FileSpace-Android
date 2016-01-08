@@ -19,11 +19,14 @@ public class FileApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // Fabric - Crashlytics
         Fabric.with(this, new Crashlytics());
 
-        //Dagger - Object graph creation
+        // Dagger - Object graph creation
         setupGraph();
 
+        // Google Analytics
         AnalyticsTrackers.initialize(this);
         AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
     }

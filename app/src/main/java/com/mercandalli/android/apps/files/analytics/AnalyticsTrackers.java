@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Google Analytics
  * A collection of Google Analytics trackers. Fetch the tracker you need using
  * {@code AnalyticsTrackers.getInstance().get(...)}
  * <p/>
