@@ -4,8 +4,7 @@ FileSpace - ANDROID
 **_Unfinished project, still in development_** [API Required](https://github.com/Mercandj/FileSpace-API)
 
 <p align="center">
-	<img src="https://raw.github.com/Mercandj/FileSpace-Android/master/screenshot/aa.png" width="250" />
-	<img src="https://raw.github.com/Mercandj/FileSpace-Android/master/screenshot/bb.png" width="250" />
+	<img src="https://raw.github.com/Mercandj/FileSpace-Android/master/screenshot/play_store/filespace_wallp.png" width="480" />
 </p>
 
 ## PROJECT DESCRIPTION

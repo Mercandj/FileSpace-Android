@@ -1,0 +1,3 @@
+https://romannurik.github.io/AndroidAssetStudio/
+
+padding 30%
