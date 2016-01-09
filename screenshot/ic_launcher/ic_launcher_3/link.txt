@@ -1,3 +1,5 @@
 https://romannurik.github.io/AndroidAssetStudio/
 
-padding 30%
+padding 5%
+
+Bevel
