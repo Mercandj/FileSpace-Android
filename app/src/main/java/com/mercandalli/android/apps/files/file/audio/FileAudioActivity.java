@@ -29,6 +29,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -68,6 +69,8 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
 
     private boolean mFirstStart;
 
+    private final FileAudioChromeCast mFileAudioChromeCast = new FileAudioChromeCast();
+
     /**
      * Start this {@link AppCompatActivity}.
      */
@@ -92,6 +95,8 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_audio);
+
+        mFileAudioChromeCast.onCreate(this);
 
         mFileAudioPlayer = FileApp.get(this).getFileAppComponent().provideMusicPlayer();
 
@@ -164,6 +169,7 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
 
             if (mFirstStart) {
                 mFileAudioPlayer.startMusic(mCurrentPosition, mFileAudioModelList);
+                mFileAudioChromeCast.startFileAudio(mFileAudioModelList.get(mCurrentPosition));
             }
         } else {
             throw new IllegalArgumentException("Use static start() method");
@@ -193,10 +199,21 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_audio_activity, menu);
+        mFileAudioChromeCast.onCreateOptionsMenu(menu.findItem(R.id.action_cast));
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finishActivity();
+                return true;
+            case R.id.action_cast:
+                mFileAudioChromeCast.onCreateOptionsMenu(item);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -243,12 +260,16 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onResume() {
         super.onResume();
+        mFileAudioChromeCast.onResume();
         mFileAudioPlayer.registerOnPlayerStatusChangeListener(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        if (isFinishing()) {
+            mFileAudioChromeCast.onPause();
+        }
         mFileAudioPlayer.unregisterOnPreviewPlayerStatusChangeListener(this);
     }
 
