@@ -1,7 +1,3 @@
-<!--
-	Personal Project : Control server
-		MERCANDALLI Jonathan
--->
 <resources>
 
     <style name="whiteedittext" parent="@android:style/Widget.Button">

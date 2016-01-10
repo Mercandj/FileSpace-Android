@@ -68,8 +68,8 @@ public class LoginFragment extends BackFragment {
             this.password.setHint(Html.fromHtml("&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"));
         }
 
-        ((CheckBox) rootView.findViewById(R.id.autoconnection)).setChecked(mApplicationCallback.getConfig().isAutoConncetion());
-        ((CheckBox) rootView.findViewById(R.id.autoconnection)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        ((CheckBox) rootView.findViewById(R.id.fragment_registration_auto_connection)).setChecked(mApplicationCallback.getConfig().isAutoConncetion());
+        ((CheckBox) rootView.findViewById(R.id.fragment_registration_auto_connection)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mApplicationCallback.getConfig().setAutoConnection(mActivity, isChecked);
