@@ -42,27 +42,6 @@ public class FileAudioChromeCast {
 
     private Activity mActivity;
 
-/*
-    private final MediaRouter.Callback mediaRouterCallback = new MediaRouter.Callback()
-    {
-        @Override
-        public void onRouteSelected(MediaRouter router, MediaRouter.RouteInfo route)
-        {
-            CastDevice device = CastDevice.getFromBundle(route.getExtras());
-            //setSelectedDevice(device);
-        }
-
-        @Override
-        public void onRouteUnselected(MediaRouter router, MediaRouter.RouteInfo route)
-        {
-            //setSelectedDevice(null);
-        }
-    };
-
-    private MediaRouter mediaRouter;
-    private MediaRouteSelector mediaRouteSelector;
-*/
-
     /* package */ void onCreate(final Activity activity) {
         mActivity = activity;
         mMediaRouter = MediaRouter.getInstance(activity.getApplicationContext());
@@ -179,8 +158,9 @@ public class FileAudioChromeCast {
                 }
                 mApplicationStarted = false;
             }
-            if (mApiClient.isConnected())
+            if (mApiClient.isConnected()) {
                 mApiClient.disconnect();
+            }
             mApiClient = null;
         }
         mSelectedDevice = null;
@@ -220,8 +200,7 @@ public class FileAudioChromeCast {
                                         }
                                     }
                             );
-                } catch (Exception e) {
-
+                } catch (Exception ignored) {
                 }
             }
         }
@@ -260,7 +239,7 @@ public class FileAudioChromeCast {
             MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE);
             mediaMetadata.putString(MediaMetadata.KEY_TITLE, fileAudioModel.getName());
 
-            MediaInfo mediaInfo = new MediaInfo.Builder(fileAudioModel.getPath())
+            MediaInfo mediaInfo = new MediaInfo.Builder("http://static1.grsites.com/archive/sounds/birds/birds013.mp3")
                     .setContentType("audio/mpeg")
                     .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
                     .setMetadata(mediaMetadata)

@@ -37,6 +37,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.common.view.PlayPauseView;
 import com.mercandalli.android.apps.files.common.view.slider.Slider;
 import com.mercandalli.android.apps.files.main.FileApp;
@@ -169,7 +170,6 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
 
             if (mFirstStart) {
                 mFileAudioPlayer.startMusic(mCurrentPosition, mFileAudioModelList);
-                mFileAudioChromeCast.startFileAudio(mFileAudioModelList.get(mCurrentPosition));
             }
         } else {
             throw new IllegalArgumentException("Use static start() method");
@@ -195,6 +195,10 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
             case R.id.activity_file_audio_previous:
                 mFileAudioPlayer.previous();
                 break;
+        }
+
+        if (NetUtils.isInternetConnection(this) && !mFileAudioPlayer.isPlaying()) {
+            mFileAudioChromeCast.startFileAudio(mFileAudioModelList.get(mCurrentPosition));
         }
     }
 
