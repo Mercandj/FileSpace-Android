@@ -1,1 +1,82 @@
-{"project_info":{"project_id":"jarvis-86921","project_number":"807253530972","name":"FileSpace"},"client":[{"client_info":{"mobilesdk_app_id":"1:807253530972:android:845f8c035dd909a6","client_id":"android:mercandalli.com.filespace","client_type":1,"android_client_info":{"package_name":"mercandalli.com.filespace"}},"oauth_client":[{"client_id":"807253530972-2pv8p6o86tfeqbqbsdmr4pajli5ctbhn.apps.googleusercontent.com","client_type":1,"android_info":{"package_name":"mercandalli.com.filespace","certificate_hash":"C6251DEB3F1438DADFA55610A0070554B361E0E2"}}],"api_key":[],"services":{"analytics_service":{"status":1},"cloud_messaging_service":{"status":2,"apns_config":[]},"appinvite_service":{"status":1,"other_platform_oauth_client":[]},"google_signin_service":{"status":2},"ads_service":{"status":1}}}],"client_info":[],"ARTIFACT_VERSION":"1"}
+{
+  "project_info": {
+    "project_id": "jarvis-86921",
+    "project_number": "807253530972",
+    "name": "FileSpace"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:807253530972:android:845f8c035dd909a6",
+        "client_id": "android:mercandalli.com.filespace",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "mercandalli.com.filespace"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 2,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 1
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:807253530972:android:0c4262a2429cce0f",
+        "client_id": "android:com.mercandalli.android.apps.files",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.mercandalli.android.apps.files"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "807253530972-2pv8p6o86tfeqbqbsdmr4pajli5ctbhn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mercandalli.android.apps.files",
+            "certificate_hash": "C6251DEB3F1438DADFA55610A0070554B361E0E2"
+          }
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 2,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}

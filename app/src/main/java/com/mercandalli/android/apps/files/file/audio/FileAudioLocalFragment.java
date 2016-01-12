@@ -109,6 +109,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     @Inject
     FileManager mFileManager;
 
+    @Inject
+    FileAudioManager mFileAudioManager;
+
     public static FileAudioLocalFragment newInstance() {
         Bundle args = new Bundle();
         FileAudioLocalFragment fragment = new FileAudioLocalFragment();
@@ -300,7 +303,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         }
 
         showProgressBar();
-        mFileManager.getLocalMusicFolders(mActivity, mSortMode, search, new ResultCallback<List<FileModel>>() {
+        mFileAudioManager.getLocalMusicFolders(mActivity, mSortMode, search, new ResultCallback<List<FileModel>>() {
             @Override
             public void success(List<FileModel> result) {
                 hideProgressBar();
@@ -333,7 +336,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         }
 
         showProgressBar();
-        mFileManager.getLocalMusic(mActivity, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
+        mFileAudioManager.getLocalMusic(mActivity, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
             @Override
             public void success(List<FileAudioModel> result) {
                 hideProgressBar();
@@ -364,7 +367,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mIsInsideFolder = true;
         mIsCard = false;
         mFileModels.clear();
-        mFileManager.getLocalMusic(mActivity, fileModel, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
+        mFileAudioManager.getLocalMusic(mActivity, fileModel, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
             @Override
             public void success(List<FileAudioModel> result) {
                 mFileModels.clear();

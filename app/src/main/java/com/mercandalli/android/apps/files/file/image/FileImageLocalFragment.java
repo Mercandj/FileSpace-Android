@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.file.picture;
+package com.mercandalli.android.apps.files.file.image;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -33,6 +33,7 @@ import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
 import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
 import com.mercandalli.android.apps.files.file.FileModelListener;
+import com.mercandalli.android.apps.files.file.audio.FileAudioManager;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
 import com.mercandalli.android.apps.files.file.audio.FileAudioRowAdapter;
 import com.mercandalli.android.apps.files.main.Config;
@@ -49,7 +50,7 @@ import javax.inject.Inject;
 /**
  * A {@link android.support.v4.app.Fragment} that displays the local {@link FileAudioModel}s.
  */
-public class FilePictureLocalFragment extends InjectedFabFragment implements
+public class FileImageLocalFragment extends InjectedFabFragment implements
         BackFragment.ISortMode,
         FileModelCardAdapter.OnFileSubtitleAdapter,
         FileModelCardAdapter.OnHeaderClickListener {
@@ -92,9 +93,12 @@ public class FilePictureLocalFragment extends InjectedFabFragment implements
     @Inject
     FileManager mFileManager;
 
-    public static FilePictureLocalFragment newInstance() {
+    @Inject
+    FileAudioManager mFileAudioManager;
+
+    public static FileImageLocalFragment newInstance() {
         Bundle args = new Bundle();
-        FilePictureLocalFragment fragment = new FilePictureLocalFragment();
+        FileImageLocalFragment fragment = new FileImageLocalFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -102,7 +106,7 @@ public class FilePictureLocalFragment extends InjectedFabFragment implements
     /**
      * Do not use this constructor. Call {@link #newInstance()} instead.
      */
-    public FilePictureLocalFragment() {
+    public FileImageLocalFragment() {
         mRefreshActivityAdapterListener = new IListener() {
             @Override
             public void execute() {
@@ -283,7 +287,7 @@ public class FilePictureLocalFragment extends InjectedFabFragment implements
         }
 
         showProgressBar();
-        mFileManager.getLocalMusicFolders(mActivity, mSortMode, search, new ResultCallback<List<FileModel>>() {
+        mFileAudioManager.getLocalMusicFolders(mActivity, mSortMode, search, new ResultCallback<List<FileModel>>() {
             @Override
             public void success(List<FileModel> result) {
                 hideProgressBar();
@@ -316,7 +320,7 @@ public class FilePictureLocalFragment extends InjectedFabFragment implements
         }
 
         showProgressBar();
-        mFileManager.getLocalMusic(mActivity, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
+        mFileAudioManager.getLocalMusic(mActivity, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
             @Override
             public void success(List<FileAudioModel> result) {
                 hideProgressBar();
@@ -347,7 +351,7 @@ public class FilePictureLocalFragment extends InjectedFabFragment implements
         mIsInsideFolder = true;
         mIsCard = false;
         mFileModels.clear();
-        mFileManager.getLocalMusic(mActivity, fileModel, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
+        mFileAudioManager.getLocalMusic(mActivity, fileModel, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
             @Override
             public void success(List<FileAudioModel> result) {
                 mFileModels.clear();

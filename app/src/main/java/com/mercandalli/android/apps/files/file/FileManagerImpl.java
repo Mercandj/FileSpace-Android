@@ -46,32 +46,19 @@ import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import org.cmc.music.metadata.IMusicMetadata;
-import org.cmc.music.metadata.MusicMetadataSet;
-import org.cmc.music.myid3.MyID3;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedString;
-
-import static com.mercandalli.android.apps.files.file.FileUtils.getNameFromPath;
 
 /**
  * A {@link FileModel} Manager.
@@ -83,18 +70,18 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
     private Context mContextApp;
     private FileOnlineApi mFileOnlineApi;
     private FileLocalApi mFileLocalApi;
-    private FilePersistenceApi mFilePersistenceApi;
+    private FileCache mFileCache;
 
     private NotificationManager mNotifyManager;
     private NotificationCompat.Builder mNotificationBuilder;
 
-    public FileManagerImpl(Context contextApp, FileOnlineApi fileOnlineApi, FileLocalApi fileLocalApi, FilePersistenceApi filePersistenceApi) {
+    public FileManagerImpl(Context contextApp, FileOnlineApi fileOnlineApi) {
         Preconditions.checkNotNull(contextApp);
 
         mContextApp = contextApp;
         mFileOnlineApi = fileOnlineApi;
-        mFileLocalApi = fileLocalApi;
-        mFilePersistenceApi = filePersistenceApi;
+        mFileLocalApi = new FileLocalApi();
+        mFileCache = new FileCache();
     }
 
     /**
@@ -604,223 +591,6 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
     @Override
     public boolean isMine(final FileModel fileModel) {
         return !fileModel.isOnline() || fileModel.getIdUser() == Config.getUserId();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void getLocalMusic(final Context context, final int sortMode, final String search, final ResultCallback<List<FileAudioModel>> resultCallback) {
-        final List<FileAudioModel> cachedLocalMusics = mFilePersistenceApi.getLocalMusics();
-        if (!cachedLocalMusics.isEmpty()) {
-            resultCallback.success(cachedLocalMusics);
-            return;
-        }
-
-        new AsyncTask<Void, Void, List<FileAudioModel>>() {
-            @Override
-            protected List<FileAudioModel> doInBackground(Void... params) {
-                final List<FileAudioModel> files = new ArrayList<>();
-
-                final String[] PROJECTION = {MediaStore.Files.FileColumns.DATA};
-
-                final Uri allSongsUri = MediaStore.Files.getContentUri("external");
-                final List<String> searchArray = new ArrayList<>();
-
-                String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO;
-
-                for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
-                    selection += " OR " + MediaStore.Files.FileColumns.DATA + LIKE;
-                    searchArray.add("%" + end);
-                }
-                selection += " )";
-
-                if (search != null && !search.isEmpty()) {
-                    searchArray.add("%" + search + "%");
-                    selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
-                }
-
-                final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
-                if (cursor != null) {
-                    if (cursor.moveToFirst()) {
-                        do {
-                            final File file = new File(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
-                            if (file.exists() && !file.isDirectory()) {
-                                FileAudioModel.FileMusicModelBuilder fileMusicModelBuilder = new FileAudioModel.FileMusicModelBuilder()
-                                        .file(file);
-                                try {
-                                    MusicMetadataSet musicMetadataSet = new MyID3().read(file);
-                                    if (musicMetadataSet != null) {
-                                        IMusicMetadata metadata = musicMetadataSet.getSimplified();
-                                        fileMusicModelBuilder.album(metadata.getAlbum());
-                                        fileMusicModelBuilder.artist(metadata.getArtist());
-                                    }
-                                } catch (IOException e) {
-                                    Log.e(getClass().getName(), "Exception", e);
-                                } // read metadata
-
-                                //if (mSortMode == SharedAudioPlayerUtils.SORT_SIZE)
-                                //    fileMusicModel.adapterTitleStart = FileUtils.humanReadableByteCount(fileMusicModel.getSize()) + " - ";
-
-                                files.add(fileMusicModelBuilder.build());
-                            }
-
-                        } while (cursor.moveToNext());
-                    }
-                    cursor.close();
-                }
-
-                if (sortMode == Constants.SORT_ABC) {
-                    Collections.sort(files, new Comparator<FileAudioModel>() {
-                        @Override
-                        public int compare(final FileAudioModel f1, final FileAudioModel f2) {
-                            if (f1.getName() == null || f2.getName() == null) {
-                                return 0;
-                            }
-                            return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
-                        }
-                    });
-                } else if (sortMode == Constants.SORT_SIZE) {
-                    Collections.sort(files, new Comparator<FileAudioModel>() {
-                        @Override
-                        public int compare(final FileAudioModel f1, final FileAudioModel f2) {
-                            return (new Long(f2.getSize())).compareTo(f1.getSize());
-                        }
-                    });
-                } else {
-                    final Map<FileModel, Long> staticLastModifiedTimes = new HashMap<>();
-                    for (FileModel f : files) {
-                        staticLastModifiedTimes.put(f, f.getLastModified());
-                    }
-                    Collections.sort(files, new Comparator<FileAudioModel>() {
-                        @Override
-                        public int compare(final FileAudioModel f1, final FileAudioModel f2) {
-                            return staticLastModifiedTimes.get(f2).compareTo(staticLastModifiedTimes.get(f1));
-                        }
-                    });
-                }
-
-                return files;
-            }
-
-            @Override
-            protected void onPostExecute(List<FileAudioModel> fileModels) {
-                resultCallback.success(fileModels);
-                mFilePersistenceApi.setLocalMusics(fileModels);
-                super.onPostExecute(fileModels);
-            }
-        }.execute();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void getLocalMusic(final Context context, final FileModel fileModelDirectParent, final int sortMode, final String search, final ResultCallback<List<FileAudioModel>> resultCallback) {
-        Preconditions.checkNotNull(fileModelDirectParent);
-        Preconditions.checkNotNull(resultCallback);
-        if (!fileModelDirectParent.isDirectory()) {
-            resultCallback.failure();
-            return;
-        }
-        final List<FileAudioModel> files = new ArrayList<>();
-        List<File> fs = Arrays.asList(fileModelDirectParent.getFile().listFiles(
-                new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        return (new FileTypeModel(FileUtils.getExtensionFromPath(name))).equals(FileTypeModelENUM.AUDIO.type);
-                    }
-                }
-        ));
-        for (File file : fs) {
-            final FileAudioModel.FileMusicModelBuilder fileMusicModelBuilder =
-                    new FileAudioModel.FileMusicModelBuilder().file(file);
-            if (file.getName().toLowerCase().endsWith(".mp3")) {
-                try {
-                    IMusicMetadata metadata = (new MyID3().read(file)).getSimplified();
-                    fileMusicModelBuilder.album(metadata.getAlbum());
-                    fileMusicModelBuilder.artist(metadata.getArtist());
-                } catch (Exception e) {
-                    Log.e(getClass().getName(), "Exception", e);
-                }
-            }
-            files.add(fileMusicModelBuilder.build());
-        }
-        resultCallback.success(files);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void getLocalMusicFolders(final Context context, final int sortMode, final String search, final ResultCallback<List<FileModel>> resultCallback) {
-        final List<FileModel> cachedLocalMusicFolders = mFilePersistenceApi.getLocalMusicFolders();
-        if (!cachedLocalMusicFolders.isEmpty()) {
-            resultCallback.success(cachedLocalMusicFolders);
-            return;
-        }
-
-        new AsyncTask<Void, Void, List<FileModel>>() {
-            @Override
-            protected List<FileModel> doInBackground(Void... params) {
-                // Used to count the number of music inside.
-                final Map<String, MutableInt> directories = new HashMap<>();
-
-                final String[] PROJECTION = new String[]{MediaStore.Files.FileColumns.DATA};
-
-                final Uri allSongsUri = MediaStore.Files.getContentUri("external");
-                final List<String> searchArray = new ArrayList<>();
-
-                String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO;
-
-                for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
-                    selection += " OR " + MediaStore.Files.FileColumns.DATA + LIKE;
-                    searchArray.add("%" + end);
-                }
-                selection += " )";
-
-                if (search != null && !search.isEmpty()) {
-                    searchArray.add("%" + search + "%");
-                    selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
-                }
-
-                final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
-                if (cursor != null) {
-                    if (cursor.moveToFirst()) {
-                        do {
-                            final String parentPath = FileUtils.getParentPathFromPath(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
-                            final MutableInt count = directories.get(parentPath);
-                            if (count == null) {
-                                directories.put(parentPath, new MutableInt());
-                            } else {
-                                count.increment();
-                            }
-                        } while (cursor.moveToNext());
-                    }
-                    cursor.close();
-                }
-
-                final List<FileModel> result = new ArrayList<>();
-                for (String path : directories.keySet()) {
-                    result.add(new FileModel.FileModelBuilder()
-                            .id(path.hashCode())
-                            .url(path)
-                            .name(getNameFromPath(path))
-                            .isDirectory(true)
-                            .countAudio(directories.get(path).value)
-                            .isOnline(false)
-                            .build());
-                }
-                return result;
-            }
-
-            @Override
-            protected void onPostExecute(List<FileModel> fileModels) {
-                resultCallback.success(fileModels);
-                mFilePersistenceApi.setLocalMusicFolders(fileModels);
-                super.onPostExecute(fileModels);
-            }
-        }.execute();
     }
 
     @Override

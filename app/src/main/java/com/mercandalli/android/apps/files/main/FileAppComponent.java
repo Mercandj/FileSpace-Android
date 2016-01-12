@@ -6,6 +6,7 @@ import com.mercandalli.android.apps.files.file.FileChooserDialog;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModule;
 import com.mercandalli.android.apps.files.file.FileUploadDialog;
+import com.mercandalli.android.apps.files.file.audio.FileAudioManager;
 import com.mercandalli.android.apps.files.file.audio.FileAudioRowAdapter;
 import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModule;
@@ -15,7 +16,7 @@ import com.mercandalli.android.apps.files.file.cloud.FileCloudFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileMyCloudFragment;
 import com.mercandalli.android.apps.files.file.local.FileLocalFragment;
 import com.mercandalli.android.apps.files.file.local.SearchActivity;
-import com.mercandalli.android.apps.files.file.picture.FilePictureLocalFragment;
+import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
 import com.mercandalli.android.apps.files.support.SupportFragment;
 import com.mercandalli.android.apps.files.support.SupportManager;
 import com.mercandalli.android.apps.files.support.SupportModule;
@@ -60,7 +61,7 @@ public interface FileAppComponent {
 
     void inject(SupportFragment supportFragment);
 
-    void inject(FilePictureLocalFragment filePictureLocalFragment);
+    void inject(FileImageLocalFragment fileImageLocalFragment);
 
     //void inject(HomeFragment homeFragment);
 
@@ -68,6 +69,8 @@ public interface FileAppComponent {
     Application provideApp();
 
     FileManager provideFileManager();
+
+    FileAudioManager provideFileAudioManager();
 
     FileAudioPlayer provideMusicPlayer();
 

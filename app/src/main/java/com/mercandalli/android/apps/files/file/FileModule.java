@@ -22,11 +22,8 @@ public class FileModule {
     @Singleton
     FileManager provideFileManager(Application application) {
         FileOnlineApi fileOnlineApi = RetrofitUtils.getAuthorizedRestAdapter().create(FileOnlineApi.class);
-        FileLocalApi fileLocalApi = new FileLocalApi();
-        FilePersistenceApi filePersistenceApi = new FilePersistenceApi();
 
-        return new FileManagerImpl(application, fileOnlineApi, fileLocalApi, filePersistenceApi);
-        // return new FileManagerMockImpl(application, fileOnlineApi, fileLocalApi, filePersistenceApi);
+        return new FileManagerImpl(application, fileOnlineApi);
+        // return new FileManagerMockImpl(application, fileOnlineApi);
     }
-
 }
