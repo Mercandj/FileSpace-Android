@@ -25,7 +25,7 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
 
     private static final String EXTRA_START_BY_INTENT = "SplashActivity.Extra.EXTRA_START_BY_INTENT";
     private static final String SHARED_PREFERENCES_INIT = "SplashActivity.Permission";
-    private static final String KEY_IS_FIRST_LOGIN = "LoginPermission.Key.KEY_IS_FIRST_LOGIN";
+    private static final String KEY_IS_FIRST_LAUNCH = "SplashActivity.Key.KEY_IS_FIRST_LAUNCH";
 
     public static void start(Activity activity) {
         final Intent intent = new Intent(activity, SplashActivity.class);
@@ -35,14 +35,15 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
     }
 
     private Permission mPermission;
+    private boolean mIsFirstLaunch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         boolean start = false;
-        Bundle extras = getIntent().getExtras();
-        if (isFirstLogin()) {
+        final Bundle extras = getIntent().getExtras();
+        if (mIsFirstLaunch = isFirstLaunch()) {
             start = true;
         } else if (extras != null &&
                 extras.containsKey(EXTRA_START_BY_INTENT) &&
@@ -74,16 +75,18 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
         }
     }
 
-    private boolean isFirstLogin() {
-        final SharedPreferences sharedPreferences = getSharedPreferences(SplashActivity.SHARED_PREFERENCES_INIT, MODE_PRIVATE);
-        return sharedPreferences.getBoolean(SplashActivity.KEY_IS_FIRST_LOGIN, true);
+    private boolean isFirstLaunch() {
+        final SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_INIT, MODE_PRIVATE);
+        return sharedPreferences.getBoolean(SplashActivity.KEY_IS_FIRST_LAUNCH, true);
     }
 
     private void end() {
-        final SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREFERENCES_INIT, MODE_PRIVATE)
-                .edit();
-        editor.putBoolean(KEY_IS_FIRST_LOGIN, false);
-        editor.apply();
+        if (mIsFirstLaunch) {
+            final SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREFERENCES_INIT, MODE_PRIVATE)
+                    .edit();
+            editor.putBoolean(KEY_IS_FIRST_LAUNCH, false);
+            editor.apply();
+        }
 
         MainActivity.start(this);
         finish();

@@ -833,7 +833,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                 final Uri allSongsUri = MediaStore.Files.getContentUri("external");
                 final List<String> searchArray = new ArrayList<>();
 
-                String selection = MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
+                final String selection = MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
                 searchArray.add("%" + search + "%");
 
                 final List<FileModel> result = new ArrayList<>();
@@ -867,18 +867,13 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
     @Override
     public void getCover(final Context context, final FileAudioModel fileAudioModel, final ImageView imageView) {
         if (!StringUtils.isNullOrEmpty(fileAudioModel.getAlbum())) {
-            CoverUtils.getCoverUrl(context, fileAudioModel.getAlbum(), new ResultCallback<String>() {
+            CoverUtils.getCoverUrl(context, fileAudioModel, new CoverUtils.CoverResponse() {
                 @Override
-                public void success(String result) {
+                public void onCoverUrlResult(FileAudioModel fileAudioModel, String url) {
                     Picasso.with(context)
-                            .load(result)
+                            .load(url)
                             .networkPolicy(NetworkPolicy.OFFLINE)
                             .into(imageView);
-                }
-
-                @Override
-                public void failure() {
-
                 }
             });
         }
@@ -897,7 +892,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         } else {
             mNotificationBuilder.setContentText("Upload in progress: " + FileUtils.humanReadableByteCount(progress) + " / " + FileUtils.humanReadableByteCount(length));
         }
-        mNotificationBuilder.setProgress((int) (length / 1000.0f), (int) (progress / 1000.0f), false);
+        mNotificationBuilder.setProgress((int) (length / 1_000.0f), (int) (progress / 1_000.0f), false);
 
         if (mNotifyManager == null) {
             mNotifyManager = (NotificationManager) this.mContextApp.getSystemService(Context.NOTIFICATION_SERVICE);

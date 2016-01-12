@@ -22,6 +22,8 @@ package com.mercandalli.android.apps.files.file.local;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -54,14 +56,17 @@ import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileMyCloudFragment;
+import com.mercandalli.android.apps.files.file.picture.FilePictureLocalFragment;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Constants;
 
-public class FileLocalPagerFragment extends BackFragment implements ViewPager.OnPageChangeListener, FabFragment.RefreshFabCallback {
+public class FileLocalPagerFragment extends BackFragment implements
+        ViewPager.OnPageChangeListener,
+        FabFragment.RefreshFabCallback {
 
     private static final String BUNDLE_ARG_TITLE = "FileFragment.Args.BUNDLE_ARG_TITLE";
 
-    private static final int NB_FRAGMENT = 2;
+    private static final int NB_FRAGMENT = 3;
     private static final int INIT_FRAGMENT = 1;
     private ViewPager mViewPager;
     private FileManagerFragmentPagerAdapter mPagerAdapter;
@@ -79,6 +84,8 @@ public class FileLocalPagerFragment extends BackFragment implements ViewPager.On
             R.drawable.ic_photo_white_24dp,
             R.drawable.ic_video_library_white_24dp
     };
+
+    private ImageSpan[] mImageImageSpan = new ImageSpan[4];
 
     private Drawable[] mImageDrawable = new Drawable[mImageResId.length];
 
@@ -183,6 +190,13 @@ public class FileLocalPagerFragment extends BackFragment implements ViewPager.On
     public void onPageSelected(int position) {
         mApplicationCallback.invalidateMenu();
         refreshFab(position);
+        for (int i = 0; i < NB_FRAGMENT; i++) {
+            if (i == position) {
+                mImageImageSpan[i].getDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+            } else {
+                mImageImageSpan[i].getDrawable().setColorFilter(Color.parseColor("#bbffffff"), PorterDuff.Mode.SRC_ATOP);
+            }
+        }
     }
 
     @Override
@@ -448,6 +462,8 @@ public class FileLocalPagerFragment extends BackFragment implements ViewPager.On
                     return FileLocalFragment.newInstance();
                 case 1:
                     return FileAudioLocalFragment.newInstance();
+                case 2:
+                    return FilePictureLocalFragment.newInstance();
                 default:
                     return FileLocalFragment.newInstance();
             }
@@ -465,8 +481,8 @@ public class FileLocalPagerFragment extends BackFragment implements ViewPager.On
             final Drawable image = mImageDrawable[i];
             image.setBounds(0, 0, image.getIntrinsicWidth(), image.getIntrinsicHeight());
             SpannableString sb = new SpannableString(" ");
-            ImageSpan imageSpan = new ImageSpan(image, ImageSpan.ALIGN_BOTTOM);
-            sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            mImageImageSpan[i] = new ImageSpan(image, ImageSpan.ALIGN_BOTTOM);
+            sb.setSpan(mImageImageSpan[i], 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             return sb;
         }
     }

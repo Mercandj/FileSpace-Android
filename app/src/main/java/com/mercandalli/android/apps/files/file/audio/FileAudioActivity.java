@@ -37,9 +37,9 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.common.view.PlayPauseView;
 import com.mercandalli.android.apps.files.common.view.slider.Slider;
+import com.mercandalli.android.apps.files.file.audio.cast.FileAudioCast;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.shared.SharedAudioPlayerUtils;
 
@@ -50,7 +50,9 @@ import java.util.List;
 /**
  * The {@link AppCompatActivity} to play/pause an audio file.
  */
-public class FileAudioActivity extends AppCompatActivity implements View.OnClickListener, FileAudioPlayer.OnPlayerStatusChangeListener {
+public class FileAudioActivity extends AppCompatActivity implements
+        View.OnClickListener,
+        FileAudioPlayer.OnPlayerStatusChangeListener {
 
     /* package */ static final String EXTRA_IS_ONLINE = "FileAudioActivity.Extra.EXTRA_IS_ONLINE";
     /* package */ static final String EXTRA_FILE_CURRENT_POSITION = "FileAudioActivity.Extra.EXTRA_FILE_CURRENT_POSITION";
@@ -69,8 +71,7 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
     private FileAudioPlayer mFileAudioPlayer;
 
     private boolean mFirstStart;
-
-    private final FileAudioChromeCast mFileAudioChromeCast = new FileAudioChromeCast();
+    private final FileAudioCast mFileAudioCast = new FileAudioCast();
 
     /**
      * Start this {@link AppCompatActivity}.
@@ -95,11 +96,11 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Initialize View, player and ChromeCast.
         setContentView(R.layout.activity_file_audio);
-
-        mFileAudioChromeCast.onCreate(this);
-
         mFileAudioPlayer = FileApp.get(this).getFileAppComponent().provideMusicPlayer();
+        mFileAudioCast.onCreate(this);
 
         if (savedInstanceState == null) {
             mFirstStart = true;
@@ -130,8 +131,8 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
         mSliderNumber.setValueToDisplay(new Slider.ValueToDisplay() {
             @Override
             public String convert(int value) {
-                long minutes = value / 60000;
-                long seconds = (value - (minutes * 60000)) / 1000;
+                long seconds = value / 1_000;
+                long minutes = seconds / 60;
                 return (minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
             }
         });
@@ -161,7 +162,7 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
             // Get data
             mIsOnline = bundle.getBoolean(EXTRA_IS_ONLINE);
             mCurrentPosition = bundle.getInt(EXTRA_FILE_CURRENT_POSITION);
-            List<String> absolutePathArray = bundle.getStringArrayList(EXTRA_FILES_PATH);
+            final List<String> absolutePathArray = bundle.getStringArrayList(EXTRA_FILES_PATH);
             if (absolutePathArray != null) {
                 for (String absolutePath : absolutePathArray) {
                     mFileAudioModelList.add(new FileAudioModel.FileMusicModelBuilder().file(new File(absolutePath)).build());
@@ -170,6 +171,7 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
 
             if (mFirstStart) {
                 mFileAudioPlayer.startMusic(mCurrentPosition, mFileAudioModelList);
+                mFileAudioCast.startMusic(mCurrentPosition, mFileAudioModelList);
             }
         } else {
             throw new IllegalArgumentException("Use static start() method");
@@ -196,17 +198,13 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
                 mFileAudioPlayer.previous();
                 break;
         }
-
-        if (NetUtils.isInternetConnection(this) && !mFileAudioPlayer.isPlaying()) {
-            mFileAudioChromeCast.startFileAudio(mFileAudioModelList.get(mCurrentPosition));
-        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_audio_activity, menu);
-        mFileAudioChromeCast.onCreateOptionsMenu(menu.findItem(R.id.action_cast));
+        mFileAudioCast.onCreateOptionsMenu(menu.findItem(R.id.action_cast));
         return true;
     }
 
@@ -217,7 +215,7 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
                 finishActivity();
                 return true;
             case R.id.action_cast:
-                mFileAudioChromeCast.onCreateOptionsMenu(item);
+                mFileAudioCast.onCreateOptionsMenu(item);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -253,7 +251,6 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onPlayerProgressChanged(int progress, int duration, int musicPosition, FileAudioModel music) {
-        //mCurrentPosition = mAudioService.getPlayingIndex();
         mCurrentPosition = musicPosition;
         mSliderNumber.setProgress(progress);
         mSliderNumber.setMax(duration);
@@ -264,7 +261,7 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onResume() {
         super.onResume();
-        mFileAudioChromeCast.onResume();
+        mFileAudioCast.onResume();
         mFileAudioPlayer.registerOnPlayerStatusChangeListener(this);
     }
 
@@ -272,7 +269,7 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
     protected void onPause() {
         super.onPause();
         if (isFinishing()) {
-            mFileAudioChromeCast.onPause();
+            mFileAudioCast.onPause();
         }
         mFileAudioPlayer.unregisterOnPreviewPlayerStatusChangeListener(this);
     }
@@ -282,8 +279,8 @@ public class FileAudioActivity extends AppCompatActivity implements View.OnClick
     }
 
     private String getTimeStr(long milliseconds) {
-        final long minutes = milliseconds / 60000;
-        final long seconds = (milliseconds - (minutes * 60000)) / 1000;
+        final long seconds = milliseconds / 1_000;
+        final long minutes = seconds / 60;
         return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
     }
 }

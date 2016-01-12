@@ -1,23 +1,4 @@
-/**
- * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
- * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
- * LICENSE:
- * <p/>
- * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
- * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
- * later version.
- * <p/>
- * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
- * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
- * details.
- *
- * @author Jonathan Mercandalli
- * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- */
-package com.mercandalli.android.apps.files.file.audio;
+package com.mercandalli.android.apps.files.file.picture;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -52,6 +33,8 @@ import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
 import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
 import com.mercandalli.android.apps.files.file.FileModelListener;
+import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
+import com.mercandalli.android.apps.files.file.audio.FileAudioRowAdapter;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
@@ -66,7 +49,7 @@ import javax.inject.Inject;
 /**
  * A {@link android.support.v4.app.Fragment} that displays the local {@link FileAudioModel}s.
  */
-public class FileAudioLocalFragment extends InjectedFabFragment implements
+public class FilePictureLocalFragment extends InjectedFabFragment implements
         BackFragment.ISortMode,
         FileModelCardAdapter.OnFileSubtitleAdapter,
         FileModelCardAdapter.OnHeaderClickListener {
@@ -109,9 +92,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     @Inject
     FileManager mFileManager;
 
-    public static FileAudioLocalFragment newInstance() {
+    public static FilePictureLocalFragment newInstance() {
         Bundle args = new Bundle();
-        FileAudioLocalFragment fragment = new FileAudioLocalFragment();
+        FilePictureLocalFragment fragment = new FilePictureLocalFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -119,7 +102,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     /**
      * Do not use this constructor. Call {@link #newInstance()} instead.
      */
-    public FileAudioLocalFragment() {
+    public FilePictureLocalFragment() {
         mRefreshActivityAdapterListener = new IListener() {
             @Override
             public void execute() {

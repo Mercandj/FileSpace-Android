@@ -36,7 +36,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class SearchActivity extends AppCompatActivity implements FileModelAdapter.OnFileClickListener, ResultCallback<List<FileModel>>, View.OnClickListener {
+public class SearchActivity extends AppCompatActivity implements
+        FileModelAdapter.OnFileClickListener,
+        ResultCallback<List<FileModel>>,
+        View.OnClickListener {
 
     @Inject
     protected FileManager mFileManager;

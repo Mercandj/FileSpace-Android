@@ -15,6 +15,7 @@ import com.mercandalli.android.apps.files.file.cloud.FileCloudFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileMyCloudFragment;
 import com.mercandalli.android.apps.files.file.local.FileLocalFragment;
 import com.mercandalli.android.apps.files.file.local.SearchActivity;
+import com.mercandalli.android.apps.files.file.picture.FilePictureLocalFragment;
 import com.mercandalli.android.apps.files.support.SupportFragment;
 import com.mercandalli.android.apps.files.support.SupportManager;
 import com.mercandalli.android.apps.files.support.SupportModule;
@@ -58,6 +59,8 @@ public interface FileAppComponent {
     void inject(FileCloudDownloadedFragment fileCloudDownloadedFragment);
 
     void inject(SupportFragment supportFragment);
+
+    void inject(FilePictureLocalFragment filePictureLocalFragment);
 
     //void inject(HomeFragment homeFragment);
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.mercandalli.android.apps.files"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mercandalli.android.apps.files">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -179,6 +179,10 @@
         <service
             android:name="com.google.android.gms.analytics.AnalyticsService"
             android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name=".file.audio.cast.FileAudioPresentationService"
             android:exported="false" />
 
         <!--

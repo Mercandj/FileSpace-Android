@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 
@@ -23,10 +22,10 @@ public class CoverUtils {
     /**
      * Get the cover from an album.
      */
-    public static void getCoverUrl(final Context context, final String album, final ResultCallback<String> resultUrl) {
-        final String albumSearch = album.replaceAll("\\s", "+");
+    public static void getCoverUrl(final Context context, final FileAudioModel fileAudioModel, final CoverResponse resultUrl) {
+        final String albumSearch = fileAudioModel.getName().replaceAll("\\s", "+");
 
-        List<StringPair> parameters = new ArrayList<>();
+        final List<StringPair> parameters = new ArrayList<>();
         parameters.add(new StringPair("term", albumSearch));
 
         new TaskGet(context, "https://itunes.apple.com/search", new IPostExecuteListener() {
@@ -39,8 +38,7 @@ public class CoverUtils {
                             if (res.length() >= 1) {
                                 JSONObject track = res.getJSONObject(0);
                                 if (track.has("artworkUrl100")) {
-                                    resultUrl.success(track.getString("artworkUrl100"));
-                                    return;
+                                    resultUrl.onCoverUrlResult(fileAudioModel, track.getString("artworkUrl100"));
                                 }
                             }
                         }
@@ -48,8 +46,11 @@ public class CoverUtils {
                         Log.e(getClass().getName(), "Failed to convert Json", e);
                     }
                 }
-                resultUrl.failure();
             }
         }, parameters, false).execute();
+    }
+
+    public interface CoverResponse {
+        void onCoverUrlResult(FileAudioModel fileAudioModel, String url);
     }
 }
