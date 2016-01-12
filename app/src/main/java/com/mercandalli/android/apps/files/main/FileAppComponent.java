@@ -6,17 +6,18 @@ import com.mercandalli.android.apps.files.file.FileChooserDialog;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModule;
 import com.mercandalli.android.apps.files.file.FileUploadDialog;
-import com.mercandalli.android.apps.files.file.audio.FileAudioManager;
-import com.mercandalli.android.apps.files.file.audio.FileAudioRowAdapter;
 import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
+import com.mercandalli.android.apps.files.file.audio.FileAudioManager;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModule;
 import com.mercandalli.android.apps.files.file.audio.FileAudioPlayer;
+import com.mercandalli.android.apps.files.file.audio.FileAudioRowAdapter;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudDownloadedFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileMyCloudFragment;
+import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
+import com.mercandalli.android.apps.files.file.image.FileImageModule;
 import com.mercandalli.android.apps.files.file.local.FileLocalFragment;
 import com.mercandalli.android.apps.files.file.local.SearchActivity;
-import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
 import com.mercandalli.android.apps.files.support.SupportFragment;
 import com.mercandalli.android.apps.files.support.SupportManager;
 import com.mercandalli.android.apps.files.support.SupportModule;
@@ -31,6 +32,7 @@ import dagger.Component;
                 FileAppModule.class,
                 FileModule.class,
                 FileAudioModule.class,
+                FileImageModule.class,
                 SupportModule.class
         }
 )
@@ -63,8 +65,6 @@ public interface FileAppComponent {
 
     void inject(FileImageLocalFragment fileImageLocalFragment);
 
-    //void inject(HomeFragment homeFragment);
-
     //Providers
     Application provideApp();
 
@@ -72,7 +72,7 @@ public interface FileAppComponent {
 
     FileAudioManager provideFileAudioManager();
 
-    FileAudioPlayer provideMusicPlayer();
+    FileAudioPlayer provideFileAudioPlayer();
 
     SupportManager provideSupportManager();
 }
