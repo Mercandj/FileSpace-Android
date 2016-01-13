@@ -91,8 +91,10 @@ public class FileAudioCast {
 
             CastRemoteDisplayLocalService.startService(
                     mActivity.getApplicationContext(),
-                    FileAudioPresentationService.class, mActivity.getString(R.string.cast_id),
-                    mSelectedDevice, settings,
+                    FileAudioPresentationService.class,
+                    mActivity.getString(R.string.cast_id),
+                    mSelectedDevice,
+                    settings,
                     new CastRemoteDisplayLocalService.Callbacks() {
                         @Override
                         public void onServiceCreated(CastRemoteDisplayLocalService castRemoteDisplayLocalService) {
