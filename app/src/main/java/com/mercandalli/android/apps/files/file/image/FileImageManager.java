@@ -19,6 +19,13 @@ public interface FileImageManager {
     boolean unregisterLocalImageFoldersListener(LocalImageFoldersListener localImageFoldersListener);
 
     interface LocalImageFoldersListener {
+
+        /**
+         *
+         * @param fileModels
+         */
         void onLocalImageFoldersSucceeded(List<FileModel> fileModels);
+
+        void onLocalImageFoldersFailed();
     }
 }

@@ -53,7 +53,8 @@ import javax.inject.Inject;
 public class FileImageLocalFragment extends InjectedFabFragment implements
         BackFragment.ISortMode,
         FileModelCardAdapter.OnFileSubtitleAdapter,
-        FileModelCardAdapter.OnHeaderClickListener {
+        FileModelCardAdapter.OnHeaderClickListener,
+        FileImageManager.LocalImageFoldersListener {
 
     private RecyclerView mRecyclerView;
     private List<FileModel> mFileModels;
@@ -96,6 +97,9 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
     @Inject
     FileAudioManager mFileAudioManager;
 
+    @Inject
+    FileImageManager mFileImageManager;
+
     public static FileImageLocalFragment newInstance() {
         Bundle args = new Bundle();
         FileImageLocalFragment fragment = new FileImageLocalFragment();
@@ -125,36 +129,12 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         };
     }
 
-    private void updateLayoutManager() {
-        if (mIsCard) {
-            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.column_number_small_card));
-            mRecyclerView.setLayoutManager(gridLayoutManager);
-            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    return mFileModelCardAdapter.isHeader(position) ? gridLayoutManager.getSpanCount() : 1;
-                }
-            });
-        } else {
-            final int nbColumn = getResources().getInteger(R.integer.column_number_card);
-            if (nbColumn <= 1) {
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            } else {
-                final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), nbColumn);
-                mRecyclerView.setLayoutManager(gridLayoutManager);
-                gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                    @Override
-                    public int getSpanSize(int position) {
-                        return mFileAudioRowAdapter.isHeader(position) ? gridLayoutManager.getSpanCount() : 1;
-                    }
-                });
-            }
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_file_audio_local, container, false);
+
+        mFileImageManager.registerLocalImageFoldersListener(this);
+
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.fragment_file_audio_local_progress_bar);
         mProgressBar.setVisibility(View.GONE);
         mMessageTextView = (TextView) rootView.findViewById(R.id.fragment_file_audio_local_message);
@@ -274,6 +254,12 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         return rootView;
     }
 
+    @Override
+    public void onDestroyView() {
+        mFileImageManager.unregisterLocalImageFoldersListener(this);
+        super.onDestroyView();
+    }
+
     public void refreshListFolders() {
         refreshListFolders("");
     }
@@ -287,29 +273,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         }
 
         showProgressBar();
-        mFileAudioManager.getLocalMusicFolders(mActivity, mSortMode, search, new ResultCallback<List<FileModel>>() {
-            @Override
-            public void success(List<FileModel> result) {
-                hideProgressBar();
-                if (mFileModels == null) {
-                    mFileModels = new ArrayList<>();
-                } else {
-                    mFileModels.clear();
-                }
-                mFileModels.addAll(result);
-
-                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
-                mScaleAnimationAdapter.setDuration(220);
-                mScaleAnimationAdapter.setOffsetDuration(32);
-                mRecyclerView.setAdapter(mScaleAnimationAdapter);
-                updateAdapter();
-            }
-
-            @Override
-            public void failure() {
-                hideProgressBar();
-            }
-        });
+        mFileImageManager.getLocalImageFolders(mActivity, mSortMode, search);
     }
 
     public void refreshListAllMusic() {
@@ -455,16 +419,6 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         return null;
     }
 
-    private void showProgressBar() {
-        mProgressBarActivationHandler.postDelayed(mProgressBarActivationRunnable, 200);
-    }
-
-    private void hideProgressBar() {
-        mProgressBarActivationHandler.removeCallbacks(mProgressBarActivationRunnable);
-        mProgressBar.setVisibility(View.GONE);
-        mRecyclerView.setVisibility(View.VISIBLE);
-    }
-
     @Override
     public boolean onHeaderClick(View v, List<FileModelCardHeaderItem> fileModelCardHeaderItems) {
         mHeaderIds.clear();
@@ -488,5 +442,70 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                 break;
         }
         return false;
+    }
+
+    private void showProgressBar() {
+        mProgressBarActivationHandler.postDelayed(mProgressBarActivationRunnable, 200);
+    }
+
+    private void hideProgressBar() {
+        mProgressBarActivationHandler.removeCallbacks(mProgressBarActivationRunnable);
+        mProgressBar.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void updateLayoutManager() {
+        if (mIsCard) {
+            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.column_number_small_card));
+            mRecyclerView.setLayoutManager(gridLayoutManager);
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    return mFileModelCardAdapter.isHeader(position) ? gridLayoutManager.getSpanCount() : 1;
+                }
+            });
+        } else {
+            final int nbColumn = getResources().getInteger(R.integer.column_number_card);
+            if (nbColumn <= 1) {
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            } else {
+                final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), nbColumn);
+                mRecyclerView.setLayoutManager(gridLayoutManager);
+                gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                    @Override
+                    public int getSpanSize(int position) {
+                        return mFileAudioRowAdapter.isHeader(position) ? gridLayoutManager.getSpanCount() : 1;
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onLocalImageFoldersSucceeded(List<FileModel> fileModels) {
+        hideProgressBar();
+        if (mFileModels == null) {
+            mFileModels = new ArrayList<>();
+        } else {
+            mFileModels.clear();
+        }
+        mFileModels.addAll(fileModels);
+
+        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
+        mScaleAnimationAdapter.setDuration(220);
+        mScaleAnimationAdapter.setOffsetDuration(32);
+        mRecyclerView.setAdapter(mScaleAnimationAdapter);
+        updateAdapter();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onLocalImageFoldersFailed() {
+        hideProgressBar();
     }
 }
