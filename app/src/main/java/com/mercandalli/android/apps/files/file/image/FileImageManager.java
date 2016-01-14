@@ -2,6 +2,7 @@ package com.mercandalli.android.apps.files.file.image;
 
 import android.content.Context;
 
+import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.file.FileModel;
 
 import java.util.List;
@@ -13,9 +14,9 @@ public interface FileImageManager {
      */
     void getLocalImageFolders(final Context context, final int sortMode, final String search);
 
-    void registerLocalImageFoldersListener(LocalImageFoldersListener localImageFoldersListener);
+    boolean registerLocalImageFoldersListener(LocalImageFoldersListener localImageFoldersListener);
 
-    void unregisterLocalImageFoldersListener(LocalImageFoldersListener localImageFoldersListener);
+    boolean unregisterLocalImageFoldersListener(LocalImageFoldersListener localImageFoldersListener);
 
     interface LocalImageFoldersListener {
         void onLocalImageFoldersSucceeded(List<FileModel> fileModels);

@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.file.FileModel;
-import com.mercandalli.android.apps.files.file.FileCache;
 import com.mercandalli.android.apps.files.file.FileTypeModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.FileUtils;
@@ -41,13 +40,15 @@ public class FileAudioManagerImpl extends FileAudioManager {
     private static final String LIKE = " LIKE ?";
 
     private Context mContextApp;
-    private FileAudioCache mFileAudioCache;
+
+    /* Cache */
+    private final List<FileAudioModel> mCacheLocalMusics = new ArrayList<>();
+    private final List<FileModel> mCacheLocalMusicFolders = new ArrayList<>();
 
     public FileAudioManagerImpl(Context contextApp) {
         Preconditions.checkNotNull(contextApp);
 
         mContextApp = contextApp;
-        mFileAudioCache = new FileAudioCache();
     }
 
     /**
@@ -55,9 +56,8 @@ public class FileAudioManagerImpl extends FileAudioManager {
      */
     @Override
     public void getLocalMusic(final Context context, final int sortMode, final String search, final ResultCallback<List<FileAudioModel>> resultCallback) {
-        final List<FileAudioModel> cachedLocalMusics = mFileAudioCache.getLocalMusics();
-        if (!cachedLocalMusics.isEmpty()) {
-            resultCallback.success(cachedLocalMusics);
+        if (!mCacheLocalMusics.isEmpty()) {
+            resultCallback.success(mCacheLocalMusics);
             return;
         }
 
@@ -150,7 +150,8 @@ public class FileAudioManagerImpl extends FileAudioManager {
             @Override
             protected void onPostExecute(List<FileAudioModel> fileModels) {
                 resultCallback.success(fileModels);
-                mFileAudioCache.setLocalMusics(fileModels);
+                mCacheLocalMusics.clear();
+                mCacheLocalMusics.addAll(fileModels);
                 super.onPostExecute(fileModels);
             }
         }.execute();
@@ -198,9 +199,8 @@ public class FileAudioManagerImpl extends FileAudioManager {
      */
     @Override
     public void getLocalMusicFolders(final Context context, final int sortMode, final String search, final ResultCallback<List<FileModel>> resultCallback) {
-        final List<FileModel> cachedLocalMusicFolders = mFileAudioCache.getLocalMusicFolders();
-        if (!cachedLocalMusicFolders.isEmpty()) {
-            resultCallback.success(cachedLocalMusicFolders);
+        if (!mCacheLocalMusicFolders.isEmpty()) {
+            resultCallback.success(mCacheLocalMusicFolders);
             return;
         }
 
@@ -261,7 +261,8 @@ public class FileAudioManagerImpl extends FileAudioManager {
             @Override
             protected void onPostExecute(List<FileModel> fileModels) {
                 resultCallback.success(fileModels);
-                mFileAudioCache.setLocalMusicFolders(fileModels);
+                mCacheLocalMusicFolders.clear();
+                mCacheLocalMusicFolders.addAll(fileModels);
                 super.onPostExecute(fileModels);
             }
         }.execute();
