@@ -71,19 +71,21 @@ public class FileUtils {
         }
     }
 
-    public static String readStringFile(Context context, String file) {
+    public static String readStringFile(Context context, String filePath) {
         String res = "";
-        try {
-            FileInputStream input = context.openFileInput(file);
-            int value;
-            StringBuffer lu = new StringBuffer();
-            while ((value = input.read()) != -1) {
-                lu.append((char) value);
+        if (new File(filePath).exists()) {
+            try {
+                FileInputStream input = context.openFileInput(filePath);
+                int value;
+                StringBuffer lu = new StringBuffer();
+                while ((value = input.read()) != -1) {
+                    lu.append((char) value);
+                }
+                input.close();
+                res = lu.toString();
+            } catch (IOException e) {
+                Log.e(TAG, "Exception", e);
             }
-            input.close();
-            res = lu.toString();
-        } catch (IOException e) {
-            Log.e(TAG, "Exception", e);
         }
         return res;
     }
