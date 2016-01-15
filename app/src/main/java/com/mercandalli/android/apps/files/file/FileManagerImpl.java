@@ -523,6 +523,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         if (fileModel.isOnline()) {
             spl.add(new StringPair("Visibility", isPublic ? "Public" : "Private"));
         }
+        spl.add(new StringPair("Path", fileModel.getUrl()));
         return HtmlUtils.createListItem(spl);
     }
 

@@ -58,7 +58,7 @@ public class FileImageManagerImpl implements FileImageManager {
                 final Uri allSongsUri = MediaStore.Files.getContentUri("external");
                 final List<String> searchArray = new ArrayList<>();
 
-                String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO;
+                String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 
                 for (String end : FileTypeModelENUM.PICTURE.type.getExtensions()) {
                     selection += " OR " + MediaStore.Files.FileColumns.DATA + LIKE;
@@ -89,14 +89,16 @@ public class FileImageManagerImpl implements FileImageManager {
 
                 final List<FileModel> result = new ArrayList<>();
                 for (String path : directories.keySet()) {
-                    result.add(new FileModel.FileModelBuilder()
-                            .id(path.hashCode())
-                            .url(path)
-                            .name(getNameFromPath(path))
-                            .isDirectory(true)
-                            .countAudio(directories.get(path).value)
-                            .isOnline(false)
-                            .build());
+                    if (!path.startsWith("/storage/emulated/0/Android/")) {
+                        result.add(new FileModel.FileModelBuilder()
+                                .id(path.hashCode())
+                                .url(path)
+                                .name(getNameFromPath(path))
+                                .isDirectory(true)
+                                .countAudio(directories.get(path).value)
+                                .isOnline(false)
+                                .build());
+                    }
                 }
                 return result;
             }
