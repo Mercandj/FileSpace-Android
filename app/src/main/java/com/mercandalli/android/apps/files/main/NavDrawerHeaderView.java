@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 import android.os.StatFs;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -14,9 +13,9 @@ import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.BuildConfig;
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.common.util.FontUtils;
 import com.mercandalli.android.apps.files.file.FileUtils;
+import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.user.UserModel;
 
 /**
@@ -33,17 +32,17 @@ public class NavDrawerHeaderView extends FrameLayout {
 
     public NavDrawerHeaderView(Context context) {
         super(context);
-        initView(context, null);
+        initView(context);
     }
 
     public NavDrawerHeaderView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initView(context, attrs);
+        initView(context);
     }
 
     public NavDrawerHeaderView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initView(context, attrs);
+        initView(context);
     }
 
     /**
@@ -65,7 +64,7 @@ public class NavDrawerHeaderView extends FrameLayout {
         }
     }
 
-    private void initView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    private void initView(@NonNull Context context) {
         inflate(context, R.layout.view_nav_drawer_header, this);
         setFitsSystemWindows(true);
 
@@ -76,9 +75,9 @@ public class NavDrawerHeaderView extends FrameLayout {
             FontUtils.applyFont(context, mSubtitleTextView, "fonts/Roboto-Light.ttf");
 
             final StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getAbsolutePath());
-            long blockSize = statFs.getBlockSize();
-            long totalSize = statFs.getBlockCount() * blockSize;
-            long availableSize = statFs.getAvailableBlocks() * blockSize;
+            final long blockSize = statFs.getBlockSize();
+            final long totalSize = statFs.getBlockCount() * blockSize;
+            final long availableSize = statFs.getAvailableBlocks() * blockSize;
 
             mIconImageView.setVisibility(View.GONE);
             mStorageImageView.setVisibility(View.VISIBLE);
