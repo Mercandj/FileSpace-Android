@@ -336,7 +336,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         }
 
         showProgressBar();
-        mFileAudioManager.getLocalMusic(mActivity, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
+        mFileAudioManager.getAllLocalMusic(mActivity, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
             @Override
             public void success(List<FileAudioModel> result) {
                 hideProgressBar();

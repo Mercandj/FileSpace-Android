@@ -56,7 +56,7 @@ import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileMyCloudFragment;
-import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
+import com.mercandalli.android.apps.files.file.image.FileImageGetLocalFragment;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Constants;
 
@@ -463,7 +463,7 @@ public class FileLocalPagerFragment extends BackFragment implements
                 case 1:
                     return FileAudioLocalFragment.newInstance();
                 case 2:
-                    return FileImageLocalFragment.newInstance();
+                    return FileImageGetLocalFragment.newInstance();
                 default:
                     return FileLocalFragment.newInstance();
             }

@@ -8,10 +8,16 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 
 import com.mercandalli.android.apps.files.file.FileModel;
+import com.mercandalli.android.apps.files.file.FileTypeModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.FileUtils;
+import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
+import com.mercandalli.android.apps.files.precondition.Preconditions;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,19 +27,23 @@ import static com.mercandalli.android.apps.files.file.FileUtils.getNameFromPath;
 public class FileImageManagerImpl implements FileImageManager {
 
     private static final String LIKE = " LIKE ?";
-    private final List<LocalImageFoldersListener> mLocalImageFoldersListeners = new ArrayList<>();
+
+    private final List<GetLocalImageFoldersListener> mGetLocalImageFoldersListeners = new ArrayList<>();
+    private final List<GetLocalImageListener> mGetLocalImageListeners = new ArrayList<>();
 
     /* Cache */
-    private final List<FileModel> mCacheLocalImagesFolders = new ArrayList<>();
+    private final List<FileModel> mCacheGetLocalImagesFolders = new ArrayList<>();
+    private final List<FileModel> mCacheGetLocalImage = new ArrayList<>();
 
     public FileImageManagerImpl(Application application) {
 
     }
 
+    //region getLocalImageFolders
     @Override
     public void getLocalImageFolders(final Context context, final int sortMode, final String search) {
-        if (!mCacheLocalImagesFolders.isEmpty()) {
-            notifyLocalImageFoldersListenerSucceeded(mCacheLocalImagesFolders);
+        if (!mCacheGetLocalImagesFolders.isEmpty()) {
+            notifyLocalImageFoldersListenerSucceeded(mCacheGetLocalImagesFolders);
             return;
         }
 
@@ -94,41 +104,109 @@ public class FileImageManagerImpl implements FileImageManager {
             @Override
             protected void onPostExecute(final List<FileModel> fileModels) {
                 notifyLocalImageFoldersListenerSucceeded(fileModels);
-                mCacheLocalImagesFolders.clear();
-                mCacheLocalImagesFolders.addAll(fileModels);
+                mCacheGetLocalImagesFolders.clear();
+                mCacheGetLocalImagesFolders.addAll(fileModels);
                 super.onPostExecute(fileModels);
             }
         }.execute();
     }
+    //endregion getLocalImageFolders
 
+    //region getLocalImage
     @Override
-    public boolean registerLocalImageFoldersListener(final LocalImageFoldersListener localImageFoldersListener) {
-        synchronized (mLocalImageFoldersListeners) {
+    public void getLocalImage(Context context, FileModel fileModelDirectParent, int sortMode, String search) {
+        Preconditions.checkNotNull(fileModelDirectParent);
+        if (!fileModelDirectParent.isDirectory()) {
+            notifyLocalImageListenerFailed();
+            return;
+        }
+        final List<FileModel> files = new ArrayList<>();
+        List<File> fs = Arrays.asList(fileModelDirectParent.getFile().listFiles(
+                new FilenameFilter() {
+                    @Override
+                    public boolean accept(File dir, String name) {
+                        return (new FileTypeModel(FileUtils.getExtensionFromPath(name))).equals(FileTypeModelENUM.PICTURE.type);
+                    }
+                }
+        ));
+        for (File file : fs) {
+            final FileModel.FileModelBuilder fileModelBuilder =
+                    new FileAudioModel.FileModelBuilder().file(file);
+            files.add(fileModelBuilder.build());
+        }
+        notifyLocalImageListenerSucceeded(files);
+    }
+    //endregion getLocalImage
+
+    //region Register / Unregister listeners
+    @Override
+    public boolean registerLocalImageFoldersListener(final GetLocalImageFoldersListener getLocalImageFoldersListener) {
+        synchronized (mGetLocalImageFoldersListeners) {
             //noinspection SimplifiableIfStatement
-            if (localImageFoldersListener == null || mLocalImageFoldersListeners.contains(localImageFoldersListener)) {
+            if (getLocalImageFoldersListener == null || mGetLocalImageFoldersListeners.contains(getLocalImageFoldersListener)) {
                 // We don't allow to register null listener
                 // And a listener can only be added once.
                 return false;
             }
 
-            return mLocalImageFoldersListeners.add(localImageFoldersListener);
+            return mGetLocalImageFoldersListeners.add(getLocalImageFoldersListener);
         }
     }
 
     @Override
-    public boolean unregisterLocalImageFoldersListener(LocalImageFoldersListener localImageFoldersListener) {
-        synchronized (mLocalImageFoldersListeners) {
-            return mLocalImageFoldersListeners.remove(localImageFoldersListener);
+    public boolean unregisterLocalImageFoldersListener(GetLocalImageFoldersListener getLocalImageFoldersListener) {
+        synchronized (mGetLocalImageFoldersListeners) {
+            return mGetLocalImageFoldersListeners.remove(getLocalImageFoldersListener);
         }
     }
 
+    @Override
+    public boolean registerLocalImageListener(GetLocalImageListener getLocalImageListener) {
+        synchronized (mGetLocalImageListeners) {
+            //noinspection SimplifiableIfStatement
+            if (getLocalImageListener == null || mGetLocalImageListeners.contains(getLocalImageListener)) {
+                // We don't allow to register null listener
+                // And a listener can only be added once.
+                return false;
+            }
+
+            return mGetLocalImageListeners.add(getLocalImageListener);
+        }
+    }
+
+    @Override
+    public boolean unregisterLocalImageListener(GetLocalImageListener getLocalImageListener) {
+        synchronized (mGetLocalImageListeners) {
+            return mGetLocalImageListeners.remove(getLocalImageListener);
+        }
+    }
+    //endregion Register / Unregister listeners
+
+    //region notify listeners
     private void notifyLocalImageFoldersListenerSucceeded(List<FileModel> fileModels) {
-        synchronized (mLocalImageFoldersListeners) {
-            for (int i = 0, size = mLocalImageFoldersListeners.size(); i < size; i++) {
-                mLocalImageFoldersListeners.get(i).onLocalImageFoldersSucceeded(fileModels);
+        synchronized (mGetLocalImageFoldersListeners) {
+            for (int i = 0, size = mGetLocalImageFoldersListeners.size(); i < size; i++) {
+                mGetLocalImageFoldersListeners.get(i).onLocalImageFoldersSucceeded(fileModels);
             }
         }
     }
+
+    private void notifyLocalImageListenerSucceeded(List<FileModel> fileModels) {
+        synchronized (mGetLocalImageListeners) {
+            for (int i = 0, size = mGetLocalImageListeners.size(); i < size; i++) {
+                mGetLocalImageListeners.get(i).onLocalImageSucceeded(fileModels);
+            }
+        }
+    }
+
+    private void notifyLocalImageListenerFailed() {
+        synchronized (mGetLocalImageListeners) {
+            for (int i = 0, size = mGetLocalImageListeners.size(); i < size; i++) {
+                mGetLocalImageListeners.get(i).onLocalImageFailed();
+            }
+        }
+    }
+    //endregion notify listeners
 
     /**
      * Class used to count.

@@ -50,11 +50,12 @@ import javax.inject.Inject;
 /**
  * A {@link android.support.v4.app.Fragment} that displays the local {@link FileAudioModel}s.
  */
-public class FileImageLocalFragment extends InjectedFabFragment implements
+public class FileImageGetLocalFragment extends InjectedFabFragment implements
         BackFragment.ISortMode,
         FileModelCardAdapter.OnFileSubtitleAdapter,
         FileModelCardAdapter.OnHeaderClickListener,
-        FileImageManager.LocalImageFoldersListener {
+        FileImageManager.GetLocalImageFoldersListener,
+        FileImageManager.GetLocalImageListener {
 
     private RecyclerView mRecyclerView;
     private List<FileModel> mFileModels;
@@ -100,9 +101,9 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
     @Inject
     FileImageManager mFileImageManager;
 
-    public static FileImageLocalFragment newInstance() {
+    public static FileImageGetLocalFragment newInstance() {
         Bundle args = new Bundle();
-        FileImageLocalFragment fragment = new FileImageLocalFragment();
+        FileImageGetLocalFragment fragment = new FileImageGetLocalFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -110,7 +111,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
     /**
      * Do not use this constructor. Call {@link #newInstance()} instead.
      */
-    public FileImageLocalFragment() {
+    public FileImageGetLocalFragment() {
         mRefreshActivityAdapterListener = new IListener() {
             @Override
             public void execute() {
@@ -134,6 +135,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         final View rootView = inflater.inflate(R.layout.fragment_file_audio_local, container, false);
 
         mFileImageManager.registerLocalImageFoldersListener(this);
+        mFileImageManager.registerLocalImageListener(this);
 
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.fragment_file_audio_local_progress_bar);
         mProgressBar.setVisibility(View.GONE);
@@ -257,104 +259,8 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
     @Override
     public void onDestroyView() {
         mFileImageManager.unregisterLocalImageFoldersListener(this);
+        mFileImageManager.unregisterLocalImageListener(this);
         super.onDestroyView();
-    }
-
-    public void refreshListFolders() {
-        refreshListFolders("");
-    }
-
-    public void refreshListFolders(final String search) {
-        mCurrentFolder = null;
-        mIsInsideFolder = false;
-        mIsCard = true;
-        if (mFileManager == null) {
-            return;
-        }
-
-        showProgressBar();
-        mFileImageManager.getLocalImageFolders(mActivity, mSortMode, search);
-    }
-
-    public void refreshListAllMusic() {
-        mIsInsideFolder = false;
-        mIsCard = false;
-        if (mFileManager == null) {
-            return;
-        }
-
-        showProgressBar();
-        mFileAudioManager.getLocalMusic(mActivity, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
-            @Override
-            public void success(List<FileAudioModel> result) {
-                hideProgressBar();
-                if (mFileModels == null) {
-                    mFileModels = new ArrayList<>();
-                } else {
-                    mFileModels.clear();
-                }
-                mFileModels.addAll(result);
-                mFileAudioRowAdapter.setHasHeader(true);
-
-                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
-                mScaleAnimationAdapter.setDuration(220);
-                mScaleAnimationAdapter.setOffsetDuration(32);
-                mRecyclerView.setAdapter(mScaleAnimationAdapter);
-                updateAdapter();
-            }
-
-            @Override
-            public void failure() {
-                updateAdapter();
-            }
-        });
-    }
-
-    public void refreshListFoldersInside(final FileModel fileModel) {
-        mCurrentFolder = fileModel;
-        mIsInsideFolder = true;
-        mIsCard = false;
-        mFileModels.clear();
-        mFileAudioManager.getLocalMusic(mActivity, fileModel, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
-            @Override
-            public void success(List<FileAudioModel> result) {
-                mFileModels.clear();
-                mFileModels.addAll(result);
-                mFileAudioRowAdapter.setHasHeader(false);
-
-                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
-                mScaleAnimationAdapter.setDuration(220);
-                mScaleAnimationAdapter.setOffsetDuration(32);
-                mRecyclerView.setAdapter(mScaleAnimationAdapter);
-                updateAdapter();
-            }
-
-            @Override
-            public void failure() {
-                updateAdapter();
-            }
-        });
-    }
-
-    public void updateAdapter() {
-        if (mRecyclerView != null && mFileModels != null && isAdded()) {
-            refreshFab();
-
-            if (mFileModels.size() == 0) {
-                mMessageTextView.setText(getString(R.string.no_music));
-                mMessageTextView.setVisibility(View.VISIBLE);
-            } else {
-                mMessageTextView.setVisibility(View.GONE);
-            }
-
-            if (mIsCard) {
-                mFileModelCardAdapter.setList(mFileModels);
-            } else {
-                mFileAudioRowAdapter.setList(mFileModels);
-            }
-
-            updateLayoutManager();
-        }
     }
 
     @Override
@@ -414,7 +320,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
     @Override
     public String onFileSubtitleModify(FileModel fileModel) {
         if (fileModel != null && fileModel.isDirectory() && fileModel.getCountAudio() != 0) {
-            return "Directory: " + StringUtils.longToShortString(fileModel.getCountAudio()) + " music" + (fileModel.getCountAudio() > 1 ? "s" : "");
+            return "Directory: " + StringUtils.longToShortString(fileModel.getCountAudio()) + " image" + (fileModel.getCountAudio() > 1 ? "s" : "");
         }
         return null;
     }
@@ -442,6 +348,137 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                 break;
         }
         return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onLocalImageFoldersSucceeded(List<FileModel> fileModels) {
+        hideProgressBar();
+        if (mFileModels == null) {
+            mFileModels = new ArrayList<>();
+        } else {
+            mFileModels.clear();
+        }
+        mFileModels.addAll(fileModels);
+
+        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
+        mScaleAnimationAdapter.setDuration(220);
+        mScaleAnimationAdapter.setOffsetDuration(32);
+        mRecyclerView.setAdapter(mScaleAnimationAdapter);
+        updateAdapter();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onLocalImageFoldersFailed() {
+        hideProgressBar();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onLocalImageSucceeded(List<FileModel> fileModels) {
+        mFileModels.clear();
+        mFileModels.addAll(fileModels);
+        mFileAudioRowAdapter.setHasHeader(false);
+
+        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
+        mScaleAnimationAdapter.setDuration(220);
+        mScaleAnimationAdapter.setOffsetDuration(32);
+        mRecyclerView.setAdapter(mScaleAnimationAdapter);
+        updateAdapter();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onLocalImageFailed() {
+        updateAdapter();
+    }
+
+    public void refreshListFolders() {
+        refreshListFolders("");
+    }
+
+    public void refreshListFolders(final String search) {
+        mCurrentFolder = null;
+        mIsInsideFolder = false;
+        mIsCard = true;
+        if (mFileManager == null) {
+            return;
+        }
+
+        showProgressBar();
+        mFileImageManager.getLocalImageFolders(mActivity, mSortMode, search);
+    }
+
+    public void refreshListAllMusic() {
+        mIsInsideFolder = false;
+        mIsCard = false;
+        if (mFileManager == null) {
+            return;
+        }
+
+        showProgressBar();
+        mFileAudioManager.getAllLocalMusic(mActivity, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
+            @Override
+            public void success(List<FileAudioModel> result) {
+                hideProgressBar();
+                if (mFileModels == null) {
+                    mFileModels = new ArrayList<>();
+                } else {
+                    mFileModels.clear();
+                }
+                mFileModels.addAll(result);
+                mFileAudioRowAdapter.setHasHeader(true);
+
+                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
+                mScaleAnimationAdapter.setDuration(220);
+                mScaleAnimationAdapter.setOffsetDuration(32);
+                mRecyclerView.setAdapter(mScaleAnimationAdapter);
+                updateAdapter();
+            }
+
+            @Override
+            public void failure() {
+                updateAdapter();
+            }
+        });
+    }
+
+    public void refreshListFoldersInside(final FileModel fileModel) {
+        mCurrentFolder = fileModel;
+        mIsInsideFolder = true;
+        mIsCard = false;
+        mFileModels.clear();
+        mFileImageManager.getLocalImage(mActivity, fileModel, mSortMode, null);
+    }
+
+    public void updateAdapter() {
+        if (mRecyclerView != null && mFileModels != null && isAdded()) {
+            refreshFab();
+
+            if (mFileModels.size() == 0) {
+                mMessageTextView.setText(getString(R.string.no_music));
+                mMessageTextView.setVisibility(View.VISIBLE);
+            } else {
+                mMessageTextView.setVisibility(View.GONE);
+            }
+
+            if (mIsCard) {
+                mFileModelCardAdapter.setList(mFileModels);
+            } else {
+                mFileAudioRowAdapter.setList(mFileModels);
+            }
+
+            updateLayoutManager();
+        }
     }
 
     private void showProgressBar() {
@@ -479,33 +516,5 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                 });
             }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onLocalImageFoldersSucceeded(List<FileModel> fileModels) {
-        hideProgressBar();
-        if (mFileModels == null) {
-            mFileModels = new ArrayList<>();
-        } else {
-            mFileModels.clear();
-        }
-        mFileModels.addAll(fileModels);
-
-        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
-        mScaleAnimationAdapter.setDuration(220);
-        mScaleAnimationAdapter.setOffsetDuration(32);
-        mRecyclerView.setAdapter(mScaleAnimationAdapter);
-        updateAdapter();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onLocalImageFoldersFailed() {
-        hideProgressBar();
     }
 }

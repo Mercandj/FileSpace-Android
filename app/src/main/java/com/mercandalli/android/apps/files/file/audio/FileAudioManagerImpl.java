@@ -55,7 +55,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
      * {@inheritDoc}
      */
     @Override
-    public void getLocalMusic(final Context context, final int sortMode, final String search, final ResultCallback<List<FileAudioModel>> resultCallback) {
+    public void getAllLocalMusic(final Context context, final int sortMode, final String search, final ResultCallback<List<FileAudioModel>> resultCallback) {
         if (!mCacheLocalMusics.isEmpty()) {
             resultCallback.success(mCacheLocalMusics);
             return;
