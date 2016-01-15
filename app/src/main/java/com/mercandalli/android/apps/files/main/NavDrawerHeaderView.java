@@ -75,11 +75,10 @@ public class NavDrawerHeaderView extends FrameLayout {
             FontUtils.applyFont(context, mTitleTextView, "fonts/Roboto-Medium.ttf");
             FontUtils.applyFont(context, mSubtitleTextView, "fonts/Roboto-Light.ttf");
 
-            StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getAbsolutePath());
+            final StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getAbsolutePath());
             long blockSize = statFs.getBlockSize();
             long totalSize = statFs.getBlockCount() * blockSize;
             long availableSize = statFs.getAvailableBlocks() * blockSize;
-            long freeSize = statFs.getFreeBlocks() * blockSize;
 
             mIconImageView.setVisibility(View.GONE);
             mStorageImageView.setVisibility(View.VISIBLE);

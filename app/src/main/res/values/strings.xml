@@ -128,7 +128,7 @@
     <string name="tab_log_out">Log out</string>
     <string name="tab_support">Support</string>
     <!-- NavDrawer Header -->
-    <string name="tab_header_title">%1$d Full</string>
+    <string name="tab_header_title">%1$d%% Full</string>
     <string name="tab_header_subtitle">Using %1$s of %2$s</string>
 
     <!-- File -->
