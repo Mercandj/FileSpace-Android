@@ -3,8 +3,8 @@ FileSpace - ANDROID
 
 **Find on play store [here](https://play.google.com/store/apps/details?id=com.mercandalli.android.apps.files)**
 
-<a align="center" margin="20px 0" href="https://play.google.com/store/apps/details?id=com.mercandalli.android.apps.files">
-	<img src="https://raw.github.com/Mercandj/FileSpace-Android/master/screenshot/play_store/filespace_wallp.png" width="560" />
+<a align="center" href="https://play.google.com/store/apps/details?id=com.mercandalli.android.apps.files">
+	<img margin="20px 0" src="https://raw.github.com/Mercandj/FileSpace-Android/master/screenshot/play_store/filespace_wallp.png" width="560" />
 </a>
 
 **_Unfinished project, still in development_** [API Required](https://github.com/Mercandj/FileSpace-API)
