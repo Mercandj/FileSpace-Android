@@ -12,12 +12,15 @@ import com.mercandalli.android.apps.files.file.FileTypeModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
+import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,15 +31,112 @@ public class FileImageManagerImpl implements FileImageManager {
 
     private static final String LIKE = " LIKE ?";
 
+    private final List<GetAllLocalImageListener> mGetAllLocalImageListeners = new ArrayList<>();
     private final List<GetLocalImageFoldersListener> mGetLocalImageFoldersListeners = new ArrayList<>();
     private final List<GetLocalImageListener> mGetLocalImageListeners = new ArrayList<>();
 
     /* Cache */
+    private final List<FileModel> mCacheGetAllLocalImage = new ArrayList<>();
     private final List<FileModel> mCacheGetLocalImagesFolders = new ArrayList<>();
-    private final List<FileModel> mCacheGetLocalImage = new ArrayList<>();
 
     public FileImageManagerImpl(Application application) {
 
+    }
+
+    @Override
+    public void getAllLocalImage(final Context context, final int sortMode, final String search) {
+        if (!mCacheGetAllLocalImage.isEmpty()) {
+            notifyAllLocalImageListenerSucceeded(mCacheGetAllLocalImage);
+            return;
+        }
+
+        new AsyncTask<Void, Void, List<FileModel>>() {
+            @Override
+            protected List<FileModel> doInBackground(Void... params) {
+                final List<FileModel> files = new ArrayList<>();
+
+                final String[] PROJECTION = {MediaStore.Files.FileColumns.DATA};
+
+                final Uri allSongsUri = MediaStore.Files.getContentUri("external");
+                final List<String> searchArray = new ArrayList<>();
+
+                String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
+
+                for (String end : FileTypeModelENUM.PICTURE.type.getExtensions()) {
+                    selection += " OR " + MediaStore.Files.FileColumns.DATA + LIKE;
+                    searchArray.add("%" + end);
+                }
+                selection += " )";
+
+                if (search != null && !search.isEmpty()) {
+                    searchArray.add("%" + search + "%");
+                    selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
+                }
+
+                final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
+                if (cursor != null) {
+                    if (cursor.moveToFirst()) {
+                        do {
+                            final String path = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
+                            if (!path.startsWith("/storage/emulated/0/Android/")) {
+                                final File file = new File(path);
+                                if (file.exists() && !file.isDirectory()) {
+
+                                    FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder()
+                                            .file(file);
+
+                                    //if (mSortMode == SharedAudioPlayerUtils.SORT_SIZE)
+                                    //    fileMusicModel.adapterTitleStart = FileUtils.humanReadableByteCount(fileMusicModel.getSize()) + " - ";
+
+                                    files.add(fileModelBuilder.build());
+                                }
+                            }
+                        } while (cursor.moveToNext());
+                    }
+                    cursor.close();
+                }
+
+                if (sortMode == Constants.SORT_ABC) {
+                    Collections.sort(files, new Comparator<FileModel>() {
+                        @Override
+                        public int compare(final FileModel f1, final FileModel f2) {
+                            if (f1.getName() == null || f2.getName() == null) {
+                                return 0;
+                            }
+                            return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
+                        }
+                    });
+                } else if (sortMode == Constants.SORT_SIZE) {
+                    Collections.sort(files, new Comparator<FileModel>() {
+                        @Override
+                        public int compare(final FileModel f1, final FileModel f2) {
+                            return (new Long(f2.getSize())).compareTo(f1.getSize());
+                        }
+                    });
+                } else {
+                    final Map<FileModel, Long> staticLastModifiedTimes = new HashMap<>();
+                    for (FileModel f : files) {
+                        staticLastModifiedTimes.put(f, f.getLastModified());
+                    }
+                    Collections.sort(files, new Comparator<FileModel>() {
+                        @Override
+                        public int compare(final FileModel f1, final FileModel f2) {
+                            return staticLastModifiedTimes.get(f2).compareTo(staticLastModifiedTimes.get(f1));
+                        }
+                    });
+                }
+
+                return files;
+            }
+
+            @Override
+            protected void onPostExecute(List<FileModel> fileModels) {
+                notifyAllLocalImageListenerSucceeded(fileModels);
+                mCacheGetAllLocalImage.clear();
+                mCacheGetAllLocalImage.addAll(fileModels);
+                super.onPostExecute(fileModels);
+            }
+        }.execute();
     }
 
     //region getLocalImageFolders
@@ -138,6 +238,27 @@ public class FileImageManagerImpl implements FileImageManager {
         }
         notifyLocalImageListenerSucceeded(files);
     }
+
+    @Override
+    public boolean registerAllLocalImageListener(GetAllLocalImageListener getAllLocalImageListener) {
+        synchronized (mGetAllLocalImageListeners) {
+            //noinspection SimplifiableIfStatement
+            if (getAllLocalImageListener == null || mGetAllLocalImageListeners.contains(getAllLocalImageListener)) {
+                // We don't allow to register null listener
+                // And a listener can only be added once.
+                return false;
+            }
+
+            return mGetAllLocalImageListeners.add(getAllLocalImageListener);
+        }
+    }
+
+    @Override
+    public boolean unregisterAllLocalImageListener(GetAllLocalImageListener getAllLocalImageListener) {
+        synchronized (mGetAllLocalImageListeners) {
+            return mGetAllLocalImageListeners.remove(getAllLocalImageListener);
+        }
+    }
     //endregion getLocalImage
 
     //region Register / Unregister listeners
@@ -185,6 +306,14 @@ public class FileImageManagerImpl implements FileImageManager {
     //endregion Register / Unregister listeners
 
     //region notify listeners
+    private void notifyAllLocalImageListenerSucceeded(List<FileModel> fileModels) {
+        synchronized (mGetAllLocalImageListeners) {
+            for (int i = 0, size = mGetAllLocalImageListeners.size(); i < size; i++) {
+                mGetAllLocalImageListeners.get(i).onAllLocalImageSucceeded(fileModels);
+            }
+        }
+    }
+
     private void notifyLocalImageFoldersListenerSucceeded(List<FileModel> fileModels) {
         synchronized (mGetLocalImageFoldersListeners) {
             for (int i = 0, size = mGetLocalImageFoldersListeners.size(); i < size; i++) {

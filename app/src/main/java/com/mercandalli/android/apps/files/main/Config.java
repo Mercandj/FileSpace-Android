@@ -154,8 +154,12 @@ public class Config {
     }
 
     private void load(Activity activity) {
+        final String fileContent = FileUtils.readStringFile(activity, fileName);
+        if (fileContent == null) {
+            return;
+        }
         try {
-            JSONObject tmp_json = new JSONObject(FileUtils.readStringFile(activity, fileName));
+            JSONObject tmp_json = new JSONObject(fileContent);
             if (tmp_json.has("settings_1")) {
                 JSONObject tmp_settings_1 = tmp_json.getJSONObject("settings_1");
                 for (ENUM_Int enum_int : ENUM_Int.values()) {

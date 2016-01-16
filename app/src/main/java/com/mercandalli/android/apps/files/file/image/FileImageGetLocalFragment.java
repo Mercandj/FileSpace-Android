@@ -23,7 +23,6 @@ import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.listener.IStringListener;
-import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
@@ -33,7 +32,6 @@ import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
 import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
 import com.mercandalli.android.apps.files.file.FileModelListener;
-import com.mercandalli.android.apps.files.file.audio.FileAudioManager;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
 import com.mercandalli.android.apps.files.file.audio.FileAudioRowAdapter;
 import com.mercandalli.android.apps.files.main.Config;
@@ -55,7 +53,8 @@ public class FileImageGetLocalFragment extends InjectedFabFragment implements
         FileModelCardAdapter.OnFileSubtitleAdapter,
         FileModelCardAdapter.OnHeaderClickListener,
         FileImageManager.GetLocalImageFoldersListener,
-        FileImageManager.GetLocalImageListener {
+        FileImageManager.GetLocalImageListener,
+        FileImageManager.GetAllLocalImageListener {
 
     private RecyclerView mRecyclerView;
     private List<FileModel> mFileModels;
@@ -96,9 +95,6 @@ public class FileImageGetLocalFragment extends InjectedFabFragment implements
     FileManager mFileManager;
 
     @Inject
-    FileAudioManager mFileAudioManager;
-
-    @Inject
     FileImageManager mFileImageManager;
 
     public static FileImageGetLocalFragment newInstance() {
@@ -134,6 +130,7 @@ public class FileImageGetLocalFragment extends InjectedFabFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_file_audio_local, container, false);
 
+        mFileImageManager.registerAllLocalImageListener(this);
         mFileImageManager.registerLocalImageFoldersListener(this);
         mFileImageManager.registerLocalImageListener(this);
 
@@ -258,6 +255,7 @@ public class FileImageGetLocalFragment extends InjectedFabFragment implements
 
     @Override
     public void onDestroyView() {
+        mFileImageManager.unregisterAllLocalImageListener(this);
         mFileImageManager.unregisterLocalImageFoldersListener(this);
         mFileImageManager.unregisterLocalImageListener(this);
         super.onDestroyView();
@@ -354,6 +352,35 @@ public class FileImageGetLocalFragment extends InjectedFabFragment implements
      * {@inheritDoc}
      */
     @Override
+    public void onAllLocalImageSucceeded(List<FileModel> fileModels) {
+        hideProgressBar();
+        if (mFileModels == null) {
+            mFileModels = new ArrayList<>();
+        } else {
+            mFileModels.clear();
+        }
+        mFileModels.addAll(fileModels);
+        mFileAudioRowAdapter.setHasHeader(true);
+
+        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
+        mScaleAnimationAdapter.setDuration(220);
+        mScaleAnimationAdapter.setOffsetDuration(32);
+        mRecyclerView.setAdapter(mScaleAnimationAdapter);
+        updateAdapter();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onAllLocalImageFailed() {
+        updateAdapter();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void onLocalImageFoldersSucceeded(List<FileModel> fileModels) {
         hideProgressBar();
         if (mFileModels == null) {
@@ -426,30 +453,7 @@ public class FileImageGetLocalFragment extends InjectedFabFragment implements
         }
 
         showProgressBar();
-        mFileAudioManager.getAllLocalMusic(mActivity, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
-            @Override
-            public void success(List<FileAudioModel> result) {
-                hideProgressBar();
-                if (mFileModels == null) {
-                    mFileModels = new ArrayList<>();
-                } else {
-                    mFileModels.clear();
-                }
-                mFileModels.addAll(result);
-                mFileAudioRowAdapter.setHasHeader(true);
-
-                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
-                mScaleAnimationAdapter.setDuration(220);
-                mScaleAnimationAdapter.setOffsetDuration(32);
-                mRecyclerView.setAdapter(mScaleAnimationAdapter);
-                updateAdapter();
-            }
-
-            @Override
-            public void failure() {
-                updateAdapter();
-            }
-        });
+        mFileImageManager.getAllLocalImage(mActivity, mSortMode, null);
     }
 
     public void refreshListFoldersInside(final FileModel fileModel) {
@@ -465,7 +469,7 @@ public class FileImageGetLocalFragment extends InjectedFabFragment implements
             refreshFab();
 
             if (mFileModels.size() == 0) {
-                mMessageTextView.setText(getString(R.string.no_music));
+                mMessageTextView.setText(getString(R.string.no_image));
                 mMessageTextView.setVisibility(View.VISIBLE);
             } else {
                 mMessageTextView.setVisibility(View.GONE);

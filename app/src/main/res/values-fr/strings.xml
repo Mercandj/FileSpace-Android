@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="no_music">Aucune musique</string>
+    <string name="no_image">Aucune image</string>
+    <string name="no_file">Aucun fichier</string>
+
     <string name="action">Action</string>
     <string name="download">Télécharger</string>
     <string name="upload">Upload</string>

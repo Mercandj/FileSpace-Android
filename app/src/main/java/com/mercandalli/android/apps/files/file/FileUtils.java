@@ -23,6 +23,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -71,21 +72,28 @@ public class FileUtils {
         }
     }
 
+    /**
+     * Get the {@link File} content to {@link String}.
+     *
+     * @param context  The current {@link Context}.
+     * @param filePath The {@link File} path.
+     * @return The {@link File} content.
+     */
+    @Nullable
     public static String readStringFile(Context context, String filePath) {
-        String res = "";
-        if (new File(filePath).exists()) {
-            try {
-                FileInputStream input = context.openFileInput(filePath);
-                int value;
-                StringBuffer lu = new StringBuffer();
-                while ((value = input.read()) != -1) {
-                    lu.append((char) value);
-                }
-                input.close();
-                res = lu.toString();
-            } catch (IOException e) {
-                Log.e(TAG, "Exception", e);
+        String res = null;
+        try {
+            FileInputStream input = context.openFileInput(filePath);
+            int value;
+            @SuppressWarnings("StringBufferMayBeStringBuilder")
+            final StringBuffer lu = new StringBuffer();
+            while ((value = input.read()) != -1) {
+                lu.append((char) value);
             }
+            input.close();
+            res = lu.toString();
+        } catch (IOException e) {
+            Log.e(TAG, "Exception", e);
         }
         return res;
     }
