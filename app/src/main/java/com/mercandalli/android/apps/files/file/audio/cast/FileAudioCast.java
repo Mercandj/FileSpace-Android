@@ -46,9 +46,14 @@ public class FileAudioCast {
     }
 
     public void onCreateOptionsMenu(MenuItem mediaRouteMenuItem) {
+        if (mediaRouteMenuItem == null) {
+            return;
+        }
         final MediaRouteActionProvider mediaRouteActionProvider =
                 (MediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem);
-        mediaRouteActionProvider.setRouteSelector(mMediaRouteSelector);
+        if (mediaRouteActionProvider != null) {
+            mediaRouteActionProvider.setRouteSelector(mMediaRouteSelector);
+        }
     }
 
     public void onResume() {
