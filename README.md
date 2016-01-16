@@ -1,7 +1,11 @@
 FileSpace - ANDROID
 =====================
 
+**_Find on play store_** [here](https://play.google.com/store/apps/details?id=com.mercandalli.android.apps.files)
+
 **_Unfinished project, still in development_** [API Required](https://github.com/Mercandj/FileSpace-API)
+
+
 
 <p align="center">
 	<img src="https://raw.github.com/Mercandj/FileSpace-Android/master/screenshot/play_store/filespace_wallp.png" width="560" />
