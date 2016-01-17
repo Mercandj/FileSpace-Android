@@ -8,6 +8,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.MediaRouteActionProvider;
 import android.support.v7.media.MediaRouteSelector;
 import android.support.v7.media.MediaRouter;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.google.android.gms.cast.CastDevice;
@@ -51,9 +52,11 @@ public class FileAudioCast {
         }
         final MediaRouteActionProvider mediaRouteActionProvider =
                 (MediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem);
-        if (mediaRouteActionProvider != null) {
-            mediaRouteActionProvider.setRouteSelector(mMediaRouteSelector);
+        if (mediaRouteActionProvider == null) {
+            mediaRouteMenuItem.setVisible(false);
+            return;
         }
+        mediaRouteActionProvider.setRouteSelector(mMediaRouteSelector);
     }
 
     public void onResume() {
@@ -79,6 +82,8 @@ public class FileAudioCast {
 
     private class MediaRouterCallback extends MediaRouter.Callback {
 
+        private static final String TAG = "MediaRouterCallback";
+
         @Override
         public void onRouteSelected(MediaRouter router, MediaRouter.RouteInfo info) {
             super.onRouteSelected(router, info);
@@ -103,7 +108,7 @@ public class FileAudioCast {
                     new CastRemoteDisplayLocalService.Callbacks() {
                         @Override
                         public void onServiceCreated(CastRemoteDisplayLocalService castRemoteDisplayLocalService) {
-
+                            Log.d(TAG, "onServiceCreated: " + castRemoteDisplayLocalService);
                         }
 
                         @Override
@@ -123,7 +128,7 @@ public class FileAudioCast {
 
                         @Override
                         public void onRemoteDisplaySessionError(Status errorReason) {
-
+                            Log.e(TAG, "onRemoteDisplaySessionError: " + errorReason);
                         }
                     });
         }

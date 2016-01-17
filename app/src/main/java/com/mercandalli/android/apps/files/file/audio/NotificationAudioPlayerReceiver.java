@@ -36,7 +36,11 @@ public class NotificationAudioPlayerReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         final String action = intent.getAction();
-        FileAudioPlayer fileAudioPlayer = FileApp.get(context).getFileAppComponent().provideFileAudioPlayer();
+        final FileAudioPlayer fileAudioPlayer = FileApp.get(context).getFileAppComponent().provideFileAudioPlayer();
+        if (fileAudioPlayer.isEmpty()) {
+            fileAudioPlayer.setNotification(false);
+            return;
+        }
         switch (action) {
             case ACTION_PLAY_PAUSE:
                 if (fileAudioPlayer.isPlaying()) {

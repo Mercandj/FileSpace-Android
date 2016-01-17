@@ -188,6 +188,10 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         }
     }
 
+    public boolean isEmpty() {
+        return mFileAudioModelList.isEmpty();
+    }
+
     public void registerOnPlayerStatusChangeListener(OnPlayerStatusChangeListener listener) {
         synchronized (mOnPlayerStatusChangeListeners) {
             if (!mOnPlayerStatusChangeListeners.contains(listener)) {
@@ -273,7 +277,7 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
     /**
      * Display or hide the notification.
      */
-    private void setNotification(boolean activated) {
+    /* package */ void setNotification(boolean activated) {
         if (activated && mCurrentMusic != null) {
 
             Intent intent = new Intent(mAppContext, FileAudioActivity.class);

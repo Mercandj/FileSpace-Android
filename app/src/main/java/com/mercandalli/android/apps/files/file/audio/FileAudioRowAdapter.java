@@ -32,7 +32,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
@@ -43,6 +42,7 @@ import com.mercandalli.android.apps.files.file.FileTypeModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.main.FileApp;
+import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -325,7 +325,7 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
                 return adapterTitleStart + fileAudioModel.getUrl();
             }
         }
-        return "";
+        return FileUtils.humanReadableByteCount(fileModel.getSize());
     }
 
     private static class RowCardsViewHolder extends ViewHolder {

@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.file.FileModel;
@@ -15,13 +14,8 @@ import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 
-import org.cmc.music.metadata.IMusicMetadata;
-import org.cmc.music.metadata.MusicMetadataSet;
-import org.cmc.music.myid3.MyID3;
-
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -55,7 +49,12 @@ public class FileAudioManagerImpl extends FileAudioManager {
      * {@inheritDoc}
      */
     @Override
-    public void getAllLocalMusic(final Context context, final int sortMode, final String search, final ResultCallback<List<FileAudioModel>> resultCallback) {
+    public void getAllLocalMusic(
+            final Context context,
+            final int sortMode,
+            final String search,
+            final ResultCallback<List<FileAudioModel>> resultCallback) {
+
         if (!mCacheLocalMusics.isEmpty()) {
             resultCallback.success(mCacheLocalMusics);
             return;
@@ -90,23 +89,8 @@ public class FileAudioManagerImpl extends FileAudioManager {
                         do {
                             final File file = new File(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
                             if (file.exists() && !file.isDirectory()) {
-                                FileAudioModel.FileMusicModelBuilder fileMusicModelBuilder = new FileAudioModel.FileMusicModelBuilder()
-                                        .file(file);
-                                try {
-                                    MusicMetadataSet musicMetadataSet = new MyID3().read(file);
-                                    if (musicMetadataSet != null) {
-                                        IMusicMetadata metadata = musicMetadataSet.getSimplified();
-                                        fileMusicModelBuilder.album(metadata.getAlbum());
-                                        fileMusicModelBuilder.artist(metadata.getArtist());
-                                    }
-                                } catch (IOException e) {
-                                    Log.e(getClass().getName(), "Exception", e);
-                                } // read metadata
-
-                                //if (mSortMode == SharedAudioPlayerUtils.SORT_SIZE)
-                                //    fileMusicModel.adapterTitleStart = FileUtils.humanReadableByteCount(fileMusicModel.getSize()) + " - ";
-
-                                files.add(fileMusicModelBuilder.build());
+                                files.add(new FileAudioModel.FileMusicModelBuilder()
+                                        .file(file).build());
                             }
 
                         } while (cursor.moveToNext());
@@ -148,7 +132,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
             }
 
             @Override
-            protected void onPostExecute(List<FileAudioModel> fileModels) {
+            protected void onPostExecute(final List<FileAudioModel> fileModels) {
                 resultCallback.success(fileModels);
                 mCacheLocalMusics.clear();
                 mCacheLocalMusics.addAll(fileModels);
@@ -161,7 +145,13 @@ public class FileAudioManagerImpl extends FileAudioManager {
      * {@inheritDoc}
      */
     @Override
-    public void getLocalMusic(final Context context, final FileModel fileModelDirectParent, final int sortMode, final String search, final ResultCallback<List<FileAudioModel>> resultCallback) {
+    public void getLocalMusic(
+            final Context context,
+            final FileModel fileModelDirectParent,
+            final int sortMode,
+            final String search,
+            final ResultCallback<List<FileAudioModel>> resultCallback) {
+
         Preconditions.checkNotNull(fileModelDirectParent);
         Preconditions.checkNotNull(resultCallback);
         if (!fileModelDirectParent.isDirectory()) {
@@ -169,27 +159,18 @@ public class FileAudioManagerImpl extends FileAudioManager {
             return;
         }
         final List<FileAudioModel> files = new ArrayList<>();
-        List<File> fs = Arrays.asList(fileModelDirectParent.getFile().listFiles(
+        final List<File> fs = Arrays.asList(fileModelDirectParent.getFile().listFiles(
                 new FilenameFilter() {
                     @Override
                     public boolean accept(File dir, String name) {
-                        return (new FileTypeModel(FileUtils.getExtensionFromPath(name))).equals(FileTypeModelENUM.AUDIO.type);
+                        return (new FileTypeModel(FileUtils.getExtensionFromPath(name)))
+                                .equals(FileTypeModelENUM.AUDIO.type);
                     }
                 }
         ));
         for (File file : fs) {
-            final FileAudioModel.FileMusicModelBuilder fileMusicModelBuilder =
-                    new FileAudioModel.FileMusicModelBuilder().file(file);
-            if (file.getName().toLowerCase().endsWith(".mp3")) {
-                try {
-                    IMusicMetadata metadata = (new MyID3().read(file)).getSimplified();
-                    fileMusicModelBuilder.album(metadata.getAlbum());
-                    fileMusicModelBuilder.artist(metadata.getArtist());
-                } catch (Exception e) {
-                    Log.e(getClass().getName(), "Exception", e);
-                }
-            }
-            files.add(fileMusicModelBuilder.build());
+            files.add(new FileAudioModel.FileMusicModelBuilder()
+                    .file(file).build());
         }
         resultCallback.success(files);
     }
@@ -198,7 +179,12 @@ public class FileAudioManagerImpl extends FileAudioManager {
      * {@inheritDoc}
      */
     @Override
-    public void getLocalMusicFolders(final Context context, final int sortMode, final String search, final ResultCallback<List<FileModel>> resultCallback) {
+    public void getLocalMusicFolders(
+            final Context context,
+            final int sortMode,
+            final String search,
+            final ResultCallback<List<FileModel>> resultCallback) {
+
         if (!mCacheLocalMusicFolders.isEmpty()) {
             resultCallback.success(mCacheLocalMusicFolders);
             return;
@@ -259,7 +245,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
             }
 
             @Override
-            protected void onPostExecute(List<FileModel> fileModels) {
+            protected void onPostExecute(final List<FileModel> fileModels) {
                 resultCallback.success(fileModels);
                 mCacheLocalMusicFolders.clear();
                 mCacheLocalMusicFolders.addAll(fileModels);
