@@ -131,9 +131,7 @@ public class FileAudioActivity extends AppCompatActivity implements
         mSliderNumber.setValueToDisplay(new Slider.ValueToDisplay() {
             @Override
             public String convert(int value) {
-                long seconds = value / 1_000;
-                long minutes = seconds / 60;
-                return (minutes + ":" + (seconds < 10 ? "0" : "") + seconds);
+                return getTimeStr(value);
             }
         });
         mSliderNumber.setOnValueChangedListener(new Slider.OnValueChangedListener() {
@@ -278,9 +276,9 @@ public class FileAudioActivity extends AppCompatActivity implements
         supportFinishAfterTransition();
     }
 
-    private String getTimeStr(long milliseconds) {
-        final long seconds = milliseconds / 1_000;
-        final long minutes = seconds / 60;
+    private String getTimeStr(final long milliseconds) {
+        final long minutes = milliseconds / 60_000;
+        final long seconds = (milliseconds / 1_000) % 60;
         return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
     }
 }
