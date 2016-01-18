@@ -10,6 +10,9 @@ import org.cmc.music.myid3.MyID3;
 
 import java.io.File;
 
+/**
+ * An audio {@link FileModel}.
+ */
 public class FileAudioModel extends FileModel {
 
     protected String mAlbum;

@@ -66,7 +66,8 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
 
     @Override
     public FileModelAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_card, parent, false), mOnFileClickListener, mOnFileLongClickListener);
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.tab_file_card, parent, false), mOnFileClickListener, mOnFileLongClickListener);
     }
 
     @Override

@@ -135,7 +135,7 @@ public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFile
     }
 
     private void updateAdapter() {
-        FileModelAdapter adapter = new FileModelAdapter(getContext(), mFileModelList, null, this, null);
+        final FileModelAdapter adapter = new FileModelAdapter(getContext(), mFileModelList, null, this, null);
         ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, adapter);
         scaleAnimationAdapter.setDuration(220);
         scaleAnimationAdapter.setOffsetDuration(32);

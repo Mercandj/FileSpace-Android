@@ -55,6 +55,14 @@
     <string name="file_model_adapter_directory">Dossier</string>
     <string name="file_model_adapter_file">fichier</string>
     <string name="file_model_adapter_files">fichiers</string>
+    <!-- FileAudio Local Fragment -->
+    <string name="file_audio_model_directory">Dossier</string>
+    <string name="file_audio_model_music">Musique</string>
+    <string name="file_audio_model_musics">Musiques</string>
+    <!-- FileAudioModel Adapter -->
+    <string name="file_audio_model_adapter_directory">Dossier</string>
+    <string name="file_audio_model_adapter_file">fichier</string>
+    <string name="file_audio_model_adapter_files">fichiers</string>
     <!-- FileModel Type -->
     <string name="file_model_type_unknown"> </string>
     <string name="file_model_type_apk">Application Android</string>

@@ -32,8 +32,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
+import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +52,10 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
      * The view type of the card.
      */
     private static final int TYPE_CARD_ITEM = 1;
+
+    private final String mStringDirectory;
+    private final String mStringFile;
+    private final String mStringFiles;
 
     private final Context mContext;
     private final List<FileModel> mFiles;
@@ -79,6 +83,10 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
         mMoreListener = moreListener;
         mOnFileClickListener = onFileClickListener;
         mOnFileLongClickListener = onFileLongClickListener;
+
+        mStringDirectory = context.getString(R.string.file_model_adapter_directory);
+        mStringFile = context.getString(R.string.file_model_adapter_file);
+        mStringFiles = context.getString(R.string.file_model_adapter_files);
     }
 
     /**
@@ -222,10 +230,10 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
             return result;
         }
         if (fileModel.isDirectory() && fileModel.getCount() != 0) {
-            return "Directory: " + StringUtils.longToShortString(fileModel.getCount()) + " file" + (fileModel.getCount() > 1 ? "s" : "");
+            return mStringDirectory + ": " + StringUtils.longToShortString(fileModel.getCount()) + " " + (fileModel.getCount() > 1 ? mStringFiles : mStringFile);
         }
         if (fileModel.isDirectory()) {
-            return "Directory";
+            return mStringDirectory;
         }
 
         if (FileTypeModelENUM.FILESPACE.type.equals(fileModel.getType()) && fileModel.getContent() != null) {

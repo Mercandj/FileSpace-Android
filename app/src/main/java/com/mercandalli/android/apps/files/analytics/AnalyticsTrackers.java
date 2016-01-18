@@ -37,6 +37,11 @@ public final class AnalyticsTrackers {
         sInstance = new AnalyticsTrackers(context);
     }
 
+    /**
+     * Instantiate the trackers.
+     *
+     * @return The instance.
+     */
     public static synchronized AnalyticsTrackers getInstance() {
         if (sInstance == null) {
             throw new IllegalStateException("Call initialize() before getInstance()");
@@ -55,6 +60,12 @@ public final class AnalyticsTrackers {
         mContext = context.getApplicationContext();
     }
 
+    /**
+     * Get the Google analytics {@link Tracker}.
+     *
+     * @param target The AnalyticsTrackers.Target.APP.
+     * @return The {@link GoogleAnalytics} {@link Tracker}.
+     */
     public synchronized Tracker get(Target target) {
         if (!mTrackers.containsKey(target)) {
             Tracker tracker;

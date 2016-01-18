@@ -48,7 +48,7 @@ import javax.inject.Inject;
 /**
  * A {@link android.support.v4.app.Fragment} that displays the local {@link FileAudioModel}s.
  */
-public class FileImageGetLocalFragment extends InjectedFabFragment implements
+public class FileImageLocalFragment extends InjectedFabFragment implements
         BackFragment.ISortMode,
         FileModelCardAdapter.OnFileSubtitleAdapter,
         FileModelCardAdapter.OnHeaderClickListener,
@@ -97,9 +97,9 @@ public class FileImageGetLocalFragment extends InjectedFabFragment implements
     @Inject
     FileImageManager mFileImageManager;
 
-    public static FileImageGetLocalFragment newInstance() {
+    public static FileImageLocalFragment newInstance() {
         Bundle args = new Bundle();
-        FileImageGetLocalFragment fragment = new FileImageGetLocalFragment();
+        FileImageLocalFragment fragment = new FileImageLocalFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -107,7 +107,7 @@ public class FileImageGetLocalFragment extends InjectedFabFragment implements
     /**
      * Do not use this constructor. Call {@link #newInstance()} instead.
      */
-    public FileImageGetLocalFragment() {
+    public FileImageLocalFragment() {
         mRefreshActivityAdapterListener = new IListener() {
             @Override
             public void execute() {

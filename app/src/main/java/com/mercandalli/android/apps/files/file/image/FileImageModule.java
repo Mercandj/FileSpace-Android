@@ -2,10 +2,6 @@ package com.mercandalli.android.apps.files.file.image;
 
 import android.app.Application;
 
-import com.mercandalli.android.apps.files.file.FileManager;
-import com.mercandalli.android.apps.files.file.audio.FileAudioManager;
-import com.mercandalli.android.apps.files.file.audio.FileAudioManagerImpl;
-import com.mercandalli.android.apps.files.file.audio.FileAudioPlayer;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 
 import javax.inject.Singleton;

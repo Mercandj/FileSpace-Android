@@ -100,10 +100,6 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
         return mConfig;
     }
 
-    public abstract void refreshData();
-
-    public abstract void updateAdapters();
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
@@ -143,4 +139,8 @@ public abstract class ApplicationActivity extends AppCompatActivity implements A
     public boolean isLogged() {
         return mConfig != null && Config.isLogged();
     }
+
+    public abstract void refreshData();
+
+    public abstract void updateAdapters();
 }

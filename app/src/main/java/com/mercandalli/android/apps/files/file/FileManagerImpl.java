@@ -70,7 +70,6 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
     private Context mContextApp;
     private FileOnlineApi mFileOnlineApi;
     private FileLocalApi mFileLocalApi;
-    private FileCache mFileCache;
 
     private NotificationManager mNotifyManager;
     private NotificationCompat.Builder mNotificationBuilder;
@@ -81,7 +80,6 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         mContextApp = contextApp;
         mFileOnlineApi = fileOnlineApi;
         mFileLocalApi = new FileLocalApi();
-        mFileCache = new FileCache();
     }
 
     /**

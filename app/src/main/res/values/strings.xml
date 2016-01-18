@@ -137,6 +137,14 @@
     <string name="file_model_adapter_directory">Directory</string>
     <string name="file_model_adapter_file">file</string>
     <string name="file_model_adapter_files">files</string>
+    <!-- FileAudio Local Fragment -->
+    <string name="file_audio_model_directory">Directory</string>
+    <string name="file_audio_model_music">Music</string>
+    <string name="file_audio_model_musics">Musics</string>
+    <!-- FileAudioModel Adapter -->
+    <string name="file_audio_model_adapter_directory">Directory</string>
+    <string name="file_audio_model_adapter_file">file</string>
+    <string name="file_audio_model_adapter_files">files</string>
     <!-- FileModel Type -->
     <string name="file_model_type_unknown"> </string>
     <string name="file_model_type_apk">Android application</string>

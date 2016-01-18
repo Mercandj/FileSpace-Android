@@ -56,7 +56,7 @@ import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileMyCloudFragment;
-import com.mercandalli.android.apps.files.file.image.FileImageGetLocalFragment;
+import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Constants;
 
@@ -73,7 +73,6 @@ public class FileLocalPagerFragment extends BackFragment implements
 
     private FloatingActionButton mFab1;
     private FloatingActionButton mFab2;
-    private View coordinatorLayoutView;
 
     private String mTitle;
     private SetToolbarCallback mSetToolbarCallback;
@@ -136,8 +135,6 @@ public class FileLocalPagerFragment extends BackFragment implements
         mSetToolbarCallback.setToolbar(toolbar);
         setStatusBarColor(mActivity, R.color.status_bar);
         setHasOptionsMenu(true);
-
-        coordinatorLayoutView = rootView.findViewById(R.id.fragment_file_coordinator_layout);
 
         mPagerAdapter = new FileManagerFragmentPagerAdapter(getChildFragmentManager(), mApplicationCallback);
 
@@ -208,10 +205,10 @@ public class FileLocalPagerFragment extends BackFragment implements
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView mSearchView = (SearchView) searchItem.getActionView();
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView mSearchView = (SearchView) searchItem.getActionView();
 
-        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+        final SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String query) {
                 if (query == null) {
@@ -251,7 +248,12 @@ public class FileLocalPagerFragment extends BackFragment implements
         menu.findItem(R.id.action_sort).setVisible(true);
 
         if (mApplicationCallback != null && getCurrentFragmentIndex() == 0) {
-            menu.findItem(R.id.action_home).setVisible(true);
+            final Fragment fragment = getCurrentFragment();
+            if (fragment instanceof HomeIconVisible) {
+                menu.findItem(R.id.action_home).setVisible(((HomeIconVisible) fragment).isHomeVisible());
+            } else {
+                menu.findItem(R.id.action_home).setVisible(true);
+            }
         }
     }
 
@@ -463,7 +465,7 @@ public class FileLocalPagerFragment extends BackFragment implements
                 case 1:
                     return FileAudioLocalFragment.newInstance();
                 case 2:
-                    return FileImageGetLocalFragment.newInstance();
+                    return FileImageLocalFragment.newInstance();
                 default:
                     return FileLocalFragment.newInstance();
             }
@@ -485,5 +487,9 @@ public class FileLocalPagerFragment extends BackFragment implements
             sb.setSpan(mImageImageSpan[i], 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             return sb;
         }
+    }
+
+    interface HomeIconVisible {
+        boolean isHomeVisible();
     }
 }

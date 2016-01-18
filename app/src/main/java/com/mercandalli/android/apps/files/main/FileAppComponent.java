@@ -14,7 +14,7 @@ import com.mercandalli.android.apps.files.file.audio.FileAudioRowAdapter;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudDownloadedFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileMyCloudFragment;
-import com.mercandalli.android.apps.files.file.image.FileImageGetLocalFragment;
+import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
 import com.mercandalli.android.apps.files.file.image.FileImageModule;
 import com.mercandalli.android.apps.files.file.local.FileLocalFragment;
 import com.mercandalli.android.apps.files.file.local.SearchActivity;
@@ -63,7 +63,7 @@ public interface FileAppComponent {
 
     void inject(SupportFragment supportFragment);
 
-    void inject(FileImageGetLocalFragment fileImageLocalFragment);
+    void inject(FileImageLocalFragment fileImageLocalFragment);
 
     //Providers
     Application provideApp();

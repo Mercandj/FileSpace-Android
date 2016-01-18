@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.mercandalli.android.apps.files.common.util.RetrofitUtils;
 import com.mercandalli.android.apps.files.file.cloud.FileOnlineApi;
-import com.mercandalli.android.apps.files.file.local.FileLocalApi;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 
 import javax.inject.Singleton;

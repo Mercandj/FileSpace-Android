@@ -20,6 +20,7 @@
 package com.mercandalli.android.apps.files.file.audio;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -93,6 +94,10 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     private boolean mIsCard = true;
 
     private ScaleAnimationAdapter mScaleAnimationAdapter;
+
+    private String mStringDirectory;
+    private String mStringMusic;
+    private String mStringMusics;
 
     /**
      * A simple {@link Handler}. Called by {@link #showProgressBar()} or {@link #hideProgressBar()}.
@@ -171,6 +176,13 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_file_audio_local, container, false);
+
+        final Context context = getContext();
+
+        mStringDirectory = context.getString(R.string.file_audio_model_adapter_directory);
+        mStringMusic = context.getString(R.string.file_audio_model_music);
+        mStringMusics = context.getString(R.string.file_audio_model_musics);
+
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.fragment_file_audio_local_progress_bar);
         mProgressBar.setVisibility(View.GONE);
         mMessageTextView = (TextView) rootView.findViewById(R.id.fragment_file_audio_local_message);
@@ -270,7 +282,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
             }
         });
 
-        mFileModelCardAdapter = new FileModelCardAdapter(getContext(), mHeaderIds, this, mFileModels, null, new FileModelCardAdapter.OnFileClickListener() {
+        mFileModelCardAdapter = new FileModelCardAdapter(context, mHeaderIds, this, mFileModels, null, new FileModelCardAdapter.OnFileClickListener() {
             @Override
             public void onFileCardClick(View view, int position) {
                 refreshListFoldersInside(mFileModels.get(position));
@@ -466,7 +478,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     @Override
     public String onFileSubtitleModify(FileModel fileModel) {
         if (fileModel != null && fileModel.isDirectory() && fileModel.getCountAudio() != 0) {
-            return "Directory: " + StringUtils.longToShortString(fileModel.getCountAudio()) + " music" + (fileModel.getCountAudio() > 1 ? "s" : "");
+            return mStringDirectory + ": " + StringUtils.longToShortString(fileModel.getCountAudio()) + " " + (fileModel.getCountAudio() > 1 ? mStringMusics : mStringMusic);
         }
         return null;
     }

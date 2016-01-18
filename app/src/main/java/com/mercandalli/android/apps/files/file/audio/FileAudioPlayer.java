@@ -117,6 +117,9 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         mAudioManager.abandonAudioFocus(this);
     }
 
+    /**
+     * Play the next {@link FileAudioModel} in {@link #mFileAudioModelList}.
+     */
     public void next() {
         mCurrentMusicIndex++;
         if (mCurrentMusicIndex >= mFileAudioModelList.size()) {
@@ -129,6 +132,9 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         }
     }
 
+    /**
+     * Play the previous {@link FileAudioModel} in {@link #mFileAudioModelList}.
+     */
     public void previous() {
         mCurrentMusicIndex--;
         if (mCurrentMusicIndex < 0) {
@@ -141,6 +147,11 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         }
     }
 
+    /**
+     * Is the song playing.
+     *
+     * @return True if the {@code mCurrentStatus == SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING}.
+     */
     public boolean isPlaying() {
         return mCurrentStatus == SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING;
     }

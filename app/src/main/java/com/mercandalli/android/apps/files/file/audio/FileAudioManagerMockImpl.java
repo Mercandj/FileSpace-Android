@@ -8,11 +8,9 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
-import com.mercandalli.android.apps.files.file.FileManagerImpl;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.FileUtils;
-import com.mercandalli.android.apps.files.file.cloud.FileOnlineApi;
 
 import java.util.ArrayList;
 import java.util.HashMap;

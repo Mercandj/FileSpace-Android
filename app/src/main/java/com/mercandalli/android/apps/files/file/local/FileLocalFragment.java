@@ -71,7 +71,9 @@ import javax.inject.Inject;
 public class FileLocalFragment extends InjectedFabFragment implements
         BackFragment.ISortMode,
         FileModelAdapter.OnFileClickListener,
-        FileModelAdapter.OnFileLongClickListener, FileModelListener {
+        FileModelAdapter.OnFileLongClickListener,
+        FileModelListener,
+        FileLocalPagerFragment.HomeIconVisible {
 
     private RecyclerView mRecyclerView;
     private ArrayList<FileModel> mFilesList;
@@ -320,6 +322,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
         if (mCurrentDirectory == null) {
             return;
         }
+        mApplicationCallback.invalidateMenu();
 
         final File[] files = (search == null) ? mCurrentDirectory.listFiles() : mCurrentDirectory.listFiles(
                 new FilenameFilter() {
@@ -384,7 +387,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
 
         mFileModelAdapter = new FileModelAdapter(getContext(), mFilesList, this, this, this);
 
-        ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
+        final ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
         scaleAnimationAdapter.setDuration(220);
         scaleAnimationAdapter.setOffsetDuration(32);
 
@@ -400,15 +403,13 @@ public class FileLocalFragment extends InjectedFabFragment implements
 
     public void updateAdapter() {
         if (mRecyclerView != null && mFilesList != null && isAdded()) {
-
             refreshFab();
-
             mFileModelAdapter.setList(mFilesList);
         }
     }
 
     private boolean createFile(String path, String name) {
-        int len = path.length();
+        final int len = path.length();
         if (len < 1 || name.length() < 1) {
             return false;
         }
@@ -535,5 +536,10 @@ public class FileLocalFragment extends InjectedFabFragment implements
                 });
         AlertDialog menuDrop = menuAlert.create();
         menuDrop.show();
+    }
+
+    @Override
+    public boolean isHomeVisible() {
+        return !mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath());
     }
 }

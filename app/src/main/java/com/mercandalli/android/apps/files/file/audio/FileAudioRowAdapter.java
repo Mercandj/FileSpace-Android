@@ -49,6 +49,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+/**
+ * The adapter for {@link FileAudioModel} rows.
+ */
 public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapter.ViewHolder> {
 
     private List<FileModel> files;
@@ -58,6 +61,10 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
 
     private boolean mShowSize;
     private boolean mHasHeader;
+
+    private final String mStringDirectory;
+    private final String mStringFile;
+    private final String mStringFiles;
 
     /**
      * The view type of the header.
@@ -73,13 +80,17 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
     @Inject
     FileManager mFileManager;
 
-    public FileAudioRowAdapter(Activity activity, List<FileModel> files, FileModelListener moreListener) {
+    public FileAudioRowAdapter(Context context, List<FileModel> files, FileModelListener moreListener) {
         this.files = new ArrayList<>();
         this.files.addAll(files);
         this.moreListener = moreListener;
         this.mHasHeader = false;
 
-        FileApp.get(activity).getFileAppComponent().inject(this);
+        mStringDirectory = context.getString(R.string.file_model_adapter_directory);
+        mStringFile = context.getString(R.string.file_model_adapter_file);
+        mStringFiles = context.getString(R.string.file_model_adapter_files);
+
+        FileApp.get(context).getFileAppComponent().inject(this);
     }
 
     /**
@@ -293,7 +304,7 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
 
     public String getAdapterSubtitle(FileModel fileModel) {
         if (fileModel.isDirectory()) {
-            return "Directory: " + fileModel.getCount() + (fileModel.getCount() > 1 ? " files" : " file");
+            return mStringDirectory + ": " + fileModel.getCount() + " " + (fileModel.getCount() > 1 ? mStringFiles : mStringFile);
         } else if (fileModel instanceof FileAudioModel) {
             final FileAudioModel fileAudioModel = (FileAudioModel) fileModel;
             if (!StringUtils.isNullOrEmpty(fileAudioModel.getAlbum()) && !StringUtils.isNullOrEmpty(fileAudioModel.getArtist())) {

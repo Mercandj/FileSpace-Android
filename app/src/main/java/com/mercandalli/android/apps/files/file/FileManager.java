@@ -69,6 +69,9 @@ public abstract class FileManager {
      */
     public abstract void openLocalAs(final Activity activity, final FileModel fileModel);
 
+    /**
+     * Get the {@link FileModel} overview.
+     */
     public abstract Spanned toSpanned(final Context context, final FileModel fileModel);
 
     public abstract void copyLocalFile(final Activity activity, final FileModel fileModel, final String outputPath);
