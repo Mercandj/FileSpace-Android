@@ -33,6 +33,7 @@ import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
 import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
 import com.mercandalli.android.apps.files.file.FileModelListener;
+import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
 import com.mercandalli.android.apps.files.file.audio.FileAudioRowAdapter;
 import com.mercandalli.android.apps.files.main.Config;
@@ -55,7 +56,8 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         FileModelCardAdapter.OnHeaderClickListener,
         FileImageManager.GetLocalImageFoldersListener,
         FileImageManager.GetLocalImageListener,
-        FileImageManager.GetAllLocalImageListener {
+        FileImageManager.GetAllLocalImageListener,
+        ScaleAnimationAdapter.NoAnimatedPosition {
 
     private RecyclerView mRecyclerView;
     private List<FileModel> mFileModels;
@@ -254,6 +256,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
         mScaleAnimationAdapter.setDuration(220);
         mScaleAnimationAdapter.setOffsetDuration(32);
+        mScaleAnimationAdapter.setNoAnimatedPosition(FileImageLocalFragment.this);
         mRecyclerView.setAdapter(mScaleAnimationAdapter);
 
         refreshListFolders();
@@ -375,6 +378,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
         mScaleAnimationAdapter.setDuration(220);
         mScaleAnimationAdapter.setOffsetDuration(32);
+        mScaleAnimationAdapter.setNoAnimatedPosition(FileImageLocalFragment.this);
         mRecyclerView.setAdapter(mScaleAnimationAdapter);
         updateAdapter();
     }
@@ -403,6 +407,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
         mScaleAnimationAdapter.setDuration(220);
         mScaleAnimationAdapter.setOffsetDuration(32);
+        mScaleAnimationAdapter.setNoAnimatedPosition(FileImageLocalFragment.this);
         mRecyclerView.setAdapter(mScaleAnimationAdapter);
         updateAdapter();
     }
@@ -427,6 +432,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
         mScaleAnimationAdapter.setDuration(220);
         mScaleAnimationAdapter.setOffsetDuration(32);
+        mScaleAnimationAdapter.setNoAnimatedPosition(FileImageLocalFragment.this);
         mRecyclerView.setAdapter(mScaleAnimationAdapter);
         updateAdapter();
     }
@@ -437,6 +443,14 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
     @Override
     public void onLocalImageFailed() {
         updateAdapter();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isAnimatedItem(int position) {
+        return mIsInsideFolder || position != 0;
     }
 
     public void refreshListFolders() {

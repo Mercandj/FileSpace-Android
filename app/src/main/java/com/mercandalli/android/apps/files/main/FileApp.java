@@ -12,6 +12,9 @@ import com.mercandalli.android.apps.files.analytics.AnalyticsTrackers;
 
 import io.fabric.sdk.android.Fabric;
 
+/**
+ * The main {@link Application}.
+ */
 public class FileApp extends Application {
 
     private FileAppComponent mFileAppComponent;

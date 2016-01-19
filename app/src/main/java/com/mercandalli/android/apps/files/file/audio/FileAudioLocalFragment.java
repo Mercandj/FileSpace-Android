@@ -70,7 +70,8 @@ import javax.inject.Inject;
 public class FileAudioLocalFragment extends InjectedFabFragment implements
         BackFragment.ISortMode,
         FileModelCardAdapter.OnFileSubtitleAdapter,
-        FileModelCardAdapter.OnHeaderClickListener {
+        FileModelCardAdapter.OnHeaderClickListener,
+        ScaleAnimationAdapter.NoAnimatedPosition {
 
     private RecyclerView mRecyclerView;
     private List<FileModel> mFileModels;
@@ -290,9 +291,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mFileModelCardAdapter.setOnFileSubtitleAdapter(this);
 
         mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
-        mScaleAnimationAdapter.setStartPosition(1);
         mScaleAnimationAdapter.setDuration(220);
         mScaleAnimationAdapter.setOffsetDuration(32);
+        mScaleAnimationAdapter.setNoAnimatedPosition(FileAudioLocalFragment.this);
         mRecyclerView.setAdapter(mScaleAnimationAdapter);
 
         refreshListFolders();
@@ -300,128 +301,6 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mApplicationCallback.invalidateMenu();
 
         return rootView;
-    }
-
-    public void refreshListFolders() {
-        refreshListFolders("");
-    }
-
-    public void refreshListFolders(final String search) {
-        mCurrentFolder = null;
-        mIsInsideFolder = false;
-        mIsCard = true;
-        if (mFileManager == null) {
-            return;
-        }
-
-        showProgressBar();
-        mFileAudioManager.getLocalMusicFolders(mActivity, mSortMode, search, new ResultCallback<List<FileModel>>() {
-            @Override
-            public void success(List<FileModel> result) {
-                hideProgressBar();
-                if (mFileModels == null) {
-                    mFileModels = new ArrayList<>();
-                } else {
-                    mFileModels.clear();
-                }
-                mFileModels.addAll(result);
-
-                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
-                mScaleAnimationAdapter.setStartPosition(1);
-                mScaleAnimationAdapter.setDuration(220);
-                mScaleAnimationAdapter.setOffsetDuration(32);
-                mRecyclerView.setAdapter(mScaleAnimationAdapter);
-                updateAdapter();
-            }
-
-            @Override
-            public void failure() {
-                hideProgressBar();
-            }
-        });
-    }
-
-    public void refreshListAllMusic() {
-        mIsInsideFolder = false;
-        mIsCard = false;
-        if (mFileManager == null) {
-            return;
-        }
-
-        showProgressBar();
-        mFileAudioManager.getAllLocalMusic(mActivity, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
-            @Override
-            public void success(List<FileAudioModel> result) {
-                hideProgressBar();
-                if (mFileModels == null) {
-                    mFileModels = new ArrayList<>();
-                } else {
-                    mFileModels.clear();
-                }
-                mFileModels.addAll(result);
-                mFileAudioRowAdapter.setHasHeader(true);
-
-                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
-                mScaleAnimationAdapter.setStartPosition(1);
-                mScaleAnimationAdapter.setDuration(220);
-                mScaleAnimationAdapter.setOffsetDuration(32);
-                mRecyclerView.setAdapter(mScaleAnimationAdapter);
-                updateAdapter();
-            }
-
-            @Override
-            public void failure() {
-                updateAdapter();
-            }
-        });
-    }
-
-    public void refreshListFoldersInside(final FileModel fileModel) {
-        mCurrentFolder = fileModel;
-        mIsInsideFolder = true;
-        mIsCard = false;
-        mFileModels.clear();
-        mFileAudioManager.getLocalMusic(mActivity, fileModel, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
-            @Override
-            public void success(List<FileAudioModel> result) {
-                mFileModels.clear();
-                mFileModels.addAll(result);
-                mFileAudioRowAdapter.setHasHeader(false);
-
-                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
-                mScaleAnimationAdapter.setStartPosition(1);
-                mScaleAnimationAdapter.setDuration(220);
-                mScaleAnimationAdapter.setOffsetDuration(32);
-                mRecyclerView.setAdapter(mScaleAnimationAdapter);
-                updateAdapter();
-            }
-
-            @Override
-            public void failure() {
-                updateAdapter();
-            }
-        });
-    }
-
-    public void updateAdapter() {
-        if (mRecyclerView != null && mFileModels != null && isAdded()) {
-            refreshFab();
-
-            if (mFileModels.size() == 0) {
-                mMessageTextView.setText(getString(R.string.no_music));
-                mMessageTextView.setVisibility(View.VISIBLE);
-            } else {
-                mMessageTextView.setVisibility(View.GONE);
-            }
-
-            if (mIsCard) {
-                mFileModelCardAdapter.setList(mFileModels);
-            } else {
-                mFileAudioRowAdapter.setList(mFileModels);
-            }
-
-            updateLayoutManager();
-        }
     }
 
     @Override
@@ -486,16 +365,6 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         return null;
     }
 
-    private void showProgressBar() {
-        mProgressBarActivationHandler.postDelayed(mProgressBarActivationRunnable, 200);
-    }
-
-    private void hideProgressBar() {
-        mProgressBarActivationHandler.removeCallbacks(mProgressBarActivationRunnable);
-        mProgressBar.setVisibility(View.GONE);
-        mRecyclerView.setVisibility(View.VISIBLE);
-    }
-
     @Override
     public boolean onHeaderClick(View v, List<FileModelCardHeaderItem> fileModelCardHeaderItems) {
         mHeaderIds.clear();
@@ -519,5 +388,142 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
                 break;
         }
         return false;
+    }
+
+    @Override
+    public boolean isAnimatedItem(int position) {
+        return mIsInsideFolder || position != 0;
+    }
+
+    public void refreshListFolders() {
+        refreshListFolders("");
+    }
+
+    public void refreshListFolders(final String search) {
+        mCurrentFolder = null;
+        mIsInsideFolder = false;
+        mIsCard = true;
+        if (mFileManager == null) {
+            return;
+        }
+
+        showProgressBar();
+        mFileAudioManager.getLocalMusicFolders(mActivity, mSortMode, search, new ResultCallback<List<FileModel>>() {
+            @Override
+            public void success(List<FileModel> result) {
+                hideProgressBar();
+                if (mFileModels == null) {
+                    mFileModels = new ArrayList<>();
+                } else {
+                    mFileModels.clear();
+                }
+                mFileModels.addAll(result);
+
+                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
+                mScaleAnimationAdapter.setDuration(220);
+                mScaleAnimationAdapter.setOffsetDuration(32);
+                mScaleAnimationAdapter.setNoAnimatedPosition(FileAudioLocalFragment.this);
+                mRecyclerView.setAdapter(mScaleAnimationAdapter);
+                updateAdapter();
+            }
+
+            @Override
+            public void failure() {
+                hideProgressBar();
+            }
+        });
+    }
+
+    public void refreshListAllMusic() {
+        mIsInsideFolder = false;
+        mIsCard = false;
+        if (mFileManager == null) {
+            return;
+        }
+
+        showProgressBar();
+        mFileAudioManager.getAllLocalMusic(mActivity, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
+            @Override
+            public void success(List<FileAudioModel> result) {
+                hideProgressBar();
+                if (mFileModels == null) {
+                    mFileModels = new ArrayList<>();
+                } else {
+                    mFileModels.clear();
+                }
+                mFileModels.addAll(result);
+                mFileAudioRowAdapter.setHasHeader(true);
+
+                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
+                mScaleAnimationAdapter.setDuration(220);
+                mScaleAnimationAdapter.setOffsetDuration(32);
+                mScaleAnimationAdapter.setNoAnimatedPosition(FileAudioLocalFragment.this);
+                mRecyclerView.setAdapter(mScaleAnimationAdapter);
+                updateAdapter();
+            }
+
+            @Override
+            public void failure() {
+                updateAdapter();
+            }
+        });
+    }
+
+    public void refreshListFoldersInside(final FileModel fileModel) {
+        mCurrentFolder = fileModel;
+        mIsInsideFolder = true;
+        mIsCard = false;
+        mFileModels.clear();
+        mFileAudioManager.getLocalMusic(mActivity, fileModel, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
+            @Override
+            public void success(List<FileAudioModel> result) {
+                mFileModels.clear();
+                mFileModels.addAll(result);
+                mFileAudioRowAdapter.setHasHeader(false);
+
+                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
+                mScaleAnimationAdapter.setDuration(220);
+                mScaleAnimationAdapter.setOffsetDuration(32);
+                mScaleAnimationAdapter.setNoAnimatedPosition(FileAudioLocalFragment.this);
+                mRecyclerView.setAdapter(mScaleAnimationAdapter);
+                updateAdapter();
+            }
+
+            @Override
+            public void failure() {
+                updateAdapter();
+            }
+        });
+    }
+
+    public void updateAdapter() {
+        if (mRecyclerView != null && mFileModels != null && isAdded()) {
+            refreshFab();
+
+            if (mFileModels.size() == 0) {
+                mMessageTextView.setText(getString(R.string.no_music));
+                mMessageTextView.setVisibility(View.VISIBLE);
+            } else {
+                mMessageTextView.setVisibility(View.GONE);
+            }
+
+            if (mIsCard) {
+                mFileModelCardAdapter.setList(mFileModels);
+            } else {
+                mFileAudioRowAdapter.setList(mFileModels);
+            }
+
+            updateLayoutManager();
+        }
+    }
+
+    private void showProgressBar() {
+        mProgressBarActivationHandler.postDelayed(mProgressBarActivationRunnable, 200);
+    }
+
+    private void hideProgressBar() {
+        mProgressBarActivationHandler.removeCallbacks(mProgressBarActivationRunnable);
+        mProgressBar.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 }

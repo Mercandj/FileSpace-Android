@@ -52,6 +52,8 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
     private boolean mAnimsInitialized;
     private final float mFrom;
 
+    private NoAnimatedPosition mNoAnimatedPosition;
+
     public ScaleAnimationAdapter(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
         this(recyclerView, adapter, 1, 0.0F);
     }
@@ -108,7 +110,7 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
         this.mAdapter.onBindViewHolder(holder, position);
         if (this.isFirstOnly && position <= this.mLastPosition) {
             clear(holder.itemView);
-        } else {
+        } else if (mNoAnimatedPosition == null || mNoAnimatedPosition.isAnimatedItem(position)) {
             Animator[] animators = this.getAnimators(holder.itemView);
 
             LinearLayoutManager layoutManager = ((LinearLayoutManager) mRecyclerView.getLayoutManager());
@@ -133,6 +135,10 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
                 holder.itemView.setScaleY(1);
             }
 
+            this.mLastPosition = position;
+        } else {
+            holder.itemView.setScaleX(1);
+            holder.itemView.setScaleY(1);
             this.mLastPosition = position;
         }
     }
@@ -217,5 +223,20 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
         v.setPivotY((float) (v.getMeasuredHeight() / 2));
         ViewCompat.setPivotX(v, (float) (v.getMeasuredWidth() / 2));
         ViewCompat.animate(v).setInterpolator(null);
+    }
+
+    public void setNoAnimatedPosition(NoAnimatedPosition noAnimatedPosition) {
+        mNoAnimatedPosition = noAnimatedPosition;
+    }
+
+    public interface NoAnimatedPosition {
+
+        /**
+         * The the item not animated.
+         *
+         * @param position The position to check.
+         * @return True if the item is animated.
+         */
+        boolean isAnimatedItem(int position);
     }
 }
