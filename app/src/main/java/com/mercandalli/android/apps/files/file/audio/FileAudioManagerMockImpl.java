@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.FileUtils;
@@ -32,7 +31,7 @@ public class FileAudioManagerMockImpl extends FileAudioManagerImpl {
      * Delay the call.
      */
     @Override
-    public void getLocalMusicFolders(final Context context, final int sortMode, final String search, final ResultCallback<List<FileModel>> resultCallback) {
+    public void getLocalMusicFolders(final Context context, final int sortMode, final String search) {
         new AsyncTask<Void, Void, List<FileModel>>() {
             @Override
             protected List<FileModel> doInBackground(Void... params) {
@@ -97,7 +96,7 @@ public class FileAudioManagerMockImpl extends FileAudioManagerImpl {
 
             @Override
             protected void onPostExecute(List<FileModel> fileModels) {
-                resultCallback.success(fileModels);
+                notifyLocalMusicFoldersListenerSucceeded(fileModels);
                 super.onPostExecute(fileModels);
             }
         }.execute();

@@ -43,7 +43,6 @@ import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.listener.IStringListener;
-import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
@@ -71,7 +70,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         BackFragment.ISortMode,
         FileModelCardAdapter.OnFileSubtitleAdapter,
         FileModelCardAdapter.OnHeaderClickListener,
-        ScaleAnimationAdapter.NoAnimatedPosition {
+        ScaleAnimationAdapter.NoAnimatedPosition, FileAudioManager.GetAllLocalMusicListener, FileAudioManager.GetLocalMusicFoldersListener, FileAudioManager.GetLocalMusicListener {
 
     private RecyclerView mRecyclerView;
     private List<FileModel> mFileModels;
@@ -182,6 +181,10 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mStringDirectory = context.getString(R.string.file_audio_model_adapter_directory);
         mStringMusic = context.getString(R.string.file_audio_model_music);
         mStringMusics = context.getString(R.string.file_audio_model_musics);
+
+        mFileAudioManager.registerAllLocalMusicListener(this);
+        mFileAudioManager.registerLocalMusicFoldersListener(this);
+        mFileAudioManager.registerLocalMusicListener(this);
 
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.fragment_file_audio_local_progress_bar);
         mProgressBar.setVisibility(View.GONE);
@@ -408,30 +411,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         }
 
         showProgressBar();
-        mFileAudioManager.getLocalMusicFolders(mActivity, mSortMode, search, new ResultCallback<List<FileModel>>() {
-            @Override
-            public void success(List<FileModel> result) {
-                hideProgressBar();
-                if (mFileModels == null) {
-                    mFileModels = new ArrayList<>();
-                } else {
-                    mFileModels.clear();
-                }
-                mFileModels.addAll(result);
-
-                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
-                mScaleAnimationAdapter.setDuration(220);
-                mScaleAnimationAdapter.setOffsetDuration(32);
-                mScaleAnimationAdapter.setNoAnimatedPosition(FileAudioLocalFragment.this);
-                mRecyclerView.setAdapter(mScaleAnimationAdapter);
-                updateAdapter();
-            }
-
-            @Override
-            public void failure() {
-                hideProgressBar();
-            }
-        });
+        mFileAudioManager.getLocalMusicFolders(mActivity, mSortMode, search);
     }
 
     public void refreshListAllMusic() {
@@ -442,31 +422,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         }
 
         showProgressBar();
-        mFileAudioManager.getAllLocalMusic(mActivity, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
-            @Override
-            public void success(List<FileAudioModel> result) {
-                hideProgressBar();
-                if (mFileModels == null) {
-                    mFileModels = new ArrayList<>();
-                } else {
-                    mFileModels.clear();
-                }
-                mFileModels.addAll(result);
-                mFileAudioRowAdapter.setHasHeader(true);
-
-                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
-                mScaleAnimationAdapter.setDuration(220);
-                mScaleAnimationAdapter.setOffsetDuration(32);
-                mScaleAnimationAdapter.setNoAnimatedPosition(FileAudioLocalFragment.this);
-                mRecyclerView.setAdapter(mScaleAnimationAdapter);
-                updateAdapter();
-            }
-
-            @Override
-            public void failure() {
-                updateAdapter();
-            }
-        });
+        mFileAudioManager.getAllLocalMusic(mActivity, mSortMode, null);
     }
 
     public void refreshListFoldersInside(final FileModel fileModel) {
@@ -474,26 +430,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mIsInsideFolder = true;
         mIsCard = false;
         mFileModels.clear();
-        mFileAudioManager.getLocalMusic(mActivity, fileModel, mSortMode, null, new ResultCallback<List<FileAudioModel>>() {
-            @Override
-            public void success(List<FileAudioModel> result) {
-                mFileModels.clear();
-                mFileModels.addAll(result);
-                mFileAudioRowAdapter.setHasHeader(false);
-
-                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
-                mScaleAnimationAdapter.setDuration(220);
-                mScaleAnimationAdapter.setOffsetDuration(32);
-                mScaleAnimationAdapter.setNoAnimatedPosition(FileAudioLocalFragment.this);
-                mRecyclerView.setAdapter(mScaleAnimationAdapter);
-                updateAdapter();
-            }
-
-            @Override
-            public void failure() {
-                updateAdapter();
-            }
-        });
+        mFileAudioManager.getLocalMusic(mActivity, fileModel, mSortMode, null);
     }
 
     public void updateAdapter() {
@@ -525,5 +462,79 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mProgressBarActivationHandler.removeCallbacks(mProgressBarActivationRunnable);
         mProgressBar.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onDestroyView() {
+        mFileAudioManager.unregisterAllLocalMusicListener(this);
+        mFileAudioManager.unregisterLocalMusicFoldersListener(this);
+        mFileAudioManager.unregisterLocalMusicListener(this);
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onAllLocalMusicSucceeded(List<FileAudioModel> fileModels) {
+        hideProgressBar();
+        if (mFileModels == null) {
+            mFileModels = new ArrayList<>();
+        } else {
+            mFileModels.clear();
+        }
+        mFileModels.addAll(fileModels);
+        mFileAudioRowAdapter.setHasHeader(true);
+
+        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
+        mScaleAnimationAdapter.setDuration(220);
+        mScaleAnimationAdapter.setOffsetDuration(32);
+        mScaleAnimationAdapter.setNoAnimatedPosition(FileAudioLocalFragment.this);
+        mRecyclerView.setAdapter(mScaleAnimationAdapter);
+        updateAdapter();
+    }
+
+    @Override
+    public void onAllLocalMusicFailed() {
+        updateAdapter();
+    }
+
+    @Override
+    public void onLocalMusicFoldersSucceeded(List<FileModel> fileModels) {
+        hideProgressBar();
+        if (mFileModels == null) {
+            mFileModels = new ArrayList<>();
+        } else {
+            mFileModels.clear();
+        }
+        mFileModels.addAll(fileModels);
+
+        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
+        mScaleAnimationAdapter.setDuration(220);
+        mScaleAnimationAdapter.setOffsetDuration(32);
+        mScaleAnimationAdapter.setNoAnimatedPosition(FileAudioLocalFragment.this);
+        mRecyclerView.setAdapter(mScaleAnimationAdapter);
+        updateAdapter();
+    }
+
+    @Override
+    public void onLocalMusicFoldersFailed() {
+        hideProgressBar();
+    }
+
+    @Override
+    public void onLocalMusicSucceeded(List<FileAudioModel> fileModels) {
+        mFileModels.clear();
+        mFileModels.addAll(fileModels);
+        mFileAudioRowAdapter.setHasHeader(false);
+
+        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
+        mScaleAnimationAdapter.setDuration(220);
+        mScaleAnimationAdapter.setOffsetDuration(32);
+        mScaleAnimationAdapter.setNoAnimatedPosition(FileAudioLocalFragment.this);
+        mRecyclerView.setAdapter(mScaleAnimationAdapter);
+        updateAdapter();
+    }
+
+    @Override
+    public void onLocalMusicFailed() {
+        updateAdapter();
     }
 }
