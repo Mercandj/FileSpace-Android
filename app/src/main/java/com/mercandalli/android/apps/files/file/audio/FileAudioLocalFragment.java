@@ -176,7 +176,6 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_file_audio_local, container, false);
-
         final Context context = getContext();
 
         mStringDirectory = context.getString(R.string.file_audio_model_adapter_directory);
@@ -194,11 +193,11 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mFileModels = new ArrayList<>();
 
         mHeaderIds = new ArrayList<>();
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.header_audio_folder, true));
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.header_audio_recent, false));
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.header_audio_artist, false));
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.header_audio_album, false));
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.header_audio_all, false));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_folder, true));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_recent, false));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_artist, false));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_album, false));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_all, false));
 
         mFileAudioRowAdapter = new FileAudioRowAdapter(mHeaderIds, this, mActivity, mFileModels, new FileModelListener() {
             @Override
@@ -291,6 +290,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mFileModelCardAdapter.setOnFileSubtitleAdapter(this);
 
         mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
+        mScaleAnimationAdapter.setStartPosition(1);
         mScaleAnimationAdapter.setDuration(220);
         mScaleAnimationAdapter.setOffsetDuration(32);
         mRecyclerView.setAdapter(mScaleAnimationAdapter);
@@ -327,6 +327,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
                 mFileModels.addAll(result);
 
                 mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
+                mScaleAnimationAdapter.setStartPosition(1);
                 mScaleAnimationAdapter.setDuration(220);
                 mScaleAnimationAdapter.setOffsetDuration(32);
                 mRecyclerView.setAdapter(mScaleAnimationAdapter);
@@ -361,6 +362,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
                 mFileAudioRowAdapter.setHasHeader(true);
 
                 mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
+                mScaleAnimationAdapter.setStartPosition(1);
                 mScaleAnimationAdapter.setDuration(220);
                 mScaleAnimationAdapter.setOffsetDuration(32);
                 mRecyclerView.setAdapter(mScaleAnimationAdapter);
@@ -387,6 +389,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
                 mFileAudioRowAdapter.setHasHeader(false);
 
                 mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
+                mScaleAnimationAdapter.setStartPosition(1);
                 mScaleAnimationAdapter.setDuration(220);
                 mScaleAnimationAdapter.setOffsetDuration(32);
                 mRecyclerView.setAdapter(mScaleAnimationAdapter);
@@ -499,19 +502,19 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mHeaderIds.addAll(fileModelCardHeaderItems);
         final int viewId = v.getId();
         switch (viewId) {
-            case R.id.header_audio_folder:
+            case R.id.view_file_header_audio_folder:
                 refreshListFolders();
                 break;
-            case R.id.header_audio_recent:
+            case R.id.view_file_header_audio_recent:
                 //TODO
                 break;
-            case R.id.header_audio_artist:
+            case R.id.view_file_header_audio_artist:
                 //TODO
                 break;
-            case R.id.header_audio_album:
+            case R.id.view_file_header_audio_album:
                 //TODO
                 break;
-            case R.id.header_audio_all:
+            case R.id.view_file_header_audio_all:
                 refreshListAllMusic();
                 break;
         }

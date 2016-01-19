@@ -121,7 +121,7 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_HEADER) {
             return new HeaderViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(R.layout.header_audio, parent, false),
+                    LayoutInflater.from(parent.getContext()).inflate(R.layout.view_file_header_audio, parent, false),
                     mHeaderIds,
                     mOnHeaderClickListener
             );

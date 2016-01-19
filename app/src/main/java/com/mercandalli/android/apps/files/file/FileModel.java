@@ -325,7 +325,6 @@ public class FileModel implements Parcelable {
         return mCount;
     }
 
-
     public long getCountAudio() {
         return mCountAudio;
     }

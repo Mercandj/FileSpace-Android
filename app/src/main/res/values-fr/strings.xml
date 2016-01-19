@@ -57,8 +57,15 @@
     <string name="file_model_adapter_files">fichiers</string>
     <!-- FileAudio Local Fragment -->
     <string name="file_audio_model_directory">Dossier</string>
-    <string name="file_audio_model_music">Musique</string>
-    <string name="file_audio_model_musics">Musiques</string>
+    <string name="file_audio_model_music">musique</string>
+    <string name="file_audio_model_musics">musiques</string>
+    <!-- FileAudio Local HEADER -->
+    <string name="file_audio_model_header_folder">DOSSIER</string>
+    <string name="file_audio_model_header_all">TOUS</string>
+    <!-- FileImage Local Fragment -->
+    <string name="file_image_model_directory">Dossier</string>
+    <string name="file_image_model_image">image</string>
+    <string name="file_image_model_images">images</string>
     <!-- FileAudioModel Adapter -->
     <string name="file_audio_model_adapter_directory">Dossier</string>
     <string name="file_audio_model_adapter_file">fichier</string>

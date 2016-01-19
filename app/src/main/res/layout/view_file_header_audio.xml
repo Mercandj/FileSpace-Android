@@ -10,7 +10,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/header_audio_folder"
+            android:id="@+id/view_file_header_audio_folder"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_16"
@@ -25,13 +25,13 @@
             android:paddingRight="@dimen/default_16"
             android:paddingTop="@dimen/default_8"
             android:singleLine="true"
-            android:text="FOLDER"
+            android:text="@string/file_audio_model_header_folder"
             android:textColor="@color/primary"
             android:textSize="@dimen/default_text_12"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/header_audio_recent"
+            android:id="@+id/view_file_header_audio_recent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_16"
@@ -51,7 +51,7 @@
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/header_audio_artist"
+            android:id="@+id/view_file_header_audio_artist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_16"
@@ -71,7 +71,7 @@
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/header_audio_album"
+            android:id="@+id/view_file_header_audio_album"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_16"
@@ -91,7 +91,7 @@
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/header_audio_all"
+            android:id="@+id/view_file_header_audio_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_16"
@@ -106,7 +106,7 @@
             android:paddingRight="@dimen/default_16"
             android:paddingTop="@dimen/default_8"
             android:singleLine="true"
-            android:text="ALL"
+            android:text="@string/file_audio_model_header_all"
             android:textColor="@android:color/white"
             android:textSize="@dimen/default_text_12"
             android:textStyle="bold" />

@@ -24,7 +24,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.RippleDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -69,10 +71,13 @@ public class FileImageActivity extends ApplicationActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_picture);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
         }
 
         // Translucent notification bar
@@ -113,7 +118,9 @@ public class FileImageActivity extends ApplicationActivity {
                     mTitleTextView.setBackgroundColor(bgColor);
                     mTitleTextView.setTextColor(ColorUtils.colorText(bgColor));
                     RippleDrawable cir = ImageUtils.getPressedColorRippleDrawable(bgColor, ColorUtils.getDarkMutedColor(bitmap));
-                    this.circle.setBackground(cir);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        this.circle.setBackground(cir);
+                    }
                 }
                 this.progressBar.setVisibility(View.GONE);
                 this.mProgressTextView.setVisibility(View.GONE);
@@ -129,7 +136,9 @@ public class FileImageActivity extends ApplicationActivity {
                             mTitleTextView.setBackgroundColor(bgColor);
                             mTitleTextView.setTextColor(ColorUtils.colorText(bgColor));
                             RippleDrawable cir = ImageUtils.getPressedColorRippleDrawable(bgColor, ColorUtils.getDarkMutedColor(bitmap));
-                            circle.setBackground(cir);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                circle.setBackground(cir);
+                            }
                         }
                         progressBar.setVisibility(View.GONE);
                         mProgressTextView.setVisibility(View.GONE);

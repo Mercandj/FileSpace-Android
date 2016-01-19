@@ -141,6 +141,13 @@
     <string name="file_audio_model_directory">Directory</string>
     <string name="file_audio_model_music">Music</string>
     <string name="file_audio_model_musics">Musics</string>
+    <!-- FileAudio Local HEADER -->
+    <string name="file_audio_model_header_folder">FOLDER</string>
+    <string name="file_audio_model_header_all">ALL</string>
+    <!-- FileImage Local Fragment -->
+    <string name="file_image_model_directory">Directory</string>
+    <string name="file_image_model_image">image</string>
+    <string name="file_image_model_images">images</string>
     <!-- FileAudioModel Adapter -->
     <string name="file_audio_model_adapter_directory">Directory</string>
     <string name="file_audio_model_adapter_file">file</string>
