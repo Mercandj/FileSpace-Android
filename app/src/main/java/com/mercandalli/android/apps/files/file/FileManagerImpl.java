@@ -317,25 +317,19 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                 activity.startActivity(intent, options.toBundle());
             }
         } else if (fileModel.getType().equals(FileTypeModelENUM.AUDIO.type)) {
-            Intent intent = new Intent(activity, FileAudioActivity.class);
-            intent.putExtra("CLOUD", true);
-            intent.putExtra("FILE", fileModel);
-            ArrayList<FileModel> tmpFiles = new ArrayList<>();
-            for (FileModel f : fileModelList) {
-                if (f.getType().equals(FileTypeModelENUM.AUDIO.type)) {
-                    tmpFiles.add(f);
+
+            int musicCurrentPosition = position;
+            List<String> filesPath = new ArrayList<>();
+            for (int i = 0; i < fileModelList.size(); i++) {
+                final FileModel f = fileModelList.get(i);
+                if (f.getType() != null && f.getType().equals(FileTypeModelENUM.AUDIO.type) && f.getFile() != null) {
+                    filesPath.add(f.getFile().getAbsolutePath());
+                } else if (i < musicCurrentPosition) {
+                    musicCurrentPosition--;
                 }
             }
-            intent.putParcelableArrayListExtra("FILES", tmpFiles);
-            if (view == null) {
-                activity.startActivity(intent);
-                activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-            } else {
-                Pair<View, String> p1 = Pair.create(view.findViewById(R.id.tab_icon), "transitionIcon");
-                ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(activity, p1);
-                activity.startActivity(intent, options.toBundle());
-            }
+            FileAudioActivity.start(activity, musicCurrentPosition, filesPath, view, true);
+
         } /* else if (this.type.equals(FileTypeModelENUM.FILESPACE.type)) {
             if (content != null) {
                 if (content.timer.timer_date != null) {
@@ -398,28 +392,8 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                     musicCurrentPosition--;
                 }
             }
-            FileAudioActivity.startLocal(activity, musicCurrentPosition, filesPath, view);
+            FileAudioActivity.start(activity, musicCurrentPosition, filesPath, view, false);
 
-
-            /*
-            Intent intent = new Intent(activity, FileAudioActivity.class);
-            intent.putExtra("CLOUD", false);
-            intent.putExtra("FILE", fileModel);
-            ArrayList<FileModel> tmpFiles = new ArrayList<>();
-            for (FileModel f : files)
-                if (f.getType() != null && f.getType().equals(FileTypeModelENUM.AUDIO.type))
-                    tmpFiles.add(f);
-            intent.putParcelableArrayListExtra("FILES", tmpFiles);
-            if (view == null) {
-                activity.startActivity(intent);
-                activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-            } else {
-                PairObject<View, String> p1 = PairObject.create(view.findViewById(R.id.icon), "transitionIcon");
-                ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(activity, p1);
-                activity.startActivity(intent, options.toBundle());
-            }
-            */
         } else if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
             Intent picIntent = new Intent();
             picIntent.setAction(Intent.ACTION_VIEW);

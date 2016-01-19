@@ -76,11 +76,17 @@ public class FileAudioActivity extends AppCompatActivity implements
     /**
      * Start this {@link AppCompatActivity}.
      */
-    public static void startLocal(Activity activity, final int currentPosition, final List<String> fileMusicPath, final View animationView) {
+    public static void start(
+            final Activity activity,
+            final int currentPosition,
+            final List<String> fileMusicPath,
+            final View animationView,
+            final boolean isOnline) {
+
         Bundle args = new Bundle();
         final Intent intent = new Intent(activity, FileAudioActivity.class);
 
-        intent.putExtra(EXTRA_IS_ONLINE, false);
+        intent.putExtra(EXTRA_IS_ONLINE, isOnline);
         intent.putExtra(EXTRA_FILE_CURRENT_POSITION, currentPosition);
         intent.putExtra(EXTRA_FILES_PATH, new ArrayList<>(fileMusicPath));
 
@@ -163,7 +169,18 @@ public class FileAudioActivity extends AppCompatActivity implements
             final List<String> absolutePathArray = bundle.getStringArrayList(EXTRA_FILES_PATH);
             if (absolutePathArray != null) {
                 for (String absolutePath : absolutePathArray) {
-                    mFileAudioModelList.add(new FileAudioModel.FileMusicModelBuilder().file(new File(absolutePath)).build());
+                    if (mIsOnline) {
+                        mFileAudioModelList.add(
+                                ((FileAudioModel.FileMusicModelBuilder) (
+                                        new FileAudioModel.FileMusicModelBuilder()
+                                                .isOnline(true)
+                                                .url(absolutePath)))
+                                        .build());
+                    } else {
+                        mFileAudioModelList.add(
+                                new FileAudioModel.FileMusicModelBuilder()
+                                        .file(new File(absolutePath)).build());
+                    }
                 }
             }
 
@@ -171,8 +188,6 @@ public class FileAudioActivity extends AppCompatActivity implements
                 mFileAudioPlayer.startMusic(mCurrentPosition, mFileAudioModelList);
                 mFileAudioCast.startMusic(mCurrentPosition, mFileAudioModelList);
             }
-        } else {
-            throw new IllegalArgumentException("Use static start() method");
         }
 
         mFirstStart = false;
