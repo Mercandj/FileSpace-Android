@@ -37,6 +37,9 @@ public class FileModel implements Parcelable {
     protected long mCount;
     private long mCountAudio;
 
+    /**
+     * A Builder to instantiate immutable object.
+     */
     public static class FileModelBuilder {
 
         // Online & Local attrs

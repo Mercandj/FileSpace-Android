@@ -29,12 +29,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
+import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The main {@link FileModel} {@link RecyclerView.Adapter}.
+ */
 public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.ViewHolder> {
 
     private final Context mContext;
@@ -134,7 +137,6 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
     public int getItemCount() {
         return mFiles.size();
     }
-
 
     public void replaceList(List<FileModel> list) {
         mFiles.clear();
