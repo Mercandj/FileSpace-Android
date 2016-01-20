@@ -20,7 +20,7 @@ public class FileModule {
     @Provides
     @Singleton
     FileManager provideFileManager(Application application) {
-        FileOnlineApi fileOnlineApi = RetrofitUtils.getAuthorizedRestAdapter().create(FileOnlineApi.class);
+        final FileOnlineApi fileOnlineApi = RetrofitUtils.getAuthorizedRestAdapter().create(FileOnlineApi.class);
 
         return new FileManagerImpl(application, fileOnlineApi);
         // return new FileManagerMockImpl(application, fileOnlineApi);
