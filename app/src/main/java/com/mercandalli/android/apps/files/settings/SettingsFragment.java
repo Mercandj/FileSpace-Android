@@ -197,6 +197,12 @@ public class SettingsFragment extends BackFragment {
                 new DialogAuthorLabel(mActivity, mApplicationCallback);
             }
         }));
+        list.add(new ModelSetting(mActivity.getString(R.string.settings_licences), new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LicenseActivity.start(mActivity);
+            }
+        }));
         if (Constants.ADS_VISIBLE) {
             list.add(new ModelSetting(context.getString(R.string.settings_ad), new View.OnClickListener() {
                 @Override

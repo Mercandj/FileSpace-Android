@@ -39,7 +39,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
     private final List<GetLocalMusicListener> mGetLocalMusicListeners = new ArrayList<>();
 
     /* Cache */
-    private final List<FileAudioModel> mCacheLocalMusics = new ArrayList<>();
+    private final HashMap<String, List<FileAudioModel>> mCacheAllLocalMusics = new HashMap<>();
     private final List<FileModel> mCacheLocalMusicFolders = new ArrayList<>();
 
     private boolean mIsGetAllLocalMusicLaunched;
@@ -58,10 +58,14 @@ public class FileAudioManagerImpl extends FileAudioManager {
     public void getAllLocalMusic(
             final Context context,
             final int sortMode,
-            final String search) {
+            final String search,
+            final boolean notifyListeners) {
 
-        if (!mCacheLocalMusics.isEmpty()) {
-            notifyAllLocalMusicListenerSucceeded(mCacheLocalMusics);
+        final String requestKey = search + "¤" + sortMode;
+        if (mCacheAllLocalMusics.containsKey(requestKey)) {
+            if (notifyListeners) {
+                notifyAllLocalMusicListenerSucceeded(mCacheAllLocalMusics.get(requestKey));
+            }
             return;
         }
         if (mIsGetAllLocalMusicLaunched) {
@@ -141,9 +145,10 @@ public class FileAudioManagerImpl extends FileAudioManager {
 
             @Override
             protected void onPostExecute(final List<FileAudioModel> fileModels) {
-                notifyAllLocalMusicListenerSucceeded(fileModels);
-                mCacheLocalMusics.clear();
-                mCacheLocalMusics.addAll(fileModels);
+                if (notifyListeners) {
+                    notifyAllLocalMusicListenerSucceeded(fileModels);
+                }
+                mCacheAllLocalMusics.put(requestKey, fileModels);
                 mIsGetAllLocalMusicLaunched = false;
                 super.onPostExecute(fileModels);
             }

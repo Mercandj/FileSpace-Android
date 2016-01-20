@@ -248,17 +248,23 @@ public class FileImageManagerImpl implements FileImageManager {
             return;
         }
         final List<FileModel> files = new ArrayList<>();
-        List<File> fs = Arrays.asList(fileModelDirectParent.getFile().listFiles(
+
+        final File[] filesArray = fileModelDirectParent.getFile().listFiles(
                 new FilenameFilter() {
                     @Override
                     public boolean accept(File dir, String name) {
-                        return (new FileTypeModel(FileUtils.getExtensionFromPath(name))).equals(FileTypeModelENUM.PICTURE.type);
+                        return (new FileTypeModel(FileUtils.getExtensionFromPath(name)))
+                                .equals(FileTypeModelENUM.PICTURE.type);
                     }
                 }
-        ));
+        );
+        final List<File> fs = new ArrayList<>();
+        if (filesArray != null) {
+            fs.addAll(Arrays.asList(filesArray));
+        }
         for (File file : fs) {
-            final FileModel.FileModelBuilder fileModelBuilder =
-                    new FileAudioModel.FileModelBuilder().file(file);
+            final FileModel.FileModelBuilder fileModelBuilder = new FileAudioModel.FileModelBuilder()
+                    .file(file);
             files.add(fileModelBuilder.build());
         }
         notifyLocalImageListenerSucceeded(files);

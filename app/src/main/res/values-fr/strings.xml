@@ -106,6 +106,7 @@
     <!-- Settings -->
     <string name="settings_title">Paramètres</string>
     <string name="settings_about">À propos</string>
+    <string name="settings_licences">Licences</string>
     <string name="settings_ad">Rendre le développeur content</string>
     <string name="settings_ad_is_loading">En cours de chargement…</string>
     <string name="settings_ad_thank_you_1">Merci. Le développeur est content =)</string>
