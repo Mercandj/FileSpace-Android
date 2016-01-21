@@ -54,10 +54,10 @@ import javax.inject.Inject;
  */
 public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapter.ViewHolder> {
 
-    private List<FileModel> files;
+    private List<FileAudioModel> files;
     private OnItemClickListener mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
-    private FileModelListener moreListener;
+    private FileAudioModelListener moreListener;
 
     private boolean mShowSize;
     private boolean mHasHeader;
@@ -80,7 +80,7 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
     @Inject
     FileManager mFileManager;
 
-    public FileAudioRowAdapter(Context context, List<FileModel> files, FileModelListener moreListener) {
+    public FileAudioRowAdapter(Context context, List<FileAudioModel> files, FileAudioModelListener moreListener) {
         this.files = new ArrayList<>();
         this.files.addAll(files);
         this.moreListener = moreListener;
@@ -100,8 +100,8 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
             final List<FileModelCardHeaderItem> headerIds,
             final FileModelCardAdapter.OnHeaderClickListener onHeaderClickListener,
             Activity activity,
-            List<FileModel> files,
-            FileModelListener moreListener) {
+            List<FileAudioModel> files,
+            FileAudioModelListener moreListener) {
         this(activity, files, moreListener);
         this.mHasHeader = true;
         mHeaderIds = new ArrayList<>();
@@ -138,7 +138,7 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
             headerViewHolder.setFileModelCardHeaderItems(mHeaderIds);
         } else if (position < files.size() + (mHasHeader ? 1 : 0)) {
             final FileViewHolder fileViewHolder = (FileViewHolder) viewHolder;
-            final FileModel file = files.get(position - (mHasHeader ? 1 : 0));
+            final FileAudioModel file = files.get(position - (mHasHeader ? 1 : 0));
 
             fileViewHolder.title.setText(getAdapterTitle(file));
             fileViewHolder.subtitle.setText(getAdapterSubtitle(file));
@@ -173,7 +173,7 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
                 @Override
                 public void onClick(View v) {
                     if (moreListener != null) {
-                        moreListener.executeFileModel(file);
+                        moreListener.executeFileAudioModel(file);
                     }
                 }
             });
@@ -255,7 +255,7 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
         }
     }
 
-    public void setList(List<FileModel> list) {
+    public void setList(List<FileAudioModel> list) {
         files.clear();
         files.addAll(list);
         notifyDataSetChanged();

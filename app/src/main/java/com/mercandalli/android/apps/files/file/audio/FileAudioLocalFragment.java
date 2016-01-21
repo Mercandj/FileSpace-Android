@@ -98,6 +98,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     private int mCurrentPage = PAGE_FOLDERS;
 
     private RecyclerView mRecyclerView;
+    private List<FileAudioModel> mFileAudioModels;
     private List<FileModel> mFileModels;
     private TextView mMessageTextView;
 
@@ -217,6 +218,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         updateLayoutManager();
 
         mFileModels = new ArrayList<>();
+        mFileAudioModels = new ArrayList<>();
 
         mHeaderIds = new ArrayList<>();
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_folder, true));
@@ -225,13 +227,13 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_album, false));
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_all, false));
 
-        mFileAudioRowAdapter = new FileAudioRowAdapter(mHeaderIds, this, mActivity, mFileModels, new FileModelListener() {
+        mFileAudioRowAdapter = new FileAudioRowAdapter(mHeaderIds, this, mActivity, mFileAudioModels, new FileAudioModelListener() {
             @Override
-            public void executeFileModel(final FileModel fileModel) {
+            public void executeFileAudioModel(final FileAudioModel fileModel) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
-                String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.properties)};
+                String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.meta_data_edition), getString(R.string.properties)};
                 if (mApplicationCallback.isLogged()) {
-                    menuList = new String[]{getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.properties)};
+                    menuList = new String[]{getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.meta_data_edition), getString(R.string.properties)};
                 }
                 menuAlert.setTitle("Action");
                 menuAlert.setItems(menuList,
@@ -281,6 +283,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
                                         }, "No", null);
                                         break;
                                     case 4:
+                                        EditMetaDataDialog.newInstance(fileModel.getUrl(), fileModel.getArtist()).show(getFragmentManager(), null);
+                                        break;
+                                    case 5:
                                         DialogUtils.alert(mActivity,
                                                 getString(R.string.properties) + " : " + fileModel.getName(),
                                                 mFileManager.toSpanned(mActivity, fileModel),
@@ -481,7 +486,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
             if (mCurrentPage == PAGE_FOLDERS) {
                 mFileModelCardAdapter.setList(mFileModels);
             } else {
-                mFileAudioRowAdapter.setList(mFileModels);
+                mFileAudioRowAdapter.setList(mFileAudioModels);
             }
 
             updateLayoutManager();
