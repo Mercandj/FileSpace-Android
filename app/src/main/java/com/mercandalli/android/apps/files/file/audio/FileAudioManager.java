@@ -14,7 +14,7 @@ public abstract class FileAudioManager {
     /**
      * Get all the {@link FileAudioModel} in the device.
      */
-    public abstract void getAllLocalMusic(final Context context, final int sortMode, final String search, final boolean notifyListeners);
+    public abstract void getAllLocalMusic(final Context context, final int sortMode, final String search);
 
     /**
      * Get all the {@link FileAudioModel} in a folder.

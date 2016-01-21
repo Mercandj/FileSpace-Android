@@ -58,14 +58,11 @@ public class FileAudioManagerImpl extends FileAudioManager {
     public void getAllLocalMusic(
             final Context context,
             final int sortMode,
-            final String search,
-            final boolean notifyListeners) {
+            final String search) {
 
         final String requestKey = search + "¤" + sortMode;
         if (mCacheAllLocalMusics.containsKey(requestKey)) {
-            if (notifyListeners) {
-                notifyAllLocalMusicListenerSucceeded(mCacheAllLocalMusics.get(requestKey));
-            }
+            notifyAllLocalMusicListenerSucceeded(mCacheAllLocalMusics.get(requestKey));
             return;
         }
         if (mIsGetAllLocalMusicLaunched) {
@@ -145,9 +142,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
 
             @Override
             protected void onPostExecute(final List<FileAudioModel> fileModels) {
-                if (notifyListeners) {
-                    notifyAllLocalMusicListenerSucceeded(fileModels);
-                }
+                notifyAllLocalMusicListenerSucceeded(fileModels);
                 mCacheAllLocalMusics.put(requestKey, fileModels);
                 mIsGetAllLocalMusicLaunched = false;
                 super.onPostExecute(fileModels);
