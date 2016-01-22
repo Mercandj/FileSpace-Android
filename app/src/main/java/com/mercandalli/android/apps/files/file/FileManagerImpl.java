@@ -470,6 +470,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
      */
     @Override
     public Spanned toSpanned(final Context context, final FileModel fileModel) {
+        Preconditions.checkNotNull(context);
+        Preconditions.checkNotNull(fileModel);
+
         final FileTypeModel type = fileModel.getType();
         final boolean isDirectory = fileModel.isDirectory();
         final long size = fileModel.getSize();

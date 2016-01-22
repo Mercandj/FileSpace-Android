@@ -1,7 +1,5 @@
 package com.mercandalli.android.apps.files.file.audio;
 
-import android.content.Context;
-
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 import org.jaudiotagger.audio.AudioFile;
@@ -18,17 +16,19 @@ import org.jaudiotagger.tag.TagException;
 import java.io.File;
 import java.io.IOException;
 
-public class FileAudioMetaUtils {
+public class FileAudioTagsUtils {
 
-    public static boolean setArtist(
-            final Context context,
+    public static boolean setMetaData(
             final File file,
-            final String artistName) {
+            final String newTitle,
+            final String newArtist,
+            final String newAlbum) {
 
-        Preconditions.checkNotNull(context);
         Preconditions.checkNotNull(file);
-        Preconditions.checkNotNull(artistName);
 
+        if (newTitle == null && newArtist == null && newAlbum == null) {
+            return true;
+        }
         if (!file.exists()) {
             return false;
         }
@@ -45,7 +45,15 @@ public class FileAudioMetaUtils {
         final Tag tag = audioFile.getTag();
         if (tag != null) {
             try {
-                tag.setField(FieldKey.ARTIST, artistName);
+                if (newTitle != null) {
+                    tag.setField(FieldKey.TITLE, newTitle);
+                }
+                if (newArtist != null) {
+                    tag.setField(FieldKey.ARTIST, newArtist);
+                }
+                if (newAlbum != null) {
+                    tag.setField(FieldKey.ALBUM, newAlbum);
+                }
                 audioFile.setTag(tag);
                 audioFile.commit();
                 return true;

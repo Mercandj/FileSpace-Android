@@ -15,12 +15,19 @@ import java.io.File;
  */
 public class FileAudioModel extends FileModel {
 
+    protected String mTitle;
     protected String mAlbum;
     protected String mArtist;
 
     public static class FileMusicModelBuilder extends FileModelBuilder {
+        private String mTitle;
         private String mAlbum;
         private String mArtist;
+
+        public FileMusicModelBuilder title(String title) {
+            this.mTitle = title;
+            return this;
+        }
 
         public FileMusicModelBuilder album(String album) {
             this.mAlbum = album;
@@ -57,7 +64,8 @@ public class FileAudioModel extends FileModel {
                 return this;
             }
             try {
-                IMusicMetadata metadata = (new MyID3().read(file)).getSimplified();
+                final IMusicMetadata metadata = (new MyID3().read(file)).getSimplified();
+                title(metadata.getSongTitle());
                 album(metadata.getAlbum());
                 artist(metadata.getArtist());
             } catch (Exception e) {
@@ -85,10 +93,15 @@ public class FileAudioModel extends FileModel {
             fileAudioModel.mLastModified = mLastModified;
             fileAudioModel.mCount = mCount;
 
+            fileAudioModel.mTitle = mTitle;
             fileAudioModel.mAlbum = mAlbum;
             fileAudioModel.mArtist = mArtist;
             return fileAudioModel;
         }
+    }
+
+    public String getTitle() {
+        return mTitle;
     }
 
     public String getAlbum() {

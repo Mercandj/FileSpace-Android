@@ -33,9 +33,7 @@ import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
 import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
 import com.mercandalli.android.apps.files.file.FileModelListener;
-import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
-import com.mercandalli.android.apps.files.file.audio.FileAudioRowAdapter;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
@@ -74,7 +72,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
      */
     private ProgressBar mProgressBar;
 
-    private FileAudioRowAdapter mFileAudioRowAdapter;
+    private FileImageRowAdapter mFileImageRowAdapter;
     private FileModelCardAdapter mFileModelCardAdapter;
 
     private int mSortMode = Constants.SORT_DATE_MODIFICATION;
@@ -163,7 +161,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_album, false));
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_all, false));
 
-        mFileAudioRowAdapter = new FileAudioRowAdapter(mHeaderIds, this, mActivity, mFileModels, new FileModelListener() {
+        mFileImageRowAdapter = new FileImageRowAdapter(mHeaderIds, this, mActivity, mFileModels, new FileModelListener() {
             @Override
             public void executeFileModel(final FileModel fileModel) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
@@ -234,7 +232,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                 menuDrop.show();
             }
         });
-        mFileAudioRowAdapter.setOnItemClickListener(new FileAudioRowAdapter.OnItemClickListener() {
+        mFileImageRowAdapter.setOnItemClickListener(new FileImageRowAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 if (mFileModels.get(position).isDirectory()) {
@@ -373,9 +371,9 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
             mFileModels.clear();
         }
         mFileModels.addAll(fileModels);
-        mFileAudioRowAdapter.setHasHeader(true);
+        mFileImageRowAdapter.setHasHeader(true);
 
-        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
+        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileImageRowAdapter);
         mScaleAnimationAdapter.setDuration(220);
         mScaleAnimationAdapter.setOffsetDuration(32);
         mScaleAnimationAdapter.setNoAnimatedPosition(FileImageLocalFragment.this);
@@ -427,9 +425,9 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
     public void onLocalImageSucceeded(List<FileModel> fileModels) {
         mFileModels.clear();
         mFileModels.addAll(fileModels);
-        mFileAudioRowAdapter.setHasHeader(false);
+        mFileImageRowAdapter.setHasHeader(false);
 
-        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
+        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileImageRowAdapter);
         mScaleAnimationAdapter.setDuration(220);
         mScaleAnimationAdapter.setOffsetDuration(32);
         mScaleAnimationAdapter.setNoAnimatedPosition(FileImageLocalFragment.this);
@@ -502,7 +500,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
             if (mIsCard) {
                 mFileModelCardAdapter.setList(mFileModels);
             } else {
-                mFileAudioRowAdapter.setList(mFileModels);
+                mFileImageRowAdapter.setList(mFileModels);
             }
 
             updateLayoutManager();
@@ -539,7 +537,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                 gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                     @Override
                     public int getSpanSize(int position) {
-                        return mFileAudioRowAdapter.isHeader(position) ? gridLayoutManager.getSpanCount() : 1;
+                        return mFileImageRowAdapter.isHeader(position) ? gridLayoutManager.getSpanCount() : 1;
                     }
                 });
             }

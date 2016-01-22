@@ -2,27 +2,69 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingBottom="8dp"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
+    android:paddingTop="24dp">
 
-    <EditText
-        android:id="@+id/dialog_edit_meta_data_artist"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <EditText
+            android:id="@+id/dialog_edit_meta_data_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Title"
+            android:lines="1"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textSize="20sp" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:hint="Artist" />
+        android:layout_marginTop="10dp">
 
-    <Button
-        android:id="@+id/dialog_edit_meta_data_button"
-        android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/dialog_edit_meta_data_artist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Artist"
+            android:lines="1"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textSize="20sp" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="OK" />
+        android:layout_marginTop="10dp">
 
-    <Button
-        android:id="@+id/dialog_edit_meta_data_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Cancel" />
+        <EditText
+            android:id="@+id/dialog_edit_meta_data_album"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Album"
+            android:lines="1"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textSize="20sp" />
+
+    </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>

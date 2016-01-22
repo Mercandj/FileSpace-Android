@@ -53,7 +53,6 @@ import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
 import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
-import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
@@ -229,11 +228,11 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
 
         mFileAudioRowAdapter = new FileAudioRowAdapter(mHeaderIds, this, mActivity, mFileAudioModels, new FileAudioModelListener() {
             @Override
-            public void executeFileAudioModel(final FileAudioModel fileModel) {
+            public void executeFileAudioModel(final FileAudioModel fileAudioModel) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
-                String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.meta_data_edition), getString(R.string.properties)};
+                String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.tags_edition), getString(R.string.properties)};
                 if (mApplicationCallback.isLogged()) {
-                    menuList = new String[]{getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.meta_data_edition), getString(R.string.properties)};
+                    menuList = new String[]{getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.tags_edition), getString(R.string.properties)};
                 }
                 menuAlert.setTitle("Action");
                 menuAlert.setItems(menuList,
@@ -244,51 +243,51 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
                                 }
                                 switch (item) {
                                     case 0:
-                                        if (fileModel.isDirectory()) {
+                                        if (fileAudioModel.isDirectory()) {
                                             Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                                         } else {
-                                            DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + fileModel.getName(), getString(R.string.upload), new IListener() {
+                                            DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + fileAudioModel.getName(), getString(R.string.upload), new IListener() {
                                                 @Override
                                                 public void execute() {
-                                                    if (fileModel.getFile() != null) {
-                                                        List<StringPair> parameters = FileManager.getForUpload(fileModel);
+                                                    if (fileAudioModel.getFile() != null) {
+                                                        List<StringPair> parameters = FileManager.getForUpload(fileAudioModel);
                                                         (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
                                                             @Override
                                                             public void onPostExecute(JSONObject json, String body) {
 
                                                             }
-                                                        }, parameters, fileModel.getFile())).execute();
+                                                        }, parameters, fileAudioModel.getFile())).execute();
                                                     }
                                                 }
                                             }, getString(R.string.cancel), null);
                                         }
                                         break;
                                     case 1:
-                                        mFileManager.openLocalAs(mActivity, fileModel);
+                                        mFileManager.openLocalAs(mActivity, fileAudioModel);
                                         break;
                                     case 2:
-                                        DialogUtils.prompt(mActivity, "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
+                                        DialogUtils.prompt(mActivity, "Rename", "Rename " + (fileAudioModel.isDirectory() ? "directory" : "file") + " " + fileAudioModel.getName() + " ?", "Ok", new IStringListener() {
                                             @Override
                                             public void execute(String text) {
-                                                mFileManager.rename(fileModel, text, mRefreshActivityAdapterListener);
+                                                mFileManager.rename(fileAudioModel, text, mRefreshActivityAdapterListener);
                                             }
-                                        }, "Cancel", null, fileModel.getFullName());
+                                        }, "Cancel", null, fileAudioModel.getFullName());
                                         break;
                                     case 3:
-                                        DialogUtils.alert(mActivity, "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
+                                        DialogUtils.alert(mActivity, "Delete", "Delete " + (fileAudioModel.isDirectory() ? "directory" : "file") + " " + fileAudioModel.getName() + " ?", "Yes", new IListener() {
                                             @Override
                                             public void execute() {
-                                                mFileManager.delete(fileModel, mRefreshActivityAdapterListener);
+                                                mFileManager.delete(fileAudioModel, mRefreshActivityAdapterListener);
                                             }
                                         }, "No", null);
                                         break;
                                     case 4:
-                                        EditMetaDataDialog.newInstance(fileModel.getUrl(), fileModel.getArtist()).show(getFragmentManager(), null);
+                                        FileAudioEditTagsDialog.newInstance(fileAudioModel).show(getFragmentManager(), null);
                                         break;
                                     case 5:
                                         DialogUtils.alert(mActivity,
-                                                getString(R.string.properties) + " : " + fileModel.getName(),
-                                                mFileManager.toSpanned(mActivity, fileModel),
+                                                getString(R.string.properties) + " : " + fileAudioModel.getName(),
+                                                mFileAudioManager.toSpanned(mActivity, fileAudioModel),
                                                 "OK",
                                                 null,
                                                 null,
@@ -341,7 +340,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mApplicationCallback.invalidateMenu();
 
         // Pre-load.
-        mFileAudioManager.getAllLocalMusic(context, mSortMode, null);
+        mFileAudioManager.getAllLocalMusic(mSortMode, null);
 
         return rootView;
     }
@@ -452,7 +451,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         }
 
         showProgressBar();
-        mFileAudioManager.getLocalMusicFolders(mActivity, mSortMode, search);
+        mFileAudioManager.getLocalMusicFolders(mSortMode, search);
     }
 
     public void refreshListAllMusic() {
@@ -462,21 +461,23 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         }
 
         showProgressBar();
-        mFileAudioManager.getAllLocalMusic(mActivity, mSortMode, null);
+        mFileAudioManager.getAllLocalMusic(mSortMode, null);
     }
 
     public void refreshListFoldersInside(final FileModel fileModel) {
         mCurrentFolder = fileModel;
         mCurrentPage = PAGE_FOLDER_INSIDE;
         mFileModels.clear();
-        mFileAudioManager.getLocalMusic(mActivity, fileModel, mSortMode, null);
+        mFileAudioManager.getLocalMusic(fileModel, mSortMode, null);
     }
 
     public void updateAdapter() {
         if (mRecyclerView != null && mFileModels != null && isAdded()) {
             refreshFab();
 
-            if (mFileModels.size() == 0) {
+            final boolean isEmpty = (mFileModels.size() == 0 && mCurrentPage == PAGE_FOLDERS) ||
+                    (mFileAudioModels.size() == 0 && mCurrentPage != PAGE_FOLDERS);
+            if (isEmpty) {
                 mMessageTextView.setText(getString(R.string.no_music));
                 mMessageTextView.setVisibility(View.VISIBLE);
             } else {
@@ -518,12 +519,12 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         }
         Preconditions.checkNotNull(fileModels);
         hideProgressBar();
-        if (mFileModels == null) {
-            mFileModels = new ArrayList<>();
+        if (mFileAudioModels == null) {
+            mFileAudioModels = new ArrayList<>();
         } else {
-            mFileModels.clear();
+            mFileAudioModels.clear();
         }
-        mFileModels.addAll(fileModels);
+        mFileAudioModels.addAll(fileModels);
         mFileAudioRowAdapter.setHasHeader(true);
 
         mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
@@ -576,8 +577,8 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         if (mCurrentPage != PAGE_FOLDER_INSIDE) {
             return;
         }
-        mFileModels.clear();
-        mFileModels.addAll(fileModels);
+        mFileAudioModels.clear();
+        mFileAudioModels.addAll(fileModels);
         mFileAudioRowAdapter.setHasHeader(false);
 
         mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);

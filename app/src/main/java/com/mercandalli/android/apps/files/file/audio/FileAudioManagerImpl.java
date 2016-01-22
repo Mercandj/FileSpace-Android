@@ -5,7 +5,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.text.Spanned;
 
+import com.mercandalli.android.apps.files.common.util.HtmlUtils;
+import com.mercandalli.android.apps.files.common.util.StringPair;
+import com.mercandalli.android.apps.files.common.util.TimeUtils;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileTypeModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
@@ -19,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +37,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
 
     private static final String LIKE = " LIKE ?";
 
-    private Context mContextApp;
+    protected Context mContextApp;
 
     private final List<GetAllLocalMusicListener> mGetAllLocalMusicListeners = new ArrayList<>();
     private final List<GetLocalMusicFoldersListener> mGetLocalMusicFoldersListeners = new ArrayList<>();
@@ -45,9 +50,13 @@ public class FileAudioManagerImpl extends FileAudioManager {
     private boolean mIsGetAllLocalMusicLaunched;
     private boolean mIsGetLocalMusicFoldersLaunched;
 
+    /**
+     * The manager constructor.
+     *
+     * @param contextApp The {@link Context} of this application.
+     */
     public FileAudioManagerImpl(Context contextApp) {
         Preconditions.checkNotNull(contextApp);
-
         mContextApp = contextApp;
     }
 
@@ -55,11 +64,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
      * {@inheritDoc}
      */
     @Override
-    public void getAllLocalMusic(
-            final Context context,
-            final int sortMode,
-            final String search) {
-
+    public void getAllLocalMusic(final int sortMode, final String search) {
         final String requestKey = search + "¤" + sortMode;
         if (mCacheAllLocalMusics.containsKey(requestKey)) {
             notifyAllLocalMusicListenerSucceeded(mCacheAllLocalMusics.get(requestKey));
@@ -92,7 +97,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
                     selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
                 }
 
-                final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
+                final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         do {
@@ -155,12 +160,12 @@ public class FileAudioManagerImpl extends FileAudioManager {
      */
     @Override
     public void getLocalMusic(
-            final Context context,
             final FileModel fileModelDirectParent,
             final int sortMode,
             final String search) {
 
         Preconditions.checkNotNull(fileModelDirectParent);
+
         if (!fileModelDirectParent.isDirectory()) {
             notifyLocalMusicListenerFailed();
             return;
@@ -187,7 +192,6 @@ public class FileAudioManagerImpl extends FileAudioManager {
      */
     @Override
     public void getLocalMusicFolders(
-            final Context context,
             final int sortMode,
             final String search) {
 
@@ -223,7 +227,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
                     selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
                 }
 
-                final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
+                final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         do {
@@ -262,6 +266,43 @@ public class FileAudioManagerImpl extends FileAudioManager {
                 super.onPostExecute(fileModels);
             }
         }.execute();
+    }
+
+    @Override
+    public Spanned toSpanned(final Context context, final FileAudioModel fileAudioModel) {
+        Preconditions.checkNotNull(context);
+        Preconditions.checkNotNull(fileAudioModel);
+
+        final FileTypeModel type = fileAudioModel.getType();
+        final boolean isDirectory = fileAudioModel.isDirectory();
+        final long size = fileAudioModel.getSize();
+        final boolean isPublic = fileAudioModel.isPublic();
+        final Date dateCreation = fileAudioModel.getDateCreation();
+
+        final List<StringPair> spl = new ArrayList<>();
+        spl.add(new StringPair("Name", fileAudioModel.getName()));
+        if (!fileAudioModel.isDirectory()) {
+            spl.add(new StringPair("Extension", type.toString()));
+        }
+        spl.add(new StringPair("Type", type.getTitle(context)));
+        spl.add(new StringPair("Title", fileAudioModel.getTitle()));
+        spl.add(new StringPair("Artist", fileAudioModel.getArtist()));
+        spl.add(new StringPair("Album", fileAudioModel.getAlbum()));
+        if (!isDirectory || size != 0) {
+            spl.add(new StringPair("Size", FileUtils.humanReadableByteCount(size)));
+        }
+        if (dateCreation != null) {
+            if (fileAudioModel.isOnline()) {
+                spl.add(new StringPair("Upload date", TimeUtils.getDate(dateCreation)));
+            } else {
+                spl.add(new StringPair("Last modification date", TimeUtils.getDate(dateCreation)));
+            }
+        }
+        if (fileAudioModel.isOnline()) {
+            spl.add(new StringPair("Visibility", isPublic ? "Public" : "Private"));
+        }
+        spl.add(new StringPair("Path", fileAudioModel.getUrl()));
+        return HtmlUtils.createListItem(spl);
     }
 
     @Override

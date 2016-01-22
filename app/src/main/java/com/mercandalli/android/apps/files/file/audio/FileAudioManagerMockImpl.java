@@ -31,7 +31,7 @@ public class FileAudioManagerMockImpl extends FileAudioManagerImpl {
      * Delay the call.
      */
     @Override
-    public void getLocalMusicFolders(final Context context, final int sortMode, final String search) {
+    public void getLocalMusicFolders(final int sortMode, final String search) {
         new AsyncTask<Void, Void, List<FileModel>>() {
             @Override
             protected List<FileModel> doInBackground(Void... params) {
@@ -56,7 +56,7 @@ public class FileAudioManagerMockImpl extends FileAudioManagerImpl {
                     selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + " LIKE ?";
                 }
 
-                final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
+                final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         do {

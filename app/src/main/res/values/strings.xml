@@ -62,7 +62,7 @@
     <string name="modify">Modify</string>
     <string name="copy">Copy</string>
     <string name="cut">Cut</string>
-    <string name="meta_data_edition">Edit meta data</string>
+    <string name="tags_edition">Edit tags</string>
     <string name="properties">Properties</string>
     <string name="data">Data</string>
     <string name="talk">Talk</string>

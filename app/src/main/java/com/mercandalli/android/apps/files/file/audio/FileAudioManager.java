@@ -1,6 +1,7 @@
 package com.mercandalli.android.apps.files.file.audio;
 
 import android.content.Context;
+import android.text.Spanned;
 
 import com.mercandalli.android.apps.files.file.FileModel;
 
@@ -14,17 +15,22 @@ public abstract class FileAudioManager {
     /**
      * Get all the {@link FileAudioModel} in the device.
      */
-    public abstract void getAllLocalMusic(final Context context, final int sortMode, final String search);
+    public abstract void getAllLocalMusic(final int sortMode, final String search);
 
     /**
      * Get all the {@link FileAudioModel} in a folder.
      */
-    public abstract void getLocalMusic(final Context context, final FileModel fileModelDirectParent, final int sortMode, final String search);
+    public abstract void getLocalMusic(final FileModel fileModelDirectParent, final int sortMode, final String search);
 
     /**
      * Get all local folders that contain music.
      */
-    public abstract void getLocalMusicFolders(final Context context, final int sortMode, final String search);
+    public abstract void getLocalMusicFolders(final int sortMode, final String search);
+
+    /**
+     * Get the {@link FileAudioModel} overview.
+     */
+    public abstract Spanned toSpanned(final Context context, final FileAudioModel fileAudioModel);
 
     public abstract boolean registerAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener);
 
