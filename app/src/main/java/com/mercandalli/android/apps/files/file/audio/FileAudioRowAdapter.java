@@ -37,7 +37,6 @@ import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
 import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
-import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.FileTypeModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.FileUtils;
@@ -128,7 +127,11 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
         } else if (viewType == TYPE_ROW_CARDS_HEADER) {
             return new RowCardsViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_row_cards, parent, false));
         }
-        return new FileViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_card_drag_drop, parent, false), mItemClickListener, mItemLongClickListener);
+        return new FileViewHolder(
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_card_drag_drop, parent, false),
+                mHasHeader,
+                mItemClickListener,
+                mItemLongClickListener);
     }
 
     @Override
@@ -191,11 +194,13 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
         public ImageView icon;
         public View item;
         public View more;
-        OnItemClickListener mItemClickListener;
-        OnItemLongClickListener mItemLongClickListener;
+        private boolean mHasHeader;
+        private OnItemClickListener mItemClickListener;
+        private OnItemLongClickListener mItemLongClickListener;
 
-        public FileViewHolder(View itemLayoutView, OnItemClickListener itemClickListener, OnItemLongClickListener itemLongClickListener) {
+        public FileViewHolder(View itemLayoutView, boolean hasHeader, OnItemClickListener itemClickListener, OnItemLongClickListener itemLongClickListener) {
             super(itemLayoutView);
+            mHasHeader = hasHeader;
             mItemClickListener = itemClickListener;
             mItemLongClickListener = itemLongClickListener;
             item = itemLayoutView.findViewById(R.id.tab_file_card_drag_drop_item);
@@ -210,7 +215,7 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
         @Override
         public void onClick(View v) {
             if (mItemClickListener != null) {
-                mItemClickListener.onItemClick(icon, getAdapterPosition());
+                mItemClickListener.onItemClick(icon, getAdapterPosition() - (mHasHeader ? 1 : 0));
             }
         }
 
@@ -269,8 +274,8 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
         void onItemClick(View view, int position);
     }
 
-    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
-        this.mItemClickListener = mItemClickListener;
+    public void setOnItemClickListener(final OnItemClickListener itemClickListener) {
+        this.mItemClickListener = itemClickListener;
     }
 
     public interface OnItemLongClickListener {

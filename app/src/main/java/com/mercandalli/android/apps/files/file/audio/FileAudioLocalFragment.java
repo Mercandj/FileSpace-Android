@@ -97,8 +97,8 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     private int mCurrentPage = PAGE_FOLDERS;
 
     private RecyclerView mRecyclerView;
-    private List<FileAudioModel> mFileAudioModels;
-    private List<FileModel> mFileModels;
+    private final List<FileModel> mFileModels = new ArrayList<>();
+    private final List<FileAudioModel> mFileAudioModels = new ArrayList<>();
     private TextView mMessageTextView;
 
     private List<FileModelCardHeaderItem> mHeaderIds;
@@ -216,9 +216,6 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mRecyclerView.setHasFixedSize(true);
         updateLayoutManager();
 
-        mFileModels = new ArrayList<>();
-        mFileAudioModels = new ArrayList<>();
-
         mHeaderIds = new ArrayList<>();
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_folder, true));
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_recent, false));
@@ -303,20 +300,20 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mFileAudioRowAdapter.setOnItemClickListener(new FileAudioRowAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if (mFileModels.isEmpty()) {
+                if (mFileAudioModels.isEmpty()) {
                     return;
                 }
                 FileModel fileModel;
-                if (position >= mFileModels.size()) {
-                    fileModel = mFileModels.get(mFileModels.size() - 1);
+                if (position >= mFileAudioModels.size()) {
+                    fileModel = mFileAudioModels.get(mFileAudioModels.size() - 1);
                     Log.e(TAG, "onItemClick: position >= size");
                 } else {
-                    fileModel = mFileModels.get(position);
+                    fileModel = mFileAudioModels.get(position);
                 }
                 if (fileModel.isDirectory()) {
                     refreshListFoldersInside(fileModel);
                 } else {
-                    mFileManager.execute(mActivity, position, mFileModels, view);
+                    mFileManager.execute(mActivity, position, mFileAudioModels, view);
                 }
             }
         });
@@ -467,12 +464,12 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     public void refreshListFoldersInside(final FileModel fileModel) {
         mCurrentFolder = fileModel;
         mCurrentPage = PAGE_FOLDER_INSIDE;
-        mFileModels.clear();
+        mFileAudioModels.clear();
         mFileAudioManager.getLocalMusic(fileModel, mSortMode, null);
     }
 
     public void updateAdapter() {
-        if (mRecyclerView != null && mFileModels != null && isAdded()) {
+        if (mRecyclerView != null && isAdded()) {
             refreshFab();
 
             final boolean isEmpty = (mFileModels.size() == 0 && mCurrentPage == PAGE_FOLDERS) ||
@@ -519,11 +516,8 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         }
         Preconditions.checkNotNull(fileModels);
         hideProgressBar();
-        if (mFileAudioModels == null) {
-            mFileAudioModels = new ArrayList<>();
-        } else {
-            mFileAudioModels.clear();
-        }
+
+        mFileAudioModels.clear();
         mFileAudioModels.addAll(fileModels);
         mFileAudioRowAdapter.setHasHeader(true);
 
@@ -549,11 +543,8 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
             return;
         }
         hideProgressBar();
-        if (mFileModels == null) {
-            mFileModels = new ArrayList<>();
-        } else {
-            mFileModels.clear();
-        }
+
+        mFileModels.clear();
         mFileModels.addAll(fileModels);
 
         mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);

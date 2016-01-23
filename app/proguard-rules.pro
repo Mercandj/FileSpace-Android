@@ -44,3 +44,6 @@
 -keep class com.example.testobfuscation.** { *; }
 -keepattributes Signature
 -keep class sun.misc.Unsafe { *; }
+
+-dontwarn org.jaudiotagger.**
+-keep class org.jaudiotagger.** { *; }
