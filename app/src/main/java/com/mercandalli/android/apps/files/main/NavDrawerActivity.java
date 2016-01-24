@@ -39,7 +39,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.admin.AdminFragment;
-import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
@@ -49,6 +48,7 @@ import com.mercandalli.android.apps.files.extras.robotics.RoboticsFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudPagerFragment;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.note.WorkspaceFragment;
+import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.settings.SettingsFragment;
 import com.mercandalli.android.apps.files.support.SupportFragment;
 import com.mercandalli.android.apps.files.user.ProfileFragment;
@@ -97,7 +97,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
     private int mThanhYou;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -111,7 +111,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
 
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        NavDrawerView navDrawerView = (NavDrawerView) findViewById(R.id.activity_main_nav_drawer_view);
+        final NavDrawerView navDrawerView = (NavDrawerView) findViewById(R.id.activity_main_nav_drawer_view);
         navDrawerView.setOnNavDrawerClickCallback(this);
         navDrawerView.setSelectedRow(this, getInitFragmentId());
         navDrawerView.setConnected(isLogged());
@@ -124,8 +124,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
             selectItem(getInitFragmentId());
         } else {
             mFromSavedInstanceState = true;
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            List<Fragment> fragments = fragmentManager.getFragments();
+            final List<Fragment> fragments = getSupportFragmentManager().getFragments();
             for (Fragment fragment : fragments) {
                 if (fragment != null && fragment instanceof BackFragment) {
                     mBackFragment = (BackFragment) fragment;

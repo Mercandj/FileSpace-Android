@@ -126,7 +126,6 @@ public class FileLocalFragment extends InjectedFabFragment implements
         } else {
             mRecyclerView.setLayoutManager(new GridLayoutManager(activity, nbColumn));
         }
-        //mRecyclerView.addItemDecoration(new FileDivider(ContextCompat.getColor(mActivity, R.color.file_divider)));
 
         mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + this.mApplicationCallback.getConfig().getLocalFolderName());
         if (!mCurrentDirectory.exists()) {

@@ -42,8 +42,6 @@ public interface FileAppComponent {
     //Injections
     void inject(FileApp fileApp);
 
-    void inject(MainActivity mainActivity);
-
     void inject(FileCloudFragment fileCloudFragment);
 
     void inject(FileMyCloudFragment fileMyCloudFragment);

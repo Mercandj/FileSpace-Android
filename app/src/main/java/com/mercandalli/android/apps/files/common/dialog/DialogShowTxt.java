@@ -22,11 +22,11 @@ package com.mercandalli.android.apps.files.common.dialog;
 import android.app.Dialog;
 import android.widget.EditText;
 
-import java.io.File;
-
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.file.FileChooserDialog;
 import com.mercandalli.android.apps.files.main.ApplicationActivity;
+
+import java.io.File;
 
 public class DialogShowTxt extends Dialog {
 

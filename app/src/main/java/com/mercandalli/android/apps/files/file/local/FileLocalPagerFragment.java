@@ -67,7 +67,7 @@ public class FileLocalPagerFragment extends BackFragment implements
     private static final String BUNDLE_ARG_TITLE = "FileFragment.Args.BUNDLE_ARG_TITLE";
 
     private static final int NB_FRAGMENT = 3;
-    private static final int INIT_FRAGMENT = 1;
+    private static final int INIT_FRAGMENT = 0;
     private ViewPager mViewPager;
     private FileManagerFragmentPagerAdapter mPagerAdapter;
 
@@ -144,10 +144,11 @@ public class FileLocalPagerFragment extends BackFragment implements
 
         if (savedInstanceState == null) {
             mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
-            mViewPager.setCurrentItem(0);
+            mViewPager.setCurrentItem(INIT_FRAGMENT);
         }
 
         ((TabLayout) rootView.findViewById(R.id.fragment_file_tab_layout)).setupWithViewPager(mViewPager);
+        syncTabLayoutIconsColor(INIT_FRAGMENT);
 
         mFab1 = ((FloatingActionButton) rootView.findViewById(R.id.fragment_file_fab_1));
         mFab1.setVisibility(View.GONE);
@@ -187,13 +188,7 @@ public class FileLocalPagerFragment extends BackFragment implements
     public void onPageSelected(int position) {
         mApplicationCallback.invalidateMenu();
         refreshFab(position);
-        for (int i = 0; i < NB_FRAGMENT; i++) {
-            if (i == position) {
-                mImageImageSpan[i].getDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-            } else {
-                mImageImageSpan[i].getDrawable().setColorFilter(Color.parseColor("#bbffffff"), PorterDuff.Mode.SRC_ATOP);
-            }
-        }
+        syncTabLayoutIconsColor(position);
     }
 
     @Override
@@ -281,7 +276,8 @@ public class FileLocalPagerFragment extends BackFragment implements
     }
 
     public FabFragment getCurrentFragment() {
-        Fragment fragment = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.fragment_file_view_pager + ":" + mPagerAdapter.getItemId(getCurrentFragmentIndex()));
+        final Fragment fragment = getChildFragmentManager().findFragmentByTag("android:switcher:" +
+                R.id.fragment_file_view_pager + ":" + mPagerAdapter.getItemId(getCurrentFragmentIndex()));
         if (fragment == null || !(fragment instanceof FabFragment)) {
             return null;
         }
@@ -293,7 +289,7 @@ public class FileLocalPagerFragment extends BackFragment implements
     }
 
     public void refreshListServer(String search) {
-        FabFragment fabFragment = getCurrentFragment();
+        final FabFragment fabFragment = getCurrentFragment();
         if (fabFragment != null) {
             if (fabFragment instanceof FileCloudFragment) {
                 FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
@@ -312,7 +308,7 @@ public class FileLocalPagerFragment extends BackFragment implements
     }
 
     public void updateAdapterListServer() {
-        FabFragment fabFragment = getCurrentFragment();
+        final FabFragment fabFragment = getCurrentFragment();
         if (fabFragment != null) {
             if (fabFragment instanceof FileCloudFragment) {
                 FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
@@ -328,7 +324,7 @@ public class FileLocalPagerFragment extends BackFragment implements
     }
 
     public void refreshData() {
-        FabFragment fabFragment = getCurrentFragment();
+        final FabFragment fabFragment = getCurrentFragment();
         if (fabFragment != null) {
             if (fabFragment instanceof FileCloudFragment) {
                 FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
@@ -389,6 +385,20 @@ public class FileLocalPagerFragment extends BackFragment implements
                 });
         AlertDialog menuDrop = menuAlert.create();
         menuDrop.show();
+    }
+
+    private void syncTabLayoutIconsColor(int position) {
+        for (int i = 0; i < NB_FRAGMENT; i++) {
+            final ImageSpan imageSpan = mImageImageSpan[i];
+            if (imageSpan == null) {
+                return;
+            }
+            if (i == position) {
+                imageSpan.getDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
+            } else {
+                imageSpan.getDrawable().setColorFilter(Color.parseColor("#85455A64"), PorterDuff.Mode.SRC_ATOP);
+            }
+        }
     }
 
     private void refreshFab() {

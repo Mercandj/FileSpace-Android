@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.common.util.FontUtils;
+import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.user.UserModel;
 
 import java.util.HashMap;
@@ -23,7 +23,8 @@ import java.util.Map;
 /**
  * The all NavDrawer {@link FrameLayout}.
  */
-public class NavDrawerView extends FrameLayout implements View.OnClickListener {
+/* package */
+class NavDrawerView extends FrameLayout implements View.OnClickListener {
 
     private NavDrawerRow mLastClicked;
 

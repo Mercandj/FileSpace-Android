@@ -21,7 +21,8 @@ import com.mercandalli.android.apps.files.user.UserModel;
 /**
  * The nav drawer header.
  */
-public class NavDrawerHeaderView extends FrameLayout {
+/* package */
+class NavDrawerHeaderView extends FrameLayout {
 
     /* Views */
     private TextView mTitleTextView;

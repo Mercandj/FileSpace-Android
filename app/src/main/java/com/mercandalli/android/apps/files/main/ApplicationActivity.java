@@ -30,6 +30,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.common.listener.IListener;
+import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
+import com.mercandalli.android.apps.files.common.net.TaskPost;
+import com.mercandalli.android.apps.files.common.util.StringPair;
+import com.mercandalli.android.apps.files.file.FileManager;
+import com.mercandalli.android.apps.files.file.FileModel;
+
 import org.json.JSONObject;
 
 import java.io.File;
@@ -38,18 +46,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.listener.IListener;
-import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.file.FileManager;
-import com.mercandalli.android.apps.files.file.FileModel;
-import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.common.util.StringPair;
-
 /**
  * Mother class of the {@link Activity} MainActivity.
  */
-public abstract class ApplicationActivity extends AppCompatActivity implements ApplicationCallback, Config.ConfigCallback {
+public abstract class ApplicationActivity extends AppCompatActivity implements
+        ApplicationCallback,
+        Config.ConfigCallback {
 
     public static FileModel mPhotoFile = null;
     public static IListener mPhotoFileListener = null;
