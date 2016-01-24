@@ -68,6 +68,8 @@ public class FileLocalPagerFragment extends BackFragment implements
 
     private static final int NB_FRAGMENT = 3;
     private static final int INIT_FRAGMENT = 0;
+
+    private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private FileManagerFragmentPagerAdapter mPagerAdapter;
 
@@ -129,32 +131,9 @@ public class FileLocalPagerFragment extends BackFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_file, container, false);
-
-        final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.fragment_file_toolbar);
-        toolbar.setTitle(mTitle);
-        mSetToolbarCallback.setToolbar(toolbar);
-        setStatusBarColor(mActivity, R.color.status_bar);
-        setHasOptionsMenu(true);
-
-        mPagerAdapter = new FileManagerFragmentPagerAdapter(getChildFragmentManager(), mApplicationCallback);
-
-        mViewPager = (ViewPager) rootView.findViewById(R.id.fragment_file_view_pager);
-        mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.addOnPageChangeListener(this);
-
-        if (savedInstanceState == null) {
-            mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
-            mViewPager.setCurrentItem(INIT_FRAGMENT);
-        }
-
-        ((TabLayout) rootView.findViewById(R.id.fragment_file_tab_layout)).setupWithViewPager(mViewPager);
-        syncTabLayoutIconsColor(INIT_FRAGMENT);
-
-        mFab1 = ((FloatingActionButton) rootView.findViewById(R.id.fragment_file_fab_1));
-        mFab1.setVisibility(View.GONE);
-        mFab2 = ((FloatingActionButton) rootView.findViewById(R.id.fragment_file_fab_2));
-        mFab2.setVisibility(View.GONE);
-
+        findViews(rootView);
+        initToolbar(rootView);
+        initViews(savedInstanceState);
         return rootView;
     }
 
@@ -188,7 +167,7 @@ public class FileLocalPagerFragment extends BackFragment implements
     public void onPageSelected(int position) {
         mApplicationCallback.invalidateMenu();
         refreshFab(position);
-        syncTabLayoutIconsColor(position);
+        syncTabLayoutIconsColor();
     }
 
     @Override
@@ -387,18 +366,50 @@ public class FileLocalPagerFragment extends BackFragment implements
         menuDrop.show();
     }
 
-    private void syncTabLayoutIconsColor(int position) {
+    private void findViews(final View rootView) {
+        mViewPager = (ViewPager) rootView.findViewById(R.id.fragment_file_view_pager);
+        mTabLayout = (TabLayout) rootView.findViewById(R.id.fragment_file_tab_layout);
+        mFab1 = ((FloatingActionButton) rootView.findViewById(R.id.fragment_file_fab_1));
+        mFab2 = ((FloatingActionButton) rootView.findViewById(R.id.fragment_file_fab_2));
+    }
+
+    private void initToolbar(View rootView) {
+        final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.fragment_file_toolbar);
+        toolbar.setTitle(mTitle);
+        mSetToolbarCallback.setToolbar(toolbar);
+        setStatusBarColor(mActivity, R.color.status_bar);
+        setHasOptionsMenu(true);
+    }
+
+    private void initViews(@Nullable Bundle savedInstanceState) {
+        mPagerAdapter = new FileManagerFragmentPagerAdapter(getChildFragmentManager(), mApplicationCallback);
+
+        mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.addOnPageChangeListener(this);
+
+        if (savedInstanceState == null) {
+            mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
+            mViewPager.setCurrentItem(INIT_FRAGMENT);
+        }
+
+        mTabLayout.setupWithViewPager(mViewPager);
+        syncTabLayoutIconsColor();
+
+        mFab1.setVisibility(View.GONE);
+        mFab2.setVisibility(View.GONE);
+    }
+
+    private void syncTabLayoutIconsColor() {
+        final int position = mViewPager.getCurrentItem();
         for (int i = 0; i < NB_FRAGMENT; i++) {
             final ImageSpan imageSpan = mImageImageSpan[i];
-            if (imageSpan == null) {
-                return;
-            }
             if (i == position) {
                 imageSpan.getDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
             } else {
                 imageSpan.getDrawable().setColorFilter(Color.parseColor("#85455A64"), PorterDuff.Mode.SRC_ATOP);
             }
         }
+        mTabLayout.setTabTextColors(position % 2 == 0 ? Color.BLACK : Color.WHITE, position % 2 == 0 ? Color.BLACK : Color.WHITE);
     }
 
     private void refreshFab() {

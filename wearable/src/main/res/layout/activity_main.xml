@@ -8,78 +8,88 @@
     tools:context="com.mercandalli.android.apps.files.MainActivity"
     tools:deviceIds="wear">
 
-    <TextView
-        android:id="@+id/activity_main_title"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="6dp"
-        android:layout_marginStart="6dp"
-        android:text="@string/activity_main_title"
-        android:textColor="#777"
-        app:layout_box="all" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/activity_main_clock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:textColor="@android:color/white"
-        app:layout_box="all" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="vertical"
+            app:layout_box="all">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="10dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_box="all">
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:background="#181818" />
 
-        <com.mercandalli.android.apps.files.shared.ForegroundImageView
-            android:id="@+id/activity_main_previous"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:src="@drawable/ic_skip_previous_white_18dp"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <FrameLayout
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp">
-
-            <com.mercandalli.android.apps.files.shared.ForegroundImageView
-                android:id="@+id/activity_main_play_pause"
+            <TextView
+                android:id="@+id/activity_main_title"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:src="@drawable/ic_pause_white_18dp"
-                android:visibility="gone"
-                tools:visibility="visible" />
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:padding="20dp"
+                android:textColor="@android:color/white"
+                app:layout_box="all"
+                tools:text="@string/app_name" />
 
-            <ProgressBar
-                android:id="@+id/activity_main_progress_bar"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
-                android:padding="8dp" />
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="#222" />
 
-        </FrameLayout>
+            <TextView
+                android:id="@+id/activity_main_files"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center_horizontal"
+                android:padding="20dp"
+                android:text="Files"
+                android:textColor="@android:color/white"
+                app:layout_box="all" />
 
-        <com.mercandalli.android.apps.files.shared.ForegroundImageView
-            android:id="@+id/activity_main_next"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:src="@drawable/ic_skip_next_white_18dp"
-            android:visibility="gone"
-            tools:visibility="visible" />
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="#222" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/activity_main_audios"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center_horizontal"
+                android:padding="20dp"
+                android:text="Musics"
+                android:textColor="@android:color/white"
+                app:layout_box="all" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="#222" />
+
+            <TextView
+                android:id="@+id/activity_main_photos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center_horizontal"
+                android:padding="20dp"
+                android:text="Photos"
+                android:textColor="@android:color/white"
+                app:layout_box="all" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:background="#181818" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
 
 </android.support.wearable.view.BoxInsetLayout>

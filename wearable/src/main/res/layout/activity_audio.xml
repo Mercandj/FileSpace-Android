@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.wearable.view.BoxInsetLayout android:id="@+id/activity_audio_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mercandalli.android.apps.files.MainActivity"
+    tools:deviceIds="wear">
+
+    <TextView
+        android:id="@+id/activity_audio_title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="6dp"
+        android:layout_marginStart="6dp"
+        android:text="@string/activity_main_title"
+        android:textColor="#777"
+        app:layout_box="all" />
+
+    <TextView
+        android:id="@+id/activity_audio_clock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:textColor="@android:color/white"
+        app:layout_box="all" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_box="all">
+
+        <com.mercandalli.android.apps.files.shared.ForegroundImageView
+            android:id="@+id/activity_audio_previous"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_skip_previous_white_18dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <FrameLayout
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp">
+
+            <com.mercandalli.android.apps.files.shared.ForegroundImageView
+                android:id="@+id/activity_audio_play_pause"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:src="@drawable/ic_pause_white_18dp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <ProgressBar
+                android:id="@+id/activity_main_progress_bar"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:padding="8dp" />
+
+        </FrameLayout>
+
+        <com.mercandalli.android.apps.files.shared.ForegroundImageView
+            android:id="@+id/activity_audio_next"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_skip_next_white_18dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    </LinearLayout>
+
+</android.support.wearable.view.BoxInsetLayout>
