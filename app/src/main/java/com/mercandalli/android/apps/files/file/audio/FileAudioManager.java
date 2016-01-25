@@ -46,7 +46,7 @@ public abstract class FileAudioManager {
 
     /**
      * Class used to count.
-     * See {@link #getLocalMusicFolders(Context, int, String)}.
+     * See {@link #getLocalMusicFolders(int, String)}.
      * http://stackoverflow.com/questions/81346/most-efficient-way-to-increment-a-map-value-in-java
      * Used to count with a map.
      */
@@ -61,7 +61,7 @@ public abstract class FileAudioManager {
     interface GetAllLocalMusicListener {
 
         /**
-         * Called when the call of {@link #getAllLocalMusic(Context, int, String)} succeeded.
+         * Called when the call of {@link #getAllLocalMusic(int, String)} succeeded.
          *
          * @param fileModels the {@link List} of result.
          */
@@ -73,7 +73,7 @@ public abstract class FileAudioManager {
     interface GetLocalMusicFoldersListener {
 
         /**
-         * Called when the call of {@link #getLocalMusicFolders(Context, int, String)} succeeded.
+         * Called when the call of {@link #getLocalMusicFolders(int, String)} succeeded.
          *
          * @param fileModels the {@link List} of result.
          */
@@ -85,7 +85,7 @@ public abstract class FileAudioManager {
     interface GetLocalMusicListener {
 
         /**
-         * Called when the call of {@link #getLocalMusic(Context, FileModel, int, String)} succeeded.
+         * Called when the call of {@link #getLocalMusic(FileModel, int, String)} succeeded.
          *
          * @param fileModels the {@link List} of result.
          */

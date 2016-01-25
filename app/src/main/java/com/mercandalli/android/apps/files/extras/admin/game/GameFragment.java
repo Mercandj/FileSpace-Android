@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.admin.game;
+package com.mercandalli.android.apps.files.extras.admin.game;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

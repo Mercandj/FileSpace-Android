@@ -38,7 +38,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.admin.AdminFragment;
+import com.mercandalli.android.apps.files.extras.admin.AdminFragment;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;

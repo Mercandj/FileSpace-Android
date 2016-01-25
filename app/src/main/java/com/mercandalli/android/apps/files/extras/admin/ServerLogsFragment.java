@@ -17,7 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package com.mercandalli.android.apps.files.admin;
+package com.mercandalli.android.apps.files.extras.admin;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -33,6 +33,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
@@ -40,8 +41,10 @@ import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.common.util.NetUtils;
-import com.mercandalli.android.apps.files.common.util.StringPair;
+import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.user.AdapterModelUserConnection;
+import com.mercandalli.android.apps.files.user.UserConnectionModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,26 +53,28 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServerDataFragment extends BackFragment {
 
-    private static final String TAG = "ServerDataFragment";
+public class ServerLogsFragment extends BackFragment {
+
     private View rootView;
 
     private RecyclerView recyclerView;
-    private AdapterModelInformation mAdapter;
+    private AdapterModelUserConnection mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    List<ModelInformation> list;
+    private List<UserConnectionModel> list;
     private ProgressBar circularProgressBar;
+    private TextView message;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    public static ServerDataFragment newInstance() {
-        return new ServerDataFragment();
+    public static ServerLogsFragment newInstance() {
+        return new ServerLogsFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_admin_data, container, false);
         circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
+        this.message = (TextView) rootView.findViewById(R.id.message);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -97,37 +102,51 @@ public class ServerDataFragment extends BackFragment {
         return rootView;
     }
 
+
     public void refreshList() {
-        List<StringPair> parameters = null;
         if (NetUtils.isInternetConnection(mActivity)) {
             new TaskGet(
                     mActivity,
-                    mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeInformation,
+                    mApplicationCallback.getConfig().getUrlServer() + Config.routeUserConnection,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
                             list = new ArrayList<>();
-                            list.add(new ModelInformation("Server Data", Constants.TAB_VIEW_TYPE_SECTION));
+
                             try {
                                 if (json != null) {
+                                    if (json.has("result_count_all")) {
+                                        list.add(new UserConnectionModel("Server Logs (" + json.getInt("result_count_all") + ")", Constants.TAB_VIEW_TYPE_SECTION));
+                                    } else {
+                                        list.add(new UserConnectionModel("Server Logs", Constants.TAB_VIEW_TYPE_SECTION));
+                                    }
+
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
-                                        for (int i = 0; i < array.length(); i++) {
-                                            ModelInformation modelFile = new ModelInformation(array.getJSONObject(i));
-                                            list.add(modelFile);
+                                        int array_length = array.length();
+                                        for (int i = 0; i < array_length; i++) {
+                                            list.add(new UserConnectionModel(array.getJSONObject(i)));
                                         }
                                     }
+
                                 } else {
                                     Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
-                                Log.e(TAG, "ServerDataFragment: failed to convert Json", e);
+                                Log.e(getClass().getName(), "Failed to convert Json", e);
                             }
                             updateAdapter();
                         }
                     },
-                    parameters
+                    null
             ).execute();
+        } else {
+            this.circularProgressBar.setVisibility(View.GONE);
+            if (isAdded()) {
+                this.message.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+            }
+            this.message.setVisibility(View.VISIBLE);
+            this.swipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -137,26 +156,26 @@ public class ServerDataFragment extends BackFragment {
         if (this.recyclerView != null && this.list != null && this.isAdded()) {
             this.circularProgressBar.setVisibility(View.GONE);
 
-            this.mAdapter = new AdapterModelInformation(mActivity, list);
+            this.mAdapter = new AdapterModelUserConnection(mActivity, list);
             this.recyclerView.setAdapter(mAdapter);
             this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
 
-            if (rootView.findViewById(R.id.circle).getVisibility() == View.GONE) {
-                rootView.findViewById(R.id.circle).setVisibility(View.VISIBLE);
+            if ((rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
+                (rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
                 Animation animOpen = AnimationUtils.loadAnimation(mActivity, R.anim.circle_button_bottom_open);
-                rootView.findViewById(R.id.circle).startAnimation(animOpen);
+                (rootView.findViewById(R.id.circle)).startAnimation(animOpen);
             }
 
-            rootView.findViewById(R.id.circle).setOnClickListener(new OnClickListener() {
+            (rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mAdapter.addItem(new ModelInformation("Number", "" + i), 0);
+                    mAdapter.addItem(new UserConnectionModel("Number", "" + i), 0);
                     recyclerView.scrollToPosition(0);
                     i++;
                 }
             });
 
-            this.mAdapter.setOnItemClickListener(new AdapterModelInformation.OnItemClickListener() {
+            this.mAdapter.setOnItemClickListener(new AdapterModelUserConnection.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
 

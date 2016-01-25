@@ -26,6 +26,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,13 +36,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
-import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.file.FileManager;
@@ -73,13 +72,15 @@ public class FileLocalFragment extends InjectedFabFragment implements
         FileModelAdapter.OnFileClickListener,
         FileModelAdapter.OnFileLongClickListener,
         FileModelListener,
-        FileLocalPagerFragment.HomeIconVisible {
+        FileLocalPagerFragment.HomeIconVisible,
+        FileLocalActions.FileLocalActionCallback {
 
     private RecyclerView mRecyclerView;
     private ArrayList<FileModel> mFilesList;
     private ProgressBar mProgressBar;
     private File mCurrentDirectory;
     private TextView mMessageTextView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private List<FileModel> mFilesToCutList = new ArrayList<>();
     private List<FileModel> mFilesToCopyList = new ArrayList<>();
@@ -88,7 +89,10 @@ public class FileLocalFragment extends InjectedFabFragment implements
 
     @Inject
     FileManager mFileManager;
+
     private FileModelAdapter mFileModelAdapter;
+
+    private FileLocalActions mFileLocalActions;
 
     public static FileLocalFragment newInstance() {
         return new FileLocalFragment();
@@ -109,33 +113,12 @@ public class FileLocalFragment extends InjectedFabFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_file_files, container, false);
 
-        final Activity activity = getActivity();
-
-        mProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
-        mProgressBar.setVisibility(View.INVISIBLE);
-        mMessageTextView = (TextView) rootView.findViewById(R.id.message);
-
-        (rootView.findViewById(R.id.fragment_file_files_swipe_refresh_layout)).setEnabled(false);
-
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
-        mRecyclerView.setHasFixedSize(true);
-
-        final int nbColumn = activity.getResources().getInteger(R.integer.column_number_card);
-        if (nbColumn <= 1) {
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        } else {
-            mRecyclerView.setLayoutManager(new GridLayoutManager(activity, nbColumn));
-        }
-
-        mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + this.mApplicationCallback.getConfig().getLocalFolderName());
-        if (!mCurrentDirectory.exists()) {
-            mCurrentDirectory.mkdir();
-        }
-
+        findViews(rootView);
+        initViews();
         refreshList();
+        mFileLocalActions = new FileLocalActions(getContext(), this);
 
         mApplicationCallback.invalidateMenu();
-
         return rootView;
     }
 
@@ -146,8 +129,8 @@ public class FileLocalFragment extends InjectedFabFragment implements
             return true;
         } else if (!mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())) {
             if (mCurrentDirectory.getParent() != null) {
-                FileLocalFragment.this.mCurrentDirectory = new File(mCurrentDirectory.getParentFile().getPath());
-                FileLocalFragment.this.refreshList();
+                mCurrentDirectory = new File(mCurrentDirectory.getParentFile().getPath());
+                refreshList();
                 return true;
             }
         } else if ((mFilesToCopyList != null && mFilesToCopyList.size() != 0) || (mFilesToCutList != null && mFilesToCutList.size() != 0)) {
@@ -231,7 +214,10 @@ public class FileLocalFragment extends InjectedFabFragment implements
             case 0:
                 return true;
             case 1:
-                return this.mCurrentDirectory != null && mCurrentDirectory.getParent() != null && !mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath());
+                return this.mCurrentDirectory != null &&
+                        mCurrentDirectory.getParent() != null &&
+                        !mCurrentDirectory.getPath().equals(
+                                Environment.getExternalStorageDirectory().getAbsolutePath());
         }
         return false;
     }
@@ -291,8 +277,54 @@ public class FileLocalFragment extends InjectedFabFragment implements
         return true;
     }
 
+    @Override
+    public void executeFileModel(final FileModel fileModel) {
+        mFileLocalActions.show(fileModel, mApplicationCallback.isLogged());
+    }
+
+    @Override
+    public boolean isHomeVisible() {
+        return !mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath());
+    }
+
+    @Override
+    public void refreshData() {
+        mApplicationCallback.refreshData();
+    }
+
+    @Override
+    public void addCopyFile(FileModel fileModel) {
+        mFilesToCopyList.add(fileModel);
+    }
+
+    @Override
+    public void addCutFile(FileModel fileModel) {
+        mFilesToCutList.add(fileModel);
+    }
+
+    @Override
+    public boolean isFileToCut() {
+        return mFilesToCutList != null && mFilesToCutList.size() != 0;
+    }
+
+    @Override
+    public boolean isFileToCopy() {
+        return mFilesToCopyList != null && mFilesToCopyList.size() != 0;
+    }
+
+    @Override
+    public void clearFileToCut() {
+        mFilesToCutList.clear();
+    }
+
+    @Override
+    public void clearFileToCopy() {
+        mFilesToCopyList.clear();
+    }
+
     public void goHome() {
-        this.mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + mApplicationCallback.getConfig().getLocalFolderName());
+        this.mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +
+                File.separator + mApplicationCallback.getConfig().getLocalFolderName());
         this.refreshList();
     }
 
@@ -407,6 +439,32 @@ public class FileLocalFragment extends InjectedFabFragment implements
         }
     }
 
+    private void findViews(final View rootView) {
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
+        mMessageTextView = (TextView) rootView.findViewById(R.id.message);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.fragment_file_files_swipe_refresh_layout);
+    }
+
+    private void initViews() {
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mSwipeRefreshLayout.setEnabled(false);
+        mRecyclerView.setHasFixedSize(true);
+
+        final Activity activity = getActivity();
+        final int nbColumn = activity.getResources().getInteger(R.integer.column_number_card);
+        if (nbColumn <= 1) {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        } else {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(activity, nbColumn));
+        }
+
+        mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + this.mApplicationCallback.getConfig().getLocalFolderName());
+        if (!mCurrentDirectory.exists()) {
+            mCurrentDirectory.mkdir();
+        }
+    }
+
     private boolean createFile(String path, String name) {
         final int len = path.length();
         if (len < 1 || name.length() < 1) {
@@ -430,115 +488,5 @@ public class FileLocalFragment extends InjectedFabFragment implements
             }
         }
         return false;
-    }
-
-    @Override
-    public void executeFileModel(final FileModel fileModel) {
-        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
-        String[] menuList = {getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties)};
-        if (mApplicationCallback.isLogged()) {
-            menuList = new String[]{getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties)};
-        }
-        menuAlert.setTitle("Action");
-        menuAlert.setItems(menuList,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        if (!mApplicationCallback.isLogged()) {
-                            item += 1;
-                        }
-                        switch (item) {
-                            case 0:
-                                if (fileModel.isDirectory()) {
-                                    Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-                                } else {
-                                    DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + fileModel.getName(), getString(R.string.upload), new IListener() {
-                                        @Override
-                                        public void execute() {
-                                            if (fileModel.getFile() != null) {
-                                                mFileManager.upload(fileModel, -1, new IListener() {
-                                                    @Override
-                                                    public void execute() {
-                                                        mApplicationCallback.refreshData();
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    }, getString(R.string.cancel), null);
-                                }
-                                break;
-                            case 1:
-                                mFileManager.openLocalAs(mActivity, fileModel);
-                                break;
-                            case 2:
-                                DialogUtils.prompt(mActivity, "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
-                                    @Override
-                                    public void execute(String text) {
-                                        mFileManager.rename(fileModel, text, new IListener() {
-                                            @Override
-                                            public void execute() {
-                                                if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
-                                                    mFilesToCutList.clear();
-                                                    refreshFab();
-                                                }
-                                                if (mFilesToCopyList != null && mFilesToCopyList.size() != 0) {
-                                                    mFilesToCopyList.clear();
-                                                    refreshFab();
-                                                }
-                                                mApplicationCallback.refreshData();
-                                            }
-                                        });
-                                    }
-                                }, "Cancel", null, fileModel.getFullName());
-                                break;
-                            case 3:
-                                DialogUtils.alert(mActivity, "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
-                                    @Override
-                                    public void execute() {
-                                        mFileManager.delete(fileModel, new IListener() {
-                                            @Override
-                                            public void execute() {
-                                                if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
-                                                    mFilesToCutList.clear();
-                                                    refreshFab();
-                                                }
-                                                if (mFilesToCopyList != null && mFilesToCopyList.size() != 0) {
-                                                    mFilesToCopyList.clear();
-                                                    refreshFab();
-                                                }
-                                                mApplicationCallback.refreshData();
-                                            }
-                                        });
-                                    }
-                                }, "No", null);
-                                break;
-                            case 4:
-                                FileLocalFragment.this.mFilesToCopyList.add(fileModel);
-                                Toast.makeText(mActivity, "File ready to copy.", Toast.LENGTH_SHORT).show();
-                                refreshFab();
-                                break;
-                            case 5:
-                                FileLocalFragment.this.mFilesToCutList.add(fileModel);
-                                Toast.makeText(mActivity, "File ready to cut.", Toast.LENGTH_SHORT).show();
-                                refreshFab();
-                                break;
-                            case 6:
-                                DialogUtils.alert(mActivity,
-                                        getString(R.string.properties) + " : " + fileModel.getName(),
-                                        mFileManager.toSpanned(mActivity, fileModel),
-                                        "OK",
-                                        null,
-                                        null,
-                                        null);
-                                break;
-                        }
-                    }
-                });
-        AlertDialog menuDrop = menuAlert.create();
-        menuDrop.show();
-    }
-
-    @Override
-    public boolean isHomeVisible() {
-        return !mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath());
     }
 }

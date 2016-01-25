@@ -21,3 +21,8 @@ allprojects {
         jcenter()
     }
 }
+
+ext {
+    versionCode = 11
+    versionName = "1.0.10"
+}

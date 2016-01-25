@@ -33,8 +33,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.admin.AdapterModelInformation;
-import com.mercandalli.android.apps.files.admin.ModelInformation;
+import com.mercandalli.android.apps.files.extras.admin.AdapterModelInformation;
+import com.mercandalli.android.apps.files.extras.admin.ModelInformation;
 import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;

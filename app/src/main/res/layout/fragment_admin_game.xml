@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.mercandalli.android.apps.files.admin.game.GameView
+    <com.mercandalli.android.apps.files.extras.admin.game.GameView
         android:id="@+id/game_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

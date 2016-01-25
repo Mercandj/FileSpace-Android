@@ -28,7 +28,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 /**
- * The wear main {@link WearableActivity}.
+ * A {@link WearableActivity} used to control the phone or tablet audio player.
  */
 public class AudioActivity extends WearableActivity implements View.OnClickListener {
 

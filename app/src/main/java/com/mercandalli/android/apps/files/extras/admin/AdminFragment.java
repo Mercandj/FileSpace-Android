@@ -17,7 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package com.mercandalli.android.apps.files.admin;
+package com.mercandalli.android.apps.files.extras.admin;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -35,7 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.admin.game.GameFragment;
+import com.mercandalli.android.apps.files.extras.admin.game.GameFragment;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.EmptyFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;

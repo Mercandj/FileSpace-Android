@@ -30,17 +30,17 @@ public abstract class FabFragment extends BackFragment {
         mRefreshFabCallback = null;
     }
 
-    public abstract void onFabClick(int fab_id, FloatingActionButton fab);
-
-    public abstract boolean isFabVisible(int fab_id);
-
-    public abstract int getFabImageResource(int fab_id);
-
     public void refreshFab() {
         if (mRefreshFabCallback != null) {
             mRefreshFabCallback.onRefreshFab();
         }
     }
+
+    public abstract void onFabClick(int fab_id, FloatingActionButton fab);
+
+    public abstract boolean isFabVisible(int fab_id);
+
+    public abstract int getFabImageResource(int fab_id);
 
     public interface RefreshFabCallback {
         void onRefreshFab();

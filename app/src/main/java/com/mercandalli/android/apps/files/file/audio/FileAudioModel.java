@@ -11,7 +11,7 @@ import org.cmc.music.myid3.MyID3;
 import java.io.File;
 
 /**
- * An audio {@link FileModel}.
+ * An audio {@link FileModel}. Contains a title, album, artist.
  */
 public class FileAudioModel extends FileModel {
 
@@ -76,7 +76,7 @@ public class FileAudioModel extends FileModel {
 
         @Override
         public FileAudioModel build() {
-            FileAudioModel fileAudioModel = new FileAudioModel();
+            final FileAudioModel fileAudioModel = new FileAudioModel();
             fileAudioModel.mId = mId;
             fileAudioModel.mIdUser = mIdUser;
             fileAudioModel.mIdFileParent = mIdFileParent;

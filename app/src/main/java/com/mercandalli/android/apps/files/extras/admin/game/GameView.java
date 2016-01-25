@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.admin.game;
+package com.mercandalli.android.apps.files.extras.admin.game;
 
 import android.content.Context;
 import android.os.Handler;

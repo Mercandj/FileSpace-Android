@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.admin;
+package com.mercandalli.android.apps.files.extras.admin;
 
 import android.content.Context;
 import android.hardware.Sensor;
