@@ -103,7 +103,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
 
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
@@ -124,7 +124,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
             selectItem(getInitFragmentId());
         } else {
             mFromSavedInstanceState = true;
-            final List<Fragment> fragments = getSupportFragmentManager().getFragments();
+            final List<Fragment> fragments = mFragmentManager.getFragments();
             for (Fragment fragment : fragments) {
                 if (fragment != null && fragment instanceof BackFragment) {
                     mBackFragment = (BackFragment) fragment;
@@ -349,10 +349,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
      * Load a new interstitial ad asynchronously.
      */
     private void requestNewInterstitial() {
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-
-        mInterstitialAd.loadAd(adRequest);
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
     }
 
     public abstract void updateAdapters();

@@ -116,3 +116,5 @@ captures/
 *.o
 *.o.d
 *.db
+
+*.hprof
