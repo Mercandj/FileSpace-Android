@@ -42,6 +42,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
     private final List<GetAllLocalMusicListener> mGetAllLocalMusicListeners = new ArrayList<>();
     private final List<GetLocalMusicFoldersListener> mGetLocalMusicFoldersListeners = new ArrayList<>();
     private final List<GetLocalMusicListener> mGetLocalMusicListeners = new ArrayList<>();
+    private final List<MusicsChangeListener> mMusicsChangeListeners = new ArrayList<>();
 
     /* Cache */
     private final HashMap<String, List<FileAudioModel>> mCacheAllLocalMusics = new HashMap<>();
@@ -269,6 +270,26 @@ public class FileAudioManagerImpl extends FileAudioManager {
     }
 
     @Override
+    public boolean setFileAudioMetaData(
+            final File file,
+            final String newTitle,
+            final String newArtist,
+            final String newAlbum) {
+        return setFileAudioMetaDataPrivate(file, newTitle, newArtist, newAlbum);
+    }
+
+    @Override
+    public boolean setFileAudioMetaData(
+            final FileAudioModel fileAudio,
+            final String newTitle,
+            final String newArtist,
+            final String newAlbum) {
+        Preconditions.checkNotNull(fileAudio);
+        final File file = fileAudio.getFile();
+        return file != null && setFileAudioMetaDataPrivate(file, newTitle, newArtist, newAlbum);
+    }
+
+    @Override
     public Spanned toSpanned(final Context context, final FileAudioModel fileAudioModel) {
         Preconditions.checkNotNull(context);
         Preconditions.checkNotNull(fileAudioModel);
@@ -365,6 +386,26 @@ public class FileAudioManagerImpl extends FileAudioManager {
         }
     }
 
+    @Override
+    public boolean registerOnMusicUpdateListener(MusicsChangeListener musicsChangeListener) {
+        synchronized (mMusicsChangeListeners) {
+            //noinspection SimplifiableIfStatement
+            if (musicsChangeListener == null || mMusicsChangeListeners.contains(musicsChangeListener)) {
+                // We don't allow to register null listener
+                // And a listener can only be added once.
+                return false;
+            }
+            return mMusicsChangeListeners.add(musicsChangeListener);
+        }
+    }
+
+    @Override
+    public boolean unregisterOnMusicUpdateListener(MusicsChangeListener musicsChangeListener) {
+        synchronized (mMusicsChangeListeners) {
+            return mMusicsChangeListeners.remove(musicsChangeListener);
+        }
+    }
+
     //region notify listeners
     private void notifyAllLocalMusicListenerSucceeded(final List<FileAudioModel> fileModels) {
         synchronized (mGetAllLocalMusicListeners) {
@@ -397,5 +438,27 @@ public class FileAudioManagerImpl extends FileAudioManager {
             }
         }
     }
+
+    private void notifyOnMusicUpdate() {
+        synchronized (mMusicsChangeListeners) {
+            for (int i = 0, size = mMusicsChangeListeners.size(); i < size; i++) {
+                mMusicsChangeListeners.get(i).onMusicsContentChange();
+            }
+        }
+    }
     //endregion notify listeners
+
+    private boolean setFileAudioMetaDataPrivate(
+            final File file,
+            final String newTitle,
+            final String newArtist,
+            final String newAlbum) {
+        Preconditions.checkNotNull(file);
+        final boolean result = file.exists() &&
+                FileAudioMetaDataUtils.setMetaData(file, newTitle, newArtist, newAlbum);
+        if (result) {
+            notifyOnMusicUpdate();
+        }
+        return result;
+    }
 }

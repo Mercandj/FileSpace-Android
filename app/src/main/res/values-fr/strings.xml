@@ -35,6 +35,9 @@
 
     <!-- NavDrawer -->
     <string name="tab_files">Fichiers</string>
+    <string name="tab_musics">Musiques</string>
+    <string name="tab_photos">Photos</string>
+    <string name="tab_videos">Videos</string>
     <string name="tab_cloud">Cloud</string>
     <string name="tab_notes">Notes</string>
     <string name="tab_community">Communauté</string>

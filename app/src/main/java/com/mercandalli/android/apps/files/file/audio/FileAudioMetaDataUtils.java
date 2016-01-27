@@ -1,5 +1,7 @@
 package com.mercandalli.android.apps.files.file.audio;
 
+import android.support.annotation.Nullable;
+
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 import org.jaudiotagger.audio.AudioFile;
@@ -16,13 +18,13 @@ import org.jaudiotagger.tag.TagException;
 import java.io.File;
 import java.io.IOException;
 
-public class FileAudioTagsUtils {
+public class FileAudioMetaDataUtils {
 
     public static boolean setMetaData(
             final File file,
-            final String newTitle,
-            final String newArtist,
-            final String newAlbum) {
+            @Nullable final String newTitle,
+            @Nullable final String newArtist,
+            @Nullable final String newAlbum) {
 
         Preconditions.checkNotNull(file);
 

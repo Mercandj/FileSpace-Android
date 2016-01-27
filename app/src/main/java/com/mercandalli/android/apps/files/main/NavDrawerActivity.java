@@ -23,6 +23,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -210,6 +211,11 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
     }
 
     @Override
+    public void setTitleToolbar(@StringRes int title) {
+        setTitle(title);
+    }
+
+    @Override
     public void onDrawerSlide(View drawerView, float slideOffset) {
         if (mActionBarDrawerToggle != null) {
             mActionBarDrawerToggle.onDrawerSlide(drawerView, slideOffset);
@@ -279,7 +285,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
                     }
                     break;
                 case FILES:
-                    fragment = FileLocalPagerFragment.newInstance(getString(R.string.tab_files));
+                    fragment = FileLocalPagerFragment.newInstance();
                     break;
                 case CLOUD:
                     fragment = FileCloudPagerFragment.newInstance(getString(R.string.tab_cloud));

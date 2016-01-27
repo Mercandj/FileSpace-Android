@@ -68,6 +68,7 @@ import javax.inject.Inject;
  * {@link FileLocalApi}.
  */
 public class FileLocalFragment extends InjectedFabFragment implements
+        FileLocalPagerFragment.ListController,
         BackFragment.ISortMode,
         FileModelAdapter.OnFileClickListener,
         FileModelAdapter.OnFileLongClickListener,
@@ -115,7 +116,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
 
         findViews(rootView);
         initViews();
-        refreshList();
+        refreshCurrentList();
         mFileLocalActions = new FileLocalActions(getContext(), this);
 
         mApplicationCallback.invalidateMenu();
@@ -130,7 +131,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
         } else if (!mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())) {
             if (mCurrentDirectory.getParent() != null) {
                 mCurrentDirectory = new File(mCurrentDirectory.getParentFile().getPath());
-                refreshList();
+                refreshCurrentList();
                 return true;
             }
         } else if ((mFilesToCopyList != null && mFilesToCopyList.size() != 0) || (mFilesToCutList != null && mFilesToCutList.size() != 0)) {
@@ -168,7 +169,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
                         }
                         mFilesToCutList.clear();
                     }
-                    refreshList();
+                    refreshCurrentList();
                 } else {
                     final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
                     final String[] menuList = {context.getString(R.string.file_model_local_new_folder_file)};
@@ -185,7 +186,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
                                                         @Override
                                                         public void execute(String text) {
                                                             createFile(mCurrentDirectory.getPath() + File.separator, text);
-                                                            refreshList();
+                                                            refreshCurrentList();
                                                         }
                                                     }, getString(R.string.cancel), null, null, context.getString(R.string.name));
                                             break;
@@ -202,7 +203,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
                 if (mCurrentDirectory.getParent() != null && !mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())) {
                     FileLocalFragment.this.mCurrentDirectory = new File(mCurrentDirectory.getParentFile().getPath());
                     //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
-                    FileLocalFragment.this.refreshList();
+                    FileLocalFragment.this.refreshCurrentList();
                 }
                 break;
         }
@@ -245,7 +246,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
                 mSortMode == Constants.SORT_DATE_MODIFICATION ||
                 mSortMode == Constants.SORT_SIZE) {
             this.mSortMode = mSortMode;
-            refreshList();
+            refreshCurrentList();
         }
     }
 
@@ -262,7 +263,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
         } else */
         if (mFilesList.get(position).isDirectory()) {
             mCurrentDirectory = new File(mFilesList.get(position).getUrl());
-            refreshList();
+            refreshCurrentList();
         } else {
             mFileManager.execute(mActivity, position, mFilesList, view);
         }
@@ -325,7 +326,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
     public void goHome() {
         this.mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +
                 File.separator + mApplicationCallback.getConfig().getLocalFolderName());
-        this.refreshList();
+        this.refreshCurrentList();
     }
 
     public boolean hasItemSelected() {
@@ -345,11 +346,13 @@ public class FileLocalFragment extends InjectedFabFragment implements
         updateAdapter();
     }
 
-    public void refreshList() {
-        refreshList(null);
+    @Override
+    public void refreshCurrentList() {
+        refreshCurrentList(null);
     }
 
-    public void refreshList(final String search) {
+    @Override
+    public void refreshCurrentList(final String search) {
         if (mCurrentDirectory == null) {
             return;
         }
@@ -432,6 +435,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
         }
     }
 
+    @Override
     public void updateAdapter() {
         if (mRecyclerView != null && mFilesList != null && isAdded()) {
             refreshFab();

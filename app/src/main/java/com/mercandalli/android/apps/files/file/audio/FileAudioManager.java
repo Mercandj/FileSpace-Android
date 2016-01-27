@@ -5,6 +5,7 @@ import android.text.Spanned;
 
 import com.mercandalli.android.apps.files.file.FileModel;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -28,6 +29,25 @@ public abstract class FileAudioManager {
     public abstract void getLocalMusicFolders(final int sortMode, final String search);
 
     /**
+     * Edit the metadata.
+     */
+    public abstract boolean setFileAudioMetaData(
+            final File fileAudio,
+            final String newTitle,
+            final String newArtist,
+            final String newAlbum);
+
+    /**
+     * Edit the metadata.
+     */
+    @SuppressWarnings("unused")
+    public abstract boolean setFileAudioMetaData(
+            final FileAudioModel fileAudio,
+            final String newTitle,
+            final String newArtist,
+            final String newAlbum);
+
+    /**
      * Get the {@link FileAudioModel} overview.
      */
     public abstract Spanned toSpanned(final Context context, final FileAudioModel fileAudioModel);
@@ -43,6 +63,10 @@ public abstract class FileAudioManager {
     public abstract boolean registerLocalMusicListener(GetLocalMusicListener getLocalImageListener);
 
     public abstract boolean unregisterLocalMusicListener(GetLocalMusicListener getLocalImageListener);
+
+    public abstract boolean registerOnMusicUpdateListener(MusicsChangeListener musicsChangeListener);
+
+    public abstract boolean unregisterOnMusicUpdateListener(MusicsChangeListener musicsChangeListener);
 
     /**
      * Class used to count.
@@ -92,5 +116,13 @@ public abstract class FileAudioManager {
         void onLocalMusicSucceeded(List<FileAudioModel> fileModels);
 
         void onLocalMusicFailed();
+    }
+
+    interface MusicsChangeListener {
+
+        /**
+         * At least one music on the device change.
+         */
+        void onMusicsContentChange();
     }
 }

@@ -117,6 +117,9 @@
 
     <!-- NavDrawer -->
     <string name="tab_files">Files</string>
+    <string name="tab_musics">Musics</string>
+    <string name="tab_photos">Photos</string>
+    <string name="tab_videos">Videos</string>
     <string name="tab_cloud">Cloud</string>
     <string name="tab_notes">Notes</string>
     <string name="tab_community">Community</string>

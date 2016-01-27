@@ -53,6 +53,7 @@ import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
 import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
+import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
@@ -71,11 +72,13 @@ import javax.inject.Inject;
  * A {@link android.support.v4.app.Fragment} that displays the local {@link FileAudioModel}s.
  */
 public class FileAudioLocalFragment extends InjectedFabFragment implements
+        FileLocalPagerFragment.ListController,
         BackFragment.ISortMode,
         FileModelCardAdapter.OnFileSubtitleAdapter,
         FileModelCardAdapter.OnHeaderClickListener,
         ScaleAnimationAdapter.NoAnimatedPosition,
         FileAudioManager.GetAllLocalMusicListener,
+        FileAudioManager.MusicsChangeListener,
         FileAudioManager.GetLocalMusicFoldersListener,
         FileAudioManager.GetLocalMusicListener {
 
@@ -207,6 +210,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mFileAudioManager.registerAllLocalMusicListener(this);
         mFileAudioManager.registerLocalMusicFoldersListener(this);
         mFileAudioManager.registerLocalMusicListener(this);
+        mFileAudioManager.registerOnMusicUpdateListener(this);
 
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.fragment_file_audio_local_progress_bar);
         mProgressBar.setVisibility(View.GONE);
@@ -448,7 +452,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         }
 
         showProgressBar();
-        mFileAudioManager.getLocalMusicFolders(mSortMode, search);
+        refreshCurrentList(search);
     }
 
     public void refreshListAllMusic() {
@@ -458,16 +462,54 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         }
 
         showProgressBar();
-        mFileAudioManager.getAllLocalMusic(mSortMode, null);
+        refreshCurrentList();
     }
 
     public void refreshListFoldersInside(final FileModel fileModel) {
         mCurrentFolder = fileModel;
         mCurrentPage = PAGE_FOLDER_INSIDE;
         mFileAudioModels.clear();
-        mFileAudioManager.getLocalMusic(fileModel, mSortMode, null);
+        refreshCurrentList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onMusicsContentChange() {
+        refreshCurrentList();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void refreshCurrentList() {
+        refreshCurrentList(null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void refreshCurrentList(String search) {
+        switch (mCurrentPage) {
+            case PAGE_ALL:
+                mFileAudioManager.getAllLocalMusic(mSortMode, search);
+                break;
+            case PAGE_FOLDERS:
+                mFileAudioManager.getLocalMusicFolders(mSortMode, search);
+                break;
+            case PAGE_FOLDER_INSIDE:
+                mFileAudioManager.getLocalMusic(mCurrentFolder, mSortMode, search);
+                break;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void updateAdapter() {
         if (mRecyclerView != null && isAdded()) {
             refreshFab();
@@ -506,6 +548,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mFileAudioManager.unregisterAllLocalMusicListener(this);
         mFileAudioManager.unregisterLocalMusicFoldersListener(this);
         mFileAudioManager.unregisterLocalMusicListener(this);
+        mFileAudioManager.unregisterOnMusicUpdateListener(this);
         super.onDestroyView();
     }
 

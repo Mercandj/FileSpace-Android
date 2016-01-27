@@ -259,10 +259,10 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
         if (fabFragment != null) {
             if (fabFragment instanceof FileCloudFragment) {
                 FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
-                fragmentFileManagerFragment.refreshList(search);
+                fragmentFileManagerFragment.refreshCurrentList(search);
             } else if (fabFragment instanceof FileMyCloudFragment) {
                 FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fabFragment;
-                fragmentFileManagerFragment.refreshList(search);
+                fragmentFileManagerFragment.refreshCurrentList(search);
             }
         }
     }
@@ -285,11 +285,11 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
         if (fabFragment != null) {
             if (fabFragment instanceof FileCloudFragment) {
                 FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
-                fragmentFileManagerFragment.refreshList();
+                fragmentFileManagerFragment.refreshCurrentList();
             }
             if (fabFragment instanceof FileMyCloudFragment) {
                 FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fabFragment;
-                fragmentFileManagerFragment.refreshList();
+                fragmentFileManagerFragment.refreshCurrentList();
             }
         }
     }

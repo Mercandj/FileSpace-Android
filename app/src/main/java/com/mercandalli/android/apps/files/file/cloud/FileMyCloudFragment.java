@@ -54,6 +54,7 @@ import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
 import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
+import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
@@ -68,6 +69,7 @@ import java.util.Stack;
 import javax.inject.Inject;
 
 public class FileMyCloudFragment extends InjectedFabFragment implements
+        FileLocalPagerFragment.ListController,
         SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView mRecyclerView;
@@ -262,7 +264,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                 */
                 if (mFilesList.get(position).isDirectory()) {
                     FileMyCloudFragment.this.mIdFileDirectoryStack.add(mFilesList.get(position).getId());
-                    refreshList();
+                    refreshCurrentList();
                 } else {
                     mFileManager.execute(mActivity, position, mFilesList, view);
                 }
@@ -282,7 +284,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
         mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
         //mRecyclerView.addItemDecoration(new FileDivider(ContextCompat.getColor(mActivity, R.color.file_divider)));
 
-        refreshList();
+        refreshCurrentList();
 
         return rootView;
     }
@@ -292,11 +294,13 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
         this.mIdFileDirectoryStack.add(-1);
     }
 
-    public void refreshList() {
-        refreshList(null);
+    @Override
+    public void refreshCurrentList() {
+        refreshCurrentList(null);
     }
 
-    public void refreshList(String search) {
+    @Override
+    public void refreshCurrentList(String search) {
         if (!isAdded()) {
             return;
         }
@@ -345,6 +349,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
         }
     }
 
+    @Override
     public void updateAdapter() {
         if (this.mRecyclerView != null && this.isAdded() && mActivity != null) {
 
@@ -374,7 +379,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
             return true;
         } else if (this.mIdFileDirectoryStack.peek() != -1) {
             FileMyCloudFragment.this.mIdFileDirectoryStack.pop();
-            FileMyCloudFragment.this.refreshList();
+            FileMyCloudFragment.this.refreshCurrentList();
             return true;
         } else if (mFilesToCutList.size() != 0) {
             mFilesToCutList.clear();
@@ -404,7 +409,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
 
     @Override
     public void onFocus() {
-        refreshList();
+        refreshCurrentList();
     }
 
     @Override
@@ -426,7 +431,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                     new FileAddDialog(mActivity, mApplicationCallback, FileMyCloudFragment.this.mIdFileDirectoryStack.peek(), new IListener() {
                         @Override
                         public void execute() {
-                            refreshList();
+                            refreshCurrentList();
                         }
                     }, new IListener() { // Dismiss
                         @Override
@@ -440,7 +445,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
             case 1:
                 if (mIdFileDirectoryStack.peek() != -1) {
                     FileMyCloudFragment.this.mIdFileDirectoryStack.pop();
-                    FileMyCloudFragment.this.refreshList();
+                    FileMyCloudFragment.this.refreshCurrentList();
                 }
                 break;
         }
@@ -482,6 +487,6 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
 
     @Override
     public void onRefresh() {
-        refreshList();
+        refreshCurrentList();
     }
 }

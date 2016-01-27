@@ -32,13 +32,9 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -52,10 +48,9 @@ import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
+import com.mercandalli.android.apps.files.fab.FabController;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
-import com.mercandalli.android.apps.files.file.cloud.FileCloudFragment;
-import com.mercandalli.android.apps.files.file.cloud.FileMyCloudFragment;
 import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Constants;
@@ -64,19 +59,26 @@ public class FileLocalPagerFragment extends BackFragment implements
         ViewPager.OnPageChangeListener,
         FabFragment.RefreshFabCallback {
 
-    private static final String BUNDLE_ARG_TITLE = "FileFragment.Args.BUNDLE_ARG_TITLE";
-
     private static final int NB_FRAGMENT = 3;
     private static final int INIT_FRAGMENT = 0;
 
+    /**
+     * Instantiate this {@link FileLocalPagerFragment}.
+     *
+     * @return The instance of this {@link Fragment}.
+     */
+    public static FileLocalPagerFragment newInstance() {
+        return new FileLocalPagerFragment();
+    }
+
+    //region Views
     private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private FileManagerFragmentPagerAdapter mPagerAdapter;
-
     private FloatingActionButton mFab1;
     private FloatingActionButton mFab2;
+    //endregion Views
 
-    private String mTitle;
     private SetToolbarCallback mSetToolbarCallback;
 
     private int[] mImageResId = {
@@ -86,17 +88,12 @@ public class FileLocalPagerFragment extends BackFragment implements
             R.drawable.ic_video_library_white_24dp
     };
 
-    private ImageSpan[] mImageImageSpan = new ImageSpan[4];
-
-    private Drawable[] mImageDrawable = new Drawable[mImageResId.length];
-
-    public static FileLocalPagerFragment newInstance(String title) {
-        final FileLocalPagerFragment fragment = new FileLocalPagerFragment();
-        final Bundle args = new Bundle();
-        args.putString(BUNDLE_ARG_TITLE, title);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private int[] mTitleIds = {
+            R.string.tab_files,
+            R.string.tab_musics,
+            R.string.tab_photos,
+            R.string.tab_videos
+    };
 
     @Override
     public void onAttach(Context context) {
@@ -106,25 +103,12 @@ public class FileLocalPagerFragment extends BackFragment implements
         } else {
             throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
         }
-        for (int i = 0, size = mImageResId.length; i < size; i++) {
-            mImageDrawable[i] = ContextCompat.getDrawable(context, mImageResId[i]);
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mSetToolbarCallback = null;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        final Bundle args = getArguments();
-        if (!args.containsKey(BUNDLE_ARG_TITLE)) {
-            throw new IllegalStateException("Missing args. Please use newInstance()");
-        }
-        mTitle = args.getString(BUNDLE_ARG_TITLE);
     }
 
     @Nullable
@@ -155,6 +139,7 @@ public class FileLocalPagerFragment extends BackFragment implements
     public void onFocus() {
     }
 
+    //region Override - ViewPager
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
     }
@@ -167,8 +152,9 @@ public class FileLocalPagerFragment extends BackFragment implements
     public void onPageSelected(int position) {
         mApplicationCallback.invalidateMenu();
         refreshFab(position);
-        syncTabLayoutIconsColor();
+        syncTabLayout();
     }
+    //endregion Override - ViewPager
 
     @Override
     public void onRefreshFab() {
@@ -196,10 +182,7 @@ public class FileLocalPagerFragment extends BackFragment implements
 
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (query == null) {
-                    return false;
-                }
-                if (query.replaceAll(" ", "").equals("")) {
+                if (query == null || query.replaceAll(" ", "").equals("")) {
                     return false;
                 }
                 refreshListServer(query);
@@ -254,6 +237,7 @@ public class FileLocalPagerFragment extends BackFragment implements
         return mViewPager.getCurrentItem();
     }
 
+    @Nullable
     public FabFragment getCurrentFragment() {
         final Fragment fragment = getChildFragmentManager().findFragmentByTag("android:switcher:" +
                 R.id.fragment_file_view_pager + ":" + mPagerAdapter.getItemId(getCurrentFragmentIndex()));
@@ -269,54 +253,22 @@ public class FileLocalPagerFragment extends BackFragment implements
 
     public void refreshListServer(String search) {
         final FabFragment fabFragment = getCurrentFragment();
-        if (fabFragment != null) {
-            if (fabFragment instanceof FileCloudFragment) {
-                FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
-                fragmentFileManagerFragment.refreshList(search);
-            } else if (fabFragment instanceof FileMyCloudFragment) {
-                FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fabFragment;
-                fragmentFileManagerFragment.refreshList(search);
-            } else if (fabFragment instanceof FileLocalFragment) {
-                FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fabFragment;
-                fragmentFileManagerFragment.refreshList(search);
-            } else if (fabFragment instanceof FileAudioLocalFragment) {
-                FileAudioLocalFragment fragmentFileManagerFragment = (FileAudioLocalFragment) fabFragment;
-                fragmentFileManagerFragment.refreshListFolders(search);
-            }
+        if (fabFragment != null && fabFragment instanceof ListController) {
+            ((ListController) fabFragment).refreshCurrentList(search);
         }
     }
 
     public void updateAdapterListServer() {
         final FabFragment fabFragment = getCurrentFragment();
-        if (fabFragment != null) {
-            if (fabFragment instanceof FileCloudFragment) {
-                FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
-                fragmentFileManagerFragment.updateAdapter();
-            } else if (fabFragment instanceof FileMyCloudFragment) {
-                FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fabFragment;
-                fragmentFileManagerFragment.updateAdapter();
-            } else if (fabFragment instanceof FileLocalFragment) {
-                FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fabFragment;
-                fragmentFileManagerFragment.updateAdapter();
-            }
+        if (fabFragment != null && fabFragment instanceof ListController) {
+            ((ListController) fabFragment).updateAdapter();
         }
     }
 
     public void refreshData() {
         final FabFragment fabFragment = getCurrentFragment();
-        if (fabFragment != null) {
-            if (fabFragment instanceof FileCloudFragment) {
-                FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
-                fragmentFileManagerFragment.refreshList();
-            }
-            if (fabFragment instanceof FileMyCloudFragment) {
-                FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fabFragment;
-                fragmentFileManagerFragment.refreshList();
-            }
-            if (fabFragment instanceof FileLocalFragment) {
-                FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fabFragment;
-                fragmentFileManagerFragment.refreshList();
-            }
+        if (fabFragment != null && fabFragment instanceof ListController) {
+            ((ListController) fabFragment).refreshCurrentList();
         }
     }
 
@@ -374,9 +326,7 @@ public class FileLocalPagerFragment extends BackFragment implements
     }
 
     private void initToolbar(View rootView) {
-        final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.fragment_file_toolbar);
-        toolbar.setTitle(mTitle);
-        mSetToolbarCallback.setToolbar(toolbar);
+        mSetToolbarCallback.setToolbar((Toolbar) rootView.findViewById(R.id.fragment_file_toolbar));
         setStatusBarColor(mActivity, R.color.status_bar);
         setHasOptionsMenu(true);
     }
@@ -393,25 +343,29 @@ public class FileLocalPagerFragment extends BackFragment implements
         }
 
         mTabLayout.setupWithViewPager(mViewPager);
-        syncTabLayoutIconsColor();
+        syncTabLayout();
 
         mFab1.setVisibility(View.GONE);
         mFab2.setVisibility(View.GONE);
     }
 
-    private void syncTabLayoutIconsColor() {
+    private void syncTabLayout() {
         final int position = mViewPager.getCurrentItem();
+        mSetToolbarCallback.setTitleToolbar(mTitleIds[position]);
         for (int i = 0; i < NB_FRAGMENT; i++) {
-            final ImageSpan imageSpan = mImageImageSpan[i];
-            if (i == position) {
-                imageSpan.getDrawable().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-            } else {
-                imageSpan.getDrawable().setColorFilter(Color.parseColor("#85455A64"), PorterDuff.Mode.SRC_ATOP);
+            final TabLayout.Tab tab = mTabLayout.getTabAt(i);
+            if (tab != null) {
+                tab.setIcon(mImageResId[i]);
+                final Drawable drawable = tab.getIcon();
+                if (drawable != null) {
+                    drawable.setColorFilter(i == position ? Color.WHITE : Color.parseColor("#85455A64"),
+                            PorterDuff.Mode.SRC_ATOP);
+                }
             }
         }
-        mTabLayout.setTabTextColors(position % 2 == 0 ? Color.BLACK : Color.WHITE, position % 2 == 0 ? Color.BLACK : Color.WHITE);
     }
 
+    //region Fab
     private void refreshFab() {
         refreshFab(getCurrentFragmentIndex());
     }
@@ -420,21 +374,21 @@ public class FileLocalPagerFragment extends BackFragment implements
         if (currentFragmentId == -1) {
             return;
         }
-        FabFragment fabFragment = getCurrentFragment();
+        final FabFragment fabFragment = getCurrentFragment();
         if (fabFragment == null) {
             return;
         }
         refreshFab(fabFragment);
     }
 
-    private void refreshFab(final FabFragment currentFragment) {
+    private void refreshFab(final FabController fabController) {
         if (mFab1 == null) {
             return;
         }
         int imageResource;
-        if (currentFragment.isFabVisible(0)) {
+        if (fabController.isFabVisible(0)) {
             mFab1.show();
-            imageResource = currentFragment.getFabImageResource(0);
+            imageResource = fabController.getFabImageResource(0);
             if (imageResource == -1) {
                 imageResource = android.R.drawable.ic_input_add;
             }
@@ -442,7 +396,7 @@ public class FileLocalPagerFragment extends BackFragment implements
             mFab1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    currentFragment.onFabClick(0, mFab1);
+                    fabController.onFabClick(0, mFab1);
                 }
             });
         } else {
@@ -452,9 +406,9 @@ public class FileLocalPagerFragment extends BackFragment implements
         if (mFab2 == null) {
             return;
         }
-        if (currentFragment.isFabVisible(1)) {
+        if (fabController.isFabVisible(1)) {
             mFab2.show();
-            imageResource = currentFragment.getFabImageResource(1);
+            imageResource = fabController.getFabImageResource(1);
             if (imageResource == -1) {
                 imageResource = android.R.drawable.ic_input_add;
             }
@@ -462,14 +416,20 @@ public class FileLocalPagerFragment extends BackFragment implements
             mFab2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    currentFragment.onFabClick(1, mFab2);
+                    fabController.onFabClick(1, mFab2);
                 }
             });
         } else {
             mFab2.hide();
         }
     }
+    //endregion Fab
 
+    //region Inner class and interface
+
+    /**
+     * A simple {@link FragmentPagerAdapter}.
+     */
     public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
         ApplicationCallback mApplicationCallback;
 
@@ -496,21 +456,33 @@ public class FileLocalPagerFragment extends BackFragment implements
         public int getCount() {
             return NB_FRAGMENT;
         }
+    }
 
-        @Override
-        public CharSequence getPageTitle(int i) {
-            // Generate title based on item position
-            // return tabTitles[position];
-            final Drawable image = mImageDrawable[i];
-            image.setBounds(0, 0, image.getIntrinsicWidth(), image.getIntrinsicHeight());
-            SpannableString sb = new SpannableString(" ");
-            mImageImageSpan[i] = new ImageSpan(image, ImageSpan.ALIGN_BOTTOM);
-            sb.setSpan(mImageImageSpan[i], 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            return sb;
-        }
+    /**
+     * An interface to manager {@link java.util.List} and {@link android.support.v7.widget.RecyclerView}.
+     */
+    public interface ListController {
+
+        /**
+         * Refresh the visible {@link java.util.List} and {@link android.support.v7.widget.RecyclerView}.
+         */
+        void refreshCurrentList();
+
+        /**
+         * Refresh the visible {@link java.util.List} and {@link android.support.v7.widget.RecyclerView}.
+         *
+         * @param search The current search.
+         */
+        void refreshCurrentList(String search);
+
+        /**
+         * Update the {@link android.support.v7.widget.RecyclerView} adapter.
+         */
+        void updateAdapter();
     }
 
     interface HomeIconVisible {
         boolean isHomeVisible();
     }
+    //endregion Inner class and interface
 }

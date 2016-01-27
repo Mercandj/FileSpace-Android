@@ -1,12 +1,13 @@
 package com.mercandalli.android.apps.files.common.fragment;
 
 import android.content.Context;
-import android.support.design.widget.FloatingActionButton;
+
+import com.mercandalli.android.apps.files.fab.FabController;
 
 /**
  * Manage the floating button.
  */
-public abstract class FabFragment extends BackFragment {
+public abstract class FabFragment extends BackFragment implements FabController {
 
     protected RefreshFabCallback mRefreshFabCallback;
 
@@ -30,19 +31,10 @@ public abstract class FabFragment extends BackFragment {
         mRefreshFabCallback = null;
     }
 
+    @Override
     public void refreshFab() {
         if (mRefreshFabCallback != null) {
             mRefreshFabCallback.onRefreshFab();
         }
-    }
-
-    public abstract void onFabClick(int fab_id, FloatingActionButton fab);
-
-    public abstract boolean isFabVisible(int fab_id);
-
-    public abstract int getFabImageResource(int fab_id);
-
-    public interface RefreshFabCallback {
-        void onRefreshFab();
     }
 }

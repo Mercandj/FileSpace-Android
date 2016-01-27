@@ -6,13 +6,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.main.FileApp;
 
 import java.io.File;
 
@@ -52,6 +55,8 @@ public class FileAudioEditTagsDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Context context = getContext();
+        final FileAudioManager fileAudioManager =
+                FileApp.get(context).getFileAppComponent().provideFileAudioManager();
 
         @SuppressLint("InflateParams")
         final View rootView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_meta_data, null);
@@ -89,15 +94,21 @@ public class FileAudioEditTagsDialog extends DialogFragment {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        final File file = new File(mFilePath);
-                        if (!file.exists()) {
+                        final String newTitle = mTitleEditText.getText().toString();
+                        final String newArtist = mArtistEditText.getText().toString();
+                        final String newAlbum = mAlbumEditText.getText().toString();
+                        if (nothingChanged(newTitle,
+                                newArtist,
+                                newAlbum)) {
+                            Toast.makeText(context, "Nothing changed", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        FileAudioTagsUtils.setMetaData(
-                                file,
-                                mTitleEditText.getText().toString(),
-                                mArtistEditText.getText().toString(),
-                                mAlbumEditText.getText().toString());
+                        final boolean succeeded = fileAudioManager.setFileAudioMetaData(
+                                new File(mFilePath),
+                                newTitle,
+                                newArtist,
+                                newAlbum);
+                        Toast.makeText(context, succeeded ? "Succeed" : "Failed", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
@@ -115,5 +126,25 @@ public class FileAudioEditTagsDialog extends DialogFragment {
         savedInstanceState.putString(SAVED_ARTIST, mArtist);
         savedInstanceState.putString(SAVED_ALBUM, mAlbum);
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    private boolean nothingChanged(
+            @Nullable final String newTitle,
+            @Nullable final String newArtist,
+            @Nullable final String newAlbum) {
+
+        return equalsString(mTitle, newTitle) &&
+                equalsString(mArtist, newArtist) &&
+                equalsString(mAlbum, newAlbum);
+    }
+
+    private boolean equalsString(@Nullable final String str1, @Nullable final String str2) {
+        if (str1 == null) {
+            return str2 == null || str2.isEmpty();
+        }
+        if (str2 == null) {
+            return str1.isEmpty();
+        }
+        return str1.equals(str2);
     }
 }

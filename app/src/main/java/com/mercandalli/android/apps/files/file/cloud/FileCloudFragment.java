@@ -55,9 +55,9 @@ import com.mercandalli.android.apps.files.file.FileModelAdapter;
 import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
-import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.main.FileAppComponent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,6 +71,7 @@ import javax.inject.Inject;
  * A {@link FabFragment} used by {@link FileLocalPagerFragment} to buildDisplay the public cloud {@link FileModel}.
  */
 public class FileCloudFragment extends InjectedFabFragment implements
+        FileLocalPagerFragment.ListController,
         FileModelAdapter.OnFileClickListener,
         FileModelAdapter.OnFileLongClickListener,
         FileModelListener, SwipeRefreshLayout.OnRefreshListener {
@@ -121,7 +122,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
         mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
         //mRecyclerView.addItemDecoration(new FileDivider(ContextCompat.getColor(mActivity, R.color.file_divider)));
 
-        refreshList();
+        refreshCurrentList();
 
         return rootView;
     }
@@ -141,7 +142,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
 
     @Override
     public void onFocus() {
-        refreshList();
+        refreshCurrentList();
     }
 
     @Override
@@ -152,7 +153,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
                 new FileAddDialog(mActivity, mApplicationCallback, -1, new IListener() {
                     @Override
                     public void execute() {
-                        refreshList();
+                        refreshCurrentList();
                     }
                 }, new IListener() { // Dismiss
                     @Override
@@ -165,7 +166,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
             case 1:
                 //FileCloudFragment.this.url = "";
                 Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-                FileCloudFragment.this.refreshList();
+                FileCloudFragment.this.refreshCurrentList();
                 break;
         }
     }
@@ -199,7 +200,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
         if (mFilesList.get(position).isDirectory()) {
             //FileCloudFragment.this.url = mFilesList.get(position).getUrl() + "/";
             Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-            refreshList();
+            refreshCurrentList();
         } else {
             mFileManager.execute(mActivity, position, mFilesList, view);
         }
@@ -340,16 +341,27 @@ public class FileCloudFragment extends InjectedFabFragment implements
         fileAppComponent.inject(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onRefresh() {
-        refreshList();
+        refreshCurrentList();
     }
 
-    public void refreshList() {
-        refreshList(null);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void refreshCurrentList() {
+        refreshCurrentList(null);
     }
 
-    public void refreshList(String search) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void refreshCurrentList(String search) {
         if (!isAdded()) {
             return;
         }
