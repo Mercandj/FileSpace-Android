@@ -21,8 +21,6 @@ package com.mercandalli.android.apps.files.file.image;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -174,7 +172,7 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
                 @Override
                 public void onClick(View v) {
                     if (moreListener != null) {
-                        moreListener.executeFileModel(file);
+                        moreListener.executeFileModel(file, v);
                     }
                 }
             });
@@ -368,15 +366,12 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
         }
 
         private void updateView() {
-            final Context context = itemView.getContext();
             for (FileModelCardHeaderItem i : mFileModelCardHeaderItems) {
                 final TextView tv = (TextView) itemView.findViewById(i.getId());
                 tv.setOnClickListener(this);
                 if (i.isSelected()) {
-                    tv.setTextColor(ContextCompat.getColor(context, R.color.primary));
                     tv.setBackgroundResource(R.drawable.file_local_audio_rounded_bg_selected);
                 } else {
-                    tv.setTextColor(Color.WHITE);
                     tv.setBackgroundResource(R.drawable.file_local_audio_rounded_bg);
                 }
             }

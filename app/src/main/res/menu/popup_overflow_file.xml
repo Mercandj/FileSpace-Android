@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/popup_overflow_file_upload"
+        android:title="@string/upload" />
+
+    <item
+        android:id="@+id/popup_overflow_file_open_as"
+        android:title="@string/open_as" />
+
+    <item
+        android:id="@+id/popup_overflow_file_rename"
+        android:title="@string/rename" />
+
+    <item
+        android:id="@+id/popup_overflow_file_delete"
+        android:title="@string/delete" />
+
+    <item
+        android:id="@+id/popup_overflow_file_copy"
+        android:title="@string/copy" />
+
+    <item
+        android:id="@+id/popup_overflow_file_cut"
+        android:title="@string/cut" />
+
+    <item
+        android:id="@+id/popup_overflow_file_properties"
+        android:title="@string/properties" />
+
+</menu>

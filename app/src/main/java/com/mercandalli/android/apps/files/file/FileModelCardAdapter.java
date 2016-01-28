@@ -20,9 +20,7 @@
 package com.mercandalli.android.apps.files.file;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -170,7 +168,7 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
                 @Override
                 public void onClick(View v) {
                     if (mMoreListener != null) {
-                        mMoreListener.executeFileModel(fileModel);
+                        mMoreListener.executeFileModel(fileModel, v);
                     }
                 }
             });
@@ -294,15 +292,12 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
         }
 
         private void updateView() {
-            final Context context = itemView.getContext();
             for (FileModelCardHeaderItem i : mFileModelCardHeaderItems) {
                 final TextView tv = (TextView) itemView.findViewById(i.getId());
                 tv.setOnClickListener(this);
                 if (i.isSelected()) {
-                    tv.setTextColor(ContextCompat.getColor(context, R.color.primary));
                     tv.setBackgroundResource(R.drawable.file_local_audio_rounded_bg_selected);
                 } else {
-                    tv.setTextColor(Color.WHITE);
                     tv.setBackgroundResource(R.drawable.file_local_audio_rounded_bg);
                 }
             }

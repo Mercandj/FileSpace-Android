@@ -215,7 +215,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public void executeFileModel(final FileModel fileModel) {
+    public void executeFileModel(final FileModel fileModel, final View view) {
         final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
         String[] menuList = {getString(R.string.download)};
         if (!fileModel.isDirectory() && mFileManager.isMine(fileModel)) {

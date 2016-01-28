@@ -7,7 +7,7 @@
     <color name="primary_dark_dark">#263238</color>
     <color name="accent">#0d84c8</color>
 
-    <color name="app_background">#EAEAEA</color>
+    <color name="app_background">#EEEEEE</color>
     <color name="action_bar">@color/primary</color>
     <color name="status_bar">@color/primary_dark</color>
 

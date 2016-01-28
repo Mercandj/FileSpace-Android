@@ -417,7 +417,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public void executeFileModel(final FileModel fileModel) {
+    public void executeFileModel(final FileModel fileModel, final View view) {
         final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
         String[] menuList = {getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties)};
         if (mApplicationCallback.isLogged()) {

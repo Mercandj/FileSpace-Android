@@ -74,7 +74,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
         FileModelAdapter.OnFileLongClickListener,
         FileModelListener,
         FileLocalPagerFragment.HomeIconVisible,
-        FileLocalActions.FileLocalActionCallback {
+        FileLocalOverflowActions.FileLocalActionCallback {
 
     private RecyclerView mRecyclerView;
     private ArrayList<FileModel> mFilesList;
@@ -93,7 +93,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
 
     private FileModelAdapter mFileModelAdapter;
 
-    private FileLocalActions mFileLocalActions;
+    private FileLocalOverflowActions mFileLocalOverflowActions;
 
     public static FileLocalFragment newInstance() {
         return new FileLocalFragment();
@@ -117,7 +117,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
         findViews(rootView);
         initViews();
         refreshCurrentList();
-        mFileLocalActions = new FileLocalActions(getContext(), this);
+        mFileLocalOverflowActions = new FileLocalOverflowActions(getContext(), this);
 
         mApplicationCallback.invalidateMenu();
         return rootView;
@@ -279,8 +279,8 @@ public class FileLocalFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public void executeFileModel(final FileModel fileModel) {
-        mFileLocalActions.show(fileModel, mApplicationCallback.isLogged());
+    public void executeFileModel(final FileModel fileModel, final View view) {
+        mFileLocalOverflowActions.show(fileModel, view, mApplicationCallback.isLogged());
     }
 
     @Override

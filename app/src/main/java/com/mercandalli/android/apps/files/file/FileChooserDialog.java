@@ -109,7 +109,7 @@ public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFile
                     refreshList();
                 }
             } else {
-                mFileModelListener.executeFileModel(file);
+                mFileModelListener.executeFileModel(file, view);
                 dismiss();
             }
         }

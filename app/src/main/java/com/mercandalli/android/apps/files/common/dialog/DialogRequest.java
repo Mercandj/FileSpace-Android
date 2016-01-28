@@ -115,7 +115,7 @@ public class DialogRequest extends Dialog {
             public void onClick(View v) {
                 mFileChooserDialog = new FileChooserDialog(mActivity, new FileModelListener() {
                     @Override
-                    public void executeFileModel(FileModel fileModel) {
+                    public void executeFileModel(FileModel fileModel, View view) {
                         ((TextView) DialogRequest.this.findViewById(R.id.label)).setText(fileModel.getUrl());
                         DialogRequest.this.file = new File(fileModel.getUrl());
                         DialogRequest.this.mFileModel = fileModel;

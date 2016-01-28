@@ -4,10 +4,6 @@ import android.app.Application;
 import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.StandardExceptionParser;
-import com.google.android.gms.analytics.Tracker;
 import com.mercandalli.android.apps.files.analytics.AnalyticsTrackers;
 
 import io.fabric.sdk.android.Fabric;

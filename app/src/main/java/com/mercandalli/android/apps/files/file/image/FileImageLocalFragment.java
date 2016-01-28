@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -55,7 +56,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         FileImageManager.GetLocalImageFoldersListener,
         FileImageManager.GetLocalImageListener,
         FileImageManager.GetAllLocalImageListener,
-        ScaleAnimationAdapter.NoAnimatedPosition {
+        ScaleAnimationAdapter.NoAnimatedPosition, SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView mRecyclerView;
     private List<FileModel> mFileModels;
@@ -83,6 +84,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
     private boolean mIsCard = true;
 
     private ScaleAnimationAdapter mScaleAnimationAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     /**
      * A simple {@link Handler}. Called by {@link #showProgressBar()} or {@link #hideProgressBar()}.
@@ -148,6 +150,13 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         mProgressBar.setVisibility(View.GONE);
         mMessageTextView = (TextView) rootView.findViewById(R.id.fragment_file_audio_local_message);
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.fragment_file_audio_local_swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_file_audio_local_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         updateLayoutManager();
@@ -163,7 +172,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
 
         mFileImageRowAdapter = new FileImageRowAdapter(mHeaderIds, this, mActivity, mFileModels, new FileModelListener() {
             @Override
-            public void executeFileModel(final FileModel fileModel) {
+            public void executeFileModel(final FileModel fileModel, final View view) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
                 String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.properties)};
                 if (mApplicationCallback.isLogged()) {
@@ -449,6 +458,11 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
     @Override
     public boolean isAnimatedItem(int position) {
         return mIsInsideFolder || position != 0;
+    }
+
+    @Override
+    public void onRefresh() {
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     public void refreshListFolders() {

@@ -82,7 +82,7 @@ public class FileUploadDialog extends Dialog {
             public void onClick(View v) {
                 mFileChooserDialog = new FileChooserDialog(mActivity, new FileModelListener() {
                     @Override
-                    public void executeFileModel(FileModel fileModel) {
+                    public void executeFileModel(FileModel fileModel, final View view) {
                         fileModel.setIdFileParent(id_file_parent);
                         ((TextView) FileUploadDialog.this.findViewById(R.id.label)).setText(fileModel.getUrl());
                         FileUploadDialog.this.mFileModel = fileModel;

@@ -120,7 +120,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
 
         mFileModelAdapter = new FileModelAdapter(getContext(), mFilesList, new FileModelListener() {
             @Override
-            public void executeFileModel(final FileModel fileModel) {
+            public void executeFileModel(final FileModel fileModel, final View view) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
                 String[] menuList = {getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties)};
                 if (!fileModel.isDirectory()) {

@@ -90,7 +90,7 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
             public void onClick(View v) {
                 new FileChooserDialog(mActivity, new FileModelListener() {
                     @Override
-                    public void executeFileModel(final FileModel fileModel) {
+                    public void executeFileModel(final FileModel fileModel, final View view) {
                         new FileUploadDialog(mActivity, mApplicationCallback, id_file_parent, fileModel, listener);
                     }
                 });

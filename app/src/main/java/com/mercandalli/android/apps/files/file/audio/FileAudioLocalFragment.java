@@ -27,6 +27,7 @@ import android.os.Handler;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -80,7 +81,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         FileAudioManager.GetAllLocalMusicListener,
         FileAudioManager.MusicsChangeListener,
         FileAudioManager.GetLocalMusicFoldersListener,
-        FileAudioManager.GetLocalMusicListener {
+        FileAudioManager.GetLocalMusicListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "FileAudioLocalFragment";
 
@@ -124,6 +125,8 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     private String mStringMusic;
     private String mStringMusics;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
     /**
      * A simple {@link Handler}. Called by {@link #showProgressBar()} or {@link #hideProgressBar()}.
      */
@@ -143,10 +146,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     FileAudioManager mFileAudioManager;
 
     public static FileAudioLocalFragment newInstance() {
-        Bundle args = new Bundle();
-        FileAudioLocalFragment fragment = new FileAudioLocalFragment();
-        fragment.setArguments(args);
-        return fragment;
+        return new FileAudioLocalFragment();
     }
 
     /**
@@ -215,6 +215,13 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.fragment_file_audio_local_progress_bar);
         mProgressBar.setVisibility(View.GONE);
         mMessageTextView = (TextView) rootView.findViewById(R.id.fragment_file_audio_local_message);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.fragment_file_audio_local_swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_file_audio_local_recycler_view);
         mRecyclerView.setHasFixedSize(true);
@@ -436,6 +443,11 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     }
 
     @Override
+    public void onRefresh() {
+        refreshListFolders();
+    }
+
+    @Override
     public boolean isAnimatedItem(int position) {
         return mCurrentPage == PAGE_FOLDER_INSIDE || position != 0;
     }
@@ -492,7 +504,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
      * {@inheritDoc}
      */
     @Override
-    public void refreshCurrentList(String search) {
+    public void refreshCurrentList(final String search) {
         switch (mCurrentPage) {
             case PAGE_ALL:
                 mFileAudioManager.getAllLocalMusic(mSortMode, search);
@@ -512,6 +524,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     @Override
     public void updateAdapter() {
         if (mRecyclerView != null && isAdded()) {
+            mSwipeRefreshLayout.setRefreshing(false);
             refreshFab();
 
             final boolean isEmpty = (mFileModels.size() == 0 && mCurrentPage == PAGE_FOLDERS) ||
@@ -553,7 +566,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public void onAllLocalMusicSucceeded(List<FileAudioModel> fileModels) {
+    public void onAllLocalMusicSucceeded(final List<FileAudioModel> fileModels) {
         if (mCurrentPage != PAGE_ALL) {
             return;
         }
@@ -581,7 +594,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public void onLocalMusicFoldersSucceeded(List<FileModel> fileModels) {
+    public void onLocalMusicFoldersSucceeded(final List<FileModel> fileModels) {
         if (mCurrentPage != PAGE_FOLDERS) {
             return;
         }
@@ -607,7 +620,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public void onLocalMusicSucceeded(List<FileAudioModel> fileModels) {
+    public void onLocalMusicSucceeded(final List<FileAudioModel> fileModels) {
         if (mCurrentPage != PAGE_FOLDER_INSIDE) {
             return;
         }

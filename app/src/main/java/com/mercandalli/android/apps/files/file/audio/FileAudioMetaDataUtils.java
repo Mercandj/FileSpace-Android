@@ -1,6 +1,7 @@
 package com.mercandalli.android.apps.files.file.audio;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 
@@ -19,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class FileAudioMetaDataUtils {
+
+    private static final String TAG = "FileAudioMetaDataUtils";
 
     public static boolean setMetaData(
             final File file,
@@ -39,7 +42,7 @@ public class FileAudioMetaDataUtils {
             audioFile = AudioFileIO.read(file);
         } catch (CannotReadException | TagException | IOException | InvalidAudioFrameException |
                 ReadOnlyFileException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Cannot get AudioFile");
         }
         if (audioFile == null) {
             return false;
@@ -60,7 +63,7 @@ public class FileAudioMetaDataUtils {
                 audioFile.commit();
                 return true;
             } catch (FieldDataInvalidException | CannotWriteException e) {
-                e.printStackTrace();
+                Log.e(TAG, "Cannot write MetaData");
             }
         }
         return false;

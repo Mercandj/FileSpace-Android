@@ -114,7 +114,7 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
                 @Override
                 public void onClick(View v) {
                     if (mMoreListener != null) {
-                        mMoreListener.executeFileModel(fileModel);
+                        mMoreListener.executeFileModel(fileModel, v);
                     }
                 }
             });

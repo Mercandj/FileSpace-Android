@@ -35,6 +35,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.view.PlayPauseView;
@@ -124,16 +125,16 @@ public class FileAudioActivity extends AppCompatActivity implements
             }
         }
 
-        final Window window = this.getWindow();
+        final Window window = getWindow();
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.notifications_bar_audio));
         }
 
-        mTitleTextView = (TextView) this.findViewById(R.id.title);
-        mSizeTextView = (TextView) this.findViewById(R.id.size);
-        mSliderNumber = (Slider) this.findViewById(R.id.sliderNumber);
+        mTitleTextView = (TextView) findViewById(R.id.title);
+        mSizeTextView = (TextView) findViewById(R.id.size);
+        mSliderNumber = (Slider) findViewById(R.id.sliderNumber);
         mSliderNumber.setValueToDisplay(new Slider.ValueToDisplay() {
             @Override
             public String convert(int value) {
@@ -182,6 +183,12 @@ public class FileAudioActivity extends AppCompatActivity implements
                                         .file(new File(absolutePath)).build());
                     }
                 }
+            }
+
+            if (mFileAudioModelList.isEmpty()) {
+                Toast.makeText(this, "Oops, I have an empty list :(", Toast.LENGTH_SHORT).show();
+                finish();
+                return;
             }
 
             if (mFirstStart) {

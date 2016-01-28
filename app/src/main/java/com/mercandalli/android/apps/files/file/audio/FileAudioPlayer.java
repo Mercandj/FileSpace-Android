@@ -12,6 +12,7 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -31,7 +32,12 @@ import java.util.concurrent.TimeUnit;
 /**
  * The {@link FileAudioModel} player.
  */
-public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener, AudioManager.OnAudioFocusChangeListener {
+public class FileAudioPlayer implements
+        MediaPlayer.OnPreparedListener,
+        MediaPlayer.OnCompletionListener,
+        AudioManager.OnAudioFocusChangeListener {
+
+    private static final String TAG = "FileAudioPlayer";
 
     @SharedAudioPlayerUtils.Status
     private int mCurrentStatus = SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_UNKNOWN;
@@ -45,15 +51,14 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
     private final Context mAppContext;
     private final AudioManager mAudioManager;
 
-    private UpdaterPosition mUpdatePositionRunnable = new UpdaterPosition();
-    private final List<OnPlayerStatusChangeListener> mOnPlayerStatusChangeListeners;
+    private final UpdaterPosition mUpdatePositionRunnable = new UpdaterPosition();
+    private final List<OnPlayerStatusChangeListener> mOnPlayerStatusChangeListeners = new ArrayList<>();
 
     private final Handler mHandler = new Handler();
     private String mWatchNodeId;
 
-    public FileAudioPlayer(Application application) {
+    public FileAudioPlayer(final Application application) {
         mAppContext = application.getApplicationContext();
-        mOnPlayerStatusChangeListeners = new ArrayList<>();
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setOnPreparedListener(this);
         mMediaPlayer.setOnCompletionListener(this);
@@ -69,7 +74,7 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
     }
 
     @Override
-    public void onCompletion(MediaPlayer mp) {
+    public void onCompletion(final MediaPlayer mp) {
         setCurrentStatus(SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED);
         next();
     }
@@ -95,6 +100,9 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
      * Play the element #{@link #mCurrentMusicIndex} in {@link #mFileAudioModelList}.
      */
     public void play() {
+        if (isPlayerKO()) {
+            return;
+        }
         if (SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED == mCurrentStatus) {
             final int request = mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
             if (request == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
@@ -110,6 +118,9 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
      * Pause the element #{@link #mCurrentMusicIndex} in {@link #mFileAudioModelList}.
      */
     public void pause() {
+        if (isPlayerKO()) {
+            return;
+        }
         if (SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING == mCurrentStatus) {
             mMediaPlayer.pause();
             setCurrentStatus(SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED);
@@ -121,11 +132,13 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
      * Play the next {@link FileAudioModel} in {@link #mFileAudioModelList}.
      */
     public void next() {
+        if (isPlayerKO()) {
+            return;
+        }
         mCurrentMusicIndex++;
         if (mCurrentMusicIndex >= mFileAudioModelList.size()) {
             mCurrentMusicIndex = 0;
         }
-
         final FileAudioModel currentMusic = mFileAudioModelList.get(mCurrentMusicIndex);
         if (mCurrentMusic == null || !currentMusic.getPath().equals(mCurrentMusic.getPath())) {
             prepare(currentMusic);
@@ -136,11 +149,13 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
      * Play the previous {@link FileAudioModel} in {@link #mFileAudioModelList}.
      */
     public void previous() {
+        if (isPlayerKO()) {
+            return;
+        }
         mCurrentMusicIndex--;
         if (mCurrentMusicIndex < 0) {
             mCurrentMusicIndex = mFileAudioModelList.size() - 1;
         }
-
         final FileAudioModel currentMusic = mFileAudioModelList.get(mCurrentMusicIndex);
         if (mCurrentMusic == null || !currentMusic.getPath().equals(mCurrentMusic.getPath())) {
             prepare(currentMusic);
@@ -156,7 +171,16 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         return mCurrentStatus == SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING;
     }
 
-    public void startMusic(final int currentMusicIndex, List<FileAudioModel> musics) {
+    public void startMusic(
+            final int currentMusicIndex,
+            final List<FileAudioModel> musics) {
+
+        Preconditions.checkNotNull(musics);
+        if (musics.isEmpty()) {
+            Log.e(TAG, "startMusic with empty List");
+            return;
+        }
+
         mCurrentMusicIndex = currentMusicIndex;
         mFileAudioModelList.clear();
         mFileAudioModelList.addAll(musics);
@@ -243,9 +267,9 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         mHandler.postDelayed(mUpdatePositionRunnable, 1000);
     }
 
-    private void prepare(@NonNull FileAudioModel fileAudioModel) {
+    private void prepare(@NonNull final FileAudioModel fileAudioModel) {
         Preconditions.checkNotNull(fileAudioModel);
-        if (SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PREPARING == mCurrentStatus) {
+        if (SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PREPARING == mCurrentStatus || isPlayerKO()) {
             return;
         }
 
@@ -288,7 +312,7 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
     /**
      * Display or hide the notification.
      */
-    /* package */ void setNotification(boolean activated) {
+    /* package */ void setNotification(final boolean activated) {
         if (activated && mCurrentMusic != null) {
 
             Intent intent = new Intent(mAppContext, FileAudioActivity.class);
@@ -323,14 +347,14 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         }
     }
 
-    private GoogleApiClient getGoogleApiClient(Context context) {
+    private GoogleApiClient getGoogleApiClient(final Context context) {
         Preconditions.checkNotNull(context);
         return new GoogleApiClient.Builder(context)
                 .addApi(Wearable.API)
                 .build();
     }
 
-    private void retrieveDeviceNode(Context context) {
+    private void retrieveDeviceNode(final Context context) {
         Preconditions.checkNotNull(context);
         final GoogleApiClient client = getGoogleApiClient(context);
         new Thread(new Runnable() {
@@ -348,18 +372,46 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         }).start();
     }
 
-    private void sendWearMessage(Context context, final @SharedAudioPlayerUtils.Status int currentStatus, final FileAudioModel fileAudioModel) {
+    private void sendWearMessage(
+            final Context context,
+            final @SharedAudioPlayerUtils.Status int currentStatus,
+            final FileAudioModel fileAudioModel) {
         Preconditions.checkNotNull(context);
         Preconditions.checkNotNull(fileAudioModel);
         FileAudioWearUtils.sendWearMessage(getGoogleApiClient(context), mWatchNodeId, currentStatus, fileAudioModel);
     }
 
+    /**
+     * Is this player KO. Are the {@link #mFileAudioModelList}, {@link #mCurrentMusicIndex} KO.
+     *
+     * @return If this class is KO.
+     */
+    private boolean isPlayerKO() {
+        boolean playerKO = false;
+        if (mFileAudioModelList.isEmpty()) {
+            Log.e(TAG, "mFileAudioModelList is empty");
+            playerKO = true;
+        } else if (mCurrentMusicIndex >= mFileAudioModelList.size()) {
+            Log.e(TAG, "mCurrentMusicIndex >= mFileAudioModelList.size()");
+            playerKO = true;
+        }
+        return playerKO;
+    }
 
     /* INNER */
 
     public interface OnPlayerStatusChangeListener {
+
+        /**
+         * The player status change.
+         *
+         * @param status The new status.
+         */
         void onPlayerStatusChanged(@SharedAudioPlayerUtils.Status int status);
 
+        /**
+         * The player progress change.
+         */
         void onPlayerProgressChanged(int progress, int duration, int musicPosition, FileAudioModel music);
     }
 
@@ -405,4 +457,3 @@ public class FileAudioPlayer implements MediaPlayer.OnPreparedListener, MediaPla
         }
     }
 }
-
