@@ -1,7 +1,5 @@
 package com.mercandalli.android.apps.files.file.image;
 
-import android.content.Context;
-
 import com.mercandalli.android.apps.files.file.FileModel;
 
 import java.util.List;
@@ -11,17 +9,17 @@ public interface FileImageManager {
     /**
      * Get all the {@link FileModel} image in the device.
      */
-    void getAllLocalImage(final Context context, final int sortMode, final String search);
+    void getAllLocalImage(final int sortMode, final String search);
 
     /**
      * Get all local folders that contain image.
      */
-    void getLocalImageFolders(final Context context, final int sortMode, final String search);
+    void getLocalImageFolders(final int sortMode, final String search);
 
     /**
      * Get all the {@link FileModel} image in a folder.
      */
-    void getLocalImage(final Context context, final FileModel fileModelDirectParent, final int sortMode, final String search);
+    void getLocalImage(final FileModel fileModelDirectParent, final int sortMode, final String search);
 
     boolean registerAllLocalImageListener(GetAllLocalImageListener getAllLocalImageListener);
 
@@ -38,7 +36,7 @@ public interface FileImageManager {
     interface GetAllLocalImageListener {
 
         /**
-         * Called when the call of {@link #getAllLocalImage(Context, int, String)} succeeded.
+         * Called when the call of {@link #getAllLocalImage(int, String)} succeeded.
          *
          * @param fileModels the {@link List} of result.
          */
@@ -50,7 +48,7 @@ public interface FileImageManager {
     interface GetLocalImageFoldersListener {
 
         /**
-         * Called when the call of {@link #getLocalImageFolders(Context, int, String)} succeeded.
+         * Called when the call of {@link #getLocalImageFolders(int, String)} succeeded.
          *
          * @param fileModels the {@link List} of result.
          */
@@ -62,7 +60,7 @@ public interface FileImageManager {
     interface GetLocalImageListener {
 
         /**
-         * Called when the call of {@link #getLocalImage(Context, FileModel, int, String)} succeeded.
+         * Called when the call of {@link #getLocalImage(FileModel, int, String)} succeeded.
          *
          * @param fileModels the {@link List} of result.
          */

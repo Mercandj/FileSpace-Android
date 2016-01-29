@@ -27,7 +27,7 @@
         android:layout_marginTop="5dp"
         android:ems="10"
         android:hint="@string/dialog_json"
-        android:padding="10dp"/>
+        android:padding="10dp" />
 
     <RelativeLayout
         android:id="@+id/file"
@@ -79,6 +79,5 @@
         android:layout_below="@+id/method"
         android:layout_marginTop="5dp"
         android:text="@string/request" />
-
 
 </RelativeLayout>

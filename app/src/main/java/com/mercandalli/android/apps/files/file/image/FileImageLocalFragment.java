@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -35,12 +36,15 @@ import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
 import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
 import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
+import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 
 import org.json.JSONObject;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,10 +57,27 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         BackFragment.ISortMode,
         FileModelCardAdapter.OnFileSubtitleAdapter,
         FileModelCardAdapter.OnHeaderClickListener,
+        FileImageManager.GetAllLocalImageListener,
         FileImageManager.GetLocalImageFoldersListener,
         FileImageManager.GetLocalImageListener,
-        FileImageManager.GetAllLocalImageListener,
-        ScaleAnimationAdapter.NoAnimatedPosition, SwipeRefreshLayout.OnRefreshListener {
+        FileLocalPagerFragment.ListController,
+        ScaleAnimationAdapter.NoAnimatedPosition,
+        SwipeRefreshLayout.OnRefreshListener {
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({
+            PAGE_FOLDERS,
+            PAGE_FOLDER_INSIDE,
+            PAGE_ALL})
+    public @interface CurrentPage {
+    }
+
+    private static final int PAGE_FOLDERS = 0;
+    private static final int PAGE_FOLDER_INSIDE = 1;
+    private static final int PAGE_ALL = 2;
+
+    @CurrentPage
+    private int mCurrentPage = PAGE_FOLDERS;
 
     private RecyclerView mRecyclerView;
     private List<FileModel> mFileModels;
@@ -79,9 +100,6 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
     private int mSortMode = Constants.SORT_DATE_MODIFICATION;
 
     private final IListener mRefreshActivityAdapterListener;
-
-    private boolean mIsInsideFolder = false;
-    private boolean mIsCard = true;
 
     private ScaleAnimationAdapter mScaleAnimationAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -283,7 +301,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
 
     @Override
     public boolean back() {
-        if (mIsInsideFolder) {
+        if (mCurrentPage == PAGE_FOLDER_INSIDE) {
             refreshListFolders();
             return true;
         }
@@ -303,7 +321,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
 
     @Override
     public boolean isFabVisible(int fab_id) {
-        return fab_id == 0 && mIsInsideFolder;
+        return fab_id == 0 && mCurrentPage == PAGE_FOLDER_INSIDE;
     }
 
     @Override
@@ -317,14 +335,16 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                 sortMode == Constants.SORT_DATE_MODIFICATION ||
                 sortMode == Constants.SORT_SIZE) {
             mSortMode = sortMode;
-            if (!mIsInsideFolder && mIsCard) {
-                refreshListFolders();
-            }
-            if (!mIsInsideFolder && !mIsCard) {
-                refreshListAllMusic();
-            }
-            if (mIsInsideFolder && mCurrentFolder != null) {
-                refreshListFoldersInside(mCurrentFolder);
+            switch (mCurrentPage) {
+                case PAGE_ALL:
+                    refreshListAllMusic();
+                    break;
+                case PAGE_FOLDER_INSIDE:
+                    refreshListFoldersInside(mCurrentFolder);
+                    break;
+                case PAGE_FOLDERS:
+                    refreshListFolders();
+                    break;
             }
         }
     }
@@ -457,12 +477,41 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
      */
     @Override
     public boolean isAnimatedItem(int position) {
-        return mIsInsideFolder || position != 0;
+        return mCurrentPage == PAGE_FOLDER_INSIDE || position != 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onRefresh() {
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void refreshCurrentList() {
+        refreshCurrentList(null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void refreshCurrentList(String search) {
+        switch (mCurrentPage) {
+            case PAGE_ALL:
+                mFileImageManager.getAllLocalImage(mSortMode, search);
+                break;
+            case PAGE_FOLDERS:
+                mFileImageManager.getLocalImageFolders(mSortMode, search);
+                break;
+            case PAGE_FOLDER_INSIDE:
+                mFileImageManager.getLocalImage(mCurrentFolder, mSortMode, search);
+                break;
+        }
     }
 
     public void refreshListFolders() {
@@ -471,33 +520,30 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
 
     public void refreshListFolders(final String search) {
         mCurrentFolder = null;
-        mIsInsideFolder = false;
-        mIsCard = true;
+        mCurrentPage = PAGE_FOLDERS;
         if (mFileManager == null) {
             return;
         }
 
         showProgressBar();
-        mFileImageManager.getLocalImageFolders(mActivity, mSortMode, search);
+        mFileImageManager.getLocalImageFolders(mSortMode, search);
     }
 
     public void refreshListAllMusic() {
-        mIsInsideFolder = false;
-        mIsCard = false;
+        mCurrentPage = PAGE_ALL;
         if (mFileManager == null) {
             return;
         }
 
         showProgressBar();
-        mFileImageManager.getAllLocalImage(mActivity, mSortMode, null);
+        mFileImageManager.getAllLocalImage(mSortMode, null);
     }
 
     public void refreshListFoldersInside(final FileModel fileModel) {
         mCurrentFolder = fileModel;
-        mIsInsideFolder = true;
-        mIsCard = false;
+        mCurrentPage = PAGE_FOLDER_INSIDE;
         mFileModels.clear();
-        mFileImageManager.getLocalImage(mActivity, fileModel, mSortMode, null);
+        mFileImageManager.getLocalImage(fileModel, mSortMode, null);
     }
 
     public void updateAdapter() {
@@ -511,7 +557,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                 mMessageTextView.setVisibility(View.GONE);
             }
 
-            if (mIsCard) {
+            if (mCurrentPage == PAGE_FOLDERS) {
                 mFileModelCardAdapter.setList(mFileModels);
             } else {
                 mFileImageRowAdapter.setList(mFileModels);
@@ -532,7 +578,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
     }
 
     private void updateLayoutManager() {
-        if (mIsCard) {
+        if (mCurrentPage == PAGE_FOLDERS) {
             final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.column_number_small_card));
             mRecyclerView.setLayoutManager(gridLayoutManager);
             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {

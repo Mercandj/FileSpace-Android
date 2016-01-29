@@ -1,6 +1,5 @@
 package com.mercandalli.android.apps.files.file.image;
 
-import android.app.Application;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -31,10 +30,12 @@ public class FileImageManagerImpl implements FileImageManager {
 
     private static final String LIKE = " LIKE ?";
 
+    private final Context mContextApp;
+
     private final List<GetAllLocalImageListener> mGetAllLocalImageListeners = new ArrayList<>();
     private final List<GetLocalImageFoldersListener> mGetLocalImageFoldersListeners = new ArrayList<>();
-    private final List<GetLocalImageListener> mGetLocalImageListeners = new ArrayList<>();
 
+    private final List<GetLocalImageListener> mGetLocalImageListeners = new ArrayList<>();
     /* Cache */
     private final List<FileModel> mCacheGetAllLocalImage = new ArrayList<>();
     private final List<FileModel> mCacheGetLocalImagesFolders = new ArrayList<>();
@@ -42,13 +43,13 @@ public class FileImageManagerImpl implements FileImageManager {
     private boolean mIsGetAllLocalImageLaunched;
     private boolean mIsGetLocalImageFoldersLaunched;
 
-    public FileImageManagerImpl(Application application) {
-
+    public FileImageManagerImpl(Context contextApp) {
+        Preconditions.checkNotNull(contextApp);
+        mContextApp = contextApp;
     }
 
     @Override
     public void getAllLocalImage(
-            final Context context,
             final int sortMode,
             final String search) {
 
@@ -83,7 +84,7 @@ public class FileImageManagerImpl implements FileImageManager {
                     selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
                 }
 
-                final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
+                final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         do {
@@ -153,7 +154,6 @@ public class FileImageManagerImpl implements FileImageManager {
     //region getLocalImageFolders
     @Override
     public void getLocalImageFolders(
-            final Context context,
             final int sortMode,
             final String search) {
 
@@ -190,7 +190,7 @@ public class FileImageManagerImpl implements FileImageManager {
                     selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
                 }
 
-                final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
+                final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         do {
@@ -237,7 +237,6 @@ public class FileImageManagerImpl implements FileImageManager {
     //region getLocalImage
     @Override
     public void getLocalImage(
-            final Context context,
             final FileModel fileModelDirectParent,
             final int sortMode,
             final String search) {
@@ -369,7 +368,7 @@ public class FileImageManagerImpl implements FileImageManager {
 
     /**
      * Class used to count.
-     * See {@link #getLocalImageFolders(Context, int, String)}.
+     * See {@link #getLocalImageFolders(int, String)}.
      * http://stackoverflow.com/questions/81346/most-efficient-way-to-increment-a-map-value-in-java
      * Used to count with a map.
      */

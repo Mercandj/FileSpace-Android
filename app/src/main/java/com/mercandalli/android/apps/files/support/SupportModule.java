@@ -1,5 +1,7 @@
 package com.mercandalli.android.apps.files.support;
 
+import android.app.Application;
+
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 
 import javax.inject.Singleton;
@@ -15,8 +17,9 @@ public class SupportModule {
 
     @Provides
     @Singleton
-    SupportManager provideSupportManager() {
-        return new SupportManagerMockImpl();
+    SupportManager provideSupportManager(Application application) {
+        //return new SupportManagerImpl(application);
+        return new SupportManagerMockImpl(application);
     }
 
 }

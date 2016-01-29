@@ -66,6 +66,8 @@ public class ServerLogsFragment extends BackFragment {
     private TextView message;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    int mNewItemPosition;
+
     public static ServerLogsFragment newInstance() {
         return new ServerLogsFragment();
     }
@@ -101,7 +103,6 @@ public class ServerLogsFragment extends BackFragment {
 
         return rootView;
     }
-
 
     public void refreshList() {
         if (NetUtils.isInternetConnection(mActivity)) {
@@ -150,8 +151,6 @@ public class ServerLogsFragment extends BackFragment {
         }
     }
 
-    int i;
-
     public void updateAdapter() {
         if (this.recyclerView != null && this.list != null && this.isAdded()) {
             this.circularProgressBar.setVisibility(View.GONE);
@@ -169,9 +168,9 @@ public class ServerLogsFragment extends BackFragment {
             (rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mAdapter.addItem(new UserConnectionModel("Number", "" + i), 0);
+                    mAdapter.addItem(new UserConnectionModel("Number", "" + mNewItemPosition), 0);
                     recyclerView.scrollToPosition(0);
-                    i++;
+                    mNewItemPosition++;
                 }
             });
 
@@ -183,7 +182,7 @@ public class ServerLogsFragment extends BackFragment {
             });
 
             this.swipeRefreshLayout.setRefreshing(false);
-            i = 0;
+            mNewItemPosition = 0;
         }
     }
 

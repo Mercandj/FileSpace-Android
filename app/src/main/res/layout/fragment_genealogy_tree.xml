@@ -1,20 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
 	Personal Project : Control server
 		MERCANDALLI Jonathan
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:fab="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="top"
-                android:orientation="vertical"
-                android:background="#fff">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="top"
+    android:background="#fff"
+    android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/parents"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/parents"
         android:layout_alignParentStart="true">
 
         <RelativeLayout
@@ -22,74 +20,73 @@
             android:layout_width="24px"
             android:layout_height="70px"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true">
-        </RelativeLayout>
+            android:layout_centerHorizontal="true"></RelativeLayout>
 
         <EditText
             android:id="@+id/et_father"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="#1976D2"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="4dp"
+            android:layout_toStartOf="@+id/center"
+            android:background="#fff"
             android:editable="false"
             android:focusable="false"
+            android:gravity="center"
             android:hint="Father"
             android:padding="10dp"
-            android:background="#fff"
-            android:gravity="center"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="4dp"
-            android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/center"
-            android:layout_marginLeft="10dp"/>
+            android:textColor="#1976D2"
+            android:textSize="15sp" />
 
         <EditText
+            android:id="@+id/et_father_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text=""
-            android:background="#fff"
-            android:editable="false"
-            android:id="@+id/et_father_description"
+            android:layout_alignStart="@+id/et_father"
             android:layout_below="@+id/et_father"
             android:layout_marginTop="-7dp"
-            android:gravity="center"
-            android:layout_alignStart="@+id/et_father"
             android:layout_toStartOf="@+id/center"
-            android:textSize="12sp"
-            android:textColor="#606060"/>
+            android:background="#fff"
+            android:editable="false"
+            android:gravity="center"
+            android:text=""
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#606060"
+            android:textSize="12sp" />
 
         <EditText
             android:id="@+id/et_mother"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="#E91E63"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/et_father"
+            android:layout_marginRight="10dp"
+            android:layout_toEndOf="@+id/center"
+            android:background="#fff"
             android:editable="false"
             android:focusable="false"
+            android:gravity="center"
             android:hint="Mother"
             android:padding="10dp"
-            android:background="#fff"
-            android:gravity="center"
-            android:layout_marginRight="10dp"
-            android:layout_alignTop="@+id/et_father"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/center"/>
+            android:textColor="#E91E63"
+            android:textSize="15sp" />
 
         <EditText
+            android:id="@+id/et_mother_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:background="#fff"
-            android:editable="false"
-            android:id="@+id/et_mother_description"
-            android:layout_below="@+id/et_mother"
-            android:layout_marginTop="-7dp"
-            android:gravity="center"
             android:layout_alignEnd="@+id/et_mother"
             android:layout_alignStart="@+id/et_mother"
-            android:textSize="12sp"
-            android:textColor="#606060"/>
+            android:layout_below="@+id/et_mother"
+            android:layout_marginTop="-7dp"
+            android:background="#fff"
+            android:editable="false"
+            android:gravity="center"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#606060"
+            android:textSize="12sp" />
 
     </RelativeLayout>
 
@@ -98,79 +95,79 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/switch_brothers_sisters_marriages"
+        android:layout_marginTop="2dp"
         android:clickable="true"
         android:focusable="true"
-        android:scrollbars="vertical"
-        android:layout_below="@+id/switch_brothers_sisters_marriages"
-        android:layout_marginTop="2dp"/>
+        android:scrollbars="vertical" />
 
     <Switch
+        android:id="@+id/switch_brothers_sisters_marriages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/switch_brothers_sisters_marriages"
         android:layout_below="@+id/selected"
-        android:textOff="Brothers &amp; Sisters"
-        android:textOn="Marriages"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="8dp"
+        android:checked="false"
         android:showText="false"
         android:singleLine="true"
-        android:checked="false"
-        android:layout_marginRight="12dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="8dp"/>
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textOff="Brothers &amp; Sisters"
+        android:textOn="Marriages" />
 
     <TextView
+        android:id="@+id/tv_brothers_sisters_marriages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Brothers &amp; Sisters"
-        android:textSize="13sp"
-        android:textColor="#606060"
-        android:textStyle="italic"
-        android:id="@+id/tv_brothers_sisters_marriages"
         android:layout_alignTop="@+id/switch_brothers_sisters_marriages"
+        android:layout_marginTop="4dp"
         android:layout_toEndOf="@+id/switch_brothers_sisters_marriages"
-        android:layout_marginTop="4dp"/>
+        android:text="Brothers &amp; Sisters"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#606060"
+        android:textSize="13sp"
+        android:textStyle="italic" />
 
     <RelativeLayout
+        android:id="@+id/selected"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/parents"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
-        android:id="@+id/selected"
-        android:paddingRight="8dp"
-        android:paddingLeft="8dp">
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
 
         <EditText
             android:id="@+id/user"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17sp"
-            android:textColor="#000"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="#fff"
             android:editable="false"
             android:focusable="false"
+            android:gravity="center"
             android:hint="Press long on list item"
             android:padding="10dp"
-            android:background="#fff"
-            android:gravity="center"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"/>
+            android:textColor="#000"
+            android:textSize="17sp" />
 
         <EditText
+            android:id="@+id/user_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:background="#fff"
-            android:editable="false"
-            android:id="@+id/user_description"
-            android:layout_below="@+id/user"
-            android:layout_marginTop="-7dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentStart="true"
+            android:layout_below="@+id/user"
+            android:layout_marginTop="-7dp"
+            android:background="#fff"
+            android:editable="false"
             android:gravity="center"
-            android:textSize="12sp"
-            android:textColor="#606060"/>
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#606060"
+            android:textSize="12sp" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -67,14 +67,14 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
 
     private static final String LIKE = " LIKE ?";
 
-    private Context mContextApp;
-    private FileOnlineApi mFileOnlineApi;
-    private FileLocalApi mFileLocalApi;
+    private final Context mContextApp;
+    private final FileOnlineApi mFileOnlineApi;
+    private final FileLocalApi mFileLocalApi;
 
     private NotificationManager mNotifyManager;
     private NotificationCompat.Builder mNotificationBuilder;
 
-    public FileManagerImpl(Context contextApp, FileOnlineApi fileOnlineApi) {
+    public FileManagerImpl(final Context contextApp, final FileOnlineApi fileOnlineApi) {
         Preconditions.checkNotNull(contextApp);
 
         mContextApp = contextApp;
@@ -86,7 +86,11 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
      * {@inheritDoc}
      */
     @Override
-    public void getFiles(final FileModel fileParent, final int sortMode, final ResultCallback<List<FileModel>> resultCallback) {
+    public void getFiles(
+            final FileModel fileParent,
+            final int sortMode,
+            final ResultCallback<List<FileModel>> resultCallback) {
+
         getFiles(fileParent, true, null, sortMode, resultCallback);
     }
 
@@ -94,13 +98,19 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
      * {@inheritDoc}
      */
     @Override
-    public void getFiles(final FileModel fileParent, boolean areMyFiles, final String search, final int sortMode, final ResultCallback<List<FileModel>> resultCallback) {
+    public void getFiles(
+            final FileModel fileParent,
+            boolean areMyFiles,
+            final String search,
+            final int sortMode,
+            final ResultCallback<List<FileModel>> resultCallback) {
+
         if (fileParent.isOnline()) {
             mFileOnlineApi.getFiles(fileParent.getId(), areMyFiles ? "" : "true", StringUtils.toEmptyIfNull(search), new Callback<FilesResponse>() {
                 @Override
                 public void success(FilesResponse filesResponse, Response response) {
-                    List<FileResponse> result = filesResponse.getResult(mContextApp);
-                    List<FileModel> fileModelList = new ArrayList<>();
+                    final List<FileResponse> result = filesResponse.getResult(mContextApp);
+                    final List<FileModel> fileModelList = new ArrayList<>();
                     for (FileResponse fileResponse : result) {
                         fileModelList.add(fileResponse.createModel());
                     }
@@ -121,20 +131,26 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
      * {@inheritDoc}
      */
     @Override
-    public void download(final Activity activity, final FileModel fileModel, final IListener listener) {
+    public void download(
+            final Activity activity,
+            final FileModel fileModel,
+            final IListener listener) {
+
         if (NetUtils.isInternetConnection(mContextApp) && fileModel.isOnline()) {
             if (fileModel.isDirectory()) {
-                Toast.makeText(mContextApp, "Directory download not supported yet.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContextApp, "Directory download not supported yet.",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
-            String url = Constants.URL_DOMAIN_API + "/" + Config.routeFile + "/" + fileModel.getId();
-            String pathFolderDownloaded = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.localFolderNameDefault;
+            final String pathFolderDownloaded = Environment.getExternalStorageDirectory()
+                    .getAbsolutePath() + File.separator + Config.localFolderNameDefault;
             final File folder = new File(pathFolderDownloaded);
             if (!folder.exists()) {
                 folder.mkdir();
             }
-            String pathFileDownloaded = pathFolderDownloaded + File.separator + fileModel.getFullName();
-            new TaskGetDownload(activity, url, pathFileDownloaded, fileModel, listener).execute();
+            new TaskGetDownload(activity, Constants.URL_DOMAIN_API + "/" + Config.routeFile + "/" +
+                    fileModel.getId(), pathFolderDownloaded + File.separator + fileModel.getFullName(),
+                    fileModel, listener).execute();
         }
     }
 
@@ -142,7 +158,11 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
      * {@inheritDoc}
      */
     @Override
-    public void upload(final FileModel fileModel, int idFileParent, final IListener listener) {
+    public void upload(
+            final FileModel fileModel,
+            final int idFileParent,
+            final IListener listener) {
+
         if (NetUtils.isInternetConnection(mContextApp) && !fileModel.isOnline()) {
             if (fileModel.isDirectory()) {
                 Toast.makeText(mContextApp, "Directory download not supported yet.", Toast.LENGTH_SHORT).show();
@@ -291,6 +311,260 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void openLocalAs(final Activity activity, final FileModel fileModel) {
+        if (fileModel.isOnline()) {
+            return;
+        }
+        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(activity);
+        final String[] menuList = {
+                activity.getString(R.string.text),
+                activity.getString(R.string.image),
+                activity.getString(R.string.audio),
+                activity.getString(R.string.video),
+                activity.getString(R.string.other)};
+        menuAlert.setTitle(activity.getString(R.string.open_as));
+
+        menuAlert.setItems(menuList,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        String type_mime = "*/*";
+                        switch (item) {
+                            case 0:
+                                type_mime = "text/plain";
+                                break;
+                            case 1:
+                                type_mime = "image/*";
+                                break;
+                            case 2:
+                                type_mime = "audio/*";
+                                break;
+                            case 3:
+                                type_mime = "video/*";
+                                break;
+                        }
+                        Intent i = new Intent();
+                        i.setAction(Intent.ACTION_VIEW);
+                        i.setDataAndType(Uri.fromFile(fileModel.getFile()), type_mime);
+                        activity.startActivity(i);
+                    }
+                });
+        AlertDialog menuDrop = menuAlert.create();
+        menuDrop.show();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Spanned toSpanned(final Context context, final FileModel fileModel) {
+        Preconditions.checkNotNull(context);
+        Preconditions.checkNotNull(fileModel);
+
+        final FileTypeModel type = fileModel.getType();
+        final boolean isDirectory = fileModel.isDirectory();
+        final long size = fileModel.getSize();
+        final boolean isPublic = fileModel.isPublic();
+        final Date dateCreation = fileModel.getDateCreation();
+
+        final List<StringPair> spl = new ArrayList<>();
+        spl.add(new StringPair("Name", fileModel.getName()));
+        if (!fileModel.isDirectory()) {
+            spl.add(new StringPair("Extension", type.toString()));
+        }
+        spl.add(new StringPair("Type", type.getTitle(context)));
+        if (!isDirectory || size != 0) {
+            spl.add(new StringPair("Size", FileUtils.humanReadableByteCount(size)));
+        }
+        if (dateCreation != null) {
+            if (fileModel.isOnline()) {
+                spl.add(new StringPair("Upload date", TimeUtils.getDate(dateCreation)));
+            } else {
+                spl.add(new StringPair("Last modification date", TimeUtils.getDate(dateCreation)));
+            }
+        }
+        if (fileModel.isOnline()) {
+            spl.add(new StringPair("Visibility", isPublic ? "Public" : "Private"));
+        }
+        spl.add(new StringPair("Path", fileModel.getUrl()));
+        return HtmlUtils.createListItem(spl);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void copyLocalFile(final Activity activity, final FileModel fileModel, final String outputPath) {
+        copyLocalFile(activity, fileModel, outputPath, null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void copyLocalFile(
+            final Activity activity,
+            final FileModel fileModel,
+            final String outputPath,
+            final IPostExecuteListener listener) {
+
+        if (fileModel.isOnline()) {
+            //TODO copy online
+            Toast.makeText(activity, activity.getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+        } else {
+            InputStream in;
+            OutputStream out;
+            try {
+                final File dir = new File(outputPath);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+
+                String outputUrl = outputPath + fileModel.getFullName();
+                while ((new File(outputUrl)).exists()) {
+                    outputUrl = outputPath + fileModel.getCopyName();
+                }
+
+                if (fileModel.isDirectory()) {
+                    final File copy = new File(outputUrl);
+                    copy.mkdirs();
+                    final File[] children = fileModel.getFile().listFiles();
+                    for (File aChildren : children) {
+                        copyLocalFile(activity, new FileModel.FileModelBuilder().file(aChildren).build(),
+                                copy.getAbsolutePath() + File.separator);
+                    }
+                } else {
+                    in = new FileInputStream(fileModel.getFile().getAbsoluteFile());
+                    out = new FileOutputStream(outputUrl);
+
+                    byte[] buffer = new byte[1024];
+                    int read;
+                    while ((read = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, read);
+                    }
+                    in.close();
+                    out.flush();
+                    out.close();
+                }
+            } catch (Exception e) {
+                Log.e("tag", e.getMessage());
+            }
+        }
+        if (listener != null) {
+            listener.onPostExecute(null, null);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isMine(final FileModel fileModel) {
+        return !fileModel.isOnline() || fileModel.getIdUser() == Config.getUserId();
+    }
+
+    @Override
+    public void searchLocal(
+            final Context context,
+            final String search,
+            final ResultCallback<List<FileModel>> resultCallback) {
+
+        new AsyncTask<Void, Void, List<FileModel>>() {
+            @Override
+            protected List<FileModel> doInBackground(Void... params) {
+                final String[] PROJECTION = new String[]{MediaStore.Files.FileColumns.DATA};
+
+                final Uri allSongsUri = MediaStore.Files.getContentUri("external");
+                final List<String> searchArray = new ArrayList<>();
+
+                final String selection = MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
+                searchArray.add("%" + search + "%");
+
+                final List<FileModel> result = new ArrayList<>();
+
+                final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection,
+                        searchArray.toArray(new String[searchArray.size()]), null);
+                if (cursor != null) {
+                    if (cursor.moveToFirst()) {
+                        do {
+                            result.add(new FileModel.FileModelBuilder()
+                                    .file(new File(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))))
+                                    .build());
+                        } while (cursor.moveToNext());
+                    }
+                    cursor.close();
+                }
+                return result;
+            }
+
+            @Override
+            protected void onPostExecute(List<FileModel> fileModels) {
+                resultCallback.success(fileModels);
+                super.onPostExecute(fileModels);
+            }
+        }.execute();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void getCover(
+            final Context context,
+            final FileAudioModel fileAudioModel,
+            final ImageView imageView) {
+
+        if (!StringUtils.isNullOrEmpty(fileAudioModel.getAlbum())) {
+            CoverUtils.getCoverUrl(context, fileAudioModel, new CoverUtils.CoverResponse() {
+                @Override
+                public void onCoverUrlResult(FileAudioModel fileAudioModel, String url) {
+                    Picasso.with(context)
+                            .load(url)
+                            .networkPolicy(NetworkPolicy.OFFLINE)
+                            .into(imageView);
+                }
+            });
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onFileUploadProgress(final FileModel fileModel, long progress, long length) {
+        if (mNotificationBuilder == null) {
+            mNotificationBuilder = new NotificationCompat.Builder(mContextApp);
+            mNotificationBuilder.setContentTitle("Upload: " + fileModel.getName())
+                    .setContentText("Upload in progress: " + FileUtils.humanReadableByteCount(progress)
+                            + " / " + FileUtils.humanReadableByteCount(length))
+                    .setSmallIcon(R.drawable.ic_notification);
+        } else {
+            mNotificationBuilder.setContentText("Upload in progress: " +
+                    FileUtils.humanReadableByteCount(progress) + " / " +
+                    FileUtils.humanReadableByteCount(length));
+        }
+        mNotificationBuilder.setProgress((int) (length / 1_000.0f), (int) (progress / 1_000.0f), false);
+
+        if (mNotifyManager == null) {
+            mNotifyManager = (NotificationManager) mContextApp.getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+        mNotifyManager.notify(1, mNotificationBuilder.build());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onFileUploadFinished(FileModel fileModel) {
+        mNotificationBuilder.setContentText("Upload complete")
+                // Removes the progress bar
+                .setProgress(0, 0, false);
+        mNotifyManager.notify(1, mNotificationBuilder.build());
+    }
+
     private void executeOnline(final Activity activity, final int position, final List<FileModel> fileModelList, View view) {
         if (fileModelList == null || position >= fileModelList.size()) {
             return;
@@ -299,7 +573,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         if (fileModel.getType().equals(FileTypeModelENUM.TEXT.type)) {
             FileTextActivity.start(activity, fileModel, true);
         } else if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
-            Intent intent = new Intent(activity, FileImageActivity.class);
+            final Intent intent = new Intent(activity, FileImageActivity.class);
             intent.putExtra("ID", fileModel.getId());
             intent.putExtra("TITLE", "" + fileModel.getFullName());
             intent.putExtra("URL_FILE", "" + fileModel.getOnlineUrl());
@@ -319,7 +593,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         } else if (fileModel.getType().equals(FileTypeModelENUM.AUDIO.type)) {
 
             int musicCurrentPosition = position;
-            List<String> filesPath = new ArrayList<>();
+            final List<String> filesPath = new ArrayList<>();
             for (int i = 0; i < fileModelList.size(); i++) {
                 final FileModel f = fileModelList.get(i);
                 if (f.getType() != null && f.getType().equals(FileTypeModelENUM.AUDIO.type) && f.getFile() != null) {
@@ -418,242 +692,5 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                 Toast.makeText(activity, "ERREUR", Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void openLocalAs(final Activity activity, final FileModel fileModel) {
-        if (fileModel.isOnline()) {
-            return;
-        }
-        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(activity);
-        final String[] menuList = {
-                activity.getString(R.string.text),
-                activity.getString(R.string.image),
-                activity.getString(R.string.audio),
-                activity.getString(R.string.video),
-                activity.getString(R.string.other)};
-        menuAlert.setTitle(activity.getString(R.string.open_as));
-
-        menuAlert.setItems(menuList,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        String type_mime = "*/*";
-                        switch (item) {
-                            case 0:
-                                type_mime = "text/plain";
-                                break;
-                            case 1:
-                                type_mime = "image/*";
-                                break;
-                            case 2:
-                                type_mime = "audio/*";
-                                break;
-                            case 3:
-                                type_mime = "video/*";
-                                break;
-                        }
-                        Intent i = new Intent();
-                        i.setAction(Intent.ACTION_VIEW);
-                        i.setDataAndType(Uri.fromFile(fileModel.getFile()), type_mime);
-                        activity.startActivity(i);
-                    }
-                });
-        AlertDialog menuDrop = menuAlert.create();
-        menuDrop.show();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Spanned toSpanned(final Context context, final FileModel fileModel) {
-        Preconditions.checkNotNull(context);
-        Preconditions.checkNotNull(fileModel);
-
-        final FileTypeModel type = fileModel.getType();
-        final boolean isDirectory = fileModel.isDirectory();
-        final long size = fileModel.getSize();
-        final boolean isPublic = fileModel.isPublic();
-        final Date dateCreation = fileModel.getDateCreation();
-
-        final List<StringPair> spl = new ArrayList<>();
-        spl.add(new StringPair("Name", fileModel.getName()));
-        if (!fileModel.isDirectory()) {
-            spl.add(new StringPair("Extension", type.toString()));
-        }
-        spl.add(new StringPair("Type", type.getTitle(context)));
-        if (!isDirectory || size != 0) {
-            spl.add(new StringPair("Size", FileUtils.humanReadableByteCount(size)));
-        }
-        if (dateCreation != null) {
-            if (fileModel.isOnline()) {
-                spl.add(new StringPair("Upload date", TimeUtils.getDate(dateCreation)));
-            } else {
-                spl.add(new StringPair("Last modification date", TimeUtils.getDate(dateCreation)));
-            }
-        }
-        if (fileModel.isOnline()) {
-            spl.add(new StringPair("Visibility", isPublic ? "Public" : "Private"));
-        }
-        spl.add(new StringPair("Path", fileModel.getUrl()));
-        return HtmlUtils.createListItem(spl);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void copyLocalFile(final Activity activity, final FileModel fileModel, final String outputPath) {
-        copyLocalFile(activity, fileModel, outputPath, null);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void copyLocalFile(final Activity activity, final FileModel fileModel, String outputPath, IPostExecuteListener listener) {
-        if (fileModel.isOnline()) {
-            //TODO copy online
-            Toast.makeText(activity, activity.getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-        } else {
-            InputStream in;
-            OutputStream out;
-            try {
-                final File dir = new File(outputPath);
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
-
-                String outputUrl = outputPath + fileModel.getFullName();
-                while ((new File(outputUrl)).exists()) {
-                    outputUrl = outputPath + fileModel.getCopyName();
-                }
-
-                if (fileModel.isDirectory()) {
-                    final File copy = new File(outputUrl);
-                    copy.mkdirs();
-                    final File[] children = fileModel.getFile().listFiles();
-                    for (File aChildren : children) {
-                        copyLocalFile(activity, new FileModel.FileModelBuilder().file(aChildren).build(), copy.getAbsolutePath() + File.separator);
-                    }
-                } else {
-                    in = new FileInputStream(fileModel.getFile().getAbsoluteFile());
-                    out = new FileOutputStream(outputUrl);
-
-                    byte[] buffer = new byte[1024];
-                    int read;
-                    while ((read = in.read(buffer)) != -1) {
-                        out.write(buffer, 0, read);
-                    }
-                    in.close();
-                    out.flush();
-                    out.close();
-                }
-            } catch (Exception e) {
-                Log.e("tag", e.getMessage());
-            }
-        }
-        if (listener != null) {
-            listener.onPostExecute(null, null);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isMine(final FileModel fileModel) {
-        return !fileModel.isOnline() || fileModel.getIdUser() == Config.getUserId();
-    }
-
-    @Override
-    public void searchLocal(final Context context, final String search, final ResultCallback<List<FileModel>> resultCallback) {
-        new AsyncTask<Void, Void, List<FileModel>>() {
-            @Override
-            protected List<FileModel> doInBackground(Void... params) {
-                final String[] PROJECTION = new String[]{MediaStore.Files.FileColumns.DATA};
-
-                final Uri allSongsUri = MediaStore.Files.getContentUri("external");
-                final List<String> searchArray = new ArrayList<>();
-
-                final String selection = MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
-                searchArray.add("%" + search + "%");
-
-                final List<FileModel> result = new ArrayList<>();
-
-                final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection,
-                        searchArray.toArray(new String[searchArray.size()]), null);
-                if (cursor != null) {
-                    if (cursor.moveToFirst()) {
-                        do {
-                            result.add(new FileModel.FileModelBuilder()
-                                    .file(new File(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))))
-                                    .build());
-                        } while (cursor.moveToNext());
-                    }
-                    cursor.close();
-                }
-                return result;
-            }
-
-            @Override
-            protected void onPostExecute(List<FileModel> fileModels) {
-                resultCallback.success(fileModels);
-                super.onPostExecute(fileModels);
-            }
-        }.execute();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void getCover(final Context context, final FileAudioModel fileAudioModel, final ImageView imageView) {
-        if (!StringUtils.isNullOrEmpty(fileAudioModel.getAlbum())) {
-            CoverUtils.getCoverUrl(context, fileAudioModel, new CoverUtils.CoverResponse() {
-                @Override
-                public void onCoverUrlResult(FileAudioModel fileAudioModel, String url) {
-                    Picasso.with(context)
-                            .load(url)
-                            .networkPolicy(NetworkPolicy.OFFLINE)
-                            .into(imageView);
-                }
-            });
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onFileUploadProgress(final FileModel fileModel, long progress, long length) {
-        if (mNotificationBuilder == null) {
-            mNotificationBuilder = new NotificationCompat.Builder(this.mContextApp);
-            mNotificationBuilder.setContentTitle("Upload: " + fileModel.getName())
-                    .setContentText("Upload in progress: " + FileUtils.humanReadableByteCount(progress) + " / " + FileUtils.humanReadableByteCount(length))
-                    .setSmallIcon(R.drawable.ic_notification);
-        } else {
-            mNotificationBuilder.setContentText("Upload in progress: " + FileUtils.humanReadableByteCount(progress) + " / " + FileUtils.humanReadableByteCount(length));
-        }
-        mNotificationBuilder.setProgress((int) (length / 1_000.0f), (int) (progress / 1_000.0f), false);
-
-        if (mNotifyManager == null) {
-            mNotifyManager = (NotificationManager) this.mContextApp.getSystemService(Context.NOTIFICATION_SERVICE);
-        }
-        mNotifyManager.notify(1, mNotificationBuilder.build());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onFileUploadFinished(FileModel fileModel) {
-        mNotificationBuilder.setContentText("Upload complete")
-                // Removes the progress bar
-                .setProgress(0, 0, false);
-        mNotifyManager.notify(1, mNotificationBuilder.build());
     }
 }

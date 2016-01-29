@@ -19,7 +19,7 @@ import java.util.Map;
 public class FileLocalApi {
 
     public List<FileModel> getFiles(final File directoryFile, final String search, final int sortMode) {
-        List<File> fs = Arrays.asList((search == null) ? directoryFile.listFiles() : directoryFile.listFiles(
+        final List<File> fs = Arrays.asList((search == null) ? directoryFile.listFiles() : directoryFile.listFiles(
                 new FilenameFilter() {
                     @Override
                     public boolean accept(File dir, String name) {
@@ -55,7 +55,7 @@ public class FileLocalApi {
             });
         }
 
-        List<FileModel> mFilesList = new ArrayList<>();
+        final List<FileModel> mFilesList = new ArrayList<>();
         for (File file : fs) {
             FileModel.FileModelBuilder mileModelBuilder = new FileModel.FileModelBuilder();
             mFilesList.add(mileModelBuilder.file(file).build());

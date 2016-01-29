@@ -73,15 +73,16 @@ import javax.inject.Inject;
  * A {@link android.support.v4.app.Fragment} that displays the local {@link FileAudioModel}s.
  */
 public class FileAudioLocalFragment extends InjectedFabFragment implements
-        FileLocalPagerFragment.ListController,
         BackFragment.ISortMode,
+        FileAudioManager.GetAllLocalMusicListener,
+        FileAudioManager.GetLocalMusicFoldersListener,
+        FileAudioManager.GetLocalMusicListener,
+        FileAudioManager.MusicsChangeListener,
+        FileLocalPagerFragment.ListController,
         FileModelCardAdapter.OnFileSubtitleAdapter,
         FileModelCardAdapter.OnHeaderClickListener,
         ScaleAnimationAdapter.NoAnimatedPosition,
-        FileAudioManager.GetAllLocalMusicListener,
-        FileAudioManager.MusicsChangeListener,
-        FileAudioManager.GetLocalMusicFoldersListener,
-        FileAudioManager.GetLocalMusicListener, SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "FileAudioLocalFragment";
 
@@ -169,33 +170,6 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
                 mRecyclerView.setVisibility(View.GONE);
             }
         };
-    }
-
-    private void updateLayoutManager() {
-        if (mCurrentPage == PAGE_FOLDERS) {
-            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.column_number_small_card));
-            mRecyclerView.setLayoutManager(gridLayoutManager);
-            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    return mFileModelCardAdapter.isHeader(position) ? gridLayoutManager.getSpanCount() : 1;
-                }
-            });
-        } else {
-            final int nbColumn = getResources().getInteger(R.integer.column_number_card);
-            if (nbColumn <= 1) {
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            } else {
-                final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), nbColumn);
-                mRecyclerView.setLayoutManager(gridLayoutManager);
-                gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                    @Override
-                    public int getSpanSize(int position) {
-                        return mFileAudioRowAdapter.isHeader(position) ? gridLayoutManager.getSpanCount() : 1;
-                    }
-                });
-            }
-        }
     }
 
     @Override
@@ -442,46 +416,20 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onRefresh() {
-        refreshListFolders();
+        refreshCurrentList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isAnimatedItem(int position) {
         return mCurrentPage == PAGE_FOLDER_INSIDE || position != 0;
-    }
-
-    public void refreshListFolders() {
-        refreshListFolders("");
-    }
-
-    public void refreshListFolders(final String search) {
-        mCurrentFolder = null;
-        mCurrentPage = PAGE_FOLDERS;
-        if (mFileManager == null) {
-            return;
-        }
-
-        showProgressBar();
-        refreshCurrentList(search);
-    }
-
-    public void refreshListAllMusic() {
-        mCurrentPage = PAGE_ALL;
-        if (mFileManager == null) {
-            return;
-        }
-
-        showProgressBar();
-        refreshCurrentList();
-    }
-
-    public void refreshListFoldersInside(final FileModel fileModel) {
-        mCurrentFolder = fileModel;
-        mCurrentPage = PAGE_FOLDER_INSIDE;
-        mFileAudioModels.clear();
-        refreshCurrentList();
     }
 
     /**
@@ -544,16 +492,6 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
 
             updateLayoutManager();
         }
-    }
-
-    private void showProgressBar() {
-        mProgressBarActivationHandler.postDelayed(mProgressBarActivationRunnable, 200);
-    }
-
-    private void hideProgressBar() {
-        mProgressBarActivationHandler.removeCallbacks(mProgressBarActivationRunnable);
-        mProgressBar.setVisibility(View.GONE);
-        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -642,5 +580,76 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
             return;
         }
         updateAdapter();
+    }
+
+    //region refresh
+    public void refreshListFolders() {
+        refreshListFolders("");
+    }
+
+    public void refreshListFolders(final String search) {
+        mCurrentFolder = null;
+        mCurrentPage = PAGE_FOLDERS;
+        if (mFileManager == null) {
+            return;
+        }
+
+        showProgressBar();
+        refreshCurrentList(search);
+    }
+
+    public void refreshListAllMusic() {
+        mCurrentPage = PAGE_ALL;
+        if (mFileManager == null) {
+            return;
+        }
+
+        showProgressBar();
+        refreshCurrentList();
+    }
+
+    public void refreshListFoldersInside(final FileModel fileModel) {
+        mCurrentFolder = fileModel;
+        mCurrentPage = PAGE_FOLDER_INSIDE;
+        mFileAudioModels.clear();
+        refreshCurrentList();
+    }
+    //endregion refresh
+
+    private void updateLayoutManager() {
+        if (mCurrentPage == PAGE_FOLDERS) {
+            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.column_number_small_card));
+            mRecyclerView.setLayoutManager(gridLayoutManager);
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    return mFileModelCardAdapter.isHeader(position) ? gridLayoutManager.getSpanCount() : 1;
+                }
+            });
+        } else {
+            final int nbColumn = getResources().getInteger(R.integer.column_number_card);
+            if (nbColumn <= 1) {
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            } else {
+                final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), nbColumn);
+                mRecyclerView.setLayoutManager(gridLayoutManager);
+                gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                    @Override
+                    public int getSpanSize(int position) {
+                        return mFileAudioRowAdapter.isHeader(position) ? gridLayoutManager.getSpanCount() : 1;
+                    }
+                });
+            }
+        }
+    }
+
+    private void showProgressBar() {
+        mProgressBarActivationHandler.postDelayed(mProgressBarActivationRunnable, 200);
+    }
+
+    private void hideProgressBar() {
+        mProgressBarActivationHandler.removeCallbacks(mProgressBarActivationRunnable);
+        mProgressBar.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 }

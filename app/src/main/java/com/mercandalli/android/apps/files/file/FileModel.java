@@ -15,7 +15,7 @@ import java.util.Date;
  */
 public class FileModel implements Parcelable {
 
-    // Online & Local attrs
+    //region Online & Local attrs
     protected int mId;
     protected int mIdUser;
     protected int mIdFileParent;
@@ -30,7 +30,7 @@ public class FileModel implements Parcelable {
     protected FileSpaceModel mContent;
     protected boolean mIsOnline;
 
-    // Local attrs
+    //region Local attrs
     protected File mFile;
     protected long mLastModified;
     // Nb of files inside this folder
@@ -42,7 +42,7 @@ public class FileModel implements Parcelable {
      */
     public static class FileModelBuilder {
 
-        // Online & Local attrs
+        //region Online & Local attrs
         protected int mId;
         protected int mIdUser;
         protected int mIdFileParent;
@@ -57,7 +57,7 @@ public class FileModel implements Parcelable {
         protected boolean mIsOnline;
         protected FileSpaceModel mContent;
 
-        // Local attrs
+        //region Local attrs
         protected File mFile;
         protected long mLastModified;
         protected long mCount;

@@ -16,17 +16,24 @@ public abstract class FileAudioManager {
     /**
      * Get all the {@link FileAudioModel} in the device.
      */
-    public abstract void getAllLocalMusic(final int sortMode, final String search);
+    public abstract void getAllLocalMusic(
+            final int sortMode,
+            final String search);
 
     /**
      * Get all the {@link FileAudioModel} in a folder.
      */
-    public abstract void getLocalMusic(final FileModel fileModelDirectParent, final int sortMode, final String search);
+    public abstract void getLocalMusic(
+            final FileModel fileModelDirectParent,
+            final int sortMode,
+            final String search);
 
     /**
      * Get all local folders that contain music.
      */
-    public abstract void getLocalMusicFolders(final int sortMode, final String search);
+    public abstract void getLocalMusicFolders(
+            final int sortMode,
+            final String search);
 
     /**
      * Edit the metadata.
@@ -50,7 +57,9 @@ public abstract class FileAudioManager {
     /**
      * Get the {@link FileAudioModel} overview.
      */
-    public abstract Spanned toSpanned(final Context context, final FileAudioModel fileAudioModel);
+    public abstract Spanned toSpanned(
+            final Context context,
+            final FileAudioModel fileAudioModel);
 
     public abstract boolean registerAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener);
 

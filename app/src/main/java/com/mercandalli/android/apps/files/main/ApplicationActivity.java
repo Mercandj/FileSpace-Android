@@ -68,10 +68,9 @@ public abstract class ApplicationActivity extends AppCompatActivity implements
         mConfig = new Config(this, this);
 
         //region Handle NFC
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        NdefMessage[] msgs = null;
-        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
+        final Intent intent = getIntent();
+        NdefMessage[] msgs;
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
             String type = intent.getType();
             Toast.makeText(this, "" + type, Toast.LENGTH_SHORT).show();
 
