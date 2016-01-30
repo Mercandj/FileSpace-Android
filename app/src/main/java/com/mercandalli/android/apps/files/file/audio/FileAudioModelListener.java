@@ -19,6 +19,8 @@
  */
 package com.mercandalli.android.apps.files.file.audio;
 
+import android.view.View;
+
 public interface FileAudioModelListener {
-    void executeFileAudioModel(final FileAudioModel fileAudioModel);
+    void executeFileAudioModel(final FileAudioModel fileAudioModel, final View view);
 }

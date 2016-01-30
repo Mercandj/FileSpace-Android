@@ -177,7 +177,7 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
                 @Override
                 public void onClick(View v) {
                     if (moreListener != null) {
-                        moreListener.executeFileAudioModel(file);
+                        moreListener.executeFileAudioModel(file, v);
                     }
                 }
             });

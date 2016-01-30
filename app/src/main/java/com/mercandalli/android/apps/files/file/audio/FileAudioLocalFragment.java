@@ -19,9 +19,7 @@
  */
 package com.mercandalli.android.apps.files.file.audio;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IntDef;
@@ -37,30 +35,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
-import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.common.listener.IStringListener;
-import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.common.util.DialogUtils;
-import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
 import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
-import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
-
-import org.json.JSONObject;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -82,7 +71,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         FileModelCardAdapter.OnFileSubtitleAdapter,
         FileModelCardAdapter.OnHeaderClickListener,
         ScaleAnimationAdapter.NoAnimatedPosition,
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener, FileAudioModelListener, FileAudioOverflowActions.FileAudioActionCallback {
 
     private static final String TAG = "FileAudioLocalFragment";
 
@@ -140,6 +129,8 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
 
     private FileModel mCurrentFolder;
 
+    private FileAudioOverflowActions mFileAudioOverflowActions;
+
     @Inject
     FileManager mFileManager;
 
@@ -177,6 +168,8 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         final View rootView = inflater.inflate(R.layout.fragment_file_audio_local, container, false);
         final Context context = getContext();
 
+        mFileAudioOverflowActions = new FileAudioOverflowActions(getContext(), getFragmentManager(), this);
+
         mStringDirectory = context.getString(R.string.file_audio_model_adapter_directory);
         mStringMusic = context.getString(R.string.file_audio_model_music);
         mStringMusics = context.getString(R.string.file_audio_model_musics);
@@ -208,13 +201,16 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_album, false));
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_all, false));
 
-        mFileAudioRowAdapter = new FileAudioRowAdapter(mHeaderIds, this, mActivity, mFileAudioModels, new FileAudioModelListener() {
+        mFileAudioRowAdapter = new FileAudioRowAdapter(mHeaderIds, this, mActivity, mFileAudioModels, this /*new FileAudioModelListener() {
             @Override
             public void executeFileAudioModel(final FileAudioModel fileAudioModel) {
+
+
+
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
-                String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.tags_edition), getString(R.string.properties)};
+                String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.meta_data_edition), getString(R.string.properties)};
                 if (mApplicationCallback.isLogged()) {
-                    menuList = new String[]{getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.tags_edition), getString(R.string.properties)};
+                    menuList = new String[]{getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.meta_data_edition), getString(R.string.properties)};
                 }
                 menuAlert.setTitle("Action");
                 menuAlert.setItems(menuList,
@@ -280,8 +276,10 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
                         });
                 AlertDialog menuDrop = menuAlert.create();
                 menuDrop.show();
+
+
             }
-        });
+        }*/);
         mFileAudioRowAdapter.setOnItemClickListener(new FileAudioRowAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -325,6 +323,16 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mFileAudioManager.getAllLocalMusic(mSortMode, null);
 
         return rootView;
+    }
+
+    @Override
+    public void executeFileAudioModel(final FileAudioModel fileAudioModel, final View view) {
+        mFileAudioOverflowActions.show(fileAudioModel, view, mApplicationCallback.isLogged());
+    }
+
+    @Override
+    public void refreshData() {
+        mApplicationCallback.refreshData();
     }
 
     @Override

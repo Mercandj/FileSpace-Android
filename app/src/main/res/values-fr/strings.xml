@@ -14,7 +14,7 @@
     <string name="modify">Modifier</string>
     <string name="copy">Copier</string>
     <string name="cut">Couper</string>
-    <string name="tags_edition">Editer les tags</string>
+    <string name="meta_data_edition">Editer les métadonnées</string>
     <string name="properties">Propriétés</string>
     <string name="data">Données</string>
     <string name="talk">Talk</string>
