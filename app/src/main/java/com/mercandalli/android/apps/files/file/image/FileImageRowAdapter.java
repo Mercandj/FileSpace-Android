@@ -21,6 +21,9 @@ package com.mercandalli.android.apps.files.file.image;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.support.annotation.ColorInt;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -347,34 +350,19 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
 
     private static class HeaderViewHolder extends ViewHolder implements OnClickListener {
 
+        @ColorInt
+        private final int mPrimaryColor;
         private final FileModelCardAdapter.OnHeaderClickListener mOnHeaderClickListener;
         private final List<FileModelCardHeaderItem> mFileModelCardHeaderItems;
 
         public HeaderViewHolder(View itemView, List<FileModelCardHeaderItem> headerIds, FileModelCardAdapter.OnHeaderClickListener onHeaderClickListener) {
             super(itemView);
             Preconditions.checkNotNull(onHeaderClickListener);
+            mPrimaryColor = ContextCompat.getColor(itemView.getContext(), R.color.primary);
             mOnHeaderClickListener = onHeaderClickListener;
             mFileModelCardHeaderItems = new ArrayList<>();
             mFileModelCardHeaderItems.addAll(headerIds);
             updateView();
-        }
-
-        public void setFileModelCardHeaderItems(List<FileModelCardHeaderItem> fileModelCardHeaderItems) {
-            mFileModelCardHeaderItems.clear();
-            mFileModelCardHeaderItems.addAll(fileModelCardHeaderItems);
-            updateView();
-        }
-
-        private void updateView() {
-            for (FileModelCardHeaderItem i : mFileModelCardHeaderItems) {
-                final TextView tv = (TextView) itemView.findViewById(i.getId());
-                tv.setOnClickListener(this);
-                if (i.isSelected()) {
-                    tv.setBackgroundResource(R.drawable.file_local_audio_rounded_bg_selected);
-                } else {
-                    tv.setBackgroundResource(R.drawable.file_local_audio_rounded_bg);
-                }
-            }
         }
 
         @Override
@@ -400,6 +388,26 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
             }
             mOnHeaderClickListener.onHeaderClick(v, mFileModelCardHeaderItems);
             updateView();
+        }
+
+        public void setFileModelCardHeaderItems(List<FileModelCardHeaderItem> fileModelCardHeaderItems) {
+            mFileModelCardHeaderItems.clear();
+            mFileModelCardHeaderItems.addAll(fileModelCardHeaderItems);
+            updateView();
+        }
+
+        private void updateView() {
+            for (FileModelCardHeaderItem f : mFileModelCardHeaderItems) {
+                final TextView tv = (TextView) itemView.findViewById(f.getId());
+                tv.setOnClickListener(this);
+                if (f.isSelected()) {
+                    tv.setTextColor(mPrimaryColor);
+                    tv.setBackgroundResource(R.drawable.file_local_audio_rounded_bg_selected);
+                } else {
+                    tv.setTextColor(Color.WHITE);
+                    tv.setBackgroundResource(R.drawable.file_local_audio_rounded_bg);
+                }
+            }
         }
     }
 

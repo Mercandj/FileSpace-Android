@@ -20,7 +20,10 @@
 package com.mercandalli.android.apps.files.file;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -273,34 +276,22 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
 
     private static class HeaderViewHolder extends ViewHolder implements OnClickListener {
 
+        @ColorInt
+        private final int mPrimaryColor;
         private final OnHeaderClickListener mOnHeaderClickListener;
         private final List<FileModelCardHeaderItem> mFileModelCardHeaderItems;
 
-        public HeaderViewHolder(View itemView, List<FileModelCardHeaderItem> headerIds, OnHeaderClickListener onHeaderClickListener) {
+        public HeaderViewHolder(
+                final View itemView,
+                final List<FileModelCardHeaderItem> headerIds,
+                final OnHeaderClickListener onHeaderClickListener) {
             super(itemView);
             Preconditions.checkNotNull(onHeaderClickListener);
+            mPrimaryColor = ContextCompat.getColor(itemView.getContext(), R.color.primary);
             mOnHeaderClickListener = onHeaderClickListener;
             mFileModelCardHeaderItems = new ArrayList<>();
             mFileModelCardHeaderItems.addAll(headerIds);
             updateView();
-        }
-
-        public void setFileModelCardHeaderItems(List<FileModelCardHeaderItem> fileModelCardHeaderItems) {
-            mFileModelCardHeaderItems.clear();
-            mFileModelCardHeaderItems.addAll(fileModelCardHeaderItems);
-            updateView();
-        }
-
-        private void updateView() {
-            for (FileModelCardHeaderItem i : mFileModelCardHeaderItems) {
-                final TextView tv = (TextView) itemView.findViewById(i.getId());
-                tv.setOnClickListener(this);
-                if (i.isSelected()) {
-                    tv.setBackgroundResource(R.drawable.file_local_audio_rounded_bg_selected);
-                } else {
-                    tv.setBackgroundResource(R.drawable.file_local_audio_rounded_bg);
-                }
-            }
         }
 
         @Override
@@ -318,18 +309,35 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
                 return;
             }
             for (FileModelCardHeaderItem f : mFileModelCardHeaderItems) {
-                if (f.getId() == viewId) {
-                    f.setSelected(true);
-                } else {
-                    f.setSelected(false);
-                }
+                f.setSelected(f.getId() == viewId);
             }
             mOnHeaderClickListener.onHeaderClick(v, mFileModelCardHeaderItems);
             updateView();
         }
+
+        public void setFileModelCardHeaderItems(List<FileModelCardHeaderItem> fileModelCardHeaderItems) {
+            mFileModelCardHeaderItems.clear();
+            mFileModelCardHeaderItems.addAll(fileModelCardHeaderItems);
+            updateView();
+        }
+
+        private void updateView() {
+            for (FileModelCardHeaderItem f : mFileModelCardHeaderItems) {
+                final TextView tv = (TextView) itemView.findViewById(f.getId());
+                tv.setOnClickListener(this);
+                if (f.isSelected()) {
+                    tv.setTextColor(mPrimaryColor);
+                    tv.setBackgroundResource(R.drawable.file_local_audio_rounded_bg_selected);
+                } else {
+                    tv.setTextColor(Color.WHITE);
+                    tv.setBackgroundResource(R.drawable.file_local_audio_rounded_bg);
+                }
+            }
+        }
     }
 
-    private static class CardViewHolder extends ViewHolder implements OnClickListener, View.OnLongClickListener {
+    private static class CardViewHolder extends ViewHolder implements
+            OnClickListener, View.OnLongClickListener {
         public final TextView mTitle;
         public final TextView subtitle;
         public final ImageView icon;
@@ -339,7 +347,11 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
         private final OnFileLongClickListener mOnFileLongClickListener;
         private final boolean mHasHeader;
 
-        public CardViewHolder(View itemLayoutView, boolean hasHeader, OnFileClickListener onFileClickListener, OnFileLongClickListener onFileLongClickListener) {
+        public CardViewHolder(
+                final View itemLayoutView,
+                final boolean hasHeader,
+                final OnFileClickListener onFileClickListener,
+                final OnFileLongClickListener onFileLongClickListener) {
             super(itemLayoutView);
             mHasHeader = hasHeader;
             item = itemLayoutView.findViewById(R.id.card_file_item);
