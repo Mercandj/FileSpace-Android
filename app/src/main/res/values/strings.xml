@@ -98,6 +98,8 @@
     <string name="menu_action_download">Download</string>
     <string name="menu_action_sort">Sort</string>
 
+    <string name="activity_main_toast_update_needed">Sorry, update is needed</string>
+
     <string name="file_fragment_public_cloud">CLOUD</string>
     <string name="file_fragment_my_cloud">MY CLOUD</string>
     <string name="file_fragment_local">LOCAL</string>

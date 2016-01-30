@@ -37,7 +37,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
 
     private static final String LIKE = " LIKE ?";
 
-    protected Context mContextApp;
+    protected final Context mContextApp;
 
     private final List<GetAllLocalMusicListener> mGetAllLocalMusicListeners = new ArrayList<>();
     private final List<GetLocalMusicFoldersListener> mGetLocalMusicFoldersListeners = new ArrayList<>();
@@ -56,7 +56,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
      *
      * @param contextApp The {@link Context} of this application.
      */
-    public FileAudioManagerImpl(Context contextApp) {
+    public FileAudioManagerImpl(final Context contextApp) {
         Preconditions.checkNotNull(contextApp);
         mContextApp = contextApp;
     }
@@ -440,6 +440,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
     }
 
     private void notifyOnMusicUpdate() {
+        clearCache();
         synchronized (mMusicsChangeListeners) {
             for (int i = 0, size = mMusicsChangeListeners.size(); i < size; i++) {
                 mMusicsChangeListeners.get(i).onMusicsContentChange();

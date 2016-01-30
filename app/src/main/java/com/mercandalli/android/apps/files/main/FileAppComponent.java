@@ -19,6 +19,8 @@ import com.mercandalli.android.apps.files.file.image.FileImageModule;
 import com.mercandalli.android.apps.files.file.image.FileImageRowAdapter;
 import com.mercandalli.android.apps.files.file.local.FileLocalFragment;
 import com.mercandalli.android.apps.files.file.local.SearchActivity;
+import com.mercandalli.android.apps.files.main.version.VersionManager;
+import com.mercandalli.android.apps.files.main.version.VersionModule;
 import com.mercandalli.android.apps.files.support.SupportFragment;
 import com.mercandalli.android.apps.files.support.SupportManager;
 import com.mercandalli.android.apps.files.support.SupportModule;
@@ -34,7 +36,8 @@ import dagger.Component;
                 FileModule.class,
                 FileAudioModule.class,
                 FileImageModule.class,
-                SupportModule.class
+                SupportModule.class,
+                VersionModule.class
         }
 )
 public interface FileAppComponent {
@@ -76,4 +79,6 @@ public interface FileAppComponent {
     FileAudioPlayer provideFileAudioPlayer();
 
     SupportManager provideSupportManager();
+
+    VersionManager provideVersionManager();
 }

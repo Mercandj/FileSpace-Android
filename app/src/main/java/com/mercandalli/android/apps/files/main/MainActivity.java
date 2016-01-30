@@ -21,28 +21,45 @@ package com.mercandalli.android.apps.files.main;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
+import com.mercandalli.android.apps.files.main.version.VersionManager;
 import com.mercandalli.android.apps.files.notificationpush.NotificationPush;
 import com.mercandalli.android.apps.files.user.community.CommunityFragment;
 
 /**
  * Main {@link Activity} launched by the xml.
  */
-public class MainActivity extends NavDrawerActivity implements SetToolbarCallback, FabFragment.RefreshFabCallback {
+public class MainActivity extends NavDrawerActivity implements
+        SetToolbarCallback,
+        FabFragment.RefreshFabCallback,
+        VersionManager.UpdateCheckedListener {
+
+    @SuppressWarnings("unused")
+    private static final String TAG = "MainActivity";
 
     public static void start(Activity activity) {
         activity.startActivity(new Intent(activity, MainActivity.class));
     }
 
+    /**
+     * The {@link VersionManager} to check if an update is needed.
+     */
+    private VersionManager mVersionManager;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mVersionManager = FileApp.get(this).getFileAppComponent().provideVersionManager();
+        mVersionManager.registerUpdateCheckedListener(this);
 
         // Notification
         if (TextUtils.isEmpty(NotificationPush.regId)) {
@@ -54,6 +71,18 @@ public class MainActivity extends NavDrawerActivity implements SetToolbarCallbac
         }
 
         // getDevice(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mVersionManager.checkIfUpdateNeeded();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mVersionManager.unregisterUpdateCheckedListener(this);
+        super.onDestroy();
     }
 
     @Override
@@ -80,5 +109,20 @@ public class MainActivity extends NavDrawerActivity implements SetToolbarCallbac
         if (getBackFragment() instanceof FabFragment.RefreshFabCallback) {
             ((FabFragment.RefreshFabCallback) getBackFragment()).onRefreshFab();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onUpdateNeeded() {
+        Toast.makeText(this, R.string.activity_main_toast_update_needed, Toast.LENGTH_SHORT).show();
+        final String appPackageName = getPackageName();
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (android.content.ActivityNotFoundException e) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
+        finish();
     }
 }

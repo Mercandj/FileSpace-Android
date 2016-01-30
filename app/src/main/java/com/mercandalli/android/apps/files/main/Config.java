@@ -61,6 +61,7 @@ public class Config {
     public static final String routeFile = "file";
     public static final String routeFileDelete = "file_delete";
     public static final String routeSupportComment = "support_comment";
+    public static final String routeVersionSupported = "version/supported";
     public static final String routeInformation = "information";
     public static final String routeRobotics = "robotics";
     public static final String routeGenealogy = "genealogy";

@@ -26,6 +26,8 @@
     <string name="add">Ajouter</string>
     <string name="name">Nom</string>
 
+    <string name="activity_main_toast_update_needed">Désolé, cette mise à jour est obligatoire</string>
+
     <string name="file_fragment_public_cloud">CLOUD</string>
     <string name="file_fragment_my_cloud">MON CLOUD</string>
     <string name="file_fragment_local">LOCAL</string>
