@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:scrollbars="none">
@@ -21,7 +20,6 @@
             android:layout_marginStart="@dimen/default_16"
             android:layout_marginTop="@dimen/default_16"
             android:background="@drawable/file_local_audio_rounded_bg_selected"
-            android:elevation="3dp"
             android:paddingBottom="@dimen/default_8"
             android:paddingLeft="@dimen/default_16"
             android:paddingRight="@dimen/default_16"
@@ -30,8 +28,7 @@
             android:text="@string/file_audio_model_header_folder"
             android:textColor="@color/primary"
             android:textSize="@dimen/default_text_12"
-            android:textStyle="bold"
-            tools:ignore="UnusedAttribute" />
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/view_file_header_audio_recent"
@@ -42,18 +39,16 @@
             android:layout_marginStart="@dimen/default_8"
             android:layout_marginTop="@dimen/default_16"
             android:background="@drawable/file_local_audio_rounded_bg"
-            android:elevation="3dp"
             android:paddingBottom="@dimen/default_8"
             android:paddingLeft="@dimen/default_16"
             android:paddingRight="@dimen/default_16"
             android:paddingTop="@dimen/default_8"
             android:singleLine="true"
             android:text="RECENT"
-            android:textColor="@color/primary"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/default_text_12"
             android:textStyle="bold"
-            android:visibility="gone"
-            tools:ignore="UnusedAttribute" />
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/view_file_header_audio_artist"
@@ -64,18 +59,16 @@
             android:layout_marginStart="@dimen/default_8"
             android:layout_marginTop="@dimen/default_16"
             android:background="@drawable/file_local_audio_rounded_bg"
-            android:elevation="3dp"
             android:paddingBottom="@dimen/default_8"
             android:paddingLeft="@dimen/default_16"
             android:paddingRight="@dimen/default_16"
             android:paddingTop="@dimen/default_8"
             android:singleLine="true"
             android:text="ARTIST"
-            android:textColor="@color/primary"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/default_text_12"
             android:textStyle="bold"
-            android:visibility="gone"
-            tools:ignore="UnusedAttribute" />
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/view_file_header_audio_album"
@@ -86,18 +79,16 @@
             android:layout_marginStart="@dimen/default_8"
             android:layout_marginTop="@dimen/default_16"
             android:background="@drawable/file_local_audio_rounded_bg"
-            android:elevation="3dp"
             android:paddingBottom="@dimen/default_8"
             android:paddingLeft="@dimen/default_16"
             android:paddingRight="@dimen/default_16"
             android:paddingTop="@dimen/default_8"
             android:singleLine="true"
             android:text="ALBUM"
-            android:textColor="@color/primary"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/default_text_12"
             android:textStyle="bold"
-            android:visibility="gone"
-            tools:ignore="UnusedAttribute" />
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/view_file_header_audio_all"
@@ -110,17 +101,15 @@
             android:layout_marginStart="@dimen/default_8"
             android:layout_marginTop="@dimen/default_16"
             android:background="@drawable/file_local_audio_rounded_bg"
-            android:elevation="3dp"
             android:paddingBottom="@dimen/default_8"
             android:paddingLeft="@dimen/default_16"
             android:paddingRight="@dimen/default_16"
             android:paddingTop="@dimen/default_8"
             android:singleLine="true"
             android:text="@string/file_audio_model_header_all"
-            android:textColor="@color/primary"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/default_text_12"
-            android:textStyle="bold"
-            tools:ignore="UnusedAttribute" />
+            android:textStyle="bold" />
 
     </LinearLayout>
 

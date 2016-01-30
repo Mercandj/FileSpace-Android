@@ -3,9 +3,9 @@
 
     <item android:id="@+id/shape_background">
         <shape android:shape="rectangle">
-            <corners android:radius="2dp"/>
+            <corners android:radius="2dp" />
 
-            <solid android:color="#00000000"/>
+            <solid android:color="#00000000" />
         </shape>
     </item>
 
