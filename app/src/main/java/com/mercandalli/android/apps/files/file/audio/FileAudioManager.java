@@ -35,6 +35,14 @@ public abstract class FileAudioManager {
             final int sortMode,
             final String search);
 
+    public abstract void getAllLocalMusicAlbums(
+            final int sortMode,
+            final String search);
+
+    public abstract void getAllLocalMusicArtists(
+            final int sortMode,
+            final String search);
+
     /**
      * Edit the metadata.
      */
@@ -76,6 +84,14 @@ public abstract class FileAudioManager {
     public abstract boolean registerOnMusicUpdateListener(MusicsChangeListener musicsChangeListener);
 
     public abstract boolean unregisterOnMusicUpdateListener(MusicsChangeListener musicsChangeListener);
+
+    public abstract boolean registerAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener);
+
+    public abstract boolean unregisterAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener);
+
+    public abstract boolean registerAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener);
+
+    public abstract boolean unregisterAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener);
 
     /**
      * Class used to count.
@@ -125,6 +141,30 @@ public abstract class FileAudioManager {
         void onLocalMusicSucceeded(List<FileAudioModel> fileModels);
 
         void onLocalMusicFailed();
+    }
+
+    interface GetAllLocalMusicArtistsListener {
+
+        /**
+         * Called when the call of {@link #getAllLocalMusicArtists(int, String)} succeeded.
+         *
+         * @param artists the {@link List} of result.
+         */
+        void onAllLocalMusicArtistsSucceeded(List<Artist> artists);
+
+        void onAllLocalMusicArtistsFailed();
+    }
+
+    interface GetAllLocalMusicAlbumsListener {
+
+        /**
+         * Called when the call of {@link #getAllLocalMusicAlbums(int, String)} succeeded.
+         *
+         * @param albums the {@link List} of result.
+         */
+        void onAllLocalMusicAlbumsSucceeded(List<Album> albums);
+
+        void onAllLocalMusicAlbumsFailed();
     }
 
     interface MusicsChangeListener {

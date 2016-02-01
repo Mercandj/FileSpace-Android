@@ -123,7 +123,7 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_HEADER) {
             return new HeaderViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(R.layout.view_file_header_audio, parent, false),
+                    LayoutInflater.from(parent.getContext()).inflate(R.layout.view_file_header_image, parent, false),
                     mHeaderIds,
                     mOnHeaderClickListener
             );

@@ -79,13 +79,17 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     @IntDef({
             PAGE_FOLDERS,
             PAGE_FOLDER_INSIDE,
+            PAGE_ARTIST,
+            PAGE_ALBUM,
             PAGE_ALL})
     public @interface CurrentPage {
     }
 
     private static final int PAGE_FOLDERS = 0;
     private static final int PAGE_FOLDER_INSIDE = 1;
-    private static final int PAGE_ALL = 2;
+    private static final int PAGE_ARTIST = 2;
+    private static final int PAGE_ALBUM = 3;
+    private static final int PAGE_ALL = 4;
 
     @CurrentPage
     private int mCurrentPage = PAGE_FOLDERS;
@@ -197,89 +201,11 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mHeaderIds = new ArrayList<>();
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_folder, true));
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_recent, false));
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_artist, false));
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_album, false));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_artist, true));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_album, true));
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_all, false));
 
-        mFileAudioRowAdapter = new FileAudioRowAdapter(mHeaderIds, this, mActivity, mFileAudioModels, this /*new FileAudioModelListener() {
-            @Override
-            public void executeFileAudioModel(final FileAudioModel fileAudioModel) {
-
-
-
-                final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
-                String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.meta_data_edition), getString(R.string.properties)};
-                if (mApplicationCallback.isLogged()) {
-                    menuList = new String[]{getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.meta_data_edition), getString(R.string.properties)};
-                }
-                menuAlert.setTitle("Action");
-                menuAlert.setItems(menuList,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int item) {
-                                if (!mApplicationCallback.isLogged()) {
-                                    item += 2;
-                                }
-                                switch (item) {
-                                    case 0:
-                                        if (fileAudioModel.isDirectory()) {
-                                            Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + fileAudioModel.getName(), getString(R.string.upload), new IListener() {
-                                                @Override
-                                                public void execute() {
-                                                    if (fileAudioModel.getFile() != null) {
-                                                        List<StringPair> parameters = FileManager.getForUpload(fileAudioModel);
-                                                        (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
-                                                            @Override
-                                                            public void onPostExecute(JSONObject json, String body) {
-
-                                                            }
-                                                        }, parameters, fileAudioModel.getFile())).execute();
-                                                    }
-                                                }
-                                            }, getString(R.string.cancel), null);
-                                        }
-                                        break;
-                                    case 1:
-                                        mFileManager.openLocalAs(mActivity, fileAudioModel);
-                                        break;
-                                    case 2:
-                                        DialogUtils.prompt(mActivity, "Rename", "Rename " + (fileAudioModel.isDirectory() ? "directory" : "file") + " " + fileAudioModel.getName() + " ?", "Ok", new IStringListener() {
-                                            @Override
-                                            public void execute(String text) {
-                                                mFileManager.rename(fileAudioModel, text, mRefreshActivityAdapterListener);
-                                            }
-                                        }, "Cancel", null, fileAudioModel.getFullName());
-                                        break;
-                                    case 3:
-                                        DialogUtils.alert(mActivity, "Delete", "Delete " + (fileAudioModel.isDirectory() ? "directory" : "file") + " " + fileAudioModel.getName() + " ?", "Yes", new IListener() {
-                                            @Override
-                                            public void execute() {
-                                                mFileManager.delete(fileAudioModel, mRefreshActivityAdapterListener);
-                                            }
-                                        }, "No", null);
-                                        break;
-                                    case 4:
-                                        FileAudioEditTagsDialog.newInstance(fileAudioModel).show(getFragmentManager(), null);
-                                        break;
-                                    case 5:
-                                        DialogUtils.alert(mActivity,
-                                                getString(R.string.properties) + " : " + fileAudioModel.getName(),
-                                                mFileAudioManager.toSpanned(mActivity, fileAudioModel),
-                                                "OK",
-                                                null,
-                                                null,
-                                                null);
-                                        break;
-                                }
-                            }
-                        });
-                AlertDialog menuDrop = menuAlert.create();
-                menuDrop.show();
-
-
-            }
-        }*/);
+        mFileAudioRowAdapter = new FileAudioRowAdapter(mHeaderIds, this, mActivity, mFileAudioModels, this);
         mFileAudioRowAdapter.setOnItemClickListener(new FileAudioRowAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -471,6 +397,12 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
             case PAGE_FOLDER_INSIDE:
                 mFileAudioManager.getLocalMusic(mCurrentFolder, mSortMode, search);
                 break;
+            case PAGE_ALBUM:
+                mFileAudioManager.getAllLocalMusicAlbums(mSortMode, search);
+                break;
+            case PAGE_ARTIST:
+                mFileAudioManager.getAllLocalMusicArtists(mSortMode, search);
+                break;
         }
     }
 
@@ -598,20 +530,24 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     public void refreshListFolders(final String search) {
         mCurrentFolder = null;
         mCurrentPage = PAGE_FOLDERS;
-        if (mFileManager == null) {
-            return;
-        }
-
         showProgressBar();
         refreshCurrentList(search);
     }
 
     public void refreshListAllMusic() {
         mCurrentPage = PAGE_ALL;
-        if (mFileManager == null) {
-            return;
-        }
+        showProgressBar();
+        refreshCurrentList();
+    }
 
+    public void refreshListArtist() {
+        mCurrentPage = PAGE_ARTIST;
+        showProgressBar();
+        refreshCurrentList();
+    }
+
+    public void refreshListAlbum() {
+        mCurrentPage = PAGE_ALBUM;
         showProgressBar();
         refreshCurrentList();
     }

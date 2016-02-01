@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/view_file_header_image_folder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_16"
+            android:layout_marginEnd="@dimen/default_8"
+            android:layout_marginLeft="@dimen/default_16"
+            android:layout_marginRight="@dimen/default_8"
+            android:layout_marginStart="@dimen/default_16"
+            android:layout_marginTop="@dimen/default_16"
+            android:background="@drawable/file_local_audio_rounded_bg_selected"
+            android:paddingBottom="@dimen/default_8"
+            android:paddingLeft="@dimen/default_16"
+            android:paddingRight="@dimen/default_16"
+            android:paddingTop="@dimen/default_8"
+            android:singleLine="true"
+            android:text="@string/file_audio_model_header_folder"
+            android:textColor="@color/primary"
+            android:textSize="@dimen/default_text_12"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/view_file_header_image_recent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_16"
+            android:layout_marginEnd="@dimen/default_8"
+            android:layout_marginStart="@dimen/default_8"
+            android:layout_marginTop="@dimen/default_16"
+            android:background="@drawable/file_local_audio_rounded_bg"
+            android:paddingBottom="@dimen/default_8"
+            android:paddingLeft="@dimen/default_16"
+            android:paddingRight="@dimen/default_16"
+            android:paddingTop="@dimen/default_8"
+            android:singleLine="true"
+            android:text="RECENT"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/default_text_12"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/view_file_header_image_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_16"
+            android:layout_marginEnd="@dimen/default_8"
+            android:layout_marginStart="@dimen/default_8"
+            android:layout_marginTop="@dimen/default_16"
+            android:background="@drawable/file_local_audio_rounded_bg"
+            android:paddingBottom="@dimen/default_8"
+            android:paddingLeft="@dimen/default_16"
+            android:paddingRight="@dimen/default_16"
+            android:paddingTop="@dimen/default_8"
+            android:singleLine="true"
+            android:text="ARTIST"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/default_text_12"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/view_file_header_image_album"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_16"
+            android:layout_marginEnd="@dimen/default_8"
+            android:layout_marginStart="@dimen/default_8"
+            android:layout_marginTop="@dimen/default_16"
+            android:background="@drawable/file_local_audio_rounded_bg"
+            android:paddingBottom="@dimen/default_8"
+            android:paddingLeft="@dimen/default_16"
+            android:paddingRight="@dimen/default_16"
+            android:paddingTop="@dimen/default_8"
+            android:singleLine="true"
+            android:text="ALBUM"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/default_text_12"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/view_file_header_image_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_16"
+            android:layout_marginEnd="@dimen/default_16"
+            android:layout_marginLeft="@dimen/default_8"
+            android:layout_marginRight="@dimen/default_16"
+            android:layout_marginStart="@dimen/default_8"
+            android:layout_marginTop="@dimen/default_16"
+            android:background="@drawable/file_local_audio_rounded_bg"
+            android:paddingBottom="@dimen/default_8"
+            android:paddingLeft="@dimen/default_16"
+            android:paddingRight="@dimen/default_16"
+            android:paddingTop="@dimen/default_8"
+            android:singleLine="true"
+            android:text="@string/file_audio_model_header_all"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/default_text_12"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</HorizontalScrollView>

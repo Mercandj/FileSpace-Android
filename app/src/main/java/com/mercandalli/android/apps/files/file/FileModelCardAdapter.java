@@ -47,12 +47,17 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
     /**
      * The view type of the header.
      */
-    private static final int TYPE_HEADER = 0;
+    public static final int TYPE_HEADER_AUDIO = 0;
+
+    /**
+     * The view type of the header.
+     */
+    public static final int TYPE_HEADER_IMAGE = 1;
 
     /**
      * The view type of the card.
      */
-    private static final int TYPE_CARD_ITEM = 1;
+    private static final int TYPE_CARD_ITEM = 2;
 
     private final String mStringDirectory;
     private final String mStringFile;
@@ -68,6 +73,8 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
     /* Header */
     private List<FileModelCardHeaderItem> mHeaderIds;
     private OnHeaderClickListener mOnHeaderClickListener;
+
+    private int mHeaderType = TYPE_HEADER_AUDIO;
 
     /**
      * Adapter without header.
@@ -109,9 +116,15 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
 
     @Override
     public FileModelCardAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == TYPE_HEADER) {
+        if (viewType == TYPE_HEADER_AUDIO) {
             return new HeaderViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(R.layout.view_file_header_audio, parent, false),
+                    mHeaderIds,
+                    mOnHeaderClickListener
+            );
+        } else if (viewType == TYPE_HEADER_IMAGE) {
+            return new HeaderViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(R.layout.view_file_header_image, parent, false),
                     mHeaderIds,
                     mOnHeaderClickListener
             );
@@ -180,7 +193,7 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
 
     @Override
     public int getItemViewType(int position) {
-        return isHeader(position) ? TYPE_HEADER : TYPE_CARD_ITEM;
+        return isHeader(position) ? mHeaderType : TYPE_CARD_ITEM;
     }
 
     @Override
@@ -197,6 +210,10 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
 
     public void setOnFileSubtitleAdapter(OnFileSubtitleAdapter onFileSubtitleAdapter) {
         mOnFileSubtitleAdapter = onFileSubtitleAdapter;
+    }
+
+    public void setHeaderType(int headerType) {
+        mHeaderType = headerType;
     }
 
     public boolean isHeader(final int position) {

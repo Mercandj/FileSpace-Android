@@ -182,11 +182,11 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         mFileModels = new ArrayList<>();
 
         mHeaderIds = new ArrayList<>();
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_folder, true));
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_recent, false));
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_artist, false));
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_album, false));
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_all, false));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_image_folder, true));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_image_recent, false));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_image_artist, false));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_image_album, false));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_image_all, false));
 
         mFileImageRowAdapter = new FileImageRowAdapter(mHeaderIds, this, mActivity, mFileModels, new FileModelListener() {
             @Override
@@ -277,6 +277,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
             }
         }, null);
         mFileModelCardAdapter.setOnFileSubtitleAdapter(this);
+        mFileModelCardAdapter.setHeaderType(FileModelCardAdapter.TYPE_HEADER_IMAGE);
 
         mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
         mScaleAnimationAdapter.setDuration(220);
@@ -369,19 +370,19 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         mHeaderIds.addAll(fileModelCardHeaderItems);
         final int viewId = v.getId();
         switch (viewId) {
-            case R.id.view_file_header_audio_folder:
+            case R.id.view_file_header_image_folder:
                 refreshListFolders();
                 break;
-            case R.id.view_file_header_audio_recent:
+            case R.id.view_file_header_image_recent:
                 //TODO
                 break;
-            case R.id.view_file_header_audio_artist:
+            case R.id.view_file_header_image_artist:
                 //TODO
                 break;
-            case R.id.view_file_header_audio_album:
+            case R.id.view_file_header_image_album:
                 //TODO
                 break;
-            case R.id.view_file_header_audio_all:
+            case R.id.view_file_header_image_all:
                 refreshListAllMusic();
                 break;
         }
