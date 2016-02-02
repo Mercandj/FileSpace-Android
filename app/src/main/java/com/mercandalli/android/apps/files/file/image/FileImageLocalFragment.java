@@ -188,10 +188,10 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_image_album, false));
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_image_all, false));
 
-        mFileImageRowAdapter = new FileImageRowAdapter(mHeaderIds, this, mActivity, mFileModels, new FileModelListener() {
+        mFileImageRowAdapter = new FileImageRowAdapter(mHeaderIds, this, getActivity(), mFileModels, new FileModelListener() {
             @Override
             public void executeFileModel(final FileModel fileModel, final View view) {
-                final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
+                final AlertDialog.Builder menuAlert = new AlertDialog.Builder(getContext());
                 String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.properties)};
                 if (mApplicationCallback.isLogged()) {
                     menuList = new String[]{getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.properties)};
@@ -206,14 +206,14 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                                 switch (item) {
                                     case 0:
                                         if (fileModel.isDirectory()) {
-                                            Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
                                         } else {
-                                            DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + fileModel.getName(), getString(R.string.upload), new IListener() {
+                                            DialogUtils.alert(getActivity(), getString(R.string.upload), "Upload file " + fileModel.getName(), getString(R.string.upload), new IListener() {
                                                 @Override
                                                 public void execute() {
                                                     if (fileModel.getFile() != null) {
                                                         List<StringPair> parameters = FileManager.getForUpload(fileModel);
-                                                        (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
+                                                        (new TaskPost(getActivity(), mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
                                                             @Override
                                                             public void onPostExecute(JSONObject json, String body) {
 
@@ -225,10 +225,10 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                                         }
                                         break;
                                     case 1:
-                                        mFileManager.openLocalAs(mActivity, fileModel);
+                                        mFileManager.openLocalAs(getActivity(), fileModel);
                                         break;
                                     case 2:
-                                        DialogUtils.prompt(mActivity, "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
+                                        DialogUtils.prompt(getActivity(), "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
                                             @Override
                                             public void execute(String text) {
                                                 mFileManager.rename(fileModel, text, mRefreshActivityAdapterListener);
@@ -236,7 +236,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                                         }, "Cancel", null, fileModel.getFullName());
                                         break;
                                     case 3:
-                                        DialogUtils.alert(mActivity, "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
+                                        DialogUtils.alert(getActivity(), "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
                                             @Override
                                             public void execute() {
                                                 mFileManager.delete(fileModel, mRefreshActivityAdapterListener);
@@ -244,9 +244,9 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                                         }, "No", null);
                                         break;
                                     case 4:
-                                        DialogUtils.alert(mActivity,
+                                        DialogUtils.alert(getActivity(),
                                                 getString(R.string.properties) + " : " + fileModel.getName(),
-                                                mFileManager.toSpanned(mActivity, fileModel),
+                                                mFileManager.toSpanned(getContext(), fileModel),
                                                 "OK",
                                                 null,
                                                 null,
@@ -265,7 +265,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                 if (mFileModels.get(position).isDirectory()) {
                     refreshListFoldersInside(mFileModels.get(position));
                 } else {
-                    mFileManager.execute(mActivity, position, mFileModels, view);
+                    mFileManager.execute(getActivity(), position, mFileModels, view);
                 }
             }
         });

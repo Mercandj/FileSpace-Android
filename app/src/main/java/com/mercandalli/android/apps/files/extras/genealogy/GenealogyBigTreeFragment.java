@@ -91,9 +91,9 @@ public class GenealogyBigTreeFragment extends FabFragment {
     public void select(final ModelGenealogyPerson genealogyUser) {
         this.genealogyPerson = genealogyUser;
 
-        if (NetUtils.isInternetConnection(mActivity)) {
+        if (NetUtils.isInternetConnection(getContext())) {
             new TaskGet(
-                    mActivity,
+                    getActivity(),
                     mApplicationCallback.getConfig().getUrlServer() + Config.routeGenealogy + "/" + genealogyPerson.id,
                     new IPostExecuteListener() {
                         @Override
@@ -101,11 +101,11 @@ public class GenealogyBigTreeFragment extends FabFragment {
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
-                                        genealogyPerson = new ModelGenealogyPerson(mActivity, mApplicationCallback, json.getJSONObject("result"));
+                                        genealogyPerson = new ModelGenealogyPerson(getActivity(), mApplicationCallback, json.getJSONObject("result"));
                                         bigTreeView.select(genealogyPerson);
                                     }
                                 } else {
-                                    Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.action_failed, Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
                                 Log.e(getClass().getName(), "Failed to convert Json", e);

@@ -97,7 +97,6 @@ public class SettingsFragment extends BackFragment {
         if (!args.containsKey(BUNDLE_ARG_TITLE)) {
             throw new IllegalStateException("Missing args. Please use newInstance()");
         }
-        mActivity = getActivity();
         mTitle = args.getString(BUNDLE_ARG_TITLE);
     }
 
@@ -108,7 +107,7 @@ public class SettingsFragment extends BackFragment {
         final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.fragment_settings_toolbar);
         toolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(toolbar);
-        setStatusBarColor(mActivity, R.color.status_bar);
+        setStatusBarColor(getActivity(), R.color.status_bar);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -161,13 +160,13 @@ public class SettingsFragment extends BackFragment {
             list.add(new ModelSetting("Auto connection", new OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    mApplicationCallback.getConfig().setAutoConnection(mActivity, isChecked);
+                    mApplicationCallback.getConfig().setAutoConnection(context, isChecked);
                 }
             }, mApplicationCallback.getConfig().isAutoConncetion()));
             list.add(new ModelSetting("Web application", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    NetUtils.search(mActivity, Config.webApplication);
+                    NetUtils.search(context, Config.webApplication);
                 }
             }));
         }
@@ -176,7 +175,7 @@ public class SettingsFragment extends BackFragment {
                 @Override
                 public void onClick(View view) {
                     //TODO Change password
-                    Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                 }
             }));
         }
@@ -184,27 +183,27 @@ public class SettingsFragment extends BackFragment {
             list.add(new ModelSetting("Login / Sign in", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(mActivity, LoginRegisterActivity.class);
-                    mActivity.startActivity(intent);
-                    mActivity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                    mActivity.finish();
+                    Intent intent = new Intent(context, LoginRegisterActivity.class);
+                    getActivity().startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                    getActivity().finish();
                 }
             }));
         }
-        list.add(new ModelSetting(mActivity.getString(R.string.settings_about), new View.OnClickListener() {
+        list.add(new ModelSetting(getString(R.string.settings_about), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DialogAuthorLabel(mActivity, mApplicationCallback);
+                new DialogAuthorLabel(getActivity(), mApplicationCallback);
             }
         }));
-        list.add(new ModelSetting(mActivity.getString(R.string.settings_licences), new View.OnClickListener() {
+        list.add(new ModelSetting(getString(R.string.settings_licences), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LicenseActivity.start(mActivity);
+                LicenseActivity.start(context);
             }
         }));
         if (Constants.ADS_VISIBLE) {
-            list.add(new ModelSetting(context.getString(R.string.settings_ad), new View.OnClickListener() {
+            list.add(new ModelSetting(getString(R.string.settings_ad), new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (mInterstitialAd.isLoaded()) {
@@ -218,18 +217,18 @@ public class SettingsFragment extends BackFragment {
         }
 
         try {
-            PackageInfo pInfo = mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0);
+            PackageInfo pInfo = getContext().getPackageManager().getPackageInfo(context.getPackageName(), 0);
             list.add(new ModelSetting("Last update date GMT", TimeUtils.getGMTDate(pInfo.lastUpdateTime)));
             list.add(new ModelSetting("Version", pInfo.versionName, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (click_version == 11) {
-                        Toast.makeText(mActivity, "Development settings activated.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Development settings activated.", Toast.LENGTH_SHORT).show();
                         isDeveloper = true;
                         refreshList();
                     } else if (click_version < 11) {
                         if (click_version >= 1) {
-                            final Toast t = Toast.makeText(mActivity, "" + (11 - click_version), Toast.LENGTH_SHORT);
+                            final Toast t = Toast.makeText(context, "" + (11 - click_version), Toast.LENGTH_SHORT);
                             t.show();
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
@@ -252,7 +251,7 @@ public class SettingsFragment extends BackFragment {
 
     public void updateAdapter() {
         if (recyclerView != null && list != null) {
-            AdapterModelSetting adapter = new AdapterModelSetting(mActivity, mApplicationCallback, list);
+            AdapterModelSetting adapter = new AdapterModelSetting(getActivity(), mApplicationCallback, list);
             adapter.setOnItemClickListener(new AdapterModelSetting.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {

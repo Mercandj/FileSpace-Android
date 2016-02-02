@@ -19,7 +19,7 @@
  */
 package com.mercandalli.android.apps.files.settings;
 
-import android.app.Activity;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,12 +38,15 @@ import java.util.List;
 public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSetting.ViewHolder> {
     private List<ModelSetting> itemsData;
     OnItemClickListener mItemClickListener;
-    Activity mActivity;
+    Context mContext;
     ApplicationCallback mApplicationCallback;
 
-    public AdapterModelSetting(Activity activity, ApplicationCallback applicationCallback, List<ModelSetting> itemsData) {
+    public AdapterModelSetting(
+            final Context context,
+            final ApplicationCallback applicationCallback,
+            final List<ModelSetting> itemsData) {
         this.itemsData = itemsData;
-        this.mActivity = activity;
+        this.mContext = context;
         this.mApplicationCallback = applicationCallback;
     }
 
@@ -77,7 +80,7 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
                 break;
             case Constants.TAB_VIEW_TYPE_SECTION:
                 viewHolder.title.setText(String.format("%s", model.title));
-                FontUtils.applyFont(mActivity, viewHolder.title, "fonts/MYRIADAB.TTF");
+                FontUtils.applyFont(mContext, viewHolder.title, "fonts/MYRIADAB.TTF");
                 break;
         }
     }

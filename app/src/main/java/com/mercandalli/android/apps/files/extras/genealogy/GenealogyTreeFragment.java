@@ -119,11 +119,11 @@ public class GenealogyTreeFragment extends FabFragment {
 
     public void getChildren(int id_user) {
         List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
+        if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
             if (requestReady) {
                 requestReady = false;
                 new TaskGet(
-                        mActivity,
+                        getActivity(),
                         mApplicationCallback.getConfig().getUrlServer() + Config.routeGenealogyChildren + "/" + id_user,
                         new IPostExecuteListener() {
                             @Override
@@ -135,11 +135,11 @@ public class GenealogyTreeFragment extends FabFragment {
                                         if (json.has(RESULT)) {
                                             JSONArray array = json.getJSONArray(RESULT);
                                             for (int i = 0; i < array.length(); i++) {
-                                                listChildren.add(new ModelGenealogyPerson(mActivity, mApplicationCallback, array.getJSONObject(i)));
+                                                listChildren.add(new ModelGenealogyPerson(getActivity(), mApplicationCallback, array.getJSONObject(i)));
                                             }
                                         }
                                     } else {
-                                        Toast.makeText(mActivity, getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), R.string.action_failed, Toast.LENGTH_SHORT).show();
                                     }
                                 } catch (JSONException e) {
                                     Log.e(getClass().getName(), "Failed to convert Json", e);
@@ -148,7 +148,7 @@ public class GenealogyTreeFragment extends FabFragment {
                                     genealogyPerson = listChildren.get(0);
                                     genealogyPerson.selected = true;
                                 } else {
-                                    Toast.makeText(mActivity, "No children", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "No children", Toast.LENGTH_SHORT).show();
                                 }
                                 update();
                             }
@@ -156,21 +156,21 @@ public class GenealogyTreeFragment extends FabFragment {
                         parameters
                 ).execute();
             } else {
-                Toast.makeText(mActivity, getString(R.string.waiting_for_response), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.waiting_for_response), Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(mActivity, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
         }
     }
 
     public void changeUser(int id_user) {
 
         List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
+        if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
             if (requestReady) {
                 requestReady = false;
                 new TaskGet(
-                        mActivity,
+                        getActivity(),
                         mApplicationCallback.getConfig().getUrlServer() + Config.routeGenealogy + "/" + id_user,
                         new IPostExecuteListener() {
                             @Override
@@ -179,11 +179,11 @@ public class GenealogyTreeFragment extends FabFragment {
                                 try {
                                     if (json != null) {
                                         if (json.has(RESULT)) {
-                                            GenealogyTreeFragment.this.genealogyPerson = new ModelGenealogyPerson(mActivity, mApplicationCallback, json.getJSONObject(RESULT));
+                                            GenealogyTreeFragment.this.genealogyPerson = new ModelGenealogyPerson(getActivity(), mApplicationCallback, json.getJSONObject(RESULT));
                                             GenealogyTreeFragment.this.genealogyPerson.selected = true;
                                         }
                                     } else {
-                                        Toast.makeText(mActivity, getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
                                     }
                                 } catch (JSONException e) {
                                     Log.e(getClass().getName(), "Failed to convert Json", e);
@@ -194,10 +194,10 @@ public class GenealogyTreeFragment extends FabFragment {
                         parameters
                 ).execute();
             } else {
-                Toast.makeText(mActivity, getString(R.string.waiting_for_response), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.waiting_for_response, Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(mActivity, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -309,7 +309,7 @@ public class GenealogyTreeFragment extends FabFragment {
     public void updateAdapter() {
         if (this.recyclerView != null && this.list != null && this.isAdded()) {
 
-            this.mAdapter = new AdapterModelGenealogyUser(mActivity, list, new IModelGenealogyUserListener() {
+            this.mAdapter = new AdapterModelGenealogyUser(getActivity(), list, new IModelGenealogyUserListener() {
                 @Override
                 public void execute(final ModelGenealogyPerson modelGenealogyUser) {
 

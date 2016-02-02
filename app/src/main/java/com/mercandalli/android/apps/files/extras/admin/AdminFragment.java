@@ -19,6 +19,7 @@
  */
 package com.mercandalli.android.apps.files.extras.admin;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -99,7 +100,7 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
         mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_admin_toolbar);
         mToolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(mToolbar);
-        setStatusBarColor(mActivity, R.color.status_bar);
+        setStatusBarColor((Activity) getContext(), R.color.status_bar);
         setHasOptionsMenu(true);
 
 

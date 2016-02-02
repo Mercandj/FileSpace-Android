@@ -106,7 +106,7 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
         mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_genealogy_toolbar);
         mToolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(mToolbar);
-        setStatusBarColor(mActivity, R.color.status_bar);
+        setStatusBarColor(getActivity(), R.color.status_bar);
         setHasOptionsMenu(true);
 
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.fragment_genealogy_app_bar_layout);
@@ -295,12 +295,12 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     private void updateNoInternet() {
-        if (!NetUtils.isInternetConnection(mActivity)) {
+        if (!NetUtils.isInternetConnection(getContext())) {
             this.snackbar = Snackbar.make(this.coordinatorLayoutView, getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE)
                     .setAction(getString(R.string.refresh), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (NetUtils.isInternetConnection(mActivity)) {
+                            if (NetUtils.isInternetConnection(getContext())) {
                                 listFragment[getCurrentFragmentIndex()].onFocus();
                             } else {
                                 updateNoInternet();

@@ -93,14 +93,14 @@ public class ProfileFragment extends BackFragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
 
-        Bitmap icon_profile_online = mApplicationCallback.getConfig().getUserProfilePicture(mActivity);
+        Bitmap icon_profile_online = mApplicationCallback.getConfig().getUserProfilePicture(getActivity());
         if (icon_profile_online != null) {
             icon_back.setImageBitmap(ImageUtils.setBlur(ImageUtils.setBrightness(icon_profile_online, -50), 15));
         }
 
         this.username = (TextView) this.rootView.findViewById(R.id.username);
         this.username.setText(StringUtils.capitalize(mApplicationCallback.getConfig().getUserUsername()));
-        FontUtils.applyFont(mActivity, this.username, "fonts/Roboto-Regular.ttf");
+        FontUtils.applyFont(getContext(), this.username, "fonts/Roboto-Regular.ttf");
 
         refreshView();
 
@@ -129,10 +129,10 @@ public class ProfileFragment extends BackFragment {
     }
 
     public void refreshView() {
-        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
+        if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
             List<StringPair> parameters = null;
             new TaskGet(
-                    mActivity,
+                    getActivity(),
                     mApplicationCallback.getConfig().getUrlServer() + Config.routeUser + "/" + Config.getUserId(),
                     new IPostExecuteListener() {
                         @Override
@@ -143,7 +143,7 @@ public class ProfileFragment extends BackFragment {
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
-                                        user = new UserModel(mActivity, mApplicationCallback, json.getJSONObject("result"));
+                                        user = new UserModel(getActivity(), mApplicationCallback, json.getJSONObject("result"));
                                         list.clear();
                                         list.add(new ModelSetting("Username", "" + user.username));
                                         list.add(new ModelSetting("Files size", FileUtils.humanReadableByteCount(user.size_files) + " / " + FileUtils.humanReadableByteCount(user.server_max_size_end_user)));
@@ -160,7 +160,7 @@ public class ProfileFragment extends BackFragment {
                                             }
                                         }
 
-                                        Location location = GpsUtils.getGpsLocation(mActivity, new ILocationListener() {
+                                        Location location = GpsUtils.getGpsLocation(getContext(), new ILocationListener() {
                                             @Override
                                             public void execute(Location location) {
                                                 if (location != null) {
@@ -170,12 +170,12 @@ public class ProfileFragment extends BackFragment {
                                                     list.add(new ModelSetting("Gps Longitude", "" + longitude));
                                                     list.add(new ModelSetting("Gps Latitude", "" + latitude));
 
-                                                    if (NetUtils.isInternetConnection(mActivity) && longitude != 0 && latitude != 0) {
+                                                    if (NetUtils.isInternetConnection(getContext()) && longitude != 0 && latitude != 0) {
                                                         List<StringPair> parameters = new ArrayList<>();
                                                         parameters.add(new StringPair("longitude", "" + longitude));
                                                         parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                        (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUserPut, new IPostExecuteListener() {
+                                                        (new TaskPost(getActivity(), mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUserPut, new IPostExecuteListener() {
                                                             @Override
                                                             public void onPostExecute(JSONObject json, String body) {
 
@@ -193,12 +193,12 @@ public class ProfileFragment extends BackFragment {
                                             list.add(new ModelSetting("Gps Longitude", "" + longitude));
                                             list.add(new ModelSetting("Gps Latitude", "" + latitude));
 
-                                            if (NetUtils.isInternetConnection(mActivity) && longitude != 0 && latitude != 0) {
+                                            if (NetUtils.isInternetConnection(getContext()) && longitude != 0 && latitude != 0) {
                                                 List<StringPair> parameters = new ArrayList<>();
                                                 parameters.add(new StringPair("longitude", "" + longitude));
                                                 parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUserPut, new IPostExecuteListener() {
+                                                (new TaskPost(getActivity(), mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUserPut, new IPostExecuteListener() {
                                                     @Override
                                                     public void onPostExecute(JSONObject json, String body) {
 
@@ -208,7 +208,7 @@ public class ProfileFragment extends BackFragment {
                                         }
                                     }
                                 } else {
-                                    Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.action_failed, Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
                                 Log.e(getClass().getName(), "Failed to convert Json", e);
@@ -225,7 +225,7 @@ public class ProfileFragment extends BackFragment {
         this.circularProgressBar.setVisibility(View.GONE);
 
         if (recyclerView != null && list != null) {
-            AdapterModelSetting adapter = new AdapterModelSetting(mActivity, mApplicationCallback, list);
+            AdapterModelSetting adapter = new AdapterModelSetting(getActivity(), mApplicationCallback, list);
             adapter.setOnItemClickListener(new AdapterModelSetting.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {

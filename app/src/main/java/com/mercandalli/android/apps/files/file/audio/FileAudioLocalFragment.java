@@ -19,6 +19,7 @@
  */
 package com.mercandalli.android.apps.files.file.audio;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -63,15 +64,19 @@ import javax.inject.Inject;
  */
 public class FileAudioLocalFragment extends InjectedFabFragment implements
         BackFragment.ISortMode,
+        FileAudioOverflowActions.FileAudioActionCallback,
         FileAudioManager.GetAllLocalMusicListener,
         FileAudioManager.GetLocalMusicFoldersListener,
         FileAudioManager.GetLocalMusicListener,
+        FileAudioManager.GetAllLocalMusicArtistsListener,
+        FileAudioManager.GetAllLocalMusicAlbumsListener,
         FileAudioManager.MusicsChangeListener,
         FileLocalPagerFragment.ListController,
-        FileModelCardAdapter.OnFileSubtitleAdapter,
         FileModelCardAdapter.OnHeaderClickListener,
+        FileModelCardAdapter.OnFileSubtitleAdapter,
         ScaleAnimationAdapter.NoAnimatedPosition,
-        SwipeRefreshLayout.OnRefreshListener, FileAudioModelListener, FileAudioOverflowActions.FileAudioActionCallback {
+        SwipeRefreshLayout.OnRefreshListener,
+        FileAudioModelListener {
 
     private static final String TAG = "FileAudioLocalFragment";
 
@@ -97,6 +102,8 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     private RecyclerView mRecyclerView;
     private final List<FileModel> mFileModels = new ArrayList<>();
     private final List<FileAudioModel> mFileAudioModels = new ArrayList<>();
+    private final List<Artist> mArtists = new ArrayList<>();
+    private final List<Album> mAlbums = new ArrayList<>();
     private TextView mMessageTextView;
 
     private List<FileModelCardHeaderItem> mHeaderIds;
@@ -182,6 +189,8 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mFileAudioManager.registerLocalMusicFoldersListener(this);
         mFileAudioManager.registerLocalMusicListener(this);
         mFileAudioManager.registerOnMusicUpdateListener(this);
+        mFileAudioManager.registerAllLocalMusicArtistsListener(this);
+        mFileAudioManager.registerAllLocalMusicAlbumsListener(this);
 
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.fragment_file_audio_local_progress_bar);
         mProgressBar.setVisibility(View.GONE);
@@ -201,11 +210,11 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mHeaderIds = new ArrayList<>();
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_folder, true));
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_recent, false));
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_artist, true));
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_album, true));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_artist, false));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_album, false));
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_all, false));
 
-        mFileAudioRowAdapter = new FileAudioRowAdapter(mHeaderIds, this, mActivity, mFileAudioModels, this);
+        mFileAudioRowAdapter = new FileAudioRowAdapter(context, mHeaderIds, this, mFileAudioModels, this);
         mFileAudioRowAdapter.setOnItemClickListener(new FileAudioRowAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -222,7 +231,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
                 if (fileModel.isDirectory()) {
                     refreshListFoldersInside(fileModel);
                 } else {
-                    mFileManager.execute(mActivity, position, mFileAudioModels, view);
+                    mFileManager.execute((Activity) context, position, mFileAudioModels, view);
                 }
             }
         });
@@ -307,6 +316,10 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
                 case PAGE_FOLDERS:
                     refreshListFolders();
                     break;
+                case PAGE_ALBUM:
+                    break;
+                case PAGE_ARTIST:
+                    break;
             }
         }
     }
@@ -338,10 +351,10 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
                 //TODO
                 break;
             case R.id.view_file_header_audio_artist:
-                //TODO
+                refreshListArtist();
                 break;
             case R.id.view_file_header_audio_album:
-                //TODO
+                refreshListAlbum();
                 break;
             case R.id.view_file_header_audio_all:
                 refreshListAllMusic();
@@ -440,6 +453,8 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mFileAudioManager.unregisterLocalMusicFoldersListener(this);
         mFileAudioManager.unregisterLocalMusicListener(this);
         mFileAudioManager.unregisterOnMusicUpdateListener(this);
+        mFileAudioManager.unregisterAllLocalMusicArtistsListener(this);
+        mFileAudioManager.unregisterAllLocalMusicAlbumsListener(this);
         super.onDestroyView();
     }
 
@@ -520,6 +535,36 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
             return;
         }
         updateAdapter();
+    }
+
+    @Override
+    public void onAllLocalMusicArtistsSucceeded(final List<Artist> artists) {
+        if (mCurrentPage != PAGE_ARTIST) {
+            return;
+        }
+        mArtists.clear();
+        mArtists.addAll(artists);
+        updateAdapter();
+    }
+
+    @Override
+    public void onAllLocalMusicArtistsFailed() {
+
+    }
+
+    @Override
+    public void onAllLocalMusicAlbumsSucceeded(final List<Album> albums) {
+        if (mCurrentPage != PAGE_ALBUM) {
+            return;
+        }
+        mAlbums.clear();
+        mAlbums.addAll(albums);
+        updateAdapter();
+    }
+
+    @Override
+    public void onAllLocalMusicAlbumsFailed() {
+
     }
 
     //region refresh

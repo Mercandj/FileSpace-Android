@@ -109,7 +109,7 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.fragment_file_toolbar);
         toolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(toolbar);
-        setStatusBarColor(mActivity, R.color.status_bar);
+        setStatusBarColor(getContext(), R.color.status_bar);
         setHasOptionsMenu(true);
 
         mCoordinatorLayoutView = rootView.findViewById(R.id.fragment_file_coordinator_layout);
@@ -232,7 +232,7 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
                 sort();
                 return true;
             case R.id.action_search:
-                SearchActivity.start(mActivity);
+                SearchActivity.start(getContext());
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -295,7 +295,7 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
     }
 
     public void add() {
-        new FileAddDialog(mActivity, mApplicationCallback, -1, new IListener() {
+        new FileAddDialog(getActivity(), mApplicationCallback, -1, new IListener() {
             @Override
             public void execute() {
                 refreshListServer();
@@ -321,7 +321,7 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
 
     public void sort() {
         final Context context = getContext();
-        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
+        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(getContext());
         String[] menuList = {context.getString(R.string.sort_abc), context.getString(R.string.sort_size), context.getString(R.string.sort_date)};
         menuAlert.setTitle(getString(R.string.view));
         menuAlert.setItems(menuList,
@@ -332,10 +332,10 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
                             if (fabFragment instanceof ISortMode) {
                                 ((ISortMode) fabFragment).setSortMode(item == 0 ? Constants.SORT_ABC : (item == 1 ? Constants.SORT_SIZE : Constants.SORT_DATE_MODIFICATION));
                             } else {
-                                Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -344,13 +344,13 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
     }
 
     private void updateNoInternet() {
-        if (!NetUtils.isInternetConnection(mActivity)) {
+        if (!NetUtils.isInternetConnection(getContext())) {
             if (mCoordinatorLayoutView != null) {
                 Snackbar snackbar = Snackbar.make(mCoordinatorLayoutView, getString(R.string.no_internet_connection), Snackbar.LENGTH_INDEFINITE)
                         .setAction(getString(R.string.refresh), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (NetUtils.isInternetConnection(mActivity)) {
+                                if (NetUtils.isInternetConnection(getContext())) {
                                     FabFragment fabFragment = getCurrentFragment();
                                     if (fabFragment != null) {
                                         fabFragment.onFocus();

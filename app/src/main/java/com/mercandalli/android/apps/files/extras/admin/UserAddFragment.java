@@ -39,6 +39,7 @@ import com.mercandalli.android.apps.files.common.util.HashUtils;
 import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
+import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.user.UserModel;
 
 import org.json.JSONException;
@@ -119,9 +120,9 @@ public class UserAddFragment extends BackFragment {
                 parameters.add(new StringPair("username", "" + newUser.username));
                 parameters.add(new StringPair("password", "" + newUser.password));
 
-                if (NetUtils.isInternetConnection(mActivity) && !StringUtils.isNullOrEmpty(newUser.username) && !StringUtils.isNullOrEmpty(newUser.password)) {
+                if (NetUtils.isInternetConnection(getContext()) && !StringUtils.isNullOrEmpty(newUser.username) && !StringUtils.isNullOrEmpty(newUser.password)) {
                     requestLaunched = true;
-                    (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUser, new IPostExecuteListener() {
+                    (new TaskPost(getActivity(), mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUser, new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
                             try {
@@ -132,11 +133,11 @@ public class UserAddFragment extends BackFragment {
                                     if (json.has("user")) {
                                         JSONObject user = json.getJSONObject("user");
                                         if (user.has("id")) {
-                                            mApplicationCallback.getConfig().setUserId(mActivity, user.getInt("id"));
+                                            mApplicationCallback.getConfig().setUserId(getActivity(), user.getInt("id"));
                                         }
                                     }
                                 } else {
-                                    Toast.makeText(mActivity, mActivity.getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.server_error, Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
                                 Log.e(getClass().getName(), "Failed to convert Json", e);

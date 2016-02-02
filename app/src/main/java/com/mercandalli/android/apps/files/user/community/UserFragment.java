@@ -48,6 +48,7 @@ import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
+import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.user.AdapterModelUser;
 import com.mercandalli.android.apps.files.user.UserModel;
 
@@ -120,11 +121,10 @@ public class UserFragment extends BackFragment {
     }
 
     public void refreshList(String search) {
-        List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
+        if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
             new TaskGet(
-                    mActivity,
-                    mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUser,
+                    getContext(),
+                    mApplicationCallback.getConfig().getUrlServer() + Config.routeUser,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -134,12 +134,12 @@ public class UserFragment extends BackFragment {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            UserModel userModel = new UserModel(mActivity, mApplicationCallback, array.getJSONObject(i));
+                                            UserModel userModel = new UserModel(getActivity(), mApplicationCallback, array.getJSONObject(i));
                                             list.add(userModel);
                                         }
                                     }
                                 } else {
-                                    Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.action_failed, Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
                                 Log.e(getClass().getName(), "Failed to convert Json", e);
@@ -147,7 +147,7 @@ public class UserFragment extends BackFragment {
                             updateAdapter();
                         }
                     },
-                    parameters
+                    null
             ).execute();
         } else {
             this.circularProgressBar.setVisibility(View.GONE);
@@ -173,7 +173,7 @@ public class UserFragment extends BackFragment {
             this.mAdapter = new AdapterModelUser(list, new IModelUserListener() {
                 @Override
                 public void execute(final UserModel userModel) {
-                    final AlertDialog.Builder menuAleart = new AlertDialog.Builder(mActivity);
+                    final AlertDialog.Builder menuAleart = new AlertDialog.Builder(getContext());
                     String[] menuList = {getString(R.string.talk)};
                     if (mApplicationCallback.getConfig().isUserAdmin()) {
                         menuList = new String[]{getString(R.string.talk), getString(R.string.delete)};
@@ -184,14 +184,14 @@ public class UserFragment extends BackFragment {
                                 public void onClick(DialogInterface dialog, int item) {
                                     switch (item) {
                                         case 0:
-                                            DialogUtils.prompt(mActivity, "Send Message", "Write your message", "Send", new IStringListener() {
+                                            DialogUtils.prompt(getContext(), "Send Message", "Write your message", "Send", new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
-                                                    String url = mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserConversation + "/" + userModel.id;
+                                                    String url = mApplicationCallback.getConfig().getUrlServer() + Config.routeUserConversation + "/" + userModel.id;
                                                     List<StringPair> parameters = new ArrayList<>();
                                                     parameters.add(new StringPair("message", "" + text));
 
-                                                    new TaskPost(mActivity, mApplicationCallback, url, new IPostExecuteListener() {
+                                                    new TaskPost(getActivity(), mApplicationCallback, url, new IPostExecuteListener() {
                                                         @Override
                                                         public void onPostExecute(JSONObject json, String body) {
 
@@ -201,11 +201,11 @@ public class UserFragment extends BackFragment {
                                             }, getString(R.string.cancel), null);
                                             break;
                                         case 1:
-                                            DialogUtils.alert(mActivity, "Delete " + userModel.username + "?", "This process cannot be undone.", getString(R.string.delete), new IListener() {
+                                            DialogUtils.alert(getContext(), "Delete " + userModel.username + "?", "This process cannot be undone.", getString(R.string.delete), new IListener() {
                                                 @Override
                                                 public void execute() {
                                                     if (mApplicationCallback.getConfig().isUserAdmin()) {
-                                                        userModel.delete(mActivity, mApplicationCallback, new IPostExecuteListener() {
+                                                        userModel.delete(getActivity(), mApplicationCallback, new IPostExecuteListener() {
                                                             @Override
                                                             public void onPostExecute(JSONObject json, String body) {
                                                                 UserFragment.this.refreshList();
@@ -228,7 +228,7 @@ public class UserFragment extends BackFragment {
 
             if ((rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
                 (rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
-                Animation animOpen = AnimationUtils.loadAnimation(mActivity, R.anim.circle_button_bottom_open);
+                Animation animOpen = AnimationUtils.loadAnimation(getContext(), R.anim.circle_button_bottom_open);
                 (rootView.findViewById(R.id.circle)).startAnimation(animOpen);
             }
 

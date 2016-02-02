@@ -41,7 +41,7 @@ public class NoteFragment extends BackFragment {
         mFileSpaceModel = new FileSpaceModel.FileSpaceModelBuilder().type("article").build();
 
         this.mInputEdiText = (EditText) this.rootView.findViewById(R.id.input);
-        FontUtils.applyFont(mActivity, this.mInputEdiText, "fonts/Roboto-Light.ttf");
+        FontUtils.applyFont(getContext(), this.mInputEdiText, "fonts/Roboto-Light.ttf");
 
         String txt = mApplicationCallback.getConfig().getUserNoteWorkspace1();
         if (!StringUtils.isNullOrEmpty(txt)) {
@@ -62,7 +62,7 @@ public class NoteFragment extends BackFragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s != null) {
-                    mApplicationCallback.getConfig().setUserNoteWorkspace1(mActivity, s.toString());
+                    mApplicationCallback.getConfig().setUserNoteWorkspace1(getContext(), s.toString());
                     mFileSpaceModel.getArticle().article_content_1 = s.toString();
                 }
             }
@@ -89,11 +89,11 @@ public class NoteFragment extends BackFragment {
      * Delete the current note. Delete the {@link #mInputEdiText} content.
      */
     public void delete() {
-        DialogUtils.alert(mActivity, "Delete note", "Delete the current note?", getString(R.string.yes), new IListener() {
+        DialogUtils.alert(getContext(), "Delete note", "Delete the current note?", getString(R.string.yes), new IListener() {
             @Override
             public void execute() {
                 mInputEdiText.setText("");
-                mApplicationCallback.getConfig().setUserNoteWorkspace1(mActivity, "");
+                mApplicationCallback.getConfig().setUserNoteWorkspace1(getContext(), "");
             }
         }, getString(R.string.no), null);
     }

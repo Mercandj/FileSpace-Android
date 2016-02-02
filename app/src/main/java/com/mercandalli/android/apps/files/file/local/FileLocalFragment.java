@@ -159,7 +159,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
                 if ((mFilesToCopyList != null && mFilesToCopyList.size() != 0) || (mFilesToCutList != null && mFilesToCutList.size() != 0)) {
                     if (mFilesToCopyList != null) {
                         for (FileModel file : mFilesToCopyList) {
-                            mFileManager.copyLocalFile(mActivity, file, mCurrentDirectory.getAbsolutePath() + File.separator);
+                            mFileManager.copyLocalFile((Activity) context, file, mCurrentDirectory.getAbsolutePath() + File.separator);
                         }
                         mFilesToCopyList.clear();
                     }
@@ -171,7 +171,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
                     }
                     refreshCurrentList();
                 } else {
-                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
+                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(context);
                     final String[] menuList = {context.getString(R.string.file_model_local_new_folder_file)};
                     menuAlert.setTitle(context.getString(R.string.file_model_local_new_title));
                     menuAlert.setItems(menuList,
@@ -179,7 +179,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
                                 public void onClick(DialogInterface dialog, int item) {
                                     switch (item) {
                                         case 0:
-                                            DialogUtils.prompt(mActivity,
+                                            DialogUtils.prompt(context,
                                                     context.getString(R.string.file_model_local_new_folder_file),
                                                     context.getString(R.string.file_model_local_new_folder_file_description),
                                                     getString(R.string.ok), new IStringListener() {
@@ -265,7 +265,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
             mCurrentDirectory = new File(mFilesList.get(position).getUrl());
             refreshCurrentList();
         } else {
-            mFileManager.execute(mActivity, position, mFilesList, view);
+            mFileManager.execute((Activity) getContext(), position, mFilesList, view);
         }
     }
 

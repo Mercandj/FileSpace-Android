@@ -161,7 +161,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
                 if ((mFilesToCopyList != null && mFilesToCopyList.size() != 0) || (mFilesToCutList != null && mFilesToCutList.size() != 0)) {
                     if (mFilesToCopyList != null) {
                         for (FileModel file : mFilesToCopyList) {
-                            mFileManager.copyLocalFile(mActivity, file, mCurrentDirectory.getAbsolutePath() + File.separator);
+                            mFileManager.copyLocalFile(getActivity(), file, mCurrentDirectory.getAbsolutePath() + File.separator);
                         }
                         mFilesToCopyList.clear();
                     }
@@ -173,7 +173,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
                     }
                     refreshList();
                 } else {
-                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
+                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(getContext());
                     final String[] menuList = {"New Folder or File"};
                     menuAlert.setTitle("Action");
                     menuAlert.setItems(menuList,
@@ -181,7 +181,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
                                 public void onClick(DialogInterface dialog, int item) {
                                     switch (item) {
                                         case 0:
-                                            DialogUtils.prompt(mActivity, "New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
+                                            DialogUtils.prompt(getActivity(), "New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
                                                     createFile(mCurrentDirectory.getPath() + File.separator, text);
@@ -261,7 +261,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
             mCurrentDirectory = new File(mFilesList.get(position).getUrl());
             refreshList();
         } else {
-            mFileManager.execute(mActivity, position, mFilesList, view);
+            mFileManager.execute(getActivity(), position, mFilesList, view);
         }
     }
 
@@ -418,7 +418,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
 
     @Override
     public void executeFileModel(final FileModel fileModel, final View view) {
-        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
+        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(getContext());
         String[] menuList = {getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties)};
         if (mApplicationCallback.isLogged()) {
             menuList = new String[]{getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties)};
@@ -433,9 +433,9 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
                         switch (item) {
                             case 0:
                                 if (fileModel.isDirectory()) {
-                                    Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
                                 } else {
-                                    DialogUtils.alert(mActivity, getString(R.string.upload), "Upload file " + fileModel.getName(), getString(R.string.upload), new IListener() {
+                                    DialogUtils.alert(getActivity(), getString(R.string.upload), "Upload file " + fileModel.getName(), getString(R.string.upload), new IListener() {
                                         @Override
                                         public void execute() {
                                             if (fileModel.getFile() != null) {
@@ -451,10 +451,10 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
                                 }
                                 break;
                             case 1:
-                                mFileManager.openLocalAs(mActivity, fileModel);
+                                mFileManager.openLocalAs(getActivity(), fileModel);
                                 break;
                             case 2:
-                                DialogUtils.prompt(mActivity, "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
+                                DialogUtils.prompt(getActivity(), "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
                                     @Override
                                     public void execute(String text) {
                                         mFileManager.rename(fileModel, text, new IListener() {
@@ -475,7 +475,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
                                 }, "Cancel", null, fileModel.getFullName());
                                 break;
                             case 3:
-                                DialogUtils.alert(mActivity, "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
+                                DialogUtils.alert(getActivity(), "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
                                     @Override
                                     public void execute() {
                                         mFileManager.delete(fileModel, new IListener() {
@@ -497,18 +497,18 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
                                 break;
                             case 4:
                                 FileCloudDownloadedFragment.this.mFilesToCopyList.add(fileModel);
-                                Toast.makeText(mActivity, "File ready to copy.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "File ready to copy.", Toast.LENGTH_SHORT).show();
                                 refreshFab();
                                 break;
                             case 5:
                                 FileCloudDownloadedFragment.this.mFilesToCutList.add(fileModel);
-                                Toast.makeText(mActivity, "File ready to cut.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "File ready to cut.", Toast.LENGTH_SHORT).show();
                                 refreshFab();
                                 break;
                             case 6:
-                                DialogUtils.alert(mActivity,
+                                DialogUtils.alert(getActivity(),
                                         getString(R.string.properties) + " : " + fileModel.getName(),
-                                        mFileManager.toSpanned(mActivity, fileModel),
+                                        mFileManager.toSpanned(getContext(), fileModel),
                                         "OK",
                                         null,
                                         null,

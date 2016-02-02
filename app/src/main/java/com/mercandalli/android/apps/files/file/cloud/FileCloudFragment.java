@@ -150,7 +150,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
         switch (fab_id) {
             case 0:
                 fab.hide();
-                new FileAddDialog(mActivity, mApplicationCallback, -1, new IListener() {
+                new FileAddDialog(getActivity(), mApplicationCallback, -1, new IListener() {
                     @Override
                     public void execute() {
                         refreshCurrentList();
@@ -165,7 +165,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
 
             case 1:
                 //FileCloudFragment.this.url = "";
-                Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                 FileCloudFragment.this.refreshCurrentList();
                 break;
         }
@@ -199,10 +199,10 @@ public class FileCloudFragment extends InjectedFabFragment implements
         } else */
         if (mFilesList.get(position).isDirectory()) {
             //FileCloudFragment.this.url = mFilesList.get(position).getUrl() + "/";
-            Toast.makeText(mActivity, getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
             refreshCurrentList();
         } else {
-            mFileManager.execute(mActivity, position, mFilesList, view);
+            mFileManager.execute(getActivity(), position, mFilesList, view);
         }
     }
 
@@ -216,7 +216,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
 
     @Override
     public void executeFileModel(final FileModel fileModel, final View view) {
-        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(mActivity);
+        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(getActivity());
         String[] menuList = {getString(R.string.download)};
         if (!fileModel.isDirectory() && mFileManager.isMine(fileModel)) {
             if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
@@ -243,17 +243,17 @@ public class FileCloudFragment extends InjectedFabFragment implements
                     public void onClick(DialogInterface dialog, int item) {
                         switch (item) {
                             case 0:
-                                mFileManager.download(mActivity, fileModel, new IListener() {
+                                mFileManager.download(getActivity(), fileModel, new IListener() {
                                     @Override
                                     public void execute() {
-                                        Toast.makeText(mActivity, "Download finished.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity(), "Download finished.", Toast.LENGTH_SHORT).show();
                                         mApplicationCallback.refreshData();
                                     }
                                 });
                                 break;
 
                             case 1:
-                                DialogUtils.prompt(mActivity, "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
+                                DialogUtils.prompt(getActivity(), "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
                                     @Override
                                     public void execute(String text) {
                                         mFileManager.rename(fileModel, text, new IListener() {
@@ -271,7 +271,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
                                 break;
 
                             case 2:
-                                DialogUtils.alert(mActivity, "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
+                                DialogUtils.alert(getContext(), "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
                                     @Override
                                     public void execute() {
                                         mFileManager.delete(fileModel, new IListener() {
@@ -290,13 +290,13 @@ public class FileCloudFragment extends InjectedFabFragment implements
 
                             case 3:
                                 FileCloudFragment.this.filesToCut.add(fileModel);
-                                Toast.makeText(mActivity, "File ready to cut.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "File ready to cut.", Toast.LENGTH_SHORT).show();
                                 break;
 
                             case 4:
-                                DialogUtils.alert(mActivity,
+                                DialogUtils.alert(getContext(),
                                         getString(R.string.properties) + " : " + fileModel.getName(),
-                                        mFileManager.toSpanned(mActivity, fileModel),
+                                        mFileManager.toSpanned(getActivity(), fileModel),
                                         "OK",
                                         null,
                                         null,
@@ -316,12 +316,12 @@ public class FileCloudFragment extends InjectedFabFragment implements
                             case 6:
                                 List<StringPair> parameters = new ArrayList<>();
                                 parameters.add(new StringPair("id_file_profile_picture", "" + fileModel.getId()));
-                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUserPut, new IPostExecuteListener() {
+                                (new TaskPost(getActivity(), mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUserPut, new IPostExecuteListener() {
                                     @Override
                                     public void onPostExecute(JSONObject json, String body) {
                                         try {
                                             if (json != null && json.has("succeed") && json.getBoolean("succeed")) {
-                                                mApplicationCallback.getConfig().setUserIdFileProfilePicture(mActivity, fileModel.getId());
+                                                mApplicationCallback.getConfig().setUserIdFileProfilePicture(getActivity(), fileModel.getId());
                                             }
                                         } catch (JSONException e) {
                                             Log.e(getClass().getName(), "Failed to convert Json", e);
@@ -366,7 +366,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
             return;
         }
 
-        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
+        if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
             mFileManager.getFiles(
                     new FileModel.FileModelBuilder().id(-1).isOnline(true).build(),
                     false,
@@ -394,7 +394,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
             }
             this.mMessageTextView.setVisibility(View.VISIBLE);
 
-            if (!NetUtils.isInternetConnection(mActivity)) {
+            if (!NetUtils.isInternetConnection(getContext())) {
                 this.setListVisibility(false);
                 refreshFab();
             }
@@ -402,11 +402,11 @@ public class FileCloudFragment extends InjectedFabFragment implements
     }
 
     public void updateAdapter() {
-        if (mRecyclerView != null && mFilesList != null && this.isAdded() && mActivity != null) {
+        if (mRecyclerView != null && mFilesList != null && this.isAdded()) {
 
             mProgressBar.setVisibility(View.GONE);
 
-            if (!NetUtils.isInternetConnection(mActivity)) {
+            if (!NetUtils.isInternetConnection(getContext())) {
                 mMessageTextView.setText(getString(R.string.no_internet_connection));
             } else if (mFilesList.size() == 0) {
                 /*

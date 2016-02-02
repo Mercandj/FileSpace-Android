@@ -38,7 +38,6 @@ import com.mercandalli.android.apps.files.main.ApplicationCallback;
  */
 public abstract class BackFragment extends Fragment {
 
-    protected Activity mActivity;
     protected ApplicationCallback mApplicationCallback;
 
     @Override
@@ -49,7 +48,6 @@ public abstract class BackFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mActivity = (Activity) getContext();
         if (context instanceof ApplicationCallback) {
             mApplicationCallback = (ApplicationCallback) context;
         } else {
@@ -60,7 +58,6 @@ public abstract class BackFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mActivity = null;
         mApplicationCallback = null;
     }
 

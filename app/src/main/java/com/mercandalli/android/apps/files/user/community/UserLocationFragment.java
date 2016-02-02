@@ -45,6 +45,7 @@ import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.GpsUtils;
 import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
+import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.user.UserLocationModel;
 import com.mercandalli.android.apps.files.user.UserModel;
 
@@ -110,23 +111,23 @@ public class UserLocationFragment extends BackFragment {
         this.circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogUtils.alert(mActivity, "Share your location", "If you share your location you will see all the positions of every users", getString(R.string.yes),
+                DialogUtils.alert(getContext(), "Share your location", "If you share your location you will see all the positions of every users", getString(R.string.yes),
                         new IListener() {
                             @Override
                             public void execute() {
-                                location = GpsUtils.getGpsLocation(mActivity, new ILocationListener() {
+                                location = GpsUtils.getGpsLocation(getContext(), new ILocationListener() {
                                     @Override
                                     public void execute(Location location) {
                                         if (location != null) {
                                             double longitude = location.getLongitude(),
                                                     latitude = location.getLatitude();
 
-                                            if (NetUtils.isInternetConnection(mActivity) && longitude != 0 && latitude != 0) {
+                                            if (NetUtils.isInternetConnection(getContext()) && longitude != 0 && latitude != 0) {
                                                 List<StringPair> parameters = new ArrayList<>();
                                                 parameters.add(new StringPair("longitude", "" + longitude));
                                                 parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserPut, new IPostExecuteListener() {
+                                                (new TaskPost(getActivity(), mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUserPut, new IPostExecuteListener() {
                                                     @Override
                                                     public void onPostExecute(JSONObject json, String body) {
 
@@ -141,12 +142,12 @@ public class UserLocationFragment extends BackFragment {
                                     double longitude = location.getLongitude(),
                                             latitude = location.getLatitude();
 
-                                    if (NetUtils.isInternetConnection(mActivity) && longitude != 0 && latitude != 0) {
+                                    if (NetUtils.isInternetConnection(getContext()) && longitude != 0 && latitude != 0) {
                                         List<StringPair> parameters = new ArrayList<>();
                                         parameters.add(new StringPair("longitude", "" + longitude));
                                         parameters.add(new StringPair("latitude", "" + latitude));
 
-                                        (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserPut, new IPostExecuteListener() {
+                                        (new TaskPost(getActivity(), mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUserPut, new IPostExecuteListener() {
                                             @Override
                                             public void onPostExecute(JSONObject json, String body) {
                                                 refreshMap();
@@ -166,11 +167,10 @@ public class UserLocationFragment extends BackFragment {
     }
 
     public void refreshMap() {
-        List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
+        if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
             new TaskGet(
-                    mActivity,
-                    mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUser,
+                    getContext(),
+                    mApplicationCallback.getConfig().getUrlServer() + Config.routeUser,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -180,12 +180,12 @@ public class UserLocationFragment extends BackFragment {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            UserModel userModel = new UserModel(mActivity, mApplicationCallback, array.getJSONObject(i));
+                                            UserModel userModel = new UserModel(getActivity(), mApplicationCallback, array.getJSONObject(i));
                                             locations.add(userModel.userLocation);
                                         }
                                     }
                                 } else {
-                                    Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.action_failed, Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
                                 Log.e(getClass().getName(), "Failed to convert Json", e);
@@ -193,7 +193,7 @@ public class UserLocationFragment extends BackFragment {
                             addLocations(locations);
                         }
                     },
-                    parameters
+                    null
             ).execute();
         }
     }

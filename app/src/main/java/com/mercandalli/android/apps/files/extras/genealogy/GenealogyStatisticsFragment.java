@@ -114,9 +114,9 @@ public class GenealogyStatisticsFragment extends FabFragment {
 
     public void refreshList() {
         List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(mActivity)) {
+        if (NetUtils.isInternetConnection(getContext())) {
             new TaskGet(
-                    mActivity,
+                    getActivity(),
                     mApplicationCallback.getConfig().getUrlServer() + Config.routeGenealogyStatistics,
                     new IPostExecuteListener() {
                         @Override
@@ -133,7 +133,7 @@ public class GenealogyStatisticsFragment extends FabFragment {
                                         }
                                     }
                                 } else {
-                                    Toast.makeText(mActivity, getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.action_failed, Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
                                 Log.e(getClass().getName(), "Failed to convert Json", e);
@@ -150,7 +150,7 @@ public class GenealogyStatisticsFragment extends FabFragment {
         if (this.recyclerView != null && this.list != null && this.isAdded()) {
             this.circularProgressBar.setVisibility(View.GONE);
 
-            this.mAdapter = new AdapterModelInformation(mActivity, list);
+            this.mAdapter = new AdapterModelInformation(getActivity(), list);
             this.recyclerView.setAdapter(mAdapter);
             this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
 

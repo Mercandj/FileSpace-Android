@@ -91,7 +91,7 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
         Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.fragment_workspace_toolbar);
         toolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(toolbar);
-        setStatusBarColor(mActivity, R.color.status_bar);
+        setStatusBarColor(getActivity(), R.color.status_bar);
         setHasOptionsMenu(true);
 
         FileManagerFragmentPagerAdapter pagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager());
@@ -201,7 +201,7 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public void add() {
-        new FileAddDialog(mActivity, mApplicationCallback, -1, new IListener() {
+        new FileAddDialog(getActivity(), mApplicationCallback, -1, new IListener() {
             @Override
             public void execute() {
                 refreshListServer();

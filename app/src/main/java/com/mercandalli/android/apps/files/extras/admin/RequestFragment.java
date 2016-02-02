@@ -48,13 +48,13 @@ public class RequestFragment extends BackFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_request, container, false);
 
-        Animation animOpen = AnimationUtils.loadAnimation(mActivity, R.anim.circle_button_bottom_open);
+        Animation animOpen = AnimationUtils.loadAnimation(getContext(), R.anim.circle_button_bottom_open);
         rootView.findViewById(R.id.circle).startAnimation(animOpen);
 
         rootView.findViewById(R.id.circle).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DialogRequest(mActivity, mApplicationCallback, new IPostExecuteListener() {
+                new DialogRequest(getActivity(), mApplicationCallback, new IPostExecuteListener() {
                     @Override
                     public void onPostExecute(JSONObject json, String body) {
                         if (json != null) {

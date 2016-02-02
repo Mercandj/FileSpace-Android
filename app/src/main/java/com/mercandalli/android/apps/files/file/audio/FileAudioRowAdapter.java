@@ -19,7 +19,6 @@
  */
 package com.mercandalli.android.apps.files.file.audio;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
@@ -97,12 +96,12 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
      * Adapter with header.
      */
     public FileAudioRowAdapter(
+            final Context context,
             final List<FileModelCardHeaderItem> headerIds,
             final FileModelCardAdapter.OnHeaderClickListener onHeaderClickListener,
-            Activity activity,
-            List<FileAudioModel> files,
-            FileAudioModelListener moreListener) {
-        this(activity, files, moreListener);
+            final List<FileAudioModel> files,
+            final FileAudioModelListener moreListener) {
+        this(context, files, moreListener);
         this.mHasHeader = true;
         mHeaderIds = new ArrayList<>();
         mHeaderIds.addAll(headerIds);

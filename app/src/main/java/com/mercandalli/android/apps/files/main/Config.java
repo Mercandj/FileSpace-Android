@@ -155,8 +155,8 @@ public class Config {
         }
     }
 
-    private void load(Activity activity) {
-        final String fileContent = FileUtils.readStringFile(activity, fileName);
+    private void load(final Context context) {
+        final String fileContent = FileUtils.readStringFile(context, fileName);
         if (fileContent == null) {
             return;
         }
@@ -193,10 +193,10 @@ public class Config {
         return ENUM_Int.INTEGER_USER_ID.value;
     }
 
-    public void setUserId(Activity activity, int value) {
+    public void setUserId(Context context, int value) {
         if (ENUM_Int.INTEGER_USER_ID.value != value) {
             ENUM_Int.INTEGER_USER_ID.value = value;
-            save(activity);
+            save(context);
         }
     }
 
@@ -208,10 +208,10 @@ public class Config {
         return ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value;
     }
 
-    public void setUserNoteWorkspace1(Activity activity, String value) {
+    public void setUserNoteWorkspace1(Context context, String value) {
         if (!ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value.equals(value)) {
             ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value = value;
-            save(activity);
+            save(context);
         }
     }
 
@@ -231,10 +231,10 @@ public class Config {
         return Base64.encodeBytes(authentication.getBytes());
     }
 
-    public void setUserUsername(Activity activity, String value) {
+    public void setUserUsername(Context context, String value) {
         if (!ENUM_String.STRING_USER_USERNAME.value.equals(value)) {
             ENUM_String.STRING_USER_USERNAME.value = value;
-            save(activity);
+            save(context);
         }
     }
 
@@ -246,10 +246,10 @@ public class Config {
         return ENUM_String.STRING_USER_PASSWORD.value;
     }
 
-    public void setUserPassword(Activity activity, String value) {
+    public void setUserPassword(Context context, String value) {
         if (!ENUM_String.STRING_USER_PASSWORD.value.equals(value)) {
             ENUM_String.STRING_USER_PASSWORD.value = value;
-            save(activity);
+            save(context);
         }
     }
 
@@ -257,10 +257,10 @@ public class Config {
         return ENUM_String.STRING_USER_REGID.value;
     }
 
-    public void setUserRegId(Activity activity, String value) {
+    public void setUserRegId(Context context, String value) {
         if (!ENUM_String.STRING_USER_REGID.value.equals(value)) {
             ENUM_String.STRING_USER_REGID.value = value;
-            save(activity);
+            save(context);
         }
     }
 
@@ -307,10 +307,10 @@ public class Config {
         return ENUM_Boolean.BOOLEAN_USER_ADMIN.value;
     }
 
-    public void setUserAdmin(Activity activity, boolean value) {
+    public void setUserAdmin(Context context, boolean value) {
         if (ENUM_Boolean.BOOLEAN_USER_ADMIN.value != value) {
             ENUM_Boolean.BOOLEAN_USER_ADMIN.value = value;
-            save(activity);
+            save(context);
         }
     }
 
@@ -318,10 +318,10 @@ public class Config {
         return ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value;
     }
 
-    public void setAutoConnection(Activity activity, boolean value) {
+    public void setAutoConnection(Context context, boolean value) {
         if (ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value != value) {
             ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value = value;
-            save(activity);
+            save(context);
         }
     }
 

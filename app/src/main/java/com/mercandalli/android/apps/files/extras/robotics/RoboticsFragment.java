@@ -129,7 +129,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
         mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_robotics_toolbar);
         mToolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(mToolbar);
-        setStatusBarColor(mActivity, R.color.notifications_bar_robotics);
+        setStatusBarColor(getActivity(), R.color.notifications_bar_robotics);
 
         // Create hardware
         this.mServo1 = new ModelHardware();
@@ -298,7 +298,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
 
                 //log("x = " + x + "    y = " + y + "    z = " + z);
 
-                if (NetUtils.isInternetConnection(mActivity) && request_ready && mModeConnection) {
+                if (NetUtils.isInternetConnection(getContext()) && request_ready && mModeConnection) {
                     List<StringPair> parameters = new ArrayList<>();
 
                     mServo1.read = false; // write
@@ -315,7 +315,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
                     request_ready = false;
 
                     new TaskPost(
-                            mActivity,
+                            getActivity(),
                             mApplicationCallback,
                             mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeRobotics,
                             new IPostExecuteListener() {

@@ -74,7 +74,7 @@ public class RegistrationFragment extends BackFragment {
         ((CheckBox) rootView.findViewById(R.id.fragment_registration_auto_connection)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mApplicationCallback.getConfig().setAutoConnection(mActivity, isChecked);
+                mApplicationCallback.getConfig().setAutoConnection(getContext(), isChecked);
             }
         });
 
@@ -129,13 +129,13 @@ public class RegistrationFragment extends BackFragment {
         mRequestLaunched = true;
 
         if (!StringUtils.isNullOrEmpty(user.username)) {
-            mApplicationCallback.getConfig().setUserUsername(mActivity, user.username);
+            mApplicationCallback.getConfig().setUserUsername(getContext(), user.username);
         } else {
             user.username = mApplicationCallback.getConfig().getUserUsername();
         }
 
         if (!StringUtils.isNullOrEmpty(user.password)) {
-            mApplicationCallback.getConfig().setUserPassword(mActivity, user.password);
+            mApplicationCallback.getConfig().setUserPassword(getContext(), user.password);
         } else {
             user.password = mApplicationCallback.getConfig().getUserPassword();
         }
@@ -153,8 +153,8 @@ public class RegistrationFragment extends BackFragment {
         //parameters.add(new StringPair("longitude", "" + GpsUtils.getLongitude(getActivity())));
         //parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
 
-        if (NetUtils.isInternetConnection(mActivity)) {
-            (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUser, new IPostExecuteListener() {
+        if (NetUtils.isInternetConnection(getContext())) {
+            (new TaskPost(getActivity(), mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUser, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     try {
@@ -165,11 +165,11 @@ public class RegistrationFragment extends BackFragment {
                             if (json.has("user")) {
                                 JSONObject user = json.getJSONObject("user");
                                 if (user.has("id")) {
-                                    mApplicationCallback.getConfig().setUserId(mActivity, user.getInt("id"));
+                                    mApplicationCallback.getConfig().setUserId(getContext(), user.getInt("id"));
                                 }
                             }
                         } else {
-                            Toast.makeText(mActivity, getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), R.string.server_error, Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         Log.e(getClass().getName(), "Failed to convert Json", e);

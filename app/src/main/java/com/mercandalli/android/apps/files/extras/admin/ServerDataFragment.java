@@ -99,9 +99,9 @@ public class ServerDataFragment extends BackFragment {
 
     public void refreshList() {
         List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(mActivity)) {
+        if (NetUtils.isInternetConnection(getContext())) {
             new TaskGet(
-                    mActivity,
+                    getActivity(),
                     mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeInformation,
                     new IPostExecuteListener() {
                         @Override
@@ -118,7 +118,7 @@ public class ServerDataFragment extends BackFragment {
                                         }
                                     }
                                 } else {
-                                    Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.action_failed, Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
                                 Log.e(TAG, "ServerDataFragment: failed to convert Json", e);
@@ -137,13 +137,13 @@ public class ServerDataFragment extends BackFragment {
         if (this.recyclerView != null && this.list != null && this.isAdded()) {
             this.circularProgressBar.setVisibility(View.GONE);
 
-            this.mAdapter = new AdapterModelInformation(mActivity, list);
+            this.mAdapter = new AdapterModelInformation(getActivity(), list);
             this.recyclerView.setAdapter(mAdapter);
             this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
 
             if (rootView.findViewById(R.id.circle).getVisibility() == View.GONE) {
                 rootView.findViewById(R.id.circle).setVisibility(View.VISIBLE);
-                Animation animOpen = AnimationUtils.loadAnimation(mActivity, R.anim.circle_button_bottom_open);
+                Animation animOpen = AnimationUtils.loadAnimation(getContext(), R.anim.circle_button_bottom_open);
                 rootView.findViewById(R.id.circle).startAnimation(animOpen);
             }
 

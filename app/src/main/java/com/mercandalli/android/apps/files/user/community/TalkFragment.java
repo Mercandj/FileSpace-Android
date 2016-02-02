@@ -45,6 +45,7 @@ import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
+import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.user.AdapterModelConnversationUser;
 import com.mercandalli.android.apps.files.user.ConversationUserModel;
 import com.mercandalli.android.apps.files.user.UserModel;
@@ -117,11 +118,10 @@ public class TalkFragment extends BackFragment {
     }
 
     public void refreshList(String search) {
-        List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
+        if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
             new TaskGet(
-                    mActivity,
-                    mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserConversation,
+                    getActivity(),
+                    mApplicationCallback.getConfig().getUrlServer() + Config.routeUserConversation,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -131,12 +131,12 @@ public class TalkFragment extends BackFragment {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ConversationUserModel modelUser = new ConversationUserModel(mActivity, mApplicationCallback, array.getJSONObject(i));
+                                            ConversationUserModel modelUser = new ConversationUserModel(getActivity(), mApplicationCallback, array.getJSONObject(i));
                                             list.add(modelUser);
                                         }
                                     }
                                 } else {
-                                    Toast.makeText(mActivity, mActivity.getString(R.string.action_failed), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.action_failed, Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
                                 Log.e(getClass().getName(), "Failed to convert Json", e);
@@ -144,7 +144,7 @@ public class TalkFragment extends BackFragment {
                             updateAdapter();
                         }
                     },
-                    parameters
+                    null
             ).execute();
         } else {
             this.circularProgressBar.setVisibility(View.GONE);
@@ -171,14 +171,14 @@ public class TalkFragment extends BackFragment {
             this.mAdapter = new AdapterModelConnversationUser(list, new IModelUserListener() {
                 @Override
                 public void execute(final UserModel userModel) {
-                    DialogUtils.prompt(mActivity, "Send Message", "Write your message", "Send", new IStringListener() {
+                    DialogUtils.prompt(getContext(), "Send Message", "Write your message", "Send", new IStringListener() {
                         @Override
                         public void execute(String text) {
-                            String url = mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeUserMessage + "/" + userModel.id;
+                            String url = mApplicationCallback.getConfig().getUrlServer() + Config.routeUserMessage + "/" + userModel.id;
                             List<StringPair> parameters = new ArrayList<>();
                             parameters.add(new StringPair("message", "" + text));
 
-                            new TaskPost(mActivity, mApplicationCallback, url, new IPostExecuteListener() {
+                            new TaskPost(getActivity(), mApplicationCallback, url, new IPostExecuteListener() {
                                 @Override
                                 public void onPostExecute(JSONObject json, String body) {
 
@@ -192,7 +192,7 @@ public class TalkFragment extends BackFragment {
 
             if (rootView.findViewById(R.id.circle).getVisibility() == View.GONE) {
                 rootView.findViewById(R.id.circle).setVisibility(View.VISIBLE);
-                Animation animOpen = AnimationUtils.loadAnimation(mActivity, R.anim.circle_button_bottom_open);
+                Animation animOpen = AnimationUtils.loadAnimation(getContext(), R.anim.circle_button_bottom_open);
                 rootView.findViewById(R.id.circle).startAnimation(animOpen);
             }
 
@@ -207,7 +207,7 @@ public class TalkFragment extends BackFragment {
             this.mAdapter.setOnItemClickListener(new AdapterModelConnversationUser.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    list.get(position).open(mActivity, mApplicationCallback);
+                    list.get(position).open(getActivity(), mApplicationCallback);
                 }
             });
 

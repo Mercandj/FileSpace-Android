@@ -72,7 +72,7 @@ public class LoginFragment extends BackFragment {
         ((CheckBox) rootView.findViewById(R.id.fragment_registration_auto_connection)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mApplicationCallback.getConfig().setAutoConnection(mActivity, isChecked);
+                mApplicationCallback.getConfig().setAutoConnection(getContext(), isChecked);
             }
         });
 
@@ -128,13 +128,13 @@ public class LoginFragment extends BackFragment {
         requestLaunched = true;
 
         if (!StringUtils.isNullOrEmpty(user.username)) {
-            mApplicationCallback.getConfig().setUserUsername(mActivity, user.username);
+            mApplicationCallback.getConfig().setUserUsername(getContext(), user.username);
         } else {
             user.username = mApplicationCallback.getConfig().getUserUsername();
         }
 
         if (!StringUtils.isNullOrEmpty(user.password)) {
-            mApplicationCallback.getConfig().setUserPassword(mActivity, user.password);
+            mApplicationCallback.getConfig().setUserPassword(getContext(), user.password);
         } else {
             user.password = mApplicationCallback.getConfig().getUserPassword();
         }
@@ -154,9 +154,11 @@ public class LoginFragment extends BackFragment {
             parameters.add(new StringPair("longitude", "" + longitude));
             parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
         }*/
-        Log.d("LoginFragment", "login " + mApplicationCallback.getConfig().getUserPassword() + mApplicationCallback.getConfig().getUserUsername() + " isInternetConnection=" + NetUtils.isInternetConnection(mActivity));
-        if (NetUtils.isInternetConnection(mActivity)) {
-            (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUser, new IPostExecuteListener() {
+        Log.d("LoginFragment", "login " + mApplicationCallback.getConfig().getUserPassword() +
+                mApplicationCallback.getConfig().getUserUsername() + " isInternetConnection=" +
+                NetUtils.isInternetConnection(getContext()));
+        if (NetUtils.isInternetConnection(getContext())) {
+            (new TaskPost(getActivity(), mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUser, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     requestLaunched = false;
@@ -168,22 +170,22 @@ public class LoginFragment extends BackFragment {
                             if (json.has("user")) {
                                 JSONObject user = json.getJSONObject("user");
                                 if (user.has("id")) {
-                                    mApplicationCallback.getConfig().setUserId(mActivity, user.getInt("id"));
+                                    mApplicationCallback.getConfig().setUserId(getContext(), user.getInt("id"));
                                 }
                                 if (user.has(ADMIN)) {
                                     Object admin_obj = user.get(ADMIN);
                                     if (admin_obj instanceof Integer) {
-                                        mApplicationCallback.getConfig().setUserAdmin(mActivity, user.getInt(ADMIN) == 1);
+                                        mApplicationCallback.getConfig().setUserAdmin(getContext(), user.getInt(ADMIN) == 1);
                                     } else if (admin_obj instanceof Boolean) {
-                                        mApplicationCallback.getConfig().setUserAdmin(mActivity, user.getBoolean(ADMIN));
+                                        mApplicationCallback.getConfig().setUserAdmin(getContext(), user.getBoolean(ADMIN));
                                     }
                                 }
                                 if (user.has("id_file_profile_picture")) {
-                                    mApplicationCallback.getConfig().setUserIdFileProfilePicture(mActivity, user.getInt("id_file_profile_picture"));
+                                    mApplicationCallback.getConfig().setUserIdFileProfilePicture(getActivity(), user.getInt("id_file_profile_picture"));
                                 }
                             }
                         } else {
-                            Toast.makeText(mActivity, getString(R.string.server_error), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), R.string.server_error, Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         Log.e(getClass().getName(), "Failed to convert Json", e);
