@@ -23,13 +23,13 @@
         android:gravity="center_vertical"
         android:marqueeRepeatLimit="marquee_forever"
         android:maxLines="1"
-        android:minHeight="?android:attr/listPreferredItemHeightSmall"
+        android:minHeight="?attr/listPreferredItemHeightSmall"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:scrollHorizontally="true"
         android:singleLine="true"
         android:text="Title"
-        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:textAppearance="?attr/textAppearanceListItemSmall"
         android:textColor="#000"
         android:textSize="20sp" />
 

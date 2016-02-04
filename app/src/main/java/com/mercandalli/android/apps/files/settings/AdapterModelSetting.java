@@ -53,9 +53,11 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
     @Override
     public AdapterModelSetting.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == Constants.TAB_VIEW_TYPE_SECTION) {
-            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_setting_section, parent, false), viewType);
+            return new ViewHolder(LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.tab_setting_section, parent, false), viewType);
         }
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_setting, parent, false), viewType);
+        return new ViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.tab_setting, parent, false), viewType);
     }
 
     @Override

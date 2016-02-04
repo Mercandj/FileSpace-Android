@@ -251,6 +251,7 @@
                 android:id="@+id/view_nav_drawer_other"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="start|top"
                 android:layout_marginLeft="28dp"
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="14dp"

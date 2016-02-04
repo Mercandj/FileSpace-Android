@@ -17,12 +17,13 @@
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        android:layout_gravity="top"
+        android:layout_marginTop="?attr/actionBarSize" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="6dp"
+        android:layout_gravity="top"
         android:layout_marginTop="?attr/actionBarSize"
         android:background="@drawable/shadow_bottom" />
 

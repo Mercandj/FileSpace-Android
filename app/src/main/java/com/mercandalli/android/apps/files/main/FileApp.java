@@ -12,14 +12,14 @@ import io.fabric.sdk.android.Fabric;
  */
 public class FileApp extends Application {
 
-    private static FileApp sAppliaction;
+    private static FileApp sApplication;
 
     private FileAppComponent mFileAppComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        sAppliaction = this;
+        sApplication = this;
 
         // Fabric - Crashlytics
         Fabric.with(this, new Crashlytics());
@@ -45,6 +45,6 @@ public class FileApp extends Application {
     }
 
     public static FileApp get() {
-        return sAppliaction;
+        return sApplication;
     }
 }
