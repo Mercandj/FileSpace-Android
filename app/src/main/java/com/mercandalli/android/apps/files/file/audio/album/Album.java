@@ -1,15 +1,15 @@
-package com.mercandalli.android.apps.files.file.audio;
+package com.mercandalli.android.apps.files.file.audio.album;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlbumArtist {
+public class Album {
 
     protected final String mUuid;
     protected final String mName;
     protected final List<String> mFilePaths = new ArrayList<>();
 
-    public AlbumArtist(final String uuid, final String name) {
+    public Album(final String uuid, final String name) {
         mUuid = uuid;
         mName = name;
     }

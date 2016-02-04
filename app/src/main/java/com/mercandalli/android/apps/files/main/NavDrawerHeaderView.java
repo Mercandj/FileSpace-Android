@@ -2,6 +2,7 @@ package com.mercandalli.android.apps.files.main;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.support.annotation.NonNull;
@@ -67,7 +68,9 @@ class NavDrawerHeaderView extends FrameLayout {
 
     private void initView(@NonNull Context context) {
         inflate(context, R.layout.view_nav_drawer_header, this);
-        setFitsSystemWindows(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            setFitsSystemWindows(true);
+        }
 
         findViews();
 

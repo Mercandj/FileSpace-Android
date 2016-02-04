@@ -1,9 +1,11 @@
 package com.mercandalli.android.apps.files.file.image;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.provider.MediaStore;
 
 import com.mercandalli.android.apps.files.file.FileModel;
@@ -153,9 +155,15 @@ public class FileImageManagerImpl implements FileImageManager {
 
     //region getLocalImageFolders
     @Override
+    @SuppressLint("NewApi")
     public void getLocalImageFolders(
             final int sortMode,
             final String search) {
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+            notifyLocalImageFoldersListenerFailed();
+            return;
+        }
 
         if (!mCacheGetLocalImagesFolders.isEmpty()) {
             notifyLocalImageFoldersListenerSucceeded(mCacheGetLocalImagesFolders);
@@ -345,6 +353,14 @@ public class FileImageManagerImpl implements FileImageManager {
         synchronized (mGetLocalImageFoldersListeners) {
             for (int i = 0, size = mGetLocalImageFoldersListeners.size(); i < size; i++) {
                 mGetLocalImageFoldersListeners.get(i).onLocalImageFoldersSucceeded(fileModels);
+            }
+        }
+    }
+
+    private void notifyLocalImageFoldersListenerFailed() {
+        synchronized (mGetLocalImageFoldersListeners) {
+            for (int i = 0, size = mGetLocalImageFoldersListeners.size(); i < size; i++) {
+                mGetLocalImageFoldersListeners.get(i).onLocalImageFoldersFailed();
             }
         }
     }

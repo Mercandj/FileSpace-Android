@@ -2,6 +2,8 @@ package com.mercandalli.android.apps.files.common.animation;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +16,7 @@ import android.view.animation.Interpolator;
 /**
  * {@link RecyclerView} adapter with animation.
  */
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> implements Animator.AnimatorListener {
 
     /**

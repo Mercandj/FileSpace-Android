@@ -1,7 +1,6 @@
 package com.mercandalli.android.apps.files.main;
 
 import android.app.Application;
-import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
 import com.mercandalli.android.apps.files.analytics.AnalyticsTrackers;
@@ -13,11 +12,14 @@ import io.fabric.sdk.android.Fabric;
  */
 public class FileApp extends Application {
 
+    private static FileApp sAppliaction;
+
     private FileAppComponent mFileAppComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        sAppliaction = this;
 
         // Fabric - Crashlytics
         Fabric.with(this, new Crashlytics());
@@ -42,7 +44,7 @@ public class FileApp extends Application {
         return mFileAppComponent;
     }
 
-    public static FileApp get(Context context) {
-        return (FileApp) context.getApplicationContext();
+    public static FileApp get() {
+        return sAppliaction;
     }
 }

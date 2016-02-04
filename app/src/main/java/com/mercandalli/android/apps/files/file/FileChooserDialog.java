@@ -56,7 +56,7 @@ public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFile
     public FileChooserDialog(final Activity activity, FileModelListener listener) {
         super(activity);
 
-        FileApp.get(activity).getFileAppComponent().inject(this);
+        FileApp.get().getFileAppComponent().inject(this);
 
         mFileModelListener = listener;
         mFileModelList = new ArrayList<>();

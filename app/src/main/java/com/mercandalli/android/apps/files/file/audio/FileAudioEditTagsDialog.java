@@ -56,7 +56,7 @@ public class FileAudioEditTagsDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Context context = getContext();
         final FileAudioManager fileAudioManager =
-                FileApp.get(context).getFileAppComponent().provideFileAudioManager();
+                FileApp.get().getFileAppComponent().provideFileAudioManager();
 
         @SuppressLint("InflateParams")
         final View rootView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_meta_data, null);

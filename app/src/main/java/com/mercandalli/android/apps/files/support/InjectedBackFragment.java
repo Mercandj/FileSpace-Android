@@ -10,7 +10,7 @@ public abstract class InjectedBackFragment extends BackFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        inject(FileApp.get(getActivity()).getFileAppComponent());
+        inject(FileApp.get().getFileAppComponent());
     }
 
     protected abstract void inject(FileAppComponent fileAppComponent);

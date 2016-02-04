@@ -1,9 +1,11 @@
 package com.mercandalli.android.apps.files.file.audio;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.text.Spanned;
 
@@ -14,6 +16,8 @@ import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileTypeModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.FileUtils;
+import com.mercandalli.android.apps.files.file.audio.album.Album;
+import com.mercandalli.android.apps.files.file.audio.artist.Artist;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 
@@ -67,7 +71,14 @@ public class FileAudioManagerImpl extends FileAudioManager {
      * {@inheritDoc}
      */
     @Override
+    @SuppressLint("NewApi")
     public void getAllLocalMusic(final int sortMode, final String search) {
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+            notifyAllLocalMusicListenerFailed();
+            return;
+        }
+
         final String requestKey = search + "¤" + sortMode;
         if (mCacheAllLocalMusics.containsKey(requestKey)) {
             notifyAllLocalMusicListenerSucceeded(mCacheAllLocalMusics.get(requestKey));
@@ -194,9 +205,15 @@ public class FileAudioManagerImpl extends FileAudioManager {
      * {@inheritDoc}
      */
     @Override
+    @SuppressLint("NewApi")
     public void getLocalMusicFolders(
             final int sortMode,
             final String search) {
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+            notifyLocalMusicFoldersListenerFailed();
+            return;
+        }
 
         final String requestKey = search + "¤" + sortMode;
         if (mCacheLocalMusicFolders.containsKey(requestKey)) {
@@ -272,7 +289,14 @@ public class FileAudioManagerImpl extends FileAudioManager {
     }
 
     @Override
+    @SuppressLint("NewApi")
     public void getAllLocalMusicAlbums(final int sortMode, final String search) {
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+            notifyAllLocalMusicAlbumsListenerFailed();
+            return;
+        }
+
         new AsyncTask<Void, Void, List<Album>>() {
             @Override
             protected List<Album> doInBackground(Void... params) {
@@ -516,6 +540,14 @@ public class FileAudioManagerImpl extends FileAudioManager {
         }
     }
 
+    private void notifyAllLocalMusicListenerFailed() {
+        synchronized (mGetAllLocalMusicListeners) {
+            for (int i = 0, size = mGetAllLocalMusicListeners.size(); i < size; i++) {
+                mGetAllLocalMusicListeners.get(i).onAllLocalMusicFailed();
+            }
+        }
+    }
+
     private void notifyAllLocalMusicArtistsListenerSucceeded(final List<Artist> artists) {
         synchronized (mGetAllLocalMusicArtistsListeners) {
             for (int i = 0, size = mGetAllLocalMusicArtistsListeners.size(); i < size; i++) {
@@ -532,10 +564,26 @@ public class FileAudioManagerImpl extends FileAudioManager {
         }
     }
 
+    private void notifyAllLocalMusicAlbumsListenerFailed() {
+        synchronized (mGetAllLocalMusicAlbumsListeners) {
+            for (int i = 0, size = mGetAllLocalMusicAlbumsListeners.size(); i < size; i++) {
+                mGetAllLocalMusicAlbumsListeners.get(i).onAllLocalMusicAlbumsFailed();
+            }
+        }
+    }
+
     protected void notifyLocalMusicFoldersListenerSucceeded(final List<FileModel> fileModels) {
         synchronized (mGetLocalMusicFoldersListeners) {
             for (int i = 0, size = mGetLocalMusicFoldersListeners.size(); i < size; i++) {
                 mGetLocalMusicFoldersListeners.get(i).onLocalMusicFoldersSucceeded(fileModels);
+            }
+        }
+    }
+
+    protected void notifyLocalMusicFoldersListenerFailed() {
+        synchronized (mGetLocalMusicFoldersListeners) {
+            for (int i = 0, size = mGetLocalMusicFoldersListeners.size(); i < size; i++) {
+                mGetLocalMusicFoldersListeners.get(i).onLocalMusicFoldersFailed();
             }
         }
     }

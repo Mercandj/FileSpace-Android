@@ -36,7 +36,7 @@ public class NotificationAudioPlayerReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         final String action = intent.getAction();
-        final FileAudioPlayer fileAudioPlayer = FileApp.get(context).getFileAppComponent().provideFileAudioPlayer();
+        final FileAudioPlayer fileAudioPlayer = FileApp.get().getFileAppComponent().provideFileAudioPlayer();
         if (fileAudioPlayer.isEmpty()) {
             fileAudioPlayer.setNotification(false);
             return;

@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -421,11 +422,14 @@ public class FileLocalFragment extends InjectedFabFragment implements
 
         mFileModelAdapter = new FileModelAdapter(getContext(), mFilesList, this, this, this);
 
-        final ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
-        scaleAnimationAdapter.setDuration(220);
-        scaleAnimationAdapter.setOffsetDuration(32);
-
-        mRecyclerView.setAdapter(scaleAnimationAdapter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            final ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
+            scaleAnimationAdapter.setDuration(220);
+            scaleAnimationAdapter.setOffsetDuration(32);
+            mRecyclerView.setAdapter(scaleAnimationAdapter);
+        } else {
+            mRecyclerView.setAdapter(mFileModelAdapter);
+        }
 
         if (mFilesList.size() == 0) {
             mMessageTextView.setText(getString(R.string.no_file_local_folder, "" + mCurrentDirectory.getName()));

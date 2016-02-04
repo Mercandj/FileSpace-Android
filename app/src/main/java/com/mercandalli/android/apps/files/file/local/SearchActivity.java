@@ -2,6 +2,7 @@ package com.mercandalli.android.apps.files.file.local;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -74,7 +75,7 @@ public class SearchActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        FileApp.get(this).getFileAppComponent().inject(this);
+        FileApp.get().getFileAppComponent().inject(this);
 
         mSearchDelayRunnable = new Runnable() {
             @Override
@@ -110,10 +111,14 @@ public class SearchActivity extends AppCompatActivity implements
             mRecyclerView.setLayoutManager(new GridLayoutManager(this, nbColumn));
         }
 
-        final ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
-        scaleAnimationAdapter.setDuration(220);
-        scaleAnimationAdapter.setOffsetDuration(32);
-        mRecyclerView.setAdapter(scaleAnimationAdapter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            final ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
+            scaleAnimationAdapter.setDuration(220);
+            scaleAnimationAdapter.setOffsetDuration(32);
+            mRecyclerView.setAdapter(scaleAnimationAdapter);
+        } else {
+            mRecyclerView.setAdapter(mFileModelAdapter);
+        }
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

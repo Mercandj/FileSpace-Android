@@ -58,7 +58,7 @@ public class MainActivity extends NavDrawerActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mVersionManager = FileApp.get(this).getFileAppComponent().provideVersionManager();
+        mVersionManager = FileApp.get().getFileAppComponent().provideVersionManager();
         mVersionManager.registerUpdateCheckedListener(this);
 
         // Notification

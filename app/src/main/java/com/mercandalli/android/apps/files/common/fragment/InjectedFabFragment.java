@@ -13,7 +13,7 @@ public abstract class InjectedFabFragment extends FabFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        inject(FileApp.get(getActivity()).getFileAppComponent());
+        inject(FileApp.get().getFileAppComponent());
     }
 
     protected abstract void inject(FileAppComponent fileAppComponent);

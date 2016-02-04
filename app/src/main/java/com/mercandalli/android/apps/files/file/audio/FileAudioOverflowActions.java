@@ -48,7 +48,7 @@ public class FileAudioOverflowActions implements PopupMenu.OnMenuItemClickListen
         mActivity = (Activity) context;
         mFragmentManager = fragmentManager;
         mFileLocalActionCallback = fileLocalActionCallback;
-        mFileManager = FileApp.get(mActivity).getFileAppComponent().provideFileManager();
+        mFileManager = FileApp.get().getFileAppComponent().provideFileManager();
         mUploadString = context.getString(R.string.upload);
         mRenameString = context.getString(R.string.rename);
         mDeleteString = context.getString(R.string.delete);

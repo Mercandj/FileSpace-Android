@@ -54,7 +54,7 @@ public class FileUploadDialog extends Dialog {
     public FileUploadDialog(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final IListener listener) {
         super(activity);
 
-        FileApp.get(activity).getFileAppComponent().inject(this);
+        FileApp.get().getFileAppComponent().inject(this);
 
         mActivity = activity;
         mApplicationCallback = applicationCallback;

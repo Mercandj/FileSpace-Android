@@ -80,7 +80,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_gravity="top|end"
-        android:background="?android:attr/selectableItemBackground"
+        android:background="?attr/selectableItemBackground"
         android:paddingBottom="8dp"
         android:paddingEnd="4dp"
         android:paddingStart="4dp"

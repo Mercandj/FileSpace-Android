@@ -3,6 +3,7 @@ package com.mercandalli.android.apps.files.file.image;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IntDef;
@@ -279,11 +280,15 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         mFileModelCardAdapter.setOnFileSubtitleAdapter(this);
         mFileModelCardAdapter.setHeaderType(FileModelCardAdapter.TYPE_HEADER_IMAGE);
 
-        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
-        mScaleAnimationAdapter.setDuration(220);
-        mScaleAnimationAdapter.setOffsetDuration(32);
-        mScaleAnimationAdapter.setNoAnimatedPosition(FileImageLocalFragment.this);
-        mRecyclerView.setAdapter(mScaleAnimationAdapter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
+            mScaleAnimationAdapter.setDuration(220);
+            mScaleAnimationAdapter.setOffsetDuration(32);
+            mScaleAnimationAdapter.setNoAnimatedPosition(FileImageLocalFragment.this);
+            mRecyclerView.setAdapter(mScaleAnimationAdapter);
+        } else {
+            mRecyclerView.setAdapter(mFileModelCardAdapter);
+        }
 
         refreshListFolders();
 

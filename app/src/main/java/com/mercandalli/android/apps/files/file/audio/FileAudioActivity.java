@@ -106,7 +106,7 @@ public class FileAudioActivity extends AppCompatActivity implements
 
         // Initialize View, player and ChromeCast.
         setContentView(R.layout.activity_file_audio);
-        mFileAudioPlayer = FileApp.get(this).getFileAppComponent().provideFileAudioPlayer();
+        mFileAudioPlayer = FileApp.get().getFileAppComponent().provideFileAudioPlayer();
         mFileAudioCast.onCreate(this);
 
         if (savedInstanceState == null) {

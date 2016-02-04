@@ -92,7 +92,7 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
         mStringFile = context.getString(R.string.file_model_adapter_file);
         mStringFiles = context.getString(R.string.file_model_adapter_files);
 
-        FileApp.get(context).getFileAppComponent().inject(this);
+        FileApp.get().getFileAppComponent().inject(this);
     }
 
     /**
@@ -380,11 +380,7 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
                 return;
             }
             for (FileModelCardHeaderItem f : mFileModelCardHeaderItems) {
-                if (f.getId() == viewId) {
-                    f.setSelected(true);
-                } else {
-                    f.setSelected(false);
-                }
+                f.setSelected(f.getId() == viewId);
             }
             mOnHeaderClickListener.onHeaderClick(v, mFileModelCardHeaderItems);
             updateView();

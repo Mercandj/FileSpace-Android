@@ -73,7 +73,7 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
     private static final int TYPE_ITEM = 2;
 
     /* Header */
-    private List<FileModelCardHeaderItem> mHeaderIds;
+    private List<FileModelCardHeaderItem> mHeaderItems;
     private FileModelCardAdapter.OnHeaderClickListener mOnHeaderClickListener;
 
     @Inject
@@ -89,7 +89,7 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
         mStringFile = context.getString(R.string.file_model_adapter_file);
         mStringFiles = context.getString(R.string.file_model_adapter_files);
 
-        FileApp.get(context).getFileAppComponent().inject(this);
+        FileApp.get().getFileAppComponent().inject(this);
     }
 
     /**
@@ -97,14 +97,14 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
      */
     public FileAudioRowAdapter(
             final Context context,
-            final List<FileModelCardHeaderItem> headerIds,
+            final List<FileModelCardHeaderItem> headerItems,
             final FileModelCardAdapter.OnHeaderClickListener onHeaderClickListener,
             final List<FileAudioModel> files,
             final FileAudioModelListener moreListener) {
         this(context, files, moreListener);
         this.mHasHeader = true;
-        mHeaderIds = new ArrayList<>();
-        mHeaderIds.addAll(headerIds);
+        mHeaderItems = new ArrayList<>();
+        mHeaderItems.addAll(headerItems);
         mOnHeaderClickListener = onHeaderClickListener;
     }
 
@@ -121,7 +121,7 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
         if (viewType == TYPE_HEADER) {
             return new HeaderViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(R.layout.view_file_header_audio, parent, false),
-                    mHeaderIds,
+                    mHeaderItems,
                     mOnHeaderClickListener
             );
         } else if (viewType == TYPE_ROW_CARDS_HEADER) {
@@ -138,7 +138,7 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         if (viewHolder instanceof HeaderViewHolder) {
             final HeaderViewHolder headerViewHolder = (HeaderViewHolder) viewHolder;
-            headerViewHolder.setFileModelCardHeaderItems(mHeaderIds);
+            headerViewHolder.setFileModelCardHeaderItems(mHeaderItems);
         } else if (position < files.size() + (mHasHeader ? 1 : 0)) {
             final FileViewHolder fileViewHolder = (FileViewHolder) viewHolder;
             final FileAudioModel file = files.get(position - (mHasHeader ? 1 : 0));
@@ -358,13 +358,16 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
         private final FileModelCardAdapter.OnHeaderClickListener mOnHeaderClickListener;
         private final List<FileModelCardHeaderItem> mFileModelCardHeaderItems;
 
-        public HeaderViewHolder(View itemView, List<FileModelCardHeaderItem> headerIds, FileModelCardAdapter.OnHeaderClickListener onHeaderClickListener) {
+        public HeaderViewHolder(
+                final View itemView,
+                final List<FileModelCardHeaderItem> headerItems,
+                final FileModelCardAdapter.OnHeaderClickListener onHeaderClickListener) {
             super(itemView);
             Preconditions.checkNotNull(onHeaderClickListener);
             mPrimaryColor = ContextCompat.getColor(itemView.getContext(), R.color.primary);
             mOnHeaderClickListener = onHeaderClickListener;
             mFileModelCardHeaderItems = new ArrayList<>();
-            mFileModelCardHeaderItems.addAll(headerIds);
+            mFileModelCardHeaderItems.addAll(headerItems);
             updateView();
         }
 
@@ -383,17 +386,14 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
                 return;
             }
             for (FileModelCardHeaderItem f : mFileModelCardHeaderItems) {
-                if (f.getId() == viewId) {
-                    f.setSelected(true);
-                } else {
-                    f.setSelected(false);
-                }
+                f.setSelected(f.getId() == viewId);
             }
             mOnHeaderClickListener.onHeaderClick(v, mFileModelCardHeaderItems);
             updateView();
         }
 
-        public void setFileModelCardHeaderItems(List<FileModelCardHeaderItem> fileModelCardHeaderItems) {
+        public void setFileModelCardHeaderItems(final List<FileModelCardHeaderItem> fileModelCardHeaderItems) {
+            Preconditions.checkNotNull(fileModelCardHeaderItems);
             mFileModelCardHeaderItems.clear();
             mFileModelCardHeaderItems.addAll(fileModelCardHeaderItems);
             updateView();

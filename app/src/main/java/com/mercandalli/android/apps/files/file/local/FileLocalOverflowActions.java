@@ -43,7 +43,7 @@ public class FileLocalOverflowActions implements PopupMenu.OnMenuItemClickListen
 
         mActivity = (Activity) context;
         mFileLocalActionCallback = fileLocalActionCallback;
-        mFileManager = FileApp.get(mActivity).getFileAppComponent().provideFileManager();
+        mFileManager = FileApp.get().getFileAppComponent().provideFileManager();
         mUploadString = context.getString(R.string.upload);
         mRenameString = context.getString(R.string.rename);
         mDeleteString = context.getString(R.string.delete);

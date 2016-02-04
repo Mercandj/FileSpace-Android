@@ -40,9 +40,7 @@
                 android:layout_marginRight="47dp"
                 android:layout_marginStart="78dp"
                 android:gravity="center_vertical"
-                android:minHeight="?android:attr/listPreferredItemHeightSmall"
                 android:text="@string/tab_files"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:textColor="#000"
                 android:textSize="24sp" />
 
@@ -74,9 +72,7 @@
                 android:layout_marginRight="47dp"
                 android:layout_marginStart="78dp"
                 android:gravity="center_vertical"
-                android:minHeight="?android:attr/listPreferredItemHeightSmall"
                 android:text="@string/tab_cloud"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:textColor="#000"
                 android:textSize="24sp" />
 
@@ -108,9 +104,7 @@
                 android:layout_marginRight="47dp"
                 android:layout_marginStart="78dp"
                 android:gravity="center_vertical"
-                android:minHeight="?android:attr/listPreferredItemHeightSmall"
                 android:text="@string/tab_notes"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:textColor="#000"
                 android:textSize="24sp" />
 
@@ -142,9 +136,7 @@
                 android:layout_marginRight="47dp"
                 android:layout_marginStart="78dp"
                 android:gravity="center_vertical"
-                android:minHeight="?android:attr/listPreferredItemHeightSmall"
                 android:text="@string/tab_community"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:textColor="#000"
                 android:textSize="24sp" />
 
@@ -176,9 +168,7 @@
                 android:layout_marginRight="47dp"
                 android:layout_marginStart="78dp"
                 android:gravity="center_vertical"
-                android:minHeight="?android:attr/listPreferredItemHeightSmall"
                 android:text="@string/tab_robotics"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:textColor="#000"
                 android:textSize="24sp" />
 
@@ -210,9 +200,7 @@
                 android:layout_marginRight="47dp"
                 android:layout_marginStart="78dp"
                 android:gravity="center_vertical"
-                android:minHeight="?android:attr/listPreferredItemHeightSmall"
                 android:text="@string/tab_genealogy"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:textColor="#000"
                 android:textSize="24sp" />
 
@@ -244,9 +232,7 @@
                 android:layout_marginRight="47dp"
                 android:layout_marginStart="78dp"
                 android:gravity="center_vertical"
-                android:minHeight="?android:attr/listPreferredItemHeightSmall"
                 android:text="@string/tab_admin"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:textColor="#000"
                 android:textSize="24sp" />
 
@@ -271,7 +257,6 @@
                 android:gravity="center_vertical"
                 android:paddingTop="5dp"
                 android:text="@string/tab_other"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:textColor="#545454"
                 android:textSize="14sp" />
 
@@ -293,7 +278,6 @@
                 android:layout_marginRight="47dp"
                 android:layout_marginStart="78dp"
                 android:text="@string/tab_settings"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:textColor="#444"
                 android:textSize="16sp" />
 
@@ -325,7 +309,6 @@
                 android:layout_marginRight="47dp"
                 android:layout_marginStart="78dp"
                 android:text="@string/tab_loyalty"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:textColor="#444"
                 android:textSize="16sp" />
 
@@ -357,7 +340,6 @@
                 android:layout_marginRight="47dp"
                 android:layout_marginStart="78dp"
                 android:text="@string/tab_log_out"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:textColor="#444"
                 android:textSize="16sp" />
 
@@ -389,7 +371,6 @@
                 android:layout_marginRight="47dp"
                 android:layout_marginStart="78dp"
                 android:text="@string/tab_support"
-                android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:textColor="#444"
                 android:textSize="16sp" />
 

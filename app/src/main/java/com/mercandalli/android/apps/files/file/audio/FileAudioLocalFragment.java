@@ -21,6 +21,7 @@ package com.mercandalli.android.apps.files.file.audio;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IntDef;
@@ -47,6 +48,8 @@ import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
 import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
+import com.mercandalli.android.apps.files.file.audio.album.Album;
+import com.mercandalli.android.apps.files.file.audio.artist.Artist;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
@@ -244,11 +247,15 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         }, null);
         mFileModelCardAdapter.setOnFileSubtitleAdapter(this);
 
-        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
-        mScaleAnimationAdapter.setDuration(220);
-        mScaleAnimationAdapter.setOffsetDuration(32);
-        mScaleAnimationAdapter.setNoAnimatedPosition(FileAudioLocalFragment.this);
-        mRecyclerView.setAdapter(mScaleAnimationAdapter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
+            mScaleAnimationAdapter.setDuration(220);
+            mScaleAnimationAdapter.setOffsetDuration(32);
+            mScaleAnimationAdapter.setNoAnimatedPosition(FileAudioLocalFragment.this);
+            mRecyclerView.setAdapter(mScaleAnimationAdapter);
+        } else {
+            mRecyclerView.setAdapter(mFileModelCardAdapter);
+        }
 
         refreshListFolders();
 
@@ -470,11 +477,15 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mFileAudioModels.addAll(fileModels);
         mFileAudioRowAdapter.setHasHeader(true);
 
-        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
-        mScaleAnimationAdapter.setDuration(220);
-        mScaleAnimationAdapter.setOffsetDuration(32);
-        mScaleAnimationAdapter.setNoAnimatedPosition(FileAudioLocalFragment.this);
-        mRecyclerView.setAdapter(mScaleAnimationAdapter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
+            mScaleAnimationAdapter.setDuration(220);
+            mScaleAnimationAdapter.setOffsetDuration(32);
+            mScaleAnimationAdapter.setNoAnimatedPosition(FileAudioLocalFragment.this);
+            mRecyclerView.setAdapter(mScaleAnimationAdapter);
+        } else {
+            mRecyclerView.setAdapter(mFileAudioRowAdapter);
+        }
         updateAdapter();
     }
 

@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -165,8 +166,14 @@ public class FileLocalPagerFragment extends BackFragment implements
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
 
-        final MenuItem searchItem = menu.findItem(R.id.action_search);
-        final SearchView mSearchView = (SearchView) searchItem.getActionView();
+        MenuItem searchItem;
+        SearchView mSearchView;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            searchItem = menu.findItem(R.id.action_search);
+            mSearchView = (SearchView) searchItem.getActionView();
+        } else {
+            return;
+        }
 
         final SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
             @Override
