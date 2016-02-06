@@ -20,6 +20,7 @@
 package com.mercandalli.android.apps.files.file.audio;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -102,6 +103,12 @@ public class FileAudioActivity extends AppCompatActivity implements
             activity.startActivity(intent);
         }
         activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+    }
+
+    public static void resume(final Context context) {
+        final Intent intent = new Intent(context, FileAudioActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     @Override

@@ -314,32 +314,36 @@ public class FileAudioPlayer implements
     /* package */ void setNotification(final boolean activated) {
         if (activated && mCurrentMusic != null) {
 
-            Intent intent = new Intent(mAppContext, FileAudioActivity.class);
+            final Intent intent = new Intent(mAppContext, FileAudioActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
             RemoteViews remoteViews = new RemoteViews(mAppContext.getPackageName(), R.layout.notification_musique);
             remoteViews.setTextViewText(R.id.titre_notif, mCurrentMusic.getName());
+            remoteViews.setOnClickPendingIntent(R.id.titre_notif, NotificationAudioPlayerReceiver.getNotificationIntentActivity(mAppContext));
             remoteViews.setOnClickPendingIntent(R.id.close, NotificationAudioPlayerReceiver.getNotificationIntentClose(mAppContext));
             remoteViews.setOnClickPendingIntent(R.id.activity_file_audio_play, NotificationAudioPlayerReceiver.getNotificationIntentPlayPause(mAppContext));
             remoteViews.setOnClickPendingIntent(R.id.activity_file_audio_next, NotificationAudioPlayerReceiver.getNotificationIntentNext(mAppContext));
             remoteViews.setOnClickPendingIntent(R.id.prev, NotificationAudioPlayerReceiver.getNotificationIntentPrevious(mAppContext));
 
-            Notification.Builder mNotifyBuilder = new Notification.Builder(mAppContext);
-            Notification foregroundNote = mNotifyBuilder.setSmallIcon(R.drawable.audio)
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                Notification.Builder mNotifyBuilder = new Notification.Builder(mAppContext);
+                Notification foregroundNote = mNotifyBuilder.setSmallIcon(R.drawable.audio)
                     /*
                     .setContentTitle("Music")
                     .setContentText( "Text" )*/
-                    //.setContentIntent(pIntent)
-                    .setAutoCancel(false)
-                    .setOngoing(true)
-                    .setContent(remoteViews)
-                    .build();
-            foregroundNote.bigContentView = remoteViews;
+                        //.setContentIntent(pIntent)
+                        .setAutoCancel(false)
+                        .setOngoing(true)
+                        .setContent(remoteViews)
+                        .build();
+                foregroundNote.contentView = remoteViews;
 
-            if (mMediaPlayer.isPlaying()) {
-                NotificationManager notificationManager = (NotificationManager) mAppContext.getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.notify(0, foregroundNote);
+                if (mMediaPlayer.isPlaying()) {
+                    NotificationManager notificationManager = (NotificationManager) mAppContext.getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.notify(0, foregroundNote);
+                }
             }
+
         } else {
             NotificationManager notificationManager = (NotificationManager) mAppContext.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(0);

@@ -14,6 +14,11 @@ import com.mercandalli.android.apps.files.main.FileApp;
 public class NotificationAudioPlayerReceiver extends BroadcastReceiver {
 
     /**
+     * The action start {@link FileAudioActivity}.
+     */
+    private static final String ACTION_ACTIVITY = "NotificationAudioPlayerReceiver.Actions.ACTION_ACTIVITY";
+
+    /**
      * The action play or pause.
      */
     private static final String ACTION_PLAY_PAUSE = "NotificationAudioPlayerReceiver.Actions.ACTION_PLAY_PAUSE";
@@ -42,6 +47,9 @@ public class NotificationAudioPlayerReceiver extends BroadcastReceiver {
             return;
         }
         switch (action) {
+            case ACTION_ACTIVITY:
+                FileAudioActivity.resume(context);
+                break;
             case ACTION_PLAY_PAUSE:
                 if (fileAudioPlayer.isPlaying()) {
                     fileAudioPlayer.pause();
@@ -61,6 +69,10 @@ public class NotificationAudioPlayerReceiver extends BroadcastReceiver {
                 }
                 break;
         }
+    }
+
+    public static PendingIntent getNotificationIntentActivity(Context context) {
+        return getPendingIntent(context, ACTION_ACTIVITY);
     }
 
     public static PendingIntent getNotificationIntentPlayPause(Context context) {

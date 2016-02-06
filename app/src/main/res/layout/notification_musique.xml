@@ -1,81 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="60dp"
-    android:background="#454545"
-    android:padding="10dp">
+    android:layout_height="64dp"
+    android:background="#454545">
 
     <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="38dp"
+        android:layout_width="60dp"
         android:layout_height="40dp"
-        android:layout_alignParentTop="false"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="6dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="6dp"
+        android:layout_gravity="center_vertical"
+        android:padding="8dp"
         android:src="@drawable/audio" />
 
     <TextView
         android:id="@+id/titre_notif"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_toEndOf="@+id/imageView1"
-        android:layout_toLeftOf="@+id/prev"
-        android:layout_toRightOf="@+id/imageView1"
-        android:layout_toStartOf="@+id/prev"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="144dp"
         android:ellipsize="marquee"
         android:focusable="false"
+        android:gravity="center_vertical"
         android:marqueeRepeatLimit="marquee_forever"
-        android:maxLines="1"
+        android:maxLines="2"
+        android:paddingLeft="60dp"
         android:scrollHorizontally="true"
-        android:singleLine="true"
         android:textColor="#fff"
-        android:textSize="20sp"
+        android:textSize="16sp"
+        tools:ignore="RtlHardcoded,RtlSymmetry"
         tools:text="Titre" />
 
-    <ImageView
-        android:id="@+id/activity_file_audio_next"
-        android:layout_width="40dp"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/close"
-        android:layout_toStartOf="@+id/close"
-        android:padding="3dp"
-        android:src="@drawable/ic_music_next" />
-
-    <ImageView
-        android:id="@+id/activity_file_audio_play"
-        android:layout_width="40dp"
-        android:layout_height="50dp"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/activity_file_audio_next"
-        android:layout_toStartOf="@+id/activity_file_audio_next"
-        android:padding="3dp"
-        android:src="@drawable/ic_music_pause" />
 
     <ImageView
         android:id="@+id/prev"
-        android:layout_width="40dp"
-        android:layout_height="50dp"
-        android:layout_toLeftOf="@+id/activity_file_audio_play"
-        android:layout_toStartOf="@+id/activity_file_audio_play"
+        android:layout_width="36dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="right|center_vertical"
+        android:layout_marginRight="108dp"
         android:padding="3dp"
-        android:src="@drawable/ic_music_previous" />
+        android:src="@drawable/ic_music_previous"
+        tools:ignore="RtlHardcoded" />
+
+    <ImageView
+        android:id="@+id/activity_file_audio_play"
+        android:layout_width="36dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="right|center_vertical"
+        android:layout_marginRight="72dp"
+        android:padding="3dp"
+        android:src="@drawable/ic_music_pause"
+        tools:ignore="RtlHardcoded" />
+
+    <ImageView
+        android:id="@+id/activity_file_audio_next"
+        android:layout_width="36dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="right|center_vertical"
+        android:layout_marginRight="36dp"
+        android:padding="3dp"
+        android:src="@drawable/ic_music_next"
+        tools:ignore="RtlHardcoded" />
 
     <ImageView
         android:id="@+id/close"
-        android:layout_width="40dp"
-        android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
+        android:layout_width="36dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="right|center_vertical"
         android:padding="5dp"
-        android:src="@drawable/ic_music_close" />
+        android:src="@drawable/ic_music_close"
+        tools:ignore="RtlHardcoded" />
 
-</RelativeLayout>
+</FrameLayout>

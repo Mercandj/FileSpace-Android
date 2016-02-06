@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -83,9 +84,10 @@
             android:layout_alignStart="@+id/play_position"
             android:clickable="true"
             android:elevation="@dimen/circle_button_elevation_high"
-            android:foreground="?android:selectableItemBackground"
+            android:foreground="?selectableItemBackground"
             android:stateListAnimator="@drawable/circle_button_elevation"
-            android:transitionName="transitionIcon" />
+            android:transitionName="transitionIcon"
+            tools:ignore="UnusedAttribute" />
 
         <ImageButton
             android:id="@+id/activity_file_audio_next"
@@ -99,10 +101,12 @@
             android:layout_toRightOf="@+id/play_position"
             android:background="@drawable/circle_button_ripple_music"
             android:elevation="@dimen/circle_button_elevation_high"
-            android:padding="15dp"
-            android:src="@android:drawable/ic_media_next"
+            android:padding="6dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_music_next"
             android:stateListAnimator="@drawable/circle_button_elevation"
-            android:tint="@android:color/white" />
+            android:tint="@android:color/white"
+            tools:ignore="UnusedAttribute" />
 
         <ImageButton
             android:id="@+id/activity_file_audio_previous"
@@ -116,10 +120,12 @@
             android:layout_toStartOf="@+id/play_position"
             android:background="@drawable/circle_button_ripple_music"
             android:elevation="@dimen/circle_button_elevation_high"
-            android:padding="15dp"
-            android:src="@android:drawable/ic_media_previous"
+            android:padding="6dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_music_previous"
             android:stateListAnimator="@drawable/circle_button_elevation"
-            android:tint="@android:color/white" />
+            android:tint="@android:color/white"
+            tools:ignore="UnusedAttribute" />
 
         <!-- SLIDER WITH NUMBER INDICATOR-->
         <FrameLayout
