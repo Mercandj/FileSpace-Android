@@ -96,12 +96,16 @@ public class FileAudioActivity extends AppCompatActivity implements
             args = options.toBundle();
         }
 
-        activity.startActivity(intent, args);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            activity.startActivity(intent, args);
+        } else {
+            activity.startActivity(intent);
+        }
         activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Initialize View, player and ChromeCast.

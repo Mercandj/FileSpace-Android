@@ -66,6 +66,7 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
     }
 
     public ScaleAnimationAdapter(RecyclerView recyclerView, RecyclerView.Adapter adapter, int cardPerLine, float from) {
+        setHasStableIds(true);
         mRecyclerView = recyclerView;
         mAdapter = adapter;
         mViewHolderPerLine = cardPerLine;
@@ -109,7 +110,7 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         this.mAdapter.onBindViewHolder(holder, position);
         if (this.isFirstOnly && position <= this.mLastPosition) {
             clear(holder.itemView);
@@ -144,6 +145,11 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
             holder.itemView.setScaleY(1);
             this.mLastPosition = position;
         }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return mAdapter.getItemId(position);
     }
 
     @Override

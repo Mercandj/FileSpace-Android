@@ -75,7 +75,6 @@ public class FileAudioPlayer implements
 
     @Override
     public void onCompletion(final MediaPlayer mp) {
-        setCurrentStatus(SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED);
         next();
     }
 

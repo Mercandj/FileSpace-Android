@@ -423,9 +423,9 @@ public class FileCloudFragment extends InjectedFabFragment implements
                 this.mMessageTextView.setVisibility(View.GONE);
             }
 
-            this.mAdapterModelFile.replaceList(mFilesList);
+            mAdapterModelFile.setList(mFilesList);
 
-            this.refreshFab();
+            refreshFab();
         }
     }
 

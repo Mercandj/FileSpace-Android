@@ -62,8 +62,8 @@ public class AudioActivity extends WearableActivity implements View.OnClickListe
         retrieveDeviceNode();
 
         // Register the local broadcast receiver, defined in step 3.
-        IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
-        MessageReceiver messageReceiver = new MessageReceiver();
+        final IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
+        final MessageReceiver messageReceiver = new MessageReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(messageReceiver, messageFilter);
     }
 
@@ -159,9 +159,9 @@ public class AudioActivity extends WearableActivity implements View.OnClickListe
             @Override
             public void run() {
                 mGoogleApiClient.blockingConnect(WearableService.CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
-                NodeApi.GetConnectedNodesResult result =
+                final NodeApi.GetConnectedNodesResult result =
                         Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
-                List<Node> nodes = result.getNodes();
+                final List<Node> nodes = result.getNodes();
                 if (nodes.size() > 0) {
                     mTelNodeId = nodes.get(0).getId();
                 }

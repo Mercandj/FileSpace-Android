@@ -22,6 +22,7 @@ package com.mercandalli.android.apps.files.file.audio;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -53,7 +54,7 @@ import javax.inject.Inject;
  */
 public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapter.ViewHolder> {
 
-    private List<FileAudioModel> files;
+    private List<FileAudioModel> mFiles;
     private OnItemClickListener mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
     private FileAudioModelListener moreListener;
@@ -80,8 +81,8 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
     FileManager mFileManager;
 
     public FileAudioRowAdapter(Context context, List<FileAudioModel> files, FileAudioModelListener moreListener) {
-        this.files = new ArrayList<>();
-        this.files.addAll(files);
+        this.mFiles = new ArrayList<>();
+        this.mFiles.addAll(files);
         this.moreListener = moreListener;
         this.mHasHeader = false;
 
@@ -90,6 +91,7 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
         mStringFiles = context.getString(R.string.file_model_adapter_files);
 
         FileApp.get().getFileAppComponent().inject(this);
+        setHasStableIds(true);
     }
 
     /**
@@ -135,52 +137,74 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+
         if (viewHolder instanceof HeaderViewHolder) {
             final HeaderViewHolder headerViewHolder = (HeaderViewHolder) viewHolder;
             headerViewHolder.setFileModelCardHeaderItems(mHeaderItems);
-        } else if (position < files.size() + (mHasHeader ? 1 : 0)) {
-            final FileViewHolder fileViewHolder = (FileViewHolder) viewHolder;
-            final FileAudioModel file = files.get(position - (mHasHeader ? 1 : 0));
+            return;
+        }
 
-            fileViewHolder.title.setText(getAdapterTitle(file));
-            fileViewHolder.subtitle.setText(getAdapterSubtitle(file));
+        final FileAudioModel file = getFileModel(position);
+        if (file == null) {
+            return;
+        }
 
-            if (file.isDirectory()) {
-                fileViewHolder.icon.setImageResource(R.drawable.directory);
-            } else if (file.getType() != null) {
-                FileTypeModel type = file.getType();
-                if (type.equals(FileTypeModelENUM.AUDIO.type)) {
-                    fileViewHolder.icon.setImageResource(R.drawable.file_audio);
-                } else if (type.equals(FileTypeModelENUM.PDF.type)) {
-                    fileViewHolder.icon.setImageResource(R.drawable.file_pdf);
-                } else if (type.equals(FileTypeModelENUM.APK.type)) {
-                    fileViewHolder.icon.setImageResource(R.drawable.file_apk);
-                } else if (type.equals(FileTypeModelENUM.ARCHIVE.type)) {
-                    fileViewHolder.icon.setImageResource(R.drawable.file_archive);
-                } else if (type.equals(FileTypeModelENUM.FILESPACE.type)) {
-                    fileViewHolder.icon.setImageResource(R.drawable.file_space);
-                } else {
-                    fileViewHolder.icon.setImageResource(R.drawable.file_default);
-                }
+        final FileViewHolder fileViewHolder = (FileViewHolder) viewHolder;
+        fileViewHolder.title.setText(getAdapterTitle(file));
+        fileViewHolder.subtitle.setText(getAdapterSubtitle(file));
+
+        if (file.isDirectory()) {
+            fileViewHolder.icon.setImageResource(R.drawable.directory);
+        } else if (file.getType() != null) {
+            FileTypeModel type = file.getType();
+            if (type.equals(FileTypeModelENUM.AUDIO.type)) {
+                fileViewHolder.icon.setImageResource(R.drawable.file_audio);
+            } else if (type.equals(FileTypeModelENUM.PDF.type)) {
+                fileViewHolder.icon.setImageResource(R.drawable.file_pdf);
+            } else if (type.equals(FileTypeModelENUM.APK.type)) {
+                fileViewHolder.icon.setImageResource(R.drawable.file_apk);
+            } else if (type.equals(FileTypeModelENUM.ARCHIVE.type)) {
+                fileViewHolder.icon.setImageResource(R.drawable.file_archive);
+            } else if (type.equals(FileTypeModelENUM.FILESPACE.type)) {
+                fileViewHolder.icon.setImageResource(R.drawable.file_space);
             } else {
                 fileViewHolder.icon.setImageResource(R.drawable.file_default);
             }
-
-            //mFileManager.getCover(mActivity, file, fileViewHolder.icon);
-
-            if (moreListener == null) {
-                fileViewHolder.more.setVisibility(View.GONE);
-            }
-            fileViewHolder.more.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (moreListener != null) {
-                        moreListener.executeFileAudioModel(file, v);
-                    }
-                }
-            });
+        } else {
+            fileViewHolder.icon.setImageResource(R.drawable.file_default);
         }
+
+        //mFileManager.getCover(mActivity, file, fileViewHolder.icon);
+
+        if (moreListener == null) {
+            fileViewHolder.more.setVisibility(View.GONE);
+        }
+        fileViewHolder.more.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (moreListener != null) {
+                    moreListener.executeFileAudioModel(file, v);
+                }
+            }
+        });
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Nullable
+    private FileAudioModel getFileModel(final int adapterPosition) {
+        if (isHeader(adapterPosition)) {
+            return null;
+        }
+        final int filesPosition = adapterPosition - (mHasHeader ? 1 : 0);
+        if (filesPosition >= mFiles.size()) {
+            return null;
+        }
+        return mFiles.get(filesPosition);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -227,42 +251,17 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
 
     @Override
     public int getItemCount() {
-        return files.size() + (mHasHeader ? 1 : 0);
-    }
-
-
-    public void remplaceList(ArrayList<FileAudioModel> list) {
-        files.clear();
-        files.addAll(0, list);
-        notifyDataSetChanged();
-    }
-
-    public void addFirst(ArrayList<FileAudioModel> list) {
-        files.addAll(0, list);
-        notifyDataSetChanged();
-    }
-
-    public void addLast(ArrayList<FileAudioModel> list) {
-        files.addAll(files.size(), list);
-        notifyDataSetChanged();
+        return mFiles.size() + (mHasHeader ? 1 : 0);
     }
 
     public void addItem(FileAudioModel name, int position) {
-        this.files.add(position, name);
+        mFiles.add(position, name);
         this.notifyItemInserted(position);
     }
 
-    public void removeAll() {
-        int size = files.size();
-        if (size > 0) {
-            files = new ArrayList<>();
-            this.notifyItemRangeInserted(0, size - 1);
-        }
-    }
-
     public void setList(List<FileAudioModel> list) {
-        files.clear();
-        files.addAll(list);
+        mFiles.clear();
+        mFiles.addAll(list);
         notifyDataSetChanged();
     }
 

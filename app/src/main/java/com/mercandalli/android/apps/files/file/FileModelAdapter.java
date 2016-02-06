@@ -20,6 +20,7 @@
 package com.mercandalli.android.apps.files.file;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +66,7 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
         mStringDirectory = context.getString(R.string.file_model_adapter_directory);
         mStringFile = context.getString(R.string.file_model_adapter_file);
         mStringFiles = context.getString(R.string.file_model_adapter_files);
+        setHasStableIds(true);
     }
 
     @Override
@@ -75,57 +77,64 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
-        if (position < mFiles.size()) {
-            final FileModel fileModel = mFiles.get(position);
 
-            viewHolder.mTitleTextView.setText(getAdapterTitle(fileModel));
-            viewHolder.mSubtitleTextView.setText(getAdapterSubtitle(fileModel));
+        final FileModel fileModel = getFileModel(position);
+        if (fileModel == null) {
+            return;
+        }
 
-            if (fileModel.isDirectory()) {
-                viewHolder.mIconImageView.setImageResource(R.drawable.directory);
-            } else if (fileModel.getType() != null) {
-                FileTypeModel type = fileModel.getType();
-                if (type.equals(FileTypeModelENUM.AUDIO.type)) {
-                    viewHolder.mIconImageView.setImageResource(R.drawable.file_audio);
-                } else if (type.equals(FileTypeModelENUM.PDF.type)) {
-                    viewHolder.mIconImageView.setImageResource(R.drawable.file_pdf);
-                } else if (type.equals(FileTypeModelENUM.APK.type)) {
-                    viewHolder.mIconImageView.setImageResource(R.drawable.file_apk);
-                } else if (type.equals(FileTypeModelENUM.ARCHIVE.type)) {
-                    viewHolder.mIconImageView.setImageResource(R.drawable.file_archive);
-                } else if (type.equals(FileTypeModelENUM.FILESPACE.type)) {
-                    viewHolder.mIconImageView.setImageResource(R.drawable.file_space);
-                } else {
-                    viewHolder.mIconImageView.setImageResource(R.drawable.file_default);
-                }
+        viewHolder.mTitleTextView.setText(getAdapterTitle(fileModel));
+        viewHolder.mSubtitleTextView.setText(getAdapterSubtitle(fileModel));
+
+        if (fileModel.isDirectory()) {
+            viewHolder.mIconImageView.setImageResource(R.drawable.directory);
+        } else if (fileModel.getType() != null) {
+            final FileTypeModel type = fileModel.getType();
+            if (type.equals(FileTypeModelENUM.AUDIO.type)) {
+                viewHolder.mIconImageView.setImageResource(R.drawable.file_audio);
+            } else if (type.equals(FileTypeModelENUM.PDF.type)) {
+                viewHolder.mIconImageView.setImageResource(R.drawable.file_pdf);
+            } else if (type.equals(FileTypeModelENUM.APK.type)) {
+                viewHolder.mIconImageView.setImageResource(R.drawable.file_apk);
+            } else if (type.equals(FileTypeModelENUM.ARCHIVE.type)) {
+                viewHolder.mIconImageView.setImageResource(R.drawable.file_archive);
+            } else if (type.equals(FileTypeModelENUM.FILESPACE.type)) {
+                viewHolder.mIconImageView.setImageResource(R.drawable.file_space);
             } else {
                 viewHolder.mIconImageView.setImageResource(R.drawable.file_default);
             }
-
-            /*
-            if (file.bitmap != null)
-                viewHolder.icon.setImageBitmap(file.bitmap);
-                */
-
-            if (mMoreListener == null) {
-                viewHolder.mMoreView.setVisibility(View.GONE);
-            }
-            viewHolder.mMoreView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mMoreListener != null) {
-                        mMoreListener.executeFileModel(fileModel, v);
-                    }
-                }
-            });
-
-            /*
-            if (file.selected)
-                viewHolder.item.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.tab_selected));
-            else
-                viewHolder.item.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.tab_file));
-                */
+        } else {
+            viewHolder.mIconImageView.setImageResource(R.drawable.file_default);
         }
+
+        /*
+        if (file.bitmap != null)
+            viewHolder.icon.setImageBitmap(file.bitmap);
+        */
+
+        if (mMoreListener == null) {
+            viewHolder.mMoreView.setVisibility(View.GONE);
+        }
+        viewHolder.mMoreView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMoreListener != null) {
+                    mMoreListener.executeFileModel(fileModel, v);
+                }
+            }
+        });
+
+        /*
+        if (file.selected)
+            viewHolder.item.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.tab_selected));
+        else
+            viewHolder.item.setBackgroundColor(ContextCompat.getColor(mActivity, R.color.tab_file));
+        */
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
@@ -138,33 +147,16 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
         return mFiles.size();
     }
 
-    public void replaceList(List<FileModel> list) {
+    public void setList(final List<FileModel> list) {
+        Preconditions.checkNotNull(list);
         mFiles.clear();
         mFiles.addAll(list);
-        notifyDataSetChanged();
-    }
-
-    public void addFirst(List<FileModel> list) {
-        mFiles.addAll(0, list);
-        notifyDataSetChanged();
-    }
-
-    public void addLast(List<FileModel> list) {
-        mFiles.addAll(mFiles.size(), list);
         notifyDataSetChanged();
     }
 
     public void addItem(FileModel name, int position) {
         this.mFiles.add(position, name);
         this.notifyItemInserted(position);
-    }
-
-    public void removeAll() {
-        int size = mFiles.size();
-        if (size > 0) {
-            mFiles.clear();
-            this.notifyItemRangeInserted(0, size - 1);
-        }
     }
 
     /**
@@ -188,7 +180,7 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
         }
     }
 
-    public String getAdapterSubtitle(FileModel fileModel) {
+    private String getAdapterSubtitle(FileModel fileModel) {
         if (fileModel.isDirectory() && fileModel.getCount() != 0) {
             return mStringDirectory + ": " + StringUtils.longToShortString(fileModel.getCount()) + " " + (fileModel.getCount() > 1 ? mStringFiles : mStringFile);
         }
@@ -206,11 +198,12 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
         return "";
     }
 
-    public void setList(List<FileModel> list) {
-        Preconditions.checkNotNull(list);
-        mFiles.clear();
-        mFiles.addAll(list);
-        notifyDataSetChanged();
+    @Nullable
+    private FileModel getFileModel(final int adapterPosition) {
+        if (adapterPosition >= mFiles.size()) {
+            return null;
+        }
+        return mFiles.get(adapterPosition);
     }
 
     public interface OnFileClickListener {
