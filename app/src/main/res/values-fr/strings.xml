@@ -120,6 +120,9 @@
     <string name="settings_ad_thank_you_3">Merci. Le développeur est très très content =)</string>
     <string name="settings_ad_thank_you_4">Merci. Le développeur est très très très content =)</string>
 
+    <!-- Support -->
+    <string name="support_edit_text_hint">Comment puis-je vous aider ?\nDécrivez la nouvelle fonctionnalité\ou le bug que vous avez.\nJe serai content de vous aider.\nLe développeur.</string>
+
     <!-- Search -->
     <string name="search_title_hint">Recherche</string>
 

@@ -105,26 +105,26 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             final int sortMode,
             final ResultCallback<List<FileModel>> resultCallback) {
 
-        if (fileParent.isOnline()) {
-            mFileOnlineApi.getFiles(fileParent.getId(), areMyFiles ? "" : "true", StringUtils.toEmptyIfNull(search), new Callback<FilesResponse>() {
-                @Override
-                public void success(FilesResponse filesResponse, Response response) {
-                    final List<FileResponse> result = filesResponse.getResult(mContextApp);
-                    final List<FileModel> fileModelList = new ArrayList<>();
-                    for (FileResponse fileResponse : result) {
-                        fileModelList.add(fileResponse.createModel());
-                    }
-                    resultCallback.success(fileModelList);
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    resultCallback.failure();
-                }
-            });
-        } else {
+        if (!fileParent.isOnline()) {
             resultCallback.success(mFileLocalApi.getFiles(fileParent.getFile(), search, sortMode));
+            return;
         }
+        mFileOnlineApi.getFiles(fileParent.getId(), areMyFiles ? "" : "true", StringUtils.toEmptyIfNull(search), new Callback<FilesResponse>() {
+            @Override
+            public void success(FilesResponse filesResponse, Response response) {
+                final List<FileResponse> result = filesResponse.getResult(mContextApp);
+                final List<FileModel> fileModelList = new ArrayList<>();
+                for (FileResponse fileResponse : result) {
+                    fileModelList.add(fileResponse.createModel());
+                }
+                resultCallback.success(fileModelList);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                resultCallback.failure();
+            }
+        });
     }
 
     /**
@@ -136,22 +136,23 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             final FileModel fileModel,
             final IListener listener) {
 
-        if (NetUtils.isInternetConnection(mContextApp) && fileModel.isOnline()) {
-            if (fileModel.isDirectory()) {
-                Toast.makeText(mContextApp, "Directory download not supported yet.",
-                        Toast.LENGTH_SHORT).show();
-                return;
-            }
-            final String pathFolderDownloaded = Environment.getExternalStorageDirectory()
-                    .getAbsolutePath() + File.separator + Config.localFolderNameDefault;
-            final File folder = new File(pathFolderDownloaded);
-            if (!folder.exists()) {
-                folder.mkdir();
-            }
-            new TaskGetDownload(activity, Constants.URL_DOMAIN_API + "/" + Config.routeFile + "/" +
-                    fileModel.getId(), pathFolderDownloaded + File.separator + fileModel.getFullName(),
-                    fileModel, listener).execute();
+        if (!NetUtils.isInternetConnection(mContextApp) || !fileModel.isOnline()) {
+            return;
         }
+        if (fileModel.isDirectory()) {
+            Toast.makeText(mContextApp, "Directory download not supported yet.", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
+        final String pathFolderDownloaded = Environment.getExternalStorageDirectory()
+                .getAbsolutePath() + File.separator + Config.localFolderNameDefault;
+        final File folder = new File(pathFolderDownloaded);
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
+        new TaskGetDownload(activity, Constants.URL_DOMAIN_API + "/" + Config.routeFile + "/" +
+                fileModel.getId(), pathFolderDownloaded + File.separator + fileModel.getFullName(),
+                fileModel, listener).execute();
     }
 
     /**
@@ -163,28 +164,31 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             final int idFileParent,
             final IListener listener) {
 
-        if (NetUtils.isInternetConnection(mContextApp) && !fileModel.isOnline()) {
-            if (fileModel.isDirectory()) {
-                Toast.makeText(mContextApp, "Directory download not supported yet.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            mFileOnlineApi.uploadFile(
-                    new FileUploadTypedFile("*/*", fileModel, this),
-                    new TypedString(fileModel.getName()),
-                    new TypedString("" + idFileParent),
-                    new TypedString("false"),
-                    new Callback<FilesResponse>() {
-                        @Override
-                        public void success(FilesResponse filesResponse, Response response) {
-                            listener.execute();
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-
-                        }
-                    });
+        if (!NetUtils.isInternetConnection(mContextApp) || fileModel.isOnline()) {
+            return;
         }
+        if (fileModel.isDirectory()) {
+            Toast.makeText(mContextApp, "Directory download not supported yet.", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
+        mFileOnlineApi.uploadFile(
+                new FileUploadTypedFile("*/*", fileModel, this),
+                new TypedString(fileModel.getName()),
+                new TypedString("" + idFileParent),
+                new TypedString("false"),
+                new Callback<FilesResponse>() {
+                    @Override
+                    public void success(FilesResponse filesResponse, Response response) {
+                        listener.execute();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                    }
+                });
+
     }
 
     /**
@@ -218,9 +222,10 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
      * {@inheritDoc}
      */
     @Override
-    public void renameLocalByPath(FileModel fileModel, String path) {
-        File tmp = new File(path);
-        fileModel.getFile().renameTo(tmp);
+    public void renameLocalByPath(final FileModel fileModel, final String path) {
+        Preconditions.checkNotNull(fileModel);
+        Preconditions.checkNotNull(path);
+        fileModel.getFile().renameTo(new File(path));
     }
 
     /**
@@ -258,20 +263,21 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
     @Override
     public void setParent(final FileModel fileModel, final int newIdFileParent, final IListener listener) {
         Preconditions.checkNotNull(fileModel);
-        if (fileModel.isOnline()) {
-            mFileOnlineApi.setParent(fileModel.getId(), new TypedString("" + newIdFileParent), new Callback<FilesResponse>() {
-                @Override
-                public void success(FilesResponse filesResponse, Response response) {
-                    filesResponse.getResult(mContextApp);
-                    listener.execute();
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-
-                }
-            });
+        if (!fileModel.isOnline()) {
+            return;
         }
+        mFileOnlineApi.setParent(fileModel.getId(), new TypedString("" + newIdFileParent), new Callback<FilesResponse>() {
+            @Override
+            public void success(FilesResponse filesResponse, Response response) {
+                filesResponse.getResult(mContextApp);
+                listener.execute();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
 
     /**
@@ -279,20 +285,21 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
      */
     @Override
     public void setPublic(final FileModel fileModel, final boolean isPublic, final IListener listener) {
-        if (fileModel.isOnline()) {
-            mFileOnlineApi.setPublic(fileModel.getId(), new TypedString("" + isPublic), new Callback<FilesResponse>() {
-                @Override
-                public void success(FilesResponse filesResponse, Response response) {
-                    filesResponse.getResult(mContextApp);
-                    listener.execute();
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-
-                }
-            });
+        if (!fileModel.isOnline()) {
+            return;
         }
+        mFileOnlineApi.setPublic(fileModel.getId(), new TypedString("" + isPublic), new Callback<FilesResponse>() {
+            @Override
+            public void success(FilesResponse filesResponse, Response response) {
+                filesResponse.getResult(mContextApp);
+                listener.execute();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
     }
 
     /**
@@ -487,16 +494,19 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
 
                 final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection,
                         searchArray.toArray(new String[searchArray.size()]), null);
-                if (cursor != null) {
-                    if (cursor.moveToFirst()) {
-                        do {
-                            result.add(new FileModel.FileModelBuilder()
-                                    .file(new File(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))))
-                                    .build());
-                        } while (cursor.moveToNext());
-                    }
-                    cursor.close();
+
+                if (cursor == null) {
+                    return result;
                 }
+                if (cursor.moveToFirst()) {
+                    do {
+                        result.add(new FileModel.FileModelBuilder()
+                                .file(new File(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))))
+                                .build());
+                    } while (cursor.moveToNext());
+                }
+                cursor.close();
+
                 return result;
             }
 
@@ -570,9 +580,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             return;
         }
         final FileModel fileModel = fileModelList.get(position);
-        if (fileModel.getType().equals(FileTypeModelENUM.TEXT.type)) {
+        if (FileTypeModelENUM.TEXT.type.equals(fileModel.getType())) {
             FileTextActivity.start(activity, fileModel, true);
-        } else if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
+        } else if (FileTypeModelENUM.PICTURE.type.equals(fileModel.getType())) {
             final Intent intent = new Intent(activity, FileImageActivity.class);
             intent.putExtra("ID", fileModel.getId());
             intent.putExtra("TITLE", "" + fileModel.getFullName());
@@ -590,7 +600,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                         makeSceneTransitionAnimation(activity, p1, p2);
                 activity.startActivity(intent, options.toBundle());
             }
-        } else if (fileModel.getType().equals(FileTypeModelENUM.AUDIO.type)) {
+        } else if (FileTypeModelENUM.AUDIO.type.equals(fileModel.getType())) {
 
             int musicCurrentPosition = position;
             final List<String> filesPath = new ArrayList<>();
@@ -630,13 +640,15 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         if (fileModel.isOnline()) {
             return;
         }
-        if (fileModel.getType().equals(FileTypeModelENUM.APK.type)) {
-            Intent apkIntent = new Intent();
+
+        final FileTypeModel fileTypeModel = fileModel.getType();
+        if (FileTypeModelENUM.APK.type.equals(fileTypeModel)) {
+            final Intent apkIntent = new Intent();
             apkIntent.setAction(Intent.ACTION_VIEW);
             apkIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "application/vnd.android.package-archive");
             activity.startActivity(apkIntent);
-        } else if (fileModel.getType().equals(FileTypeModelENUM.TEXT.type)) {
-            Intent txtIntent = new Intent();
+        } else if (FileTypeModelENUM.TEXT.type.equals(fileTypeModel)) {
+            final Intent txtIntent = new Intent();
             txtIntent.setAction(Intent.ACTION_VIEW);
             txtIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "text/plain");
             try {
@@ -645,8 +657,8 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                 txtIntent.setType("text/*");
                 activity.startActivity(txtIntent);
             }
-        } else if (fileModel.getType().equals(FileTypeModelENUM.HTML.type)) {
-            Intent htmlIntent = new Intent();
+        } else if (FileTypeModelENUM.TEXT.type.equals(fileTypeModel)) {
+            final Intent htmlIntent = new Intent();
             htmlIntent.setAction(Intent.ACTION_VIEW);
             htmlIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "text/html");
             try {
@@ -654,10 +666,9 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             } catch (ActivityNotFoundException e) {
                 Toast.makeText(activity, "ERREUR", Toast.LENGTH_SHORT).show();
             }
-        } else if (fileModel.getType().equals(FileTypeModelENUM.AUDIO.type)) {
-
+        } else if (FileTypeModelENUM.AUDIO.type.equals(fileTypeModel)) {
             int musicCurrentPosition = position;
-            List<String> filesPath = new ArrayList<>();
+            final List<String> filesPath = new ArrayList<>();
             for (int i = 0; i < fileModelList.size(); i++) {
                 final FileModel f = (FileModel) fileModelList.get(i);
                 if (f.getType() != null && f.getType().equals(FileTypeModelENUM.AUDIO.type) && f.getFile() != null) {
@@ -667,14 +678,13 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                 }
             }
             FileAudioActivity.start(activity, musicCurrentPosition, filesPath, view, false);
-
-        } else if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
-            Intent picIntent = new Intent();
+        } else if (FileTypeModelENUM.PICTURE.type.equals(fileTypeModel)) {
+            final Intent picIntent = new Intent();
             picIntent.setAction(Intent.ACTION_VIEW);
             picIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "image/*");
             activity.startActivity(picIntent);
-        } else if (fileModel.getType().equals(FileTypeModelENUM.VIDEO.type)) {
-            Intent videoIntent = new Intent();
+        } else if (FileTypeModelENUM.PICTURE.type.equals(fileTypeModel)) {
+            final Intent videoIntent = new Intent();
             videoIntent.setAction(Intent.ACTION_VIEW);
             videoIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "video/*");
             try {
@@ -682,8 +692,8 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             } catch (ActivityNotFoundException e) {
                 Toast.makeText(activity, "ERREUR", Toast.LENGTH_SHORT).show();
             }
-        } else if (fileModel.getType().equals(FileTypeModelENUM.PDF.type)) {
-            Intent pdfIntent = new Intent();
+        } else if (FileTypeModelENUM.PDF.type.equals(fileTypeModel)) {
+            final Intent pdfIntent = new Intent();
             pdfIntent.setAction(Intent.ACTION_VIEW);
             pdfIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "application/pdf");
             try {

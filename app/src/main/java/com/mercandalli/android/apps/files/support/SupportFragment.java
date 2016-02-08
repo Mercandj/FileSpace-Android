@@ -2,14 +2,17 @@ package com.mercandalli.android.apps.files.support;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
@@ -19,14 +22,16 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class SupportFragment extends InjectedBackFragment implements View.OnClickListener, SupportCommentAdapter.OnSupportCommentLongClickListener, SupportCommentAdapter.OnSupportCommentClickListener, SupportManager.GetSupportManagerCallback {
+public class SupportFragment extends InjectedBackFragment implements
+        SupportCommentAdapter.OnSupportCommentLongClickListener,
+        SupportCommentAdapter.OnSupportCommentClickListener,
+        SupportManager.GetSupportManagerCallback {
 
     private static final String BUNDLE_ARG_TITLE = "SupportFragment.Args.BUNDLE_ARG_TITLE";
     private SetToolbarCallback mSetToolbarCallback;
     private String mTitle;
     private RecyclerView mRecyclerView;
     private EditText mEditText;
-    private FloatingActionButton mFloatingActionButton;
     private SupportCommentAdapter mSupportCommentAdapter;
 
     @Inject
@@ -96,16 +101,6 @@ public class SupportFragment extends InjectedBackFragment implements View.OnClic
     }
 
     @Override
-    public void onClick(View v) {
-        final int viewId = v.getId();
-        switch (viewId) {
-            case R.id.fragment_support_fab:
-                onFabClicked();
-                break;
-        }
-    }
-
-    @Override
     public boolean onSupportCommentLongClick(View view, int position) {
         return false;
     }
@@ -116,7 +111,7 @@ public class SupportFragment extends InjectedBackFragment implements View.OnClic
     }
 
     @Override
-    public void onSupportManagerGetSucceeded(List<SupportComment> supportComments) {
+    public void onSupportManagerGetSucceeded(final List<SupportComment> supportComments) {
         mSupportCommentAdapter.setSupportComments(supportComments);
     }
 
@@ -125,18 +120,27 @@ public class SupportFragment extends InjectedBackFragment implements View.OnClic
 
     }
 
-    private void findViews(View rootView) {
+    private void findViews(final View rootView) {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_support_recycler_view);
         mEditText = (EditText) rootView.findViewById(R.id.fragment_support_edit_text);
-        mFloatingActionButton = (FloatingActionButton) rootView.findViewById(R.id.fragment_support_fab);
     }
 
     private void init(final Context context) {
         mSupportCommentAdapter = new SupportCommentAdapter(this, this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.setAdapter(mSupportCommentAdapter);
-        mFloatingActionButton.setOnClickListener(this);
         refreshList();
+
+        mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH && !TextUtils.isEmpty(v.getText())) {
+                    onFabClicked();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     private void refreshList() {

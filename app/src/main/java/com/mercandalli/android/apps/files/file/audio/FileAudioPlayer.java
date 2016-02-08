@@ -64,7 +64,7 @@ public class FileAudioPlayer implements
         mMediaPlayer.setOnCompletionListener(this);
         mCurrentStatus = SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED;
         mAudioManager = (AudioManager) mAppContext.getSystemService(Context.AUDIO_SERVICE);
-        updatePosition();
+        notifyPositionChanged();
         retrieveDeviceNode(mAppContext);
 
         // Register the local broadcast receiver, defined in step 3.
@@ -142,6 +142,7 @@ public class FileAudioPlayer implements
         if (mCurrentMusic == null || !currentMusic.getPath().equals(mCurrentMusic.getPath())) {
             prepare(currentMusic);
         }
+        notifyAudioChanged();
     }
 
     /**
@@ -159,6 +160,7 @@ public class FileAudioPlayer implements
         if (mCurrentMusic == null || !currentMusic.getPath().equals(mCurrentMusic.getPath())) {
             prepare(currentMusic);
         }
+        notifyAudioChanged();
     }
 
     /**
@@ -190,6 +192,7 @@ public class FileAudioPlayer implements
         } else if (mCurrentStatus == SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED) {
             play();
         }
+        notifyAudioChanged();
     }
 
     public int getDuration() {
@@ -212,16 +215,6 @@ public class FileAudioPlayer implements
         }
     }
 
-    public void stopPreview() {
-        if (SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PREPARING == mCurrentStatus) {
-            mMediaPlayer.reset();
-            mCurrentMusic = null;
-            setCurrentStatus(SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED);
-        } else {
-            pause();
-        }
-    }
-
     public boolean isEmpty() {
         return mFileAudioModelList.isEmpty();
     }
@@ -240,30 +233,34 @@ public class FileAudioPlayer implements
         }
     }
 
-    public int getCurrentStatus() {
-        return mCurrentStatus;
+    public int getCurrentMusicIndex() {
+        return mCurrentMusicIndex;
     }
 
-    /**
-     * Get the current audio file.
-     */
-    public FileAudioModel getCurrentPreview() {
-        return mCurrentMusic;
+    public List<FileAudioModel> getFileAudioModelList() {
+        return mFileAudioModelList;
     }
-
 
     /* PRIVATE */
 
-    private void updatePosition() {
+    private void notifyPositionChanged() {
         mHandler.removeCallbacks(mUpdatePositionRunnable);
         if (isPlaying()) {
             synchronized (mOnPlayerStatusChangeListeners) {
                 for (int i = 0, size = mOnPlayerStatusChangeListeners.size(); i < size; i++) {
-                    mOnPlayerStatusChangeListeners.get(i).onPlayerProgressChanged(getCurrentProgress(), getDuration(), mCurrentMusicIndex, mCurrentMusic);
+                    mOnPlayerStatusChangeListeners.get(i).onPlayerProgressChanged(getCurrentProgress(), getDuration());
                 }
             }
         }
         mHandler.postDelayed(mUpdatePositionRunnable, 1000);
+    }
+
+    private void notifyAudioChanged() {
+        synchronized (mOnPlayerStatusChangeListeners) {
+            for (int i = 0, size = mOnPlayerStatusChangeListeners.size(); i < size; i++) {
+                mOnPlayerStatusChangeListeners.get(i).onAudioChanged(mCurrentMusicIndex, mFileAudioModelList);
+            }
+        }
     }
 
     private void prepare(@NonNull final FileAudioModel fileAudioModel) {
@@ -415,13 +412,15 @@ public class FileAudioPlayer implements
         /**
          * The player progress change.
          */
-        void onPlayerProgressChanged(int progress, int duration, int musicPosition, FileAudioModel music);
+        void onPlayerProgressChanged(int progress, int duration);
+
+        void onAudioChanged(int musicPosition, List<FileAudioModel> musics);
     }
 
     private class UpdaterPosition implements Runnable {
         @Override
         public void run() {
-            updatePosition();
+            notifyPositionChanged();
         }
     }
 

@@ -150,45 +150,42 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
         }
 
         final FileModel fileModel = getFileModel(position);
-        if (viewHolder instanceof CardViewHolder && fileModel != null) {
-            final CardViewHolder cardViewHolder = (CardViewHolder) viewHolder;
-
-            cardViewHolder.mTitle.setText(getAdapterTitle(fileModel));
-            cardViewHolder.subtitle.setText(getAdapterSubtitle(fileModel));
-
-            if (fileModel.isDirectory()) {
-                cardViewHolder.icon.setImageResource(R.drawable.directory);
-            } else if (fileModel.getType() != null) {
-                FileTypeModel type = fileModel.getType();
-                if (type.equals(FileTypeModelENUM.AUDIO.type)) {
-                    cardViewHolder.icon.setImageResource(R.drawable.file_audio);
-                } else if (type.equals(FileTypeModelENUM.PDF.type)) {
-                    cardViewHolder.icon.setImageResource(R.drawable.file_pdf);
-                } else if (type.equals(FileTypeModelENUM.APK.type)) {
-                    cardViewHolder.icon.setImageResource(R.drawable.file_apk);
-                } else if (type.equals(FileTypeModelENUM.ARCHIVE.type)) {
-                    cardViewHolder.icon.setImageResource(R.drawable.file_archive);
-                } else if (type.equals(FileTypeModelENUM.FILESPACE.type)) {
-                    cardViewHolder.icon.setImageResource(R.drawable.file_space);
-                } else {
-                    cardViewHolder.icon.setImageResource(R.drawable.file_default);
-                }
-            } else {
-                cardViewHolder.icon.setImageResource(R.drawable.file_default);
-            }
-
-            if (mMoreListener == null) {
-                cardViewHolder.more.setVisibility(View.GONE);
-            }
-            cardViewHolder.more.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mMoreListener != null) {
-                        mMoreListener.executeFileModel(fileModel, v);
-                    }
-                }
-            });
+        if (fileModel == null || !(viewHolder instanceof CardViewHolder)) {
+            return;
         }
+
+        final CardViewHolder cardViewHolder = (CardViewHolder) viewHolder;
+        cardViewHolder.mTitle.setText(getAdapterTitle(fileModel));
+        cardViewHolder.subtitle.setText(getAdapterSubtitle(fileModel));
+
+        final FileTypeModel type = fileModel.getType();
+        if (fileModel.isDirectory()) {
+            cardViewHolder.icon.setImageResource(R.drawable.directory);
+        } else if (FileTypeModelENUM.AUDIO.type.equals(type)) {
+            cardViewHolder.icon.setImageResource(R.drawable.file_audio);
+        } else if (FileTypeModelENUM.PDF.type.equals(type)) {
+            cardViewHolder.icon.setImageResource(R.drawable.file_pdf);
+        } else if (FileTypeModelENUM.APK.type.equals(type)) {
+            cardViewHolder.icon.setImageResource(R.drawable.file_apk);
+        } else if (FileTypeModelENUM.ARCHIVE.type.equals(type)) {
+            cardViewHolder.icon.setImageResource(R.drawable.file_archive);
+        } else if (FileTypeModelENUM.FILESPACE.type.equals(type)) {
+            cardViewHolder.icon.setImageResource(R.drawable.file_space);
+        } else {
+            cardViewHolder.icon.setImageResource(R.drawable.file_default);
+        }
+
+        if (mMoreListener == null) {
+            cardViewHolder.more.setVisibility(View.GONE);
+        }
+        cardViewHolder.more.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mMoreListener != null) {
+                    mMoreListener.executeFileModel(fileModel, v);
+                }
+            }
+        });
     }
 
     @Override
@@ -238,7 +235,7 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
             } else {
                 return adapterTitleStart + fileModel.getUrl();
             }
-        } else if (fileModel.getType().equals(FileTypeModelENUM.FILESPACE.type) && fileModel.getContent() != null) {
+        } else if (FileTypeModelENUM.FILESPACE.type.equals(fileModel.getType()) && fileModel.getContent() != null) {
             return adapterTitleStart + fileModel.getContent().getAdapterTitle();
         } else if (fileModel.getName() != null) {
             return adapterTitleStart + fileModel.getFullName();

@@ -2,6 +2,7 @@ package com.mercandalli.android.apps.files.file;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import com.mercandalli.android.apps.files.file.filespace.FileSpaceModel;
 import com.mercandalli.android.apps.files.main.Config;
@@ -287,6 +288,7 @@ public class FileModel implements Parcelable {
         return mIsPublic;
     }
 
+    @Nullable
     public FileTypeModel getType() {
         return mType;
     }

@@ -2,6 +2,8 @@ package com.mercandalli.android.apps.files.support;
 
 import android.app.Application;
 
+import com.mercandalli.android.apps.files.common.util.RetrofitUtils;
+import com.mercandalli.android.apps.files.file.cloud.FileOnlineApi;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 
 import javax.inject.Singleton;
@@ -18,8 +20,8 @@ public class SupportModule {
     @Provides
     @Singleton
     SupportManager provideSupportManager(Application application) {
-        //return new SupportManagerImpl(application);
-        return new SupportManagerMockImpl(application);
+        return new SupportManagerImpl(application, RetrofitUtils.getAuthorizedRestAdapter().create(SupportOnlineApi.class));
+        //return new SupportManagerMockImpl(application);
     }
 
 }

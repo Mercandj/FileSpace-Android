@@ -12,7 +12,7 @@ public class SupportManagerMockImpl extends SupportManager {
     @SuppressWarnings("UnusedParameters")
     public SupportManagerMockImpl(final Context contextApp) {
         mSupportComments = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 3; i++) {
             mSupportComments.add(new SupportComment("Toto " + i, "Comment " + i));
         }
     }
