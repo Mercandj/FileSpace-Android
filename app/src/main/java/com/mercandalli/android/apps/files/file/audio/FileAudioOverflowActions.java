@@ -16,6 +16,7 @@ import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
+import com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataEditionDialog;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 
@@ -177,7 +178,7 @@ public class FileAudioOverflowActions implements PopupMenu.OnMenuItemClickListen
     }
 
     private void editMetadata(final FileAudioModel fileAudioModel) {
-        FileAudioEditTagsDialog.newInstance(fileAudioModel).show(mFragmentManager, null);
+        FileAudioMetaDataEditionDialog.newInstance(fileAudioModel).show(mFragmentManager, null);
     }
 
     private void properties(final FileModel fileModel) {

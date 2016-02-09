@@ -4,9 +4,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/my_toolbar"
-        layout="@layout/toolbar" />
+    <android.support.v7.widget.Toolbar android:id="@+id/activity_file_timer_toolbar"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:titleTextAppearance="@style/ToolbarTitle" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,7 +22,7 @@
         android:layout_centerVertical="true">
 
         <TextView
-            android:id="@+id/txt"
+            android:id="@+id/activity_file_timer_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -27,7 +33,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/second"
+            android:id="@+id/activity_file_timer_second"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

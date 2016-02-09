@@ -215,7 +215,7 @@ public class Config {
         }
     }
 
-    public String getUserUsername() {
+    public static String getUserUsername() {
         return ENUM_String.STRING_USER_USERNAME.value;
     }
 
@@ -242,7 +242,7 @@ public class Config {
         return ENUM_String.STRING_LOCAL_FOLDER_NAME_1.value;
     }
 
-    public String getUserPassword() {
+    public static String getUserPassword() {
         return ENUM_String.STRING_USER_PASSWORD.value;
     }
 
@@ -303,7 +303,7 @@ public class Config {
         }
     }
 
-    public boolean isUserAdmin() {
+    public static boolean isUserAdmin() {
         return ENUM_Boolean.BOOLEAN_USER_ADMIN.value;
     }
 
@@ -314,7 +314,7 @@ public class Config {
         }
     }
 
-    public boolean isAutoConncetion() {
+    public boolean isAutoConnection() {
         return ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value;
     }
 
@@ -325,7 +325,7 @@ public class Config {
         }
     }
 
-    public UserModel getUser() {
+    public static UserModel getUser() {
         return new UserModel(getUserId(), getUserUsername(), getUserPassword(), getUserRegId(), isUserAdmin());
     }
 

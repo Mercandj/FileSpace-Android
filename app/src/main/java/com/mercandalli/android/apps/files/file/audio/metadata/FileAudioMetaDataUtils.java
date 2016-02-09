@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.file.audio;
+package com.mercandalli.android.apps.files.file.audio.metadata;
 
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -69,4 +69,13 @@ public class FileAudioMetaDataUtils {
         return false;
     }
 
+    /* protected */ static boolean equalsString(@Nullable final String str1, @Nullable final String str2) {
+        if (str1 == null) {
+            return str2 == null || str2.isEmpty();
+        }
+        if (str2 == null) {
+            return str1.isEmpty();
+        }
+        return str1.equals(str2);
+    }
 }

@@ -22,5 +22,5 @@ package com.mercandalli.android.apps.files.file;
 import android.view.View;
 
 public interface FileModelListener {
-    void executeFileModel(final FileModel modelFile, final View view);
+    void executeFileModel(final FileModel fileModel, final View view);
 }

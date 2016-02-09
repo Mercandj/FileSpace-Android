@@ -70,7 +70,7 @@ public class RegistrationFragment extends BackFragment {
         this.mUsername = (EditText) rootView.findViewById(R.id.fragment_registration_username);
         this.mPassword = (EditText) rootView.findViewById(R.id.fragment_registration_password);
 
-        ((CheckBox) rootView.findViewById(R.id.fragment_registration_auto_connection)).setChecked(mApplicationCallback.getConfig().isAutoConncetion());
+        ((CheckBox) rootView.findViewById(R.id.fragment_registration_auto_connection)).setChecked(mApplicationCallback.getConfig().isAutoConnection());
         ((CheckBox) rootView.findViewById(R.id.fragment_registration_auto_connection)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

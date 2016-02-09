@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.file.audio;
+package com.mercandalli.android.apps.files.file.audio.metadata;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -15,29 +15,33 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.file.audio.FileAudioManager;
+import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
 import com.mercandalli.android.apps.files.main.FileApp;
 
 import java.io.File;
 
-public class FileAudioEditTagsDialog extends DialogFragment {
+import static com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataUtils.equalsString;
 
-    private static final String ARG_FILE = "FileAudioEditTagsDialog.Args.ARG_FILE";
-    private static final String ARG_TITLE = "FileAudioEditTagsDialog.Args.ARG_TITLE";
-    private static final String ARG_ARTIST = "FileAudioEditTagsDialog.Args.ARG_ARTIST";
-    private static final String ARG_ALBUM = "FileAudioEditTagsDialog.Args.ARG_ALBUM";
+public class FileAudioMetaDataEditionDialog extends DialogFragment {
 
-    private static final String SAVED_FILE = "FileAudioEditTagsDialog.Saved.SAVED_FILE";
-    private static final String SAVED_TITLE = "FileAudioEditTagsDialog.Saved.SAVED_TITLE";
-    private static final String SAVED_ARTIST = "FileAudioEditTagsDialog.Saved.SAVED_ARTIST";
-    private static final String SAVED_ALBUM = "FileAudioEditTagsDialog.Saved.SAVED_ALBUM";
+    private static final String ARG_FILE = "FileAudioMetaDataEditionDialog.Args.ARG_FILE";
+    private static final String ARG_TITLE = "FileAudioMetaDataEditionDialog.Args.ARG_TITLE";
+    private static final String ARG_ARTIST = "FileAudioMetaDataEditionDialog.Args.ARG_ARTIST";
+    private static final String ARG_ALBUM = "FileAudioMetaDataEditionDialog.Args.ARG_ALBUM";
 
-    public static FileAudioEditTagsDialog newInstance(FileAudioModel fileAudioModel) {
+    private static final String SAVED_FILE = "FileAudioMetaDataEditionDialog.Saved.SAVED_FILE";
+    private static final String SAVED_TITLE = "FileAudioMetaDataEditionDialog.Saved.SAVED_TITLE";
+    private static final String SAVED_ARTIST = "FileAudioMetaDataEditionDialog.Saved.SAVED_ARTIST";
+    private static final String SAVED_ALBUM = "FileAudioMetaDataEditionDialog.Saved.SAVED_ALBUM";
+
+    public static FileAudioMetaDataEditionDialog newInstance(FileAudioModel fileAudioModel) {
         final Bundle args = new Bundle();
         args.putString(ARG_FILE, fileAudioModel.getUrl());
         args.putString(ARG_TITLE, fileAudioModel.getTitle());
         args.putString(ARG_ARTIST, fileAudioModel.getArtist());
         args.putString(ARG_ALBUM, fileAudioModel.getAlbum());
-        final FileAudioEditTagsDialog instance = new FileAudioEditTagsDialog();
+        final FileAudioMetaDataEditionDialog instance = new FileAudioMetaDataEditionDialog();
         instance.setArguments(args);
         return instance;
     }
@@ -53,10 +57,10 @@ public class FileAudioEditTagsDialog extends DialogFragment {
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
         final Context context = getContext();
-        final FileAudioManager fileAudioManager =
-                FileApp.get().getFileAppComponent().provideFileAudioManager();
+        final FileAudioManager fileAudioManager = FileApp.get().getFileAppComponent()
+                .provideFileAudioManager();
 
         @SuppressLint("InflateParams")
         final View rootView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_meta_data, null);
@@ -120,7 +124,7 @@ public class FileAudioEditTagsDialog extends DialogFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
+    public void onSaveInstanceState(final Bundle savedInstanceState) {
         savedInstanceState.putString(SAVED_FILE, mFilePath);
         savedInstanceState.putString(SAVED_TITLE, mTitle);
         savedInstanceState.putString(SAVED_ARTIST, mArtist);
@@ -136,15 +140,5 @@ public class FileAudioEditTagsDialog extends DialogFragment {
         return equalsString(mTitle, newTitle) &&
                 equalsString(mArtist, newArtist) &&
                 equalsString(mAlbum, newAlbum);
-    }
-
-    private boolean equalsString(@Nullable final String str1, @Nullable final String str2) {
-        if (str1 == null) {
-            return str2 == null || str2.isEmpty();
-        }
-        if (str2 == null) {
-            return str1.isEmpty();
-        }
-        return str1.equals(str2);
     }
 }

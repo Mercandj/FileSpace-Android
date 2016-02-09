@@ -129,7 +129,7 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
         tabs.setViewPager(mViewPager);
         tabs.setIndicatorColor(ContextCompat.getColor(this, android.R.color.white));
 
-        if (this.getConfig().isAutoConncetion() && this.getConfig().getUrlServer() != null && this.getConfig().getUserUsername() != null && this.getConfig().getUserPassword() != null &&
+        if (this.getConfig().isAutoConnection() && this.getConfig().getUrlServer() != null && this.getConfig().getUserUsername() != null && this.getConfig().getUserPassword() != null &&
                 !this.getConfig().getUserUsername().equals("") && !this.getConfig().getUserPassword().equals("") && Config.getUserId() != -1) {
             connectionSucceed();
         }

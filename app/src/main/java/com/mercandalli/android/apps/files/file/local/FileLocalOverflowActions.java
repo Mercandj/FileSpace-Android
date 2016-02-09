@@ -34,6 +34,8 @@ public class FileLocalOverflowActions implements PopupMenu.OnMenuItemClickListen
     private final FileLocalActionCallback mFileLocalActionCallback;
     private FileModel mFileModel;
 
+    private boolean mShowCopyCut = true;
+
     public FileLocalOverflowActions(
             final Context context,
             final FileLocalActionCallback fileLocalActionCallback) {
@@ -101,10 +103,18 @@ public class FileLocalOverflowActions implements PopupMenu.OnMenuItemClickListen
                 menuItem.setVisible(false);
             } else if (currentId == R.id.popup_overflow_file_open_as && fileModel.isDirectory()) {
                 menuItem.setVisible(false);
+            } else if (currentId == R.id.popup_overflow_file_copy && !mShowCopyCut) {
+                menuItem.setVisible(false);
+            } else if (currentId == R.id.popup_overflow_file_cut && !mShowCopyCut) {
+                menuItem.setVisible(false);
             }
         }
         popupMenu.setOnMenuItemClickListener(this);
         popupMenu.show();
+    }
+
+    public void setShowCopyCut(boolean showCopyCut) {
+        mShowCopyCut = showCopyCut;
     }
 
     //region Actions

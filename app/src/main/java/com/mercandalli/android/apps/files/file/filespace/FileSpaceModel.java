@@ -50,17 +50,26 @@ public class FileSpaceModel {
     private Timer mTimer = new Timer();
     private Article mArticle = new Article();
 
+    private final SimpleDateFormat mDateFormatGmt;
+    private final SimpleDateFormat mDateFormatLocal;
+    private final SimpleDateFormat mDateFormatGmtMillis;
+    private final SimpleDateFormat mDateFormatLocalMillis;
+
     public FileSpaceModel() {
+        mDateFormatGmt = new SimpleDateFormat(DATE_FORMAT);
+        mDateFormatGmt.setTimeZone(TimeZone.getTimeZone(UTC));
+        mDateFormatLocal = new SimpleDateFormat(DATE_FORMAT);
+
+        mDateFormatGmtMillis = new SimpleDateFormat(DATE_FORMAT_MS);
+        mDateFormatGmtMillis.setTimeZone(TimeZone.getTimeZone(UTC));
+        mDateFormatLocalMillis = new SimpleDateFormat(DATE_FORMAT_MS);
 
     }
 
     public String getAdapterTitle() {
         if (this.mTimer.timer_date != null) {
-            SimpleDateFormat dateFormatGmt = new SimpleDateFormat(DATE_FORMAT);
-            dateFormatGmt.setTimeZone(TimeZone.getTimeZone(UTC));
-            SimpleDateFormat dateFormatLocal = new SimpleDateFormat(DATE_FORMAT);
             try {
-                return TimeUtils.printDifferenceFuture(this.mTimer.timer_date, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
+                return TimeUtils.printDifferenceFuture(this.mTimer.timer_date, mDateFormatLocal.parse(mDateFormatGmt.format(new Date())));
             } catch (ParseException e) {
                 Log.e(getClass().getName(), "Exception", e);
             }
@@ -76,12 +85,9 @@ public class FileSpaceModel {
 
     @Override
     public String toString() {
-        if (this.mTimer.timer_date != null) {
-            SimpleDateFormat dateFormatGmt = new SimpleDateFormat(DATE_FORMAT);
-            dateFormatGmt.setTimeZone(TimeZone.getTimeZone(UTC));
-            SimpleDateFormat dateFormatLocal = new SimpleDateFormat(DATE_FORMAT);
+        if (mTimer.timer_date != null) {
             try {
-                return TimeUtils.printDifferenceFuture(this.mTimer.timer_date, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
+                return TimeUtils.printDifferenceFuture(mTimer.timer_date, mDateFormatLocal.parse(mDateFormatGmt.format(new Date())));
             } catch (ParseException e) {
                 Log.e(getClass().getName(), "Exception", e);
             }
@@ -93,12 +99,9 @@ public class FileSpaceModel {
     }
 
     public PointLong diffSecond() {
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat(DATE_FORMAT_MS);
-        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
-        SimpleDateFormat dateFormatLocal = new SimpleDateFormat(DATE_FORMAT_MS);
         long diff = 0;
         try {
-            diff = this.mTimer.timer_date.getTime() - dateFormatLocal.parse(dateFormatGmt.format(new Date())).getTime();
+            diff = mTimer.timer_date.getTime() - mDateFormatLocalMillis.parse(mDateFormatGmtMillis.format(new Date())).getTime();
         } catch (ParseException e) {
             Log.e(getClass().getName(), "Exception", e);
         }
@@ -106,15 +109,13 @@ public class FileSpaceModel {
     }
 
     public JSONObject toJSONObject() {
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat(DATE_FORMAT);
-        dateFormatGmt.setTimeZone(TimeZone.getTimeZone(UTC));
         JSONObject json = new JSONObject();
         try {
             json.put("type", "timer");
-            json.put("date_creation", dateFormatGmt.format(mDateCreation));
+            json.put("date_creation", mDateFormatGmt.format(mDateCreation));
             switch (mType) {
                 case TIMER:
-                    json.put("timer_date", "" + dateFormatGmt.format(this.mTimer.timer_date));
+                    json.put("timer_date", "" + mDateFormatGmt.format(this.mTimer.timer_date));
                     break;
                 case ARTICLE:
                     json.put("article_content_1", "" + mArticle.article_content_1);

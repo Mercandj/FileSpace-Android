@@ -29,21 +29,20 @@ import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
+import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.main.FileApp;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 public class SearchActivity extends AppCompatActivity implements
         FileModelAdapter.OnFileClickListener,
         ResultCallback<List<FileModel>>,
-        View.OnClickListener {
+        View.OnClickListener,
+        FileModelListener, FileLocalOverflowActions.FileLocalActionCallback {
 
-    @Inject
-    protected FileManager mFileManager;
+    private FileManager mFileManager;
 
     /**
      * The search {@link EditText}.
@@ -65,6 +64,9 @@ public class SearchActivity extends AppCompatActivity implements
     private ImageView mClearImageView;
     private TextView mEmptyTextView;
 
+    private FileLocalOverflowActions mFileLocalOverflowActions;
+    private String mLastSearch;
+
     public static void start(final Context context) {
         final Intent intent = new Intent(context, SearchActivity.class);
         context.startActivity(intent);
@@ -75,7 +77,10 @@ public class SearchActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        FileApp.get().getFileAppComponent().inject(this);
+        mFileManager = FileApp.get().getFileAppComponent().provideFileManager();
+
+        mFileLocalOverflowActions = new FileLocalOverflowActions(this, this);
+        mFileLocalOverflowActions.setShowCopyCut(false);
 
         mSearchDelayRunnable = new Runnable() {
             @Override
@@ -101,7 +106,7 @@ public class SearchActivity extends AppCompatActivity implements
             actionBar.setTitle("");
         }
 
-        mFileModelAdapter = new FileModelAdapter(this, mFileModelList, null, this, null);
+        mFileModelAdapter = new FileModelAdapter(this, mFileModelList, this, this, null);
 
         mRecyclerView.setHasFixedSize(true);
         final int nbColumn = getResources().getInteger(R.integer.column_number_card);
@@ -216,6 +221,51 @@ public class SearchActivity extends AppCompatActivity implements
         }
     }
 
+    @Override
+    public void executeFileModel(FileModel fileModel, View view) {
+        mFileLocalOverflowActions.show(fileModel, view, false);
+    }
+
+    @Override
+    public void refreshFab() {
+
+    }
+
+    @Override
+    public void refreshData() {
+        performSearch(mLastSearch);
+    }
+
+    @Override
+    public void addCopyFile(FileModel fileModel) {
+
+    }
+
+    @Override
+    public void addCutFile(FileModel fileModel) {
+
+    }
+
+    @Override
+    public boolean isFileToCut() {
+        return false;
+    }
+
+    @Override
+    public boolean isFileToCopy() {
+        return false;
+    }
+
+    @Override
+    public void clearFileToCut() {
+
+    }
+
+    @Override
+    public void clearFileToCopy() {
+
+    }
+
     /**
      * Find all the {@link View}s.
      */
@@ -230,7 +280,8 @@ public class SearchActivity extends AppCompatActivity implements
     /**
      * Call the {@link #mFileManager} to perform the search.
      */
-    private void performSearch(String search) {
+    private void performSearch(final String search) {
+        mLastSearch = search;
         mRecyclerView.setVisibility(View.GONE);
         mEmptyTextView.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.VISIBLE);

@@ -18,6 +18,7 @@ import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.album.Album;
 import com.mercandalli.android.apps.files.file.audio.artist.Artist;
+import com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataUtils;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 

@@ -8,18 +8,20 @@ import retrofit.http.Multipart;
 import retrofit.http.POST;
 import retrofit.http.Part;
 import retrofit.http.Path;
+import retrofit.http.Query;
 
 public interface SupportOnlineApi {
 
     @GET("/" + Config.routeSupportComment)
     void getSupportComments(
+            @Query("id_device") String deviceId,
             Callback<SupportCommentsResponse> result);
 
     @Multipart
     @POST("/" + Config.routeSupportComment)
-    void pousrSupportComment(
-            @Path("device_id") String deviceId,
-            @Part("comment_content") String commentContent,
+    void postSupportComment(
+            @Path("id_device") String deviceId,
+            @Part("content") String commentContent,
             Callback<SupportCommentsResponse> result);
 
 }

@@ -62,7 +62,7 @@ public class FileUtils {
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
-    public static void writeStringFile(Context context, String file, String txt) {
+    public static void writeStringFile(final Context context, String file, String txt) {
         try {
             FileOutputStream output = context.openFileOutput(file, Context.MODE_PRIVATE);
             output.write((txt).getBytes());
@@ -80,10 +80,14 @@ public class FileUtils {
      * @return The {@link File} content.
      */
     @Nullable
-    public static String readStringFile(Context context, String filePath) {
+    public static String readStringFile(final Context context, @Nullable final String filePath) {
+        Preconditions.checkNotNull(context);
+        if(filePath == null) {
+            return "";
+        }
         String res = null;
         try {
-            FileInputStream input = context.openFileInput(filePath);
+            final FileInputStream input = context.openFileInput(filePath);
             int value;
             @SuppressWarnings("StringBufferMayBeStringBuilder")
             final StringBuffer lu = new StringBuffer();
@@ -145,7 +149,10 @@ public class FileUtils {
         return path.substring(path.lastIndexOf('.') + 1);
     }
 
-    public static String getNameFromPath(String path) {
+    public static String getNameFromPath(@Nullable final String path) {
+        if (path == null) {
+            return "";
+        }
         if (!path.contains("/")) {
             return "";
         }
@@ -155,7 +162,10 @@ public class FileUtils {
         return path.substring(path.lastIndexOf('/') + 1);
     }
 
-    public static String getParentPathFromPath(String path) {
+    public static String getParentPathFromPath(@Nullable final String path) {
+        if (path == null) {
+            return "";
+        }
         if (!path.contains("/")) {
             return "";
         }
@@ -183,7 +193,7 @@ public class FileUtils {
     /**
      * Manage the soft input (keyboard).
      */
-    public static void hideSoftInput(EditText editText) {
+    public static void hideSoftInput(final EditText editText) {
         Preconditions.checkNotNull(editText);
         final Context context = editText.getContext();
         final InputMethodManager inputMethodManager = (InputMethodManager)
@@ -194,7 +204,7 @@ public class FileUtils {
     /**
      * Manage the soft input (keyboard).
      */
-    public static void showSoftInput(EditText editText) {
+    public static void showSoftInput(final EditText editText) {
         Preconditions.checkNotNull(editText);
         final Context context = editText.getContext();
         final InputMethodManager inputMethodManager = (InputMethodManager)

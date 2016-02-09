@@ -162,7 +162,7 @@ public class SettingsFragment extends BackFragment {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     mApplicationCallback.getConfig().setAutoConnection(context, isChecked);
                 }
-            }, mApplicationCallback.getConfig().isAutoConncetion()));
+            }, mApplicationCallback.getConfig().isAutoConnection()));
             list.add(new ModelSetting("Web application", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

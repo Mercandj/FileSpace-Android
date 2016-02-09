@@ -21,12 +21,12 @@ package com.mercandalli.android.apps.files.file.filespace;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
@@ -42,7 +42,8 @@ import java.util.Date;
  */
 public class FileTimerActivity extends ApplicationActivity {
 
-    private String initate, url, login;
+    private String url;
+    private String login;
     private boolean online;
     public Date timer_date;
     public FileSpaceModel mFileSpaceModel;
@@ -55,16 +56,12 @@ public class FileTimerActivity extends ApplicationActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_timer);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        initToolbar();
 
         // Visibility
-        ((ProgressBar) this.findViewById(R.id.circularProgressBar)).setVisibility(View.GONE);
-        this.txt = (TextView) FileTimerActivity.this.findViewById(R.id.txt);
-        this.second = (TextView) FileTimerActivity.this.findViewById(R.id.second);
+        findViewById(R.id.circularProgressBar).setVisibility(View.GONE);
+        this.txt = (TextView) FileTimerActivity.this.findViewById(R.id.activity_file_timer_text);
+        this.second = (TextView) FileTimerActivity.this.findViewById(R.id.activity_file_timer_second);
 
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
@@ -72,39 +69,40 @@ public class FileTimerActivity extends ApplicationActivity {
             this.finish();
             this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             return;
-        } else {
-            this.url = extras.getString("URL_FILE");
-            this.login = extras.getString("LOGIN");
-            this.online = extras.getBoolean("CLOUD");
-
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            try {
-                this.timer_date = dateFormat.parse("" + extras.getString("TIMER_DATE"));
-                mFileSpaceModel = new FileSpaceModel.FileSpaceModelBuilder().type("timer").build();
-                mFileSpaceModel.getTimer().timer_date = timer_date;
-            } catch (ParseException e) {
-                Log.e(getClass().getName(), "Exception", e);
-            }
-
-            handler = new Handler();
-            runnable = new Runnable() {
-                @Override
-                public void run() {
-                    if (mFileSpaceModel != null) {
-                        txt.setText(mFileSpaceModel.toString());
-                        PointLong diff = mFileSpaceModel.diffSecond();
-                        if (diff.y < 0) {
-                            diff.y = -diff.y;
-                        }
-                        second.setText(diff.x + " : " + ((diff.y < 10) ? "0" : "") + diff.y);
-                    }
-
-                    //also call the same runnable
-                    handler.postDelayed(this, 50);
-                }
-            };
-            runnable.run();
         }
+
+        this.url = extras.getString("URL_FILE");
+        this.login = extras.getString("LOGIN");
+        this.online = extras.getBoolean("CLOUD");
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            this.timer_date = dateFormat.parse("" + extras.getString("TIMER_DATE"));
+            mFileSpaceModel = new FileSpaceModel.FileSpaceModelBuilder().type("timer").build();
+            mFileSpaceModel.getTimer().timer_date = timer_date;
+        } catch (ParseException e) {
+            Log.e(getClass().getName(), "Exception", e);
+        }
+
+        handler = new Handler();
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (mFileSpaceModel != null) {
+                    txt.setText(mFileSpaceModel.toString());
+                    final PointLong diff = mFileSpaceModel.diffSecond();
+                    if (diff.y < 0) {
+                        diff.y = -diff.y;
+                    }
+                    final String secondText = diff.x + " : " + ((diff.y < 10) ? ('0' + diff.y) : diff.y);
+                    second.setText(secondText);
+                }
+
+                //also call the same runnable
+                handler.postDelayed(this, 50);
+            }
+        };
+        runnable.run();
     }
 
     @Override
@@ -141,5 +139,14 @@ public class FileTimerActivity extends ApplicationActivity {
             this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private void initToolbar() {
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.activity_file_timer_toolbar);
+        setSupportActionBar(toolbar);
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 }

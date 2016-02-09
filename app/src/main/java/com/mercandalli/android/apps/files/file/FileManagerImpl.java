@@ -37,6 +37,8 @@ import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
 import com.mercandalli.android.apps.files.file.cloud.FileOnlineApi;
 import com.mercandalli.android.apps.files.file.cloud.response.FileResponse;
 import com.mercandalli.android.apps.files.file.cloud.response.FilesResponse;
+import com.mercandalli.android.apps.files.file.filespace.FileSpaceModel;
+import com.mercandalli.android.apps.files.file.filespace.FileTimerActivity;
 import com.mercandalli.android.apps.files.file.image.FileImageActivity;
 import com.mercandalli.android.apps.files.file.local.FileLocalApi;
 import com.mercandalli.android.apps.files.file.text.FileTextActivity;
@@ -51,6 +53,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -580,9 +583,10 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             return;
         }
         final FileModel fileModel = fileModelList.get(position);
-        if (FileTypeModelENUM.TEXT.type.equals(fileModel.getType())) {
+        final FileTypeModel fileTypeModel = fileModel.getType();
+        if (FileTypeModelENUM.TEXT.type.equals(fileTypeModel)) {
             FileTextActivity.start(activity, fileModel, true);
-        } else if (FileTypeModelENUM.PICTURE.type.equals(fileModel.getType())) {
+        } else if (FileTypeModelENUM.PICTURE.type.equals(fileTypeModel)) {
             final Intent intent = new Intent(activity, FileImageActivity.class);
             intent.putExtra("ID", fileModel.getId());
             intent.putExtra("TITLE", "" + fileModel.getFullName());
@@ -600,7 +604,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                         makeSceneTransitionAnimation(activity, p1, p2);
                 activity.startActivity(intent, options.toBundle());
             }
-        } else if (FileTypeModelENUM.AUDIO.type.equals(fileModel.getType())) {
+        } else if (FileTypeModelENUM.AUDIO.type.equals(fileTypeModel)) {
 
             int musicCurrentPosition = position;
             final List<String> filesPath = new ArrayList<>();
@@ -614,22 +618,24 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             }
             FileAudioActivity.start(activity, musicCurrentPosition, filesPath, view, true);
 
-        } /* else if (this.type.equals(FileTypeModelENUM.FILESPACE.type)) {
-            if (content != null) {
-                if (content.timer.timer_date != null) {
-                    Intent intent = new Intent(activity, FileTimerActivity.class);
-                    intent.putExtra("URL_FILE", "" + this.onlineUrl);
-                    intent.putExtra("LOGIN", "" + this.app.getConfig().getUser().getAccessLogin());
-                    intent.putExtra("CLOUD", true);
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    intent.putExtra("TIMER_DATE", "" + dateFormat.format(content.timer.timer_date));
-                    activity.startActivity(intent);
-                    activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-                } else if (!StringUtils.isNullOrEmpty(content.article.article_content_1)) {
-                    FileTextActivity.startForSelection(activity, this, true);
-                }
+        } else if (FileTypeModelENUM.FILESPACE.type.equals(fileTypeModel)) {
+            final FileSpaceModel fileSpaceModel = fileModel.getContent();
+            if (fileSpaceModel == null) {
+                return;
             }
-        }*/
+            if (fileSpaceModel.getTimer().timer_date != null) {
+                Intent intent = new Intent(activity, FileTimerActivity.class);
+                intent.putExtra("URL_FILE", "" + fileModel.getOnlineUrl());
+                intent.putExtra("LOGIN", "" + Config.getUser().getAccessLogin());
+                intent.putExtra("CLOUD", true);
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                intent.putExtra("TIMER_DATE", "" + dateFormat.format(fileSpaceModel.getTimer().timer_date));
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+            } else if (!StringUtils.isNullOrEmpty(fileSpaceModel.getArticle().article_content_1)) {
+                FileTextActivity.start(activity, fileModel, true);
+            }
+        }
     }
 
     private void executeLocal(final Activity activity, final int position, final List fileModelList, View view) {
@@ -683,7 +689,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             picIntent.setAction(Intent.ACTION_VIEW);
             picIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "image/*");
             activity.startActivity(picIntent);
-        } else if (FileTypeModelENUM.PICTURE.type.equals(fileTypeModel)) {
+        } else if (FileTypeModelENUM.VIDEO.type.equals(fileTypeModel)) {
             final Intent videoIntent = new Intent();
             videoIntent.setAction(Intent.ACTION_VIEW);
             videoIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "video/*");
