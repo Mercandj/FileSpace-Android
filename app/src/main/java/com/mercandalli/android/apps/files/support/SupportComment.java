@@ -2,16 +2,16 @@ package com.mercandalli.android.apps.files.support;
 
 public class SupportComment {
 
-    private final String mPseudo;
+    private final boolean mIsDevResponse;
     private final String mComment;
 
-    public SupportComment(final String pseudo, final String comment) {
-        mPseudo = pseudo;
+    public SupportComment(final boolean isDevResponse, final String comment) {
+        mIsDevResponse = isDevResponse;
         mComment = comment;
     }
 
-    public String getPseudo() {
-        return mPseudo;
+    public boolean isDevResponse() {
+        return mIsDevResponse;
     }
 
     public String getComment() {

@@ -134,7 +134,7 @@ public class SupportFragment extends InjectedBackFragment implements
         mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH && !TextUtils.isEmpty(v.getText())) {
+                if (actionId == EditorInfo.IME_ACTION_DONE && !TextUtils.isEmpty(v.getText())) {
                     onFabClicked();
                     return true;
                 }
@@ -148,7 +148,7 @@ public class SupportFragment extends InjectedBackFragment implements
     }
 
     private void onFabClicked() {
-        mSupportManager.addSupportComment(new SupportComment("", mEditText.getText().toString()), this);
+        mSupportManager.addSupportComment(new SupportComment(false, mEditText.getText().toString()), this);
         mEditText.setText("");
     }
 }

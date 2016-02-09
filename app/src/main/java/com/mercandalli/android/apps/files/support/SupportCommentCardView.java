@@ -32,7 +32,7 @@ public class SupportCommentCardView extends CardView {
 
     public void setSupportComment(final SupportComment supportComment) {
         Preconditions.checkNotNull(supportComment);
-        mTitleTextView.setText(supportComment.getPseudo());
+        mTitleTextView.setText(supportComment.isDevResponse() ? "The dev" : "You");
         mSubtitleTextView.setText(supportComment.getComment());
     }
 

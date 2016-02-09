@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class SupportManagerMockImpl extends SupportManager {
 
     private final List<SupportComment> mSupportComments;
@@ -13,7 +14,7 @@ public class SupportManagerMockImpl extends SupportManager {
     public SupportManagerMockImpl(final Context contextApp) {
         mSupportComments = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            mSupportComments.add(new SupportComment("Toto " + i, "Comment " + i));
+            mSupportComments.add(new SupportComment(false, "Comment " + i));
         }
     }
 

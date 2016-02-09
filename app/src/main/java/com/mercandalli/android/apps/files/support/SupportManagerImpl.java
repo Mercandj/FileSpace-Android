@@ -10,14 +10,17 @@ import java.util.List;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedString;
 
 public class SupportManagerImpl extends SupportManager {
 
+    private final Context mContextApp;
     private final SupportOnlineApi mSupportOnlineApi;
     private final String mDeviceId;
 
     @SuppressWarnings({"UnusedParameters", "unused"})
     /* package */ SupportManagerImpl(final Context contextApp, final SupportOnlineApi supportOnlineApi) {
+        mContextApp = contextApp;
         mSupportOnlineApi = supportOnlineApi;
         mDeviceId = SupportUtils.getIdentifier(contextApp);
     }
@@ -29,13 +32,16 @@ public class SupportManagerImpl extends SupportManager {
             @Override
             public void success(SupportCommentsResponse supportCommentsResponse, Response response) {
                 final List<SupportComment> supportComments = new ArrayList<>();
-                // TODO
+                final List<SupportCommentResponse> supportCommentResponses = supportCommentsResponse.getResult(mContextApp);
+                for (SupportCommentResponse supportCommentResponse : supportCommentResponses) {
+                    supportComments.add(supportCommentResponse.toSupportComment());
+                }
                 getSupportManagerCallback.onSupportManagerGetSucceeded(supportComments);
             }
 
             @Override
             public void failure(RetrofitError error) {
-
+                getSupportManagerCallback.onSupportManagerGetFailed();
             }
         });
     }
@@ -44,5 +50,25 @@ public class SupportManagerImpl extends SupportManager {
     /* package */ void addSupportComment(final SupportComment supportComment, final GetSupportManagerCallback getSupportManagerCallback) {
         Preconditions.checkNotNull(supportComment);
         Preconditions.checkNotNull(getSupportManagerCallback);
+        mSupportOnlineApi.postSupportComment(
+                new TypedString(mDeviceId),
+                supportComment.isDevResponse(),
+                new TypedString(supportComment.getComment()),
+                new Callback<SupportCommentsResponse>() {
+                    @Override
+                    public void success(SupportCommentsResponse supportCommentsResponse, Response response) {
+                        final List<SupportComment> supportComments = new ArrayList<>();
+                        final List<SupportCommentResponse> supportCommentResponses = supportCommentsResponse.getResult(mContextApp);
+                        for (SupportCommentResponse supportCommentResponse : supportCommentResponses) {
+                            supportComments.add(supportCommentResponse.toSupportComment());
+                        }
+                        getSupportManagerCallback.onSupportManagerGetSucceeded(supportComments);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        getSupportManagerCallback.onSupportManagerGetFailed();
+                    }
+                });
     }
 }
