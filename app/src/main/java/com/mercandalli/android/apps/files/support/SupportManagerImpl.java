@@ -56,7 +56,7 @@ public class SupportManagerImpl extends SupportManager {
         Preconditions.checkNotNull(getSupportManagerCallback);
         mSupportOnlineApi.postSupportComment(
                 new TypedString(mDeviceId),
-                new TypedString("" + supportComment.isDevResponse()),
+                //new TypedString("" + supportComment.isDevResponse()),
                 new TypedString(supportComment.getComment()),
                 new Callback<SupportCommentsResponse>() {
                     @Override

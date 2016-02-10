@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -18,19 +19,21 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.main.FileApp;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 
 import java.util.List;
 
 public class SupportFragment extends BackFragment implements
         SupportCommentAdapter.OnSupportCommentLongClickListener,
         SupportCommentAdapter.OnSupportCommentClickListener,
-        SupportManager.GetSupportManagerCallback {
+        SupportManager.GetSupportManagerCallback, View.OnClickListener {
 
     private static final String BUNDLE_ARG_TITLE = "SupportFragment.Args.BUNDLE_ARG_TITLE";
     private SetToolbarCallback mSetToolbarCallback;
     private String mTitle;
     private RecyclerView mRecyclerView;
     private EditText mEditText;
+    private Button mNoInternetButton;
     private SupportCommentAdapter mSupportCommentAdapter;
 
     private SupportManager mSupportManager;
@@ -105,22 +108,33 @@ public class SupportFragment extends BackFragment implements
 
     @Override
     public void onSupportManagerGetSucceeded(final List<SupportComment> supportComments) {
+        syncInternetConnection();
         mSupportCommentAdapter.setSupportComments(supportComments);
         mRecyclerView.scrollToPosition(supportComments.size() - 1);
     }
 
     @Override
     public void onSupportManagerGetFailed() {
+        syncInternetConnection();
+    }
 
+    @Override
+    public void onClick(View v) {
+        if (v == mNoInternetButton) {
+            refreshList();
+        }
     }
 
     private void findViews(final View rootView) {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_support_recycler_view);
         mEditText = (EditText) rootView.findViewById(R.id.fragment_support_edit_text);
+        mNoInternetButton = (Button) rootView.findViewById(R.id.fragment_support_no_internet_bt);
     }
 
     private void init(final Context context) {
         mSupportManager = FileApp.get().getFileAppComponent().provideSupportManager();
+        mNoInternetButton.setOnClickListener(this);
+
         mSupportCommentAdapter = new SupportCommentAdapter(this, this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.setAdapter(mSupportCommentAdapter);
@@ -136,6 +150,13 @@ public class SupportFragment extends BackFragment implements
                 return false;
             }
         });
+    }
+
+    private void syncInternetConnection() {
+        final boolean internetOn = NetUtils.isInternetConnection(getContext());
+        mNoInternetButton.setVisibility(internetOn ? View.GONE : View.VISIBLE);
+        mEditText.setVisibility(internetOn ? View.VISIBLE : View.GONE);
+        mRecyclerView.setVisibility(internetOn ? View.VISIBLE : View.GONE);
     }
 
     private void refreshList() {

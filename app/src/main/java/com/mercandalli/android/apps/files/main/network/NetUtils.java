@@ -17,7 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package com.mercandalli.android.apps.files.common.util;
+package com.mercandalli.android.apps.files.main.network;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +25,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 
+import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 import java.util.List;

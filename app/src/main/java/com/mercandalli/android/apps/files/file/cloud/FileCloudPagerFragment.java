@@ -46,7 +46,7 @@ import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
-import com.mercandalli.android.apps.files.common.util.NetUtils;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.local.SearchActivity;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
