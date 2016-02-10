@@ -56,8 +56,37 @@ public class SupportManagerImpl extends SupportManager {
         Preconditions.checkNotNull(getSupportManagerCallback);
         mSupportOnlineApi.postSupportComment(
                 new TypedString(mDeviceId),
-                //supportComment.isDevResponse(),
+                new TypedString("" + supportComment.isDevResponse()),
                 new TypedString(supportComment.getComment()),
+                new Callback<SupportCommentsResponse>() {
+                    @Override
+                    public void success(SupportCommentsResponse supportCommentsResponse, Response response) {
+                        if (!supportCommentsResponse.isSucceed()) {
+                            getSupportManagerCallback.onSupportManagerGetFailed();
+                            return;
+                        }
+                        final List<SupportComment> supportComments = new ArrayList<>();
+                        final List<SupportCommentResponse> supportCommentResponses = supportCommentsResponse.getResult(mContextApp);
+                        for (SupportCommentResponse supportCommentResponse : supportCommentResponses) {
+                            supportComments.add(supportCommentResponse.toSupportComment());
+                        }
+                        getSupportManagerCallback.onSupportManagerGetSucceeded(supportComments);
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        getSupportManagerCallback.onSupportManagerGetFailed();
+                    }
+                });
+    }
+
+    @Override
+    /* package */ void deleteSupportComment(final SupportComment supportComment, final GetSupportManagerCallback getSupportManagerCallback) {
+        Preconditions.checkNotNull(supportComment);
+        Preconditions.checkNotNull(getSupportManagerCallback);
+        mSupportOnlineApi.deleteSupportComment(
+                new TypedString(supportComment.getId()),
+                new TypedString(mDeviceId),
                 new Callback<SupportCommentsResponse>() {
                     @Override
                     public void success(SupportCommentsResponse supportCommentsResponse, Response response) {

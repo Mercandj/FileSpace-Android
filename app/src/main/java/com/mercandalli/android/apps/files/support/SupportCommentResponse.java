@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class SupportCommentResponse {
 
+    @SerializedName("id")
+    private String mId;
+
     @SerializedName("content")
     private String mContent;
 
@@ -11,6 +14,6 @@ public class SupportCommentResponse {
     private boolean mIsDevResponse;
 
     public SupportComment toSupportComment() {
-        return new SupportComment(mIsDevResponse, mContent);
+        return new SupportComment(mId, mIsDevResponse, mContent);
     }
 }

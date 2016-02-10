@@ -8,6 +8,8 @@ public abstract class SupportManager {
 
     abstract void addSupportComment(SupportComment supportComment, GetSupportManagerCallback getSupportManagerCallback);
 
+    abstract void deleteSupportComment(SupportComment supportComment, GetSupportManagerCallback getSupportManagerCallback);
+
     interface GetSupportManagerCallback {
         void onSupportManagerGetSucceeded(List<SupportComment> supportComments);
 

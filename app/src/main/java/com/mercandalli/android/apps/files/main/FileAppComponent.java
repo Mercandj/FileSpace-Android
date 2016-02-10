@@ -18,7 +18,6 @@ import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
 import com.mercandalli.android.apps.files.file.image.FileImageModule;
 import com.mercandalli.android.apps.files.file.image.FileImageRowAdapter;
 import com.mercandalli.android.apps.files.file.local.FileLocalFragment;
-import com.mercandalli.android.apps.files.file.local.SearchActivity;
 import com.mercandalli.android.apps.files.main.version.VersionManager;
 import com.mercandalli.android.apps.files.main.version.VersionModule;
 import com.mercandalli.android.apps.files.support.SupportFragment;

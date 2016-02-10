@@ -15,14 +15,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
-import com.mercandalli.android.apps.files.main.FileAppComponent;
+import com.mercandalli.android.apps.files.main.FileApp;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
-public class SupportFragment extends InjectedBackFragment implements
+public class SupportFragment extends BackFragment implements
         SupportCommentAdapter.OnSupportCommentLongClickListener,
         SupportCommentAdapter.OnSupportCommentClickListener,
         SupportManager.GetSupportManagerCallback {
@@ -34,8 +33,7 @@ public class SupportFragment extends InjectedBackFragment implements
     private EditText mEditText;
     private SupportCommentAdapter mSupportCommentAdapter;
 
-    @Inject
-    /*package*/ SupportManager mSupportManager;
+    private SupportManager mSupportManager;
 
     public static SupportFragment newInstance(String title) {
         final SupportFragment fragment = new SupportFragment();
@@ -69,11 +67,6 @@ public class SupportFragment extends InjectedBackFragment implements
             throw new IllegalStateException("Missing args. Please use newInstance()");
         }
         mTitle = args.getString(BUNDLE_ARG_TITLE);
-    }
-
-    @Override
-    protected void inject(FileAppComponent fileAppComponent) {
-        fileAppComponent.inject(this);
     }
 
     @Override
@@ -113,6 +106,7 @@ public class SupportFragment extends InjectedBackFragment implements
     @Override
     public void onSupportManagerGetSucceeded(final List<SupportComment> supportComments) {
         mSupportCommentAdapter.setSupportComments(supportComments);
+        mRecyclerView.scrollToPosition(supportComments.size() - 1);
     }
 
     @Override
@@ -126,6 +120,7 @@ public class SupportFragment extends InjectedBackFragment implements
     }
 
     private void init(final Context context) {
+        mSupportManager = FileApp.get().getFileAppComponent().provideSupportManager();
         mSupportCommentAdapter = new SupportCommentAdapter(this, this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.setAdapter(mSupportCommentAdapter);
@@ -148,7 +143,7 @@ public class SupportFragment extends InjectedBackFragment implements
     }
 
     private void onFabClicked() {
-        mSupportManager.addSupportComment(new SupportComment(false, mEditText.getText().toString()), this);
+        mSupportManager.addSupportComment(new SupportComment("", false, mEditText.getText().toString()), this);
         mEditText.setText("");
     }
 }

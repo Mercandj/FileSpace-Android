@@ -14,7 +14,7 @@ public class SupportManagerMockImpl extends SupportManager {
     public SupportManagerMockImpl(final Context contextApp) {
         mSupportComments = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            mSupportComments.add(new SupportComment(false, "Comment " + i));
+            mSupportComments.add(new SupportComment(String.valueOf(i), false, "Comment " + i));
         }
     }
 
@@ -26,6 +26,12 @@ public class SupportManagerMockImpl extends SupportManager {
     @Override
     /* package */ void addSupportComment(SupportComment supportComment, GetSupportManagerCallback getSupportManagerCallback) {
         mSupportComments.add(supportComment);
+        getSupportManagerCallback.onSupportManagerGetSucceeded(mSupportComments);
+    }
+
+    @Override
+    /* package */ void deleteSupportComment(SupportComment supportComment, GetSupportManagerCallback getSupportManagerCallback) {
+
         getSupportManagerCallback.onSupportManagerGetSucceeded(mSupportComments);
     }
 }

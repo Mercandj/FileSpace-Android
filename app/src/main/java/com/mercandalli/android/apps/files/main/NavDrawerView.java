@@ -180,7 +180,7 @@ class NavDrawerView extends FrameLayout implements View.OnClickListener {
         SETTINGS(R.id.view_nav_drawer_settings, NavDrawerSimpleRow.SETTINGS, true, true),
         LOYALTY(R.id.view_nav_drawer_loyalty, NavDrawerSimpleRow.LOYALTY, Constants.ADS_VISIBLE, Constants.ADS_VISIBLE, false),
         LOGOUT(R.id.view_nav_drawer_logout, NavDrawerSimpleRow.LOGOUT, false, true),
-        SUPPORT(R.id.view_nav_drawer_support, NavDrawerSimpleRow.SUPPORT, false, true);
+        SUPPORT(R.id.view_nav_drawer_support, NavDrawerSimpleRow.SUPPORT, true, true);
 
         private final int mId;
 
