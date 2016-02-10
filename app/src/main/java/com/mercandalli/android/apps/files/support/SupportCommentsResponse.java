@@ -2,7 +2,7 @@ package com.mercandalli.android.apps.files.support;
 
 import android.content.Context;
 
-import com.mercandalli.android.apps.files.file.cloud.response.MyResponse;
+import com.mercandalli.android.apps.files.main.network.MyResponse;
 
 import java.util.List;
 

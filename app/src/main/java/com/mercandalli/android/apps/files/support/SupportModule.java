@@ -2,8 +2,7 @@ package com.mercandalli.android.apps.files.support;
 
 import android.app.Application;
 
-import com.mercandalli.android.apps.files.common.util.RetrofitUtils;
-import com.mercandalli.android.apps.files.file.cloud.FileOnlineApi;
+import com.mercandalli.android.apps.files.main.network.RetrofitUtils;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 
 import javax.inject.Singleton;

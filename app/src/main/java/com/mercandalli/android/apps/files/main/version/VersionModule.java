@@ -2,7 +2,7 @@ package com.mercandalli.android.apps.files.main.version;
 
 import android.app.Application;
 
-import com.mercandalli.android.apps.files.common.util.RetrofitUtils;
+import com.mercandalli.android.apps.files.main.network.RetrofitUtils;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 
 import javax.inject.Singleton;

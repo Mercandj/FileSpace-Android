@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.common.util;
+package com.mercandalli.android.apps.files.main.network;
 
 import com.squareup.okhttp.OkHttpClient;
 

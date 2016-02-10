@@ -21,7 +21,7 @@ public interface SupportOnlineApi {
     @POST("/" + Config.routeSupportComment)
     void postSupportComment(
             @Part("id_device") TypedString deviceId,
-            @Part("is_dev_response") boolean isDevResponse,
+            //@Part("is_dev_response") boolean isDevResponse,
             @Part("content") TypedString commentContent,
             Callback<SupportCommentsResponse> result);
 

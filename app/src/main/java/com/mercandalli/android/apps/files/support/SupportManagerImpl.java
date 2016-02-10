@@ -31,6 +31,10 @@ public class SupportManagerImpl extends SupportManager {
         mSupportOnlineApi.getSupportComments(mDeviceId, new Callback<SupportCommentsResponse>() {
             @Override
             public void success(SupportCommentsResponse supportCommentsResponse, Response response) {
+                if (!supportCommentsResponse.isSucceed()) {
+                    getSupportManagerCallback.onSupportManagerGetFailed();
+                    return;
+                }
                 final List<SupportComment> supportComments = new ArrayList<>();
                 final List<SupportCommentResponse> supportCommentResponses = supportCommentsResponse.getResult(mContextApp);
                 for (SupportCommentResponse supportCommentResponse : supportCommentResponses) {
@@ -52,11 +56,15 @@ public class SupportManagerImpl extends SupportManager {
         Preconditions.checkNotNull(getSupportManagerCallback);
         mSupportOnlineApi.postSupportComment(
                 new TypedString(mDeviceId),
-                supportComment.isDevResponse(),
+                //supportComment.isDevResponse(),
                 new TypedString(supportComment.getComment()),
                 new Callback<SupportCommentsResponse>() {
                     @Override
                     public void success(SupportCommentsResponse supportCommentsResponse, Response response) {
+                        if (!supportCommentsResponse.isSucceed()) {
+                            getSupportManagerCallback.onSupportManagerGetFailed();
+                            return;
+                        }
                         final List<SupportComment> supportComments = new ArrayList<>();
                         final List<SupportCommentResponse> supportCommentResponses = supportCommentsResponse.getResult(mContextApp);
                         for (SupportCommentResponse supportCommentResponse : supportCommentResponses) {
