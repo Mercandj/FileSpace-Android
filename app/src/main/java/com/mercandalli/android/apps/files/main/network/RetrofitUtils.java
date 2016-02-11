@@ -1,5 +1,6 @@
 package com.mercandalli.android.apps.files.main.network;
 
+import com.mercandalli.android.apps.files.BuildConfig;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 
@@ -17,21 +18,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitUtils {
 
     private static OkHttpClient getOkHttpClient() {
-        final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        return (new OkHttpClient.Builder())
+        final OkHttpClient.Builder builder = (new OkHttpClient.Builder())
                 .connectTimeout(60 * 1000, TimeUnit.MILLISECONDS)
-                .readTimeout(60 * 1000, TimeUnit.MILLISECONDS)
-                .addInterceptor(interceptor)
-                .build();
+                .readTimeout(60 * 1000, TimeUnit.MILLISECONDS);
+        if (BuildConfig.DEBUG) {
+            final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.addInterceptor(interceptor);
+        }
+        return builder.build();
     }
 
     private static OkHttpClient getAuthorizedOkHttpClient() {
-        final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        return (new OkHttpClient.Builder())
+        final OkHttpClient.Builder builder = (new OkHttpClient.Builder())
                 .connectTimeout(60 * 1000, TimeUnit.MILLISECONDS)
                 .readTimeout(60 * 1000, TimeUnit.MILLISECONDS)
                 .addInterceptor(new Interceptor() {
@@ -49,9 +48,13 @@ public class RetrofitUtils {
                         // Customize or return the response
                         return chain.proceed(request);
                     }
-                })
-                .addInterceptor(interceptor)
-                .build();
+                });
+        if (BuildConfig.DEBUG) {
+            final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.addInterceptor(interceptor);
+        }
+        return builder.build();
     }
 
     public static Retrofit getRetrofit() {
