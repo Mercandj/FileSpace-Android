@@ -72,6 +72,7 @@ import retrofit2.Response;
 public class FileManagerImpl extends FileManager /*implements FileUploadTypedFile.FileUploadListener*/ {
 
     private static final String LIKE = " LIKE ?";
+    private static final String MIME_TEXT = "text/plain";
 
     private final Context mContextApp;
     private final FileOnlineApi mFileOnlineApi;
@@ -160,6 +161,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
                 .getAbsolutePath() + File.separator + Config.localFolderNameDefault;
         final File folder = new File(pathFolderDownloaded);
         if (!folder.exists()) {
+            //noinspection ResultOfMethodCallIgnored
             folder.mkdir();
         }
         new TaskGetDownload(activity, Constants.URL_DOMAIN_API + Config.routeFile + "/" +
@@ -192,9 +194,9 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
         RequestBody photo = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         params.put("file\"; filename=\"" + filename, photo);
 
-        params.put("url", RequestBody.create(MediaType.parse("text/plain"), fileModel.getName()));
-        params.put("id_file_parent", RequestBody.create(MediaType.parse("text/plain"), "" + idFileParent));
-        params.put("directory", RequestBody.create(MediaType.parse("text/plain"), "false"));
+        params.put("url", RequestBody.create(MediaType.parse(MIME_TEXT), fileModel.getName()));
+        params.put("id_file_parent", RequestBody.create(MediaType.parse(MIME_TEXT), "" + idFileParent));
+        params.put("directory", RequestBody.create(MediaType.parse(MIME_TEXT), "false"));
 
         final Call<FilesResponse> call = mFileOnlineApi.uploadFile(params);
         //new FileUploadTypedFile("*/*", fileModel, this),
@@ -242,6 +244,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
         } else {
             File parent = fileModel.getFile().getParentFile();
             if (parent != null) {
+                //noinspection ResultOfMethodCallIgnored
                 fileModel.getFile().renameTo(new File(parent.getAbsolutePath(), newName));
             }
             listener.execute();
@@ -255,6 +258,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
     public void renameLocalByPath(final FileModel fileModel, final String path) {
         Preconditions.checkNotNull(fileModel);
         Preconditions.checkNotNull(path);
+        //noinspection ResultOfMethodCallIgnored
         fileModel.getFile().renameTo(new File(path));
     }
 
@@ -285,6 +289,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
             if (fileModel.getFile().isDirectory()) {
                 FileUtils.deleteDirectory(fileModel.getFile());
             } else {
+                //noinspection ResultOfMethodCallIgnored
                 fileModel.getFile().delete();
             }
             listener.execute();
@@ -383,7 +388,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
                         String type_mime = "*/*";
                         switch (item) {
                             case 0:
-                                type_mime = "text/plain";
+                                type_mime = MIME_TEXT;
                                 break;
                             case 1:
                                 type_mime = "image/*";
@@ -469,6 +474,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
             try {
                 final File dir = new File(outputPath);
                 if (!dir.exists()) {
+                    //noinspection ResultOfMethodCallIgnored
                     dir.mkdirs();
                 }
 
@@ -479,6 +485,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
 
                 if (fileModel.isDirectory()) {
                     final File copy = new File(outputUrl);
+                    //noinspection ResultOfMethodCallIgnored
                     copy.mkdirs();
                     final File[] children = fileModel.getFile().listFiles();
                     for (File aChildren : children) {
@@ -695,7 +702,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
         } else if (FileTypeModelENUM.TEXT.type.equals(fileTypeModel)) {
             final Intent txtIntent = new Intent();
             txtIntent.setAction(Intent.ACTION_VIEW);
-            txtIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "text/plain");
+            txtIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), MIME_TEXT);
             try {
                 activity.startActivity(txtIntent);
             } catch (ActivityNotFoundException e) {
