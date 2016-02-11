@@ -1,18 +1,21 @@
 package com.mercandalli.android.apps.files.file.cloud;
 
-import com.mercandalli.android.apps.files.file.FileUploadTypedFile;
-import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.cloud.response.FilesResponse;
-import retrofit.Callback;
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.Multipart;
-import retrofit.http.POST;
-import retrofit.http.Part;
-import retrofit.http.Path;
-import retrofit.http.Query;
-import retrofit.mime.TypedString;
+import com.mercandalli.android.apps.files.main.Config;
+
+import java.util.Map;
+
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.GET;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.PartMap;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * The {@link FileModel} online api .
@@ -20,45 +23,41 @@ import retrofit.mime.TypedString;
 public interface FileOnlineApi {
 
     @GET("/" + Config.routeFile)
-    void getFiles(
+    Call<FilesResponse> getFiles(
             @Query("id_file_parent") int fileParentId,
             @Query("all-public") String publicFiles,
-            @Query("search") String search,
-            Callback<FilesResponse> result);
+            @Query("search") String search);
 
     @Multipart
     @POST("/" + Config.routeFile)
-    void uploadFile(
-            @Part("file") FileUploadTypedFile file,
-            @Part("url") TypedString url,
-            @Part("id_file_parent") TypedString id_file_parent,
-            @Part("directory") TypedString directory,
-            Callback<FilesResponse> result);
+    Call<FilesResponse> uploadFile(
+            @PartMap() Map<String, RequestBody> mapPhoto
+            //@Part("file") FileUploadTypedFile file,
+            //@Field("url") String url,
+            //@Field("id_file_parent") String id_file_parent,
+            //@Field("directory") String directory
+    );
 
     @Multipart
     @POST("/" + Config.routeFile + "/{id_file_to_rename}")
-    void rename(
+    Call<FilesResponse> rename(
             @Path("id_file_to_rename") int fileId,
-            @Part("url") TypedString newFullName,
-            Callback<FilesResponse> result);
+            @Field("url") String newFullName);
 
     @POST("/" + Config.routeFileDelete + "/{id_file_to_delete}")
-    void delete(
+    Call<FilesResponse> delete(
             @Path("id_file_to_delete") int fileId,
-            @Body String body,
-            Callback<FilesResponse> result);
+            @Body String body);
 
     @Multipart
     @POST("/" + Config.routeFile + "/{id_file}")
-    void setParent(
+    Call<FilesResponse> setParent(
             @Path("id_file") int fileId,
-            @Part("id_file_parent") TypedString idFileParent,
-            Callback<FilesResponse> result);
+            @Field("id_file_parent") String idFileParent);
 
     @Multipart
     @POST("/" + Config.routeFile + "/{id_file}")
-    void setPublic(
+    Call<FilesResponse> setPublic(
             @Path("id_file") int fileId,
-            @Part("public") TypedString isPublic,
-            Callback<FilesResponse> result);
+            @Field("public") String isPublic);
 }

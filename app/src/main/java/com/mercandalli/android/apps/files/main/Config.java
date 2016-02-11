@@ -29,9 +29,9 @@ import com.mercandalli.android.apps.files.common.listener.IBitmapListener;
 import com.mercandalli.android.apps.files.common.net.Base64;
 import com.mercandalli.android.apps.files.common.net.TaskGetDownloadImage;
 import com.mercandalli.android.apps.files.common.util.HashUtils;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileUtils;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.user.UserModel;
 
 import org.json.JSONException;
@@ -58,24 +58,25 @@ public class Config {
     // Server routes
     public static final String aboutURL = "http://mercandalli.com/";
     public static final String webApplication = "http://mercandalli.com/FileSpace";
-    public static final String routeFile = "file";
-    public static final String routeFileDelete = "file_delete";
-    public static final String routeSupportComment = "support/comment";
-    public static final String routeSupportCommentDelete = "support/comment/delete";
-    public static final String routeVersionSupported = "version/supported";
-    public static final String routeInformation = "information";
-    public static final String routeRobotics = "robotics";
-    public static final String routeGenealogy = "genealogy";
-    public static final String routeGenealogyDelete = "genealogy_delete";
-    public static final String routeGenealogyPut = "genealogy_put";
-    public static final String routeGenealogyChildren = "genealogy_children";
-    public static final String routeGenealogyStatistics = "genealogy_statistics";
-    public static final String routeUser = "user";
-    public static final String routeUserDelete = "user_delete";
-    public static final String routeUserPut = "user_put";
-    public static final String routeUserMessage = "user_message";
-    public static final String routeUserConversation = "user_conversation";
-    public static final String routeUserConnection = "user_connection";
+    private static final String startRoute = "FileSpace-API/";
+    public static final String routeFile = startRoute + "file";
+    public static final String routeFileDelete = startRoute + "file_delete";
+    public static final String routeSupportComment = startRoute + "support/comment";
+    public static final String routeSupportCommentDelete = startRoute + "support/comment/delete";
+    public static final String routeVersionSupported = startRoute + "version/supported";
+    public static final String routeInformation = startRoute + "information";
+    public static final String routeRobotics = startRoute + "robotics";
+    public static final String routeGenealogy = startRoute + "genealogy";
+    public static final String routeGenealogyDelete = startRoute + "genealogy_delete";
+    public static final String routeGenealogyPut = startRoute + "genealogy_put";
+    public static final String routeGenealogyChildren = startRoute + "genealogy_children";
+    public static final String routeGenealogyStatistics = startRoute + "genealogy_statistics";
+    public static final String routeUser = startRoute + "user";
+    public static final String routeUserDelete = startRoute + "user_delete";
+    public static final String routeUserPut = startRoute + "user_put";
+    public static final String routeUserMessage = startRoute + "user_message";
+    public static final String routeUserConversation = startRoute + "user_conversation";
+    public static final String routeUserConnection = startRoute + "user_connection";
 
     /**
      * Static int to save/load

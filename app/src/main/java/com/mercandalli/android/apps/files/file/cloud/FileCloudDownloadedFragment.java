@@ -187,7 +187,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
                                                     createFile(mCurrentDirectory.getPath() + File.separator, text);
                                                     refreshList();
                                                 }
-                                            }, getString(R.string.cancel), null, null, "Name");
+                                            }, getString(android.R.string.cancel), null, null, "Name");
                                             break;
                                     }
                                 }
@@ -447,7 +447,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
                                                 });
                                             }
                                         }
-                                    }, getString(R.string.cancel), null);
+                                    }, getString(android.R.string.cancel), null);
                                 }
                                 break;
                             case 1:

@@ -109,7 +109,7 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
                         //TODO create a online txt with content
                         Toast.makeText(getContext(), getContext().getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                     }
-                }, mActivity.getString(R.string.cancel), null);
+                }, mActivity.getString(android.R.string.cancel), null);
                 FileAddDialog.this.dismiss();
             }
         });
@@ -244,7 +244,7 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
                             }
                         }, parameters)).execute();
                     }
-                }, mActivity.getString(R.string.cancel), null);
+                }, mActivity.getString(android.R.string.cancel), null);
                 FileAddDialog.this.dismiss();
                 break;
         }

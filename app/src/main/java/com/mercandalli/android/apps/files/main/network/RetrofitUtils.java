@@ -1,55 +1,72 @@
 package com.mercandalli.android.apps.files.main.network;
 
-import com.squareup.okhttp.OkHttpClient;
-
-import java.util.concurrent.TimeUnit;
-
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.client.OkClient;
 
-/**
- * Created by Jonathan on 23/10/2015.
- */
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class RetrofitUtils {
 
     private static OkHttpClient getOkHttpClient() {
-        OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.setConnectTimeout(60 * 1000, TimeUnit.MILLISECONDS);
-        okHttpClient.setReadTimeout(60 * 1000, TimeUnit.MILLISECONDS);
-        return okHttpClient;
+        final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        return (new OkHttpClient.Builder())
+                .connectTimeout(60 * 1000, TimeUnit.MILLISECONDS)
+                .readTimeout(60 * 1000, TimeUnit.MILLISECONDS)
+                .addInterceptor(interceptor)
+                .build();
     }
 
-    private static RestAdapter.Builder getBaseRestAdapter() {
-        RestAdapter.Builder builder = new RestAdapter.Builder();
-        builder.setClient(new OkClient(getOkHttpClient()))
-                .setEndpoint(Constants.URL_DOMAIN_API);
+    private static OkHttpClient getAuthorizedOkHttpClient() {
+        final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        /*
-        if (BuildConfig.DEBUG) {
-            builder.setLogLevel(RestAdapter.LogLevel.FULL);
-        }
-        */
-
-        return builder;
-    }
-
-    public static RestAdapter getRestAdapter() {
-        return getBaseRestAdapter().build();
-    }
-
-    public static RestAdapter getAuthorizedRestAdapter() {
-        RestAdapter.Builder builder = getBaseRestAdapter()
-                .setRequestInterceptor(new RequestInterceptor() {
+        return (new OkHttpClient.Builder())
+                .connectTimeout(60 * 1000, TimeUnit.MILLISECONDS)
+                .readTimeout(60 * 1000, TimeUnit.MILLISECONDS)
+                .addInterceptor(new Interceptor() {
                     @Override
-                    public void intercept(RequestFacade request) {
-                        request.addHeader("Accept", "application/json");
-                        request.addHeader("Authorization", "Basic " + Config.getUserToken());
-                    }
-                });
+                    public Response intercept(Chain chain) throws IOException {
+                        Request original = chain.request();
 
-        return builder.build();
+                        // Customize the request
+                        Request request = original.newBuilder()
+                                .header("Accept", "application/json")
+                                .header("Authorization", "Basic " + Config.getUserToken())
+                                .method(original.method(), original.body())
+                                .build();
+
+                        // Customize or return the response
+                        return chain.proceed(request);
+                    }
+                })
+                .addInterceptor(interceptor)
+                .build();
+    }
+
+    public static Retrofit getRetrofit() {
+        return (new Retrofit.Builder())
+                .baseUrl(Constants.URL_DOMAIN)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(getOkHttpClient())
+                .build();
+    }
+
+    public static Retrofit getAuthorizedRetrofit() {
+        return (new Retrofit.Builder())
+                .baseUrl(Constants.URL_DOMAIN)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(getAuthorizedOkHttpClient())
+                .build();
     }
 }

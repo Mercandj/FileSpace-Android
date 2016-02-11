@@ -19,19 +19,19 @@ public class SupportManagerMockImpl extends SupportManager {
     }
 
     @Override
-    /* package */ void getSupportComment(GetSupportManagerCallback getSupportManagerCallback) {
-        getSupportManagerCallback.onSupportManagerGetSucceeded(mSupportComments);
+    /* package */ void getSupportComment() {
+        notifyGetSupportManagerCallbackSucceeded(mSupportComments);
     }
 
     @Override
-    /* package */ void addSupportComment(SupportComment supportComment, GetSupportManagerCallback getSupportManagerCallback) {
+    /* package */ void addSupportComment(SupportComment supportComment) {
         mSupportComments.add(supportComment);
-        getSupportManagerCallback.onSupportManagerGetSucceeded(mSupportComments);
+        notifyGetSupportManagerCallbackSucceeded(mSupportComments);
     }
 
     @Override
-    /* package */ void deleteSupportComment(SupportComment supportComment, GetSupportManagerCallback getSupportManagerCallback) {
+    /* package */ void deleteSupportComment(SupportComment supportComment) {
 
-        getSupportManagerCallback.onSupportManagerGetSucceeded(mSupportComments);
+        notifyGetSupportManagerCallbackSucceeded(mSupportComments);
     }
 }

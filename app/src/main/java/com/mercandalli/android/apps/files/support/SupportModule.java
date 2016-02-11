@@ -19,7 +19,7 @@ public class SupportModule {
     @Provides
     @Singleton
     SupportManager provideSupportManager(Application application) {
-        return new SupportManagerImpl(application, RetrofitUtils.getAuthorizedRestAdapter().create(SupportOnlineApi.class));
+        return new SupportManagerImpl(application, RetrofitUtils.getRetrofit().create(SupportOnlineApi.class));
         //return new SupportManagerMockImpl(application);
     }
 

@@ -1,5 +1,6 @@
 package com.mercandalli.android.apps.files.main.version;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.mercandalli.android.apps.files.BuildConfig;
 
@@ -10,10 +11,12 @@ import com.mercandalli.android.apps.files.BuildConfig;
 class VersionResponse {
 
     @SuppressWarnings("unused")
+    @Expose
     @SerializedName("android_last_supported_version_code")
     private int mLastSupportedVersionCode;
 
     @SuppressWarnings({"unused", "MismatchedReadAndWriteOfArray"})
+    @Expose
     @SerializedName("android_version_not_supported")
     private int[] mVersionCodeNotSupported;
 

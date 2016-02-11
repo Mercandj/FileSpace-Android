@@ -111,7 +111,7 @@ public class UserLocationFragment extends BackFragment {
         this.circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogUtils.alert(getContext(), "Share your location", "If you share your location you will see all the positions of every users", getString(R.string.yes),
+                DialogUtils.alert(getContext(), "Share your location", "If you share your location you will see all the positions of every users", getString(android.R.string.yes),
                         new IListener() {
                             @Override
                             public void execute() {
@@ -156,7 +156,7 @@ public class UserLocationFragment extends BackFragment {
                                     }
                                 }
                             }
-                        }, getString(R.string.no), null
+                        }, getString(android.R.string.no), null
                 );
             }
         });

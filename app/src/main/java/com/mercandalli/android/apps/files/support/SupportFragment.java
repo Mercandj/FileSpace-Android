@@ -70,18 +70,27 @@ public class SupportFragment extends BackFragment implements
             throw new IllegalStateException("Missing args. Please use newInstance()");
         }
         mTitle = args.getString(BUNDLE_ARG_TITLE);
+        mSupportManager = FileApp.get().getFileAppComponent().provideSupportManager();
+        mSupportManager.registerOnCurrentMixFaderChangeListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        mSupportManager.unregisterOnCurrentMixFaderChangeListener(this);
+        super.onDestroy();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_support, container, false);
+        final Context context = getContext();
 
         final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.fragment_support_tool_bar);
         toolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(toolbar);
 
         findViews(rootView);
-        init(getContext());
+        init(context);
 
         return rootView;
     }
@@ -132,7 +141,6 @@ public class SupportFragment extends BackFragment implements
     }
 
     private void init(final Context context) {
-        mSupportManager = FileApp.get().getFileAppComponent().provideSupportManager();
         mNoInternetButton.setOnClickListener(this);
 
         mSupportCommentAdapter = new SupportCommentAdapter(this, this);
@@ -160,11 +168,11 @@ public class SupportFragment extends BackFragment implements
     }
 
     private void refreshList() {
-        mSupportManager.getSupportComment(this);
+        mSupportManager.getSupportComment();
     }
 
     private void onFabClicked() {
-        mSupportManager.addSupportComment(new SupportComment("", false, mEditText.getText().toString()), this);
+        mSupportManager.addSupportComment(new SupportComment("", false, mEditText.getText().toString()));
         mEditText.setText("");
     }
 }

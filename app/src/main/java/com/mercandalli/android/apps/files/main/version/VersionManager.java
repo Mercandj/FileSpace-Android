@@ -8,9 +8,9 @@ import com.mercandalli.android.apps.files.precondition.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple manager to manage the current
@@ -55,20 +55,25 @@ public class VersionManager {
             return;
         }
         mIsUpdateChecking = true;
-        mVersionApi.getVersionSupported(new Callback<VersionResponse>() {
+        final Call<VersionResponse> call = mVersionApi.getVersionSupported();
+        call.enqueue(new Callback<VersionResponse>() {
             @Override
-            public void success(VersionResponse versionResponse, Response response) {
+            public void onResponse(Call<VersionResponse> call, Response<VersionResponse> response) {
+                if (!response.isSuccess()) {
+                    mIsUpdateChecking = false;
+                    return;
+                }
                 mIsUpdateChecking = false;
                 mIsUpdateCalledSucceeded = true;
-                mIsUpdateNeeded = versionResponse.isUpdateNeeded();
+                mIsUpdateNeeded = response.body().isUpdateNeeded();
                 if (mIsUpdateNeeded) {
                     notifyUpdateNeeded();
                 }
             }
 
             @Override
-            public void failure(RetrofitError error) {
-                mIsUpdateChecking = false;
+            public void onFailure(Call<VersionResponse> call, Throwable t) {
+
             }
         });
     }

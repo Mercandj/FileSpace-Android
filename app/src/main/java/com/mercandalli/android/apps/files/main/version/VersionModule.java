@@ -19,7 +19,7 @@ public class VersionModule {
     @Provides
     @Singleton
     VersionManager provideVersionManager(Application application) {
-        final VersionApi versionApi = RetrofitUtils.getAuthorizedRestAdapter().create(VersionApi.class);
+        final VersionApi versionApi = RetrofitUtils.getRetrofit().create(VersionApi.class);
 
         return new VersionManager(application, versionApi);
     }

@@ -67,10 +67,15 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.0.2'
 
     //Network
+    compile('com.squareup.retrofit2:retrofit:2.0.0-beta4') {
+        // exclude Retrofit’s OkHttp peer-dependency module and define your own module import
+        exclude module: 'okhttp'
+    }
+    compile 'com.squareup.okhttp3:okhttp:3.0.0'
     compile 'com.google.code.gson:gson:2.4'
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
-    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
 
     //Audio
     compile 'org.jaudiotagger:jaudiotagger:2.0.1'

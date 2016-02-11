@@ -222,7 +222,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                                                         }, parameters, fileModel.getFile())).execute();
                                                     }
                                                 }
-                                            }, getString(R.string.cancel), null);
+                                            }, getString(android.R.string.cancel), null);
                                         }
                                         break;
                                     case 1:

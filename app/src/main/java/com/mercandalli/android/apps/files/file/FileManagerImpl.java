@@ -27,7 +27,6 @@ import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.net.TaskGetDownload;
 import com.mercandalli.android.apps.files.common.util.HtmlUtils;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.common.util.TimeUtils;
@@ -44,6 +43,7 @@ import com.mercandalli.android.apps.files.file.local.FileLocalApi;
 import com.mercandalli.android.apps.files.file.text.FileTextActivity;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -56,17 +56,20 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedString;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A {@link FileModel} Manager.
  */
-public class FileManagerImpl extends FileManager implements FileUploadTypedFile.FileUploadListener {
+public class FileManagerImpl extends FileManager /*implements FileUploadTypedFile.FileUploadListener*/ {
 
     private static final String LIKE = " LIKE ?";
 
@@ -112,19 +115,25 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
             resultCallback.success(mFileLocalApi.getFiles(fileParent.getFile(), search, sortMode));
             return;
         }
-        mFileOnlineApi.getFiles(fileParent.getId(), areMyFiles ? "" : "true", StringUtils.toEmptyIfNull(search), new Callback<FilesResponse>() {
+        final Call<FilesResponse> call = mFileOnlineApi.getFiles(fileParent.getId(), areMyFiles ? "" : "true", StringUtils.toEmptyIfNull(search));
+        call.enqueue(new Callback<FilesResponse>() {
             @Override
-            public void success(FilesResponse filesResponse, Response response) {
-                final List<FileResponse> result = filesResponse.getResult(mContextApp);
-                final List<FileModel> fileModelList = new ArrayList<>();
-                for (FileResponse fileResponse : result) {
-                    fileModelList.add(fileResponse.createModel());
+            public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
+                if (response.isSuccess()) {
+                    final FilesResponse filesResponse = response.body();
+                    final List<FileResponse> result = filesResponse.getResult(mContextApp);
+                    final List<FileModel> fileModelList = new ArrayList<>();
+                    for (FileResponse fileResponse : result) {
+                        fileModelList.add(fileResponse.createModel());
+                    }
+                    resultCallback.success(fileModelList);
+                } else {
+                    resultCallback.failure();
                 }
-                resultCallback.success(fileModelList);
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void onFailure(Call<FilesResponse> call, Throwable t) {
                 resultCallback.failure();
             }
         });
@@ -153,7 +162,7 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         if (!folder.exists()) {
             folder.mkdir();
         }
-        new TaskGetDownload(activity, Constants.URL_DOMAIN_API + "/" + Config.routeFile + "/" +
+        new TaskGetDownload(activity, Constants.URL_DOMAIN_API + Config.routeFile + "/" +
                 fileModel.getId(), pathFolderDownloaded + File.separator + fileModel.getFullName(),
                 fileModel, listener).execute();
     }
@@ -175,22 +184,36 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
                     .show();
             return;
         }
-        mFileOnlineApi.uploadFile(
-                new FileUploadTypedFile("*/*", fileModel, this),
-                new TypedString(fileModel.getName()),
-                new TypedString("" + idFileParent),
-                new TypedString("false"),
-                new Callback<FilesResponse>() {
-                    @Override
-                    public void success(FilesResponse filesResponse, Response response) {
-                        listener.execute();
-                    }
 
-                    @Override
-                    public void failure(RetrofitError error) {
+        final Map<String, RequestBody> params = new HashMap<>();
 
-                    }
-                });
+        final File file = fileModel.getFile();
+        String filename = file.getName();
+        RequestBody photo = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        params.put("file\"; filename=\"" + filename, photo);
+
+        params.put("url", RequestBody.create(MediaType.parse("text/plain"), fileModel.getName()));
+        params.put("id_file_parent", RequestBody.create(MediaType.parse("text/plain"), "" + idFileParent));
+        params.put("directory", RequestBody.create(MediaType.parse("text/plain"), "false"));
+
+        final Call<FilesResponse> call = mFileOnlineApi.uploadFile(params);
+        //new FileUploadTypedFile("*/*", fileModel, this),
+        //fileModel.getName(),
+        //"" + idFileParent,
+        //"false");
+        call.enqueue(new Callback<FilesResponse>() {
+            @Override
+            public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
+                if (response.isSuccess()) {
+                    listener.execute();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FilesResponse> call, Throwable t) {
+
+            }
+        });
 
     }
 
@@ -200,15 +223,19 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
     @Override
     public void rename(final FileModel fileModel, final String newName, final IListener listener) {
         if (fileModel.isOnline()) {
-            mFileOnlineApi.rename(fileModel.getId(), new TypedString(newName), new Callback<FilesResponse>() {
+            final Call<FilesResponse> call = mFileOnlineApi.rename(fileModel.getId(), newName);
+            call.enqueue(new Callback<FilesResponse>() {
                 @Override
-                public void success(FilesResponse filesResponse, Response response) {
-                    filesResponse.getResult(mContextApp);
-                    listener.execute();
+                public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
+                    if (response.isSuccess()) {
+                        final FilesResponse filesResponse = response.body();
+                        filesResponse.getResult(mContextApp);
+                        listener.execute();
+                    }
                 }
 
                 @Override
-                public void failure(RetrofitError error) {
+                public void onFailure(Call<FilesResponse> call, Throwable t) {
 
                 }
             });
@@ -238,15 +265,19 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
     public void delete(final FileModel fileModel, final IListener listener) {
         Preconditions.checkNotNull(fileModel);
         if (fileModel.isOnline()) {
-            mFileOnlineApi.delete(fileModel.getId(), "", new Callback<FilesResponse>() {
+            final Call<FilesResponse> call = mFileOnlineApi.delete(fileModel.getId(), "");
+            call.enqueue(new Callback<FilesResponse>() {
                 @Override
-                public void success(FilesResponse filesResponse, Response response) {
-                    filesResponse.getResult(mContextApp);
-                    listener.execute();
+                public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
+                    if (response.isSuccess()) {
+                        final FilesResponse filesResponse = response.body();
+                        filesResponse.getResult(mContextApp);
+                        listener.execute();
+                    }
                 }
 
                 @Override
-                public void failure(RetrofitError error) {
+                public void onFailure(Call<FilesResponse> call, Throwable t) {
 
                 }
             });
@@ -269,15 +300,19 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         if (!fileModel.isOnline()) {
             return;
         }
-        mFileOnlineApi.setParent(fileModel.getId(), new TypedString("" + newIdFileParent), new Callback<FilesResponse>() {
+        final Call<FilesResponse> call = mFileOnlineApi.setParent(fileModel.getId(), "" + newIdFileParent);
+        call.enqueue(new Callback<FilesResponse>() {
             @Override
-            public void success(FilesResponse filesResponse, Response response) {
-                filesResponse.getResult(mContextApp);
-                listener.execute();
+            public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
+                if (response.isSuccess()) {
+                    final FilesResponse filesResponse = response.body();
+                    filesResponse.getResult(mContextApp);
+                    listener.execute();
+                }
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void onFailure(Call<FilesResponse> call, Throwable t) {
 
             }
         });
@@ -291,15 +326,19 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         if (!fileModel.isOnline()) {
             return;
         }
-        mFileOnlineApi.setPublic(fileModel.getId(), new TypedString("" + isPublic), new Callback<FilesResponse>() {
+        final Call<FilesResponse> call = mFileOnlineApi.setPublic(fileModel.getId(), "" + isPublic);
+        call.enqueue(new Callback<FilesResponse>() {
             @Override
-            public void success(FilesResponse filesResponse, Response response) {
-                filesResponse.getResult(mContextApp);
-                listener.execute();
+            public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
+                if (response.isSuccess()) {
+                    final FilesResponse filesResponse = response.body();
+                    filesResponse.getResult(mContextApp);
+                    listener.execute();
+                }
             }
 
             @Override
-            public void failure(RetrofitError error) {
+            public void onFailure(Call<FilesResponse> call, Throwable t) {
 
             }
         });
@@ -543,40 +582,40 @@ public class FileManagerImpl extends FileManager implements FileUploadTypedFile.
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onFileUploadProgress(final FileModel fileModel, long progress, long length) {
-        if (mNotificationBuilder == null) {
-            mNotificationBuilder = new NotificationCompat.Builder(mContextApp);
-            mNotificationBuilder.setContentTitle("Upload: " + fileModel.getName())
-                    .setContentText("Upload in progress: " + FileUtils.humanReadableByteCount(progress)
-                            + " / " + FileUtils.humanReadableByteCount(length))
-                    .setSmallIcon(R.drawable.ic_notification);
-        } else {
-            mNotificationBuilder.setContentText("Upload in progress: " +
-                    FileUtils.humanReadableByteCount(progress) + " / " +
-                    FileUtils.humanReadableByteCount(length));
-        }
-        mNotificationBuilder.setProgress((int) (length / 1_000.0f), (int) (progress / 1_000.0f), false);
-
-        if (mNotifyManager == null) {
-            mNotifyManager = (NotificationManager) mContextApp.getSystemService(Context.NOTIFICATION_SERVICE);
-        }
-        mNotifyManager.notify(1, mNotificationBuilder.build());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void onFileUploadFinished(FileModel fileModel) {
-        mNotificationBuilder.setContentText("Upload complete")
-                // Removes the progress bar
-                .setProgress(0, 0, false);
-        mNotifyManager.notify(1, mNotificationBuilder.build());
-    }
+//    /**
+//     * {@inheritDoc}
+//     */
+//    @Override
+//    public void onFileUploadProgress(final FileModel fileModel, long progress, long length) {
+//        if (mNotificationBuilder == null) {
+//            mNotificationBuilder = new NotificationCompat.Builder(mContextApp);
+//            mNotificationBuilder.setContentTitle("Upload: " + fileModel.getName())
+//                    .setContentText("Upload in progress: " + FileUtils.humanReadableByteCount(progress)
+//                            + " / " + FileUtils.humanReadableByteCount(length))
+//                    .setSmallIcon(R.drawable.ic_notification);
+//        } else {
+//            mNotificationBuilder.setContentText("Upload in progress: " +
+//                    FileUtils.humanReadableByteCount(progress) + " / " +
+//                    FileUtils.humanReadableByteCount(length));
+//        }
+//        mNotificationBuilder.setProgress((int) (length / 1_000.0f), (int) (progress / 1_000.0f), false);
+//
+//        if (mNotifyManager == null) {
+//            mNotifyManager = (NotificationManager) mContextApp.getSystemService(Context.NOTIFICATION_SERVICE);
+//        }
+//        mNotifyManager.notify(1, mNotificationBuilder.build());
+//    }
+//
+//    /**
+//     * {@inheritDoc}
+//     */
+//    @Override
+//    public void onFileUploadFinished(FileModel fileModel) {
+//        mNotificationBuilder.setContentText("Upload complete")
+//                // Removes the progress bar
+//                .setProgress(0, 0, false);
+//        mNotifyManager.notify(1, mNotificationBuilder.build());
+//    }
 
     private void executeOnline(final Activity activity, final int position, final List<FileModel> fileModelList, View view) {
         if (fileModelList == null || position >= fileModelList.size()) {

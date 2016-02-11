@@ -129,7 +129,7 @@ public class FileAudioOverflowActions implements PopupMenu.OnMenuItemClickListen
                         });
                     }
                 }
-            }, mActivity.getString(R.string.cancel), null);
+            }, mActivity.getString(android.R.string.cancel), null);
         }
     }
 
@@ -161,7 +161,7 @@ public class FileAudioOverflowActions implements PopupMenu.OnMenuItemClickListen
                 mActivity,
                 mDeleteString,
                 "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?",
-                "Yes",
+                mActivity.getResources().getString(android.R.string.yes),
                 new IListener() {
                     @Override
                     public void execute() {
@@ -173,7 +173,7 @@ public class FileAudioOverflowActions implements PopupMenu.OnMenuItemClickListen
                         });
                     }
                 },
-                "No",
+                mActivity.getResources().getString(android.R.string.no),
                 null);
     }
 

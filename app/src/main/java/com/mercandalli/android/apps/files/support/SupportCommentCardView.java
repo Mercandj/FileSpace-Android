@@ -3,6 +3,7 @@ package com.mercandalli.android.apps.files.support;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -10,10 +11,13 @@ import android.widget.TextView;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 
-public class SupportCommentCardView extends CardView {
+public class SupportCommentCardView extends CardView implements View.OnClickListener {
 
     private TextView mTitleTextView;
     private TextView mSubtitleTextView;
+    private SupportManager mSupportManager;
+    private SupportComment mSupportComment;
+    private SupportOverflowActions mSupportOverflowActions;
 
     public SupportCommentCardView(Context context) {
         super(context);
@@ -30,8 +34,19 @@ public class SupportCommentCardView extends CardView {
         init(context);
     }
 
+    @Override
+    public void onClick(final View v) {
+        if (v.getId() == R.id.tab_support_comment_card_more && mSupportComment != null) {
+            if (mSupportOverflowActions == null) {
+                mSupportOverflowActions = new SupportOverflowActions(getContext());
+            }
+            mSupportOverflowActions.show(mSupportComment, v);
+        }
+    }
+
     public void setSupportComment(final SupportComment supportComment) {
         Preconditions.checkNotNull(supportComment);
+        mSupportComment = supportComment;
         mTitleTextView.setText(supportComment.isDevResponse() ? "The dev" : "You");
         mSubtitleTextView.setText(supportComment.getComment());
     }
@@ -51,9 +66,10 @@ public class SupportCommentCardView extends CardView {
     private void findViews() {
         mTitleTextView = (TextView) findViewById(R.id.tab_support_comment_card_title);
         mSubtitleTextView = (TextView) findViewById(R.id.tab_support_comment_card_subtitle);
+        findViewById(R.id.tab_support_comment_card_more).setOnClickListener(this);
     }
 
-    public float dpToPx(final Context context, final float dp) {
+    private float dpToPx(final Context context, final float dp) {
         return dp * context.getResources().getDisplayMetrics().density;
     }
 }

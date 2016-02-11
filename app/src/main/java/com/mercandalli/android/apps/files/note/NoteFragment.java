@@ -89,13 +89,13 @@ public class NoteFragment extends BackFragment {
      * Delete the current note. Delete the {@link #mInputEdiText} content.
      */
     public void delete() {
-        DialogUtils.alert(getContext(), "Delete note", "Delete the current note?", getString(R.string.yes), new IListener() {
+        DialogUtils.alert(getContext(), "Delete note", "Delete the current note?", getString(android.R.string.yes), new IListener() {
             @Override
             public void execute() {
                 mInputEdiText.setText("");
                 mApplicationCallback.getConfig().setUserNoteWorkspace1(getContext(), "");
             }
-        }, getString(R.string.no), null);
+        }, getString(android.R.string.no), null);
     }
 
     /**

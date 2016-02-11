@@ -198,7 +198,7 @@ public class UserFragment extends BackFragment {
                                                         }
                                                     }, parameters).execute();
                                                 }
-                                            }, getString(R.string.cancel), null);
+                                            }, getString(android.R.string.cancel), null);
                                             break;
                                         case 1:
                                             DialogUtils.alert(getContext(), "Delete " + userModel.username + "?", "This process cannot be undone.", getString(R.string.delete), new IListener() {
@@ -215,7 +215,7 @@ public class UserFragment extends BackFragment {
                                                         Toast.makeText(getActivity(), "Not permitted.", Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
-                                            }, getString(R.string.cancel), null);
+                                            }, getString(android.R.string.cancel), null);
                                             break;
                                     }
                                 }

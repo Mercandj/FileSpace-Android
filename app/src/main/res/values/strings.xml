@@ -36,7 +36,6 @@
     <string name="request">Request</string>
     <string name="signin">Sign in</string>
     <string name="login">Log in</string>
-    <string name="cancel">Cancel</string>
     <string name="up">Up</string>
     <string name="console">Console</string>
     <string name="server_error">No server response.</string>
@@ -45,8 +44,6 @@
     <string name="ok">OK</string>
     <string name="ON">ON</string>
     <string name="OFF">OFF</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
     <string name="add">Add</string>
     <string name="name">Name</string>
     <string name="waiting_for_response">Waiting for response</string>

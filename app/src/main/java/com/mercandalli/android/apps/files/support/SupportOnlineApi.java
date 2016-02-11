@@ -2,33 +2,30 @@ package com.mercandalli.android.apps.files.support;
 
 import com.mercandalli.android.apps.files.main.Config;
 
-import retrofit.Callback;
-import retrofit.http.GET;
-import retrofit.http.Multipart;
-import retrofit.http.POST;
-import retrofit.http.Part;
-import retrofit.http.Query;
-import retrofit.mime.TypedString;
+import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Query;
+
 
 public interface SupportOnlineApi {
 
     @GET("/" + Config.routeSupportComment)
-    void getSupportComments(
-            @Query("id_device") String deviceId,
-            Callback<SupportCommentsResponse> result);
+    Call<SupportCommentsResponse> getSupportComments(
+            @Query("id_device") String deviceId);
 
-    @Multipart
+    @FormUrlEncoded
     @POST("/" + Config.routeSupportComment)
-    void postSupportComment(
-            @Part("id_device") TypedString deviceId,
-            //@Part("is_dev_response") TypedString isDevResponse,
-            @Part("content") TypedString commentContent,
-            Callback<SupportCommentsResponse> result);
+    Call<SupportCommentsResponse> postSupportComment(
+            @Field("id_device") String deviceId,
+            @Field("is_dev_response") boolean isDevResponse,
+            @Field("content") String commentContent);
 
-    @Multipart
+    @FormUrlEncoded
     @POST("/" + Config.routeSupportCommentDelete)
-    void deleteSupportComment(
-            @Part("id") TypedString id,
-            @Part("id_device") TypedString deviceId,
-            Callback<SupportCommentsResponse> result);
+    Call<SupportCommentsResponse> deleteSupportComment(
+            @Field("id") String id,
+            @Field("id_device") String deviceId);
 }

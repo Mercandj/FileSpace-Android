@@ -189,7 +189,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
                                                             createFile(mCurrentDirectory.getPath() + File.separator, text);
                                                             refreshCurrentList();
                                                         }
-                                                    }, getString(R.string.cancel), null, null, context.getString(R.string.name));
+                                                    }, getString(android.R.string.cancel), null, null, context.getString(R.string.name));
                                             break;
                                     }
                                 }

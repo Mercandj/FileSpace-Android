@@ -134,7 +134,7 @@ public class FileLocalOverflowActions implements PopupMenu.OnMenuItemClickListen
                         });
                     }
                 }
-            }, mActivity.getString(R.string.cancel), null);
+            }, mActivity.getResources().getString(android.R.string.cancel), null);
         }
     }
 
@@ -166,7 +166,7 @@ public class FileLocalOverflowActions implements PopupMenu.OnMenuItemClickListen
                     }
                 });
             }
-        }, "Cancel", null, fileModel.getFullName());
+        }, mActivity.getResources().getString(android.R.string.cancel), null, fileModel.getFullName());
     }
 
     private void delete(final FileModel fileModel) {
@@ -174,7 +174,7 @@ public class FileLocalOverflowActions implements PopupMenu.OnMenuItemClickListen
                 mActivity,
                 mDeleteString,
                 "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?",
-                "Yes",
+                mActivity.getResources().getString(android.R.string.yes),
                 new IListener() {
                     @Override
                     public void execute() {
@@ -194,7 +194,7 @@ public class FileLocalOverflowActions implements PopupMenu.OnMenuItemClickListen
                         });
                     }
                 },
-                "No",
+                mActivity.getResources().getString(android.R.string.no),
                 null);
     }
 

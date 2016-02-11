@@ -269,7 +269,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
                     NavDrawerActivity.this.getConfig().reset(NavDrawerActivity.this);
                     NavDrawerActivity.this.finish();
                 }
-            }, getString(R.string.cancel), null);
+            }, getString(android.R.string.cancel), null);
             return;
         }
 

@@ -2,8 +2,8 @@ package com.mercandalli.android.apps.files.main.version;
 
 import com.mercandalli.android.apps.files.main.Config;
 
-import retrofit.Callback;
-import retrofit.http.GET;
+import retrofit2.Call;
+import retrofit2.http.GET;
 
 /**
  * A simple retrofit interface.
@@ -12,5 +12,5 @@ import retrofit.http.GET;
 interface VersionApi {
 
     @GET("/" + Config.routeVersionSupported)
-    void getVersionSupported(Callback<VersionResponse> result);
+    Call<VersionResponse> getVersionSupported();
 }

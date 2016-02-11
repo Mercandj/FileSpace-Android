@@ -47,3 +47,8 @@
 
 -dontwarn org.jaudiotagger.**
 -keep class org.jaudiotagger.** { *; }
+
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
