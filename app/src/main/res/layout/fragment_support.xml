@@ -32,18 +32,52 @@
         android:layout_width="match_parent"
         android:layout_height="102dp"
         android:layout_gravity="bottom"
-        android:layout_margin="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:background="#fff"
         android:elevation="3dp"
         android:gravity="top"
         android:hint="@string/support_edit_text_hint"
-        android:inputType="text"
+        android:inputType="textMultiLine"
         android:lines="5"
         android:maxLines="5"
+        android:minLines="5"
         android:padding="8dp"
+        android:scrollbars="vertical"
         android:singleLine="false"
         android:textSize="@dimen/default_text_14"
         tools:ignore="UnusedAttribute" />
+
+    <LinearLayout
+        android:layout_width="80dp"
+        android:layout_height="102dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/fragment_support_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:background="?selectableItemBackground"
+            android:gravity="center"
+            android:text="@android:string/cancel" />
+
+        <TextView
+            android:id="@+id/fragment_support_ok"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:background="?selectableItemBackground"
+            android:gravity="center"
+            android:text="@android:string/ok" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/fragment_support_no_internet_bt"

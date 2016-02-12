@@ -180,13 +180,18 @@ public class FileAudioManagerImpl extends FileAudioManager {
             final String search) {
 
         Preconditions.checkNotNull(fileModelDirectParent);
-
         if (!fileModelDirectParent.isDirectory()) {
             notifyLocalMusicListenerFailed();
             return;
         }
+
+        final File file = fileModelDirectParent.getFile();
+        if (!file.exists()) {
+            return;
+        }
+
         final List<FileAudioModel> files = new ArrayList<>();
-        final List<File> fs = Arrays.asList(fileModelDirectParent.getFile().listFiles(
+        final List<File> fs = Arrays.asList(file.listFiles(
                 new FilenameFilter() {
                     @Override
                     public boolean accept(File dir, String name) {
@@ -195,9 +200,9 @@ public class FileAudioManagerImpl extends FileAudioManager {
                     }
                 }
         ));
-        for (File file : fs) {
+        for (final File f : fs) {
             files.add(new FileAudioModel.FileMusicModelBuilder()
-                    .file(file).build());
+                    .file(f).build());
         }
         notifyLocalMusicListenerSucceeded(files);
     }

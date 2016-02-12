@@ -200,7 +200,7 @@
     <string name="settings_ad_thank_you_4">Thank you. You make the developer very very very happy =)</string>
 
     <!-- Support -->
-    <string name="support_edit_text_hint">How can I help you?\nDescribe the new feature you want, bug you have, questions etc.\nThe dev.</string>
+    <string name="support_edit_text_hint">How can I help you?\nDescribe the new feature you want,\nbug you have, questions etc.\nThe dev.</string>
 
     <!-- Search -->
     <string name="search_title_hint">Search</string>

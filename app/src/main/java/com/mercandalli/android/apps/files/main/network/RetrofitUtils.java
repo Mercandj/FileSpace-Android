@@ -17,10 +17,22 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitUtils {
 
+    private static OkHttpClient getOkHttpClientUpload() {
+        final OkHttpClient.Builder builder = (new OkHttpClient.Builder())
+                .connectTimeout(10, TimeUnit.MINUTES)
+                .readTimeout(10, TimeUnit.MINUTES);
+        if (BuildConfig.DEBUG) {
+            final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.addInterceptor(interceptor);
+        }
+        return builder.build();
+    }
+
     private static OkHttpClient getOkHttpClient() {
         final OkHttpClient.Builder builder = (new OkHttpClient.Builder())
-                .connectTimeout(60 * 1000, TimeUnit.MILLISECONDS)
-                .readTimeout(60 * 1000, TimeUnit.MILLISECONDS);
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS);
         if (BuildConfig.DEBUG) {
             final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

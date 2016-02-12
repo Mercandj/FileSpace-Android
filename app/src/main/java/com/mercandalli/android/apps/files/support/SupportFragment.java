@@ -128,13 +128,25 @@ public class SupportFragment extends BackFragment implements
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         if (v == mNoInternetButton) {
             refreshList();
+            return;
+        }
+        final int viewId = v.getId();
+        switch (viewId) {
+            case R.id.fragment_support_ok:
+                sedEditTextContent();
+                break;
+            case R.id.fragment_support_cancel:
+                mEditText.setText("");
+                break;
         }
     }
 
     private void findViews(final View rootView) {
+        rootView.findViewById(R.id.fragment_support_ok).setOnClickListener(this);
+        rootView.findViewById(R.id.fragment_support_cancel).setOnClickListener(this);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_support_recycler_view);
         mEditText = (EditText) rootView.findViewById(R.id.fragment_support_edit_text);
         mNoInternetButton = (Button) rootView.findViewById(R.id.fragment_support_no_internet_bt);
@@ -146,13 +158,22 @@ public class SupportFragment extends BackFragment implements
         mSupportCommentAdapter = new SupportCommentAdapter(this, this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.setAdapter(mSupportCommentAdapter);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy < -5) {
+                    SupportUtils.hideSoftInput(mEditText);
+                }
+            }
+        });
         refreshList();
 
         mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE && !TextUtils.isEmpty(v.getText())) {
-                    onFabClicked();
+                    sedEditTextContent();
                     return true;
                 }
                 return false;
@@ -171,7 +192,7 @@ public class SupportFragment extends BackFragment implements
         mSupportManager.getSupportComment();
     }
 
-    private void onFabClicked() {
+    private void sedEditTextContent() {
         mSupportManager.addSupportComment(new SupportComment("", false, mEditText.getText().toString()));
         mEditText.setText("");
     }
