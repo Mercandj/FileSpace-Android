@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:focusable="false"
-            android:lines="1"
+            android:lines="8"
             android:maxLines="12"
             android:minLines="1"
             android:singleLine="false"

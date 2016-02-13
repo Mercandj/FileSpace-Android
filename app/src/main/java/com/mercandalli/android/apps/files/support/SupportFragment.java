@@ -34,6 +34,8 @@ public class SupportFragment extends BackFragment implements
     private RecyclerView mRecyclerView;
     private EditText mEditText;
     private Button mNoInternetButton;
+    private View mCancelView;
+    private View mOkView;
     private SupportCommentAdapter mSupportCommentAdapter;
 
     private SupportManager mSupportManager;
@@ -131,22 +133,16 @@ public class SupportFragment extends BackFragment implements
     public void onClick(final View v) {
         if (v == mNoInternetButton) {
             refreshList();
-            return;
-        }
-        final int viewId = v.getId();
-        switch (viewId) {
-            case R.id.fragment_support_ok:
-                sedEditTextContent();
-                break;
-            case R.id.fragment_support_cancel:
-                mEditText.setText("");
-                break;
+        } else if (v == mOkView) {
+            sedEditTextContent();
+        } else if (v == mCancelView) {
+            mEditText.setText("");
         }
     }
 
     private void findViews(final View rootView) {
-        rootView.findViewById(R.id.fragment_support_ok).setOnClickListener(this);
-        rootView.findViewById(R.id.fragment_support_cancel).setOnClickListener(this);
+        mOkView = rootView.findViewById(R.id.fragment_support_ok);
+        mCancelView = rootView.findViewById(R.id.fragment_support_cancel);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_support_recycler_view);
         mEditText = (EditText) rootView.findViewById(R.id.fragment_support_edit_text);
         mNoInternetButton = (Button) rootView.findViewById(R.id.fragment_support_no_internet_bt);
@@ -179,12 +175,17 @@ public class SupportFragment extends BackFragment implements
                 return false;
             }
         });
+
+        mOkView.setOnClickListener(this);
+        mCancelView.setOnClickListener(this);
     }
 
     private void syncInternetConnection() {
         final boolean internetOn = NetUtils.isInternetConnection(getContext());
         mNoInternetButton.setVisibility(internetOn ? View.GONE : View.VISIBLE);
         mEditText.setVisibility(internetOn ? View.VISIBLE : View.GONE);
+        mOkView.setVisibility(internetOn ? View.VISIBLE : View.GONE);
+        mCancelView.setVisibility(internetOn ? View.VISIBLE : View.GONE);
         mRecyclerView.setVisibility(internetOn ? View.VISIBLE : View.GONE);
     }
 
