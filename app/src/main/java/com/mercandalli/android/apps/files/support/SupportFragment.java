@@ -213,6 +213,7 @@ public class SupportFragment extends BackFragment implements
         final boolean internetOn = NetUtils.isInternetConnection(getContext());
         if (!internetOn) {
             mNoInternetButton.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.GONE);
             mEditText.setVisibility(View.GONE);
             mAdminTextView.setVisibility(View.GONE);
             mOkView.setVisibility(View.GONE);
