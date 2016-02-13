@@ -45,6 +45,7 @@ import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
+import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
@@ -124,7 +125,7 @@ public class UserFragment extends BackFragment {
         if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
             new TaskGet(
                     getContext(),
-                    mApplicationCallback.getConfig().getUrlServer() + Config.routeUser,
+                    Constants.URL_DOMAIN + Config.routeUser,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -187,7 +188,7 @@ public class UserFragment extends BackFragment {
                                             DialogUtils.prompt(getContext(), "Send Message", "Write your message", "Send", new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
-                                                    String url = mApplicationCallback.getConfig().getUrlServer() + Config.routeUserConversation + "/" + userModel.id;
+                                                    String url = Constants.URL_DOMAIN + Config.routeUserConversation + "/" + userModel.id;
                                                     List<StringPair> parameters = new ArrayList<>();
                                                     parameters.add(new StringPair("message", "" + text));
 

@@ -32,6 +32,7 @@ import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.Constants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -132,8 +133,8 @@ public class ModelGenealogyPerson extends Model {
     }
 
     public void delete(IPostExecuteListener listener) {
-        if (this.app != null && this.app.getConfig().isUserAdmin() && this.id != Config.getUserId()) {
-            String url = this.app.getConfig().getUrlServer() + Config.routeGenealogyDelete + "/" + this.id;
+        if (this.app != null && Config.isUserAdmin() && this.id != Config.getUserId()) {
+            String url = Constants.URL_DOMAIN + Config.routeGenealogyDelete + "/" + this.id;
             new TaskPost(mActivity, this.app, url, listener).execute();
             return;
         }
@@ -143,7 +144,7 @@ public class ModelGenealogyPerson extends Model {
     }
 
     public void modify(IPostExecuteListener listener) {
-        if (this.app != null && this.app.getConfig().isUserAdmin() && this.id != Config.getUserId()) {
+        if (this.app != null && Config.isUserAdmin() && this.id != Config.getUserId()) {
             new DialogAddGenealogyPerson(mActivity, app, listener, mActivity.getString(R.string.modify), this);
             return;
         }

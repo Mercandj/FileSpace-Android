@@ -36,6 +36,7 @@ import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.HashUtils;
+import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
@@ -122,7 +123,7 @@ public class UserAddFragment extends BackFragment {
 
                 if (NetUtils.isInternetConnection(getContext()) && !StringUtils.isNullOrEmpty(newUser.username) && !StringUtils.isNullOrEmpty(newUser.password)) {
                     requestLaunched = true;
-                    (new TaskPost(getActivity(), mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUser, new IPostExecuteListener() {
+                    (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.routeUser, new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
                             try {

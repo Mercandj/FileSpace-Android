@@ -34,6 +34,7 @@ import com.mercandalli.android.apps.files.file.FileChooserDialog;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
+import com.mercandalli.android.apps.files.main.Constants;
 
 import org.json.JSONObject;
 
@@ -71,7 +72,7 @@ public class DialogRequest extends Dialog {
 
                     case POST:
                         if (!((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString().equals("")) {
-                            (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + ((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString(), new IPostExecuteListener() {
+                            (new TaskPost(mActivity, mApplicationCallback, Constants.URL_DOMAIN + "FileSpace-API/" + ((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString(), new IPostExecuteListener() {
                                 @Override
                                 public void onPostExecute(JSONObject json, String body) {
                                     if (listener != null) {
@@ -95,7 +96,7 @@ public class DialogRequest extends Dialog {
                     default: //GET
                         if (!((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString().equals("")) {
                             (new TaskGet(mActivity,
-                                    mApplicationCallback.getConfig().getUrlServer() + ((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString(),
+                                    Constants.URL_DOMAIN + "FileSpace-API/" + ((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString(),
                                     new IPostExecuteListener() {
                                         @Override
                                         public void onPostExecute(JSONObject json, String body) {

@@ -42,6 +42,8 @@ import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
+import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.view.slider.Slider;
@@ -317,7 +319,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
                     new TaskPost(
                             getActivity(),
                             mApplicationCallback,
-                            mApplicationCallback.getConfig().getUrlServer() + mApplicationCallback.getConfig().routeRobotics,
+                            Constants.URL_DOMAIN + Config.routeRobotics,
                             new IPostExecuteListener() {
                                 @Override
                                 public void onPostExecute(JSONObject json, String body) {

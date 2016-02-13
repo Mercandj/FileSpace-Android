@@ -32,6 +32,7 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
+import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.view.GenealogyBigTreeView;
 import com.mercandalli.android.apps.files.main.Config;
@@ -94,7 +95,7 @@ public class GenealogyBigTreeFragment extends FabFragment {
         if (NetUtils.isInternetConnection(getContext())) {
             new TaskGet(
                     getActivity(),
-                    mApplicationCallback.getConfig().getUrlServer() + Config.routeGenealogy + "/" + genealogyPerson.id,
+                    Constants.URL_DOMAIN + Config.routeGenealogy + "/" + genealogyPerson.id,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {

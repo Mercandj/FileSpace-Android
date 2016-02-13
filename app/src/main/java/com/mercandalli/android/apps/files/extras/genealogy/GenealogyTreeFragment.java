@@ -39,6 +39,7 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
+import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
@@ -124,7 +125,7 @@ public class GenealogyTreeFragment extends FabFragment {
                 requestReady = false;
                 new TaskGet(
                         getActivity(),
-                        mApplicationCallback.getConfig().getUrlServer() + Config.routeGenealogyChildren + "/" + id_user,
+                        Constants.URL_DOMAIN + Config.routeGenealogyChildren + "/" + id_user,
                         new IPostExecuteListener() {
                             @Override
                             public void onPostExecute(JSONObject json, String body) {
@@ -171,7 +172,7 @@ public class GenealogyTreeFragment extends FabFragment {
                 requestReady = false;
                 new TaskGet(
                         getActivity(),
-                        mApplicationCallback.getConfig().getUrlServer() + Config.routeGenealogy + "/" + id_user,
+                        Constants.URL_DOMAIN + Config.routeGenealogy + "/" + id_user,
                         new IPostExecuteListener() {
                             @Override
                             public void onPostExecute(JSONObject json, String body) {

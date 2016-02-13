@@ -245,7 +245,7 @@ public class FileModel implements Parcelable {
     }
 
     public String getOnlineUrl() {
-        return Constants.URL_DOMAIN_API + Config.routeFile + "/" + getId();
+        return Constants.URL_DOMAIN + Config.routeFile + "/" + getId();
     }
 
     public boolean isAudio() {

@@ -31,6 +31,8 @@ import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
+import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,7 +88,7 @@ public class DialogCreateArticle extends Dialog {
                     parameters.add(new StringPair("name", "ARTICLE_" + nowAsISO));
                     new TaskPost(mActivity,
                             applicationCallback,
-                            applicationCallback.getConfig().getUrlServer() + applicationCallback.getConfig().routeFile,
+                            Constants.URL_DOMAIN + Config.routeFile,
                             new IPostExecuteListener() {
                                 @Override
                                 public void onPostExecute(JSONObject json, String body) {

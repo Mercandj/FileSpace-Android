@@ -38,11 +38,12 @@ import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.HashUtils;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.MainActivity;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -131,16 +132,16 @@ public class RegistrationFragment extends BackFragment {
         if (!StringUtils.isNullOrEmpty(user.username)) {
             mApplicationCallback.getConfig().setUserUsername(getContext(), user.username);
         } else {
-            user.username = mApplicationCallback.getConfig().getUserUsername();
+            user.username = Config.getUserUsername();
         }
 
         if (!StringUtils.isNullOrEmpty(user.password)) {
             mApplicationCallback.getConfig().setUserPassword(getContext(), user.password);
         } else {
-            user.password = mApplicationCallback.getConfig().getUserPassword();
+            user.password = Config.getUserPassword();
         }
 
-        if (StringUtils.isNullOrEmpty(mApplicationCallback.getConfig().getUrlServer())) {
+        if (StringUtils.isNullOrEmpty(Constants.URL_DOMAIN)) {
             mRequestLaunched = false;
             return;
         }
@@ -154,7 +155,7 @@ public class RegistrationFragment extends BackFragment {
         //parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
 
         if (NetUtils.isInternetConnection(getContext())) {
-            (new TaskPost(getActivity(), mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUser, new IPostExecuteListener() {
+            (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.routeUser, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     try {

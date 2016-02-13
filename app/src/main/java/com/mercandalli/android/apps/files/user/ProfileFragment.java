@@ -44,6 +44,7 @@ import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.FontUtils;
 import com.mercandalli.android.apps.files.common.util.GpsUtils;
 import com.mercandalli.android.apps.files.common.util.ImageUtils;
+import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
@@ -133,7 +134,7 @@ public class ProfileFragment extends BackFragment {
             List<StringPair> parameters = null;
             new TaskGet(
                     getActivity(),
-                    mApplicationCallback.getConfig().getUrlServer() + Config.routeUser + "/" + Config.getUserId(),
+                    Constants.URL_DOMAIN + Config.routeUser + "/" + Config.getUserId(),
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -175,7 +176,7 @@ public class ProfileFragment extends BackFragment {
                                                         parameters.add(new StringPair("longitude", "" + longitude));
                                                         parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                        (new TaskPost(getActivity(), mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUserPut, new IPostExecuteListener() {
+                                                        (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.routeUserPut, new IPostExecuteListener() {
                                                             @Override
                                                             public void onPostExecute(JSONObject json, String body) {
 
@@ -198,7 +199,7 @@ public class ProfileFragment extends BackFragment {
                                                 parameters.add(new StringPair("longitude", "" + longitude));
                                                 parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                (new TaskPost(getActivity(), mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUserPut, new IPostExecuteListener() {
+                                                (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.routeUserPut, new IPostExecuteListener() {
                                                     @Override
                                                     public void onPostExecute(JSONObject json, String body) {
 

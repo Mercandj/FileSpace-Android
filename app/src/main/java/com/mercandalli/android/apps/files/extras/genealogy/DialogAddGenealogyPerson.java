@@ -32,6 +32,8 @@ import android.widget.Toast;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
+import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
@@ -137,9 +139,9 @@ public class DialogAddGenealogyPerson extends Dialog {
                     parameters.add(new StringPair("is_man", "" + sex.isChecked()));
 
                     if (genealogyUser == null) {
-                        (new TaskPost(mActivity, app, app.getConfig().getUrlServer() + app.getConfig().routeGenealogy, listener, parameters)).execute();
+                        (new TaskPost(mActivity, app, Constants.URL_DOMAIN + Config.routeGenealogy, listener, parameters)).execute();
                     } else {
-                        (new TaskPost(mActivity, app, app.getConfig().getUrlServer() + app.getConfig().routeGenealogyPut + "/" + genealogyUser.id, listener, parameters)).execute();
+                        (new TaskPost(mActivity, app, Constants.URL_DOMAIN + Config.routeGenealogyPut + "/" + genealogyUser.id, listener, parameters)).execute();
                     }
 
                     DialogAddGenealogyPerson.this.dismiss();

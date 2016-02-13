@@ -115,10 +115,9 @@ public class Config {
      * Static Sctring to save/load
      */
     private enum ENUM_String {
-        STRING_URL_SERVER("http://mercandalli.com/FileSpace-API/", "string_url_server_1"),
         STRING_USER_USERNAME("", "string_user_username_1"),
         STRING_USER_PASSWORD("", "string_user_password_1"),
-        STRING_USER_REGID("", "string_user_regid_1"),
+        STRING_USER_REG_ID("", "string_user_reg_id_1"),
         STRING_USER_NOTE_WORKSPACE_1("", "string_user_note_workspace_1"),
         STRING_LOCAL_FOLDER_NAME_1("", "string_local_folder_name_1"),;
 
@@ -202,10 +201,6 @@ public class Config {
         }
     }
 
-    public String getUrlServer() {
-        return ENUM_String.STRING_URL_SERVER.value;
-    }
-
     public String getUserNoteWorkspace1() {
         return ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value;
     }
@@ -256,12 +251,12 @@ public class Config {
     }
 
     public static String getUserRegId() {
-        return ENUM_String.STRING_USER_REGID.value;
+        return ENUM_String.STRING_USER_REG_ID.value;
     }
 
     public void setUserRegId(Context context, String value) {
-        if (!ENUM_String.STRING_USER_REGID.value.equals(value)) {
-            ENUM_String.STRING_USER_REGID.value = value;
+        if (!ENUM_String.STRING_USER_REG_ID.value.equals(value)) {
+            ENUM_String.STRING_USER_REG_ID.value = value;
             save(context);
         }
     }
@@ -273,7 +268,7 @@ public class Config {
         } else if (NetUtils.isInternetConnection(activity)) {
             FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
             fileModelBuilder.id(getUserIdFileProfilePicture());
-            new TaskGetDownloadImage(activity, app, fileModelBuilder.build(), 100000, new IBitmapListener() {
+            new TaskGetDownloadImage(activity, app, fileModelBuilder.build(), 100_000, new IBitmapListener() {
                 @Override
                 public void execute(Bitmap bitmap) {
                     //TODO photo profile

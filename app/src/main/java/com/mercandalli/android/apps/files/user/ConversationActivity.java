@@ -39,6 +39,8 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
+import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
@@ -89,7 +91,7 @@ public class ConversationActivity extends ApplicationActivity {
         this.input = (EditText) findViewById(R.id.input);
 
         this.id_conversation = extras.getString("ID_CONVERSATION");
-        this.url = this.getConfig().getUrlServer() + this.getConfig().routeUserMessage + "/" + this.id_conversation;
+        this.url = Constants.URL_DOMAIN + Config.routeUserMessage + "/" + this.id_conversation;
 
         this.circularProgressBar = (ProgressBar) findViewById(R.id.circularProgressBar);
         this.message = (TextView) findViewById(R.id.message);
@@ -137,7 +139,7 @@ public class ConversationActivity extends ApplicationActivity {
         this.input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    String url = getConfig().getUrlServer() + getConfig().routeUserMessage + "/" + id_conversation;
+                    String url = Constants.URL_DOMAIN + Config.routeUserMessage + "/" + id_conversation;
                     List<StringPair> parameters = new ArrayList<>();
                     parameters.add(new StringPair("message", "" + input.getText().toString()));
                     input.setText("");

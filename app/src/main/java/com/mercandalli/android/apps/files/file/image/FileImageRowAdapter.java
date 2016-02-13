@@ -130,7 +130,11 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
         } else if (viewType == TYPE_ROW_CARDS_HEADER) {
             return new RowCardsViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_row_cards, parent, false));
         }
-        return new FileViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_card_drag_drop, parent, false), mItemClickListener, mItemLongClickListener);
+        return new FileViewHolder(
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_card_drag_drop, parent, false),
+                mHasHeader,
+                mItemClickListener,
+                mItemLongClickListener);
     }
 
     @Override
@@ -193,11 +197,13 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
         public ImageView icon;
         public View item;
         public View more;
-        OnItemClickListener mItemClickListener;
-        OnItemLongClickListener mItemLongClickListener;
+        private boolean mHasHeader;
+        private OnItemClickListener mItemClickListener;
+        private OnItemLongClickListener mItemLongClickListener;
 
-        public FileViewHolder(View itemLayoutView, OnItemClickListener itemClickListener, OnItemLongClickListener itemLongClickListener) {
+        public FileViewHolder(View itemLayoutView, boolean hasHeader, OnItemClickListener itemClickListener, OnItemLongClickListener itemLongClickListener) {
             super(itemLayoutView);
+            mHasHeader = hasHeader;
             mItemClickListener = itemClickListener;
             mItemLongClickListener = itemLongClickListener;
             item = itemLayoutView.findViewById(R.id.tab_file_card_drag_drop_item);
@@ -212,7 +218,7 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
         @Override
         public void onClick(View v) {
             if (mItemClickListener != null) {
-                mItemClickListener.onItemClick(icon, getAdapterPosition());
+                mItemClickListener.onItemClick(icon, getAdapterPosition() - (mHasHeader ? 1 : 0));
             }
         }
 
@@ -225,23 +231,6 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
     @Override
     public int getItemCount() {
         return files.size() + (mHasHeader ? 1 : 0);
-    }
-
-
-    public void remplaceList(ArrayList<FileModel> list) {
-        files.clear();
-        files.addAll(0, list);
-        notifyDataSetChanged();
-    }
-
-    public void addFirst(ArrayList<FileModel> list) {
-        files.addAll(0, list);
-        notifyDataSetChanged();
-    }
-
-    public void addLast(ArrayList<FileModel> list) {
-        files.addAll(files.size(), list);
-        notifyDataSetChanged();
     }
 
     public void addItem(FileModel name, int position) {
@@ -283,18 +272,15 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
         this.mItemLongClickListener = mItemLongClickListener;
     }
 
-    private String getAdapterTitle(FileModel fileModel) {
+    private String getAdapterTitle(final FileModel fileModel) {
         String adapterTitleStart = "";
         if (mShowSize) {
             adapterTitleStart = FileUtils.humanReadableByteCount(fileModel.getSize()) + " - ";
         }
 
         if (fileModel.getType() == null) {
-            if (fileModel.getName() != null) {
-                return adapterTitleStart + fileModel.getFullName();
-            } else {
-                return adapterTitleStart + fileModel.getUrl();
-            }
+            return adapterTitleStart + (fileModel.getName() == null ?
+                    fileModel.getUrl() : fileModel.getFullName());
         } else if (fileModel.getType().equals(FileTypeModelENUM.FILESPACE.type) && fileModel.getContent() != null) {
             return adapterTitleStart + fileModel.getContent().getAdapterTitle();
         } else if (fileModel.getName() != null) {

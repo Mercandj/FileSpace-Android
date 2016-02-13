@@ -50,6 +50,7 @@ import com.mercandalli.android.apps.files.common.dialog.DialogCallback;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.HashUtils;
+import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
@@ -118,9 +119,9 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
         mViewPager.addOnPageChangeListener(this);
         mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
 
-        if (this.getConfig().getUserUsername() == null || this.getConfig().getUserPassword() == null) {
+        if (Config.getUserUsername() == null || Config.getUserPassword() == null) {
             mInitialFragment = 0;
-        } else if (this.getConfig().getUserUsername().equals("") || this.getConfig().getUserPassword().equals("")) {
+        } else if (Config.getUserUsername().equals("") || Config.getUserPassword().equals("")) {
             mInitialFragment = 0;
         }
 
@@ -129,8 +130,8 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
         tabs.setViewPager(mViewPager);
         tabs.setIndicatorColor(ContextCompat.getColor(this, android.R.color.white));
 
-        if (this.getConfig().isAutoConnection() && this.getConfig().getUrlServer() != null && this.getConfig().getUserUsername() != null && this.getConfig().getUserPassword() != null &&
-                !this.getConfig().getUserUsername().equals("") && !this.getConfig().getUserPassword().equals("") && Config.getUserId() != -1) {
+        if (this.getConfig().isAutoConnection() && Config.getUserUsername() != null && Config.getUserPassword() != null &&
+                !Config.getUserUsername().equals("") && !Config.getUserPassword().equals("") && Config.getUserId() != -1) {
             connectionSucceed();
         }
 
@@ -373,7 +374,7 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
         user.username = username;
         user.password = password;
 
-        if (StringUtils.isNullOrEmpty(this.getConfig().getUrlServer())) {
+        if (StringUtils.isNullOrEmpty(Constants.URL_DOMAIN)) {
             mRequestLaunched = false;
             return;
         }
@@ -384,7 +385,7 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
         parameters.add(new StringPair("username", "" + user.username));
         parameters.add(new StringPair("password", "" + user.password));
         if (NetUtils.isInternetConnection(this)) {
-            (new TaskPost(this, this, this.getConfig().getUrlServer() + Config.routeUser, new IPostExecuteListener() {
+            (new TaskPost(this, this, Constants.URL_DOMAIN + Config.routeUser, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     try {

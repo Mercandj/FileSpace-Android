@@ -26,11 +26,12 @@ import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.HashUtils;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.MainActivity;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,13 +59,13 @@ public class LoginFragment extends BackFragment {
         this.username = (EditText) rootView.findViewById(R.id.fragment_log_in_username);
         this.password = (EditText) rootView.findViewById(R.id.fragment_log_in_password);
 
-        if (this.mApplicationCallback.getConfig().getUserUsername() != null &&
-                !this.mApplicationCallback.getConfig().getUserUsername().equals("")) {
-            this.username.setText(this.mApplicationCallback.getConfig().getUserUsername());
+        if (Config.getUserUsername() != null &&
+                !Config.getUserUsername().equals("")) {
+            this.username.setText(Config.getUserUsername());
         }
 
-        if (this.mApplicationCallback.getConfig().getUserPassword() != null &&
-                !this.mApplicationCallback.getConfig().getUserPassword().equals("")) {
+        if (Config.getUserPassword() != null &&
+                !Config.getUserPassword().equals("")) {
             this.password.setHint(Html.fromHtml("&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"));
         }
 
@@ -130,18 +131,13 @@ public class LoginFragment extends BackFragment {
         if (!StringUtils.isNullOrEmpty(user.username)) {
             mApplicationCallback.getConfig().setUserUsername(getContext(), user.username);
         } else {
-            user.username = mApplicationCallback.getConfig().getUserUsername();
+            user.username = Config.getUserUsername();
         }
 
         if (!StringUtils.isNullOrEmpty(user.password)) {
             mApplicationCallback.getConfig().setUserPassword(getContext(), user.password);
         } else {
-            user.password = mApplicationCallback.getConfig().getUserPassword();
-        }
-
-        if (StringUtils.isNullOrEmpty(mApplicationCallback.getConfig().getUrlServer())) {
-            requestLaunched = false;
-            return;
+            user.password = Config.getUserPassword();
         }
 
         // Login : POST /user
@@ -154,11 +150,11 @@ public class LoginFragment extends BackFragment {
             parameters.add(new StringPair("longitude", "" + longitude));
             parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
         }*/
-        Log.d("LoginFragment", "login " + mApplicationCallback.getConfig().getUserPassword() +
-                mApplicationCallback.getConfig().getUserUsername() + " isInternetConnection=" +
+        Log.d("LoginFragment", "login " + Config.getUserPassword() +
+                Config.getUserUsername() + " isInternetConnection=" +
                 NetUtils.isInternetConnection(getContext()));
         if (NetUtils.isInternetConnection(getContext())) {
-            (new TaskPost(getActivity(), mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUser, new IPostExecuteListener() {
+            (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.routeUser, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     requestLaunched = false;

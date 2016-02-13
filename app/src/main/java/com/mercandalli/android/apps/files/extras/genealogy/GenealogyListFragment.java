@@ -44,12 +44,13 @@ import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -158,7 +159,7 @@ public class GenealogyListFragment extends FabFragment {
         if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
             new TaskGet(
                     mActivity,
-                    mApplicationCallback.getConfig().getUrlServer() + Config.routeGenealogy,
+                    Constants.URL_DOMAIN + Config.routeGenealogy,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {

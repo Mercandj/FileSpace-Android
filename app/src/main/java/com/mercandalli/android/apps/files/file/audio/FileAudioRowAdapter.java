@@ -291,13 +291,14 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
             adapterTitleStart = FileUtils.humanReadableByteCount(fileModel.getSize()) + " - ";
         }
 
-        if (fileModel.getType() == null) {
+        final FileTypeModel fileType = fileModel.getType();
+        if (fileType == null) {
             if (fileModel.getName() != null) {
                 return adapterTitleStart + fileModel.getFullName();
             } else {
                 return adapterTitleStart + fileModel.getUrl();
             }
-        } else if (fileModel.getType().equals(FileTypeModelENUM.FILESPACE.type) && fileModel.getContent() != null) {
+        } else if (FileTypeModelENUM.FILESPACE.type.equals(fileType) && fileModel.getContent() != null) {
             return adapterTitleStart + fileModel.getContent().getAdapterTitle();
         } else if (fileModel.getName() != null) {
             return adapterTitleStart + fileModel.getFullName();

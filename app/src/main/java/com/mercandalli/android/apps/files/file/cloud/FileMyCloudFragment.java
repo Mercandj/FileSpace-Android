@@ -213,10 +213,10 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
 
                                     case 6:
                                         // Picture set as profile
-                                        if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
+                                        if (FileTypeModelENUM.PICTURE.type.equals(fileModel.getType())) {
                                             List<StringPair> parameters = new ArrayList<>();
                                             parameters.add(new StringPair("id_file_profile_picture", "" + fileModel.getId()));
-                                            (new TaskPost(getActivity(), mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeUserPut, new IPostExecuteListener() {
+                                            (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.routeUserPut, new IPostExecuteListener() {
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
                                                     try {
@@ -228,10 +228,10 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                                     }
                                                 }
                                             }, parameters)).execute();
-                                        } else if (fileModel.getType().equals(FileTypeModelENUM.APK.type) && mApplicationCallback.getConfig().isUserAdmin()) {
+                                        } else if (FileTypeModelENUM.APK.type.equals(fileModel.getType()) && Config.isUserAdmin()) {
                                             List<StringPair> parameters = new ArrayList<>();
                                             parameters.add(new StringPair("is_apk_update", "" + !fileModel.isApkUpdate()));
-                                            (new TaskPost(getActivity(), mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile + "/" + fileModel.getId(), new IPostExecuteListener() {
+                                            (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.routeFile + "/" + fileModel.getId(), new IPostExecuteListener() {
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
                                                     try {

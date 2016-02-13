@@ -117,7 +117,7 @@ public class GenealogyStatisticsFragment extends FabFragment {
         if (NetUtils.isInternetConnection(getContext())) {
             new TaskGet(
                     getActivity(),
-                    mApplicationCallback.getConfig().getUrlServer() + Config.routeGenealogyStatistics,
+                    Constants.URL_DOMAIN + Config.routeGenealogyStatistics,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {

@@ -47,6 +47,7 @@ import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.main.ApplicationActivity;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -173,7 +174,7 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
                                     parameters.add(new StringPair("name", "TIMER_" + nowAsISO));
                                     parameters.add(new StringPair("id_file_parent", "" + id_file_parent));
                                     new TaskPost(mActivity, mApplicationCallback,
-                                            mApplicationCallback.getConfig().getUrlServer() + Config.routeFile,
+                                            Constants.URL_DOMAIN + Config.routeFile,
                                             new IPostExecuteListener() {
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
@@ -235,7 +236,7 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
                         fileModelBuilder.isDirectory(true);
                         fileModelBuilder.idFileParent(mFileParentId);
                         List<StringPair> parameters = FileManager.getForUpload(fileModelBuilder.build());
-                        (new TaskPost(mActivity, mApplicationCallback, mApplicationCallback.getConfig().getUrlServer() + Config.routeFile, new IPostExecuteListener() {
+                        (new TaskPost(mActivity, mApplicationCallback, Constants.URL_DOMAIN + Config.routeFile, new IPostExecuteListener() {
                             @Override
                             public void onPostExecute(JSONObject json, String body) {
                                 if (mListener != null) {
