@@ -152,8 +152,8 @@
                 android:layout_toEndOf="@+id/toggleButton3"
                 android:text="RESET" />
 
-            <RelativeLayout android:id="@+id/rl_seekBar_dir"
-                xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+            <RelativeLayout xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/rl_seekBar_dir"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
                 android:layout_alignParentBottom="true"
@@ -185,8 +185,8 @@
                 android:layout_centerHorizontal="true"></RelativeLayout>
 
             <!-- SLIDER WITH NUMBER INDICATOR-->
-            <RelativeLayout android:id="@+id/rl_seekBar_speed"
-                xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+            <RelativeLayout xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/rl_seekBar_speed"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
                 android:layout_alignParentBottom="true"
@@ -195,8 +195,8 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false">
 
-                <com.mercandalli.android.apps.files.common.view.slider.Slider android:id="@+id/seekBar_speed"
-                    xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+                <com.mercandalli.android.apps.files.common.view.slider.Slider xmlns:materialdesign="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/seekBar_speed"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"

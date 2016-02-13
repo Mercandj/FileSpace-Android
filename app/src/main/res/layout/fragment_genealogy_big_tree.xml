@@ -9,8 +9,8 @@
     android:background="#fff"
     android:orientation="vertical">
 
-    <com.mercandalli.android.apps.files.common.view.GenealogyBigTreeView android:id="@+id/arbre_view"
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <com.mercandalli.android.apps.files.common.view.GenealogyBigTreeView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/arbre_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
