@@ -2,6 +2,7 @@ package com.mercandalli.android.apps.files.support;
 
 import android.content.Context;
 
+import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 import java.util.ArrayList;
@@ -15,28 +16,26 @@ public class SupportManagerImpl extends SupportManager {
 
     private final Context mContextApp;
     private final SupportOnlineApi mSupportOnlineApi;
-    private final String mDeviceId;
 
     @SuppressWarnings({"UnusedParameters", "unused"})
     /* package */ SupportManagerImpl(final Context contextApp, final SupportOnlineApi supportOnlineApi) {
         mContextApp = contextApp;
         mSupportOnlineApi = supportOnlineApi;
-        mDeviceId = SupportUtils.getIdentifier(contextApp);
     }
 
     @Override
-    /* package */ void getSupportComment() {
-        final Call<SupportCommentsResponse> call = mSupportOnlineApi.getSupportComments(mDeviceId);
+    /* package */ void getSupportComment(final String deviceId) {
+        final Call<SupportCommentsResponse> call = mSupportOnlineApi.getSupportComments(deviceId);
         call.enqueue(new Callback<SupportCommentsResponse>() {
             @Override
             public void onResponse(Call<SupportCommentsResponse> call, Response<SupportCommentsResponse> response) {
                 if (!response.isSuccess()) {
-                    notifyGetSupportManagerCallbackFailed();
+                    notifyGetSupportManagerCallbackFailed(false);
                     return;
                 }
                 final SupportCommentsResponse supportCommentsResponse = response.body();
                 if (!supportCommentsResponse.isSucceed()) {
-                    notifyGetSupportManagerCallbackFailed();
+                    notifyGetSupportManagerCallbackFailed(false);
                     return;
                 }
                 final List<SupportComment> supportComments = new ArrayList<>();
@@ -44,12 +43,12 @@ public class SupportManagerImpl extends SupportManager {
                 for (SupportCommentResponse supportCommentResponse : supportCommentResponses) {
                     supportComments.add(supportCommentResponse.toSupportComment());
                 }
-                notifyGetSupportManagerCallbackSucceeded(supportComments);
+                notifyGetSupportManagerCallbackSucceeded(deviceId, supportComments, false);
             }
 
             @Override
             public void onFailure(Call<SupportCommentsResponse> call, Throwable t) {
-                notifyGetSupportManagerCallbackFailed();
+                notifyGetSupportManagerCallbackFailed(false);
 
             }
         });
@@ -59,19 +58,22 @@ public class SupportManagerImpl extends SupportManager {
     /* package */ void addSupportComment(final SupportComment supportComment) {
         Preconditions.checkNotNull(supportComment);
         final Call<SupportCommentsResponse> call = mSupportOnlineApi.postSupportComment(
-                mDeviceId,
+                supportComment.getIdDevice(),
                 supportComment.isDevResponse(),
-                supportComment.getComment());
+                supportComment.getComment(),
+                supportComment.getAndroidAppVersionCode(),
+                supportComment.getAndroidAppVersionName(),
+                supportComment.getAndroidDeviceVersionSdk());
         call.enqueue(new Callback<SupportCommentsResponse>() {
             @Override
             public void onResponse(Call<SupportCommentsResponse> call, Response<SupportCommentsResponse> response) {
                 if (!response.isSuccess()) {
-                    notifyGetSupportManagerCallbackFailed();
+                    notifyGetSupportManagerCallbackFailed(false);
                     return;
                 }
                 final SupportCommentsResponse supportCommentsResponse = response.body();
                 if (!supportCommentsResponse.isSucceed()) {
-                    notifyGetSupportManagerCallbackFailed();
+                    notifyGetSupportManagerCallbackFailed(false);
                     return;
                 }
                 final List<SupportComment> supportComments = new ArrayList<>();
@@ -79,12 +81,12 @@ public class SupportManagerImpl extends SupportManager {
                 for (SupportCommentResponse supportCommentResponse : supportCommentResponses) {
                     supportComments.add(supportCommentResponse.toSupportComment());
                 }
-                notifyGetSupportManagerCallbackSucceeded(supportComments);
+                notifyGetSupportManagerCallbackSucceeded(supportComment.getIdDevice(), supportComments, false);
             }
 
             @Override
             public void onFailure(Call<SupportCommentsResponse> call, Throwable t) {
-                notifyGetSupportManagerCallbackFailed();
+                notifyGetSupportManagerCallbackFailed(false);
             }
         });
     }
@@ -94,17 +96,17 @@ public class SupportManagerImpl extends SupportManager {
         Preconditions.checkNotNull(supportComment);
         final Call<SupportCommentsResponse> call = mSupportOnlineApi.deleteSupportComment(
                 supportComment.getId(),
-                mDeviceId);
+                supportComment.getIdDevice());
         call.enqueue(new Callback<SupportCommentsResponse>() {
             @Override
             public void onResponse(Call<SupportCommentsResponse> call, Response<SupportCommentsResponse> response) {
                 if (!response.isSuccess()) {
-                    notifyGetSupportManagerCallbackFailed();
+                    notifyGetSupportManagerCallbackFailed(false);
                     return;
                 }
                 final SupportCommentsResponse supportCommentsResponse = response.body();
                 if (!supportCommentsResponse.isSucceed()) {
-                    notifyGetSupportManagerCallbackFailed();
+                    notifyGetSupportManagerCallbackFailed(false);
                     return;
                 }
                 final List<SupportComment> supportComments = new ArrayList<>();
@@ -112,12 +114,45 @@ public class SupportManagerImpl extends SupportManager {
                 for (SupportCommentResponse supportCommentResponse : supportCommentResponses) {
                     supportComments.add(supportCommentResponse.toSupportComment());
                 }
-                notifyGetSupportManagerCallbackSucceeded(supportComments);
+                notifyGetSupportManagerCallbackSucceeded(supportComment.getIdDevice(), supportComments, false);
             }
 
             @Override
             public void onFailure(Call<SupportCommentsResponse> call, Throwable t) {
-                notifyGetSupportManagerCallbackFailed();
+                notifyGetSupportManagerCallbackFailed(false);
+            }
+        });
+    }
+
+    @Override
+    /* package */ void getAllDeviceIds() {
+        if (!Config.isUserAdmin()) {
+            notifyGetSupportManagerCallbackFailed(true);
+        }
+        final Call<SupportCommentsResponse> call = mSupportOnlineApi.getAllDeviceIdSupportComment();
+        call.enqueue(new Callback<SupportCommentsResponse>() {
+            @Override
+            public void onResponse(Call<SupportCommentsResponse> call, Response<SupportCommentsResponse> response) {
+                if (!response.isSuccess()) {
+                    notifyGetSupportManagerCallbackFailed(true);
+                    return;
+                }
+                final SupportCommentsResponse supportCommentsResponse = response.body();
+                if (!supportCommentsResponse.isSucceed()) {
+                    notifyGetSupportManagerCallbackFailed(true);
+                    return;
+                }
+                final List<SupportComment> supportComments = new ArrayList<>();
+                final List<SupportCommentResponse> supportCommentResponses = supportCommentsResponse.getResult(mContextApp);
+                for (SupportCommentResponse supportCommentResponse : supportCommentResponses) {
+                    supportComments.add(supportCommentResponse.toSupportComment());
+                }
+                notifyGetSupportManagerCallbackSucceeded(null, supportComments, true);
+            }
+
+            @Override
+            public void onFailure(Call<SupportCommentsResponse> call, Throwable t) {
+                notifyGetSupportManagerCallbackFailed(true);
             }
         });
     }

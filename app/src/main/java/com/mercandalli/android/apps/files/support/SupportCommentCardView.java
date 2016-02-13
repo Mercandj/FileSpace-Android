@@ -9,15 +9,20 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 public class SupportCommentCardView extends CardView implements View.OnClickListener {
 
     private TextView mTitleTextView;
     private TextView mSubtitleTextView;
+    private View mOverfloavView;
     private SupportManager mSupportManager;
     private SupportComment mSupportComment;
     private SupportOverflowActions mSupportOverflowActions;
+
+    private boolean mIsAdminIdSelection;
 
     public SupportCommentCardView(Context context) {
         super(context);
@@ -36,24 +41,40 @@ public class SupportCommentCardView extends CardView implements View.OnClickList
 
     @Override
     public void onClick(final View v) {
-        if (v.getId() == R.id.tab_support_comment_card_more && mSupportComment != null) {
+        if (mSupportComment == null) {
+            return;
+        }
+        final int viewId = v.getId();
+        if (viewId == R.id.tab_support_comment_card_more) {
             if (mSupportOverflowActions == null) {
                 mSupportOverflowActions = new SupportOverflowActions(getContext());
             }
             mSupportOverflowActions.show(mSupportComment, v);
+        } else if (viewId == R.id.tab_support_comment_card_item && mIsAdminIdSelection) {
+            mSupportManager.getSupportComment(mSupportComment.getIdDevice());
         }
     }
 
-    public void setSupportComment(final SupportComment supportComment) {
+    public void setSupportComment(final SupportComment supportComment, final boolean isAdminIdSelection) {
         Preconditions.checkNotNull(supportComment);
         mSupportComment = supportComment;
-        mTitleTextView.setText(supportComment.isDevResponse() ? "The dev" : "You");
-        mSubtitleTextView.setText(supportComment.getComment());
+        mIsAdminIdSelection = isAdminIdSelection;
+        mTitleTextView.setText(isAdminIdSelection ? (
+                "#" + supportComment.getId() + " conversation") :
+                (supportComment.isDevResponse() ?
+                        "The dev" : "You"));
+        mOverfloavView.setVisibility(Config.isUserAdmin() ? VISIBLE : (supportComment.isDevResponse() ? GONE : VISIBLE));
+        mSubtitleTextView.setText(isAdminIdSelection ?
+                (supportComment.getIdDevice() + " is the device id.\n" + supportComment.getNbCommentsWithThisIdDevice() + " messages.") :
+                supportComment.getComment());
     }
 
     private void init(final Context context) {
         Preconditions.checkNotNull(context);
+        mSupportManager = FileApp.get().getFileAppComponent().provideSupportManager();
         inflate(context, R.layout.tab_support_comment_card, this);
+        setUseCompatPadding(true);
+        setContentPadding(0, 0, 0, 0);
         findViews();
 
         int marginVertical = (int) dpToPx(context, 6);
@@ -61,12 +82,15 @@ public class SupportCommentCardView extends CardView implements View.OnClickList
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(marginHorizontal, marginVertical, marginHorizontal, marginVertical);
         setLayoutParams(layoutParams);
+
+        mOverfloavView.setOnClickListener(this);
     }
 
     private void findViews() {
         mTitleTextView = (TextView) findViewById(R.id.tab_support_comment_card_title);
         mSubtitleTextView = (TextView) findViewById(R.id.tab_support_comment_card_subtitle);
-        findViewById(R.id.tab_support_comment_card_more).setOnClickListener(this);
+        mOverfloavView = findViewById(R.id.tab_support_comment_card_more);
+        findViewById(R.id.tab_support_comment_card_item).setOnClickListener(this);
     }
 
     private float dpToPx(final Context context, final float dp) {

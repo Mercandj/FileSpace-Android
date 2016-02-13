@@ -21,11 +21,17 @@ public interface SupportOnlineApi {
     Call<SupportCommentsResponse> postSupportComment(
             @Field("id_device") String deviceId,
             @Field("is_dev_response") boolean isDevResponse,
-            @Field("content") String commentContent);
+            @Field("content") String commentContent,
+            @Field("android_app_version_code") String androidAppVersionCode,
+            @Field("android_app_version_name") String androidAppVersionName,
+            @Field("android_device_version_sdk") String androidDeviceVersionSdk);
 
     @FormUrlEncoded
     @POST("/" + Config.routeSupportCommentDelete)
     Call<SupportCommentsResponse> deleteSupportComment(
             @Field("id") String id,
             @Field("id_device") String deviceId);
+
+    @GET("/" + Config.routeSupportCommentDeviceId)
+    Call<SupportCommentsResponse> getAllDeviceIdSupportComment();
 }

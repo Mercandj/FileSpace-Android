@@ -29,7 +29,7 @@ public class DeviceUtils {
         device.buildBootloader = Build.BOOTLOADER;
         device.buildVersionSdk = Build.VERSION.SDK_INT;
         device.buildVersionIncremental = Build.VERSION.INCREMENTAL;
-        device.buildRadioVersion = Build.getRadioVersion();
+        device.buildVersionRadio = Build.getRadioVersion();
         device.versionOs = System.getProperty("os.version");
         device.displayLanguage = Locale.getDefault().getDisplayLanguage();
 

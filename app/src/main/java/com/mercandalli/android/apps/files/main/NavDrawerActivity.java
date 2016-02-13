@@ -117,7 +117,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
         navDrawerView.setSelectedRow(this, getInitFragmentId());
         navDrawerView.setConnected(isLogged());
         if (isLogged()) {
-            navDrawerView.setUser(getConfig().getUser(), getConfig().getUserProfilePicture(this));
+            navDrawerView.setUser(Config.getUser(), getConfig().getUserProfilePicture(this));
         }
 
         // Initial Fragment

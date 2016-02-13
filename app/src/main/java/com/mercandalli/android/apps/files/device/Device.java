@@ -6,7 +6,7 @@ public class Device {
     public String buildDisplay;
     public String buildBootloader;
     public String buildVersionIncremental;
-    public String buildRadioVersion;
+    public String buildVersionRadio;
     public String versionOs;
     public int versionCode;
     public String versionName;

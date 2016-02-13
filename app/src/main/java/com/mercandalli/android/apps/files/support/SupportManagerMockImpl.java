@@ -14,24 +14,39 @@ public class SupportManagerMockImpl extends SupportManager {
     public SupportManagerMockImpl(final Context contextApp) {
         mSupportComments = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            mSupportComments.add(new SupportComment(String.valueOf(i), false, "Comment " + i));
+            mSupportComments.add(new SupportComment(
+                    String.valueOf(i),
+                    String.valueOf(i),
+                    false,
+                    "Comment " + i,
+                    "",
+                    "",
+                    "",
+                    10));
         }
     }
 
     @Override
-    /* package */ void getSupportComment() {
-        notifyGetSupportManagerCallbackSucceeded(mSupportComments);
+    /* package */ void getSupportComment(final String deviceId) {
+        notifyGetSupportManagerCallbackSucceeded(deviceId, mSupportComments, false);
     }
 
     @Override
     /* package */ void addSupportComment(SupportComment supportComment) {
         mSupportComments.add(supportComment);
-        notifyGetSupportManagerCallbackSucceeded(mSupportComments);
+        notifyGetSupportManagerCallbackSucceeded(supportComment.getIdDevice(), mSupportComments, false);
     }
 
     @Override
     /* package */ void deleteSupportComment(SupportComment supportComment) {
 
-        notifyGetSupportManagerCallbackSucceeded(mSupportComments);
+        notifyGetSupportManagerCallbackSucceeded(supportComment.getIdDevice(), mSupportComments, false);
+    }
+
+    @Override
+    void getAllDeviceIds() {
+
+        notifyGetSupportManagerCallbackSucceeded(null, mSupportComments, true);
+
     }
 }

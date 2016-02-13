@@ -2,6 +2,7 @@ package com.mercandalli.android.apps.files.support;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,14 +15,18 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
+import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 
 import java.util.List;
+
+import static com.mercandalli.android.apps.files.support.SupportUtils.getDevice;
 
 public class SupportFragment extends BackFragment implements
         SupportCommentAdapter.OnSupportCommentLongClickListener,
@@ -34,10 +39,14 @@ public class SupportFragment extends BackFragment implements
     private RecyclerView mRecyclerView;
     private EditText mEditText;
     private Button mNoInternetButton;
+    private TextView mAdminTextView;
     private View mCancelView;
     private View mOkView;
-    private SupportCommentAdapter mSupportCommentAdapter;
+    private View mProgressBar;
 
+    private String mCurrentDeviceId;
+
+    private SupportCommentAdapter mSupportCommentAdapter;
     private SupportManager mSupportManager;
 
     public static SupportFragment newInstance(String title) {
@@ -73,12 +82,12 @@ public class SupportFragment extends BackFragment implements
         }
         mTitle = args.getString(BUNDLE_ARG_TITLE);
         mSupportManager = FileApp.get().getFileAppComponent().provideSupportManager();
-        mSupportManager.registerOnCurrentMixFaderChangeListener(this);
+        mSupportManager.registerGetSupportManagerCallback(this);
     }
 
     @Override
     public void onDestroy() {
-        mSupportManager.unregisterOnCurrentMixFaderChangeListener(this);
+        mSupportManager.unregisterGetSupportManagerCallback(this);
         super.onDestroy();
     }
 
@@ -118,15 +127,17 @@ public class SupportFragment extends BackFragment implements
     }
 
     @Override
-    public void onSupportManagerGetSucceeded(final List<SupportComment> supportComments) {
-        syncInternetConnection();
+    public void onGetSupportSucceeded(@Nullable final String deviceIdAsked, final List<SupportComment> supportComments, final boolean adminIdSelection) {
+        mCurrentDeviceId = deviceIdAsked;
+        syncVisibility(false);
         mSupportCommentAdapter.setSupportComments(supportComments);
+        mSupportCommentAdapter.setIsAdminIdSelection(adminIdSelection);
         mRecyclerView.scrollToPosition(supportComments.size() - 1);
     }
 
     @Override
-    public void onSupportManagerGetFailed() {
-        syncInternetConnection();
+    public void onGetSupportFailed(final boolean adminIdSelection) {
+        syncVisibility(false);
     }
 
     @Override
@@ -134,14 +145,27 @@ public class SupportFragment extends BackFragment implements
         if (v == mNoInternetButton) {
             refreshList();
         } else if (v == mOkView) {
-            sedEditTextContent();
+            sendEditTextContent();
         } else if (v == mCancelView) {
             mEditText.setText("");
+        } else if (v == mAdminTextView) {
+            final String myDeviceId = SupportUtils.getDeviceId(getContext());
+            if (!SupportUtils.equalsString(mCurrentDeviceId, myDeviceId)) {
+                mCurrentDeviceId = myDeviceId;
+                refreshList();
+                mAdminTextView.setText("Go Adm");
+            } else {
+                syncVisibility(true);
+                mSupportManager.getAllDeviceIds();
+                mAdminTextView.setText("Go You");
+            }
         }
     }
 
     private void findViews(final View rootView) {
+        mProgressBar = rootView.findViewById(R.id.fragment_support_progress_bar);
         mOkView = rootView.findViewById(R.id.fragment_support_ok);
+        mAdminTextView = (TextView) rootView.findViewById(R.id.fragment_support_admin);
         mCancelView = rootView.findViewById(R.id.fragment_support_cancel);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_support_recycler_view);
         mEditText = (EditText) rootView.findViewById(R.id.fragment_support_edit_text);
@@ -163,38 +187,72 @@ public class SupportFragment extends BackFragment implements
                 }
             }
         });
+
+        mCurrentDeviceId = SupportUtils.getDeviceId(context);
         refreshList();
 
         mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE && !TextUtils.isEmpty(v.getText())) {
-                    sedEditTextContent();
+                    sendEditTextContent();
                     return true;
                 }
                 return false;
             }
         });
 
+        if (Config.isUserAdmin()) {
+            mAdminTextView.setOnClickListener(this);
+        }
         mOkView.setOnClickListener(this);
         mCancelView.setOnClickListener(this);
     }
 
-    private void syncInternetConnection() {
+    private void syncVisibility(final boolean isLoading) {
         final boolean internetOn = NetUtils.isInternetConnection(getContext());
-        mNoInternetButton.setVisibility(internetOn ? View.GONE : View.VISIBLE);
-        mEditText.setVisibility(internetOn ? View.VISIBLE : View.GONE);
-        mOkView.setVisibility(internetOn ? View.VISIBLE : View.GONE);
-        mCancelView.setVisibility(internetOn ? View.VISIBLE : View.GONE);
-        mRecyclerView.setVisibility(internetOn ? View.VISIBLE : View.GONE);
+        if (!internetOn) {
+            mNoInternetButton.setVisibility(View.VISIBLE);
+            mEditText.setVisibility(View.GONE);
+            mAdminTextView.setVisibility(View.GONE);
+            mOkView.setVisibility(View.GONE);
+            mCancelView.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.GONE);
+            return;
+        }
+        mNoInternetButton.setVisibility(View.GONE);
+        mProgressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        mRecyclerView.setVisibility(isLoading ? View.GONE : View.VISIBLE);
+        mEditText.setVisibility(isLoading ? View.GONE : View.VISIBLE);
+        mAdminTextView.setVisibility(!isLoading && Config.isUserAdmin() ? View.VISIBLE : View.GONE);
+        mOkView.setVisibility(isLoading ? View.GONE : View.VISIBLE);
+        mCancelView.setVisibility(isLoading ? View.GONE : View.VISIBLE);
     }
 
     private void refreshList() {
-        mSupportManager.getSupportComment();
+        syncVisibility(true);
+        mSupportManager.getSupportComment(mCurrentDeviceId);
     }
 
-    private void sedEditTextContent() {
-        mSupportManager.addSupportComment(new SupportComment("", false, mEditText.getText().toString()));
+    private void sendEditTextContent() {
+        final String message = mEditText.getText().toString();
+        final Context context = getContext();
+        if (TextUtils.isEmpty(message)) {
+            Toast.makeText(context, "Your message is empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final SupportDevice supportDevice = getDevice(context);
+
+
+        mSupportManager.addSupportComment(new SupportComment(
+                "",
+                mCurrentDeviceId,
+                Config.isUserAdmin(),
+                message,
+                supportDevice.mAndroidAppVersionCode,
+                supportDevice.mAndroidAppVersionName,
+                supportDevice.mAndroidDeviceVersionSdk,
+                0));
         mEditText.setText("");
     }
 }

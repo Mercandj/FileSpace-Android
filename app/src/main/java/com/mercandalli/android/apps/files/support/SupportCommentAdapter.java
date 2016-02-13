@@ -12,6 +12,7 @@ public class SupportCommentAdapter extends RecyclerView.Adapter<SupportCommentAd
     private final List<SupportComment> mSupportComments;
     private final OnSupportCommentClickListener mOnSupportCommentClickListener;
     private final OnSupportCommentLongClickListener mOnSupportCommentLongClickListener;
+    private boolean mIsAdminIdSelection;
 
     public SupportCommentAdapter(
             OnSupportCommentClickListener onSupportCommentClickListener,
@@ -32,7 +33,7 @@ public class SupportCommentAdapter extends RecyclerView.Adapter<SupportCommentAd
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mSupportCommentCardView.setSupportComment(mSupportComments.get(position));
+        holder.mSupportCommentCardView.setSupportComment(mSupportComments.get(position), mIsAdminIdSelection);
     }
 
     @Override
@@ -43,6 +44,11 @@ public class SupportCommentAdapter extends RecyclerView.Adapter<SupportCommentAd
     public void setSupportComments(List<SupportComment> supportComments) {
         mSupportComments.clear();
         mSupportComments.addAll(supportComments);
+        notifyDataSetChanged();
+    }
+
+    public void setIsAdminIdSelection(boolean isAdminIdSelection) {
+        mIsAdminIdSelection = isAdminIdSelection;
         notifyDataSetChanged();
     }
 

@@ -63,6 +63,7 @@ public class Config {
     public static final String routeFileDelete = startRoute + "file_delete";
     public static final String routeSupportComment = startRoute + "support/comment";
     public static final String routeSupportCommentDelete = startRoute + "support/comment/delete";
+    public static final String routeSupportCommentDeviceId = startRoute + "support/comment/device_id";
     public static final String routeVersionSupported = startRoute + "version/supported";
     public static final String routeInformation = startRoute + "information";
     public static final String routeRobotics = startRoute + "robotics";
