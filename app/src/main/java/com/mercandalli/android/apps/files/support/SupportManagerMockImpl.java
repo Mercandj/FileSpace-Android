@@ -47,6 +47,5 @@ public class SupportManagerMockImpl extends SupportManager {
     void getAllDeviceIds() {
 
         notifyGetSupportManagerCallbackSucceeded(null, mSupportComments, true);
-
     }
 }

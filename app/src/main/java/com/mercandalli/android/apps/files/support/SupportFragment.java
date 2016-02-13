@@ -31,7 +31,8 @@ import static com.mercandalli.android.apps.files.support.SupportUtils.getDevice;
 public class SupportFragment extends BackFragment implements
         SupportCommentAdapter.OnSupportCommentLongClickListener,
         SupportCommentAdapter.OnSupportCommentClickListener,
-        SupportManager.GetSupportManagerCallback, View.OnClickListener {
+        SupportManager.GetSupportManagerCallback,
+        View.OnClickListener {
 
     private static final String BUNDLE_ARG_TITLE = "SupportFragment.Args.BUNDLE_ARG_TITLE";
     private SetToolbarCallback mSetToolbarCallback;
@@ -210,8 +211,7 @@ public class SupportFragment extends BackFragment implements
     }
 
     private void syncVisibility(final boolean isLoading) {
-        final boolean internetOn = NetUtils.isInternetConnection(getContext());
-        if (!internetOn) {
+        if (!NetUtils.isInternetConnection(getContext())) {
             mNoInternetButton.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.GONE);
             mEditText.setVisibility(View.GONE);
