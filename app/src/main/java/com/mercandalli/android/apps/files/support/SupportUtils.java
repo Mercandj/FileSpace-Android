@@ -10,7 +10,10 @@ import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.mercandalli.android.apps.files.notificationpush.NotificationPush;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
+
+import java.util.Locale;
 
 /**
  * Support utils.
@@ -54,10 +57,14 @@ public class SupportUtils {
     static SupportDevice getDevice(final Context context) {
         final SupportDevice supportDevice = new SupportDevice();
 
-        //Device
+        // Device
         supportDevice.mAndroidDeviceVersionSdk = String.valueOf(Build.VERSION.SDK_INT);
+        supportDevice.mAndroidDeviceModel = Build.MODEL;
+        supportDevice.mAndroidDeviceManufacturer = Build.MANUFACTURER;
+        supportDevice.mAndroidDeviceDisplayLanguage = Locale.getDefault().getDisplayLanguage();
+        supportDevice.mAndroidDeviceCountry = Locale.getDefault().getCountry();
 
-        //App
+        // App
         try {
             final PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             supportDevice.mAndroidAppVersionCode = String.valueOf(packageInfo.versionCode);
@@ -65,11 +72,13 @@ public class SupportUtils {
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("DeviceUtils", "NameNotFoundException", e);
         }
+        supportDevice.mAndroidAppNotificationId = NotificationPush.regId;
 
         return supportDevice;
     }
 
-    /* protected */ static boolean equalsString(@Nullable final String str1, @Nullable final String str2) {
+    /* protected */
+    static boolean equalsString(@Nullable final String str1, @Nullable final String str2) {
         if (str1 == null) {
             return str2 == null || str2.isEmpty();
         }

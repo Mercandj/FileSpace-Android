@@ -22,9 +22,17 @@ public interface SupportOnlineApi {
             @Field("id_device") String deviceId,
             @Field("is_dev_response") boolean isDevResponse,
             @Field("content") String commentContent,
+
             @Field("android_app_version_code") String androidAppVersionCode,
             @Field("android_app_version_name") String androidAppVersionName,
-            @Field("android_device_version_sdk") String androidDeviceVersionSdk);
+            @Field("android_app_notification_id") String androidAppNotificationId,
+
+            @Field("android_device_version_sdk") String androidDeviceVersionSdk,
+            @Field("android_device_model") String androidDeviceModel,
+            @Field("android_device_manufacturer") String androidDeviceManufacturer,
+            @Field("android_device_display_language") String androidDeviceDisplayLanguage,
+            @Field("android_device_country") String androidDeviceCountry
+    );
 
     @FormUrlEncoded
     @POST("/" + Config.routeSupportCommentDelete)

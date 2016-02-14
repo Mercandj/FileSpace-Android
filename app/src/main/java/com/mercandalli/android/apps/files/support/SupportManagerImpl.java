@@ -61,9 +61,17 @@ public class SupportManagerImpl extends SupportManager {
                 supportComment.getIdDevice(),
                 supportComment.isDevResponse(),
                 supportComment.getComment(),
+
                 supportComment.getAndroidAppVersionCode(),
                 supportComment.getAndroidAppVersionName(),
-                supportComment.getAndroidDeviceVersionSdk());
+                supportComment.getAndroidAppNotificationId(),
+
+                supportComment.getAndroidDeviceVersionSdk(),
+                supportComment.mAndroidDeviceModel,
+                supportComment.mAndroidDeviceManufacturer,
+                supportComment.mAndroidDeviceDisplayLanguage,
+                supportComment.mAndroidDeviceCountry
+        );
         call.enqueue(new Callback<SupportCommentsResponse>() {
             @Override
             public void onResponse(Call<SupportCommentsResponse> call, Response<SupportCommentsResponse> response) {

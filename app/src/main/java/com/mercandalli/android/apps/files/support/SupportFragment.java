@@ -24,6 +24,7 @@ import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
+import com.mercandalli.android.apps.files.notificationpush.NotificationPush;
 
 import java.util.List;
 
@@ -33,7 +34,8 @@ public class SupportFragment extends BackFragment implements
         SupportCommentAdapter.OnSupportCommentLongClickListener,
         SupportCommentAdapter.OnSupportCommentClickListener,
         SupportManager.GetSupportManagerCallback,
-        View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+        View.OnClickListener,
+        SwipeRefreshLayout.OnRefreshListener {
 
     private static final String BUNDLE_ARG_TITLE = "SupportFragment.Args.BUNDLE_ARG_TITLE";
     private SetToolbarCallback mSetToolbarCallback;
@@ -268,7 +270,12 @@ public class SupportFragment extends BackFragment implements
                 message,
                 supportDevice.mAndroidAppVersionCode,
                 supportDevice.mAndroidAppVersionName,
+                NotificationPush.regId,
                 supportDevice.mAndroidDeviceVersionSdk,
+                supportDevice.mAndroidDeviceModel,
+                supportDevice.mAndroidDeviceManufacturer,
+                supportDevice.mAndroidDeviceDisplayLanguage,
+                supportDevice.mAndroidDeviceCountry,
                 0));
         mEditText.setText("");
     }

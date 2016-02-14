@@ -34,7 +34,7 @@ public class NotificationPush {
     public static GoogleCloudMessaging gcm;
     public static String regId;
 
-    public static final String REG_ID = "regId";
+    public static final String TAG_REG_ID = "regId";
     public static final String APP_VERSION = "appVersion";
 
     public static AsyncTask<Void, Void, String> shareRegidTask;
@@ -69,7 +69,7 @@ public class NotificationPush {
 
     public static String getRegistrationId(Activity activity) {
         final SharedPreferences prefs = activity.getSharedPreferences(ApplicationActivity.class.getSimpleName(), Context.MODE_PRIVATE);
-        String registrationId = prefs.getString(REG_ID, "");
+        String registrationId = prefs.getString(TAG_REG_ID, "");
         if (registrationId.isEmpty()) {
             return "";
         }
@@ -121,7 +121,7 @@ public class NotificationPush {
         final SharedPreferences prefs = app.getSharedPreferences(ApplicationActivity.class.getSimpleName(), Context.MODE_PRIVATE);
         int appVersion = getAppVersion(app);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(REG_ID, regId);
+        editor.putString(TAG_REG_ID, regId);
         editor.putInt(APP_VERSION, appVersion);
         editor.commit();
     }

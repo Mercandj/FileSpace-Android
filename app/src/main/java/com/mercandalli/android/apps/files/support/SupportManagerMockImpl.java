@@ -2,6 +2,8 @@ package com.mercandalli.android.apps.files.support;
 
 import android.content.Context;
 
+import com.mercandalli.android.apps.files.notificationpush.NotificationPush;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,12 @@ public class SupportManagerMockImpl extends SupportManager {
                     "Comment " + i,
                     "",
                     "",
-                    "",
+                    NotificationPush.regId,
+                    "23",
+                    "Maguro",
+                    "Samsung",
+                    "fr",
+                    "France",
                     10));
         }
     }
