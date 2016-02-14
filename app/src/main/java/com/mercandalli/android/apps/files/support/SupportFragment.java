@@ -3,6 +3,7 @@ package com.mercandalli.android.apps.files.support;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -32,7 +33,7 @@ public class SupportFragment extends BackFragment implements
         SupportCommentAdapter.OnSupportCommentLongClickListener,
         SupportCommentAdapter.OnSupportCommentClickListener,
         SupportManager.GetSupportManagerCallback,
-        View.OnClickListener {
+        View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String BUNDLE_ARG_TITLE = "SupportFragment.Args.BUNDLE_ARG_TITLE";
     private SetToolbarCallback mSetToolbarCallback;
@@ -44,6 +45,7 @@ public class SupportFragment extends BackFragment implements
     private View mCancelView;
     private View mOkView;
     private View mProgressBar;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private String mCurrentDeviceId;
 
@@ -129,6 +131,7 @@ public class SupportFragment extends BackFragment implements
 
     @Override
     public void onGetSupportSucceeded(@Nullable final String deviceIdAsked, final List<SupportComment> supportComments, final boolean adminIdSelection) {
+        mSwipeRefreshLayout.setRefreshing(false);
         mCurrentDeviceId = deviceIdAsked;
         syncVisibility(false);
         mSupportCommentAdapter.setSupportComments(supportComments);
@@ -138,6 +141,7 @@ public class SupportFragment extends BackFragment implements
 
     @Override
     public void onGetSupportFailed(final boolean adminIdSelection) {
+        mSwipeRefreshLayout.setRefreshing(false);
         syncVisibility(false);
     }
 
@@ -163,7 +167,13 @@ public class SupportFragment extends BackFragment implements
         }
     }
 
+    @Override
+    public void onRefresh() {
+        refreshList();
+    }
+
     private void findViews(final View rootView) {
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.fragment_support_swipe_refresh_layout);
         mProgressBar = rootView.findViewById(R.id.fragment_support_progress_bar);
         mOkView = rootView.findViewById(R.id.fragment_support_ok);
         mAdminTextView = (TextView) rootView.findViewById(R.id.fragment_support_admin);
@@ -188,6 +198,12 @@ public class SupportFragment extends BackFragment implements
                 }
             }
         });
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         mCurrentDeviceId = SupportUtils.getDeviceId(context);
         refreshList();

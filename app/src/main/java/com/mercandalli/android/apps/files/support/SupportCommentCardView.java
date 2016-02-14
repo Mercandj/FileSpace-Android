@@ -17,7 +17,7 @@ public class SupportCommentCardView extends CardView implements View.OnClickList
 
     private TextView mTitleTextView;
     private TextView mSubtitleTextView;
-    private View mOverfloavView;
+    private View mOverflowView;
     private SupportManager mSupportManager;
     private SupportComment mSupportComment;
     private SupportOverflowActions mSupportOverflowActions;
@@ -63,9 +63,16 @@ public class SupportCommentCardView extends CardView implements View.OnClickList
                 "#" + supportComment.getId() + " conversation") :
                 (supportComment.isDevResponse() ?
                         "The dev" : "You"));
-        mOverfloavView.setVisibility(Config.isUserAdmin() ? VISIBLE : (supportComment.isDevResponse() ? GONE : VISIBLE));
+        mOverflowView.setVisibility(isAdminIdSelection ?
+                GONE :
+                Config.isUserAdmin() ?
+                        VISIBLE :
+                        (supportComment.isDevResponse() ?
+                                GONE :
+                                VISIBLE));
         mSubtitleTextView.setText(isAdminIdSelection ?
-                (supportComment.getIdDevice() + " is the device id.\n" + supportComment.getNbCommentsWithThisIdDevice() + " messages.") :
+                (supportComment.getIdDevice() + " is the device id.\n" +
+                        supportComment.getNbCommentsWithThisIdDevice() + " messages.") :
                 supportComment.getComment());
     }
 
@@ -79,17 +86,18 @@ public class SupportCommentCardView extends CardView implements View.OnClickList
 
         int marginVertical = (int) dpToPx(context, 6);
         int marginHorizontal = (int) dpToPx(context, 20);
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.setMargins(marginHorizontal, marginVertical, marginHorizontal, marginVertical);
         setLayoutParams(layoutParams);
 
-        mOverfloavView.setOnClickListener(this);
+        mOverflowView.setOnClickListener(this);
     }
 
     private void findViews() {
         mTitleTextView = (TextView) findViewById(R.id.tab_support_comment_card_title);
         mSubtitleTextView = (TextView) findViewById(R.id.tab_support_comment_card_subtitle);
-        mOverfloavView = findViewById(R.id.tab_support_comment_card_more);
+        mOverflowView = findViewById(R.id.tab_support_comment_card_more);
         findViewById(R.id.tab_support_comment_card_item).setOnClickListener(this);
     }
 
