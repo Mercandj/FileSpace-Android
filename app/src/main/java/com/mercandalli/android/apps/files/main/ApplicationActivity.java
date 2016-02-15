@@ -46,6 +46,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import static com.mercandalli.android.apps.files.main.FileApp.logPerformance;
+
 /**
  * Mother class of the {@link Activity} MainActivity.
  */
@@ -53,6 +55,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements
         ApplicationCallback,
         Config.ConfigCallback {
 
+    private static final String TAG = "ApplicationActivity";
     public static FileModel mPhotoFile = null;
     public static IListener mPhotoFileListener = null;
 
@@ -65,7 +68,11 @@ public abstract class ApplicationActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        logPerformance(TAG, "ApplicationActivity#onCreate() - Start");
+
         mConfig = new Config(this, this);
+
+        logPerformance(TAG, "ApplicationActivity#onCreate() - Start Config");
 
         //region Handle NFC
         final Intent intent = getIntent();
@@ -138,7 +145,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements
 
     @Override
     public boolean isLogged() {
-        return mConfig != null && Config.isLogged();
+        return Config.isLogged();
     }
 
     public abstract void refreshData();

@@ -23,8 +23,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
+import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
@@ -34,6 +33,8 @@ import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.main.version.VersionManager;
 import com.mercandalli.android.apps.files.notificationpush.NotificationPush;
 import com.mercandalli.android.apps.files.user.community.CommunityFragment;
+
+import static com.mercandalli.android.apps.files.main.FileApp.logPerformance;
 
 /**
  * Main {@link Activity} launched by the xml.
@@ -62,21 +63,15 @@ public class MainActivity extends NavDrawerActivity implements
         mVersionManager.registerUpdateCheckedListener(this);
 
         // Notification
-        if (TextUtils.isEmpty(NotificationPush.regId)) {
-            NotificationPush.regId = NotificationPush.registerGCM(this);
-            Log.d("ActivityMain", "GCM RegId: " + NotificationPush.regId);
-        } else {
-            Log.d("ActivityMain", "Already Registered with GCM Server!");
-            NotificationPush.mainActNotif(this);
-        }
-
-        // getDevice(this);
+        new NotificationPush(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mVersionManager.checkIfUpdateNeeded();
+
+        logPerformance(TAG, "MainActivity#onResume() - End");
     }
 
     @Override
@@ -87,27 +82,27 @@ public class MainActivity extends NavDrawerActivity implements
 
     @Override
     public void updateAdapters() {
-        if (mBackFragment instanceof FileLocalPagerFragment) {
-            FileLocalPagerFragment fragmentFileManager = (FileLocalPagerFragment) mBackFragment;
-            fragmentFileManager.updateAdapterListServer();
-        } else if (mBackFragment instanceof CommunityFragment) {
-            CommunityFragment fragmentTalkManager = (CommunityFragment) mBackFragment;
-            fragmentTalkManager.updateAdapterListServer();
+        final Fragment fragment = getCurrentFragment();
+        if (fragment instanceof FileLocalPagerFragment) {
+            ((FileLocalPagerFragment) fragment).updateAdapterListServer();
+        } else if (fragment instanceof CommunityFragment) {
+            ((CommunityFragment) fragment).updateAdapterListServer();
         }
     }
 
     @Override
     public void refreshData() {
-        if (mBackFragment instanceof FileLocalPagerFragment) {
-            FileLocalPagerFragment fragmentFileManager = (FileLocalPagerFragment) mBackFragment;
-            fragmentFileManager.refreshData();
+        final Fragment fragment = getCurrentFragment();
+        if (fragment instanceof FileLocalPagerFragment) {
+            ((FileLocalPagerFragment) fragment).refreshData();
         }
     }
 
     @Override
     public void onRefreshFab() {
-        if (getBackFragment() instanceof FabFragment.RefreshFabCallback) {
-            ((FabFragment.RefreshFabCallback) getBackFragment()).onRefreshFab();
+        final Fragment fragment = getCurrentFragment();
+        if (fragment instanceof FabFragment.RefreshFabCallback) {
+            ((FabFragment.RefreshFabCallback) fragment).onRefreshFab();
         }
     }
 

@@ -23,6 +23,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -39,11 +40,11 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.extras.admin.AdminFragment;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
+import com.mercandalli.android.apps.files.extras.admin.AdminFragment;
 import com.mercandalli.android.apps.files.extras.genealogy.GenealogyFragment;
 import com.mercandalli.android.apps.files.extras.robotics.RoboticsFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudPagerFragment;
@@ -55,7 +56,7 @@ import com.mercandalli.android.apps.files.support.SupportFragment;
 import com.mercandalli.android.apps.files.user.ProfileFragment;
 import com.mercandalli.android.apps.files.user.community.CommunityFragment;
 
-import java.util.List;
+import static com.mercandalli.android.apps.files.main.FileApp.logPerformance;
 
 /**
  * An abstract class with a {@link NavigationView}.
@@ -65,16 +66,13 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
         DrawerLayout.DrawerListener,
         NavDrawerView.OnNavDrawerClickCallback {
 
+    private static final String TAG = "NavDrawerActivity";
+
     /**
      * Per the design guidelines, you should show the drawer on launch until the
      * user manually expands it. This shared preference tracks this.
      */
     private static final String PREF_USER_LEARNED_DRAWER = "NavDrawerActivity.navigation_drawer_learned";
-
-    /**
-     * The current fragment displayed.
-     */
-    protected BackFragment mBackFragment;
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -95,11 +93,15 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
     private boolean mUserLearnedDrawer;
 
     private InterstitialAd mInterstitialAd;
-    private int mThanhYou;
+    private int mThankYou;
+    private String mCurrentFragmentTag;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        logPerformance(TAG, "NavDrawerActivity#onCreate() - Start");
+
         setContentView(R.layout.activity_main);
 
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
@@ -120,17 +122,13 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
             navDrawerView.setUser(Config.getUser(), getConfig().getUserProfilePicture(this));
         }
 
+        logPerformance(TAG, "NavDrawerActivity#onCreate() - Middle");
+
         // Initial Fragment
         if (savedInstanceState == null) {
             selectItem(getInitFragmentId());
         } else {
             mFromSavedInstanceState = true;
-            final List<Fragment> fragments = mFragmentManager.getFragments();
-            for (Fragment fragment : fragments) {
-                if (fragment != null && fragment instanceof BackFragment) {
-                    mBackFragment = (BackFragment) fragment;
-                }
-            }
         }
 
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name);
@@ -142,38 +140,9 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
             mDrawerLayout.openDrawer(GravityCompat.START);
         }
 
-        if (Constants.ADS_VISIBLE) {
-            // Ads
-            // Create an InterstitialAd object. This same object can be re-used whenever you want to
-            // show an interstitial.
-            mInterstitialAd = new InterstitialAd(this);
-            mInterstitialAd.setAdUnitId(Constants.AD_MOB_KEY_NAV_DRAWER);
-            mInterstitialAd.setAdListener(new AdListener() {
-                @Override
-                public void onAdClosed() {
-                    if (!isFinishing()) {
-                        switch (mThanhYou) {
-                            case 0:
-                                Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_1, Toast.LENGTH_SHORT).show();
-                                break;
-                            case 1:
-                                Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_2, Toast.LENGTH_SHORT).show();
-                                break;
-                            case 2:
-                                Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_3, Toast.LENGTH_SHORT).show();
-                                break;
-                            default:
-                                Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_4, Toast.LENGTH_SHORT).show();
-                                break;
-                        }
-                        mThanhYou++;
-                    }
-                }
-            });
-            if (!mInterstitialAd.isLoaded()) {
-                requestNewInterstitial();
-            }
-        }
+        initAds();
+
+        logPerformance(TAG, "NavDrawerActivity#onCreate() - End");
     }
 
     /**
@@ -204,8 +173,8 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
     @Override
     public void setToolbar(Toolbar toolbar) {
         setSupportActionBar(toolbar);
-        mActionBarDrawerToggle = new ActionBarDrawerToggle(
-                this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.setDrawerListener(this);
         mActionBarDrawerToggle.syncState();
     }
@@ -239,10 +208,8 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
             // The user manually closed the drawer; store this flag to prevent auto-showing
             // the navigation drawer automatically in the future.
             mUserLearnedDrawer = true;
-            SharedPreferences sp = PreferenceManager
-                    .getDefaultSharedPreferences(NavDrawerActivity.this);
-            sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true)
-                    .apply();
+            PreferenceManager.getDefaultSharedPreferences(NavDrawerActivity.this).edit()
+                    .putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
         }
 
         invalidateOptionsMenu();
@@ -255,14 +222,15 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
         }
     }
 
-    public BackFragment getBackFragment() {
-        return mBackFragment;
+    @Nullable
+    protected Fragment getCurrentFragment() {
+        return mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
     }
 
     /* package */ void selectItem(final NavDrawerView.NavDrawerRow navDrawerRow) {
         Preconditions.checkNotNull(navDrawerRow);
 
-        if (navDrawerRow.equals(NavDrawerView.NavDrawerRow.LOGOUT)) {
+        if (NavDrawerView.NavDrawerRow.LOGOUT.equals(navDrawerRow)) {
             DialogUtils.alert(NavDrawerActivity.this, "Log out", "Do you want to log out?", "Yes", new IListener() {
                 @Override
                 public void execute() {
@@ -273,8 +241,8 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
             return;
         }
 
-        final String fragmentTag = navDrawerRow.getTag();
-        Fragment fragment = mFragmentManager.findFragmentByTag(fragmentTag);
+        mCurrentFragmentTag = navDrawerRow.getTag();
+        Fragment fragment = mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
         if (fragment == null) {
             switch (navDrawerRow) {
                 case HEADER:
@@ -310,7 +278,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
                     break;
                 case LOYALTY:
                     if (Constants.ADS_VISIBLE) {
-                        if (mInterstitialAd.isLoaded()) {
+                        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
                             mInterstitialAd.show();
                         } else {
                             requestNewInterstitial();
@@ -327,8 +295,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
                     throw new IllegalArgumentException("Wrong navDrawerRow in selectItem() " + navDrawerRow);
             }
         }
-        mBackFragment = (BackFragment) fragment;
-        mFragmentManager.beginTransaction().replace(R.id.activity_main_content_frame, fragment, fragmentTag).commit();
+        mFragmentManager.beginTransaction().replace(R.id.activity_main_content_frame, fragment, mCurrentFragmentTag).commit();
         if (mDrawerLayout.isDrawerOpen(mNavigationView)) {
             mDrawerLayout.closeDrawer(mNavigationView);
         }
@@ -344,7 +311,8 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
             mDrawerLayout.closeDrawer(mNavigationView);
             return true;
         }
-        return mBackFragment != null && mBackFragment.back();
+        final Fragment fragment = getCurrentFragment();
+        return fragment instanceof BackFragment && ((BackFragment) fragment).back();
     }
 
     private NavDrawerView.NavDrawerRow getInitFragmentId() {
@@ -355,7 +323,45 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
      * Load a new interstitial ad asynchronously.
      */
     private void requestNewInterstitial() {
+        if (mInterstitialAd == null) {
+            return;
+        }
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
+    }
+
+    private void initAds() {
+        if (Constants.ADS_VISIBLE) {
+            // Ads
+            // Create an InterstitialAd object. This same object can be re-used whenever you want to
+            // show an interstitial.
+            mInterstitialAd = new InterstitialAd(this);
+            mInterstitialAd.setAdUnitId(Constants.AD_MOB_KEY_NAV_DRAWER);
+            mInterstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    if (!isFinishing()) {
+                        switch (mThankYou) {
+                            case 0:
+                                Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_1, Toast.LENGTH_SHORT).show();
+                                break;
+                            case 1:
+                                Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_2, Toast.LENGTH_SHORT).show();
+                                break;
+                            case 2:
+                                Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_3, Toast.LENGTH_SHORT).show();
+                                break;
+                            default:
+                                Toast.makeText(NavDrawerActivity.this, R.string.settings_ad_thank_you_4, Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                        mThankYou++;
+                    }
+                }
+            });
+            if (!mInterstitialAd.isLoaded()) {
+                requestNewInterstitial();
+            }
+        }
     }
 
     public abstract void updateAdapters();

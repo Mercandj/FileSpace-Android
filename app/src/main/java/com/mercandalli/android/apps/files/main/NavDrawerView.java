@@ -26,6 +26,7 @@ import java.util.Map;
 /* package */
 class NavDrawerView extends FrameLayout implements View.OnClickListener {
 
+    private static final String TAG = "NavDrawerView";
     private NavDrawerRow mLastClicked;
 
     private NavDrawerHeaderView mNavDrawerHeaderView;
@@ -117,6 +118,8 @@ class NavDrawerView extends FrameLayout implements View.OnClickListener {
 
         mNavDrawerHeaderView = (NavDrawerHeaderView) findViewById(R.id.view_nav_drawer_header);
 
+        FileApp.logPerformance(TAG, "initView - Start");
+
         FontUtils.applyFont(context, (TextView) findViewById(R.id.view_nav_drawer_other), "fonts/MYRIADAB.TTF");
 
         for (final NavDrawerRow navDrawerRow : NavDrawerRow.values()) {
@@ -130,6 +133,8 @@ class NavDrawerView extends FrameLayout implements View.OnClickListener {
                 mImageViews.put(navDrawerRow.mId, (ImageView) findViewById(navDrawerRow.mNavDrawerSimpleRow.mIconId));
             }
         }
+
+        FileApp.logPerformance(TAG, "initView - End");
     }
 
     private void applyFont(Context context, TextView textView, NavDrawerRow navDrawerRow, boolean selected) {

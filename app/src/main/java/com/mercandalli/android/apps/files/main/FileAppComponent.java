@@ -56,8 +56,6 @@ public interface FileAppComponent {
 
     void inject(FileUploadDialog fileUploadDialog);
 
-    void inject(FileAudioRowAdapter fileAudioRowAdapter);
-
     void inject(FileCloudDownloadedFragment fileCloudDownloadedFragment);
 
     void inject(SupportFragment supportFragment);

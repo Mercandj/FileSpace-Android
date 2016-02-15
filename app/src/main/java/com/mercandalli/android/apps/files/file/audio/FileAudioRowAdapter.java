@@ -34,20 +34,16 @@ import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
-import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
 import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
 import com.mercandalli.android.apps.files.file.FileTypeModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.FileUtils;
-import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 /**
  * The adapter for {@link FileAudioModel} rows.
@@ -77,9 +73,6 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
     private List<FileModelCardHeaderItem> mHeaderItems;
     private FileModelCardAdapter.OnHeaderClickListener mOnHeaderClickListener;
 
-    @Inject
-    FileManager mFileManager;
-
     public FileAudioRowAdapter(Context context, List<FileAudioModel> files, FileAudioModelListener moreListener) {
         this.mFiles = new ArrayList<>();
         this.mFiles.addAll(files);
@@ -90,7 +83,6 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
         mStringFile = context.getString(R.string.file_model_adapter_file);
         mStringFiles = context.getString(R.string.file_model_adapter_files);
 
-        FileApp.get().getFileAppComponent().inject(this);
         setHasStableIds(true);
     }
 
@@ -174,8 +166,6 @@ public class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapte
         } else {
             fileViewHolder.icon.setImageResource(R.drawable.file_default);
         }
-
-        //mFileManager.getCover(mActivity, file, fileViewHolder.icon);
 
         if (moreListener == null) {
             fileViewHolder.more.setVisibility(View.GONE);

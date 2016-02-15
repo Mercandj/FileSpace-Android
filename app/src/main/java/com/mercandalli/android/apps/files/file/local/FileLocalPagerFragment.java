@@ -82,14 +82,14 @@ public class FileLocalPagerFragment extends BackFragment implements
 
     private SetToolbarCallback mSetToolbarCallback;
 
-    private int[] mImageResId = {
+    private static final int[] mImageResId = {
             R.drawable.ic_folder_open_white_24dp,
             R.drawable.ic_music_note_white_24dp,
             R.drawable.ic_photo_white_24dp,
             R.drawable.ic_video_library_white_24dp
     };
 
-    private int[] mTitleIds = {
+    private static final int[] mTitleIds = {
             R.string.tab_files,
             R.string.tab_musics,
             R.string.tab_photos,
@@ -124,14 +124,11 @@ public class FileLocalPagerFragment extends BackFragment implements
 
     @Override
     public boolean back() {
-        int currentFragmentId = getCurrentFragmentIndex();
-        if (currentFragmentId == -1) {
+        final Fragment fragment = getCurrentFragment();
+        if (fragment == null || !(fragment instanceof FabFragment)) {
             return false;
         }
-        FabFragment fabFragment = getCurrentFragment();
-        if (fabFragment == null) {
-            return false;
-        }
+        final FabFragment fabFragment = (FabFragment) fragment;
         refreshFab(fabFragment);
         return fabFragment.back();
     }
@@ -166,11 +163,9 @@ public class FileLocalPagerFragment extends BackFragment implements
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
 
-        MenuItem searchItem;
         SearchView mSearchView;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            searchItem = menu.findItem(R.id.action_search);
-            mSearchView = (SearchView) searchItem.getActionView();
+            mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         } else {
             return;
         }
@@ -245,13 +240,9 @@ public class FileLocalPagerFragment extends BackFragment implements
     }
 
     @Nullable
-    public FabFragment getCurrentFragment() {
-        final Fragment fragment = getChildFragmentManager().findFragmentByTag("android:switcher:" +
+    public Fragment getCurrentFragment() {
+        return getChildFragmentManager().findFragmentByTag("android:switcher:" +
                 R.id.fragment_file_view_pager + ":" + mPagerAdapter.getItemId(getCurrentFragmentIndex()));
-        if (fragment == null || !(fragment instanceof FabFragment)) {
-            return null;
-        }
-        return (FabFragment) fragment;
     }
 
     public void refreshListServer() {
@@ -259,23 +250,23 @@ public class FileLocalPagerFragment extends BackFragment implements
     }
 
     public void refreshListServer(String search) {
-        final FabFragment fabFragment = getCurrentFragment();
-        if (fabFragment != null && fabFragment instanceof ListController) {
-            ((ListController) fabFragment).refreshCurrentList(search);
+        final Fragment fragment = getCurrentFragment();
+        if (fragment != null && fragment instanceof ListController) {
+            ((ListController) fragment).refreshCurrentList(search);
         }
     }
 
     public void updateAdapterListServer() {
-        final FabFragment fabFragment = getCurrentFragment();
-        if (fabFragment != null && fabFragment instanceof ListController) {
-            ((ListController) fabFragment).updateAdapter();
+        final Fragment fragment = getCurrentFragment();
+        if (fragment != null && fragment instanceof ListController) {
+            ((ListController) fragment).updateAdapter();
         }
     }
 
     public void refreshData() {
-        final FabFragment fabFragment = getCurrentFragment();
-        if (fabFragment != null && fabFragment instanceof ListController) {
-            ((ListController) fabFragment).refreshCurrentList();
+        final Fragment fragment = getCurrentFragment();
+        if (fragment != null && fragment instanceof ListController) {
+            ((ListController) fragment).refreshCurrentList();
         }
     }
 
@@ -294,9 +285,9 @@ public class FileLocalPagerFragment extends BackFragment implements
     }
 
     public void goHome() {
-        FabFragment fabFragment = getCurrentFragment();
-        if (fabFragment != null && fabFragment instanceof FileLocalFragment) {
-            FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fabFragment;
+        final Fragment fragment = getCurrentFragment();
+        if (fragment != null && fragment instanceof FileLocalFragment) {
+            FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fragment;
             fragmentFileManagerFragment.goHome();
         }
     }
@@ -309,10 +300,10 @@ public class FileLocalPagerFragment extends BackFragment implements
         menuAlert.setItems(menuList,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        FabFragment fabFragment = getCurrentFragment();
-                        if (fabFragment != null) {
-                            if (fabFragment instanceof ISortMode) {
-                                ((ISortMode) fabFragment).setSortMode(item == 0 ? Constants.SORT_ABC : (item == 1 ? Constants.SORT_SIZE : Constants.SORT_DATE_MODIFICATION));
+                        final Fragment fragment = getCurrentFragment();
+                        if (fragment != null) {
+                            if (fragment instanceof ISortMode) {
+                                ((ISortMode) fragment).setSortMode(item == 0 ? Constants.SORT_ABC : (item == 1 ? Constants.SORT_SIZE : Constants.SORT_DATE_MODIFICATION));
                             } else {
                                 Toast.makeText(getContext(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                             }
@@ -381,11 +372,11 @@ public class FileLocalPagerFragment extends BackFragment implements
         if (currentFragmentId == -1) {
             return;
         }
-        final FabFragment fabFragment = getCurrentFragment();
-        if (fabFragment == null) {
+        final Fragment fabFragment = getCurrentFragment();
+        if (fabFragment == null || !(fabFragment instanceof FabController)) {
             return;
         }
-        refreshFab(fabFragment);
+        refreshFab((FabController) fabFragment);
     }
 
     private void refreshFab(final FabController fabController) {

@@ -78,8 +78,8 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... urls) {
         try {
             if (this.parameters != null) {
-                if (!StringUtils.isNullOrEmpty(Config.getUserRegId())) {
-                    parameters.add(new StringPair("android_id", "" + Config.getUserRegId()));
+                if (!StringUtils.isNullOrEmpty(Config.getNotificationId())) {
+                    parameters.add(new StringPair("android_id", "" + Config.getNotificationId()));
                 }
                 url = NetUtils.addUrlParameters(url, parameters);
             }

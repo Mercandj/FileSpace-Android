@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.mercandalli.android.apps.files.notificationpush.NotificationPush;
+import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 import java.util.Locale;
@@ -72,7 +72,7 @@ public class SupportUtils {
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("DeviceUtils", "NameNotFoundException", e);
         }
-        supportDevice.mAndroidAppNotificationId = NotificationPush.regId;
+        supportDevice.mAndroidAppNotificationId = Config.getNotificationId();
 
         return supportDevice;
     }

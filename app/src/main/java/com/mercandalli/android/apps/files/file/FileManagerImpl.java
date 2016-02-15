@@ -78,9 +78,6 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
     private final FileOnlineApi mFileOnlineApi;
     private final FileLocalApi mFileLocalApi;
 
-    private NotificationManager mNotifyManager;
-    private NotificationCompat.Builder mNotificationBuilder;
-
     public FileManagerImpl(final Context contextApp, final FileOnlineApi fileOnlineApi) {
         Preconditions.checkNotNull(contextApp);
 

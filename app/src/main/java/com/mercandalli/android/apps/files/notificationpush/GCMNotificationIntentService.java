@@ -33,6 +33,8 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.mercandalli.android.apps.files.R;
 
 public class GCMNotificationIntentService extends IntentService {
+
+    static final String KEY_MESSAGE = "m";
     private static final String TAG = "GCMNotificationIntentS";
 
     public static final int NOTIFICATION_ID = 1;
@@ -56,9 +58,9 @@ public class GCMNotificationIntentService extends IntentService {
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
                 //
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                extras.get(Config.KEY_MESSAGE);
-                extras.get(Config.KEY_ID_CONVERSATION);
-                sendNotification("" + extras.get(Config.KEY_MESSAGE));
+                extras.get(KEY_MESSAGE);
+                extras.get("id_conversation");
+                sendNotification("" + extras.get(KEY_MESSAGE));
             }
         }
         GcmBroadcastReceiver.completeWakefulIntent(intent);

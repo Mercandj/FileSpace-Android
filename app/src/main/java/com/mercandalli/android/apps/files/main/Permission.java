@@ -15,12 +15,10 @@ public class Permission {
 
     public static final int REQUEST_CODE = 26;
 
-    private final Activity mActivity;
     private final String[] mPermissions;
     private OnPermissionResult mOnPermissionResult;
 
-    public Permission(Activity activity, String[] permissions) {
-        mActivity = activity;
+    public Permission(final String[] permissions) {
         mPermissions = permissions;
     }
 
@@ -29,11 +27,11 @@ public class Permission {
      *
      * @param onPermissionResult The callback.
      */
-    public void askPermissions(OnPermissionResult onPermissionResult) {
+    public void askPermissions(final Activity activity, final OnPermissionResult onPermissionResult) {
         Preconditions.checkNotNull(onPermissionResult);
         mOnPermissionResult = onPermissionResult;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ActivityCompat.requestPermissions(mActivity, mPermissions, REQUEST_CODE);
+            ActivityCompat.requestPermissions(activity, mPermissions, REQUEST_CODE);
         } else {
             onPermissionResult.onPermissionResult(true);
         }
@@ -41,13 +39,13 @@ public class Permission {
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (REQUEST_CODE == requestCode) {
-            boolean allSucceed = true;
-            for (int i = 0; i < permissions.length; i++) {
-                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                    allSucceed = false;
+            for (final int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    mOnPermissionResult.onPermissionResult(false);
+                    return;
                 }
             }
-            mOnPermissionResult.onPermissionResult(allSucceed);
+            mOnPermissionResult.onPermissionResult(true);
         }
     }
 

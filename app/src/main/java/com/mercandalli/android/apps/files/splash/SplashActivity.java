@@ -52,8 +52,8 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
         }
 
         if (start) {
-            mPermission = new Permission(this, PERMISSIONS);
-            mPermission.askPermissions(this);
+            mPermission = new Permission(PERMISSIONS);
+            mPermission.askPermissions(this, this);
         } else {
             MainActivity.start(this);
             finish();
@@ -81,14 +81,14 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
     }
 
     private void end() {
+        MainActivity.start(this);
+        finish();
+
         if (mIsFirstLaunch) {
             final SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREFERENCES_INIT, MODE_PRIVATE)
                     .edit();
             editor.putBoolean(KEY_IS_FIRST_LAUNCH, false);
             editor.apply();
         }
-
-        MainActivity.start(this);
-        finish();
     }
 }

@@ -42,7 +42,6 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
-import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
@@ -121,8 +120,6 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
 
     private int mSortMode = Constants.SORT_DATE_MODIFICATION;
 
-    private final IListener mRefreshActivityAdapterListener;
-
     private ScaleAnimationAdapter mScaleAnimationAdapter;
 
     private String mStringDirectory;
@@ -159,14 +156,6 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
      * Do not use this constructor. Call {@link #newInstance()} instead.
      */
     public FileAudioLocalFragment() {
-        mRefreshActivityAdapterListener = new IListener() {
-            @Override
-            public void execute() {
-                if (mApplicationCallback != null) {
-                    mApplicationCallback.refreshData();
-                }
-            }
-        };
         mProgressBarActivationHandler = new Handler();
         mProgressBarActivationRunnable = new Runnable() {
             @Override
@@ -182,7 +171,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         final View rootView = inflater.inflate(R.layout.fragment_file_audio_local, container, false);
         final Context context = getContext();
 
-        mFileAudioOverflowActions = new FileAudioOverflowActions(getContext(), getFragmentManager(), this);
+        mFileAudioOverflowActions = new FileAudioOverflowActions(context, getFragmentManager(), this);
 
         mStringDirectory = context.getString(R.string.file_audio_model_adapter_directory);
         mStringMusic = context.getString(R.string.file_audio_model_music);

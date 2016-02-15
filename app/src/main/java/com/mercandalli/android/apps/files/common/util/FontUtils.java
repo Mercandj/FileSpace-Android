@@ -21,8 +21,10 @@ package com.mercandalli.android.apps.files.common.util;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.widget.Button;
 import android.widget.TextView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Static Methods used to apply Fonts
@@ -30,19 +32,19 @@ import android.widget.TextView;
  * @author Jonathan
  */
 public class FontUtils {
-    public static void applyFont(Context context, TextView tv, String police) {
-        if (context == null || tv == null || police == null) {
-            return;
-        }
-        Typeface font = Typeface.createFromAsset(context.getAssets(), police);
-        tv.setTypeface(font);
-    }
 
-    public static void applyFont(Context context, Button bt, String police) {
-        if (context == null || bt == null || police == null) {
+    private static final Map<String, Typeface> sFonts = new HashMap<>();
+
+    public static void applyFont(final Context context, final TextView tv, final String font) {
+        if (context == null || tv == null || font == null) {
             return;
         }
-        Typeface font = Typeface.createFromAsset(context.getAssets(), police);
-        bt.setTypeface(font);
+        if (sFonts.containsKey(font)) {
+            tv.setTypeface(sFonts.get(font));
+            return;
+        }
+        final Typeface fromAsset = Typeface.createFromAsset(context.getAssets(), font);
+        sFonts.put(font, fromAsset);
+        tv.setTypeface(fromAsset);
     }
 }

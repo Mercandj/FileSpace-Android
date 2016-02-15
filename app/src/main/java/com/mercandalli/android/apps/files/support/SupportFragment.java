@@ -24,7 +24,6 @@ import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
-import com.mercandalli.android.apps.files.notificationpush.NotificationPush;
 
 import java.util.List;
 
@@ -270,7 +269,7 @@ public class SupportFragment extends BackFragment implements
                 message,
                 supportDevice.mAndroidAppVersionCode,
                 supportDevice.mAndroidAppVersionName,
-                NotificationPush.regId,
+                Config.getNotificationId(),
                 supportDevice.mAndroidDeviceVersionSdk,
                 supportDevice.mAndroidDeviceModel,
                 supportDevice.mAndroidDeviceManufacturer,

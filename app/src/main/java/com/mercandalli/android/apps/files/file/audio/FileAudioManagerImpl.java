@@ -6,7 +6,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.text.Spanned;
 
 import com.mercandalli.android.apps.files.common.util.HtmlUtils;
@@ -58,6 +61,9 @@ public class FileAudioManagerImpl extends FileAudioManager {
     private boolean mIsGetAllLocalMusicLaunched;
     private boolean mIsGetLocalMusicFoldersLaunched;
 
+    private final Handler mUiHandler;
+    private final Thread mUiThread;
+
     /**
      * The manager constructor.
      *
@@ -66,6 +72,10 @@ public class FileAudioManagerImpl extends FileAudioManager {
     public FileAudioManagerImpl(final Context contextApp) {
         Preconditions.checkNotNull(contextApp);
         mContextApp = contextApp;
+
+        final Looper mainLooper = Looper.getMainLooper();
+        mUiHandler = new Handler(mainLooper);
+        mUiThread = mainLooper.getThread();
     }
 
     /**
@@ -82,16 +92,17 @@ public class FileAudioManagerImpl extends FileAudioManager {
 
         final String requestKey = search + "¤" + sortMode;
         if (mCacheAllLocalMusics.containsKey(requestKey)) {
-            notifyAllLocalMusicListenerSucceeded(mCacheAllLocalMusics.get(requestKey));
+            notifyAllLocalMusicListenerSucceeded(mCacheAllLocalMusics.get(requestKey), null);
             return;
         }
         if (mIsGetAllLocalMusicLaunched) {
             return;
         }
         mIsGetAllLocalMusicLaunched = true;
-        new AsyncTask<Void, Void, List<FileAudioModel>>() {
+
+        new Thread() {
             @Override
-            protected List<FileAudioModel> doInBackground(Void... params) {
+            public void run() {
                 final List<FileAudioModel> files = new ArrayList<>();
 
                 final String[] PROJECTION = {MediaStore.Files.FileColumns.DATA};
@@ -157,17 +168,9 @@ public class FileAudioManagerImpl extends FileAudioManager {
                     });
                 }
 
-                return files;
+                notifyAllLocalMusicListenerSucceeded(files, requestKey);
             }
-
-            @Override
-            protected void onPostExecute(final List<FileAudioModel> fileModels) {
-                notifyAllLocalMusicListenerSucceeded(fileModels);
-                mCacheAllLocalMusics.put(requestKey, fileModels);
-                mIsGetAllLocalMusicLaunched = false;
-                super.onPostExecute(fileModels);
-            }
-        }.execute();
+        }.start();
     }
 
     /**
@@ -538,7 +541,21 @@ public class FileAudioManagerImpl extends FileAudioManager {
     }
 
     //region notify listeners
-    private void notifyAllLocalMusicListenerSucceeded(final List<FileAudioModel> fileModels) {
+    private void notifyAllLocalMusicListenerSucceeded(final List<FileAudioModel> fileModels, @Nullable final String requestKey) {
+        if (mUiThread != Thread.currentThread()) {
+            mUiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    notifyAllLocalMusicListenerSucceeded(fileModels, requestKey);
+                }
+            });
+            return;
+        }
+        if (requestKey != null) {
+            mCacheAllLocalMusics.put(requestKey, fileModels);
+            mIsGetAllLocalMusicLaunched = false;
+        }
+
         synchronized (mGetAllLocalMusicListeners) {
             for (int i = 0, size = mGetAllLocalMusicListeners.size(); i < size; i++) {
                 mGetAllLocalMusicListeners.get(i).onAllLocalMusicSucceeded(fileModels);

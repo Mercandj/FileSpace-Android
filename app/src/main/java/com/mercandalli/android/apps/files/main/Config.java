@@ -49,6 +49,7 @@ import java.util.TimeZone;
  */
 public class Config {
 
+    private static final String TAG = "Config";
     private ApplicationCallback app;
 
     // Local routes
@@ -136,7 +137,7 @@ public class Config {
         load(activity);
     }
 
-    private void save(Context context) {
+    private static void save(Context context) {
         try {
             JSONObject tmp_json = new JSONObject();
             JSONObject tmp_settings_1 = new JSONObject();
@@ -153,7 +154,7 @@ public class Config {
             FileUtils.writeStringFile(context, fileName, tmp_json.toString());
 
         } catch (JSONException e) {
-            Log.e(getClass().getName(), "Failed to convert Json", e);
+            Log.e(TAG, "Failed to convert Json", e);
         }
     }
 
@@ -251,11 +252,11 @@ public class Config {
         }
     }
 
-    public static String getUserRegId() {
+    public static String getNotificationId() {
         return ENUM_String.STRING_USER_REG_ID.value;
     }
 
-    public void setUserRegId(Context context, String value) {
+    public static void setNotificationId(Context context, String value) {
         if (!ENUM_String.STRING_USER_REG_ID.value.equals(value)) {
             ENUM_String.STRING_USER_REG_ID.value = value;
             save(context);
@@ -324,7 +325,7 @@ public class Config {
     }
 
     public static UserModel getUser() {
-        return new UserModel(getUserId(), getUserUsername(), getUserPassword(), getUserRegId(), isUserAdmin());
+        return new UserModel(getUserId(), getUserUsername(), getUserPassword(), getNotificationId(), isUserAdmin());
     }
 
     public static String getFileName() {
@@ -336,7 +337,7 @@ public class Config {
      * (When the user log out)
      */
     public void reset(Activity activity) {
-        setUserRegId(activity, "");
+        setNotificationId(activity, "");
         setUserUsername(activity, "");
         setUserPassword(activity, "");
         setAutoConnection(activity, true);
