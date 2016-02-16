@@ -17,7 +17,7 @@
     android:transitionName="transitionRoot"
     app:cardCornerRadius="2dp">
 
-    <com.mercandalli.android.apps.files.common.view.CircularImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/tab_file_card_drag_drop_icon"
         android:layout_width="42dp"
         android:layout_height="42dp"

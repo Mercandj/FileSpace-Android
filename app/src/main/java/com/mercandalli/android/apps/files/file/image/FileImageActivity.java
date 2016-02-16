@@ -107,7 +107,6 @@ public class FileImageActivity extends ApplicationActivity {
 
             if (this.mTitle != null) {
                 mTitleTextView.setText(this.mTitle);
-                FontUtils.applyFont(this, mTitleTextView, "fonts/Roboto-Regular.ttf");
             }
 
             if (ImageUtils.isImage(this, this.mId)) {

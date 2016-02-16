@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.BuildConfig;
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.util.FontUtils;
 import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.user.UserModel;
@@ -75,9 +74,6 @@ class NavDrawerHeaderView extends FrameLayout {
         findViews();
 
         if (!isInEditMode()) {
-            FontUtils.applyFont(context, mTitleTextView, "fonts/Roboto-Medium.ttf");
-            FontUtils.applyFont(context, mSubtitleTextView, "fonts/Roboto-Light.ttf");
-
             final StatFs statFs = new StatFs(Environment.getExternalStorageDirectory().getAbsolutePath());
             final long blockSize = statFs.getBlockSize();
             final long totalSize = statFs.getBlockCount() * blockSize;

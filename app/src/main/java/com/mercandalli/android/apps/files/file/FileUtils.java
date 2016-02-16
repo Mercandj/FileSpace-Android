@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -82,7 +82,7 @@ public class FileUtils {
     @Nullable
     public static String readStringFile(final Context context, @Nullable final String filePath) {
         Preconditions.checkNotNull(context);
-        if(filePath == null) {
+        if (filePath == null) {
             return "";
         }
         String res = null;
@@ -127,10 +127,13 @@ public class FileUtils {
      *
      * @param directory directory to delete
      */
-    public static boolean deleteDirectory(File directory) {
+    public static boolean deleteDirectory(final File directory) {
         if (directory.isDirectory()) {
-            String[] children = directory.list();
-            for (String str : children) {
+            final String[] children = directory.list();
+            if (children == null) {
+                return directory.delete();
+            }
+            for (final String str : children) {
                 boolean success = deleteDirectory(new File(directory, str));
                 if (!success) {
                     return false;

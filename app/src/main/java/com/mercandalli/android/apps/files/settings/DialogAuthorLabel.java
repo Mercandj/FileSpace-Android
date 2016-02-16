@@ -56,7 +56,6 @@ public class DialogAuthorLabel extends Dialog {
         countDown(version_tv, 5);
 
         myShimmerTextView = (ShimmerTextView) this.findViewById(R.id.shimmer_tv);
-        FontUtils.applyFont(activity, myShimmerTextView, "fonts/Roboto-Light.ttf");
 
         getShimmer(myShimmerTextView).start(myShimmerTextView);
 
@@ -88,7 +87,6 @@ public class DialogAuthorLabel extends Dialog {
                 countDown(tv, count - 1);
                 if (count == 1) {
                     try {
-                        FontUtils.applyFont(mActivity, tv, "fonts/Roboto-Light.ttf");
                         getShimmer(tv).start(tv);
                         PackageInfo pInfo = mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0);
                         version(tv, "Version: " + pInfo.versionName, 0);

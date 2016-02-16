@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -208,6 +208,9 @@ public class Config {
     }
 
     public void setUserNoteWorkspace1(Context context, String value) {
+        if (value == null) {
+            return;
+        }
         if (!ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value.equals(value)) {
             ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value = value;
             save(context);
@@ -231,13 +234,16 @@ public class Config {
     }
 
     public void setUserUsername(Context context, String value) {
+        if (value == null) {
+            return;
+        }
         if (!ENUM_String.STRING_USER_USERNAME.value.equals(value)) {
             ENUM_String.STRING_USER_USERNAME.value = value;
             save(context);
         }
     }
 
-    public String getLocalFolderName() {
+    public static String getLocalFolderName() {
         return ENUM_String.STRING_LOCAL_FOLDER_NAME_1.value;
     }
 
@@ -246,6 +252,9 @@ public class Config {
     }
 
     public void setUserPassword(Context context, String value) {
+        if (value == null) {
+            return;
+        }
         if (!ENUM_String.STRING_USER_PASSWORD.value.equals(value)) {
             ENUM_String.STRING_USER_PASSWORD.value = value;
             save(context);
@@ -257,7 +266,10 @@ public class Config {
     }
 
     public static void setNotificationId(Context context, String value) {
-        if (!ENUM_String.STRING_USER_REG_ID.value.equals(value)) {
+        if (value == null) {
+            return;
+        }
+        if (!value.equals(ENUM_String.STRING_USER_REG_ID.value)) {
             ENUM_String.STRING_USER_REG_ID.value = value;
             save(context);
         }

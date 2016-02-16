@@ -142,17 +142,9 @@ class NavDrawerView extends FrameLayout implements View.OnClickListener {
             return;
         }
         if (selected) {
-            if (isOtherSection(navDrawerRow)) {
-                FontUtils.applyFont(context, textView, "fonts/MYRIADAB.TTF");
-            } else {
-                FontUtils.applyFont(context, textView, "fonts/Roboto-Medium.ttf");
-            }
+            FontUtils.applyFont(context, textView, "fonts/MYRIADAB.TTF");
         } else {
-            if (isOtherSection(navDrawerRow)) {
-                FontUtils.applyFont(context, textView, "fonts/MYRIADAM.TTF");
-            } else {
-                FontUtils.applyFont(context, textView, "fonts/Roboto-Light.ttf");
-            }
+            FontUtils.applyFont(context, textView, "fonts/MYRIADAT.TTF");
         }
     }
 

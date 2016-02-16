@@ -90,15 +90,15 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
             viewHolder.mIconImageView.setImageResource(R.drawable.directory);
         } else if (fileModel.getType() != null) {
             final FileTypeModel type = fileModel.getType();
-            if (type.equals(FileTypeModelENUM.AUDIO.type)) {
+            if (FileTypeModelENUM.AUDIO.type.equals(type)) {
                 viewHolder.mIconImageView.setImageResource(R.drawable.file_audio);
-            } else if (type.equals(FileTypeModelENUM.PDF.type)) {
+            } else if (FileTypeModelENUM.PDF.type.equals(type)) {
                 viewHolder.mIconImageView.setImageResource(R.drawable.file_pdf);
-            } else if (type.equals(FileTypeModelENUM.APK.type)) {
+            } else if (FileTypeModelENUM.APK.type.equals(type)) {
                 viewHolder.mIconImageView.setImageResource(R.drawable.file_apk);
-            } else if (type.equals(FileTypeModelENUM.ARCHIVE.type)) {
+            } else if (FileTypeModelENUM.ARCHIVE.type.equals(type)) {
                 viewHolder.mIconImageView.setImageResource(R.drawable.file_archive);
-            } else if (type.equals(FileTypeModelENUM.FILESPACE.type)) {
+            } else if (FileTypeModelENUM.FILESPACE.type.equals(type)) {
                 viewHolder.mIconImageView.setImageResource(R.drawable.file_space);
             } else {
                 viewHolder.mIconImageView.setImageResource(R.drawable.file_default);

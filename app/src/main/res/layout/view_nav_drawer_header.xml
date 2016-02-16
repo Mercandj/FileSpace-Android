@@ -33,6 +33,7 @@
             android:layout_marginTop="12dp"
             android:ellipsize="marquee"
             android:focusable="false"
+            android:fontFamily="sans-serif"
             android:gravity="center_vertical"
             android:marqueeRepeatLimit="marquee_forever"
             android:maxLines="1"
@@ -43,7 +44,8 @@
             android:text="@string/app_name"
             android:textAppearance="?attr/textAppearanceListItemSmall"
             android:textColor="#fff"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            tools:ignore="UnusedAttribute" />
 
         <TextView
             android:id="@+id/view_nav_drawer_header_subtitle"
@@ -56,6 +58,7 @@
             android:layout_marginTop="44dp"
             android:ellipsize="marquee"
             android:focusable="false"
+            android:fontFamily="sans-serif-light"
             android:gravity="center_vertical"
             android:marqueeRepeatLimit="marquee_forever"
             android:maxLines="1"
@@ -66,9 +69,10 @@
             android:text="@string/app_name_full"
             android:textAppearance="?attr/textAppearanceListItemSmall"
             android:textColor="#fff"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            tools:ignore="UnusedAttribute" />
 
-        <com.mercandalli.android.apps.files.common.view.CircularImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/view_nav_drawer_header_icon"
             android:layout_width="52dp"
             android:layout_height="52dp"

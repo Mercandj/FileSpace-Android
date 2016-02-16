@@ -100,8 +100,7 @@ public class ProfileFragment extends BackFragment {
         }
 
         this.username = (TextView) this.rootView.findViewById(R.id.username);
-        this.username.setText(StringUtils.capitalize(mApplicationCallback.getConfig().getUserUsername()));
-        FontUtils.applyFont(getContext(), this.username, "fonts/Roboto-Regular.ttf");
+        this.username.setText(StringUtils.capitalize(Config.getUserUsername()));
 
         refreshView();
 

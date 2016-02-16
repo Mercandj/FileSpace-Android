@@ -11,7 +11,9 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -42,11 +44,17 @@ public class Slider extends SliderCustomView {
     private ValueToDisplay valueToDisplay;
     private int initialValue = 0;
 
+    private final Paint mTmpPaint = new Paint();
+    private final Paint mPaint = new Paint();
+    private final Paint mTransparentPaint = new Paint();
+
     public boolean isNumberIndicator = true;
 
     public Slider(Context context, AttributeSet attrs) {
         super(context, attrs);
         setAttributes(attrs);
+        mTransparentPaint.setColor(ContextCompat.getColor(context, android.R.color.transparent));
+        mTransparentPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
     }
 
     public int getMax() {
@@ -100,12 +108,13 @@ public class Slider extends SliderCustomView {
                     value * division + getHeight() / 2 - mSliderBall.getWidth() / 2);
             mSliderBall.changeBackground();
         }
-
     }
 
     @Override
     public void invalidate() {
-        mSliderBall.invalidate();
+        if (mSliderBall != null) {
+            mSliderBall.invalidate();
+        }
         super.invalidate();
     }
 
@@ -231,7 +240,7 @@ public class Slider extends SliderCustomView {
             placeBall();
         }
 
-        Paint paint = new Paint();
+        mTmpPaint.reset();
 
         if (value == min) {
             // Crop line to transparent effect
@@ -241,46 +250,40 @@ public class Slider extends SliderCustomView {
                         canvas.getHeight(), Bitmap.Config.ARGB_8888);
             }
             Canvas temp = new Canvas(bitmap);
-            paint.setColor(Color.parseColor("#B0B0B0"));
-            paint.setStrokeWidth(SliderUtils.dpToPx(2, getResources()));
+            mTmpPaint.setColor(Color.parseColor("#B0B0B0"));
+            mTmpPaint.setStrokeWidth(SliderUtils.dpToPx(2, getResources()));
             temp.drawLine(getHeight() / 2, getHeight() / 2, getWidth()
-                    - getHeight() / 2, getHeight() / 2, paint);
-            Paint transparentPaint = new Paint();
-            transparentPaint.setColor(getResources().getColor(
-                    android.R.color.transparent));
-            transparentPaint.setXfermode(new PorterDuffXfermode(
-                    PorterDuff.Mode.CLEAR));
+                    - getHeight() / 2, getHeight() / 2, mTmpPaint);
             temp.drawCircle(ViewHelper.getX(mSliderBall) + mSliderBall.getWidth() / 2,
                     ViewHelper.getY(mSliderBall) + mSliderBall.getHeight() / 2,
-                    mSliderBall.getWidth() / 2, transparentPaint);
+                    mSliderBall.getWidth() / 2, mTransparentPaint);
 
-            canvas.drawBitmap(bitmap, 0, 0, new Paint());
+            canvas.drawBitmap(bitmap, 0, 0, mPaint);
         } else {
-            paint.setColor(Color.parseColor("#B0B0B0"));
-            paint.setStrokeWidth(SliderUtils.dpToPx(2, getResources()));
+            mTmpPaint.setColor(Color.parseColor("#B0B0B0"));
+            mTmpPaint.setStrokeWidth(SliderUtils.dpToPx(2, getResources()));
             canvas.drawLine(getHeight() / 2, getHeight() / 2, getWidth()
-                    - getHeight() / 2, getHeight() / 2, paint);
-            paint.setColor(backgroundColor);
+                    - getHeight() / 2, getHeight() / 2, mTmpPaint);
+            mTmpPaint.setColor(backgroundColor);
             float division = (mSliderBall.xFin - mSliderBall.xIni) / (max - min);
             int value = this.value - min;
 
             canvas.drawLine(getHeight() / 2, getHeight() / 2, value * division
-                    + getHeight() / 2, getHeight() / 2, paint);
+                    + getHeight() / 2, getHeight() / 2, mTmpPaint);
 
         }
 
         if (press && !showNumberIndicator) {
-            paint.setColor(backgroundColor);
-            paint.setAntiAlias(true);
+            mTmpPaint.setColor(backgroundColor);
+            mTmpPaint.setAntiAlias(true);
             canvas.drawCircle(ViewHelper.getX(mSliderBall) + mSliderBall.getWidth() / 2,
-                    getHeight() / 2, getHeight() / 3, paint);
+                    getHeight() / 2, getHeight() / 3, mTmpPaint);
         }
         invalidate();
     }
 
     // Set attributes of XML to View
     protected void setAttributes(AttributeSet attrs) {
-
         setBackgroundResource(R.drawable.background_transparent);
 
         // Set size of view
@@ -391,7 +394,7 @@ public class Slider extends SliderCustomView {
 
         public Indicator(Context context) {
             super(context);
-            setBackgroundColor(getResources().getColor(android.R.color.transparent));
+            setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
             //setBackgroundColor(getResources().getColor(R.color.actionbar));
 
             paint = new Paint();
@@ -401,7 +404,9 @@ public class Slider extends SliderCustomView {
             // Border and shadow
             paintBorder = new Paint();
             paintBorder.setAntiAlias(true);
-            this.setLayerType(LAYER_TYPE_SOFTWARE, paintBorder);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                setLayerType(LAYER_TYPE_SOFTWARE, paintBorder);
+            }
         }
 
         @Override
@@ -443,7 +448,7 @@ public class Slider extends SliderCustomView {
                 if (valueToDisplay != null) {
                     numberIndicator.mNumberIndicator.setText(valueToDisplay.convert(value));
                 } else {
-                    numberIndicator.mNumberIndicator.setText(value + "");
+                    numberIndicator.mNumberIndicator.setText(String.valueOf(value));
                 }
             }
 

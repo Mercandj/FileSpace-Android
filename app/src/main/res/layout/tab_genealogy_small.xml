@@ -54,7 +54,7 @@
             android:textColor="#666"
             android:textSize="12sp" />
 
-        <com.mercandalli.android.apps.files.common.view.CircularImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/tab_icon"
             android:layout_width="36dp"
             android:layout_height="36dp"

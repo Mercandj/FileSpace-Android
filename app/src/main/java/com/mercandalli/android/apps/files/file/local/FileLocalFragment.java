@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -26,6 +26,7 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -41,6 +42,7 @@ import android.widget.TextView;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
+import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
@@ -48,8 +50,9 @@ import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
 import com.mercandalli.android.apps.files.file.FileModelListener;
+import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.apps.files.main.FileAppComponent;
+import com.mercandalli.android.apps.files.main.FileApp;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -62,13 +65,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.inject.Inject;
-
 /**
  * A {@link InjectedFabFragment} used to buildDisplay the local {@link FileModel} provide by the
  * {@link FileLocalApi}.
  */
-public class FileLocalFragment extends InjectedFabFragment implements
+public class FileLocalFragment extends FabFragment implements
         FileLocalPagerFragment.ListController,
         BackFragment.ISortMode,
         FileModelAdapter.OnFileClickListener,
@@ -78,7 +79,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
         FileLocalOverflowActions.FileLocalActionCallback {
 
     private RecyclerView mRecyclerView;
-    private ArrayList<FileModel> mFilesList;
+    private final List<FileModel> mFilesList = new ArrayList<>();
     private ProgressBar mProgressBar;
     private File mCurrentDirectory;
     private TextView mMessageTextView;
@@ -89,11 +90,8 @@ public class FileLocalFragment extends InjectedFabFragment implements
 
     private int mSortMode = Constants.SORT_ABC;
 
-    @Inject
-    FileManager mFileManager;
-
+    private FileManager mFileManager;
     private FileModelAdapter mFileModelAdapter;
-
     private FileLocalOverflowActions mFileLocalOverflowActions;
 
     public static FileLocalFragment newInstance() {
@@ -102,8 +100,8 @@ public class FileLocalFragment extends InjectedFabFragment implements
 
     /**
      * Default Constructor.
-     * <p/>
-     * <p/>
+     * <p>
+     * <p>
      * lint [ValidFragment]
      * http://developer.android.com/reference/android/app/Fragment.html#Fragment()
      * Every fragment must have an empty constructor, so it can be instantiated when restoring its activity's state.
@@ -159,12 +157,14 @@ public class FileLocalFragment extends InjectedFabFragment implements
             case 0:
                 if ((mFilesToCopyList != null && mFilesToCopyList.size() != 0) || (mFilesToCutList != null && mFilesToCutList.size() != 0)) {
                     if (mFilesToCopyList != null) {
+                        initFileManager();
                         for (FileModel file : mFilesToCopyList) {
                             mFileManager.copyLocalFile((Activity) context, file, mCurrentDirectory.getAbsolutePath() + File.separator);
                         }
                         mFilesToCopyList.clear();
                     }
                     if (mFilesToCutList != null) {
+                        initFileManager();
                         for (FileModel file : mFilesToCutList) {
                             mFileManager.renameLocalByPath(file, mCurrentDirectory.getAbsolutePath() + File.separator + file.getFullName());
                         }
@@ -194,18 +194,18 @@ public class FileLocalFragment extends InjectedFabFragment implements
                                     }
                                 }
                             });
-                    AlertDialog menuDrop = menuAlert.create();
-                    menuDrop.show();
+                    menuAlert.create().show();
                 }
                 refreshFab();
                 break;
 
             case 1:
                 if (mCurrentDirectory.getParent() != null && !mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())) {
-                    FileLocalFragment.this.mCurrentDirectory = new File(mCurrentDirectory.getParentFile().getPath());
+                    mCurrentDirectory = new File(mCurrentDirectory.getParentFile().getPath());
                     //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
-                    FileLocalFragment.this.refreshCurrentList();
+                    refreshCurrentList();
                 }
+                refreshFab();
                 break;
         }
     }
@@ -242,18 +242,13 @@ public class FileLocalFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public void setSortMode(int mSortMode) {
-        if (mSortMode == Constants.SORT_ABC ||
-                mSortMode == Constants.SORT_DATE_MODIFICATION ||
-                mSortMode == Constants.SORT_SIZE) {
-            this.mSortMode = mSortMode;
+    public void setSortMode(final int sortMode) {
+        if (sortMode == Constants.SORT_ABC ||
+                sortMode == Constants.SORT_DATE_MODIFICATION ||
+                sortMode == Constants.SORT_SIZE) {
+            mSortMode = sortMode;
             refreshCurrentList();
         }
-    }
-
-    @Override
-    protected void inject(FileAppComponent fileAppComponent) {
-        fileAppComponent.inject(this);
     }
 
     @Override
@@ -266,7 +261,14 @@ public class FileLocalFragment extends InjectedFabFragment implements
             mCurrentDirectory = new File(mFilesList.get(position).getUrl());
             refreshCurrentList();
         } else {
+            initFileManager();
             mFileManager.execute((Activity) getContext(), position, mFilesList, view);
+        }
+    }
+
+    private void initFileManager() {
+        if (mFileManager == null) {
+            mFileManager = FileApp.get().getFileAppComponent().provideFileManager();
         }
     }
 
@@ -326,7 +328,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
 
     public void goHome() {
         this.mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +
-                File.separator + mApplicationCallback.getConfig().getLocalFolderName());
+                File.separator + Config.getLocalFolderName());
         this.refreshCurrentList();
     }
 
@@ -401,7 +403,7 @@ public class FileLocalFragment extends InjectedFabFragment implements
             });
         }
 
-        mFilesList = new ArrayList<>();
+        mFilesList.clear();
         for (File file : fs) {
             FileModel tmpFileModel = new FileModel.FileModelBuilder().file(file).build();
             /*
@@ -420,16 +422,9 @@ public class FileLocalFragment extends InjectedFabFragment implements
             mMessageTextView.setVisibility(View.GONE);
         }
 
-        mFileModelAdapter = new FileModelAdapter(getContext(), mFilesList, this, this, this);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            final ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
-            scaleAnimationAdapter.setDuration(220);
-            scaleAnimationAdapter.setOffsetDuration(32);
-            mRecyclerView.setAdapter(scaleAnimationAdapter);
-        } else {
-            mRecyclerView.setAdapter(mFileModelAdapter);
-        }
+        final Parcelable recyclerViewState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        mFileModelAdapter.setList(mFilesList);
+        mRecyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewState);
 
         if (mFilesList.size() == 0) {
             mMessageTextView.setText(getString(R.string.no_file_local_folder, "" + mCurrentDirectory.getName()));
@@ -441,9 +436,11 @@ public class FileLocalFragment extends InjectedFabFragment implements
 
     @Override
     public void updateAdapter() {
-        if (mRecyclerView != null && mFilesList != null && isAdded()) {
+        if (mRecyclerView != null && isAdded()) {
             refreshFab();
+            final Parcelable recyclerViewState = mRecyclerView.getLayoutManager().onSaveInstanceState();
             mFileModelAdapter.setList(mFilesList);
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewState);
         }
     }
 
@@ -467,9 +464,19 @@ public class FileLocalFragment extends InjectedFabFragment implements
             mRecyclerView.setLayoutManager(new GridLayoutManager(activity, nbColumn));
         }
 
-        mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + this.mApplicationCallback.getConfig().getLocalFolderName());
+        mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.getLocalFolderName());
         if (!mCurrentDirectory.exists()) {
             mCurrentDirectory.mkdir();
+        }
+
+        mFileModelAdapter = new FileModelAdapter(getContext(), mFilesList, this, this, this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            final ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
+            scaleAnimationAdapter.setDuration(220);
+            scaleAnimationAdapter.setOffsetDuration(32);
+            mRecyclerView.setAdapter(scaleAnimationAdapter);
+        } else {
+            mRecyclerView.setAdapter(mFileModelAdapter);
         }
     }
 

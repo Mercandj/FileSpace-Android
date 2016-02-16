@@ -14,7 +14,6 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
-import com.mercandalli.android.apps.files.common.util.FontUtils;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.file.filespace.FileSpaceModel;
 
@@ -25,7 +24,6 @@ import java.io.UnsupportedEncodingException;
  */
 public class NoteFragment extends BackFragment {
 
-    private View rootView;
     private EditText mInputEdiText;
 
     private FileSpaceModel mFileSpaceModel;
@@ -36,14 +34,12 @@ public class NoteFragment extends BackFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.rootView = inflater.inflate(R.layout.fragment_workspace_note, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_workspace_note, container, false);
 
         mFileSpaceModel = new FileSpaceModel.FileSpaceModelBuilder().type("article").build();
+        mInputEdiText = (EditText) rootView.findViewById(R.id.input);
 
-        this.mInputEdiText = (EditText) this.rootView.findViewById(R.id.input);
-        FontUtils.applyFont(getContext(), this.mInputEdiText, "fonts/Roboto-Light.ttf");
-
-        String txt = mApplicationCallback.getConfig().getUserNoteWorkspace1();
+        final String txt = mApplicationCallback.getConfig().getUserNoteWorkspace1();
         if (!StringUtils.isNullOrEmpty(txt)) {
             try {
                 String txt_tmp = new String(txt.getBytes("ISO-8859-1"), "UTF-8");
@@ -54,7 +50,7 @@ public class NoteFragment extends BackFragment {
             }
         }
 
-        this.mInputEdiText.addTextChangedListener(new TextWatcher() {
+        mInputEdiText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -72,7 +68,7 @@ public class NoteFragment extends BackFragment {
             }
         });
 
-        return this.rootView;
+        return rootView;
     }
 
     @Override
@@ -102,7 +98,7 @@ public class NoteFragment extends BackFragment {
      * Share the current note. Share the {@link #mInputEdiText}.
      */
     public void share() {
-        Intent sendIntent = new Intent();
+        final Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, mInputEdiText.getText().toString());
         sendIntent.setType("text/plain");

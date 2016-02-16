@@ -1,6 +1,5 @@
 package com.mercandalli.android.apps.files.common.view;
 
-import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
@@ -11,6 +10,7 @@ import android.graphics.Outline;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Property;
 import android.view.View;
@@ -25,19 +25,6 @@ import com.mercandalli.android.apps.files.R;
  */
 public class PlayPauseView extends FrameLayout {
 
-    private static final Property<PlayPauseView, Integer> COLOR =
-            new Property<PlayPauseView, Integer>(Integer.class, "color") {
-                @Override
-                public Integer get(PlayPauseView v) {
-                    return v.getColor();
-                }
-
-                @Override
-                public void set(PlayPauseView v, Integer value) {
-                    v.setColor(value);
-                }
-            };
-
     private static final long PLAY_PAUSE_ANIMATION_DURATION = 200;
 
     private final PlayPauseDrawable mDrawable;
@@ -50,17 +37,17 @@ public class PlayPauseView extends FrameLayout {
     private int mWidth;
     private int mHeight;
 
-    public PlayPauseView(Context context, AttributeSet attrs) {
+    public PlayPauseView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         setWillNotDraw(false);
-        mBackgroundColor = getResources().getColor(R.color.actionbar_audio);
+        mBackgroundColor = ContextCompat.getColor(context, R.color.actionbar_audio);
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.FILL);
         mDrawable = new PlayPauseDrawable(context);
         mDrawable.setCallback(this);
 
-        mPauseBackgroundColor = getResources().getColor(R.color.actionbar_audio);
-        mPlayBackgroundColor = getResources().getColor(R.color.actionbar_audio);
+        mPauseBackgroundColor = ContextCompat.getColor(context, R.color.actionbar_audio);
+        mPlayBackgroundColor = ContextCompat.getColor(context, R.color.actionbar_audio);
     }
 
     @Override
@@ -113,18 +100,35 @@ public class PlayPauseView extends FrameLayout {
     }
 
     public void toggle() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            return;
+        }
         if (mAnimatorSet != null) {
             mAnimatorSet.cancel();
         }
-
         mAnimatorSet = new AnimatorSet();
-        final boolean isPlay = mDrawable.isPlay();
-        final ObjectAnimator colorAnim = ObjectAnimator.ofInt(this, COLOR, isPlay ? mPauseBackgroundColor : mPlayBackgroundColor);
-        colorAnim.setEvaluator(new ArgbEvaluator());
-        final Animator pausePlayAnim = mDrawable.getPausePlayAnimator();
         mAnimatorSet.setInterpolator(new DecelerateInterpolator());
         mAnimatorSet.setDuration(PLAY_PAUSE_ANIMATION_DURATION);
-        mAnimatorSet.playTogether(colorAnim, pausePlayAnim);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            final Property<PlayPauseView, Integer> COLOR =
+                    new Property<PlayPauseView, Integer>(Integer.class, "color") {
+                        @Override
+                        public Integer get(PlayPauseView v) {
+                            return v.getColor();
+                        }
+
+                        @Override
+                        public void set(PlayPauseView v, Integer value) {
+                            v.setColor(value);
+                        }
+                    };
+
+            final ObjectAnimator colorAnim = ObjectAnimator.ofInt(this, COLOR, mDrawable.isPlay() ?
+                    mPauseBackgroundColor : mPlayBackgroundColor);
+            colorAnim.setEvaluator(new ArgbEvaluator());
+            mAnimatorSet.playTogether(colorAnim, mDrawable.getPausePlayAnimator());
+        }
         mAnimatorSet.start();
     }
 

@@ -14,6 +14,8 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.Nullable;
 import android.util.Property;
 
 import com.mercandalli.android.apps.files.R;
@@ -22,19 +24,6 @@ import com.mercandalli.android.apps.files.R;
  * Created by Jonathan on 30/05/2015.
  */
 public class PlayPauseDrawable extends Drawable {
-
-    private static final Property<PlayPauseDrawable, Float> PROGRESS =
-            new Property<PlayPauseDrawable, Float>(Float.class, "progress") {
-                @Override
-                public Float get(PlayPauseDrawable d) {
-                    return d.getProgress();
-                }
-
-                @Override
-                public void set(PlayPauseDrawable d, Float value) {
-                    d.setProgress(value);
-                }
-            };
 
     private final Path mLeftPauseBar = new Path();
     private final Path mRightPauseBar = new Path();
@@ -121,7 +110,24 @@ public class PlayPauseDrawable extends Drawable {
         canvas.restore();
     }
 
+    @Nullable
     public Animator getPausePlayAnimator() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            return null;
+        }
+        final Property<PlayPauseDrawable, Float> PROGRESS =
+                new Property<PlayPauseDrawable, Float>(Float.class, "progress") {
+                    @Override
+                    public Float get(PlayPauseDrawable d) {
+                        return d.getProgress();
+                    }
+
+                    @Override
+                    public void set(PlayPauseDrawable d, Float value) {
+                        d.setProgress(value);
+                    }
+                };
+
         final Animator anim = ObjectAnimator.ofFloat(this, PROGRESS, mIsPlay ? 1 : 0, mIsPlay ? 0 : 1);
         anim.addListener(new AnimatorListenerAdapter() {
             @Override

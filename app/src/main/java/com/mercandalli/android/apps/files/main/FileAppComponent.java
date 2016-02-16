@@ -50,8 +50,6 @@ public interface FileAppComponent {
 
     void inject(FileAudioLocalFragment fileAudioLocalFragment);
 
-    void inject(FileLocalFragment fileLocalFragment);
-
     void inject(FileChooserDialog fileChooserDialog);
 
     void inject(FileUploadDialog fileUploadDialog);
