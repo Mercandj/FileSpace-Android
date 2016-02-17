@@ -46,11 +46,11 @@ import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.local.SearchActivity;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 
 public class FileCloudPagerFragment extends BackFragment implements ViewPager.OnPageChangeListener, FabFragment.RefreshFabCallback {
 
@@ -170,6 +170,16 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
     @Override
     public void onRefreshFab() {
         refreshFab();
+    }
+
+    @Override
+    public void hideFab(int fab_id) {
+
+    }
+
+    @Override
+    public void showFab(int fab_id) {
+
     }
 
     @Override
@@ -300,12 +310,7 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
             public void execute() {
                 refreshListServer();
             }
-        }, new IListener() { // Dismiss
-            @Override
-            public void execute() {
-
-            }
-        });
+        }, null);
     }
 
     public void goHome() {

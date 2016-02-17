@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -165,6 +165,38 @@ public class FileLocalPagerFragment extends BackFragment implements
     }
 
     @Override
+    public void hideFab(int fab_id) {
+        switch (fab_id) {
+            case 0:
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
+                    mFab1.hide();
+                } else {
+                    mFab1.setVisibility(View.GONE);
+                }
+                break;
+            case 1:
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
+                    mFab2.hide();
+                } else {
+                    mFab2.setVisibility(View.GONE);
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void showFab(int fab_id) {
+        switch (fab_id) {
+            case 0:
+                mFab1.show();
+                break;
+            case 1:
+                mFab2.show();
+                break;
+        }
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
 
@@ -281,12 +313,7 @@ public class FileLocalPagerFragment extends BackFragment implements
             public void execute() {
                 refreshListServer();
             }
-        }, new IListener() { // Dismiss
-            @Override
-            public void execute() {
-
-            }
-        });
+        }, null);
     }
 
     public void goHome() {
@@ -390,7 +417,7 @@ public class FileLocalPagerFragment extends BackFragment implements
         }
         int imageResource;
         if (fabController.isFabVisible(0)) {
-            mFab1.show();
+            showFab(0);
             imageResource = fabController.getFabImageResource(0);
             if (imageResource == -1) {
                 imageResource = android.R.drawable.ic_input_add;
@@ -402,17 +429,15 @@ public class FileLocalPagerFragment extends BackFragment implements
                     fabController.onFabClick(0, mFab1);
                 }
             });
-        } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-            mFab1.hide();
         } else {
-            mFab1.setVisibility(View.GONE);
+            hideFab(0);
         }
 
         if (mFab2 == null) {
             return;
         }
         if (fabController.isFabVisible(1)) {
-            mFab2.show();
+            showFab(1);
             imageResource = fabController.getFabImageResource(1);
             if (imageResource == -1) {
                 imageResource = android.R.drawable.ic_input_add;
@@ -424,10 +449,8 @@ public class FileLocalPagerFragment extends BackFragment implements
                     fabController.onFabClick(1, mFab2);
                 }
             });
-        } else if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-            mFab2.hide();
         } else {
-            mFab2.setVisibility(View.GONE);
+            hideFab(1);
         }
     }
     //endregion Fab

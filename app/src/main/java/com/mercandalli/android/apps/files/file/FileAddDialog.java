@@ -26,6 +26,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -69,7 +70,12 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
     private IListener mListener;
 
     @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
-    public FileAddDialog(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final IListener listener, final IListener dismissListener) {
+    public FileAddDialog(
+            final Activity activity,
+            final ApplicationCallback applicationCallback,
+            final int id_file_parent,
+            @Nullable final IListener listener,
+            @Nullable final IListener dismissListener) {
         super(activity, R.style.DialogFullscreen);
         mActivity = activity;
         mApplicationCallback = applicationCallback;

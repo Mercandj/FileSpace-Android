@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
 import android.text.Spanned;
@@ -171,7 +172,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
     public void upload(
             final FileModel fileModel,
             final int idFileParent,
-            final IListener listener) {
+            @Nullable final IListener listener) {
 
         if (!NetUtils.isInternetConnection(mContextApp) || fileModel.isOnline()) {
             return;
@@ -201,7 +202,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
         call.enqueue(new Callback<FilesResponse>() {
             @Override
             public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
-                if (response.isSuccess()) {
+                if (response.isSuccess() && listener != null) {
                     listener.execute();
                 }
             }

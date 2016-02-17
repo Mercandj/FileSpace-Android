@@ -21,16 +21,17 @@ package com.mercandalli.android.apps.files.file;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import javax.inject.Inject;
-
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
+import com.mercandalli.android.apps.files.main.FileApp;
+
+import javax.inject.Inject;
 
 public class FileUploadDialog extends Dialog {
 
@@ -43,7 +44,12 @@ public class FileUploadDialog extends Dialog {
     FileModel mFileModel;
     int id_file_parent;
 
-    public FileUploadDialog(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final FileModel fileModel, final IListener listener) {
+    public FileUploadDialog(
+            final Activity activity,
+            final ApplicationCallback applicationCallback,
+            final int id_file_parent,
+            final FileModel fileModel,
+            @Nullable final IListener listener) {
         this(activity, applicationCallback, id_file_parent, listener);
 
         fileModel.setIdFileParent(id_file_parent);
@@ -51,7 +57,11 @@ public class FileUploadDialog extends Dialog {
         mFileModel = fileModel;
     }
 
-    public FileUploadDialog(final Activity activity, final ApplicationCallback applicationCallback, final int id_file_parent, final IListener listener) {
+    public FileUploadDialog(
+            final Activity activity,
+            final ApplicationCallback applicationCallback,
+            final int id_file_parent,
+            @Nullable final IListener listener) {
         super(activity);
 
         FileApp.get().getFileAppComponent().inject(this);

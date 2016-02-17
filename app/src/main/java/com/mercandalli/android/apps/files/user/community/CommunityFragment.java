@@ -251,11 +251,6 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
             public void execute() {
                 refreshListServer();
             }
-        }, new IListener() { // Dismiss
-            @Override
-            public void execute() {
-
-            }
-        });
+        }, null);
     }
 }

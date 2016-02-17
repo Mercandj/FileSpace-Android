@@ -26,6 +26,7 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -93,6 +94,8 @@ public class FileLocalFragment extends FabFragment implements
     private FileManager mFileManager;
     private FileModelAdapter mFileModelAdapter;
     private FileLocalOverflowActions mFileLocalOverflowActions;
+
+    private ScaleAnimationAdapter mScaleAnimationAdapter;
 
     public static FileLocalFragment newInstance() {
         return new FileLocalFragment();
@@ -409,8 +412,6 @@ public class FileLocalFragment extends FabFragment implements
             mFilesList.add(tmpFileModel);
         }
 
-        refreshFab();
-
         if (mFilesList.size() == 0) {
             mMessageTextView.setText(getString(R.string.no_file_local_folder, "" + mCurrentDirectory.getName()));
             mMessageTextView.setVisibility(View.VISIBLE);
@@ -418,16 +419,7 @@ public class FileLocalFragment extends FabFragment implements
             mMessageTextView.setVisibility(View.GONE);
         }
 
-        final Parcelable recyclerViewState = mRecyclerView.getLayoutManager().onSaveInstanceState();
-        mFileModelAdapter.setList(mFilesList);
-        mRecyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewState);
-
-        if (mFilesList.size() == 0) {
-            mMessageTextView.setText(getString(R.string.no_file_local_folder, "" + mCurrentDirectory.getName()));
-            mMessageTextView.setVisibility(View.VISIBLE);
-        } else {
-            mMessageTextView.setVisibility(View.GONE);
-        }
+        updateAdapter();
     }
 
     @Override
@@ -436,6 +428,12 @@ public class FileLocalFragment extends FabFragment implements
             refreshFab();
             final Parcelable recyclerViewState = mRecyclerView.getLayoutManager().onSaveInstanceState();
             mFileModelAdapter.setList(mFilesList);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
+                mScaleAnimationAdapter.setDuration(220);
+                mScaleAnimationAdapter.setOffsetDuration(32);
+                mRecyclerView.setAdapter(mScaleAnimationAdapter);
+            }
             mRecyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewState);
         }
     }
@@ -446,6 +444,15 @@ public class FileLocalFragment extends FabFragment implements
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.fragment_file_files_swipe_refresh_layout);
     }
+
+    private boolean mIsFabAnimating = false;
+    private final Handler mHandler = new Handler();
+    private final Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mIsFabAnimating = false;
+        }
+    };
 
     private void initViews() {
         mProgressBar.setVisibility(View.INVISIBLE);
@@ -464,13 +471,37 @@ public class FileLocalFragment extends FabFragment implements
 
         mFileModelAdapter = new FileModelAdapter(getContext(), mFilesList, this, this, this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            final ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
-            scaleAnimationAdapter.setDuration(220);
-            scaleAnimationAdapter.setOffsetDuration(32);
-            mRecyclerView.setAdapter(scaleAnimationAdapter);
+            mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
+            mScaleAnimationAdapter.setDuration(220);
+            mScaleAnimationAdapter.setOffsetDuration(32);
+            mRecyclerView.setAdapter(mScaleAnimationAdapter);
         } else {
             mRecyclerView.setAdapter(mFileModelAdapter);
         }
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy <= 0) {
+                    if (!mIsFabAnimating) {
+                        mIsFabAnimating = true;
+                        mRefreshFabCallback.showFab(0);
+                        mRefreshFabCallback.showFab(1);
+                        mHandler.removeCallbacks(mRunnable);
+                        mHandler.postDelayed(mRunnable, 250);
+                    }
+                } else {
+                    if (!mIsFabAnimating) {
+                        mIsFabAnimating = true;
+                        mRefreshFabCallback.hideFab(0);
+                        mRefreshFabCallback.hideFab(1);
+                        mHandler.removeCallbacks(mRunnable);
+                        mHandler.postDelayed(mRunnable, 250);
+                    }
+                }
+            }
+        });
     }
 
     protected void initCurrentDirectory() {

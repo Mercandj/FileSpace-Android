@@ -14,5 +14,8 @@ public interface FabController {
 
     interface RefreshFabCallback {
         void onRefreshFab();
+
+        void hideFab(int fab_id);
+        void showFab(int fab_id);
     }
 }

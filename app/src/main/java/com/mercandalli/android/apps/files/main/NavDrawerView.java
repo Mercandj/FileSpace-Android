@@ -3,6 +3,7 @@ package com.mercandalli.android.apps.files.main;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -142,9 +143,13 @@ class NavDrawerView extends FrameLayout implements View.OnClickListener {
             return;
         }
         if (selected) {
-            FontUtils.applyFont(context, textView, "fonts/MYRIADAB.TTF");
+            textView.setTypeface(Typeface.SANS_SERIF, Typeface.NORMAL);
         } else {
-            FontUtils.applyFont(context, textView, "fonts/MYRIADAT.TTF");
+            if (isOtherSection(navDrawerRow)) {
+                textView.setTypeface(Typeface.SANS_SERIF, Typeface.NORMAL);
+            } else {
+                FontUtils.applyFont(context, textView, "fonts/MYRIADAT.TTF");
+            }
         }
     }
 

@@ -106,6 +106,22 @@ public class MainActivity extends NavDrawerActivity implements
         }
     }
 
+    @Override
+    public void hideFab(int fab_id) {
+        final Fragment fragment = getCurrentFragment();
+        if (fragment instanceof FabFragment.RefreshFabCallback) {
+            ((FabFragment.RefreshFabCallback) fragment).hideFab(fab_id);
+        }
+    }
+
+    @Override
+    public void showFab(int fab_id) {
+        final Fragment fragment = getCurrentFragment();
+        if (fragment instanceof FabFragment.RefreshFabCallback) {
+            ((FabFragment.RefreshFabCallback) fragment).showFab(fab_id);
+        }
+    }
+
     /**
      * {@inheritDoc}
      */

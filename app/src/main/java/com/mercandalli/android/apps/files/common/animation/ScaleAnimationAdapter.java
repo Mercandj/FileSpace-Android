@@ -5,7 +5,6 @@ import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.View;
@@ -74,6 +73,7 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
+                mLastPosition = -1;
                 notifyDataSetChanged();
             }
 
@@ -115,12 +115,8 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
         if (this.isFirstOnly && position <= this.mLastPosition) {
             clear(holder.itemView);
         } else if (mNoAnimatedPosition == null || mNoAnimatedPosition.isAnimatedItem(position)) {
-            Animator[] animators = this.getAnimators(holder.itemView);
-
-            LinearLayoutManager layoutManager = ((LinearLayoutManager) mRecyclerView.getLayoutManager());
-            int firstVisiblePosition = layoutManager.findFirstVisibleItemPosition();
-
-            if (!mAnimsInitialized && firstVisiblePosition <= 1) {
+            final Animator[] animators = this.getAnimators(holder.itemView);
+            if (!mAnimsInitialized) {
                 for (Animator anim : animators) {
                     anim.setDuration((long) this.mDuration);
                     anim.setInterpolator(this.mInterpolator);
