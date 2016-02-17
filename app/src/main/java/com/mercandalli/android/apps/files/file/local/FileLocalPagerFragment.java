@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -27,7 +27,9 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -51,6 +53,7 @@ import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.fab.FabController;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
+import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
@@ -84,6 +87,7 @@ public class FileLocalPagerFragment extends BackFragment implements
 
     private static final int[] mImageResId = {
             R.drawable.ic_folder_open_white_24dp,
+            R.drawable.ic_sd_storage_white_24dp,
             R.drawable.ic_music_note_white_24dp,
             R.drawable.ic_photo_white_24dp,
             R.drawable.ic_video_library_white_24dp
@@ -91,6 +95,7 @@ public class FileLocalPagerFragment extends BackFragment implements
 
     private static final int[] mTitleIds = {
             R.string.tab_files,
+            R.string.tab_sdcard,
             R.string.tab_musics,
             R.string.tab_photos,
             R.string.tab_videos
@@ -206,7 +211,7 @@ public class FileLocalPagerFragment extends BackFragment implements
         menu.findItem(R.id.action_home).setVisible(false);
         menu.findItem(R.id.action_sort).setVisible(true);
 
-        if (mApplicationCallback != null && getCurrentFragmentIndex() == 0) {
+        if (mApplicationCallback != null) {
             final Fragment fragment = getCurrentFragment();
             if (fragment instanceof HomeIconVisible) {
                 menu.findItem(R.id.action_home).setVisible(((HomeIconVisible) fragment).isHomeVisible());
@@ -336,7 +341,7 @@ public class FileLocalPagerFragment extends BackFragment implements
         mViewPager.addOnPageChangeListener(this);
 
         if (savedInstanceState == null) {
-            mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
+            mViewPager.setOffscreenPageLimit(getCount() - 1);
             mViewPager.setCurrentItem(INIT_FRAGMENT);
         }
 
@@ -349,11 +354,11 @@ public class FileLocalPagerFragment extends BackFragment implements
 
     private void syncTabLayout() {
         final int position = mViewPager.getCurrentItem();
-        mSetToolbarCallback.setTitleToolbar(mTitleIds[position]);
-        for (int i = 0; i < NB_FRAGMENT; i++) {
+        mSetToolbarCallback.setTitleToolbar(getTitleRes(position));
+        for (int i = 0; i < getCount(); i++) {
             final TabLayout.Tab tab = mTabLayout.getTabAt(i);
             if (tab != null) {
-                tab.setIcon(mImageResId[i]);
+                tab.setIcon(getImageRes(i));
                 final Drawable drawable = tab.getIcon();
                 if (drawable != null) {
                     drawable.setColorFilter(i == position ? Color.WHITE : Color.parseColor("#85455A64"),
@@ -427,6 +432,36 @@ public class FileLocalPagerFragment extends BackFragment implements
     }
     //endregion Fab
 
+    private boolean isSdCardFragmentVisible() {
+        return FileUtils.isSdCardAvailable() && FileUtils.isSdCardAvailable();
+    }
+
+    @DrawableRes
+    private int getImageRes(int pagerPosition) {
+        int realPosition = pagerPosition;
+        if (isSdCardFragmentVisible()) {
+            return mImageResId[pagerPosition];
+        } else if (pagerPosition != 0) {
+            realPosition++;
+        }
+        return mImageResId[realPosition];
+    }
+
+    @StringRes
+    private int getTitleRes(int pagerPosition) {
+        int realPosition = pagerPosition;
+        if (isSdCardFragmentVisible()) {
+            return mTitleIds[pagerPosition];
+        } else if (pagerPosition != 0) {
+            realPosition++;
+        }
+        return mTitleIds[realPosition];
+    }
+
+    private int getCount() {
+        return NB_FRAGMENT + (isSdCardFragmentVisible() ? 1 : 0);
+    }
+
     //region Inner class and interface
 
     /**
@@ -442,21 +477,36 @@ public class FileLocalPagerFragment extends BackFragment implements
 
         @Override
         public FabFragment getItem(int i) {
-            switch (i) {
-                case 0:
-                    return FileLocalFragment.newInstance();
-                case 1:
-                    return FileAudioLocalFragment.newInstance();
-                case 2:
-                    return FileImageLocalFragment.newInstance();
-                default:
-                    return FileLocalFragment.newInstance();
+            if (isSdCardFragmentVisible()) {
+                switch (i) {
+                    case 0:
+                        return FileLocalFragment.newInstance();
+                    case 1:
+                        return FileLocalSdFragment.newInstance();
+                    case 2:
+                        return FileAudioLocalFragment.newInstance();
+                    case 3:
+                        return FileImageLocalFragment.newInstance();
+                    default:
+                        return FileLocalFragment.newInstance();
+                }
+            } else {
+                switch (i) {
+                    case 0:
+                        return FileLocalFragment.newInstance();
+                    case 1:
+                        return FileAudioLocalFragment.newInstance();
+                    case 2:
+                        return FileImageLocalFragment.newInstance();
+                    default:
+                        return FileLocalFragment.newInstance();
+                }
             }
         }
 
         @Override
         public int getCount() {
-            return NB_FRAGMENT;
+            return NB_FRAGMENT + (isSdCardFragmentVisible() ? 1 : 0);
         }
     }
 

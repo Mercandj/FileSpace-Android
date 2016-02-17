@@ -127,7 +127,7 @@ public class FileAudioActivity extends AppCompatActivity implements
             mFirstStart = true;
         }
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.activity_file_audio_toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
             toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.actionbar_audio));

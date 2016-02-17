@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -32,7 +32,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +55,6 @@ import com.mercandalli.android.apps.files.main.FileApp;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -64,6 +62,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.mercandalli.android.apps.files.file.FileUtils.createFile;
 
 /**
  * A {@link InjectedFabFragment} used to buildDisplay the local {@link FileModel} provide by the
@@ -81,7 +81,7 @@ public class FileLocalFragment extends FabFragment implements
     private RecyclerView mRecyclerView;
     private final List<FileModel> mFilesList = new ArrayList<>();
     private ProgressBar mProgressBar;
-    private File mCurrentDirectory;
+    protected File mCurrentDirectory;
     private TextView mMessageTextView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -100,8 +100,8 @@ public class FileLocalFragment extends FabFragment implements
 
     /**
      * Default Constructor.
-     * <p>
-     * <p>
+     * <p/>
+     * <p/>
      * lint [ValidFragment]
      * http://developer.android.com/reference/android/app/Fragment.html#Fragment()
      * Every fragment must have an empty constructor, so it can be instantiated when restoring its activity's state.
@@ -127,7 +127,7 @@ public class FileLocalFragment extends FabFragment implements
         if (hasItemSelected()) {
             deselectAll();
             return true;
-        } else if (!mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())) {
+        } else if (!mCurrentDirectory.getPath().equals(initialPath())) {
             if (mCurrentDirectory.getParent() != null) {
                 mCurrentDirectory = new File(mCurrentDirectory.getParentFile().getPath());
                 refreshCurrentList();
@@ -200,9 +200,8 @@ public class FileLocalFragment extends FabFragment implements
                 break;
 
             case 1:
-                if (mCurrentDirectory.getParent() != null && !mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())) {
+                if (mCurrentDirectory.getParent() != null) {
                     mCurrentDirectory = new File(mCurrentDirectory.getParentFile().getPath());
-                    //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
                     refreshCurrentList();
                 }
                 refreshFab();
@@ -217,9 +216,7 @@ public class FileLocalFragment extends FabFragment implements
                 return true;
             case 1:
                 return this.mCurrentDirectory != null &&
-                        mCurrentDirectory.getParent() != null &&
-                        !mCurrentDirectory.getPath().equals(
-                                Environment.getExternalStorageDirectory().getAbsolutePath());
+                        mCurrentDirectory.getParent() != null;
         }
         return false;
     }
@@ -288,7 +285,7 @@ public class FileLocalFragment extends FabFragment implements
 
     @Override
     public boolean isHomeVisible() {
-        return !mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath());
+        return !mCurrentDirectory.getPath().equals(initialPath());
     }
 
     @Override
@@ -327,8 +324,7 @@ public class FileLocalFragment extends FabFragment implements
     }
 
     public void goHome() {
-        this.mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +
-                File.separator + Config.getLocalFolderName());
+        initCurrentDirectory();
         this.refreshCurrentList();
     }
 
@@ -464,10 +460,7 @@ public class FileLocalFragment extends FabFragment implements
             mRecyclerView.setLayoutManager(new GridLayoutManager(activity, nbColumn));
         }
 
-        mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.getLocalFolderName());
-        if (!mCurrentDirectory.exists()) {
-            mCurrentDirectory.mkdir();
-        }
+        initCurrentDirectory();
 
         mFileModelAdapter = new FileModelAdapter(getContext(), mFilesList, this, this, this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -480,28 +473,14 @@ public class FileLocalFragment extends FabFragment implements
         }
     }
 
-    private boolean createFile(String path, String name) {
-        final int len = path.length();
-        if (len < 1 || name.length() < 1) {
-            return false;
+    protected void initCurrentDirectory() {
+        mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.getLocalFolderName());
+        if (!mCurrentDirectory.exists()) {
+            mCurrentDirectory.mkdir();
         }
-        if (path.charAt(len - 1) != '/') {
-            path += "/";
-        }
-        if (!name.contains(".")) {
-            if (new File(path + name).mkdir()) {
-                return true;
-            }
-        } else {
-            try {
-                if (new File(path + name).createNewFile()) {
-                    return true;
-                }
-            } catch (IOException e) {
-                Log.e(getClass().getName(), "Exception", e);
-                return false;
-            }
-        }
-        return false;
+    }
+
+    protected String initialPath() {
+        return Environment.getExternalStorageDirectory().getAbsolutePath();
     }
 }

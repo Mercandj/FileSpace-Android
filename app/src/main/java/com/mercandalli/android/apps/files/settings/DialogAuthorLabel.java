@@ -31,7 +31,6 @@ import android.view.animation.Animation;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.util.FontUtils;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.romainpiel.shimmer.Shimmer;

@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -19,11 +19,14 @@
  */
 package com.mercandalli.android.apps.files.file;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -41,17 +44,17 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 
-/**
- * Created by Jonathan on 15/05/2015.
- */
 public class FileUtils {
 
     private static final String TAG = "FileUtils";
+
+    private static String sSdCardPath = null;
 
     public static String humanReadableByteCount(long bytes) {
         return humanReadableByteCount(bytes, true);
     }
 
+    @SuppressLint("DefaultLocale")
     public static String humanReadableByteCount(long bytes, boolean si) {
         int unit = si ? 1000 : 1024;
         if (bytes < unit) {
@@ -64,11 +67,11 @@ public class FileUtils {
 
     public static void writeStringFile(final Context context, String file, String txt) {
         try {
-            FileOutputStream output = context.openFileOutput(file, Context.MODE_PRIVATE);
+            final FileOutputStream output = context.openFileOutput(file, Context.MODE_PRIVATE);
             output.write((txt).getBytes());
             output.close();
         } catch (IOException e) {
-            Log.e(TAG, "Exception", e);
+            Log.e(TAG, "writeStringFile: Exception", e);
         }
     }
 
@@ -97,7 +100,7 @@ public class FileUtils {
             input.close();
             res = lu.toString();
         } catch (IOException e) {
-            Log.e(TAG, "Exception", e);
+            Log.e(TAG, "readStringFile: Exception", e);
         }
         return res;
     }
@@ -117,7 +120,7 @@ public class FileUtils {
                 is.close();
             }
         } catch (IOException e) {
-            Log.e(TAG, "Exception", e);
+            Log.e(TAG, "readStringAssets: Exception", e);
         }
         return writer.toString();
     }
@@ -213,5 +216,58 @@ public class FileUtils {
         final InputMethodManager inputMethodManager = (InputMethodManager)
                 context.getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    public static boolean createFile(String path, String name) {
+        final int len = path.length();
+        if (len < 1 || name.length() < 1) {
+            return false;
+        }
+        if (path.charAt(len - 1) != '/') {
+            path += "/";
+        }
+        if (!name.contains(".")) {
+            if (new File(path + name).mkdir()) {
+                return true;
+            }
+        } else {
+            try {
+                if (new File(path + name).createNewFile()) {
+                    return true;
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "Exception", e);
+                return false;
+            }
+        }
+        return false;
+    }
+
+    @Nullable
+    public static String getSdCardPath() {
+        if (sSdCardPath != null) {
+            if (TextUtils.isEmpty(sSdCardPath)) {
+                return null;
+            }
+            return sSdCardPath;
+        }
+        final String fileExtPath = (new File(Environment.getExternalStorageDirectory().getAbsolutePath())).getAbsolutePath();
+        File sdFile;
+        sSdCardPath = "";
+        if ((sdFile = new File("/storage/extSdCard")).exists() && !fileExtPath.equalsIgnoreCase(sdFile.getAbsolutePath())) {
+            sSdCardPath = "/storage/extSdCard";
+        } else if ((sdFile = new File("/storage/sdcard1/")).exists() && !fileExtPath.equalsIgnoreCase(sdFile.getAbsolutePath())) {
+            sSdCardPath = "/storage/sdcard/";
+        } else if ((sdFile = new File("/storage/usbcard1")).exists() && !fileExtPath.equalsIgnoreCase(sdFile.getAbsolutePath())) {
+            sSdCardPath = "/storage/usbcard1";
+        }
+        return sSdCardPath;
+    }
+
+    /**
+     * @return True if the external storage is writabe. False otherwise.
+     */
+    public static boolean isSdCardAvailable() {
+        return getSdCardPath() != null;
     }
 }

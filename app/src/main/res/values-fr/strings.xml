@@ -35,6 +35,7 @@
 
     <!-- NavDrawer -->
     <string name="tab_files">Fichiers</string>
+    <string name="tab_sdcard">SdCard</string>
     <string name="tab_musics">Musiques</string>
     <string name="tab_photos">Photos</string>
     <string name="tab_videos">Videos</string>

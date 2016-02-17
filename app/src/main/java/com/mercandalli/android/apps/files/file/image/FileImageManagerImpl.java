@@ -51,9 +51,15 @@ public class FileImageManagerImpl implements FileImageManager {
     }
 
     @Override
+    @SuppressLint("NewApi")
     public void getAllLocalImage(
             final int sortMode,
             final String search) {
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+            notifyLocalImageFoldersListenerFailed();
+            return;
+        }
 
         if (!mCacheGetAllLocalImage.isEmpty()) {
             notifyAllLocalImageListenerSucceeded(mCacheGetAllLocalImage);
