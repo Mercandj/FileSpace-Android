@@ -143,13 +143,9 @@ class NavDrawerView extends FrameLayout implements View.OnClickListener {
             return;
         }
         if (selected) {
-            textView.setTypeface(Typeface.SANS_SERIF, Typeface.NORMAL);
+            textView.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
         } else {
-            if (isOtherSection(navDrawerRow)) {
-                textView.setTypeface(Typeface.SANS_SERIF, Typeface.NORMAL);
-            } else {
-                FontUtils.applyFont(context, textView, "fonts/MYRIADAT.TTF");
-            }
+            textView.setTypeface(Typeface.SANS_SERIF, Typeface.NORMAL);
         }
     }
 

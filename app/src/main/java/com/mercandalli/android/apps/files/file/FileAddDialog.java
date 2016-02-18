@@ -29,7 +29,6 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
@@ -86,10 +85,8 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
         setContentView(R.layout.dialog_add_file);
         setCancelable(true);
 
-        Animation animOpen = AnimationUtils.loadAnimation(mActivity, R.anim.dialog_add_file_open);
-
         final View rootView = findViewById(R.id.dialog_add_file_root);
-        rootView.startAnimation(animOpen);
+        rootView.startAnimation(AnimationUtils.loadAnimation(mActivity, R.anim.dialog_add_file_open));
         rootView.setOnClickListener(this);
 
         findViewById(R.id.uploadFile).setOnClickListener(new View.OnClickListener() {

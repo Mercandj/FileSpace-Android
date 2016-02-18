@@ -97,6 +97,15 @@ public class FileLocalFragment extends FabFragment implements
 
     private ScaleAnimationAdapter mScaleAnimationAdapter;
 
+    private boolean mIsFabAnimating = false;
+    private final Handler mHandler = new Handler();
+    private final Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mIsFabAnimating = false;
+        }
+    };
+
     public static FileLocalFragment newInstance() {
         return new FileLocalFragment();
     }
@@ -444,15 +453,6 @@ public class FileLocalFragment extends FabFragment implements
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.fragment_file_files_swipe_refresh_layout);
     }
-
-    private boolean mIsFabAnimating = false;
-    private final Handler mHandler = new Handler();
-    private final Runnable mRunnable = new Runnable() {
-        @Override
-        public void run() {
-            mIsFabAnimating = false;
-        }
-    };
 
     private void initViews() {
         mProgressBar.setVisibility(View.INVISIBLE);

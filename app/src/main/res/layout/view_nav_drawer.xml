@@ -42,7 +42,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/tab_files"
                 android:textColor="#000"
-                android:textSize="24sp" />
+                android:textSize="@dimen/view_nav_drawer_text_section" />
 
         </FrameLayout>
 
@@ -74,7 +74,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/tab_cloud"
                 android:textColor="#000"
-                android:textSize="24sp" />
+                android:textSize="@dimen/view_nav_drawer_text_section" />
 
         </FrameLayout>
 
@@ -106,7 +106,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/tab_notes"
                 android:textColor="#000"
-                android:textSize="24sp" />
+                android:textSize="@dimen/view_nav_drawer_text_section" />
 
         </FrameLayout>
 
@@ -138,7 +138,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/tab_community"
                 android:textColor="#000"
-                android:textSize="24sp" />
+                android:textSize="@dimen/view_nav_drawer_text_section" />
 
         </FrameLayout>
 
@@ -170,7 +170,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/tab_robotics"
                 android:textColor="#000"
-                android:textSize="24sp" />
+                android:textSize="@dimen/view_nav_drawer_text_section" />
 
         </FrameLayout>
 
@@ -202,7 +202,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/tab_genealogy"
                 android:textColor="#000"
-                android:textSize="24sp" />
+                android:textSize="@dimen/view_nav_drawer_text_section" />
 
         </FrameLayout>
 
@@ -234,7 +234,7 @@
                 android:gravity="center_vertical"
                 android:text="@string/tab_admin"
                 android:textColor="#000"
-                android:textSize="24sp" />
+                android:textSize="@dimen/view_nav_drawer_text_section" />
 
         </FrameLayout>
 
@@ -280,7 +280,7 @@
                 android:layout_marginStart="78dp"
                 android:text="@string/tab_settings"
                 android:textColor="#444"
-                android:textSize="16sp" />
+                android:textSize="@dimen/view_nav_drawer_text_section_other" />
 
             <ImageView
                 android:id="@+id/view_nav_drawer_settings_icon"
@@ -311,7 +311,7 @@
                 android:layout_marginStart="78dp"
                 android:text="@string/tab_loyalty"
                 android:textColor="#444"
-                android:textSize="16sp" />
+                android:textSize="@dimen/view_nav_drawer_text_section_other" />
 
             <ImageView
                 android:id="@+id/view_nav_drawer_loyalty_icon"
@@ -342,7 +342,7 @@
                 android:layout_marginStart="78dp"
                 android:text="@string/tab_log_out"
                 android:textColor="#444"
-                android:textSize="16sp" />
+                android:textSize="@dimen/view_nav_drawer_text_section_other" />
 
             <ImageView
                 android:id="@+id/view_nav_drawer_logout_icon"
@@ -373,7 +373,7 @@
                 android:layout_marginStart="78dp"
                 android:text="@string/tab_support"
                 android:textColor="#444"
-                android:textSize="16sp" />
+                android:textSize="@dimen/view_nav_drawer_text_section_other" />
 
             <ImageView
                 android:id="@+id/view_nav_drawer_support_icon"
