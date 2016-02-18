@@ -1,11 +1,11 @@
 package com.mercandalli.android.apps.files.file.audio;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
+import android.os.Build;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
@@ -23,6 +23,8 @@ import static com.mercandalli.android.apps.files.file.FileUtils.getNameFromPath;
  */
 public class FileAudioManagerMockImpl extends FileAudioManagerImpl {
 
+    private static final String LIKE = " LIKE ?";
+
     public FileAudioManagerMockImpl(Context contextApp) {
         super(contextApp);
     }
@@ -31,10 +33,27 @@ public class FileAudioManagerMockImpl extends FileAudioManagerImpl {
      * Delay the call.
      */
     @Override
+    @SuppressLint("NewApi")
     public void getLocalMusicFolders(final int sortMode, final String search) {
-        new AsyncTask<Void, Void, List<FileModel>>() {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+            notifyLocalMusicFoldersListenerFailed();
+            return;
+        }
+
+        final String requestKey = search + "¤" + sortMode;
+        if (mCacheLocalMusicFolders.containsKey(requestKey)) {
+            notifyLocalMusicFoldersListenerSucceeded(mCacheLocalMusicFolders.get(requestKey), null);
+            return;
+        }
+        if (mIsGetLocalMusicFoldersLaunched) {
+            return;
+        }
+        mIsGetLocalMusicFoldersLaunched = true;
+
+        new Thread() {
             @Override
-            protected List<FileModel> doInBackground(Void... params) {
+            public void run() {
+
                 // Used to count the number of music inside.
                 final Map<String, MutableInt> directories = new HashMap<>();
 
@@ -46,14 +65,14 @@ public class FileAudioManagerMockImpl extends FileAudioManagerImpl {
                 String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO;
 
                 for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
-                    selection += " OR " + MediaStore.Files.FileColumns.DATA + " LIKE ?";
+                    selection += " OR " + MediaStore.Files.FileColumns.DATA + LIKE;
                     searchArray.add("%" + end);
                 }
                 selection += " )";
 
                 if (search != null && !search.isEmpty()) {
                     searchArray.add("%" + search + "%");
-                    selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + " LIKE ?";
+                    selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
                 }
 
                 final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
@@ -84,21 +103,14 @@ public class FileAudioManagerMockImpl extends FileAudioManagerImpl {
                             .build());
                 }
 
-                // WAIT
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(10_000);
                 } catch (InterruptedException e) {
-                    Log.e(getClass().getName(), "Exception", e);
+                    e.printStackTrace();
                 }
 
-                return result;
+                notifyLocalMusicFoldersListenerSucceeded(result, requestKey);
             }
-
-            @Override
-            protected void onPostExecute(List<FileModel> fileModels) {
-                notifyLocalMusicFoldersListenerSucceeded(fileModels);
-                super.onPostExecute(fileModels);
-            }
-        }.execute();
+        }.start();
     }
 }

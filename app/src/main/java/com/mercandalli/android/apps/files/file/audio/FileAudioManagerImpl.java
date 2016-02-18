@@ -55,11 +55,11 @@ public class FileAudioManagerImpl extends FileAudioManager {
     private final List<MusicsChangeListener> mMusicsChangeListeners = new ArrayList<>();
 
     /* Cache */
-    private final HashMap<String, List<FileAudioModel>> mCacheAllLocalMusics = new HashMap<>();
-    private final HashMap<String, List<FileModel>> mCacheLocalMusicFolders = new HashMap<>();
+    protected final HashMap<String, List<FileAudioModel>> mCacheAllLocalMusics = new HashMap<>();
+    protected final HashMap<String, List<FileModel>> mCacheLocalMusicFolders = new HashMap<>();
 
-    private boolean mIsGetAllLocalMusicLaunched;
-    private boolean mIsGetLocalMusicFoldersLaunched;
+    protected boolean mIsGetAllLocalMusicLaunched;
+    protected boolean mIsGetLocalMusicFoldersLaunched;
 
     private final Handler mUiHandler;
     private final Thread mUiThread;
@@ -226,16 +226,18 @@ public class FileAudioManagerImpl extends FileAudioManager {
 
         final String requestKey = search + "¤" + sortMode;
         if (mCacheLocalMusicFolders.containsKey(requestKey)) {
-            notifyLocalMusicFoldersListenerSucceeded(mCacheLocalMusicFolders.get(requestKey));
+            notifyLocalMusicFoldersListenerSucceeded(mCacheLocalMusicFolders.get(requestKey), null);
             return;
         }
         if (mIsGetLocalMusicFoldersLaunched) {
             return;
         }
         mIsGetLocalMusicFoldersLaunched = true;
-        new AsyncTask<Void, Void, List<FileModel>>() {
+
+        new Thread() {
             @Override
-            protected List<FileModel> doInBackground(Void... params) {
+            public void run() {
+
                 // Used to count the number of music inside.
                 final Map<String, MutableInt> directories = new HashMap<>();
 
@@ -284,17 +286,10 @@ public class FileAudioManagerImpl extends FileAudioManager {
                             .isOnline(false)
                             .build());
                 }
-                return result;
-            }
 
-            @Override
-            protected void onPostExecute(final List<FileModel> fileModels) {
-                notifyLocalMusicFoldersListenerSucceeded(fileModels);
-                mCacheLocalMusicFolders.put(requestKey, fileModels);
-                mIsGetLocalMusicFoldersLaunched = false;
-                super.onPostExecute(fileModels);
+                notifyLocalMusicFoldersListenerSucceeded(result, requestKey);
             }
-        }.execute();
+        }.start();
     }
 
     @Override
@@ -595,7 +590,21 @@ public class FileAudioManagerImpl extends FileAudioManager {
         }
     }
 
-    protected void notifyLocalMusicFoldersListenerSucceeded(final List<FileModel> fileModels) {
+    protected void notifyLocalMusicFoldersListenerSucceeded(final List<FileModel> fileModels, @Nullable final String requestKey) {
+        if (mUiThread != Thread.currentThread()) {
+            mUiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    notifyLocalMusicFoldersListenerSucceeded(fileModels, requestKey);
+                }
+            });
+            return;
+        }
+        if (requestKey != null) {
+            mCacheLocalMusicFolders.put(requestKey, fileModels);
+            mIsGetLocalMusicFoldersLaunched = false;
+        }
+
         synchronized (mGetLocalMusicFoldersListeners) {
             for (int i = 0, size = mGetLocalMusicFoldersListeners.size(); i < size; i++) {
                 mGetLocalMusicFoldersListeners.get(i).onLocalMusicFoldersSucceeded(fileModels);

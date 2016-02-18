@@ -10,6 +10,7 @@ import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.audio.FileAudioManager;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModule;
 import com.mercandalli.android.apps.files.file.audio.FileAudioPlayer;
+import com.mercandalli.android.apps.files.file.audio.library.FileAudioLibraryModule;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudDownloadedFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileMyCloudFragment;
@@ -32,6 +33,7 @@ import dagger.Component;
                 FileAppModule.class,
                 FileModule.class,
                 FileAudioModule.class,
+                FileAudioLibraryModule.class,
                 FileImageModule.class,
                 SupportModule.class,
                 VersionModule.class
