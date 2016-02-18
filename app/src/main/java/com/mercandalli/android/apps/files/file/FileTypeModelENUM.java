@@ -43,6 +43,7 @@ public enum FileTypeModelENUM {
     TMP(new FileTypeModel(R.string.file_model_type_tmp, new String[]{"tmp"})),
     INDEX(new FileTypeModel(R.string.file_model_type_index, new String[]{"idx"})),
     KEYSTORE(new FileTypeModel(R.string.file_model_type_keystore, new String[]{"keystore", "jdk"})),
+    TRACE(new FileTypeModel(R.string.file_model_type_trace, new String[]{"trace"})),
     DIRECTORY(new FileTypeModel(R.string.file_model_type_directory, new String[]{"dir", ""}));
 
     public final FileTypeModel type;

@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -199,14 +199,11 @@ public class FileLocalPagerFragment extends BackFragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-
-        SearchView mSearchView;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        } else {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             return;
         }
 
+        final SearchView mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         final SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextChange(String query) {
@@ -248,7 +245,7 @@ public class FileLocalPagerFragment extends BackFragment implements
             if (fragment instanceof HomeIconVisible) {
                 menu.findItem(R.id.action_home).setVisible(((HomeIconVisible) fragment).isHomeVisible());
             } else {
-                menu.findItem(R.id.action_home).setVisible(true);
+                menu.findItem(R.id.action_home).setVisible(false);
             }
         }
     }
@@ -335,7 +332,9 @@ public class FileLocalPagerFragment extends BackFragment implements
                         final Fragment fragment = getCurrentFragment();
                         if (fragment != null) {
                             if (fragment instanceof ISortMode) {
-                                ((ISortMode) fragment).setSortMode(item == 0 ? Constants.SORT_ABC : (item == 1 ? Constants.SORT_SIZE : Constants.SORT_DATE_MODIFICATION));
+                                ((ISortMode) fragment).setSortMode(item == 0 ?
+                                        Constants.SORT_ABC : (item == 1 ? Constants.SORT_SIZE :
+                                        Constants.SORT_DATE_MODIFICATION));
                             } else {
                                 Toast.makeText(getContext(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
                             }

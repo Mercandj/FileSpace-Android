@@ -97,6 +97,7 @@
     <string name="file_model_type_tmp">Temporaire</string>
     <string name="file_model_type_index">Index</string>
     <string name="file_model_type_keystore">KeyStore</string>
+    <string name="file_model_type_trace">Debugging Trace</string>
     <string name="file_model_type_directory">Dossier</string>
     <!-- FileModel Local New File -->
     <string name="file_model_local_new_title">Action</string>
