@@ -22,7 +22,9 @@ import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.album.Album;
 import com.mercandalli.android.apps.files.file.audio.artist.Artist;
 import com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataUtils;
+import com.mercandalli.android.apps.files.file.provider.FileProviderManagerImpl;
 import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 import java.io.File;
@@ -64,6 +66,8 @@ public class FileAudioManagerImpl extends FileAudioManager {
     private final Handler mUiHandler;
     private final Thread mUiThread;
 
+    private final FileProviderManagerImpl mFileProviderManagerImpl;
+
     /**
      * The manager constructor.
      *
@@ -76,6 +80,8 @@ public class FileAudioManagerImpl extends FileAudioManager {
         final Looper mainLooper = Looper.getMainLooper();
         mUiHandler = new Handler(mainLooper);
         mUiThread = mainLooper.getThread();
+
+        mFileProviderManagerImpl = FileApp.get().getFileAppComponent().provideFileProviderManager();
     }
 
     /**

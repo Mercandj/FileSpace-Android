@@ -17,7 +17,7 @@ public class FileApp extends Application {
     private static final String TAG = "FileApp";
     private static FileApp sApplication;
 
-    public static long sTimeLaunch;
+    private static long sTimeLaunch;
 
     public static FileApp get() {
         return sApplication;
@@ -75,6 +75,8 @@ public class FileApp extends Application {
         AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
 
         logPerformance(TAG, "FileApp#onCreate() - Fabric Dagger Analytics");
+
+        FileApp.get().getFileAppComponent().provideFileProviderManager().load();
     }
 
     public FileAppComponent getFileAppComponent() {

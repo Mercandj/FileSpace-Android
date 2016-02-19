@@ -81,7 +81,7 @@ public class FileImageManagerImpl implements FileImageManager {
 
                 String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 
-                for (String end : FileTypeModelENUM.PICTURE.type.getExtensions()) {
+                for (String end : FileTypeModelENUM.IMAGE.type.getExtensions()) {
                     selection += " OR " + MediaStore.Files.FileColumns.DATA + LIKE;
                     searchArray.add("%" + end);
                 }
@@ -193,7 +193,7 @@ public class FileImageManagerImpl implements FileImageManager {
 
                 String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 
-                for (String end : FileTypeModelENUM.PICTURE.type.getExtensions()) {
+                for (String end : FileTypeModelENUM.IMAGE.type.getExtensions()) {
                     selection += " OR " + MediaStore.Files.FileColumns.DATA + LIKE;
                     searchArray.add("%" + end);
                 }
@@ -267,7 +267,7 @@ public class FileImageManagerImpl implements FileImageManager {
                     @Override
                     public boolean accept(File dir, String name) {
                         return (new FileTypeModel(FileUtils.getExtensionFromPath(name)))
-                                .equals(FileTypeModelENUM.PICTURE.type);
+                                .equals(FileTypeModelENUM.IMAGE.type);
                     }
                 }
         );

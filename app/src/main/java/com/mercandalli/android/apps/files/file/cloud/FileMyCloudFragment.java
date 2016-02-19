@@ -124,7 +124,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(getContext());
                 String[] menuList = {getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties)};
                 if (!fileModel.isDirectory()) {
-                    if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
+                    if (fileModel.getType().equals(FileTypeModelENUM.IMAGE.type)) {
                         menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (fileModel.isPublic()) ? "Become private" : "Become public", "Set as profile"};
                     } else if (fileModel.getType().equals(FileTypeModelENUM.APK.type) && mApplicationCallback.getConfig().isUserAdmin()) {
                         menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (fileModel.isPublic()) ? "Become private" : "Become public", (fileModel.isApkUpdate()) ? "Remove the update" : "Set as update"};
@@ -213,7 +213,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
 
                                     case 6:
                                         // Picture set as profile
-                                        if (FileTypeModelENUM.PICTURE.type.equals(fileModel.getType())) {
+                                        if (FileTypeModelENUM.IMAGE.type.equals(fileModel.getType())) {
                                             List<StringPair> parameters = new ArrayList<>();
                                             parameters.add(new StringPair("id_file_profile_picture", "" + fileModel.getId()));
                                             (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.routeUserPut, new IPostExecuteListener() {

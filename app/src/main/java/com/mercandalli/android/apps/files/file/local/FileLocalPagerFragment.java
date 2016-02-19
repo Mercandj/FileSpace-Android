@@ -316,8 +316,7 @@ public class FileLocalPagerFragment extends BackFragment implements
     public void goHome() {
         final Fragment fragment = getCurrentFragment();
         if (fragment != null && fragment instanceof FileLocalFragment) {
-            FileLocalFragment fragmentFileManagerFragment = (FileLocalFragment) fragment;
-            fragmentFileManagerFragment.goHome();
+            ((FileLocalFragment) fragment).goHome();
         }
     }
 
@@ -343,8 +342,7 @@ public class FileLocalPagerFragment extends BackFragment implements
                         }
                     }
                 });
-        AlertDialog menuDrop = menuAlert.create();
-        menuDrop.show();
+        menuAlert.create().show();
     }
 
     private void findViews(final View rootView) {
@@ -361,7 +359,8 @@ public class FileLocalPagerFragment extends BackFragment implements
     }
 
     private void initViews(@Nullable Bundle savedInstanceState) {
-        mPagerAdapter = new FileManagerFragmentPagerAdapter(getChildFragmentManager(), mApplicationCallback);
+        mPagerAdapter = new FileManagerFragmentPagerAdapter(
+                getChildFragmentManager(), mApplicationCallback, isSdCardFragmentVisible());
 
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
@@ -489,17 +488,22 @@ public class FileLocalPagerFragment extends BackFragment implements
     /**
      * A simple {@link FragmentPagerAdapter}.
      */
-    public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
+    private static class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
         ApplicationCallback mApplicationCallback;
+        private final boolean mIsSdcardVisible;
 
-        public FileManagerFragmentPagerAdapter(FragmentManager fm, ApplicationCallback applicationCallback) {
+        public FileManagerFragmentPagerAdapter(
+                final FragmentManager fm,
+                final ApplicationCallback applicationCallback,
+                final boolean isSdcardVisible) {
             super(fm);
             mApplicationCallback = applicationCallback;
+            mIsSdcardVisible = isSdcardVisible;
         }
 
         @Override
         public FabFragment getItem(int i) {
-            if (isSdCardFragmentVisible()) {
+            if (mIsSdcardVisible) {
                 switch (i) {
                     case 0:
                         return FileLocalFragment.newInstance();
@@ -528,7 +532,7 @@ public class FileLocalPagerFragment extends BackFragment implements
 
         @Override
         public int getCount() {
-            return NB_FRAGMENT + (isSdCardFragmentVisible() ? 1 : 0);
+            return NB_FRAGMENT + (mIsSdcardVisible ? 1 : 0);
         }
     }
 

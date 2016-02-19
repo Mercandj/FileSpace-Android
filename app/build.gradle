@@ -83,17 +83,19 @@ dependencies {
     //Audio
     compile 'org.jaudiotagger:jaudiotagger:2.0.1'
 
-    // Testing-only dependencies
-    androidTestCompile 'com.android.support:support-annotations:23.1.1'
-    androidTestCompile 'com.android.support.test:runner:0.4.1'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
-
     //Other
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'org.glassfish:javax.annotation:10.0-b28'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
+
+    // Testing-only dependencies
+    androidTestCompile 'com.android.support:support-annotations:23.1.1'
+    androidTestCompile 'com.android.support.test:runner:0.4.1'
+    androidTestCompile 'com.android.support.test:rules:0.4.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.1'
 
     wearApp project(':wearable')
 }

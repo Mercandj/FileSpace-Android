@@ -628,7 +628,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
         final FileTypeModel fileTypeModel = fileModel.getType();
         if (FileTypeModelENUM.TEXT.type.equals(fileTypeModel)) {
             FileTextActivity.start(activity, fileModel, true);
-        } else if (FileTypeModelENUM.PICTURE.type.equals(fileTypeModel)) {
+        } else if (FileTypeModelENUM.IMAGE.type.equals(fileTypeModel)) {
             final Intent intent = new Intent(activity, FileImageActivity.class);
             intent.putExtra("ID", fileModel.getId());
             intent.putExtra("TITLE", "" + fileModel.getFullName());
@@ -726,7 +726,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
                 }
             }
             FileAudioActivity.start(activity, musicCurrentPosition, filesPath, view, false);
-        } else if (FileTypeModelENUM.PICTURE.type.equals(fileTypeModel)) {
+        } else if (FileTypeModelENUM.IMAGE.type.equals(fileTypeModel)) {
             final Intent picIntent = new Intent();
             picIntent.setAction(Intent.ACTION_VIEW);
             picIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "image/*");

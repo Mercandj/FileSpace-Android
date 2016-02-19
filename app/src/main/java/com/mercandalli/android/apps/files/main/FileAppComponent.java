@@ -10,13 +10,14 @@ import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.audio.FileAudioManager;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModule;
 import com.mercandalli.android.apps.files.file.audio.FileAudioPlayer;
-import com.mercandalli.android.apps.files.file.audio.library.FileAudioLibraryModule;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudDownloadedFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileMyCloudFragment;
 import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
 import com.mercandalli.android.apps.files.file.image.FileImageModule;
 import com.mercandalli.android.apps.files.file.image.FileImageRowAdapter;
+import com.mercandalli.android.apps.files.file.provider.FileProviderManagerImpl;
+import com.mercandalli.android.apps.files.file.provider.FileProviderModule;
 import com.mercandalli.android.apps.files.main.version.VersionManager;
 import com.mercandalli.android.apps.files.main.version.VersionModule;
 import com.mercandalli.android.apps.files.support.SupportFragment;
@@ -33,7 +34,7 @@ import dagger.Component;
                 FileAppModule.class,
                 FileModule.class,
                 FileAudioModule.class,
-                FileAudioLibraryModule.class,
+                FileProviderModule.class,
                 FileImageModule.class,
                 SupportModule.class,
                 VersionModule.class
@@ -66,6 +67,8 @@ public interface FileAppComponent {
     Application provideApp();
 
     FileManager provideFileManager();
+
+    FileProviderManagerImpl provideFileProviderManager();
 
     FileAudioManager provideFileAudioManager();
 

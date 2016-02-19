@@ -26,7 +26,7 @@ public enum FileTypeModelENUM {
     APK(new FileTypeModel(R.string.file_model_type_apk, "apk")),
     TEXT(new FileTypeModel(R.string.file_model_type_text, new String[]{"txt", "csv", "rtf", "text", "json"})),
     HTML(new FileTypeModel(R.string.file_model_type_html, new String[]{"html", "htm", "php", "xml"})),
-    PICTURE(new FileTypeModel(R.string.file_model_type_picture, new String[]{"jpeg", "jpg", "png", "gif", "raw", "psd", "bmp", "tiff", "tif"})),
+    IMAGE(new FileTypeModel(R.string.file_model_type_picture, new String[]{"jpeg", "jpg", "png", "gif", "raw", "psd", "bmp", "tiff", "tif"})),
     AUDIO(new FileTypeModel(R.string.file_model_type_audio, new String[]{"mp3", "wav", "m4a", "aiff", "wma", "caf", "flac", "m4p", "amr", "ogg"})),
     VIDEO(new FileTypeModel(R.string.file_model_type_video, new String[]{"m4v", "3gp", "wmv", "mp4", "mpeg", "mpg", "rm", "mov", "avi", "mkv", "flv", "ogg"})),
     ARCHIVE(new FileTypeModel(R.string.file_model_type_archive, new String[]{"zip", "gzip", "rar", "tar", "tar.gz", "gz", "7z"})),

@@ -219,7 +219,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
         final AlertDialog.Builder menuAlert = new AlertDialog.Builder(getActivity());
         String[] menuList = {getString(R.string.download)};
         if (!fileModel.isDirectory() && mFileManager.isMine(fileModel)) {
-            if (fileModel.getType().equals(FileTypeModelENUM.PICTURE.type)) {
+            if (fileModel.getType().equals(FileTypeModelENUM.IMAGE.type)) {
                 menuList = new String[]{
                         getString(R.string.download),
                         getString(R.string.rename),
