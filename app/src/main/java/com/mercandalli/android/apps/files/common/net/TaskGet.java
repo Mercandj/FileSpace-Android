@@ -27,10 +27,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -128,13 +128,13 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
     private String convertInputStreamToString(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         String line = "";
-        String result = "";
+        final StringBuilder result = new StringBuilder();
         while ((line = bufferedReader.readLine()) != null) {
-            result += line;
+            result.append(line);
         }
 
         inputStream.close();
-        return result;
+        return result.toString();
     }
 
     @Override

@@ -75,8 +75,6 @@ public class FileApp extends Application {
         AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
 
         logPerformance(TAG, "FileApp#onCreate() - Fabric Dagger Analytics");
-
-        FileApp.get().getFileAppComponent().provideFileProviderManager().load();
     }
 
     public FileAppComponent getFileAppComponent() {

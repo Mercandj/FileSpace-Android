@@ -210,21 +210,12 @@ public class FileModel implements Parcelable {
 
     @Override
     public String toString() {
-        String toString = "FileModel[" + mId + "] ";
-        toString += mName;
-        return toString;
+        return "FileModel[" + mId + "] " + mName;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        }
-        if (!(obj instanceof FileModel)) {
-            return false;
-        }
-        FileModel fileModel = (FileModel) obj;
-        return fileModel.mId == ((FileModel) obj).getId();
+        return obj == this || obj instanceof FileModel && mId == ((FileModel) obj).getId();
     }
 
     @Override

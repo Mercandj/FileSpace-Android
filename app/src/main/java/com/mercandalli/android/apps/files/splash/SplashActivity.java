@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
 import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.MainActivity;
 import com.mercandalli.android.apps.files.main.Permission;
 
@@ -69,6 +70,7 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
     @Override
     public void onPermissionResult(boolean allSucceed) {
         if (allSucceed) {
+            FileApp.get().getFileAppComponent().provideFileProviderManager().load();
             end();
         } else {
             finish();

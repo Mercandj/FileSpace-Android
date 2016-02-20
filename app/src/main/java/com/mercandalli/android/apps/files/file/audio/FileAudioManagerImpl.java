@@ -116,20 +116,20 @@ public class FileAudioManagerImpl extends FileAudioManager {
                 final Uri allSongsUri = MediaStore.Files.getContentUri("external");
                 final List<String> searchArray = new ArrayList<>();
 
-                String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO;
+                final StringBuilder selection = new StringBuilder("( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO);
 
                 for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
-                    selection += " OR " + MediaStore.Files.FileColumns.DATA + LIKE;
-                    searchArray.add("%" + end);
+                    selection.append(" OR " + MediaStore.Files.FileColumns.DATA + LIKE);
+                    searchArray.add('%' + end);
                 }
-                selection += " )";
+                selection.append(" )");
 
                 if (search != null && !search.isEmpty()) {
-                    searchArray.add("%" + search + "%");
-                    selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
+                    searchArray.add('%' + search + '%');
+                    selection.append(" AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE);
                 }
 
-                final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
+                final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection.toString(), searchArray.toArray(new String[searchArray.size()]), null);
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         do {
@@ -252,20 +252,22 @@ public class FileAudioManagerImpl extends FileAudioManager {
                 final Uri allSongsUri = MediaStore.Files.getContentUri("external");
                 final List<String> searchArray = new ArrayList<>();
 
-                String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO;
+                final StringBuilder selection = new StringBuilder("( " +
+                        MediaStore.Files.FileColumns.MEDIA_TYPE + " = " +
+                        MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO);
 
                 for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
-                    selection += " OR " + MediaStore.Files.FileColumns.DATA + LIKE;
-                    searchArray.add("%" + end);
+                    selection.append(" OR " + MediaStore.Files.FileColumns.DATA + LIKE);
+                    searchArray.add('%' + end);
                 }
-                selection += " )";
+                selection.append(" )");
 
                 if (search != null && !search.isEmpty()) {
-                    searchArray.add("%" + search + "%");
-                    selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
+                    searchArray.add('%' + search + '%');
+                    selection.append(" AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE);
                 }
 
-                final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
+                final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection.toString(), searchArray.toArray(new String[searchArray.size()]), null);
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         do {
@@ -318,20 +320,22 @@ public class FileAudioManagerImpl extends FileAudioManager {
                 final Uri allSongsUri = MediaStore.Files.getContentUri("external");
                 final List<String> searchArray = new ArrayList<>();
 
-                String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO;
+                final StringBuilder selection = new StringBuilder("( " +
+                        MediaStore.Files.FileColumns.MEDIA_TYPE + " = " +
+                        MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO);
 
                 for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
-                    selection += " OR " + MediaStore.Files.FileColumns.DATA + LIKE;
-                    searchArray.add("%" + end);
+                    selection.append(" OR " + MediaStore.Files.FileColumns.DATA + LIKE);
+                    searchArray.add('%' + end);
                 }
-                selection += " )";
+                selection.append(" )");
 
                 if (search != null && !search.isEmpty()) {
                     searchArray.add("%" + search + "%");
-                    selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
+                    selection.append(" AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE);
                 }
 
-                final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
+                final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection.toString(), searchArray.toArray(new String[searchArray.size()]), null);
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         do {

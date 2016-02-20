@@ -86,11 +86,11 @@ public class FileProviderManagerImpl extends FileProviderManager {
 
                 for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
                     selection.append(" OR " + MediaStore.Files.FileColumns.DATA + LIKE);
-                    searchArray.add("%" + end);
+                    searchArray.add('%' + end);
                 }
                 for (String end : FileTypeModelENUM.IMAGE.type.getExtensions()) {
                     selection.append(" OR " + MediaStore.Files.FileColumns.DATA + LIKE);
-                    searchArray.add("%" + end);
+                    searchArray.add('%' + end);
                 }
                 selection.append(" )");
 
