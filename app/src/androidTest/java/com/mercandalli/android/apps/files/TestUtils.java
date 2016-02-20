@@ -12,8 +12,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFro
 
 public class TestUtils {
 
-    /* package */
-    static ViewAction actionOpenDrawer() {
+    public static ViewAction actionOpenDrawer() {
         return new ViewAction() {
             @Override
             public Matcher<View> getConstraints() {
@@ -28,6 +27,30 @@ public class TestUtils {
             @Override
             public void perform(UiController uiController, View view) {
                 ((DrawerLayout) view).openDrawer(GravityCompat.START);
+            }
+        };
+    }
+
+    /**
+     * {@link android.support.v4.view.ViewPager} constraints.
+     * <p/>
+     * http://stackoverflow.com/questions/33505953/espresso-how-to-test-swiperefreshlayout
+     */
+    public static ViewAction withCustomConstraints(final ViewAction action, final Matcher<View> constraints) {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return constraints;
+            }
+
+            @Override
+            public String getDescription() {
+                return action.getDescription();
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                action.perform(uiController, view);
             }
         };
     }
