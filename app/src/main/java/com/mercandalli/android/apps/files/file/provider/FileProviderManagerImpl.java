@@ -84,11 +84,11 @@ public class FileProviderManagerImpl extends FileProviderManager {
                         MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO + " OR " + mediaTypeKey + " = " +
                         MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE);
 
-                for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
+                for (final String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
                     selection.append(" OR " + MediaStore.Files.FileColumns.DATA + LIKE);
                     searchArray.add('%' + end);
                 }
-                for (String end : FileTypeModelENUM.IMAGE.type.getExtensions()) {
+                for (final String end : FileTypeModelENUM.IMAGE.type.getExtensions()) {
                     selection.append(" OR " + MediaStore.Files.FileColumns.DATA + LIKE);
                     searchArray.add('%' + end);
                 }
@@ -106,17 +106,12 @@ public class FileProviderManagerImpl extends FileProviderManager {
                         do {
                             final String path = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
                             final String pathLower = path.toLowerCase();
-                            for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
-                                if (pathLower.endsWith(end)) {
-                                    fileAudioPaths.add(path);
-                                }
-                            }
-                            for (String end : FileTypeModelENUM.IMAGE.type.getExtensions()) {
-                                if (pathLower.endsWith(end)) {
-                                    fileImagePaths.add(path);
-                                }
-                            }
 
+                            if (isAudioPath(pathLower)) {
+                                fileAudioPaths.add(path);
+                            } else if (isImagePath(pathLower)) {
+                                fileImagePaths.add(path);
+                            }
                             filePaths.add(path);
                         } while (cursor.moveToNext());
                     }
@@ -172,10 +167,10 @@ public class FileProviderManagerImpl extends FileProviderManager {
         }
 
         synchronized (mFileProviderListeners) {
-            for (int i = 0, size = mFileProviderListeners.size(); i < size; i++) {
-                mFileProviderListeners.get(i).onFileProviderAllBasicLoaded(filePaths);
-                mFileProviderListeners.get(i).onFileProviderAudioLoaded(fileAudioPaths);
-                mFileProviderListeners.get(i).onFileProviderImageLoaded(fileImagePaths);
+            for (final FileProviderListener fileProviderManager : mFileProviderListeners) {
+                fileProviderManager.onFileProviderAllBasicLoaded(filePaths);
+                fileProviderManager.onFileProviderAudioLoaded(fileAudioPaths);
+                fileProviderManager.onFileProviderImageLoaded(fileImagePaths);
             }
         }
         mIsLoadLaunched = false;
@@ -188,9 +183,27 @@ public class FileProviderManagerImpl extends FileProviderManager {
             fileProviderListener.onFileProviderFailed(error);
         }
         synchronized (mFileProviderListeners) {
-            for (int i = 0, size = mFileProviderListeners.size(); i < size; i++) {
-                mFileProviderListeners.get(i).onFileProviderFailed(error);
+            for (final FileProviderListener fileProviderManager : mFileProviderListeners) {
+                fileProviderManager.onFileProviderFailed(error);
             }
         }
+    }
+
+    private boolean isAudioPath(final String path) {
+        for (final String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
+            if (end.endsWith(path)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isImagePath(final String path) {
+        for (final String end : FileTypeModelENUM.IMAGE.type.getExtensions()) {
+            if (end.endsWith(path)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
