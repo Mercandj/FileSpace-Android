@@ -80,24 +80,24 @@ public class FileProviderManagerImpl extends FileProviderManager {
                 final List<String> searchArray = new ArrayList<>();
 
                 final String mediaTypeKey = MediaStore.Files.FileColumns.MEDIA_TYPE;
-                String selection = "( " + mediaTypeKey + " = " +
+                final StringBuilder selection = new StringBuilder("( " + mediaTypeKey + " = " +
                         MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO + " OR " + mediaTypeKey + " = " +
-                        MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
+                        MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE);
 
                 for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
-                    selection += " OR " + MediaStore.Files.FileColumns.DATA + LIKE;
+                    selection.append(" OR " + MediaStore.Files.FileColumns.DATA + LIKE);
                     searchArray.add("%" + end);
                 }
                 for (String end : FileTypeModelENUM.IMAGE.type.getExtensions()) {
-                    selection += " OR " + MediaStore.Files.FileColumns.DATA + LIKE;
+                    selection.append(" OR " + MediaStore.Files.FileColumns.DATA + LIKE);
                     searchArray.add("%" + end);
                 }
-                selection += " )";
+                selection.append(" )");
 
                 final Cursor cursor = mContextApp.getContentResolver().query(
                         allSongsUri,
                         PROJECTION,
-                        selection,
+                        selection.toString(),
                         searchArray.toArray(new String[searchArray.size()]),
                         null);
 
