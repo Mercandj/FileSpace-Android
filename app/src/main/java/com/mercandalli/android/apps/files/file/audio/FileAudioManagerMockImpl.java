@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
@@ -23,6 +24,7 @@ import static com.mercandalli.android.apps.files.file.FileUtils.getNameFromPath;
  */
 public class FileAudioManagerMockImpl extends FileAudioManagerImpl {
 
+    private static final String TAG = "FileAudioManagerMockImp";
     private static final String LIKE = " LIKE ?";
 
     public FileAudioManagerMockImpl(Context contextApp) {
@@ -106,7 +108,7 @@ public class FileAudioManagerMockImpl extends FileAudioManagerImpl {
                 try {
                     Thread.sleep(10_000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "getLocalMusicFolders: ", e);
                 }
 
                 notifyLocalMusicFoldersListenerSucceeded(result, requestKey);
