@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
@@ -20,6 +21,7 @@ import java.util.List;
 public class FileLocalProviderManagerImpl extends FileLocalProviderManager {
 
     private static final String LIKE = " LIKE ?";
+    private static final String TAG = "FileLocalProviderMa";
 
     private final Handler mUiHandler;
     private final Thread mUiThread;
@@ -28,6 +30,9 @@ public class FileLocalProviderManagerImpl extends FileLocalProviderManager {
     private final List<String> mFilePaths;
     private final List<String> mFileAudioPaths;
     private final List<String> mFileImagePaths;
+    private final List<GetFileListener> mGetFileListeners;
+    private final List<GetFileAudioListener> mGetFileAudioListeners;
+    private final List<GetFileImageListener> mGetFileImageListeners;
 
     private boolean mIsLoadLaunched = false;
     private boolean mIsLoaded = false;
@@ -47,6 +52,9 @@ public class FileLocalProviderManagerImpl extends FileLocalProviderManager {
         mFilePaths = new ArrayList<>();
         mFileAudioPaths = new ArrayList<>();
         mFileImagePaths = new ArrayList<>();
+        mGetFileListeners = new ArrayList<>();
+        mGetFileAudioListeners = new ArrayList<>();
+        mGetFileImageListeners = new ArrayList<>();
     }
 
     @SuppressLint("NewApi")
@@ -67,6 +75,13 @@ public class FileLocalProviderManagerImpl extends FileLocalProviderManager {
             return;
         }
         mIsLoadLaunched = true;
+        mIsLoaded = false;
+
+        synchronized (mFileProviderListeners) {
+            for (final FileProviderListener fileProviderManager : mFileProviderListeners) {
+                fileProviderManager.onFileProviderReloadStarted();
+            }
+        }
 
         new Thread() {
             @Override
@@ -100,7 +115,7 @@ public class FileLocalProviderManagerImpl extends FileLocalProviderManager {
                         PROJECTION,
                         selection.toString(),
                         searchArray.toArray(new String[searchArray.size()]),
-                        MediaStore.Files.FileColumns.DISPLAY_NAME + " ASC");
+                        MediaStore.Files.FileColumns.TITLE + " ASC");
 
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
@@ -125,26 +140,54 @@ public class FileLocalProviderManagerImpl extends FileLocalProviderManager {
     }
 
     @Override
-    public boolean isLoaded() {
-        return mIsLoaded;
+    public void getFilePaths(final GetFileListener getFileListener) {
+        if (mIsLoaded) {
+            getFileListener.onGetFile(new ArrayList<>(mFilePaths));
+            return;
+        }
+        synchronized (mGetFileListeners) {
+            //noinspection SimplifiableIfStatement
+            if (getFileListener == null || mGetFileListeners.contains(getFileListener)) {
+                // We don't allow to register null listener
+                // And a listener can only be added once.
+                return;
+            }
+            mGetFileListeners.add(getFileListener);
+        }
     }
 
-    @NonNull
     @Override
-    public List<String> getFilePaths() {
-        return new ArrayList<>(mFilePaths);
+    public void getFileAudioPaths(final GetFileAudioListener getFileAudioListener) {
+        if (mIsLoaded) {
+            getFileAudioListener.onGetFileAudio(new ArrayList<>(mFileAudioPaths));
+            return;
+        }
+        synchronized (mGetFileAudioListeners) {
+            //noinspection SimplifiableIfStatement
+            if (getFileAudioListener == null || mGetFileAudioListeners.contains(getFileAudioListener)) {
+                // We don't allow to register null listener
+                // And a listener can only be added once.
+                return;
+            }
+            mGetFileAudioListeners.add(getFileAudioListener);
+        }
     }
 
-    @NonNull
     @Override
-    public List<String> getFileAudioPaths() {
-        return new ArrayList<>(mFileAudioPaths);
-    }
-
-    @NonNull
-    @Override
-    public List<String> getFileImagePaths() {
-        return new ArrayList<>(mFileImagePaths);
+    public void getFileImagePaths(final GetFileImageListener getFileImageListener) {
+        if (mIsLoaded) {
+            getFileImageListener.onGetFileImage(new ArrayList<>(mFileImagePaths));
+            return;
+        }
+        synchronized (mGetFileImageListeners) {
+            //noinspection SimplifiableIfStatement
+            if (getFileImageListener == null || mGetFileImageListeners.contains(getFileImageListener)) {
+                // We don't allow to register null listener
+                // And a listener can only be added once.
+                return;
+            }
+            mGetFileImageListeners.add(getFileImageListener);
+        }
     }
 
     private void notifyLoadSucceeded(
@@ -177,6 +220,27 @@ public class FileLocalProviderManagerImpl extends FileLocalProviderManager {
             fileProviderListener.onFileProviderImageLoaded(fileImagePaths);
         }
 
+        synchronized (mGetFileListeners) {
+            for (final GetFileListener getFileListener : mGetFileListeners) {
+                getFileListener.onGetFile(filePaths);
+            }
+            mGetFileListeners.clear();
+        }
+
+        synchronized (mGetFileAudioListeners) {
+            for (final GetFileAudioListener getFileAudioListener : mGetFileAudioListeners) {
+                getFileAudioListener.onGetFileAudio(fileAudioPaths);
+            }
+            mGetFileAudioListeners.clear();
+        }
+
+        synchronized (mGetFileImageListeners) {
+            for (final GetFileImageListener getFileImageListener : mGetFileImageListeners) {
+                getFileImageListener.onGetFileImage(fileImagePaths);
+            }
+            mGetFileImageListeners.clear();
+        }
+
         synchronized (mFileProviderListeners) {
             for (final FileProviderListener fileProviderManager : mFileProviderListeners) {
                 fileProviderManager.onFileProviderAllBasicLoaded(filePaths);
@@ -190,6 +254,9 @@ public class FileLocalProviderManagerImpl extends FileLocalProviderManager {
     private void notifyLoadFailed(
             @Nullable final FileProviderListener fileProviderListener,
             @LoadingError final int error) {
+
+        Log.e(TAG, "notifyLoadFailed LoadingError=" + error);
+
         if (fileProviderListener != null) {
             fileProviderListener.onFileProviderFailed(error);
         }

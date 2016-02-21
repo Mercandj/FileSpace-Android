@@ -1,7 +1,6 @@
 package com.mercandalli.android.apps.files.file.local.provider;
 
 import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.lang.annotation.Retention;
@@ -27,16 +26,11 @@ public abstract class FileLocalProviderManager {
 
     public abstract void load(@Nullable final FileProviderListener fileProviderListener);
 
-    public abstract boolean isLoaded();
+    public abstract void getFilePaths(final GetFileListener getFileListener);
 
-    @NonNull
-    public abstract List<String> getFilePaths();
+    public abstract void getFileAudioPaths(final GetFileAudioListener getFileAudioListener);
 
-    @NonNull
-    public abstract List<String> getFileAudioPaths();
-
-    @NonNull
-    public abstract List<String> getFileImagePaths();
+    public abstract void getFileImagePaths(final GetFileImageListener getFileImageListener);
 
     public boolean registerFileProviderListener(final FileProviderListener fileProviderListener) {
         synchronized (mFileProviderListeners) {
@@ -56,7 +50,23 @@ public abstract class FileLocalProviderManager {
         }
     }
 
+    public interface GetFileListener {
+        void onGetFile(final List<String> filePaths);
+    }
+
+    public interface GetFileAudioListener {
+        void onGetFileAudio(final List<String> fileAudioPaths);
+    }
+
+    public interface GetFileImageListener {
+        void onGetFileImage(final List<String> fileImagePaths);
+    }
+
     public static abstract class FileProviderListener {
+
+        public void onFileProviderReloadStarted() {
+            // To override
+        }
 
         /**
          * Audio, image.
@@ -68,7 +78,7 @@ public abstract class FileLocalProviderManager {
         /**
          * Audio.
          */
-        protected void onFileProviderAudioLoaded(final List<String> fileAudioPaths) {
+        public void onFileProviderAudioLoaded(final List<String> fileAudioPaths) {
             // To override
         }
 

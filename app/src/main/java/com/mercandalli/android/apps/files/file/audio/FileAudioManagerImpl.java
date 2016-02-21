@@ -23,7 +23,6 @@ import com.mercandalli.android.apps.files.file.audio.album.Album;
 import com.mercandalli.android.apps.files.file.audio.artist.Artist;
 import com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataUtils;
 import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
-import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager.FileProviderListener;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 
@@ -65,28 +64,38 @@ public class FileAudioManagerImpl extends FileAudioManager {
      *
      * @param contextApp The {@link Context} of this application.
      */
-    public FileAudioManagerImpl(
-            final Context contextApp) {
+    public FileAudioManagerImpl(final Context contextApp) {
         Preconditions.checkNotNull(contextApp);
 
         mContextApp = contextApp;
         mFileLocalProviderManager = FileApp.get().getFileAppComponent().provideFileProviderManager();
-        mFileLocalProviderManager.registerFileProviderListener(createFileProviderListener());
+        mFileLocalProviderManager.registerFileProviderListener(new FileLocalProviderManager.FileProviderListener() {
+            @Override
+            public void onFileProviderReloadStarted() {
+                super.onFileProviderReloadStarted();
+                clearCache();
+            }
+        });
 
         final Looper mainLooper = Looper.getMainLooper();
         mUiHandler = new Handler(mainLooper);
         mUiThread = mainLooper.getThread();
 
-        if (mFileLocalProviderManager.isLoaded()) {
-            final List<String> fileAudioPaths = mFileLocalProviderManager.getFileAudioPaths();
-            new Thread() {
-                @Override
-                public void run() {
-                    createLocalMusicFolders(fileAudioPaths);
-                    createAllLocalMusic(fileAudioPaths);
-                }
-            }.start();
-        }
+        // Cache.
+        mIsGetLocalMusicFoldersLaunched = true;
+        mIsGetAllLocalMusicLaunched = true;
+        mFileLocalProviderManager.getFileAudioPaths(new FileLocalProviderManager.GetFileAudioListener() {
+            @Override
+            public void onGetFileAudio(final List<String> fileAudioPaths) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        threadWorkerCreateLocalMusicFolders(fileAudioPaths);
+                        threadWorkerCreateAllLocalMusic(fileAudioPaths);
+                    }
+                }.start();
+            }
+        });
     }
 
     /**
@@ -110,15 +119,17 @@ public class FileAudioManagerImpl extends FileAudioManager {
             return;
         }
 
-        new Thread() {
+        mFileLocalProviderManager.getFileAudioPaths(new FileLocalProviderManager.GetFileAudioListener() {
             @Override
-            public void run() {
-                if (!mFileLocalProviderManager.isLoaded()) {
-                    return;
-                }
-                createAllLocalMusic(mFileLocalProviderManager.getFileAudioPaths());
+            public void onGetFileAudio(final List<String> fileAudioPaths) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        threadWorkerCreateAllLocalMusic(fileAudioPaths);
+                    }
+                }.start();
             }
-        }.start();
+        });
     }
 
     /**
@@ -178,15 +189,18 @@ public class FileAudioManagerImpl extends FileAudioManager {
             return;
         }
 
-        new Thread() {
+        mFileLocalProviderManager.getFileAudioPaths(new FileLocalProviderManager.GetFileAudioListener() {
             @Override
-            public void run() {
-                if (!mFileLocalProviderManager.isLoaded()) {
-                    return;
-                }
-                createLocalMusicFolders(mFileLocalProviderManager.getFileAudioPaths());
+            public void onGetFileAudio(final List<String> fileAudioPaths) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        threadWorkerCreateLocalMusicFolders(fileAudioPaths);
+                    }
+                }.start();
             }
-        }.start();
+        });
+
     }
 
     @Override
@@ -310,7 +324,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
     }
 
     //region Create.
-    private void createLocalMusicFolders(@NonNull final List<String> fileAudioPaths) {
+    private void threadWorkerCreateLocalMusicFolders(@NonNull final List<String> fileAudioPaths) {
         final Map<String, MutableInt> directories = new HashMap<>();
         for (final String path : fileAudioPaths) {
             final String parentPath = FileUtils.getParentPathFromPath(path);
@@ -337,7 +351,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
         notifyLocalMusicFoldersListenerSucceeded(result, true);
     }
 
-    private void createAllLocalMusic(@NonNull final List<String> fileAudioPaths) {
+    private void threadWorkerCreateAllLocalMusic(@NonNull final List<String> fileAudioPaths) {
         final List<FileAudioModel> files = new ArrayList<>();
         final MyID3 myID3 = new MyID3();
         for (final String path : fileAudioPaths) {
@@ -347,16 +361,6 @@ public class FileAudioManagerImpl extends FileAudioManager {
             }
         }
         notifyAllLocalMusicListenerSucceeded(files, true);
-    }
-
-    private FileProviderListener createFileProviderListener() {
-        return new FileProviderListener() {
-            @Override
-            protected void onFileProviderAudioLoaded(final List<String> fileAudioPaths) {
-                createLocalMusicFolders(fileAudioPaths);
-                createAllLocalMusic(fileAudioPaths);
-            }
-        };
     }
     //endregion Create.
 

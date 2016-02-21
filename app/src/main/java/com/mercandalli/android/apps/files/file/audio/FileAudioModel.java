@@ -1,6 +1,7 @@
 package com.mercandalli.android.apps.files.file.audio;
 
 import android.os.Parcel;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.mercandalli.android.apps.files.file.FileModel;
@@ -64,7 +65,7 @@ public class FileAudioModel extends FileModel {
 
         public FileMusicModelBuilder file(final File file, final MyID3 myID3) {
             super.file(file);
-            if (!mUrl.toLowerCase().endsWith(".mp3")) {
+            if (mUrl == null || !mUrl.toLowerCase().endsWith(".mp3")) {
                 return this;
             }
             try {
@@ -116,6 +117,7 @@ public class FileAudioModel extends FileModel {
         return mArtist;
     }
 
+    @Nullable
     public String getPath() {
         if (mFile != null) {
             return mFile.getPath();

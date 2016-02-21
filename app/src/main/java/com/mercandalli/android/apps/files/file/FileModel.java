@@ -300,6 +300,7 @@ public class FileModel implements Parcelable {
         return mContent;
     }
 
+    @Nullable
     public File getFile() {
         if (mFile != null) {
             return mFile;

@@ -719,7 +719,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
                 final FileModel f = (FileModel) fileModelList.get(i);
                 if (f.getType() != null && f.getType().equals(FileTypeModelENUM.AUDIO.type) && f.getFile() != null) {
                     filesPath.add(f.getFile().getAbsolutePath());
-                } else if (i < musicCurrentPosition) {
+                } else if (i < position) {
                     musicCurrentPosition--;
                 }
             }

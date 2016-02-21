@@ -173,7 +173,7 @@ public class FileAudioPlayer implements
     }
 
     public void startMusic(
-            final int currentMusicIndex,
+            int currentMusicIndex,
             final List<FileAudioModel> musics) {
 
         Preconditions.checkNotNull(musics);
@@ -181,14 +181,30 @@ public class FileAudioPlayer implements
             Log.e(TAG, "startMusic with empty List");
             return;
         }
+        int musicsSize = musics.size();
+        if (musicsSize <= currentMusicIndex) {
+            Log.e(TAG, "startMusic invalid index : " + currentMusicIndex + " with musics.size() = " + musicsSize);
+            currentMusicIndex = 0;
+        }
 
-        mCurrentMusicIndex = currentMusicIndex;
         mFileAudioModelList.clear();
         mFileAudioModelList.addAll(musics);
-        final FileAudioModel currentMusic = mFileAudioModelList.get(mCurrentMusicIndex);
+        FileAudioModel newCurrentMusic = mFileAudioModelList.get(currentMusicIndex);
+        if (newCurrentMusic.getPath() == null) {
+            // Error with the newCurrentMusic: we play the first track.
+            mCurrentMusicIndex = 0;
+            mFileAudioModelList.remove(currentMusicIndex);
+            newCurrentMusic = mFileAudioModelList.get(mCurrentMusicIndex);
+            if (newCurrentMusic.getPath() == null) {
+                // Error.
+                return;
+            }
+        } else {
+            mCurrentMusicIndex = currentMusicIndex;
+        }
 
-        if (mCurrentMusic == null || !currentMusic.getPath().equals(mCurrentMusic.getPath())) {
-            prepare(currentMusic);
+        if (mCurrentMusic == null || !newCurrentMusic.getPath().equals(mCurrentMusic.getPath())) {
+            prepare(newCurrentMusic);
         } else if (mCurrentStatus == SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED) {
             play();
         }
