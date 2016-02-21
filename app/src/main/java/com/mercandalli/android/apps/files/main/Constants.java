@@ -32,10 +32,6 @@ public class Constants {
     public static final long SIZE_MAX_ONLINE_PICTURE_ICON = 100_000;
     public static final int WIDTH_MAX_ONLINE_PICTURE_BITMAP = 500;
 
-    public static final int SORT_DATE_MODIFICATION = 0;
-    public static final int SORT_ABC = 1;
-    public static final int SORT_SIZE = 2;
-
     public static final boolean ADS_VISIBLE = true;
 
     public static final String AD_MOB_KEY_NAV_DRAWER = BuildConfig.DEBUG ?

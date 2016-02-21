@@ -13,15 +13,12 @@ import com.mercandalli.android.apps.files.file.FileTypeModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
-import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,9 +49,7 @@ public class FileImageManagerImpl implements FileImageManager {
 
     @Override
     @SuppressLint("NewApi")
-    public void getAllLocalImage(
-            final int sortMode,
-            final String search) {
+    public void getAllLocalImage() {
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
             notifyLocalImageFoldersListenerFailed();
@@ -87,11 +82,6 @@ public class FileImageManagerImpl implements FileImageManager {
                 }
                 selection += " )";
 
-                if (search != null && !search.isEmpty()) {
-                    searchArray.add("%" + search + "%");
-                    selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
-                }
-
                 final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
@@ -114,37 +104,6 @@ public class FileImageManagerImpl implements FileImageManager {
                     }
                     cursor.close();
                 }
-
-                if (sortMode == Constants.SORT_ABC) {
-                    Collections.sort(files, new Comparator<FileModel>() {
-                        @Override
-                        public int compare(final FileModel f1, final FileModel f2) {
-                            if (f1.getName() == null || f2.getName() == null) {
-                                return 0;
-                            }
-                            return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
-                        }
-                    });
-                } else if (sortMode == Constants.SORT_SIZE) {
-                    Collections.sort(files, new Comparator<FileModel>() {
-                        @Override
-                        public int compare(final FileModel f1, final FileModel f2) {
-                            return (new Long(f2.getSize())).compareTo(f1.getSize());
-                        }
-                    });
-                } else {
-                    final Map<FileModel, Long> staticLastModifiedTimes = new HashMap<>();
-                    for (FileModel f : files) {
-                        staticLastModifiedTimes.put(f, f.getLastModified());
-                    }
-                    Collections.sort(files, new Comparator<FileModel>() {
-                        @Override
-                        public int compare(final FileModel f1, final FileModel f2) {
-                            return staticLastModifiedTimes.get(f2).compareTo(staticLastModifiedTimes.get(f1));
-                        }
-                    });
-                }
-
                 return files;
             }
 
@@ -162,9 +121,7 @@ public class FileImageManagerImpl implements FileImageManager {
     //region getLocalImageFolders
     @Override
     @SuppressLint("NewApi")
-    public void getLocalImageFolders(
-            final int sortMode,
-            final String search) {
+    public void getLocalImageFolders() {
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
             notifyLocalImageFoldersListenerFailed();
@@ -198,11 +155,6 @@ public class FileImageManagerImpl implements FileImageManager {
                     searchArray.add("%" + end);
                 }
                 selection += " )";
-
-                if (search != null && !search.isEmpty()) {
-                    searchArray.add("%" + search + "%");
-                    selection += " AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
-                }
 
                 final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
                 if (cursor != null) {
@@ -251,9 +203,7 @@ public class FileImageManagerImpl implements FileImageManager {
     //region getLocalImage
     @Override
     public void getLocalImage(
-            final FileModel fileModelDirectParent,
-            final int sortMode,
-            final String search) {
+            final FileModel fileModelDirectParent) {
 
         Preconditions.checkNotNull(fileModelDirectParent);
         if (!fileModelDirectParent.isDirectory()) {
@@ -390,7 +340,7 @@ public class FileImageManagerImpl implements FileImageManager {
 
     /**
      * Class used to count.
-     * See {@link #getLocalImageFolders(int, String)}.
+     * See {@link #getLocalImageFolders()}.
      * http://stackoverflow.com/questions/81346/most-efficient-way-to-increment-a-map-value-in-java
      * Used to count with a map.
      */

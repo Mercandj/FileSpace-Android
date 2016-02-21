@@ -26,12 +26,6 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_sort"
-        android:icon="@drawable/ic_filter_list_white_24dp"
-        android:title="@string/menu_action_sort"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search_white_24dp"
         android:title="@string/menu_action_search"

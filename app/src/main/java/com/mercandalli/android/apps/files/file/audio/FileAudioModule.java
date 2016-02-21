@@ -17,7 +17,7 @@ public class FileAudioModule {
 
     @Provides
     @Singleton
-    FileAudioManager provideFileAudioManager(Application application) {
+    FileAudioManager provideFileAudioManager(final Application application) {
         // return new FileAudioManagerMockImpl(application);
         return new FileAudioManagerImpl(application);
     }

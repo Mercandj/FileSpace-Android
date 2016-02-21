@@ -19,9 +19,7 @@
  */
 package com.mercandalli.android.apps.files.file.cloud;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -31,7 +29,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -49,7 +46,6 @@ import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.local.SearchActivity;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
-import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 
 public class FileCloudPagerFragment extends BackFragment implements ViewPager.OnPageChangeListener, FabFragment.RefreshFabCallback {
@@ -185,38 +181,6 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView mSearchView = (SearchView) searchItem.getActionView();
-
-        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextChange(String query) {
-                if (query == null) {
-                    return true;
-                }
-                if (query.replaceAll(" ", "").equals("")) {
-                    refreshListServer();
-                }
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (query == null) {
-                    return false;
-                }
-                if (query.replaceAll(" ", "").equals("")) {
-                    return false;
-                }
-                refreshListServer(query);
-                return false;
-            }
-        };
-
-        if (mSearchView != null) {
-            mSearchView.setOnQueryTextListener(queryTextListener);
-        }
     }
 
     @Override
@@ -226,7 +190,6 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
         menu.findItem(R.id.action_delete).setVisible(false);
         menu.findItem(R.id.action_add).setVisible(false);
         menu.findItem(R.id.action_home).setVisible(false);
-        menu.findItem(R.id.action_sort).setVisible(true);
     }
 
     @Override
@@ -237,9 +200,6 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
                 return true;
             case R.id.action_home:
                 goHome();
-                return true;
-            case R.id.action_sort:
-                sort();
                 return true;
             case R.id.action_search:
                 SearchActivity.start(getContext());
@@ -261,18 +221,14 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
     }
 
     public void refreshListServer() {
-        refreshListServer(null);
-    }
-
-    public void refreshListServer(String search) {
         FabFragment fabFragment = getCurrentFragment();
         if (fabFragment != null) {
             if (fabFragment instanceof FileCloudFragment) {
                 FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
-                fragmentFileManagerFragment.refreshCurrentList(search);
+                fragmentFileManagerFragment.refreshCurrentList();
             } else if (fabFragment instanceof FileMyCloudFragment) {
                 FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fabFragment;
-                fragmentFileManagerFragment.refreshCurrentList(search);
+                fragmentFileManagerFragment.refreshCurrentList();
             }
         }
     }
@@ -322,30 +278,6 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
                 // TODO
             }
         }
-    }
-
-    public void sort() {
-        final Context context = getContext();
-        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(getContext());
-        String[] menuList = {context.getString(R.string.sort_abc), context.getString(R.string.sort_size), context.getString(R.string.sort_date)};
-        menuAlert.setTitle(getString(R.string.view));
-        menuAlert.setItems(menuList,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        FabFragment fabFragment = getCurrentFragment();
-                        if (fabFragment != null) {
-                            if (fabFragment instanceof ISortMode) {
-                                ((ISortMode) fabFragment).setSortMode(item == 0 ? Constants.SORT_ABC : (item == 1 ? Constants.SORT_SIZE : Constants.SORT_DATE_MODIFICATION));
-                            } else {
-                                Toast.makeText(getContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Toast.makeText(getContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-        AlertDialog menuDrop = menuAlert.create();
-        menuDrop.show();
     }
 
     private void updateNoInternet() {

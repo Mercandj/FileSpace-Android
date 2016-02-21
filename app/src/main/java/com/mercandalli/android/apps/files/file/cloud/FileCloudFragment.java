@@ -354,14 +354,6 @@ public class FileCloudFragment extends InjectedFabFragment implements
      */
     @Override
     public void refreshCurrentList() {
-        refreshCurrentList(null);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void refreshCurrentList(String search) {
         if (!isAdded()) {
             return;
         }
@@ -370,8 +362,6 @@ public class FileCloudFragment extends InjectedFabFragment implements
             mFileManager.getFiles(
                     new FileModel.FileModelBuilder().id(-1).isOnline(true).build(),
                     false,
-                    search,
-                    Constants.SORT_DATE_MODIFICATION,
                     new ResultCallback<List<FileModel>>() {
                         @Override
                         public void success(List<FileModel> result) {

@@ -40,7 +40,6 @@ import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
-import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.file.FileManager;
@@ -50,9 +49,7 @@ import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
 import com.mercandalli.android.apps.files.file.audio.album.Album;
 import com.mercandalli.android.apps.files.file.audio.artist.Artist;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
-import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
-import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -65,7 +62,6 @@ import javax.inject.Inject;
  * A {@link android.support.v4.app.Fragment} that displays the local {@link FileAudioModel}s.
  */
 public class FileAudioLocalFragment extends InjectedFabFragment implements
-        BackFragment.ISortMode,
         FileAudioOverflowActions.FileAudioActionCallback,
         FileAudioManager.GetAllLocalMusicListener,
         FileAudioManager.GetLocalMusicFoldersListener,
@@ -117,8 +113,6 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
 
     private FileAudioRowAdapter mFileAudioRowAdapter;
     private FileModelCardAdapter mFileModelCardAdapter;
-
-    private int mSortMode = Constants.SORT_DATE_MODIFICATION;
 
     private ScaleAnimationAdapter mScaleAnimationAdapter;
 
@@ -250,9 +244,6 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
 
         mApplicationCallback.invalidateMenu();
 
-        // Pre-load.
-        mFileAudioManager.getAllLocalMusic(mSortMode, null);
-
         return rootView;
     }
 
@@ -294,30 +285,6 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     @Override
     public int getFabImageResource(int fab_id) {
         return R.drawable.arrow_up;
-    }
-
-    @Override
-    public void setSortMode(int sortMode) {
-        if (sortMode == Constants.SORT_ABC ||
-                sortMode == Constants.SORT_DATE_MODIFICATION ||
-                sortMode == Constants.SORT_SIZE) {
-            mSortMode = sortMode;
-            switch (mCurrentPage) {
-                case PAGE_ALL:
-                    refreshListAllMusic();
-                    break;
-                case PAGE_FOLDER_INSIDE:
-                    refreshListFoldersInside(mCurrentFolder);
-                    break;
-                case PAGE_FOLDERS:
-                    refreshListFolders();
-                    break;
-                case PAGE_ALBUM:
-                    break;
-                case PAGE_ARTIST:
-                    break;
-            }
-        }
     }
 
     @Override
@@ -388,29 +355,22 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
      */
     @Override
     public void refreshCurrentList() {
-        refreshCurrentList(null);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void refreshCurrentList(final String search) {
+        showProgressBar();
         switch (mCurrentPage) {
             case PAGE_ALL:
-                mFileAudioManager.getAllLocalMusic(mSortMode, search);
+                mFileAudioManager.getAllLocalMusic();
                 break;
             case PAGE_FOLDERS:
-                mFileAudioManager.getLocalMusicFolders(mSortMode, search);
+                mFileAudioManager.getLocalMusicFolders();
                 break;
             case PAGE_FOLDER_INSIDE:
-                mFileAudioManager.getLocalMusic(mCurrentFolder, mSortMode, search);
+                mFileAudioManager.getLocalMusic(mCurrentFolder);
                 break;
             case PAGE_ALBUM:
-                mFileAudioManager.getAllLocalMusicAlbums(mSortMode, search);
+                mFileAudioManager.getAllLocalMusicAlbums();
                 break;
             case PAGE_ARTIST:
-                mFileAudioManager.getAllLocalMusicArtists(mSortMode, search);
+                mFileAudioManager.getAllLocalMusicArtists();
                 break;
         }
     }
@@ -459,7 +419,6 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         if (mCurrentPage != PAGE_ALL) {
             return;
         }
-        Preconditions.checkNotNull(fileModels);
         hideProgressBar();
 
         mFileAudioModels.clear();
@@ -517,6 +476,8 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         if (mCurrentPage != PAGE_FOLDER_INSIDE) {
             return;
         }
+        hideProgressBar();
+
         mFileAudioModels.clear();
         mFileAudioModels.addAll(fileModels);
         mFileAudioRowAdapter.setHasHeader(false);
@@ -569,14 +530,10 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
 
     //region refresh
     public void refreshListFolders() {
-        refreshListFolders("");
-    }
-
-    public void refreshListFolders(final String search) {
         mCurrentFolder = null;
         mCurrentPage = PAGE_FOLDERS;
         showProgressBar();
-        refreshCurrentList(search);
+        refreshCurrentList();
     }
 
     public void refreshListAllMusic() {

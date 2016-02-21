@@ -28,7 +28,7 @@ public class FileAudioManagerMockImpl extends FileAudioManagerImpl {
     private static final String TAG = "FileAudioManagerMockImp";
     private static final String LIKE = " LIKE ?";
 
-    public FileAudioManagerMockImpl(Context contextApp) {
+    public FileAudioManagerMockImpl(final Context contextApp) {
         super(contextApp);
     }
 
@@ -37,15 +37,14 @@ public class FileAudioManagerMockImpl extends FileAudioManagerImpl {
      */
     @Override
     @SuppressLint("NewApi")
-    public void getLocalMusicFolders(final int sortMode, final String search) {
+    public void getLocalMusicFolders() {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
             notifyLocalMusicFoldersListenerFailed();
             return;
         }
 
-        final String requestKey = search + "¤" + sortMode;
-        if (mCacheLocalMusicFolders.containsKey(requestKey)) {
-            notifyLocalMusicFoldersListenerSucceeded(mCacheLocalMusicFolders.get(requestKey), null);
+        if (!mCacheLocalMusicFolders.isEmpty()) {
+            notifyLocalMusicFoldersListenerSucceeded(mCacheLocalMusicFolders, false);
             return;
         }
         if (mIsGetLocalMusicFoldersLaunched) {
@@ -72,11 +71,6 @@ public class FileAudioManagerMockImpl extends FileAudioManagerImpl {
                     searchArray.add("%" + end);
                 }
                 selection.append(" )");
-
-                if (search != null && !search.isEmpty()) {
-                    searchArray.add("%" + search + "%");
-                    selection.append(" AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE);
-                }
 
                 final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection.toString(), searchArray.toArray(new String[searchArray.size()]), null);
                 if (cursor != null) {
@@ -112,7 +106,7 @@ public class FileAudioManagerMockImpl extends FileAudioManagerImpl {
                     Log.e(TAG, "getLocalMusicFolders: ", e);
                 }
 
-                notifyLocalMusicFoldersListenerSucceeded(result, requestKey);
+                notifyLocalMusicFoldersListenerSucceeded(result, true);
             }
         }.start();
     }

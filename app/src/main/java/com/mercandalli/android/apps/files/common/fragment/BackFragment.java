@@ -74,19 +74,6 @@ public abstract class BackFragment extends Fragment {
      */
     public abstract void onFocus();
 
-    public interface ISortMode {
-
-        /**
-         * Define the list sort.
-         *
-         * @param sortMode {@link com.mercandalli.android.apps.files.main.Constants#SORT_ABC},
-         *                 {@link com.mercandalli.android.apps.files.main.Constants#SORT_SIZE} or
-         *                 {@link com.mercandalli.android.apps.files.main.Constants#SORT_DATE_MODIFICATION}
-         */
-        void setSortMode(int sortMode);
-    }
-
-
     /**
      * Set the status bar transparency.
      *

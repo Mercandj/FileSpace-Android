@@ -9,17 +9,17 @@ public interface FileImageManager {
     /**
      * Get all the {@link FileModel} image in the device.
      */
-    void getAllLocalImage(final int sortMode, final String search);
+    void getAllLocalImage();
 
     /**
      * Get all local folders that contain image.
      */
-    void getLocalImageFolders(final int sortMode, final String search);
+    void getLocalImageFolders();
 
     /**
      * Get all the {@link FileModel} image in a folder.
      */
-    void getLocalImage(final FileModel fileModelDirectParent, final int sortMode, final String search);
+    void getLocalImage(final FileModel fileModelDirectParent);
 
     boolean registerAllLocalImageListener(GetAllLocalImageListener getAllLocalImageListener);
 
@@ -36,7 +36,7 @@ public interface FileImageManager {
     interface GetAllLocalImageListener {
 
         /**
-         * Called when the call of {@link #getAllLocalImage(int, String)} succeeded.
+         * Called when the call of {@link #getAllLocalImage()} succeeded.
          *
          * @param fileModels the {@link List} of result.
          */
@@ -48,7 +48,7 @@ public interface FileImageManager {
     interface GetLocalImageFoldersListener {
 
         /**
-         * Called when the call of {@link #getLocalImageFolders(int, String)} succeeded.
+         * Called when the call of {@link #getLocalImageFolders()} succeeded.
          *
          * @param fileModels the {@link List} of result.
          */
@@ -60,7 +60,7 @@ public interface FileImageManager {
     interface GetLocalImageListener {
 
         /**
-         * Called when the call of {@link #getLocalImage(FileModel, int, String)} succeeded.
+         * Called when the call of {@link #getLocalImage(FileModel)} succeeded.
          *
          * @param fileModels the {@link List} of result.
          */

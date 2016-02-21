@@ -25,7 +25,6 @@ public abstract class FileManager {
      */
     public abstract void getFiles(
             final FileModel fileParent,
-            final int sortMode,
             final ResultCallback<List<FileModel>> resultCallback);
 
     /**
@@ -34,8 +33,6 @@ public abstract class FileManager {
     public abstract void getFiles(
             final FileModel fileParent,
             boolean areMyFiles,
-            final String search,
-            final int sortMode,
             final ResultCallback<List<FileModel>> resultCallback);
 
     /**

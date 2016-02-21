@@ -1,6 +1,7 @@
-package com.mercandalli.android.apps.files.file.provider;
+package com.mercandalli.android.apps.files.file.local.provider;
 
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.lang.annotation.Retention;
@@ -8,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class FileProviderManager {
+public abstract class FileLocalProviderManager {
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({
@@ -26,7 +27,18 @@ public abstract class FileProviderManager {
 
     public abstract void load(@Nullable final FileProviderListener fileProviderListener);
 
-    public boolean registerOnMusicUpdateListener(final FileProviderListener fileProviderListener) {
+    public abstract boolean isLoaded();
+
+    @NonNull
+    public abstract List<String> getFilePaths();
+
+    @NonNull
+    public abstract List<String> getFileAudioPaths();
+
+    @NonNull
+    public abstract List<String> getFileImagePaths();
+
+    public boolean registerFileProviderListener(final FileProviderListener fileProviderListener) {
         synchronized (mFileProviderListeners) {
             //noinspection SimplifiableIfStatement
             if (fileProviderListener == null || mFileProviderListeners.contains(fileProviderListener)) {
@@ -38,7 +50,7 @@ public abstract class FileProviderManager {
         }
     }
 
-    public boolean unregisterOnMusicUpdateListener(final FileProviderListener fileProviderListener) {
+    public boolean unregisterFileProviderListener(final FileProviderListener fileProviderListener) {
         synchronized (mFileProviderListeners) {
             return mFileProviderListeners.remove(fileProviderListener);
         }
@@ -49,28 +61,28 @@ public abstract class FileProviderManager {
         /**
          * Audio, image.
          */
-        void onFileProviderAllBasicLoaded(final List<String> filePaths) {
+        protected void onFileProviderAllBasicLoaded(final List<String> filePaths) {
             // To override
         }
 
         /**
          * Audio.
          */
-        void onFileProviderAudioLoaded(final List<String> fileAudioPaths) {
+        protected void onFileProviderAudioLoaded(final List<String> fileAudioPaths) {
             // To override
         }
 
         /**
          * Image.
          */
-        void onFileProviderImageLoaded(final List<String> fileImagePaths) {
+        protected void onFileProviderImageLoaded(final List<String> fileImagePaths) {
             // To override
         }
 
         /**
          * Load failed.
          */
-        void onFileProviderFailed(@LoadingError final int error) {
+        protected void onFileProviderFailed(@LoadingError final int error) {
             // To override
         }
     }

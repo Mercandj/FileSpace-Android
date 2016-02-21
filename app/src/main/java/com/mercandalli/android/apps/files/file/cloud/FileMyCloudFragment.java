@@ -46,7 +46,6 @@ import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.FileManager;
@@ -55,9 +54,10 @@ import com.mercandalli.android.apps.files.file.FileModelAdapter;
 import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
-import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.main.FileAppComponent;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -296,11 +296,6 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
 
     @Override
     public void refreshCurrentList() {
-        refreshCurrentList(null);
-    }
-
-    @Override
-    public void refreshCurrentList(String search) {
         if (!isAdded()) {
             return;
         }
@@ -310,8 +305,6 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
             mFileManager.getFiles(
                     new FileModel.FileModelBuilder().id(mIdFileDirectoryStack.peek()).isOnline(true).build(),
                     true,
-                    search,
-                    Constants.SORT_DATE_MODIFICATION,
                     new ResultCallback<List<FileModel>>() {
                         @Override
                         public void success(List<FileModel> result) {

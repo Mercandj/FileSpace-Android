@@ -59,12 +59,16 @@ public class FileAudioModel extends FileModel {
         }
 
         public FileMusicModelBuilder file(final File file) {
+            return file(file, new MyID3());
+        }
+
+        public FileMusicModelBuilder file(final File file, final MyID3 myID3) {
             super.file(file);
-            if (!file.getName().toLowerCase().endsWith(".mp3")) {
+            if (!mUrl.toLowerCase().endsWith(".mp3")) {
                 return this;
             }
             try {
-                final IMusicMetadata metadata = (new MyID3().read(file)).getSimplified();
+                final IMusicMetadata metadata = (myID3.read(file)).getSimplified();
                 title(metadata.getSongTitle());
                 album(metadata.getAlbum());
                 artist(metadata.getArtist());

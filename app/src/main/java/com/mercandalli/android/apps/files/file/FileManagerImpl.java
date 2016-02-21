@@ -42,6 +42,7 @@ import com.mercandalli.android.apps.files.file.local.FileLocalApi;
 import com.mercandalli.android.apps.files.file.text.FileTextActivity;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.squareup.picasso.NetworkPolicy;
@@ -91,10 +92,8 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
     @Override
     public void getFiles(
             final FileModel fileParent,
-            final int sortMode,
             final ResultCallback<List<FileModel>> resultCallback) {
-
-        getFiles(fileParent, true, null, sortMode, resultCallback);
+        getFiles(fileParent, true, resultCallback);
     }
 
     /**
@@ -104,15 +103,13 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
     public void getFiles(
             final FileModel fileParent,
             boolean areMyFiles,
-            final String search,
-            final int sortMode,
             final ResultCallback<List<FileModel>> resultCallback) {
 
         if (!fileParent.isOnline()) {
-            resultCallback.success(mFileLocalApi.getFiles(fileParent.getFile(), search, sortMode));
+            resultCallback.success(mFileLocalApi.getFiles(fileParent.getFile()));
             return;
         }
-        final Call<FilesResponse> call = mFileOnlineApi.getFiles(fileParent.getId(), areMyFiles ? "" : "true", StringUtils.toEmptyIfNull(search));
+        final Call<FilesResponse> call = mFileOnlineApi.getFiles(fileParent.getId(), areMyFiles ? "" : "true", "");
         call.enqueue(new Callback<FilesResponse>() {
             @Override
             public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
@@ -288,6 +285,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
                 //noinspection ResultOfMethodCallIgnored
                 fileModel.getFile().delete();
             }
+            FileApp.get().getFileAppComponent().provideFileProviderManager().load();
             listener.execute();
         }
     }

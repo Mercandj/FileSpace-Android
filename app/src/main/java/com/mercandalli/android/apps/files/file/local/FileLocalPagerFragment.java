@@ -19,9 +19,7 @@
  */
 package com.mercandalli.android.apps.files.file.local;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -36,7 +34,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,7 +41,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
@@ -57,7 +53,6 @@ import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
-import com.mercandalli.android.apps.files.main.Constants;
 
 public class FileLocalPagerFragment extends BackFragment implements
         ViewPager.OnPageChangeListener,
@@ -199,36 +194,6 @@ public class FileLocalPagerFragment extends BackFragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            return;
-        }
-
-        final SearchView mSearchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        final SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextChange(String query) {
-                if (query == null) {
-                    return true;
-                }
-                if (query.replaceAll(" ", "").equals("")) {
-                    refreshListServer();
-                }
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (query == null || query.replaceAll(" ", "").equals("")) {
-                    return false;
-                }
-                refreshListServer(query);
-                return false;
-            }
-        };
-
-        if (mSearchView != null) {
-            mSearchView.setOnQueryTextListener(queryTextListener);
-        }
     }
 
     @Override
@@ -238,7 +203,6 @@ public class FileLocalPagerFragment extends BackFragment implements
         menu.findItem(R.id.action_delete).setVisible(false);
         menu.findItem(R.id.action_add).setVisible(false);
         menu.findItem(R.id.action_home).setVisible(false);
-        menu.findItem(R.id.action_sort).setVisible(true);
 
         if (mApplicationCallback != null) {
             final Fragment fragment = getCurrentFragment();
@@ -259,9 +223,6 @@ public class FileLocalPagerFragment extends BackFragment implements
             case R.id.action_home:
                 goHome();
                 return true;
-            case R.id.action_sort:
-                sort();
-                return true;
             case R.id.action_search:
                 SearchActivity.start(getContext());
                 return true;
@@ -280,13 +241,9 @@ public class FileLocalPagerFragment extends BackFragment implements
     }
 
     public void refreshListServer() {
-        refreshListServer(null);
-    }
-
-    public void refreshListServer(String search) {
         final Fragment fragment = getCurrentFragment();
         if (fragment != null && fragment instanceof ListController) {
-            ((ListController) fragment).refreshCurrentList(search);
+            ((ListController) fragment).refreshCurrentList();
         }
     }
 
@@ -318,31 +275,6 @@ public class FileLocalPagerFragment extends BackFragment implements
         if (fragment != null && fragment instanceof FileLocalFragment) {
             ((FileLocalFragment) fragment).goHome();
         }
-    }
-
-    public void sort() {
-        final Context context = getContext();
-        final AlertDialog.Builder menuAlert = new AlertDialog.Builder(getContext());
-        String[] menuList = {context.getString(R.string.sort_abc), context.getString(R.string.sort_size), context.getString(R.string.sort_date)};
-        menuAlert.setTitle(getString(R.string.view));
-        menuAlert.setItems(menuList,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        final Fragment fragment = getCurrentFragment();
-                        if (fragment != null) {
-                            if (fragment instanceof ISortMode) {
-                                ((ISortMode) fragment).setSortMode(item == 0 ?
-                                        Constants.SORT_ABC : (item == 1 ? Constants.SORT_SIZE :
-                                        Constants.SORT_DATE_MODIFICATION));
-                            } else {
-                                Toast.makeText(getContext(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Toast.makeText(getContext(), getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-        menuAlert.create().show();
     }
 
     private void findViews(final View rootView) {
@@ -545,13 +477,6 @@ public class FileLocalPagerFragment extends BackFragment implements
          * Refresh the visible {@link java.util.List} and {@link android.support.v7.widget.RecyclerView}.
          */
         void refreshCurrentList();
-
-        /**
-         * Refresh the visible {@link java.util.List} and {@link android.support.v7.widget.RecyclerView}.
-         *
-         * @param search The current search.
-         */
-        void refreshCurrentList(String search);
 
         /**
          * Update the {@link android.support.v7.widget.RecyclerView} adapter.

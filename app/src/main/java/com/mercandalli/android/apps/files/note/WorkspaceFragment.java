@@ -221,7 +221,6 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
         menu.findItem(R.id.action_search).setVisible(false);
         menu.findItem(R.id.action_add).setVisible(false);
         menu.findItem(R.id.action_home).setVisible(false);
-        menu.findItem(R.id.action_sort).setVisible(false);
     }
 
     @Override

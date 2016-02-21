@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
-import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
@@ -55,7 +54,6 @@ import javax.inject.Inject;
  * A {@link android.support.v4.app.Fragment} that displays the local {@link FileAudioModel}s.
  */
 public class FileImageLocalFragment extends InjectedFabFragment implements
-        BackFragment.ISortMode,
         FileModelCardAdapter.OnFileSubtitleAdapter,
         FileModelCardAdapter.OnHeaderClickListener,
         FileImageManager.GetAllLocalImageListener,
@@ -97,8 +95,6 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
 
     private FileImageRowAdapter mFileImageRowAdapter;
     private FileModelCardAdapter mFileModelCardAdapter;
-
-    private int mSortMode = Constants.SORT_DATE_MODIFICATION;
 
     private final IListener mRefreshActivityAdapterListener;
 
@@ -336,26 +332,6 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public void setSortMode(int sortMode) {
-        if (sortMode == Constants.SORT_ABC ||
-                sortMode == Constants.SORT_DATE_MODIFICATION ||
-                sortMode == Constants.SORT_SIZE) {
-            mSortMode = sortMode;
-            switch (mCurrentPage) {
-                case PAGE_ALL:
-                    refreshListAllMusic();
-                    break;
-                case PAGE_FOLDER_INSIDE:
-                    refreshListFoldersInside(mCurrentFolder);
-                    break;
-                case PAGE_FOLDERS:
-                    refreshListFolders();
-                    break;
-            }
-        }
-    }
-
-    @Override
     protected void inject(FileAppComponent fileAppComponent) {
         fileAppComponent.inject(this);
     }
@@ -499,32 +475,20 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
      */
     @Override
     public void refreshCurrentList() {
-        refreshCurrentList(null);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void refreshCurrentList(String search) {
         switch (mCurrentPage) {
             case PAGE_ALL:
-                mFileImageManager.getAllLocalImage(mSortMode, search);
+                mFileImageManager.getAllLocalImage();
                 break;
             case PAGE_FOLDERS:
-                mFileImageManager.getLocalImageFolders(mSortMode, search);
+                mFileImageManager.getLocalImageFolders();
                 break;
             case PAGE_FOLDER_INSIDE:
-                mFileImageManager.getLocalImage(mCurrentFolder, mSortMode, search);
+                mFileImageManager.getLocalImage(mCurrentFolder);
                 break;
         }
     }
 
     public void refreshListFolders() {
-        refreshListFolders("");
-    }
-
-    public void refreshListFolders(final String search) {
         mCurrentFolder = null;
         mCurrentPage = PAGE_FOLDERS;
         if (mFileManager == null) {
@@ -532,7 +496,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         }
 
         showProgressBar();
-        mFileImageManager.getLocalImageFolders(mSortMode, search);
+        mFileImageManager.getLocalImageFolders();
     }
 
     public void refreshListAllMusic() {
@@ -542,14 +506,14 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         }
 
         showProgressBar();
-        mFileImageManager.getAllLocalImage(mSortMode, null);
+        mFileImageManager.getAllLocalImage();
     }
 
     public void refreshListFoldersInside(final FileModel fileModel) {
         mCurrentFolder = fileModel;
         mCurrentPage = PAGE_FOLDER_INSIDE;
         mFileModels.clear();
-        mFileImageManager.getLocalImage(fileModel, mSortMode, null);
+        mFileImageManager.getLocalImage(fileModel);
     }
 
     public void updateAdapter() {

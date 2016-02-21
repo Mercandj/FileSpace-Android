@@ -9,7 +9,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.text.Spanned;
 
 import com.mercandalli.android.apps.files.common.util.HtmlUtils;
@@ -22,17 +22,17 @@ import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.album.Album;
 import com.mercandalli.android.apps.files.file.audio.artist.Artist;
 import com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataUtils;
-import com.mercandalli.android.apps.files.file.provider.FileProviderManagerImpl;
-import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
+import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager.FileProviderListener;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
+
+import org.cmc.music.myid3.MyID3;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -48,17 +48,11 @@ public class FileAudioManagerImpl extends FileAudioManager {
     private static final String LIKE = " LIKE ?";
 
     protected final Context mContextApp;
-
-    private final List<GetAllLocalMusicListener> mGetAllLocalMusicListeners = new ArrayList<>();
-    private final List<GetAllLocalMusicArtistsListener> mGetAllLocalMusicArtistsListeners = new ArrayList<>();
-    private final List<GetAllLocalMusicAlbumsListener> mGetAllLocalMusicAlbumsListeners = new ArrayList<>();
-    private final List<GetLocalMusicFoldersListener> mGetLocalMusicFoldersListeners = new ArrayList<>();
-    private final List<GetLocalMusicListener> mGetLocalMusicListeners = new ArrayList<>();
-    private final List<MusicsChangeListener> mMusicsChangeListeners = new ArrayList<>();
+    protected final FileLocalProviderManager mFileLocalProviderManager;
 
     /* Cache */
-    protected final HashMap<String, List<FileAudioModel>> mCacheAllLocalMusics = new HashMap<>();
-    protected final HashMap<String, List<FileModel>> mCacheLocalMusicFolders = new HashMap<>();
+    protected final List<FileAudioModel> mCacheAllLocalMusics = new ArrayList<>();
+    protected final List<FileModel> mCacheLocalMusicFolders = new ArrayList<>();
 
     protected boolean mIsGetAllLocalMusicLaunched;
     protected boolean mIsGetLocalMusicFoldersLaunched;
@@ -66,22 +60,33 @@ public class FileAudioManagerImpl extends FileAudioManager {
     private final Handler mUiHandler;
     private final Thread mUiThread;
 
-    private final FileProviderManagerImpl mFileProviderManagerImpl;
-
     /**
      * The manager constructor.
      *
      * @param contextApp The {@link Context} of this application.
      */
-    public FileAudioManagerImpl(final Context contextApp) {
+    public FileAudioManagerImpl(
+            final Context contextApp) {
         Preconditions.checkNotNull(contextApp);
+
         mContextApp = contextApp;
+        mFileLocalProviderManager = FileApp.get().getFileAppComponent().provideFileProviderManager();
+        mFileLocalProviderManager.registerFileProviderListener(createFileProviderListener());
 
         final Looper mainLooper = Looper.getMainLooper();
         mUiHandler = new Handler(mainLooper);
         mUiThread = mainLooper.getThread();
 
-        mFileProviderManagerImpl = FileApp.get().getFileAppComponent().provideFileProviderManager();
+        if (mFileLocalProviderManager.isLoaded()) {
+            final List<String> fileAudioPaths = mFileLocalProviderManager.getFileAudioPaths();
+            new Thread() {
+                @Override
+                public void run() {
+                    createLocalMusicFolders(fileAudioPaths);
+                    createAllLocalMusic(fileAudioPaths);
+                }
+            }.start();
+        }
     }
 
     /**
@@ -89,92 +94,29 @@ public class FileAudioManagerImpl extends FileAudioManager {
      */
     @Override
     @SuppressLint("NewApi")
-    public void getAllLocalMusic(final int sortMode, final String search) {
+    public void getAllLocalMusic() {
+        if (mIsGetAllLocalMusicLaunched) {
+            return;
+        }
+        mIsGetAllLocalMusicLaunched = true;
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
             notifyAllLocalMusicListenerFailed();
             return;
         }
 
-        final String requestKey = search + "¤" + sortMode;
-        if (mCacheAllLocalMusics.containsKey(requestKey)) {
-            notifyAllLocalMusicListenerSucceeded(mCacheAllLocalMusics.get(requestKey), null);
+        if (!mCacheAllLocalMusics.isEmpty()) {
+            notifyAllLocalMusicListenerSucceeded(mCacheAllLocalMusics, false);
             return;
         }
-        if (mIsGetAllLocalMusicLaunched) {
-            return;
-        }
-        mIsGetAllLocalMusicLaunched = true;
 
         new Thread() {
             @Override
             public void run() {
-                final List<FileAudioModel> files = new ArrayList<>();
-
-                final String[] PROJECTION = {MediaStore.Files.FileColumns.DATA};
-
-                final Uri allSongsUri = MediaStore.Files.getContentUri("external");
-                final List<String> searchArray = new ArrayList<>();
-
-                final StringBuilder selection = new StringBuilder("( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO);
-
-                for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
-                    selection.append(" OR " + MediaStore.Files.FileColumns.DATA + LIKE);
-                    searchArray.add('%' + end);
+                if (!mFileLocalProviderManager.isLoaded()) {
+                    return;
                 }
-                selection.append(" )");
-
-                if (search != null && !search.isEmpty()) {
-                    searchArray.add('%' + search + '%');
-                    selection.append(" AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE);
-                }
-
-                final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection.toString(), searchArray.toArray(new String[searchArray.size()]), null);
-                if (cursor != null) {
-                    if (cursor.moveToFirst()) {
-                        do {
-                            final File file = new File(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
-                            if (file.exists() && !file.isDirectory()) {
-                                files.add(new FileAudioModel.FileMusicModelBuilder()
-                                        .file(file).build());
-                            }
-
-                        } while (cursor.moveToNext());
-                    }
-                    cursor.close();
-                }
-
-                if (sortMode == Constants.SORT_ABC) {
-                    Collections.sort(files, new Comparator<FileAudioModel>() {
-                        @Override
-                        public int compare(final FileAudioModel f1, final FileAudioModel f2) {
-                            if (f1.getName() == null || f2.getName() == null) {
-                                return 0;
-                            }
-                            return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
-                        }
-                    });
-                } else if (sortMode == Constants.SORT_SIZE) {
-                    Collections.sort(files, new Comparator<FileAudioModel>() {
-                        @Override
-                        public int compare(final FileAudioModel f1, final FileAudioModel f2) {
-                            return (new Long(f2.getSize())).compareTo(f1.getSize());
-                        }
-                    });
-                } else {
-                    final Map<FileModel, Long> staticLastModifiedTimes = new HashMap<>();
-                    for (FileModel f : files) {
-                        staticLastModifiedTimes.put(f, f.getLastModified());
-                    }
-                    Collections.sort(files, new Comparator<FileAudioModel>() {
-                        @Override
-                        public int compare(final FileAudioModel f1, final FileAudioModel f2) {
-                            return staticLastModifiedTimes.get(f2).compareTo(staticLastModifiedTimes.get(f1));
-                        }
-                    });
-                }
-
-                notifyAllLocalMusicListenerSucceeded(files, requestKey);
+                createAllLocalMusic(mFileLocalProviderManager.getFileAudioPaths());
             }
         }.start();
     }
@@ -184,9 +126,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
      */
     @Override
     public void getLocalMusic(
-            final FileModel fileModelDirectParent,
-            final int sortMode,
-            final String search) {
+            final FileModel fileModelDirectParent) {
 
         Preconditions.checkNotNull(fileModelDirectParent);
         if (!fileModelDirectParent.isDirectory()) {
@@ -221,88 +161,37 @@ public class FileAudioManagerImpl extends FileAudioManager {
      */
     @Override
     @SuppressLint("NewApi")
-    public void getLocalMusicFolders(
-            final int sortMode,
-            final String search) {
+    public void getLocalMusicFolders() {
+
+        if (mIsGetLocalMusicFoldersLaunched) {
+            return;
+        }
+        mIsGetLocalMusicFoldersLaunched = true;
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
             notifyLocalMusicFoldersListenerFailed();
             return;
         }
 
-        final String requestKey = search + "¤" + sortMode;
-        if (mCacheLocalMusicFolders.containsKey(requestKey)) {
-            notifyLocalMusicFoldersListenerSucceeded(mCacheLocalMusicFolders.get(requestKey), null);
+        if (!mCacheLocalMusicFolders.isEmpty()) {
+            notifyLocalMusicFoldersListenerSucceeded(mCacheLocalMusicFolders, false);
             return;
         }
-        if (mIsGetLocalMusicFoldersLaunched) {
-            return;
-        }
-        mIsGetLocalMusicFoldersLaunched = true;
 
         new Thread() {
             @Override
             public void run() {
-
-                // Used to count the number of music inside.
-                final Map<String, MutableInt> directories = new HashMap<>();
-
-                final String[] PROJECTION = new String[]{MediaStore.Files.FileColumns.DATA};
-
-                final Uri allSongsUri = MediaStore.Files.getContentUri("external");
-                final List<String> searchArray = new ArrayList<>();
-
-                final StringBuilder selection = new StringBuilder("( " +
-                        MediaStore.Files.FileColumns.MEDIA_TYPE + " = " +
-                        MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO);
-
-                for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
-                    selection.append(" OR " + MediaStore.Files.FileColumns.DATA + LIKE);
-                    searchArray.add('%' + end);
+                if (!mFileLocalProviderManager.isLoaded()) {
+                    return;
                 }
-                selection.append(" )");
-
-                if (search != null && !search.isEmpty()) {
-                    searchArray.add('%' + search + '%');
-                    selection.append(" AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE);
-                }
-
-                final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection.toString(), searchArray.toArray(new String[searchArray.size()]), null);
-                if (cursor != null) {
-                    if (cursor.moveToFirst()) {
-                        do {
-                            final String parentPath = FileUtils.getParentPathFromPath(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
-                            final MutableInt count = directories.get(parentPath);
-                            if (count == null) {
-                                directories.put(parentPath, new MutableInt());
-                            } else {
-                                count.increment();
-                            }
-                        } while (cursor.moveToNext());
-                    }
-                    cursor.close();
-                }
-
-                final List<FileModel> result = new ArrayList<>();
-                for (String path : directories.keySet()) {
-                    result.add(new FileModel.FileModelBuilder()
-                            .id(path.hashCode())
-                            .url(path)
-                            .name(getNameFromPath(path))
-                            .isDirectory(true)
-                            .countAudio(directories.get(path).value)
-                            .isOnline(false)
-                            .build());
-                }
-
-                notifyLocalMusicFoldersListenerSucceeded(result, requestKey);
+                createLocalMusicFolders(mFileLocalProviderManager.getFileAudioPaths());
             }
         }.start();
     }
 
     @Override
     @SuppressLint("NewApi")
-    public void getAllLocalMusicAlbums(final int sortMode, final String search) {
+    public void getAllLocalMusicAlbums() {
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
             notifyAllLocalMusicAlbumsListenerFailed();
@@ -329,11 +218,6 @@ public class FileAudioManagerImpl extends FileAudioManager {
                     searchArray.add('%' + end);
                 }
                 selection.append(" )");
-
-                if (search != null && !search.isEmpty()) {
-                    searchArray.add("%" + search + "%");
-                    selection.append(" AND " + MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE);
-                }
 
                 final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection.toString(), searchArray.toArray(new String[searchArray.size()]), null);
                 if (cursor != null) {
@@ -364,7 +248,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
     }
 
     @Override
-    public void getAllLocalMusicArtists(int sortMode, String search) {
+    public void getAllLocalMusicArtists() {
 
     }
 
@@ -425,141 +309,97 @@ public class FileAudioManagerImpl extends FileAudioManager {
         return HtmlUtils.createListItem(spl);
     }
 
-    @Override
-    public boolean registerAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener) {
-        synchronized (mGetAllLocalMusicListeners) {
-            //noinspection SimplifiableIfStatement
-            if (getAllLocalMusicListener == null || mGetAllLocalMusicListeners.contains(getAllLocalMusicListener)) {
-                // We don't allow to register null listener
-                // And a listener can only be added once.
-                return false;
+    //region Create.
+    private void createLocalMusicFolders(@NonNull final List<String> fileAudioPaths) {
+        final Map<String, MutableInt> directories = new HashMap<>();
+        for (final String path : fileAudioPaths) {
+            final String parentPath = FileUtils.getParentPathFromPath(path);
+            final MutableInt count = directories.get(parentPath);
+            if (count == null) {
+                directories.put(parentPath, new MutableInt());
+            } else {
+                count.increment();
             }
-            return mGetAllLocalMusicListeners.add(getAllLocalMusicListener);
         }
+
+        final List<FileModel> result = new ArrayList<>();
+        for (String path : directories.keySet()) {
+            result.add(new FileModel.FileModelBuilder()
+                    .id(path.hashCode())
+                    .url(path)
+                    .name(getNameFromPath(path))
+                    .isDirectory(true)
+                    .countAudio(directories.get(path).value)
+                    .isOnline(false)
+                    .build());
+        }
+
+        notifyLocalMusicFoldersListenerSucceeded(result, true);
     }
 
-    @Override
-    public boolean unregisterAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener) {
-        synchronized (mGetAllLocalMusicListeners) {
-            return mGetAllLocalMusicListeners.remove(getAllLocalMusicListener);
-        }
-    }
-
-    @Override
-    public boolean registerLocalMusicFoldersListener(GetLocalMusicFoldersListener getLocalImageFoldersListener) {
-        synchronized (mGetLocalMusicFoldersListeners) {
-            //noinspection SimplifiableIfStatement
-            if (getLocalImageFoldersListener == null || mGetLocalMusicFoldersListeners.contains(getLocalImageFoldersListener)) {
-                // We don't allow to register null listener
-                // And a listener can only be added once.
-                return false;
+    private void createAllLocalMusic(@NonNull final List<String> fileAudioPaths) {
+        final List<FileAudioModel> files = new ArrayList<>();
+        final MyID3 myID3 = new MyID3();
+        for (final String path : fileAudioPaths) {
+            final File file = new File(path);
+            if (file.exists() && !file.isDirectory()) {
+                files.add(new FileAudioModel.FileMusicModelBuilder().file(file, myID3).build());
             }
-            return mGetLocalMusicFoldersListeners.add(getLocalImageFoldersListener);
         }
+        notifyAllLocalMusicListenerSucceeded(files, true);
     }
 
-    @Override
-    public boolean unregisterLocalMusicFoldersListener(GetLocalMusicFoldersListener getLocalImageFoldersListener) {
-        synchronized (mGetLocalMusicFoldersListeners) {
-            return mGetLocalMusicFoldersListeners.remove(getLocalImageFoldersListener);
-        }
-    }
-
-    @Override
-    public boolean registerLocalMusicListener(GetLocalMusicListener getLocalImageListener) {
-        synchronized (mGetLocalMusicListeners) {
-            //noinspection SimplifiableIfStatement
-            if (getLocalImageListener == null || mGetLocalMusicListeners.contains(getLocalImageListener)) {
-                // We don't allow to register null listener
-                // And a listener can only be added once.
-                return false;
+    private FileProviderListener createFileProviderListener() {
+        return new FileProviderListener() {
+            @Override
+            protected void onFileProviderAudioLoaded(final List<String> fileAudioPaths) {
+                createLocalMusicFolders(fileAudioPaths);
+                createAllLocalMusic(fileAudioPaths);
             }
-            return mGetLocalMusicListeners.add(getLocalImageListener);
+        };
+    }
+    //endregion Create.
+
+    private boolean setFileAudioMetaDataPrivate(
+            final File file,
+            final String newTitle,
+            final String newArtist,
+            final String newAlbum) {
+        Preconditions.checkNotNull(file);
+        final boolean result = file.exists() &&
+                FileAudioMetaDataUtils.setMetaData(file, newTitle, newArtist, newAlbum);
+        if (result) {
+            notifyOnMusicFile();
         }
+        return result;
     }
 
-    @Override
-    public boolean unregisterLocalMusicListener(GetLocalMusicListener getLocalImageListener) {
-        synchronized (mGetLocalMusicListeners) {
-            return mGetLocalMusicListeners.remove(getLocalImageListener);
-        }
-    }
-
-    @Override
-    public boolean registerOnMusicUpdateListener(MusicsChangeListener musicsChangeListener) {
-        synchronized (mMusicsChangeListeners) {
-            //noinspection SimplifiableIfStatement
-            if (musicsChangeListener == null || mMusicsChangeListeners.contains(musicsChangeListener)) {
-                // We don't allow to register null listener
-                // And a listener can only be added once.
-                return false;
-            }
-            return mMusicsChangeListeners.add(musicsChangeListener);
-        }
-    }
-
-    @Override
-    public boolean unregisterOnMusicUpdateListener(MusicsChangeListener musicsChangeListener) {
-        synchronized (mMusicsChangeListeners) {
-            return mMusicsChangeListeners.remove(musicsChangeListener);
-        }
-    }
-
-    @Override
-    public boolean registerAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener) {
-        synchronized (mGetAllLocalMusicArtistsListeners) {
-            //noinspection SimplifiableIfStatement
-            if (getAllLocalMusicArtistsListener == null || mGetAllLocalMusicArtistsListeners.contains(getAllLocalMusicArtistsListener)) {
-                // We don't allow to register null listener
-                // And a listener can only be added once.
-                return false;
-            }
-            return mGetAllLocalMusicArtistsListeners.add(getAllLocalMusicArtistsListener);
-        }
-    }
-
-    @Override
-    public boolean unregisterAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener) {
-        synchronized (mGetAllLocalMusicArtistsListeners) {
-            return mGetAllLocalMusicArtistsListeners.remove(getAllLocalMusicArtistsListener);
-        }
-    }
-
-    @Override
-    public boolean registerAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener) {
-        synchronized (mGetAllLocalMusicAlbumsListeners) {
-            //noinspection SimplifiableIfStatement
-            if (getAllLocalMusicAlbumsListener == null || mGetAllLocalMusicAlbumsListeners.contains(getAllLocalMusicAlbumsListener)) {
-                // We don't allow to register null listener
-                // And a listener can only be added once.
-                return false;
-            }
-            return mGetAllLocalMusicAlbumsListeners.add(getAllLocalMusicAlbumsListener);
-        }
-    }
-
-    @Override
-    public boolean unregisterAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener) {
-        synchronized (mGetAllLocalMusicAlbumsListeners) {
-            return mGetAllLocalMusicAlbumsListeners.remove(getAllLocalMusicAlbumsListener);
-        }
+    private void clearCache() {
+        mCacheAllLocalMusics.clear();
+        mCacheLocalMusicFolders.clear();
     }
 
     //region notify listeners
-    private void notifyAllLocalMusicListenerSucceeded(final List<FileAudioModel> fileModels, @Nullable final String requestKey) {
+    private void notifyAllLocalMusicListenerSucceeded(
+            final List<FileAudioModel> fileModels,
+            final boolean cacheResult) {
         if (mUiThread != Thread.currentThread()) {
             mUiHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    notifyAllLocalMusicListenerSucceeded(fileModels, requestKey);
+                    notifyAllLocalMusicListenerSucceeded(fileModels, cacheResult);
                 }
             });
             return;
         }
-        if (requestKey != null) {
-            mCacheAllLocalMusics.put(requestKey, fileModels);
-            mIsGetAllLocalMusicLaunched = false;
+        if (cacheResult) {
+            mCacheAllLocalMusics.clear();
+            mCacheAllLocalMusics.addAll(fileModels);
         }
+        if (!mIsGetAllLocalMusicLaunched) {
+            return;
+        }
+        mIsGetAllLocalMusicLaunched = false;
 
         synchronized (mGetAllLocalMusicListeners) {
             for (int i = 0, size = mGetAllLocalMusicListeners.size(); i < size; i++) {
@@ -600,24 +440,30 @@ public class FileAudioManagerImpl extends FileAudioManager {
         }
     }
 
-    protected void notifyLocalMusicFoldersListenerSucceeded(final List<FileModel> fileModels, @Nullable final String requestKey) {
+    protected void notifyLocalMusicFoldersListenerSucceeded(
+            final List<FileModel> fileModelFolders,
+            final boolean cacheResult) {
         if (mUiThread != Thread.currentThread()) {
             mUiHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    notifyLocalMusicFoldersListenerSucceeded(fileModels, requestKey);
+                    notifyLocalMusicFoldersListenerSucceeded(fileModelFolders, cacheResult);
                 }
             });
             return;
         }
-        if (requestKey != null) {
-            mCacheLocalMusicFolders.put(requestKey, fileModels);
-            mIsGetLocalMusicFoldersLaunched = false;
+        if (cacheResult) {
+            mCacheLocalMusicFolders.clear();
+            mCacheLocalMusicFolders.addAll(fileModelFolders);
         }
+        if (!mIsGetLocalMusicFoldersLaunched) {
+            return;
+        }
+        mIsGetLocalMusicFoldersLaunched = false;
 
         synchronized (mGetLocalMusicFoldersListeners) {
             for (int i = 0, size = mGetLocalMusicFoldersListeners.size(); i < size; i++) {
-                mGetLocalMusicFoldersListeners.get(i).onLocalMusicFoldersSucceeded(fileModels);
+                mGetLocalMusicFoldersListeners.get(i).onLocalMusicFoldersSucceeded(fileModelFolders);
             }
         }
     }
@@ -646,7 +492,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
         }
     }
 
-    private void notifyOnMusicUpdate() {
+    private void notifyOnMusicFile() {
         clearCache();
         synchronized (mMusicsChangeListeners) {
             for (int i = 0, size = mMusicsChangeListeners.size(); i < size; i++) {
@@ -655,23 +501,4 @@ public class FileAudioManagerImpl extends FileAudioManager {
         }
     }
     //endregion notify listeners
-
-    private boolean setFileAudioMetaDataPrivate(
-            final File file,
-            final String newTitle,
-            final String newArtist,
-            final String newAlbum) {
-        Preconditions.checkNotNull(file);
-        final boolean result = file.exists() &&
-                FileAudioMetaDataUtils.setMetaData(file, newTitle, newArtist, newAlbum);
-        if (result) {
-            notifyOnMusicUpdate();
-        }
-        return result;
-    }
-
-    private void clearCache() {
-        mCacheAllLocalMusics.clear();
-        mCacheLocalMusicFolders.clear();
-    }
 }

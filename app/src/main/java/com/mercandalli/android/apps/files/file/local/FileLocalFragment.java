@@ -41,7 +41,6 @@ import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
-import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IStringListener;
@@ -51,18 +50,12 @@ import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
 import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileApp;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.mercandalli.android.apps.files.file.FileUtils.createFile;
 
@@ -72,7 +65,6 @@ import static com.mercandalli.android.apps.files.file.FileUtils.createFile;
  */
 public class FileLocalFragment extends FabFragment implements
         FileLocalPagerFragment.ListController,
-        BackFragment.ISortMode,
         FileModelAdapter.OnFileClickListener,
         FileModelAdapter.OnFileLongClickListener,
         FileModelListener,
@@ -88,8 +80,6 @@ public class FileLocalFragment extends FabFragment implements
 
     private List<FileModel> mFilesToCutList = new ArrayList<>();
     private List<FileModel> mFilesToCopyList = new ArrayList<>();
-
-    private int mSortMode = Constants.SORT_ABC;
 
     private FileManager mFileManager;
     private FileModelAdapter mFileModelAdapter;
@@ -251,16 +241,6 @@ public class FileLocalFragment extends FabFragment implements
     }
 
     @Override
-    public void setSortMode(final int sortMode) {
-        if (sortMode == Constants.SORT_ABC ||
-                sortMode == Constants.SORT_DATE_MODIFICATION ||
-                sortMode == Constants.SORT_SIZE) {
-            mSortMode = sortMode;
-            refreshCurrentList();
-        }
-    }
-
-    @Override
     public void onFileClick(View view, int position) {
         /*if (hasItemSelected()) {
             mFilesList.get(position).selected = !mFilesList.get(position).selected;
@@ -359,56 +339,17 @@ public class FileLocalFragment extends FabFragment implements
 
     @Override
     public void refreshCurrentList() {
-        refreshCurrentList(null);
-    }
-
-    @Override
-    public void refreshCurrentList(final String search) {
         if (mCurrentDirectory == null) {
             return;
         }
         mApplicationCallback.invalidateMenu();
 
-        final File[] files = (search == null) ? mCurrentDirectory.listFiles() : mCurrentDirectory.listFiles(
-                new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        return name.toLowerCase().contains(search.toLowerCase());
-                    }
-                }
-        );
+        final File[] files = mCurrentDirectory.listFiles();
         List<File> fs;
         if (files == null) {
             fs = new ArrayList<>();
         } else {
             fs = Arrays.asList(files);
-        }
-
-        if (mSortMode == Constants.SORT_ABC) {
-            Collections.sort(fs, new Comparator<File>() {
-                @Override
-                public int compare(final File f1, final File f2) {
-                    return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
-                }
-            });
-        } else if (mSortMode == Constants.SORT_SIZE) {
-            Collections.sort(fs, new Comparator<File>() {
-                @Override
-                public int compare(final File f1, final File f2) {
-                    return (Long.valueOf(f2.length())).compareTo(f1.length());
-                }
-            });
-        } else {
-            final Map<File, Long> staticLastModifiedTimes = new HashMap<>();
-            for (File f : fs) {
-                staticLastModifiedTimes.put(f, f.lastModified());
-            }
-            Collections.sort(fs, new Comparator<File>() {
-                @Override
-                public int compare(final File f1, final File f2) {
-                    return staticLastModifiedTimes.get(f2).compareTo(staticLastModifiedTimes.get(f1));
-                }
-            });
         }
 
         mFilesList.clear();

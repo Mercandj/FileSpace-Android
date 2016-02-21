@@ -93,7 +93,6 @@
     <string name="menu_action_home">Home</string>
     <string name="menu_action_upload">Upload</string>
     <string name="menu_action_download">Download</string>
-    <string name="menu_action_sort">Sort</string>
 
     <string name="activity_main_toast_update_needed">Sorry, update is needed</string>
 

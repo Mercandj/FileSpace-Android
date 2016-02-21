@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.file.provider;
+package com.mercandalli.android.apps.files.file.local.provider;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -17,7 +17,7 @@ import com.mercandalli.android.apps.files.precondition.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileProviderManagerImpl extends FileProviderManager {
+public class FileLocalProviderManagerImpl extends FileLocalProviderManager {
 
     private static final String LIKE = " LIKE ?";
 
@@ -30,13 +30,14 @@ public class FileProviderManagerImpl extends FileProviderManager {
     private final List<String> mFileImagePaths;
 
     private boolean mIsLoadLaunched = false;
+    private boolean mIsLoaded = false;
 
     /**
      * The manager constructor.
      *
      * @param contextApp The {@link Context} of this application.
      */
-    public FileProviderManagerImpl(final Context contextApp) {
+    public FileLocalProviderManagerImpl(final Context contextApp) {
         Preconditions.checkNotNull(contextApp);
         mContextApp = contextApp;
 
@@ -99,7 +100,7 @@ public class FileProviderManagerImpl extends FileProviderManager {
                         PROJECTION,
                         selection.toString(),
                         searchArray.toArray(new String[searchArray.size()]),
-                        null);
+                        MediaStore.Files.FileColumns.DISPLAY_NAME + " ASC");
 
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
@@ -123,17 +124,25 @@ public class FileProviderManagerImpl extends FileProviderManager {
         }.start();
     }
 
+    @Override
+    public boolean isLoaded() {
+        return mIsLoaded;
+    }
+
     @NonNull
+    @Override
     public List<String> getFilePaths() {
         return new ArrayList<>(mFilePaths);
     }
 
     @NonNull
+    @Override
     public List<String> getFileAudioPaths() {
         return new ArrayList<>(mFileAudioPaths);
     }
 
     @NonNull
+    @Override
     public List<String> getFileImagePaths() {
         return new ArrayList<>(mFileImagePaths);
     }
@@ -159,6 +168,8 @@ public class FileProviderManagerImpl extends FileProviderManager {
         mFileAudioPaths.addAll(fileAudioPaths);
         mFileImagePaths.clear();
         mFileImagePaths.addAll(fileImagePaths);
+
+        mIsLoaded = true;
 
         if (fileProviderListener != null) {
             fileProviderListener.onFileProviderAllBasicLoaded(filePaths);
@@ -189,18 +200,18 @@ public class FileProviderManagerImpl extends FileProviderManager {
         }
     }
 
-    private boolean isAudioPath(final String path) {
+    private boolean isAudioPath(@NonNull final String path) {
         for (final String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
-            if (end.endsWith(path)) {
+            if (path.endsWith(end)) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean isImagePath(final String path) {
+    private boolean isImagePath(@NonNull final String path) {
         for (final String end : FileTypeModelENUM.IMAGE.type.getExtensions()) {
-            if (end.endsWith(path)) {
+            if (path.endsWith(end)) {
                 return true;
             }
         }

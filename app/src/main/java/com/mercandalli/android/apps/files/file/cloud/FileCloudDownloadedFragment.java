@@ -38,7 +38,6 @@ import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
-import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IStringListener;
@@ -49,7 +48,6 @@ import com.mercandalli.android.apps.files.file.FileModelAdapter;
 import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.local.FileLocalApi;
 import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 
 import java.io.File;
@@ -57,11 +55,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -70,7 +64,6 @@ import javax.inject.Inject;
  * {@link FileLocalApi}.
  */
 public class FileCloudDownloadedFragment extends InjectedFabFragment implements
-        BackFragment.ISortMode,
         FileModelAdapter.OnFileClickListener,
         FileModelAdapter.OnFileLongClickListener, FileModelListener {
 
@@ -82,8 +75,6 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
 
     private List<FileModel> mFilesToCutList = new ArrayList<>();
     private List<FileModel> mFilesToCopyList = new ArrayList<>();
-
-    private int mSortMode = Constants.SORT_ABC;
 
     @Inject
     FileManager mFileManager;
@@ -237,16 +228,6 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public void setSortMode(int mSortMode) {
-        if (mSortMode == Constants.SORT_ABC ||
-                mSortMode == Constants.SORT_DATE_MODIFICATION ||
-                mSortMode == Constants.SORT_SIZE) {
-            this.mSortMode = mSortMode;
-            refreshList();
-        }
-    }
-
-    @Override
     protected void inject(FileAppComponent fileAppComponent) {
         fileAppComponent.inject(this);
     }
@@ -318,33 +299,6 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
             fs = new ArrayList<>();
         } else {
             fs = Arrays.asList(files);
-        }
-
-        if (mSortMode == Constants.SORT_ABC) {
-            Collections.sort(fs, new Comparator<File>() {
-                @Override
-                public int compare(final File f1, final File f2) {
-                    return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
-                }
-            });
-        } else if (mSortMode == Constants.SORT_SIZE) {
-            Collections.sort(fs, new Comparator<File>() {
-                @Override
-                public int compare(final File f1, final File f2) {
-                    return (Long.valueOf(f2.length())).compareTo(f1.length());
-                }
-            });
-        } else {
-            final Map<File, Long> staticLastModifiedTimes = new HashMap<>();
-            for (File f : fs) {
-                staticLastModifiedTimes.put(f, f.lastModified());
-            }
-            Collections.sort(fs, new Comparator<File>() {
-                @Override
-                public int compare(final File f1, final File f2) {
-                    return staticLastModifiedTimes.get(f2).compareTo(staticLastModifiedTimes.get(f1));
-                }
-            });
         }
 
         mFilesList = new ArrayList<>();

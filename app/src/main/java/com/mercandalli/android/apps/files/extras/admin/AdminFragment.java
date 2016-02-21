@@ -253,7 +253,6 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
         menu.findItem(R.id.action_delete).setVisible(false);
         menu.findItem(R.id.action_add).setVisible(false);
         menu.findItem(R.id.action_home).setVisible(false);
-        menu.findItem(R.id.action_sort).setVisible(false);
 
         if (getCurrentFragmentIndex() == 5) {
             menu.findItem(R.id.action_delete).setVisible(true);
