@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -564,14 +564,16 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
 
     private void updateLayoutManager() {
         if (mCurrentPage == PAGE_FOLDERS) {
-            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.column_number_small_card));
-            mRecyclerView.setLayoutManager(gridLayoutManager);
+            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),
+                    getResources().getInteger(R.integer.column_number_small_card));
             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    return mFileModelCardAdapter.isHeader(position) ? gridLayoutManager.getSpanCount() : 1;
+                    return mFileModelCardAdapter.isHeader(position) ?
+                            gridLayoutManager.getSpanCount() : 1;
                 }
             });
+            mRecyclerView.setLayoutManager(gridLayoutManager);
         } else {
             final int nbColumn = getResources().getInteger(R.integer.column_number_card);
             if (nbColumn <= 1) {
