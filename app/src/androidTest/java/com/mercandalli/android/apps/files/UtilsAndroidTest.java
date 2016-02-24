@@ -10,7 +10,7 @@ import org.hamcrest.Matcher;
 
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 
-public class TestUtils {
+public class UtilsAndroidTest {
 
     public static ViewAction actionOpenDrawer() {
         return new ViewAction() {

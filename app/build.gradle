@@ -98,7 +98,14 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.1'
 
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.10.19'
+
     wearApp project(':wearable')
+}
+
+task jenkins(dependsOn: ['assembleDebug', 'check', 'connectedCheck']) << {
+
 }
 
 apply plugin: 'com.google.gms.google-services'

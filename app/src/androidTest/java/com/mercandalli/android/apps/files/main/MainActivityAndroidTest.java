@@ -22,13 +22,12 @@ import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static com.mercandalli.android.apps.files.TestUtils.actionOpenDrawer;
-import static com.mercandalli.android.apps.files.TestUtils.withCustomConstraints;
+import static com.mercandalli.android.apps.files.UtilsAndroidTest.actionOpenDrawer;
+import static com.mercandalli.android.apps.files.UtilsAndroidTest.withCustomConstraints;
 
 @RunWith(AndroidJUnit4.class)
-@SuppressWarnings("PMD")
 @LargeTest
-public class MainActivityTest {
+public class MainActivityAndroidTest {
 
     @Rule
     public final ActivityTestRule<MainActivity> mActivityRule = new IntentsTestRule<>(MainActivity.class);
