@@ -31,6 +31,25 @@ public class UtilsAndroidTest {
         };
     }
 
+    public static ViewAction actionCloseDrawer() {
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return isAssignableFrom(DrawerLayout.class);
+            }
+
+            @Override
+            public String getDescription() {
+                return "close drawer";
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                ((DrawerLayout) view).closeDrawer(GravityCompat.START);
+            }
+        };
+    }
+
     /**
      * {@link android.support.v4.view.ViewPager} constraints.
      * <p/>
@@ -54,5 +73,4 @@ public class UtilsAndroidTest {
             }
         };
     }
-
 }

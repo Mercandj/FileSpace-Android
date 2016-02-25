@@ -22,6 +22,7 @@ import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.action.ViewActions.swipeRight;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static com.mercandalli.android.apps.files.UtilsAndroidTest.actionCloseDrawer;
 import static com.mercandalli.android.apps.files.UtilsAndroidTest.actionOpenDrawer;
 import static com.mercandalli.android.apps.files.UtilsAndroidTest.withCustomConstraints;
 
@@ -37,8 +38,13 @@ public class MainActivityAndroidTest {
 
         // Find obj.
         final ViewInteraction viewInteraction = onView(withId(R.id.fragment_file_view_pager));
+        final ViewInteraction drawerLayout = onView(withId(R.id.activity_main_drawer_layout));
         final ViewAction swipeLeft = withCustomConstraints(swipeLeft(), isDisplayingAtLeast(85));
         final ViewAction swipeRight = withCustomConstraints(swipeRight(), isDisplayingAtLeast(85));
+
+        IdlingPolicies.setIdlingResourceTimeout(2, TimeUnit.SECONDS);
+
+        drawerLayout.perform(actionCloseDrawer());
 
         IdlingPolicies.setIdlingResourceTimeout(2, TimeUnit.SECONDS);
 
@@ -63,6 +69,10 @@ public class MainActivityAndroidTest {
 
         IdlingPolicies.setIdlingResourceTimeout(2, TimeUnit.SECONDS);
 
+        drawerLayout.perform(actionCloseDrawer());
+
+        IdlingPolicies.setIdlingResourceTimeout(2, TimeUnit.SECONDS);
+
         // Go to workspace.
         drawerLayout.perform(actionOpenDrawer());
         IdlingPolicies.setIdlingResourceTimeout(400, TimeUnit.MILLISECONDS);
@@ -77,5 +87,4 @@ public class MainActivityAndroidTest {
 
         IdlingPolicies.setIdlingResourceTimeout(800, TimeUnit.MILLISECONDS);
     }
-
 }
