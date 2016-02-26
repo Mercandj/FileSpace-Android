@@ -400,7 +400,7 @@ public class FileLocalFragment extends FabFragment implements
     private void findViews(final View rootView) {
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         mMessageTextView = (TextView) rootView.findViewById(R.id.message);
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_file_files_recycler_view);
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.fragment_file_files_swipe_refresh_layout);
     }
 

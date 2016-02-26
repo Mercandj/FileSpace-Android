@@ -107,7 +107,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_file_files_recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
         final int nbColumn = getResources().getInteger(R.integer.column_number_card);

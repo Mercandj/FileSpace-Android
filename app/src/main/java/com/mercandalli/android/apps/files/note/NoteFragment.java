@@ -37,7 +37,7 @@ public class NoteFragment extends BackFragment {
         final View rootView = inflater.inflate(R.layout.fragment_workspace_note, container, false);
 
         mFileSpaceModel = new FileSpaceModel.FileSpaceModelBuilder().type("article").build();
-        mInputEdiText = (EditText) rootView.findViewById(R.id.input);
+        mInputEdiText = (EditText) rootView.findViewById(R.id.fragment_workspace_note_input);
 
         final String txt = mApplicationCallback.getConfig().getUserNoteWorkspace1();
         if (!StringUtils.isNullOrEmpty(txt)) {

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,8 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
-            android:id="@+id/listView"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_file_files_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="true"
@@ -20,12 +19,7 @@
             android:paddingStart="@dimen/horizontal_margin"
             android:paddingTop="6dp"
             android:scrollbarStyle="outsideOverlay"
-            android:scrollbars="none"
-            app:fastScrollAutoHide="true"
-            app:fastScrollAutoHideDelay="1500"
-            app:fastScrollPopupBgColor="@color/primary"
-            app:fastScrollPopupTextColor="@android:color/primary_text_dark"
-            app:fastScrollThumbColor="@color/primary" />
+            android:scrollbars="vertical" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

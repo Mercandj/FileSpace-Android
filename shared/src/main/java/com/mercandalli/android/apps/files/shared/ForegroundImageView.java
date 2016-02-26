@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.ImageView;
@@ -35,7 +36,7 @@ public class ForegroundImageView extends ImageView {
     @Override
     public void jumpDrawablesToCurrentState() {
         super.jumpDrawablesToCurrentState();
-        if (mForeground != null) {
+        if (mForeground != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mForeground.jumpToCurrentState();
         }
     }

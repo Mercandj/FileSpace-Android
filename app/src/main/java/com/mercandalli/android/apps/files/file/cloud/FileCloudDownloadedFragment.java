@@ -96,7 +96,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
 
         (rootView.findViewById(R.id.fragment_file_files_swipe_refresh_layout)).setEnabled(false);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.listView);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_file_files_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         if (activity.getResources().getBoolean(R.bool.is_landscape)) {
             mRecyclerView.setLayoutManager(new GridLayoutManager(activity, 2));

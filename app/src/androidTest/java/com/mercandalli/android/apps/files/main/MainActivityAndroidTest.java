@@ -1,8 +1,8 @@
 package com.mercandalli.android.apps.files.main;
 
 import android.support.test.espresso.IdlingPolicies;
-import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.ViewInteraction;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -18,13 +18,12 @@ import java.util.concurrent.TimeUnit;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.swipeLeft;
-import static android.support.test.espresso.action.ViewActions.swipeRight;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
+import static android.support.test.espresso.action.ViewActions.swipeDown;
+import static android.support.test.espresso.action.ViewActions.swipeUp;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static com.mercandalli.android.apps.files.UtilsAndroidTest.actionCloseDrawer;
 import static com.mercandalli.android.apps.files.UtilsAndroidTest.actionOpenDrawer;
-import static com.mercandalli.android.apps.files.UtilsAndroidTest.withCustomConstraints;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -34,49 +33,35 @@ public class MainActivityAndroidTest {
     public final ActivityTestRule<MainActivity> mActivityRule = new IntentsTestRule<>(MainActivity.class);
 
     @Test
-    public void swipeViewPager_shouldDisplayTabs() {
-
+    public void scrollLocalFilesAndClick() {
         // Find obj.
-        final ViewInteraction viewInteraction = onView(withId(R.id.fragment_file_view_pager));
-        final ViewInteraction drawerLayout = onView(withId(R.id.activity_main_drawer_layout));
-        final ViewAction swipeLeft = withCustomConstraints(swipeLeft(), isDisplayingAtLeast(85));
-        final ViewAction swipeRight = withCustomConstraints(swipeRight(), isDisplayingAtLeast(85));
-
-        IdlingPolicies.setIdlingResourceTimeout(2, TimeUnit.SECONDS);
-
-        drawerLayout.perform(actionCloseDrawer());
-
-        IdlingPolicies.setIdlingResourceTimeout(2, TimeUnit.SECONDS);
+        final ViewInteraction viewInteraction = onView(withId(R.id.fragment_file_files_recycler_view));
 
         // SwipeLeft.
-        viewInteraction.perform(swipeLeft);
-        viewInteraction.perform(swipeLeft);
+        viewInteraction.perform(swipeUp());
+        viewInteraction.perform(swipeDown());
 
-        IdlingPolicies.setIdlingResourceTimeout(800, TimeUnit.MILLISECONDS);
-
-        // SwipeRight.
-        viewInteraction.perform(swipeRight);
-        viewInteraction.perform(swipeRight);
-
-        IdlingPolicies.setIdlingResourceTimeout(800, TimeUnit.MILLISECONDS);
+        onView(withId(R.id.fragment_file_files_recycler_view)).perform(
+                RecyclerViewActions.actionOnItemAtPosition(0, click()));
     }
 
     @Test
-    public void navigateIntoDrawer_shouldDisplayDrawer() {
+    public void showNotesThenShowFiles() {
 
         // Find obj.
         final ViewInteraction drawerLayout = onView(withId(R.id.activity_main_drawer_layout));
 
         IdlingPolicies.setIdlingResourceTimeout(2, TimeUnit.SECONDS);
 
-        drawerLayout.perform(actionCloseDrawer());
+        //drawerLayout.perform(actionCloseDrawer());
 
-        IdlingPolicies.setIdlingResourceTimeout(2, TimeUnit.SECONDS);
+        //IdlingPolicies.setIdlingResourceTimeout(2, TimeUnit.SECONDS);
 
         // Go to workspace.
         drawerLayout.perform(actionOpenDrawer());
         IdlingPolicies.setIdlingResourceTimeout(400, TimeUnit.MILLISECONDS);
         onView(withId(R.id.view_nav_drawer_workspace)).perform(click());
+        //onView(withId(R.id.fragment_workspace_note_input)).check(matches(isDisplayed()));
 
         IdlingPolicies.setIdlingResourceTimeout(800, TimeUnit.MILLISECONDS);
 
@@ -84,6 +69,7 @@ public class MainActivityAndroidTest {
         drawerLayout.perform(actionOpenDrawer());
         IdlingPolicies.setIdlingResourceTimeout(400, TimeUnit.MILLISECONDS);
         onView(withId(R.id.view_nav_drawer_files)).perform(click());
+        onView(withId(R.id.fragment_file_files_recycler_view)).check(matches(isDisplayed()));
 
         IdlingPolicies.setIdlingResourceTimeout(800, TimeUnit.MILLISECONDS);
     }
