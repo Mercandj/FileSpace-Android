@@ -270,4 +270,22 @@ public class FileUtils {
     public static boolean isSdCardAvailable() {
         return getSdCardPath() != null;
     }
+
+    public static long getLocalFolderSize(final File f) {
+        if (f == null || !f.exists()) {
+            return 0;
+        }
+        if (f.isDirectory()) {
+            final File[] children = f.listFiles();
+            if (children == null) {
+                return 0;
+            }
+            long size = 0;
+            for (final File file : children) {
+                size += getLocalFolderSize(file);
+            }
+            return size;
+        }
+        return f.length();
+    }
 }

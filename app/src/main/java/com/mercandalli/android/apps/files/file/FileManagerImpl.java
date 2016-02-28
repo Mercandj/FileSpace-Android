@@ -10,6 +10,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -78,12 +80,34 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
     private final FileOnlineApi mFileOnlineApi;
     private final FileLocalApi mFileLocalApi;
 
+    private final Handler mUiHandler;
+    private final Thread mUiThread;
+
     public FileManagerImpl(final Context contextApp, final FileOnlineApi fileOnlineApi) {
         Preconditions.checkNotNull(contextApp);
 
         mContextApp = contextApp;
         mFileOnlineApi = fileOnlineApi;
         mFileLocalApi = new FileLocalApi();
+
+        final Looper mainLooper = Looper.getMainLooper();
+        mUiHandler = new Handler(mainLooper);
+        mUiThread = mainLooper.getThread();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void getFiles(
+            final File fileParent,
+            final ResultCallback<List<FileModel>> resultCallback) {
+        new Thread() {
+            @Override
+            public void run() {
+                notifyGetFilesSucceeded(mFileLocalApi.getFiles(fileParent), resultCallback);
+            }
+        }.start();
     }
 
     /**
@@ -102,11 +126,16 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
     @Override
     public void getFiles(
             final FileModel fileParent,
-            boolean areMyFiles,
+            final boolean areMyFiles,
             final ResultCallback<List<FileModel>> resultCallback) {
 
         if (!fileParent.isOnline()) {
-            resultCallback.success(mFileLocalApi.getFiles(fileParent.getFile()));
+            new Thread() {
+                @Override
+                public void run() {
+                    resultCallback.success(mFileLocalApi.getFiles(fileParent.getFile()));
+                }
+            }.start();
             return;
         }
         final Call<FilesResponse> call = mFileOnlineApi.getFiles(fileParent.getId(), areMyFiles ? "" : "true", "");
@@ -748,5 +777,20 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
                 Toast.makeText(activity, "ERREUR", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void notifyGetFilesSucceeded(
+            final List<FileModel> fileModels,
+            final ResultCallback<List<FileModel>> resultCallback) {
+        if (mUiThread != Thread.currentThread()) {
+            mUiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    notifyGetFilesSucceeded(fileModels, resultCallback);
+                }
+            });
+            return;
+        }
+        resultCallback.success(fileModels);
     }
 }

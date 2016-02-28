@@ -44,6 +44,7 @@ import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter
 import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IStringListener;
+import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
@@ -54,9 +55,6 @@ import com.mercandalli.android.apps.files.main.FileApp;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import static com.mercandalli.android.apps.files.file.FileUtils.createFile;
@@ -98,6 +96,8 @@ public class FileLocalFragment extends FabFragment implements
         }
     };
 
+    private boolean isRefreshing = false;
+
     public static FileLocalFragment newInstance() {
         return new FileLocalFragment();
     }
@@ -111,6 +111,12 @@ public class FileLocalFragment extends FabFragment implements
      * Every fragment must have an empty constructor, so it can be instantiated when restoring its activity's state.
      */
     public FileLocalFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mFileManager = FileApp.get().getFileAppComponent().provideFileManager();
     }
 
     @Override
@@ -161,15 +167,13 @@ public class FileLocalFragment extends FabFragment implements
             case 0:
                 if ((mFilesToCopyList != null && mFilesToCopyList.size() != 0) || (mFilesToCutList != null && mFilesToCutList.size() != 0)) {
                     if (mFilesToCopyList != null) {
-                        initFileManager();
-                        for (FileModel file : mFilesToCopyList) {
+                        for (final FileModel file : mFilesToCopyList) {
                             mFileManager.copyLocalFile((Activity) context, file, mCurrentDirectory.getAbsolutePath() + File.separator);
                         }
                         mFilesToCopyList.clear();
                     }
                     if (mFilesToCutList != null) {
-                        initFileManager();
-                        for (FileModel file : mFilesToCutList) {
+                        for (final FileModel file : mFilesToCutList) {
                             mFileManager.renameLocalByPath(file, mCurrentDirectory.getAbsolutePath() + File.separator + file.getFullName());
                         }
                         mFilesToCutList.clear();
@@ -252,14 +256,7 @@ public class FileLocalFragment extends FabFragment implements
             mCurrentDirectory = new File(mFilesList.get(position).getUrl());
             refreshCurrentList();
         } else {
-            initFileManager();
             mFileManager.execute((Activity) getContext(), position, mFilesList, view);
-        }
-    }
-
-    private void initFileManager() {
-        if (mFileManager == null) {
-            mFileManager = FileApp.get().getFileAppComponent().provideFileManager();
         }
     }
 
@@ -341,40 +338,47 @@ public class FileLocalFragment extends FabFragment implements
 
     @Override
     public void refreshCurrentList() {
-        if (mCurrentDirectory == null) {
+        if (isRefreshing || mCurrentDirectory == null || !isAdded()) {
             return;
         }
+        isRefreshing = true;
         mApplicationCallback.invalidateMenu();
 
-        final File[] files = mCurrentDirectory.listFiles();
-        List<File> fs;
-        if (files == null) {
-            fs = new ArrayList<>();
-        } else {
-            fs = Arrays.asList(files);
-        }
+        mFilesList.clear();
 
-        Collections.sort(fs, new Comparator<File>() {
+        mProgressBar.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.GONE);
+        mMessageTextView.setVisibility(View.GONE);
+        mRecyclerView.scrollToPosition(0);
+
+        mFileManager.getFiles(mCurrentDirectory, new ResultCallback<List<FileModel>>() {
             @Override
-            public int compare(final File f1, final File f2) {
-                return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
+            public void success(final List<FileModel> result) {
+                mFilesList.clear();
+                mFilesList.addAll(result);
+                if (mFilesList.size() == 0) {
+                    mMessageTextView.setText(getString(R.string.no_file_local_folder, "" + mCurrentDirectory.getName()));
+                    mMessageTextView.setVisibility(View.VISIBLE);
+                } else {
+                    mMessageTextView.setVisibility(View.GONE);
+                }
+                mProgressBar.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
+                isRefreshing = false;
+                updateAdapter();
+            }
+
+            @Override
+            public void failure() {
+                mFilesList.clear();
+                mMessageTextView.setText("Failed to load");
+                mMessageTextView.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.GONE);
+                mRecyclerView.setVisibility(View.VISIBLE);
+                isRefreshing = false;
+                updateAdapter();
             }
         });
-        mFilesList.clear();
-        for (File file : fs) {
-            if (file.exists()) {
-                mFilesList.add(new FileModel.FileModelBuilder().file(file).build());
-            }
-        }
-
-        if (mFilesList.size() == 0) {
-            mMessageTextView.setText(getString(R.string.no_file_local_folder, "" + mCurrentDirectory.getName()));
-            mMessageTextView.setVisibility(View.VISIBLE);
-        } else {
-            mMessageTextView.setVisibility(View.GONE);
-        }
-
-        updateAdapter();
     }
 
     @Override

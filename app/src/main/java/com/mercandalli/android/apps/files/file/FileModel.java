@@ -1,5 +1,6 @@
 package com.mercandalli.android.apps.files.file;
 
+import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -131,17 +132,22 @@ public class FileModel implements Parcelable {
             if (!file.exists()) {
                 throw new IllegalStateException("file not exits in FileModelBuilder#file(File).");
             }
-
             mIsOnline = false;
             mIsDirectory = file.isDirectory();
-            mSize = file.length();
             mUrl = file.getAbsolutePath();
+            if (!mIsDirectory) {
+                mSize = file.length();
+            } else if (mUrl.startsWith(Environment.getExternalStorageDirectory().getAbsolutePath())) {
+                mSize = FileUtils.getLocalFolderSize(file);
+            } else {
+                mSize = file.length();
+            }
             mId = mUrl.hashCode();
             final String tmpName = file.getName();
             mName = (tmpName.lastIndexOf('.') == -1) ? tmpName : tmpName.substring(0, tmpName.lastIndexOf('.'));
             mType = new FileTypeModel(FileUtils.getExtensionFromPath(mUrl));
             mLastModified = file.lastModified();
-            mDateCreation = new Date(this.mLastModified);
+            mDateCreation = new Date(mLastModified);
             if (mIsDirectory) {
                 final File[] tmpListFiles = file.listFiles();
                 if (tmpListFiles != null) {

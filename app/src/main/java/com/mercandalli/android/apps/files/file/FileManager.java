@@ -12,6 +12,7 @@ import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,13 @@ import java.util.List;
  * The {@link FileModel} Manager abstract class.
  */
 public abstract class FileManager {
+
+    /**
+     * Get the {@link FileModel}s from a local parent.
+     */
+    public abstract void getFiles(
+            final File fileParent,
+            final ResultCallback<List<FileModel>> resultCallback);
 
     /**
      * Get the {@link FileModel}s from a parent. (Could be local or online.)
