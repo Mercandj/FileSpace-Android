@@ -303,12 +303,9 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
 
         mFilesList = new ArrayList<>();
         for (File file : fs) {
-            FileModel tmpFileModel = new FileModel.FileModelBuilder().file(file).build();
-            /*
-            if (mSortMode == SharedAudioPlayerUtils.SORT_SIZE)
-                tmpFileModel.adapterTitleStart = FileUtils.humanReadableByteCount(tmpFileModel.size) + " - ";
-            */
-            mFilesList.add(tmpFileModel);
+            if (file.exists()) {
+                mFilesList.add(new FileModel.FileModelBuilder().file(file).build());
+            }
         }
 
         refreshFab();

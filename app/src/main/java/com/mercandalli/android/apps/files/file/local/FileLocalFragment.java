@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -360,15 +360,11 @@ public class FileLocalFragment extends FabFragment implements
                 return String.CASE_INSENSITIVE_ORDER.compare(f1.getName(), f2.getName());
             }
         });
-
         mFilesList.clear();
         for (File file : fs) {
-            FileModel tmpFileModel = new FileModel.FileModelBuilder().file(file).build();
-            /*
-            if (mSortMode == SharedAudioPlayerUtils.SORT_SIZE)
-                tmpFileModel.adapterTitleStart = FileUtils.humanReadableByteCount(tmpFileModel.size) + " - ";
-            */
-            mFilesList.add(tmpFileModel);
+            if (file.exists()) {
+                mFilesList.add(new FileModel.FileModelBuilder().file(file).build());
+            }
         }
 
         if (mFilesList.size() == 0) {
