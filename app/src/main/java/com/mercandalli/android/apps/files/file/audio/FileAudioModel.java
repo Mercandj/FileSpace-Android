@@ -20,27 +20,27 @@ public class FileAudioModel extends FileModel {
     protected String mAlbum;
     protected String mArtist;
 
-    public static class FileMusicModelBuilder extends FileModelBuilder {
+    public static class FileAudioModelBuilder extends FileModelBuilder {
         private String mTitle;
         private String mAlbum;
         private String mArtist;
 
-        public FileMusicModelBuilder title(String title) {
+        public FileAudioModelBuilder title(String title) {
             this.mTitle = title;
             return this;
         }
 
-        public FileMusicModelBuilder album(String album) {
+        public FileAudioModelBuilder album(String album) {
             this.mAlbum = album;
             return this;
         }
 
-        public FileMusicModelBuilder artist(String artist) {
+        public FileAudioModelBuilder artist(String artist) {
             this.mArtist = artist;
             return this;
         }
 
-        public FileMusicModelBuilder fileModel(FileModel fileModel) {
+        public FileAudioModelBuilder fileModel(FileModel fileModel) {
             id(fileModel.getId());
             idUser(fileModel.getIdUser());
             idFileParent(fileModel.getIdFileParent());
@@ -59,11 +59,11 @@ public class FileAudioModel extends FileModel {
             return this;
         }
 
-        public FileMusicModelBuilder file(final File file) {
+        public FileAudioModelBuilder file(final File file) {
             return file(file, new MyID3());
         }
 
-        public FileMusicModelBuilder file(final File file, final MyID3 myID3) {
+        public FileAudioModelBuilder file(final File file, final MyID3 myID3) {
             super.file(file);
             if (mUrl == null || !mUrl.toLowerCase().endsWith(".mp3")) {
                 return this;

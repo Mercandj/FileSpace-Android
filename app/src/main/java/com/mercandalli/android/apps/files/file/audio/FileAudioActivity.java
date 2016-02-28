@@ -186,14 +186,14 @@ public class FileAudioActivity extends AppCompatActivity implements
                 for (String absolutePath : absolutePathArray) {
                     if (mIsOnline) {
                         mFileAudioModelList.add(
-                                ((FileAudioModel.FileMusicModelBuilder) (
-                                        new FileAudioModel.FileMusicModelBuilder()
+                                ((FileAudioModel.FileAudioModelBuilder) (
+                                        new FileAudioModel.FileAudioModelBuilder()
                                                 .isOnline(true)
                                                 .url(absolutePath)))
                                         .build());
                     } else {
                         mFileAudioModelList.add(
-                                new FileAudioModel.FileMusicModelBuilder()
+                                new FileAudioModel.FileAudioModelBuilder()
                                         .file(new File(absolutePath)).build());
                     }
                 }

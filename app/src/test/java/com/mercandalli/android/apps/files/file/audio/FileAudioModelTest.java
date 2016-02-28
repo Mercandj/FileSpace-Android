@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.file;
+package com.mercandalli.android.apps.files.file.audio;
 
 import android.test.suitebuilder.annotation.SmallTest;
 
@@ -13,12 +13,12 @@ import static junit.framework.Assert.fail;
 
 @RunWith(MockitoJUnitRunner.class)
 @SmallTest
-public class FileModelTest {
+public class FileAudioModelTest {
 
     @Test
-    public void createFileModelFromFileNotExist() {
+    public void createFileAudioModelFromFileNotExist() {
         try {
-            new FileModel.FileModelBuilder()
+            new FileAudioModel.FileAudioModelBuilder()
                     .file(new File(""))
                     .build();
             fail("Should throw exception when file not exists");
@@ -28,9 +28,9 @@ public class FileModelTest {
     }
 
     @Test
-    public void createFileModelFromFileNull() {
+    public void createFileAudioModelFromFileNull() {
         try {
-            new FileModel.FileModelBuilder()
+            new FileAudioModel.FileAudioModelBuilder()
                     .file(null)
                     .build();
             fail("Should throw exception when file is null");
@@ -40,13 +40,16 @@ public class FileModelTest {
     }
 
     @Test
-    public void createFileModel() {
-        final FileModel fileModel = new FileModel.FileModelBuilder()
+    public void createFileAudioModel() {
+        final FileAudioModel.FileAudioModelBuilder fileAudioModelBuilder = new FileAudioModel.FileAudioModelBuilder();
+        fileAudioModelBuilder
                 .id(1234)
-                .isOnline(false)
-                .build();
-        Assert.assertFalse(fileModel.isOnline());
-        Assert.assertTrue(fileModel.getId() == 1234);
+                .isOnline(false);
+        final FileAudioModel fileAudioModel = fileAudioModelBuilder.build();
+
+
+        Assert.assertFalse(fileAudioModel.isOnline());
+        Assert.assertTrue(fileAudioModel.getId() == 1234);
     }
 
 }

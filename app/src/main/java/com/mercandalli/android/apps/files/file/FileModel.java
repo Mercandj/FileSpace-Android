@@ -125,31 +125,37 @@ public class FileModel implements Parcelable {
         }
 
         public FileModelBuilder file(final File file) {
+            if (file == null) {
+                throw new IllegalStateException("file is null in FileModelBuilder#file(File).");
+            }
+            if (!file.exists()) {
+                throw new IllegalStateException("file not exits in FileModelBuilder#file(File).");
+            }
+
             mIsOnline = false;
-            if (file != null && file.exists()) {
-                this.mIsDirectory = file.isDirectory();
-                this.mSize = file.length();
-                this.mUrl = file.getAbsolutePath();
-                this.mId = mUrl.hashCode();
-                final String tmpName = file.getName();
-                this.mName = (tmpName.lastIndexOf('.') == -1) ? tmpName : tmpName.substring(0, tmpName.lastIndexOf('.'));
-                this.mType = new FileTypeModel(FileUtils.getExtensionFromPath(this.mUrl));
-                this.mLastModified = file.lastModified();
-                this.mDateCreation = new Date(this.mLastModified);
-                if (this.mIsDirectory) {
-                    final File[] tmpListFiles = file.listFiles();
-                    if (tmpListFiles != null) {
-                        this.mCount = tmpListFiles.length;
-                        this.mCountAudio = 0;
-                        for (File f : tmpListFiles) {
-                            if ((new FileTypeModel(FileUtils.getExtensionFromPath(f.getPath()))).equals(FileTypeModelENUM.AUDIO.type)) {
-                                this.mCountAudio++;
-                            }
+            mIsDirectory = file.isDirectory();
+            mSize = file.length();
+            mUrl = file.getAbsolutePath();
+            mId = mUrl.hashCode();
+            final String tmpName = file.getName();
+            mName = (tmpName.lastIndexOf('.') == -1) ? tmpName : tmpName.substring(0, tmpName.lastIndexOf('.'));
+            mType = new FileTypeModel(FileUtils.getExtensionFromPath(mUrl));
+            mLastModified = file.lastModified();
+            mDateCreation = new Date(this.mLastModified);
+            if (mIsDirectory) {
+                final File[] tmpListFiles = file.listFiles();
+                if (tmpListFiles != null) {
+                    mCount = tmpListFiles.length;
+                    mCountAudio = 0;
+                    for (File f : tmpListFiles) {
+                        if ((new FileTypeModel(FileUtils.getExtensionFromPath(f.getPath())))
+                                .equals(FileTypeModelENUM.AUDIO.type)) {
+                            mCountAudio++;
                         }
                     }
                 }
-                this.mFile = file;
             }
+            mFile = file;
             return this;
         }
 
@@ -186,7 +192,7 @@ public class FileModel implements Parcelable {
         }
 
         public FileModel build() {
-            FileModel fileModel = new FileModel();
+            final FileModel fileModel = new FileModel();
             fileModel.mId = mId;
             fileModel.mIdUser = mIdUser;
             fileModel.mIdFileParent = mIdFileParent;

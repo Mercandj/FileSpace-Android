@@ -161,7 +161,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
                 }
         ));
         for (final File f : fs) {
-            files.add(new FileAudioModel.FileMusicModelBuilder()
+            files.add(new FileAudioModel.FileAudioModelBuilder()
                     .file(f).build());
         }
         notifyLocalMusicListenerSucceeded(files);
@@ -357,7 +357,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
         for (final String path : fileAudioPaths) {
             final File file = new File(path);
             if (file.exists() && !file.isDirectory()) {
-                files.add(new FileAudioModel.FileMusicModelBuilder().file(file, myID3).build());
+                files.add(new FileAudioModel.FileAudioModelBuilder().file(file, myID3).build());
             }
         }
         notifyAllLocalMusicListenerSucceeded(files, true);
