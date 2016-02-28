@@ -96,7 +96,7 @@ public class FileLocalFragment extends FabFragment implements
         }
     };
 
-    private boolean isRefreshing = false;
+    private boolean mIsRefreshing = false;
 
     public static FileLocalFragment newInstance() {
         return new FileLocalFragment();
@@ -338,10 +338,10 @@ public class FileLocalFragment extends FabFragment implements
 
     @Override
     public void refreshCurrentList() {
-        if (isRefreshing || mCurrentDirectory == null || !isAdded()) {
+        if (mIsRefreshing || mCurrentDirectory == null || !isAdded()) {
             return;
         }
-        isRefreshing = true;
+        mIsRefreshing = true;
         mApplicationCallback.invalidateMenu();
 
         mFilesList.clear();
@@ -364,7 +364,7 @@ public class FileLocalFragment extends FabFragment implements
                 }
                 mProgressBar.setVisibility(View.GONE);
                 mRecyclerView.setVisibility(View.VISIBLE);
-                isRefreshing = false;
+                mIsRefreshing = false;
                 updateAdapter();
             }
 
@@ -375,7 +375,7 @@ public class FileLocalFragment extends FabFragment implements
                 mMessageTextView.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.GONE);
                 mRecyclerView.setVisibility(View.VISIBLE);
-                isRefreshing = false;
+                mIsRefreshing = false;
                 updateAdapter();
             }
         });
