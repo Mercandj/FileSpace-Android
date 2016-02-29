@@ -15,7 +15,7 @@ import com.mercandalli.android.apps.files.file.cloud.FileCloudFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileMyCloudFragment;
 import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
 import com.mercandalli.android.apps.files.file.image.FileImageModule;
-import com.mercandalli.android.apps.files.file.image.FileImageRowAdapter;
+import com.mercandalli.android.apps.files.file.image.FileImageAdapter;
 import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
 import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderModule;
 import com.mercandalli.android.apps.files.main.version.VersionManager;
@@ -61,7 +61,7 @@ public interface FileAppComponent {
 
     void inject(FileImageLocalFragment fileImageLocalFragment);
 
-    void inject(FileImageRowAdapter fileImageRowAdapter);
+    void inject(FileImageAdapter fileImageAdapter);
 
     //Providers
     Application provideApp();

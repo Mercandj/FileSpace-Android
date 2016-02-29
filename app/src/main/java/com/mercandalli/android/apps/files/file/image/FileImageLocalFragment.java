@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,7 +92,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
      */
     private ProgressBar mProgressBar;
 
-    private FileImageRowAdapter mFileImageRowAdapter;
+    private FileImageAdapter mFileImageAdapter;
     private FileModelCardAdapter mFileModelCardAdapter;
 
     private final IListener mRefreshActivityAdapterListener;
@@ -185,7 +184,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_image_album, false));
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_image_all, false));
 
-        mFileImageRowAdapter = new FileImageRowAdapter(mHeaderIds, this, getActivity(), mFileModels, new FileModelListener() {
+        mFileImageAdapter = new FileImageAdapter(mHeaderIds, this, getActivity(), mFileModels, new FileModelListener() {
             @Override
             public void executeFileModel(final FileModel fileModel, final View view) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(getContext());
@@ -256,7 +255,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                 menuDrop.show();
             }
         });
-        mFileImageRowAdapter.setOnItemClickListener(new FileImageRowAdapter.OnItemClickListener() {
+        mFileImageAdapter.setOnItemClickListener(new FileImageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 if (mFileModels.get(position).isDirectory()) {
@@ -382,9 +381,9 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
             mFileModels.clear();
         }
         mFileModels.addAll(fileModels);
-        mFileImageRowAdapter.setHasHeader(true);
+        mFileImageAdapter.setHasHeader(true);
 
-        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileImageRowAdapter);
+        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileImageAdapter);
         mScaleAnimationAdapter.setDuration(220);
         mScaleAnimationAdapter.setOffsetDuration(32);
         mScaleAnimationAdapter.setNoAnimatedPosition(FileImageLocalFragment.this);
@@ -436,9 +435,9 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
     public void onLocalImageSucceeded(List<FileModel> fileModels) {
         mFileModels.clear();
         mFileModels.addAll(fileModels);
-        mFileImageRowAdapter.setHasHeader(false);
+        mFileImageAdapter.setHasHeader(false);
 
-        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileImageRowAdapter);
+        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileImageAdapter);
         mScaleAnimationAdapter.setDuration(220);
         mScaleAnimationAdapter.setOffsetDuration(32);
         mScaleAnimationAdapter.setNoAnimatedPosition(FileImageLocalFragment.this);
@@ -530,7 +529,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
             if (mCurrentPage == PAGE_FOLDERS) {
                 mFileModelCardAdapter.setList(mFileModels);
             } else {
-                mFileImageRowAdapter.setList(mFileModels);
+                mFileImageAdapter.setList(mFileModels);
             }
 
             updateLayoutManager();
@@ -548,29 +547,13 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
     }
 
     private void updateLayoutManager() {
-        if (mCurrentPage == PAGE_FOLDERS) {
-            final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.column_number_small_card));
-            mRecyclerView.setLayoutManager(gridLayoutManager);
-            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    return mFileModelCardAdapter.isHeader(position) ? gridLayoutManager.getSpanCount() : 1;
-                }
-            });
-        } else {
-            final int nbColumn = getResources().getInteger(R.integer.column_number_card);
-            if (nbColumn <= 1) {
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            } else {
-                final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), nbColumn);
-                mRecyclerView.setLayoutManager(gridLayoutManager);
-                gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                    @Override
-                    public int getSpanSize(int position) {
-                        return mFileImageRowAdapter.isHeader(position) ? gridLayoutManager.getSpanCount() : 1;
-                    }
-                });
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.column_number_small_card));
+        mRecyclerView.setLayoutManager(gridLayoutManager);
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return mFileModelCardAdapter.isHeader(position) ? gridLayoutManager.getSpanCount() : 1;
             }
-        }
+        });
     }
 }

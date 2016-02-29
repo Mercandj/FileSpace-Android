@@ -45,6 +45,7 @@ import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,14 +55,13 @@ import javax.inject.Inject;
 /**
  * The adapter for {@link FileAudioModel} rows.
  */
-public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapter.ViewHolder> {
+public class FileImageAdapter extends RecyclerView.Adapter<FileImageAdapter.ViewHolder> {
 
     private List<FileModel> files;
     private OnItemClickListener mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
     private FileModelListener moreListener;
 
-    private boolean mShowSize;
     private boolean mHasHeader;
 
     private final String mStringDirectory;
@@ -82,7 +82,7 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
     @Inject
     FileManager mFileManager;
 
-    public FileImageRowAdapter(Context context, List<FileModel> files, FileModelListener moreListener) {
+    public FileImageAdapter(Context context, List<FileModel> files, FileModelListener moreListener) {
         this.files = new ArrayList<>();
         this.files.addAll(files);
         this.moreListener = moreListener;
@@ -98,7 +98,7 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
     /**
      * Adapter with header.
      */
-    public FileImageRowAdapter(
+    public FileImageAdapter(
             final List<FileModelCardHeaderItem> headerIds,
             final FileModelCardAdapter.OnHeaderClickListener onHeaderClickListener,
             Activity activity,
@@ -131,7 +131,7 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
             return new RowCardsViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_row_cards, parent, false));
         }
         return new FileViewHolder(
-                LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_card_drag_drop, parent, false),
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.card_file, parent, false),
                 mHasHeader,
                 mItemClickListener,
                 mItemLongClickListener);
@@ -144,30 +144,36 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
             headerViewHolder.setFileModelCardHeaderItems(mHeaderIds);
         } else if (position < files.size() + (mHasHeader ? 1 : 0)) {
             final FileViewHolder fileViewHolder = (FileViewHolder) viewHolder;
-            final FileModel file = files.get(position - (mHasHeader ? 1 : 0));
+            final FileModel fileModel = files.get(position - (mHasHeader ? 1 : 0));
 
-            fileViewHolder.title.setText(getAdapterTitle(file));
-            fileViewHolder.subtitle.setText(getAdapterSubtitle(file));
+            fileViewHolder.mTitle.setText(getAdapterTitle(fileModel));
+            fileViewHolder.mSubtitle.setText(getAdapterSubtitle(fileModel));
 
-            if (file.isDirectory()) {
-                fileViewHolder.icon.setImageResource(R.drawable.directory);
-            } else if (file.getType() != null) {
-                FileTypeModel type = file.getType();
+            if (fileModel.isDirectory()) {
+                fileViewHolder.mIcon.setImageResource(R.drawable.directory);
+            } else if (fileModel.getType() != null) {
+                final FileTypeModel type = fileModel.getType();
+
                 if (type.equals(FileTypeModelENUM.AUDIO.type)) {
-                    fileViewHolder.icon.setImageResource(R.drawable.file_audio);
+                    fileViewHolder.mIcon.setImageResource(R.drawable.file_audio);
                 } else if (type.equals(FileTypeModelENUM.PDF.type)) {
-                    fileViewHolder.icon.setImageResource(R.drawable.file_pdf);
+                    fileViewHolder.mIcon.setImageResource(R.drawable.file_pdf);
                 } else if (type.equals(FileTypeModelENUM.APK.type)) {
-                    fileViewHolder.icon.setImageResource(R.drawable.file_apk);
+                    fileViewHolder.mIcon.setImageResource(R.drawable.file_apk);
                 } else if (type.equals(FileTypeModelENUM.ARCHIVE.type)) {
-                    fileViewHolder.icon.setImageResource(R.drawable.file_archive);
+                    fileViewHolder.mIcon.setImageResource(R.drawable.file_archive);
                 } else if (type.equals(FileTypeModelENUM.FILESPACE.type)) {
-                    fileViewHolder.icon.setImageResource(R.drawable.file_space);
+                    fileViewHolder.mIcon.setImageResource(R.drawable.file_space);
+                } else if (type.equals(FileTypeModelENUM.IMAGE.type)) {
+                    Picasso.with(fileViewHolder.mItem.getContext())
+                            .load(fileModel.getUrl())
+                            .placeholder(R.drawable.file_default)
+                            .into(fileViewHolder.mIcon);
                 } else {
-                    fileViewHolder.icon.setImageResource(R.drawable.file_default);
+                    fileViewHolder.mIcon.setImageResource(R.drawable.file_default);
                 }
             } else {
-                fileViewHolder.icon.setImageResource(R.drawable.file_default);
+                fileViewHolder.mIcon.setImageResource(R.drawable.file_default);
             }
 
             //mFileManager.getCover(mActivity, file, fileViewHolder.icon);
@@ -179,7 +185,7 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
                 @Override
                 public void onClick(View v) {
                     if (moreListener != null) {
-                        moreListener.executeFileModel(file, v);
+                        moreListener.executeFileModel(fileModel, v);
                     }
                 }
             });
@@ -193,9 +199,9 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
     }
 
     private static class FileViewHolder extends ViewHolder implements OnClickListener, View.OnLongClickListener {
-        public TextView title, subtitle;
-        public ImageView icon;
-        public View item;
+        public TextView mTitle, mSubtitle;
+        public ImageView mIcon;
+        public View mItem;
         public View more;
         private boolean mHasHeader;
         private OnItemClickListener mItemClickListener;
@@ -206,11 +212,11 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
             mHasHeader = hasHeader;
             mItemClickListener = itemClickListener;
             mItemLongClickListener = itemLongClickListener;
-            item = itemLayoutView.findViewById(R.id.tab_file_card_drag_drop_item);
-            title = (TextView) itemLayoutView.findViewById(R.id.tab_file_card_drag_drop_title);
-            subtitle = (TextView) itemLayoutView.findViewById(R.id.tab_file_card_drag_drop_subtitle);
-            icon = (ImageView) itemLayoutView.findViewById(R.id.tab_file_card_drag_drop_icon);
-            more = itemLayoutView.findViewById(R.id.tab_file_card_drag_drop_more);
+            mItem = itemLayoutView.findViewById(R.id.card_file_item);
+            mTitle = (TextView) itemLayoutView.findViewById(R.id.card_file_title);
+            mSubtitle = (TextView) itemLayoutView.findViewById(R.id.card_file_subtitle);
+            mIcon = (ImageView) itemLayoutView.findViewById(R.id.card_file_icon);
+            more = itemLayoutView.findViewById(R.id.card_file_more);
             itemLayoutView.setOnClickListener(this);
             itemLayoutView.setOnLongClickListener(this);
         }
@@ -218,7 +224,7 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
         @Override
         public void onClick(View v) {
             if (mItemClickListener != null) {
-                mItemClickListener.onItemClick(icon, getAdapterPosition() - (mHasHeader ? 1 : 0));
+                mItemClickListener.onItemClick(mIcon, getAdapterPosition() - (mHasHeader ? 1 : 0));
             }
         }
 
@@ -274,9 +280,6 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
 
     private String getAdapterTitle(final FileModel fileModel) {
         String adapterTitleStart = "";
-        if (mShowSize) {
-            adapterTitleStart = FileUtils.humanReadableByteCount(fileModel.getSize()) + " - ";
-        }
 
         if (fileModel.getType() == null) {
             return adapterTitleStart + (fileModel.getName() == null ?
@@ -306,10 +309,6 @@ public class FileImageRowAdapter extends RecyclerView.Adapter<FileImageRowAdapte
             }
 
             String adapterTitleStart = "";
-            if (mShowSize) {
-                adapterTitleStart = FileUtils.humanReadableByteCount(fileAudioModel.getSize()) + " - ";
-            }
-
             if (fileAudioModel.getType() == null) {
                 if (fileAudioModel.getName() != null) {
                     return adapterTitleStart + fileAudioModel.getFullName();
