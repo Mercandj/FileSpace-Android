@@ -137,10 +137,6 @@ public class FileModel implements Parcelable {
             mUrl = file.getAbsolutePath();
             if (!mIsDirectory) {
                 mSize = file.length();
-            } else if (mUrl.startsWith(Environment.getExternalStorageDirectory().getAbsolutePath())) {
-                mSize = FileUtils.getLocalFolderSize(file);
-            } else {
-                mSize = file.length();
             }
             mId = mUrl.hashCode();
             final String tmpName = file.getName();
@@ -284,6 +280,10 @@ public class FileModel implements Parcelable {
     }
 
     public long getSize() {
+        if (mSize == 0 && mIsDirectory && mUrl != null &&
+                mUrl.startsWith(Environment.getExternalStorageDirectory().getAbsolutePath())) {
+            mSize = FileUtils.getLocalFolderSize(mFile);
+        }
         return mSize;
     }
 

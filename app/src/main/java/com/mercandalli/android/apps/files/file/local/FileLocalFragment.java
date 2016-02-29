@@ -436,8 +436,12 @@ public class FileLocalFragment extends FabFragment implements
                 if (dy <= 0) {
                     if (!mIsFabAnimating) {
                         mIsFabAnimating = true;
-                        mRefreshFabCallback.showFab(0);
-                        mRefreshFabCallback.showFab(1);
+                        if (isFabVisible(0)) {
+                            mRefreshFabCallback.showFab(0);
+                        }
+                        if (isFabVisible(1)) {
+                            mRefreshFabCallback.showFab(1);
+                        }
                         mHandler.removeCallbacks(mRunnable);
                         mHandler.postDelayed(mRunnable, 250);
                     }

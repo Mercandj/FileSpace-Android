@@ -265,27 +265,32 @@ public class FileUtils {
     }
 
     /**
-     * @return True if the external storage is writabe. False otherwise.
+     * @return True if the external storage is writable. False otherwise.
      */
     public static boolean isSdCardAvailable() {
         return getSdCardPath() != null;
     }
 
-    public static long getLocalFolderSize(final File f) {
-        if (f == null || !f.exists()) {
+    /**
+     * Get the size of the file (file or directory).
+     * @param file The file.
+     * @return The size in bytes.
+     */
+    public static long getLocalFolderSize(final File file) {
+        if (file == null || !file.exists()) {
             return 0;
         }
-        if (f.isDirectory()) {
-            final File[] children = f.listFiles();
+        if (file.isDirectory()) {
+            final File[] children = file.listFiles();
             if (children == null) {
                 return 0;
             }
             long size = 0;
-            for (final File file : children) {
-                size += getLocalFolderSize(file);
+            for (final File f : children) {
+                size += getLocalFolderSize(f);
             }
             return size;
         }
-        return f.length();
+        return file.length();
     }
 }
