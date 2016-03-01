@@ -1,5 +1,6 @@
 package com.mercandalli.android.apps.files.file;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
@@ -133,7 +135,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
             new Thread() {
                 @Override
                 public void run() {
-                    resultCallback.success(mFileLocalApi.getFiles(fileParent.getFile()));
+                    notifyGetFilesSucceeded(mFileLocalApi.getFiles(fileParent.getFile()), resultCallback);
                 }
             }.start();
             return;
@@ -208,11 +210,15 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
                     .show();
             return;
         }
+        final File file = fileModel.getFile();
+        if (file == null) {
+            Toast.makeText(mContextApp, "Failed: File is null.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         final Map<String, RequestBody> params = new HashMap<>();
 
-        final File file = fileModel.getFile();
-        String filename = file.getName();
+        final String filename = file.getName();
         RequestBody photo = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         params.put("file\"; filename=\"" + filename, photo);
 
@@ -264,10 +270,15 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
                 }
             });
         } else {
-            File parent = fileModel.getFile().getParentFile();
+            final File file = fileModel.getFile();
+            if (file == null) {
+                Toast.makeText(mContextApp, "Failed: File is null.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            final File parent = file.getParentFile();
             if (parent != null) {
                 //noinspection ResultOfMethodCallIgnored
-                fileModel.getFile().renameTo(new File(parent.getAbsolutePath(), newName));
+                file.renameTo(new File(parent.getAbsolutePath(), newName));
             }
             listener.execute();
         }
@@ -281,7 +292,13 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
         Preconditions.checkNotNull(fileModel);
         Preconditions.checkNotNull(path);
         //noinspection ResultOfMethodCallIgnored
-        fileModel.getFile().renameTo(new File(path));
+        final File file = fileModel.getFile();
+        if (file == null) {
+            Toast.makeText(mContextApp, "Failed: File is null.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //noinspection ResultOfMethodCallIgnored
+        file.renameTo(new File(path));
     }
 
     /**
@@ -308,11 +325,17 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
                 }
             });
         } else {
-            if (fileModel.getFile().isDirectory()) {
-                FileUtils.deleteDirectory(fileModel.getFile());
+            final File file = fileModel.getFile();
+            if (file == null) {
+                Toast.makeText(mContextApp, "Failed: File is null.", Toast.LENGTH_SHORT).show();
+                listener.execute();
+                return;
+            }
+            if (file.isDirectory()) {
+                FileUtils.deleteDirectory(file);
             } else {
                 //noinspection ResultOfMethodCallIgnored
-                fileModel.getFile().delete();
+                file.delete();
             }
             FileApp.get().getFileAppComponent().provideFileProviderManager().load();
             listener.execute();
@@ -546,10 +569,16 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
     }
 
     @Override
+    @SuppressLint("NewApi")
     public void searchLocal(
             final Context context,
             final String search,
             final ResultCallback<List<FileModel>> resultCallback) {
+
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+            resultCallback.failure();
+            return;
+        }
 
         new AsyncTask<Void, Void, List<FileModel>>() {
             @Override
@@ -671,7 +700,9 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
                 Pair<View, String> p2 = Pair.create(view.findViewById(R.id.title), "transitionTitle");
                 ActivityOptionsCompat options = ActivityOptionsCompat.
                         makeSceneTransitionAnimation(activity, p1, p2);
-                activity.startActivity(intent, options.toBundle());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    activity.startActivity(intent, options.toBundle());
+                }
             }
         } else if (FileTypeModelENUM.AUDIO.type.equals(fileTypeModel)) {
 

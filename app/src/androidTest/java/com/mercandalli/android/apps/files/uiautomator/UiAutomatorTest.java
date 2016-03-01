@@ -62,12 +62,12 @@ public final class UiAutomatorTest {
         // Swipe up.
         mDevice.findObject(new UiSelector()
                 .resourceId("com.mercandalli.android.apps.files:id/fragment_file_files_recycler_view"))
-                .swipeUp(3);
+                .swipeUp(100);
 
         // Swipe up.
         mDevice.findObject(new UiSelector()
                 .resourceId("com.mercandalli.android.apps.files:id/fragment_file_files_recycler_view"))
-                .swipeDown(3);
+                .swipeDown(100);
 
         // Select the second file
         mDevice.findObject(new UiSelector()
@@ -78,36 +78,9 @@ public final class UiAutomatorTest {
 
     @Test
     public void swipeViewPager() throws UiObjectNotFoundException {
-        // Select the first file
+        // Swipe ViewPager
         mDevice.findObject(new UiSelector()
                 .resourceId("com.mercandalli.android.apps.files:id/fragment_file_files_recycler_view"))
-                .getChild(new UiSelector().clickable(true).index(0))
-                .click();
-
-        // Go up.
-        mDevice.findObject(new UiSelector()
-                .resourceId("com.mercandalli.android.apps.files:id/fragment_file_fab_2"))
-                .click();
-
-        // Swipe up.
-        mDevice.findObject(new UiSelector()
-                .resourceId("com.mercandalli.android.apps.files:id/fragment_file_files_recycler_view"))
-                .swipeUp(3);
-
-        // Swipe up.
-        mDevice.findObject(new UiSelector()
-                .resourceId("com.mercandalli.android.apps.files:id/fragment_file_files_recycler_view"))
-                .swipeDown(3);
-
-        // Select the second file
-        mDevice.findObject(new UiSelector()
-                .resourceId("com.mercandalli.android.apps.files:id/fragment_file_files_recycler_view"))
-                .getChild(new UiSelector().clickable(true).index(2))
-                .click();
-
-        // Select the second file
-        mDevice.findObject(new UiSelector()
-                .resourceId("com.mercandalli.android.apps.files:id/fragment_file_view_pager"))
-                .swipeLeft(4);
+                .swipeLeft(100);
     }
 }

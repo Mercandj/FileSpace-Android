@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -124,9 +124,9 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(getContext());
                 String[] menuList = {getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties)};
                 if (!fileModel.isDirectory()) {
-                    if (fileModel.getType().equals(FileTypeModelENUM.IMAGE.type)) {
+                    if (FileTypeModelENUM.IMAGE.type.equals(fileModel.getType())) {
                         menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (fileModel.isPublic()) ? "Become private" : "Become public", "Set as profile"};
-                    } else if (fileModel.getType().equals(FileTypeModelENUM.APK.type) && mApplicationCallback.getConfig().isUserAdmin()) {
+                    } else if ( FileTypeModelENUM.APK.type.equals(fileModel.getType()) && Config.isUserAdmin()) {
                         menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (fileModel.isPublic()) ? "Become private" : "Become public", (fileModel.isApkUpdate()) ? "Remove the update" : "Set as update"};
                     } else {
                         menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (fileModel.isPublic()) ? "Become private" : "Become public"};

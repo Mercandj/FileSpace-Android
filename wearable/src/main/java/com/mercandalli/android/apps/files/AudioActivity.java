@@ -193,14 +193,18 @@ public class AudioActivity extends WearableActivity implements View.OnClickListe
                     break;
             }
             String text = "";
-            if (mSharedAudioData.getTitle() != null) {
-                text += mSharedAudioData.getTitle() + "\n";
+
+            final String title = mSharedAudioData.getTitle();
+            if (title != null) {
+                text += title + "\n";
             }
-            if (mSharedAudioData.getArtist() != null) {
-                text += mSharedAudioData.getArtist() + "\n";
+            final String artist = mSharedAudioData.getArtist();
+            if (artist != null) {
+                text += artist + "\n";
             }
-            if (mSharedAudioData.getAlbum() != null) {
-                text += mSharedAudioData.getAlbum() + "\n";
+            final String album = mSharedAudioData.getAlbum();
+            if (album != null) {
+                text += album + "\n";
             }
             mTextView.setText(text);
         }

@@ -1,5 +1,7 @@
 package com.mercandalli.android.apps.files.shared;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -64,18 +66,22 @@ public class SharedAudioData {
         mAlbum = album;
     }
 
+    @Nullable
     public int getId() {
         return mId;
     }
 
+    @Nullable
     public String getTitle() {
         return mTitle;
     }
 
+    @Nullable
     public String getArtist() {
         return mArtist;
     }
 
+    @Nullable
     public String getAlbum() {
         return mAlbum;
     }
@@ -107,6 +113,7 @@ public class SharedAudioData {
         }
     }
 
+    @NonNull
     public JSONObject toJson() {
         final JSONObject jsonObject = new JSONObject();
         try {
