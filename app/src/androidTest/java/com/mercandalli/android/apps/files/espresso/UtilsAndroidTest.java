@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files;
+package com.mercandalli.android.apps.files.espresso;
 
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;

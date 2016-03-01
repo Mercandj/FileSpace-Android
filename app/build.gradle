@@ -21,6 +21,7 @@ android {
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -33,6 +34,18 @@ android {
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    productFlavors {
+        uiAutomatorConfig {
+            minSdkVersion 18
+        }
+    }
+
+    packagingOptions {
+        // uiAutomatorConfig : https://code.google.com/p/android/issues/detail?id=195331
+        exclude 'META-INF/maven/com.google.guava/guava/pom.properties'
+        exclude 'META-INF/maven/com.google.guava/guava/pom.xml'
     }
 }
 

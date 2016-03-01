@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.main;
+package com.mercandalli.android.apps.files.espresso;
 
 import android.support.test.espresso.IdlingPolicies;
 import android.support.test.espresso.ViewInteraction;
@@ -9,6 +9,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.main.MainActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,7 +22,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.swipeDown;
 import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static com.mercandalli.android.apps.files.UtilsAndroidTest.actionOpenDrawer;
+import static com.mercandalli.android.apps.files.espresso.UtilsAndroidTest.actionOpenDrawer;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
