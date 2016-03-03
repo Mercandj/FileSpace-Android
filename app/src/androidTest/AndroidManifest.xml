@@ -9,5 +9,5 @@
     <uses-sdk
         android:minSdkVersion="18"
         tools:overrideLibrary="android.support.test, android.app, android.support.test.rule, android.support.test.uiautomator.v18" />
-    <application />
+
 </manifest>

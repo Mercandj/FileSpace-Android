@@ -77,11 +77,12 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
 
     private static final String LIKE = " LIKE ?";
     private static final String MIME_TEXT = "text/plain";
+    private static final String FAILED_FILE_IS_NULL = "Failed: File is null.";
 
     private final Context mContextApp;
     private final FileOnlineApi mFileOnlineApi;
-    private final FileLocalApi mFileLocalApi;
 
+    private final FileLocalApi mFileLocalApi;
     private final Handler mUiHandler;
     private final Thread mUiThread;
 
@@ -212,7 +213,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
         }
         final File file = fileModel.getFile();
         if (file == null) {
-            Toast.makeText(mContextApp, "Failed: File is null.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContextApp, FAILED_FILE_IS_NULL, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -272,7 +273,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
         } else {
             final File file = fileModel.getFile();
             if (file == null) {
-                Toast.makeText(mContextApp, "Failed: File is null.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContextApp, FAILED_FILE_IS_NULL, Toast.LENGTH_SHORT).show();
                 return;
             }
             final File parent = file.getParentFile();
@@ -294,7 +295,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
         //noinspection ResultOfMethodCallIgnored
         final File file = fileModel.getFile();
         if (file == null) {
-            Toast.makeText(mContextApp, "Failed: File is null.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContextApp, FAILED_FILE_IS_NULL, Toast.LENGTH_SHORT).show();
             return;
         }
         //noinspection ResultOfMethodCallIgnored
@@ -327,7 +328,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
         } else {
             final File file = fileModel.getFile();
             if (file == null) {
-                Toast.makeText(mContextApp, "Failed: File is null.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContextApp, FAILED_FILE_IS_NULL, Toast.LENGTH_SHORT).show();
                 listener.execute();
                 return;
             }
