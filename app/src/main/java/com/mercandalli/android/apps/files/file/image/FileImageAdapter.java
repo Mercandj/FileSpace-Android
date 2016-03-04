@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -149,31 +149,35 @@ public class FileImageAdapter extends RecyclerView.Adapter<FileImageAdapter.View
             fileViewHolder.mTitle.setText(getAdapterTitle(fileModel));
             fileViewHolder.mSubtitle.setText(getAdapterSubtitle(fileModel));
 
+            final ImageView icon = fileViewHolder.mIcon;
             if (fileModel.isDirectory()) {
-                fileViewHolder.mIcon.setImageResource(R.drawable.directory);
+                icon.setImageResource(R.drawable.directory);
             } else if (fileModel.getType() != null) {
                 final FileTypeModel type = fileModel.getType();
 
                 if (type.equals(FileTypeModelENUM.AUDIO.type)) {
-                    fileViewHolder.mIcon.setImageResource(R.drawable.file_audio);
+                    icon.setImageResource(R.drawable.file_audio);
                 } else if (type.equals(FileTypeModelENUM.PDF.type)) {
-                    fileViewHolder.mIcon.setImageResource(R.drawable.file_pdf);
+                    icon.setImageResource(R.drawable.file_pdf);
                 } else if (type.equals(FileTypeModelENUM.APK.type)) {
-                    fileViewHolder.mIcon.setImageResource(R.drawable.file_apk);
+                    icon.setImageResource(R.drawable.file_apk);
                 } else if (type.equals(FileTypeModelENUM.ARCHIVE.type)) {
-                    fileViewHolder.mIcon.setImageResource(R.drawable.file_archive);
+                    icon.setImageResource(R.drawable.file_archive);
                 } else if (type.equals(FileTypeModelENUM.FILESPACE.type)) {
-                    fileViewHolder.mIcon.setImageResource(R.drawable.file_space);
+                    icon.setImageResource(R.drawable.file_space);
                 } else if (type.equals(FileTypeModelENUM.IMAGE.type)) {
+                    icon.setBackgroundColor(Color.parseColor("#0d84c8"));
                     Picasso.with(fileViewHolder.mItem.getContext())
-                            .load(fileModel.getUrl())
+                            .load(fileModel.getFile())
                             .placeholder(R.drawable.file_default)
-                            .into(fileViewHolder.mIcon);
+                            .into(icon);
                 } else {
-                    fileViewHolder.mIcon.setImageResource(R.drawable.file_default);
+                    icon.setBackgroundColor(Color.parseColor("#0d84c8"));
+                    icon.setImageResource(R.drawable.file_default);
                 }
             } else {
-                fileViewHolder.mIcon.setImageResource(R.drawable.file_default);
+                icon.setBackgroundColor(Color.parseColor("#0d84c8"));
+                icon.setImageResource(R.drawable.file_default);
             }
 
             //mFileManager.getCover(mActivity, file, fileViewHolder.icon);

@@ -19,10 +19,6 @@
  */
 package com.mercandalli.android.apps.files.common.view;
 
-/**
- * Created by Jonathan on 07/04/2015.
- */
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -53,7 +49,7 @@ import java.util.Locale;
 public class PagerSlidingTabStrip extends HorizontalScrollView {
 
     public interface IconTabProvider {
-        public int getPageIconResId(int position);
+        int getPageIconResId(int position);
     }
 
     // @formatter:off

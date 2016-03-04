@@ -50,8 +50,8 @@ public final class AnalyticsTrackers {
         return sInstance;
     }
 
-    private final Map<Target, Tracker> mTrackers = new HashMap<>();
     private final Context mContext;
+    private final Map<Target, Tracker> mTrackers = new HashMap<>();
 
     /**
      * Don't instantiate directly - use {@link #getInstance()} instead.

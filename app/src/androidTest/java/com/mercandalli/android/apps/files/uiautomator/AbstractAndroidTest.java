@@ -22,6 +22,9 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 
+import java.text.DateFormat;
+import java.util.Date;
+
 import static android.content.Intent.CATEGORY_LAUNCHER;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -77,6 +80,11 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
             Thread.sleep(timeMillis);
         } catch (InterruptedException ignored) {
         }
+    }
+
+    protected String getCurrentDateString() {
+        return DateFormat.getDateTimeInstance().format(new Date())
+                .replaceAll("\\s", "").replaceAll(":", "").replaceAll(",", "").trim();
     }
 
     //region - find object and determine object stats
@@ -234,7 +242,9 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
     protected void setText(
             final String id,
             final String text) throws UiObjectNotFoundException {
-        findObjectById(id).setText(text);
+        final UiObject objectById = findObjectById(id);
+        objectById.clickAndWaitForNewWindow(100);
+        objectById.setText(text);
     }
 
     protected void setText(

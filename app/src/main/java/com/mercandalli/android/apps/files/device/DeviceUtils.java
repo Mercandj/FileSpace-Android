@@ -29,7 +29,9 @@ public class DeviceUtils {
         device.buildBootloader = Build.BOOTLOADER;
         device.buildVersionSdk = Build.VERSION.SDK_INT;
         device.buildVersionIncremental = Build.VERSION.INCREMENTAL;
-        device.buildVersionRadio = Build.getRadioVersion();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            device.buildVersionRadio = Build.getRadioVersion();
+        }
         device.versionOs = System.getProperty("os.version");
         device.displayLanguage = Locale.getDefault().getDisplayLanguage();
 
@@ -45,7 +47,9 @@ public class DeviceUtils {
         ActivityManager actManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
         ActivityManager.MemoryInfo memInfo = new ActivityManager.MemoryInfo();
         actManager.getMemoryInfo(memInfo);
-        device.totalRamMemory = memInfo.totalMem;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            device.totalRamMemory = memInfo.totalMem;
+        }
         device.availableRamMemory = memInfo.availMem;
 
         //Memory external

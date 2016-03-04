@@ -34,6 +34,7 @@ import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
+import com.mercandalli.android.apps.files.file.filespace.FileSpaceModel;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 import java.util.ArrayList;
@@ -59,16 +60,19 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
      */
     private static final int TYPE_CARD_ITEM = 2;
 
-    private final String mStringDirectory;
-    private final String mStringFile;
-    private final String mStringFiles;
-
-    private final Context mContext;
+    /**
+     * The application {@link Context}.
+     */
+    private final Context mContextApp;
     private final List<FileModel> mFiles;
     private final OnFileClickListener mOnFileClickListener;
     private final OnFileLongClickListener mOnFileLongClickListener;
     private FileModelListener mMoreListener;
     private OnFileSubtitleAdapter mOnFileSubtitleAdapter;
+
+    private final String mStringDirectory;
+    private final String mStringFile;
+    private final String mStringFiles;
 
     /* Header */
     private List<FileModelCardHeaderItem> mHeaderIds;
@@ -85,7 +89,7 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
             final FileModelListener moreListener,
             final OnFileClickListener onFileClickListener,
             final OnFileLongClickListener onFileLongClickListener) {
-        mContext = context;
+        mContextApp = context.getApplicationContext();
         mFiles = new ArrayList<>();
         mFiles.addAll(files);
         mMoreListener = moreListener;
@@ -119,25 +123,29 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
     public FileModelCardAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_HEADER_AUDIO) {
             return new HeaderViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(R.layout.view_file_header_audio, parent, false),
+                    LayoutInflater.from(parent.getContext()).inflate(
+                            R.layout.view_file_header_audio, parent, false),
                     mHeaderIds,
                     mOnHeaderClickListener
             );
         } else if (viewType == TYPE_HEADER_IMAGE) {
             return new HeaderViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(R.layout.view_file_header_image, parent, false),
+                    LayoutInflater.from(parent.getContext()).inflate(
+                            R.layout.view_file_header_image, parent, false),
                     mHeaderIds,
                     mOnHeaderClickListener
             );
         } else if (viewType == TYPE_CARD_ITEM) {
             return new CardViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(R.layout.card_file, parent, false),
+                    LayoutInflater.from(parent.getContext()).inflate(
+                            R.layout.card_file, parent, false),
                     hasHeader(),
                     mOnFileClickListener,
                     mOnFileLongClickListener
             );
         }
-        throw new RuntimeException("There is no type that matches the type " + viewType + " + make sure your using types correctly.");
+        throw new RuntimeException("There is no type that matches the type " + viewType +
+                " + make sure your using types correctly.");
     }
 
     @Override
@@ -235,7 +243,8 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
             } else {
                 return adapterTitleStart + fileModel.getUrl();
             }
-        } else if (FileTypeModelENUM.FILESPACE.type.equals(fileModel.getType()) && fileModel.getContent() != null) {
+        } else if (FileTypeModelENUM.FILESPACE.type.equals(fileModel.getType()) &&
+                fileModel.getContent() != null) {
             return adapterTitleStart + fileModel.getContent().getAdapterTitle();
         } else if (fileModel.getName() != null) {
             return adapterTitleStart + fileModel.getFullName();
@@ -246,22 +255,27 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
 
     private String getAdapterSubtitle(final FileModel fileModel) {
         String result;
-        if (mOnFileSubtitleAdapter != null && (result = mOnFileSubtitleAdapter.onFileSubtitleModify(fileModel)) != null) {
+        if (mOnFileSubtitleAdapter != null && (result =
+                mOnFileSubtitleAdapter.onFileSubtitleModify(fileModel)) != null) {
             return result;
         }
         if (fileModel.isDirectory() && fileModel.getCount() != 0) {
-            return mStringDirectory + ": " + StringUtils.longToShortString(fileModel.getCount()) + " " + (fileModel.getCount() > 1 ? mStringFiles : mStringFile);
+            return mStringDirectory + ": " + StringUtils.longToShortString(fileModel.getCount()) +
+                    " " + (fileModel.getCount() > 1 ? mStringFiles : mStringFile);
         }
         if (fileModel.isDirectory()) {
             return mStringDirectory;
         }
 
-        if (FileTypeModelENUM.FILESPACE.type.equals(fileModel.getType()) && fileModel.getContent() != null) {
-            return fileModel.getType().getTitle(mContext) + " " + StringUtils.capitalize(fileModel.getContent().getType().toString());
+        final FileSpaceModel content;
+        if (FileTypeModelENUM.FILESPACE.type.equals(fileModel.getType()) &&
+                (content = fileModel.getContent()) != null) {
+            return fileModel.getType().getTitle(mContextApp) + " " +
+                    StringUtils.capitalize(content.getType().toString());
         }
 
         if (fileModel.getType() != null) {
-            return fileModel.getType().getTitle(mContext);
+            return fileModel.getType().getTitle(mContextApp);
         }
         return "";
     }
@@ -405,7 +419,8 @@ public class FileModelCardAdapter extends RecyclerView.Adapter<FileModelCardAdap
 
         @Override
         public boolean onLongClick(View v) {
-            return mOnFileLongClickListener != null && mOnFileLongClickListener.onFileCardLongClick(v, getAdapterPosition() - (mHasHeader ? 1 : 0));
+            return mOnFileLongClickListener != null && mOnFileLongClickListener.onFileCardLongClick(v,
+                    getAdapterPosition() - (mHasHeader ? 1 : 0));
         }
     }
 }

@@ -3,6 +3,7 @@ package com.mercandalli.android.apps.files.uiautomator;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.UiSelector;
+import android.widget.EditText;
 
 import com.mercandalli.android.apps.files.R;
 
@@ -24,10 +25,10 @@ public final class LocalFileAndroidTest extends AbstractAndroidTest {
         clickWaitNewWindow(R.id.fragment_file_fab_2);
 
         // Swipe up.
-        swipeUpById(R.id.fragment_file_files_recycler_view, 30);
+        swipeUpById(R.id.fragment_file_files_recycler_view, 20);
 
         // Swipe up.
-        swipeDownById(R.id.fragment_file_files_recycler_view, 30);
+        swipeDownById(R.id.fragment_file_files_recycler_view, 20);
 
         // Select the second file
         mDevice.findObject(new UiSelector()
@@ -39,6 +40,25 @@ public final class LocalFileAndroidTest extends AbstractAndroidTest {
     @Test
     public void swipeViewPager() throws UiObjectNotFoundException {
         // Swipe ViewPager
-        swipeLeftById(R.id.fragment_file_files_recycler_view, 30);
+        swipeLeftById(R.id.fragment_file_view_pager, 20);
+        swipeLeftById(R.id.fragment_file_view_pager, 20);
+        // swipeRightById(R.id.fragment_file_view_pager, 20);
+        // swipeRightById(R.id.fragment_file_view_pager, 20);
+    }
+
+    @Test
+    public void createAndDeleteFolder() throws UiObjectNotFoundException {
+        final String folderName = "_" + getCurrentDateString();
+
+        // Create folder.
+        clickWaitNewWindow(R.id.fragment_file_fab_1);
+        clickWaitNewWindow("android:id/text1");
+        mDevice.findObject(new UiSelector().className(EditText.class)).setText(folderName);
+        clickWaitNewWindow("android:id/button1");
+
+        // Delete
+        mDevice.findObject(new UiSelector().descriptionContains("overflow#" + folderName)).click();
+        clickWaitNewWindowContainsText(R.string.delete);
+        clickWaitNewWindow("android:id/button1");
     }
 }
