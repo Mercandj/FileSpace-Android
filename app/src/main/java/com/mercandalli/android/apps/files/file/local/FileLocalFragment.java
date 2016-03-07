@@ -69,7 +69,8 @@ public class FileLocalFragment extends FabFragment implements
         FileModelAdapter.OnFileLongClickListener,
         FileModelListener,
         FileLocalPagerFragment.HomeIconVisible,
-        FileLocalOverflowActions.FileLocalActionCallback {
+        FileLocalOverflowActions.FileLocalActionCallback,
+        SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView mRecyclerView;
     private final List<FileModel> mFilesList = new ArrayList<>();
@@ -394,6 +395,7 @@ public class FileLocalFragment extends FabFragment implements
                 mRecyclerView.setAdapter(mScaleAnimationAdapter);
             }
             mRecyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewState);
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -406,8 +408,13 @@ public class FileLocalFragment extends FabFragment implements
 
     private void initViews() {
         mProgressBar.setVisibility(View.INVISIBLE);
-        mSwipeRefreshLayout.setEnabled(false);
         mRecyclerView.setHasFixedSize(true);
+        mSwipeRefreshLayout.setEnabled(true);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         final Activity activity = getActivity();
         final int nbColumn = activity.getResources().getInteger(R.integer.column_number_card);
@@ -467,5 +474,10 @@ public class FileLocalFragment extends FabFragment implements
 
     protected String initialPath() {
         return Environment.getExternalStorageDirectory().getAbsolutePath();
+    }
+
+    @Override
+    public void onRefresh() {
+        refreshData();
     }
 }

@@ -552,7 +552,8 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                return mFileModelCardAdapter.isHeader(position) ? gridLayoutManager.getSpanCount() : 1;
+                return mFileModelCardAdapter.isHeader(position) && mCurrentPage != PAGE_FOLDER_INSIDE ?
+                        gridLayoutManager.getSpanCount() : 1;
             }
         });
     }

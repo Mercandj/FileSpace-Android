@@ -1,5 +1,6 @@
 package com.mercandalli.android.apps.files.uiautomator;
 
+import android.app.Activity;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,9 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.core.deps.guava.collect.Iterables;
+import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
+import android.support.test.runner.lifecycle.Stage;
 import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject;
@@ -17,6 +21,7 @@ import android.support.test.uiautomator.UiSelector;
 import android.support.test.uiautomator.Until;
 
 import com.mercandalli.android.apps.files.R;
+import com.squareup.spoon.Spoon;
 
 import junit.framework.Assert;
 
@@ -27,6 +32,7 @@ import java.util.Date;
 
 import static android.content.Intent.CATEGORY_LAUNCHER;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
 /**
  * An abstract test that launch the app and provide useful test methods.
@@ -302,4 +308,20 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
         mDevice.waitForWindowUpdate(null, 100);
     }
     //endregion - device actions
+
+    protected void takeScreenShot(final String title) {
+        Spoon.screenshot(getCurrentActivity(), title);
+    }
+
+    protected Activity getCurrentActivity() {
+        final Activity[] activity = new Activity[1];
+        getInstrumentation().runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                activity[0] = Iterables.getOnlyElement(ActivityLifecycleMonitorRegistry.getInstance()
+                        .getActivitiesInStage(Stage.RESUMED));
+            }
+        });
+        return activity[0];
+    }
 }
