@@ -192,21 +192,21 @@ public class AudioActivity extends WearableActivity implements View.OnClickListe
                     syncControlVisibility(false);
                     break;
             }
-            String text = "";
+            final StringBuilder text = new StringBuilder();
 
             final String title = mSharedAudioData.getTitle();
             if (title != null) {
-                text += title + "\n";
+                text.append(title).append("\n");
             }
             final String artist = mSharedAudioData.getArtist();
             if (artist != null) {
-                text += artist + "\n";
+                text.append(artist).append("\n");
             }
             final String album = mSharedAudioData.getAlbum();
             if (album != null) {
-                text += album + "\n";
+                text.append(album).append("\n");
             }
-            mTextView.setText(text);
+            mTextView.setText(text.toString());
         }
     }
 }
