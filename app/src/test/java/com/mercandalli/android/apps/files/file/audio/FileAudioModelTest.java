@@ -47,7 +47,6 @@ public class FileAudioModelTest {
                 .isOnline(false);
         final FileAudioModel fileAudioModel = fileAudioModelBuilder.build();
 
-
         Assert.assertFalse(fileAudioModel.isOnline());
         Assert.assertTrue(fileAudioModel.getId() == 1234);
     }

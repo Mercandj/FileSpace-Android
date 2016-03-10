@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.uiautomator;
+package com.mercandalli.android.apps.files.lib;
 
 import android.app.Activity;
 import android.app.Instrumentation;
@@ -20,7 +20,6 @@ import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.support.test.uiautomator.UiSelector;
 import android.support.test.uiautomator.Until;
 
-import com.mercandalli.android.apps.files.R;
 import com.squareup.spoon.Spoon;
 
 import junit.framework.Assert;
@@ -38,7 +37,7 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
  * An abstract test that launch the app and provide useful test methods.
  */
 @SuppressWarnings("unused")
-/* package */ abstract class AbstractAndroidTest {
+public abstract class AbstractAndroidTest {
 
     protected final String mTargetPackage = InstrumentationRegistry.getTargetContext().getPackageName();
     protected final Context mContext = InstrumentationRegistry.getTargetContext();
@@ -66,14 +65,14 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
         mDevice.wait(Until.hasObject(By.pkg(mTargetPackage).depth(0)), MAX_LAUNCH_TIMEOUT);
 
         // Close navDrawer if open.
-        final UiObject navDrawer = mDevice.findObject(new UiSelector()
+        /*final UiObject navDrawer = mDevice.findObject(new UiSelector()
                 .resourceId(mResources.getResourceName(R.id.activity_main_navigation_view)));
         try {
             if (navDrawer != null && navDrawer.isEnabled()) {
                 navDrawer.swipeLeft(10);
             }
         } catch (UiObjectNotFoundException ignored) {
-        }
+        }*/
     }
 
     /**
@@ -310,7 +309,11 @@ import static android.support.test.InstrumentationRegistry.getInstrumentation;
     //endregion - device actions
 
     protected void takeScreenShot(final String title) {
-        Spoon.screenshot(getCurrentActivity(), title);
+        takeScreenShot(getCurrentActivity(), title);
+    }
+
+    protected void takeScreenShot(final Activity activity, final String title) {
+        Spoon.screenshot(activity, title);
     }
 
     protected Activity getCurrentActivity() {
