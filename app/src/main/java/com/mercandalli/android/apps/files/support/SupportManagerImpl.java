@@ -29,7 +29,7 @@ public class SupportManagerImpl extends SupportManager {
         call.enqueue(new Callback<SupportCommentsResponse>() {
             @Override
             public void onResponse(Call<SupportCommentsResponse> call, Response<SupportCommentsResponse> response) {
-                if (!response.isSuccess()) {
+                if (!response.isSuccessful()) {
                     notifyGetSupportManagerCallbackFailed(false);
                     return;
                 }
@@ -75,7 +75,7 @@ public class SupportManagerImpl extends SupportManager {
         call.enqueue(new Callback<SupportCommentsResponse>() {
             @Override
             public void onResponse(Call<SupportCommentsResponse> call, Response<SupportCommentsResponse> response) {
-                if (!response.isSuccess()) {
+                if (!response.isSuccessful()) {
                     notifyGetSupportManagerCallbackFailed(false);
                     return;
                 }
@@ -108,7 +108,7 @@ public class SupportManagerImpl extends SupportManager {
         call.enqueue(new Callback<SupportCommentsResponse>() {
             @Override
             public void onResponse(Call<SupportCommentsResponse> call, Response<SupportCommentsResponse> response) {
-                if (!response.isSuccess()) {
+                if (!response.isSuccessful()) {
                     notifyGetSupportManagerCallbackFailed(false);
                     return;
                 }
@@ -141,7 +141,7 @@ public class SupportManagerImpl extends SupportManager {
         call.enqueue(new Callback<SupportCommentsResponse>() {
             @Override
             public void onResponse(Call<SupportCommentsResponse> call, Response<SupportCommentsResponse> response) {
-                if (!response.isSuccess()) {
+                if (!response.isSuccessful()) {
                     notifyGetSupportManagerCallbackFailed(true);
                     return;
                 }

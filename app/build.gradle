@@ -100,28 +100,28 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.google.android.gms:play-services-auth:8.4.0'
 
-    //CircleImageView
+    // CircleImageView
     compile 'de.hdodenhof:circleimageview:2.0.0'
 
-    //Dagger
+    // Dagger
     compile 'com.google.dagger:dagger:2.0.2'
     apt 'com.google.dagger:dagger-compiler:2.0.2'
 
-    //Network
-    compile('com.squareup.retrofit2:retrofit:2.0.0-beta4') {
+    // Network
+    compile('com.squareup.retrofit2:retrofit:2.0.0') {
         // exclude Retrofit’s OkHttp peer-dependency module and define your own module import
         exclude module: 'okhttp'
     }
-    compile 'com.squareup.okhttp3:okhttp:3.0.0'
-    compile 'com.google.code.gson:gson:2.4'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
+    compile 'com.squareup.okhttp3:okhttp:3.2.0'
+    compile 'com.google.code.gson:gson:2.6.2'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
 
-    //Audio
+    // Audio
     compile 'org.jaudiotagger:jaudiotagger:2.0.1'
 
-    //Other
+    // Other
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'org.glassfish:javax.annotation:10.0-b28'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {

@@ -59,7 +59,7 @@ public class VersionManager {
         call.enqueue(new Callback<VersionResponse>() {
             @Override
             public void onResponse(Call<VersionResponse> call, Response<VersionResponse> response) {
-                if (!response.isSuccess()) {
+                if (!response.isSuccessful()) {
                     mIsUpdateChecking = false;
                     return;
                 }

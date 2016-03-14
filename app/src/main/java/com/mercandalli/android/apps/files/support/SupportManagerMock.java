@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class SupportManagerMockImpl extends SupportManager {
+public class SupportManagerMock extends SupportManager {
 
     private final List<SupportComment> mSupportComments;
 
     @SuppressWarnings("UnusedParameters")
-    public SupportManagerMockImpl(final Context contextApp) {
+    public SupportManagerMock(final Context contextApp) {
         mSupportComments = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             mSupportComments.add(new SupportComment(

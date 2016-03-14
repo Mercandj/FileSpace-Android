@@ -23,12 +23,12 @@ import static com.mercandalli.android.apps.files.file.FileUtils.getNameFromPath;
  * A MockUp to test.
  */
 @SuppressWarnings("unused")
-public class FileAudioManagerMockImpl extends FileAudioManagerImpl {
+public class FileAudioManagerMock extends FileAudioManagerImpl {
 
     private static final String TAG = "FileAudioManagerMockImp";
     private static final String LIKE = " LIKE ?";
 
-    public FileAudioManagerMockImpl(final Context contextApp) {
+    public FileAudioManagerMock(final Context contextApp) {
         super(contextApp);
     }
 

@@ -145,7 +145,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
         call.enqueue(new Callback<FilesResponse>() {
             @Override
             public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
-                if (response.isSuccess()) {
+                if (response.isSuccessful()) {
                     final FilesResponse filesResponse = response.body();
                     final List<FileResponse> result = filesResponse.getResult(mContextApp);
                     final List<FileModel> fileModelList = new ArrayList<>();
@@ -235,7 +235,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
         call.enqueue(new Callback<FilesResponse>() {
             @Override
             public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
-                if (response.isSuccess() && listener != null) {
+                if (response.isSuccessful() && listener != null) {
                     listener.execute();
                 }
             }
@@ -258,7 +258,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
             call.enqueue(new Callback<FilesResponse>() {
                 @Override
                 public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
-                    if (response.isSuccess()) {
+                    if (response.isSuccessful()) {
                         final FilesResponse filesResponse = response.body();
                         filesResponse.getResult(mContextApp);
                         listener.execute();
@@ -313,7 +313,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
             call.enqueue(new Callback<FilesResponse>() {
                 @Override
                 public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
-                    if (response.isSuccess()) {
+                    if (response.isSuccessful()) {
                         final FilesResponse filesResponse = response.body();
                         filesResponse.getResult(mContextApp);
                         listener.execute();
@@ -356,7 +356,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
         call.enqueue(new Callback<FilesResponse>() {
             @Override
             public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
-                if (response.isSuccess()) {
+                if (response.isSuccessful()) {
                     final FilesResponse filesResponse = response.body();
                     filesResponse.getResult(mContextApp);
                     listener.execute();
@@ -382,7 +382,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
         call.enqueue(new Callback<FilesResponse>() {
             @Override
             public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
-                if (response.isSuccess()) {
+                if (response.isSuccessful()) {
                     final FilesResponse filesResponse = response.body();
                     filesResponse.getResult(mContextApp);
                     listener.execute();

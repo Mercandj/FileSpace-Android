@@ -23,6 +23,6 @@ public class FileModule {
         final FileOnlineApi fileOnlineApi = RetrofitUtils.getAuthorizedRetrofit().create(FileOnlineApi.class);
 
         return new FileManagerImpl(application, fileOnlineApi);
-        // return new FileManagerMockImpl(application, fileOnlineApi);
+        // return new FileManagerMock(application, fileOnlineApi);
     }
 }

@@ -32,6 +32,8 @@ import java.util.Date;
 import static android.content.Intent.CATEGORY_LAUNCHER;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
+import static org.hamcrest.CoreMatchers.instanceOf;
 
 /**
  * An abstract test that launch the app and provide useful test methods.
@@ -80,14 +82,14 @@ public abstract class AbstractAndroidTest {
      *
      * @param timeMillis The time in millis.
      */
-    protected void sleep(final int timeMillis) {
+    public static void sleep(final int timeMillis) {
         try {
             Thread.sleep(timeMillis);
         } catch (InterruptedException ignored) {
         }
     }
 
-    protected String getCurrentDateString() {
+    public static String getCurrentDateString() {
         return DateFormat.getDateTimeInstance().format(new Date())
                 .replaceAll("\\s", "").replaceAll(":", "").replaceAll(",", "").trim();
     }
@@ -308,15 +310,15 @@ public abstract class AbstractAndroidTest {
     }
     //endregion - device actions
 
-    protected void takeScreenShot(final String title) {
+    public static void takeScreenShot(final String title) {
         takeScreenShot(getCurrentActivity(), title);
     }
 
-    protected void takeScreenShot(final Activity activity, final String title) {
+    public static void takeScreenShot(final Activity activity, final String title) {
         Spoon.screenshot(activity, title);
     }
 
-    protected Activity getCurrentActivity() {
+    public static Activity getCurrentActivity() {
         final Activity[] activity = new Activity[1];
         getInstrumentation().runOnMainSync(new Runnable() {
             @Override
@@ -326,5 +328,19 @@ public abstract class AbstractAndroidTest {
             }
         });
         return activity[0];
+    }
+
+    /**
+     * Assert that the current activity is an instance of a given class and finish it.
+     *
+     * @param activityClass the {@link Class}
+     * @throws Throwable
+     */
+    public static void finish(Class<? extends Activity> activityClass) {
+        sleep(800);
+        final Activity currentActivity = getCurrentActivity();
+        assertThat(currentActivity, instanceOf(activityClass));
+        currentActivity.finish();
+        sleep(800);
     }
 }

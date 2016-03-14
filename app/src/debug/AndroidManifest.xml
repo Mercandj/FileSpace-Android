@@ -1,0 +1,13 @@
+<manifest package="com.mercandalli.android.apps.files"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- TODO http://b.android.com/179651 -->
+    <uses-sdk
+        android:minSdkVersion="18"
+        tools:overrideLibrary="android.support.test, android.app, android.support.test.rule, android.support.test.uiautomator.v18" />
+
+</manifest>
