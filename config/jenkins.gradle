@@ -1,3 +1,7 @@
-task jenkins(dependsOn: ['clean', 'check', 'test', 'spoon']) {
+task jenkins(dependsOn: ['clean', 'spoon']) {
+
+}
+
+task jenkinsunit(dependsOn: ['check', 'test']) {
 
 }
