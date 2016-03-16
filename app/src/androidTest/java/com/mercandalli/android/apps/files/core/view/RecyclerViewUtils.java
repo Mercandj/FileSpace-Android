@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.lib.view;
+package com.mercandalli.android.apps.files.core.view;
 
 import android.support.annotation.IdRes;
 import android.support.test.espresso.contrib.RecyclerViewActions;

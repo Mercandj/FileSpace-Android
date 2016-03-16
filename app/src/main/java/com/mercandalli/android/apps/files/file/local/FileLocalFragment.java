@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -70,7 +70,8 @@ public class FileLocalFragment extends FabFragment implements
         FileModelListener,
         FileLocalPagerFragment.HomeIconVisible,
         FileLocalOverflowActions.FileLocalActionCallback,
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener,
+        FileLocalPagerFragment.ScrollTop {
 
     private RecyclerView mRecyclerView;
     private final List<FileModel> mFilesList = new ArrayList<>();
@@ -105,8 +106,8 @@ public class FileLocalFragment extends FabFragment implements
 
     /**
      * Default Constructor.
-     * <p/>
-     * <p/>
+     * <p>
+     * <p>
      * lint [ValidFragment]
      * http://developer.android.com/reference/android/app/Fragment.html#Fragment()
      * Every fragment must have an empty constructor, so it can be instantiated when restoring its activity's state.
@@ -337,6 +338,9 @@ public class FileLocalFragment extends FabFragment implements
         updateAdapter();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void refreshCurrentList() {
         if (mIsRefreshing || mCurrentDirectory == null || !isAdded()) {
@@ -382,6 +386,9 @@ public class FileLocalFragment extends FabFragment implements
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateAdapter() {
         if (mRecyclerView != null && isAdded()) {
@@ -397,6 +404,22 @@ public class FileLocalFragment extends FabFragment implements
             mRecyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewState);
             mSwipeRefreshLayout.setRefreshing(false);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onRefresh() {
+        refreshData();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void scrollTop() {
+        mRecyclerView.smoothScrollToPosition(0);
     }
 
     private void findViews(final View rootView) {
@@ -474,10 +497,5 @@ public class FileLocalFragment extends FabFragment implements
 
     protected String initialPath() {
         return Environment.getExternalStorageDirectory().getAbsolutePath();
-    }
-
-    @Override
-    public void onRefresh() {
-        refreshData();
     }
 }

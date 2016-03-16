@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout android:id="@+id/snackBarPosition"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/snackBarPosition"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -52,8 +52,6 @@
         android:src="@drawable/add"
         android:stateListAnimator="@drawable/circle_button_elevation"
         android:tint="@android:color/white"
-        android:transitionName="transitionFab"
-        app:layout_anchor="@id/snackBarPosition"
-        app:layout_anchorGravity="bottom|right|end" />
+        android:transitionName="transitionFab" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -21,7 +21,7 @@ android {
         versionName rootProject.ext.versionName
         multiDexEnabled true
         //testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunner "com.mercandalli.android.apps.files.lib.FileSpaceJUnitRunner"
+        testInstrumentationRunner "com.mercandalli.android.apps.files.core.FileSpaceJUnitRunner"
     }
 
     buildTypes {
@@ -54,6 +54,9 @@ spoon {
 
     // Enable debug output
     debug = true
+
+    // Disable gif
+    noAnimations = true
 
     // Set custom test reports directory (defaults to "spoon")
     baseOutputDir = file("$buildDir/spoon-custom-report-dir")

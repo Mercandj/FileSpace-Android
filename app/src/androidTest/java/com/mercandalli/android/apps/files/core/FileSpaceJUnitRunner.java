@@ -1,5 +1,6 @@
-package com.mercandalli.android.apps.files.lib;
+package com.mercandalli.android.apps.files.core;
 
+import android.app.Application;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.os.PowerManager;
@@ -11,9 +12,9 @@ import static android.content.Context.POWER_SERVICE;
 /**
  * Tests can fail for other reasons than code, it´ because of the animations and espresso sync and
  * emulator state (screen off or locked).
- * <p>
+ * <p/>
  * Before all the tests prepare the device to run tests and avoid these problems.
- * <p>
+ * <p/>
  * - Disable animations
  * - Disable keyguard lock
  * - Set it to be awake all the time (don't let the processor sleep)
@@ -28,6 +29,12 @@ import static android.content.Context.POWER_SERVICE;
 public class FileSpaceJUnitRunner extends AndroidJUnitRunner {
 
     private PowerManager.WakeLock mWakeLock;
+
+    @Override
+    public Application newApplication(ClassLoader cl, String className, Context context) throws
+            InstantiationException, IllegalAccessException, ClassNotFoundException {
+        return super.newApplication(cl, TestApp.class.getName(), context);
+    }
 
     @Override
     public void onStart() {
@@ -50,7 +57,12 @@ public class FileSpaceJUnitRunner extends AndroidJUnitRunner {
 
     @Override
     public void onDestroy() {
-        mWakeLock.release();
+        runOnMainSync(new Runnable() {
+            @Override
+            public void run() {
+                mWakeLock.release();
+            }
+        });
         super.onDestroy();
     }
 }

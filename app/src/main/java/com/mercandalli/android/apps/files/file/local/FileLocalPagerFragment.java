@@ -56,7 +56,7 @@ import com.mercandalli.android.apps.files.main.ApplicationCallback;
 
 public class FileLocalPagerFragment extends BackFragment implements
         ViewPager.OnPageChangeListener,
-        FabFragment.RefreshFabCallback {
+        FabFragment.RefreshFabCallback, TabLayout.OnTabSelectedListener {
 
     private static final int NB_FRAGMENT = 3;
     private static final int INIT_FRAGMENT = 0;
@@ -230,6 +230,27 @@ public class FileLocalPagerFragment extends BackFragment implements
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        mViewPager.setCurrentItem(tab.getPosition());
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+        final int currentItemPosition = mViewPager.getCurrentItem();
+        if (tab.getPosition() == currentItemPosition) {
+            final Fragment fragment = getCurrentFragment();
+            if (fragment != null && fragment instanceof ScrollTop) {
+                ((ScrollTop) fragment).scrollTop();
+            }
+        }
+    }
+
     public int getCurrentFragmentIndex() {
         return mViewPager.getCurrentItem();
     }
@@ -280,8 +301,8 @@ public class FileLocalPagerFragment extends BackFragment implements
     private void findViews(final View rootView) {
         mViewPager = (ViewPager) rootView.findViewById(R.id.fragment_file_view_pager);
         mTabLayout = (TabLayout) rootView.findViewById(R.id.fragment_file_tab_layout);
-        mFab1 = ((FloatingActionButton) rootView.findViewById(R.id.fragment_file_fab_1));
-        mFab2 = ((FloatingActionButton) rootView.findViewById(R.id.fragment_file_fab_2));
+        mFab1 = (FloatingActionButton) rootView.findViewById(R.id.fragment_file_fab_1);
+        mFab2 = (FloatingActionButton) rootView.findViewById(R.id.fragment_file_fab_2);
     }
 
     private void initToolbar(View rootView) {
@@ -303,6 +324,10 @@ public class FileLocalPagerFragment extends BackFragment implements
         }
 
         mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.setOnTabSelectedListener(this);
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
+            mTabLayout.setSelectedTabIndicatorColor(Color.TRANSPARENT);
+        }
         syncTabLayout();
 
         mFab1.setVisibility(View.GONE);
@@ -330,7 +355,7 @@ public class FileLocalPagerFragment extends BackFragment implements
         refreshFab(getCurrentFragmentIndex());
     }
 
-    private void refreshFab(int currentFragmentId) {
+    private void refreshFab(final int currentFragmentId) {
         if (currentFragmentId == -1) {
             return;
         }
@@ -486,6 +511,14 @@ public class FileLocalPagerFragment extends BackFragment implements
 
     interface HomeIconVisible {
         boolean isHomeVisible();
+    }
+
+    public interface ScrollTop {
+
+        /**
+         * Scroll to the top of the {@link android.support.v7.widget.RecyclerView}.
+         */
+        void scrollTop();
     }
     //endregion Inner class and interface
 }

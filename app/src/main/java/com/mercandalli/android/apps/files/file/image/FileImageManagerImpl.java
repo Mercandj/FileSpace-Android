@@ -234,6 +234,12 @@ public class FileImageManagerImpl implements FileImageManager {
     }
 
     @Override
+    public void clearCache() {
+        mCacheGetAllLocalImage.clear();
+        mCacheGetLocalImagesFolders.clear();
+    }
+
+    @Override
     public boolean registerAllLocalImageListener(final GetAllLocalImageListener getAllLocalImageListener) {
         synchronized (mGetAllLocalImageListeners) {
             //noinspection SimplifiableIfStatement

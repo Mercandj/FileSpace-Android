@@ -60,7 +60,8 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         FileImageManager.GetLocalImageListener,
         FileLocalPagerFragment.ListController,
         ScaleAnimationAdapter.NoAnimatedPosition,
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener,
+        FileLocalPagerFragment.ScrollTop {
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({
@@ -485,6 +486,14 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                 mFileImageManager.getLocalImage(mCurrentFolder);
                 break;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void scrollTop() {
+        mRecyclerView.smoothScrollToPosition(0);
     }
 
     public void refreshListFolders() {

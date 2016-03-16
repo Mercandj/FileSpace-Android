@@ -74,7 +74,8 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         FileModelCardAdapter.OnFileSubtitleAdapter,
         ScaleAnimationAdapter.NoAnimatedPosition,
         SwipeRefreshLayout.OnRefreshListener,
-        FileAudioModelListener {
+        FileAudioModelListener,
+        FileLocalPagerFragment.ScrollTop {
 
     private static final String TAG = "FileAudioLocalFragment";
 
@@ -526,6 +527,14 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     @Override
     public void onAllLocalMusicAlbumsFailed() {
 
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void scrollTop() {
+        mRecyclerView.smoothScrollToPosition(0);
     }
 
     //region refresh

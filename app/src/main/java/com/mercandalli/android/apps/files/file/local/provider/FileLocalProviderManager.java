@@ -5,64 +5,49 @@ import android.support.annotation.Nullable;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
 import java.util.List;
 
-public abstract class FileLocalProviderManager {
+public interface FileLocalProviderManager {
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({
             LOADING_ERROR_ALREADY_LAUNCHED,
             LOADING_ERROR_ANDROID_API})
-    public @interface LoadingError {
+    @interface LoadingError {
     }
 
-    public static final int LOADING_ERROR_ALREADY_LAUNCHED = -1;
-    public static final int LOADING_ERROR_ANDROID_API = -2;
+    int LOADING_ERROR_ALREADY_LAUNCHED = -1;
+    int LOADING_ERROR_ANDROID_API = -2;
 
-    protected final List<FileProviderListener> mFileProviderListeners = new ArrayList<>();
+    void load();
 
-    public abstract void load();
+    void load(@Nullable final FileProviderListener fileProviderListener);
 
-    public abstract void load(@Nullable final FileProviderListener fileProviderListener);
+    void getFilePaths(final GetFileListener getFileListener);
 
-    public abstract void getFilePaths(final GetFileListener getFileListener);
+    void getFileAudioPaths(final GetFileAudioListener getFileAudioListener);
 
-    public abstract void getFileAudioPaths(final GetFileAudioListener getFileAudioListener);
+    void getFileImagePaths(final GetFileImageListener getFileImageListener);
 
-    public abstract void getFileImagePaths(final GetFileImageListener getFileImageListener);
+    boolean registerFileProviderListener(final FileProviderListener fileProviderListener);
 
-    public boolean registerFileProviderListener(final FileProviderListener fileProviderListener) {
-        synchronized (mFileProviderListeners) {
-            //noinspection SimplifiableIfStatement
-            if (fileProviderListener == null || mFileProviderListeners.contains(fileProviderListener)) {
-                // We don't allow to register null listener
-                // And a listener can only be added once.
-                return false;
-            }
-            return mFileProviderListeners.add(fileProviderListener);
-        }
-    }
+    boolean unregisterFileProviderListener(final FileProviderListener fileProviderListener);
 
-    public boolean unregisterFileProviderListener(final FileProviderListener fileProviderListener) {
-        synchronized (mFileProviderListeners) {
-            return mFileProviderListeners.remove(fileProviderListener);
-        }
-    }
+    void clearCache();
 
-    public interface GetFileListener {
+    interface GetFileListener {
         void onGetFile(final List<String> filePaths);
     }
 
-    public interface GetFileAudioListener {
+    interface GetFileAudioListener {
         void onGetFileAudio(final List<String> fileAudioPaths);
     }
 
-    public interface GetFileImageListener {
+    interface GetFileImageListener {
         void onGetFileImage(final List<String> fileImagePaths);
     }
 
-    public static abstract class FileProviderListener {
+    abstract class FileProviderListener {
 
         public void onFileProviderReloadStarted() {
             // To override

@@ -378,7 +378,7 @@ public class FileAudioManagerImpl extends FileAudioManager {
         return result;
     }
 
-    private void clearCache() {
+    public void clearCache() {
         mCacheAllLocalMusics.clear();
         mCacheLocalMusicFolders.clear();
     }
