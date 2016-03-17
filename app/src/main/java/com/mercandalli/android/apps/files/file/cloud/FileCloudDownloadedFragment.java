@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -65,13 +66,15 @@ import javax.inject.Inject;
  */
 public class FileCloudDownloadedFragment extends InjectedFabFragment implements
         FileModelAdapter.OnFileClickListener,
-        FileModelAdapter.OnFileLongClickListener, FileModelListener {
+        FileModelAdapter.OnFileLongClickListener, FileModelListener, SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView mRecyclerView;
     private ArrayList<FileModel> mFilesList;
     private ProgressBar mProgressBar;
     private File mCurrentDirectory;
     private TextView mMessageTextView;
+
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private List<FileModel> mFilesToCutList = new ArrayList<>();
     private List<FileModel> mFilesToCopyList = new ArrayList<>();
@@ -94,7 +97,13 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
         mProgressBar.setVisibility(View.INVISIBLE);
         mMessageTextView = (TextView) rootView.findViewById(R.id.message);
 
-        (rootView.findViewById(R.id.fragment_file_files_swipe_refresh_layout)).setEnabled(false);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.fragment_file_files_swipe_refresh_layout);
+        mSwipeRefreshLayout.setEnabled(true);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_file_files_recycler_view);
         mRecyclerView.setHasFixedSize(true);
@@ -255,116 +264,9 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
         return true;
     }
 
-    public void goHome() {
-        this.mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + mApplicationCallback.getConfig().getLocalFolderName());
-        this.refreshList();
-    }
-
-    public boolean hasItemSelected() {
-        /*
-        for (FileModel file : mFilesList)
-            if (file.selected)
-                return true;
-                */
-        return false;
-    }
-
-    public void deselectAll() {
-        /*
-        for (FileModel file : mFilesList)
-            file.selected = false;
-            */
-        updateAdapter();
-    }
-
-    public void refreshList() {
-        refreshList(null);
-    }
-
-    public void refreshList(final String search) {
-        if (mCurrentDirectory == null) {
-            return;
-        }
-
-        final File[] files = (search == null) ? mCurrentDirectory.listFiles() : mCurrentDirectory.listFiles(
-                new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        return name.toLowerCase().contains(search.toLowerCase());
-                    }
-                }
-        );
-        List<File> fs;
-        if (files == null) {
-            fs = new ArrayList<>();
-        } else {
-            fs = Arrays.asList(files);
-        }
-
-        mFilesList = new ArrayList<>();
-        for (File file : fs) {
-            if (file.exists()) {
-                mFilesList.add(new FileModel.FileModelBuilder().file(file).build());
-            }
-        }
-
-        refreshFab();
-
-        if (mFilesList.size() == 0) {
-            mMessageTextView.setText(getString(R.string.no_file_local_folder, "" + mCurrentDirectory.getName()));
-            mMessageTextView.setVisibility(View.VISIBLE);
-        } else {
-            mMessageTextView.setVisibility(View.GONE);
-        }
-
-        mFileModelAdapter = new FileModelAdapter(getContext(), mFilesList, this, this, this);
-
-        ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
-        scaleAnimationAdapter.setDuration(220);
-        scaleAnimationAdapter.setOffsetDuration(32);
-
-        mRecyclerView.setAdapter(scaleAnimationAdapter);
-
-        if (mFilesList.size() == 0) {
-            mMessageTextView.setText(getString(R.string.no_file_local_folder, "" + mCurrentDirectory.getName()));
-            mMessageTextView.setVisibility(View.VISIBLE);
-        } else {
-            mMessageTextView.setVisibility(View.GONE);
-        }
-    }
-
-    public void updateAdapter() {
-        if (mRecyclerView != null && mFilesList != null && isAdded()) {
-
-            refreshFab();
-
-            mFileModelAdapter.setList(mFilesList);
-        }
-    }
-
-    private boolean createFile(String path, String name) {
-        int len = path.length();
-        if (len < 1 || name.length() < 1) {
-            return false;
-        }
-        if (path.charAt(len - 1) != '/') {
-            path += "/";
-        }
-        if (!name.contains(".")) {
-            if (new File(path + name).mkdir()) {
-                return true;
-            }
-        } else {
-            try {
-                if (new File(path + name).createNewFile()) {
-                    return true;
-                }
-            } catch (IOException e) {
-                Log.e(getClass().getName(), "Exception", e);
-                return false;
-            }
-        }
-        return false;
+    @Override
+    public void onRefresh() {
+        refreshList();
     }
 
     @Override
@@ -470,5 +372,118 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
                 });
         AlertDialog menuDrop = menuAlert.create();
         menuDrop.show();
+    }
+
+    public void goHome() {
+        this.mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + mApplicationCallback.getConfig().getLocalFolderName());
+        this.refreshList();
+    }
+
+    public boolean hasItemSelected() {
+        /*
+        for (FileModel file : mFilesList)
+            if (file.selected)
+                return true;
+                */
+        return false;
+    }
+
+    public void deselectAll() {
+        /*
+        for (FileModel file : mFilesList)
+            file.selected = false;
+            */
+        updateAdapter();
+    }
+
+    public void refreshList() {
+        refreshList(null);
+    }
+
+    public void refreshList(final String search) {
+        if (mCurrentDirectory == null) {
+            return;
+        }
+
+        final File[] files = (search == null) ? mCurrentDirectory.listFiles() : mCurrentDirectory.listFiles(
+                new FilenameFilter() {
+                    @Override
+                    public boolean accept(File dir, String name) {
+                        return name.toLowerCase().contains(search.toLowerCase());
+                    }
+                }
+        );
+        List<File> fs;
+        if (files == null) {
+            fs = new ArrayList<>();
+        } else {
+            fs = Arrays.asList(files);
+        }
+
+        mFilesList = new ArrayList<>();
+        for (File file : fs) {
+            if (file.exists()) {
+                mFilesList.add(new FileModel.FileModelBuilder().file(file).build());
+            }
+        }
+
+        refreshFab();
+
+        if (mFilesList.size() == 0) {
+            mMessageTextView.setText(getString(R.string.no_file_local_folder, "" + mCurrentDirectory.getName()));
+            mMessageTextView.setVisibility(View.VISIBLE);
+        } else {
+            mMessageTextView.setVisibility(View.GONE);
+        }
+
+        mFileModelAdapter = new FileModelAdapter(getContext(), mFilesList, this, this, this);
+
+        ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
+        scaleAnimationAdapter.setDuration(220);
+        scaleAnimationAdapter.setOffsetDuration(32);
+
+        mRecyclerView.setAdapter(scaleAnimationAdapter);
+
+        if (mFilesList.size() == 0) {
+            mMessageTextView.setText(getString(R.string.no_file_local_folder, "" + mCurrentDirectory.getName()));
+            mMessageTextView.setVisibility(View.VISIBLE);
+        } else {
+            mMessageTextView.setVisibility(View.GONE);
+        }
+    }
+
+    public void updateAdapter() {
+        if (mRecyclerView != null && mFilesList != null && isAdded()) {
+
+            refreshFab();
+
+            mFileModelAdapter.setList(mFilesList);
+        }
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    private boolean createFile(String path, String name) {
+        int len = path.length();
+        if (len < 1 || name.length() < 1) {
+            return false;
+        }
+        if (path.charAt(len - 1) != '/') {
+            path += "/";
+        }
+        if (!name.contains(".")) {
+            if (new File(path + name).mkdir()) {
+                return true;
+            }
+        } else {
+            try {
+                if (new File(path + name).createNewFile()) {
+                    return true;
+                }
+            } catch (IOException e) {
+                Log.e(getClass().getName(), "Exception", e);
+                return false;
+            }
+        }
+        return false;
     }
 }
