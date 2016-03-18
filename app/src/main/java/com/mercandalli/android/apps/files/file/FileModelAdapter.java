@@ -57,6 +57,7 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
             final FileModelListener moreListener,
             final OnFileClickListener onFileClickListener,
             final OnFileLongClickListener onFileLongClickListener) {
+        Preconditions.checkNotNull(files);
         mContext = context;
         mFiles = new ArrayList<>();
         mFiles.addAll(files);

@@ -60,16 +60,20 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import static com.mercandalli.android.apps.files.file.FileUtils.createFile;
+
 /**
  * A {@link InjectedFabFragment} used to buildDisplay the local {@link FileModel} provide by the
  * {@link FileLocalApi}.
  */
 public class FileCloudDownloadedFragment extends InjectedFabFragment implements
         FileModelAdapter.OnFileClickListener,
-        FileModelAdapter.OnFileLongClickListener, FileModelListener, SwipeRefreshLayout.OnRefreshListener {
+        FileModelAdapter.OnFileLongClickListener,
+        FileModelListener,
+        SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView mRecyclerView;
-    private ArrayList<FileModel> mFilesList;
+    private final List<FileModel> mFilesList = new ArrayList<>();
     private ProgressBar mProgressBar;
     private File mCurrentDirectory;
     private TextView mMessageTextView;
@@ -118,6 +122,12 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
         if (!mCurrentDirectory.exists()) {
             mCurrentDirectory.mkdir();
         }
+
+        mFileModelAdapter = new FileModelAdapter(getContext(), mFilesList, this, this, this);
+        final ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
+        scaleAnimationAdapter.setDuration(220);
+        scaleAnimationAdapter.setOffsetDuration(32);
+        mRecyclerView.setAdapter(scaleAnimationAdapter);
 
         refreshList();
 
@@ -420,7 +430,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
             fs = Arrays.asList(files);
         }
 
-        mFilesList = new ArrayList<>();
+        mFilesList.clear();
         for (File file : fs) {
             if (file.exists()) {
                 mFilesList.add(new FileModel.FileModelBuilder().file(file).build());
@@ -436,54 +446,21 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
             mMessageTextView.setVisibility(View.GONE);
         }
 
-        mFileModelAdapter = new FileModelAdapter(getContext(), mFilesList, this, this, this);
-
-        ScaleAnimationAdapter scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
-        scaleAnimationAdapter.setDuration(220);
-        scaleAnimationAdapter.setOffsetDuration(32);
-
-        mRecyclerView.setAdapter(scaleAnimationAdapter);
-
         if (mFilesList.size() == 0) {
             mMessageTextView.setText(getString(R.string.no_file_local_folder, "" + mCurrentDirectory.getName()));
             mMessageTextView.setVisibility(View.VISIBLE);
         } else {
             mMessageTextView.setVisibility(View.GONE);
         }
+
+        updateAdapter();
     }
 
     public void updateAdapter() {
-        if (mRecyclerView != null && mFilesList != null && isAdded()) {
-
+        if (mRecyclerView != null && isAdded()) {
             refreshFab();
-
             mFileModelAdapter.setList(mFilesList);
         }
         mSwipeRefreshLayout.setRefreshing(false);
-    }
-
-    private boolean createFile(String path, String name) {
-        int len = path.length();
-        if (len < 1 || name.length() < 1) {
-            return false;
-        }
-        if (path.charAt(len - 1) != '/') {
-            path += "/";
-        }
-        if (!name.contains(".")) {
-            if (new File(path + name).mkdir()) {
-                return true;
-            }
-        } else {
-            try {
-                if (new File(path + name).createNewFile()) {
-                    return true;
-                }
-            } catch (IOException e) {
-                Log.e(getClass().getName(), "Exception", e);
-                return false;
-            }
-        }
-        return false;
     }
 }
