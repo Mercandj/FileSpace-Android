@@ -10,6 +10,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -38,7 +39,7 @@ public interface FileOnlineApi {
             //@Field("directory") String directory
     );
 
-    @Multipart
+    @FormUrlEncoded
     @POST("/" + Config.routeFile + "/{id_file_to_rename}")
     Call<FilesResponse> rename(
             @Path("id_file_to_rename") int fileId,
@@ -49,13 +50,13 @@ public interface FileOnlineApi {
             @Path("id_file_to_delete") int fileId,
             @Body String body);
 
-    @Multipart
+    @FormUrlEncoded
     @POST("/" + Config.routeFile + "/{id_file}")
     Call<FilesResponse> setParent(
             @Path("id_file") int fileId,
             @Field("id_file_parent") String idFileParent);
 
-    @Multipart
+    @FormUrlEncoded
     @POST("/" + Config.routeFile + "/{id_file}")
     Call<FilesResponse> setPublic(
             @Path("id_file") int fileId,

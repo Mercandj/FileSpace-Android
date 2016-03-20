@@ -29,7 +29,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +52,6 @@ import com.mercandalli.android.apps.files.main.FileAppComponent;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -462,5 +460,9 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
             mFileModelAdapter.setList(mFilesList);
         }
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    public void refreshCurrentList() {
+        refreshList();
     }
 }
