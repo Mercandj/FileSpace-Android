@@ -10,14 +10,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
@@ -45,7 +42,6 @@ import com.mercandalli.android.apps.files.file.image.FileImageActivity;
 import com.mercandalli.android.apps.files.file.local.FileLocalApi;
 import com.mercandalli.android.apps.files.file.text.FileTextActivity;
 import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
@@ -189,8 +185,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
             //noinspection ResultOfMethodCallIgnored
             folder.mkdir();
         }
-        new TaskGetDownload(activity, Constants.URL_DOMAIN_API + Config.routeFile + "/" +
-                fileModel.getId(), pathFolderDownloaded + File.separator + fileModel.getFullName(),
+        new TaskGetDownload(activity, fileModel.getOnlineUrl(), pathFolderDownloaded + File.separator + fileModel.getFullName(),
                 fileModel, listener).execute();
     }
 
@@ -677,7 +672,11 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
 //        mNotifyManager.notify(1, mNotificationBuilder.build());
 //    }
 
-    private void executeOnline(final Activity activity, final int position, final List<FileModel> fileModelList, View view) {
+    private void executeOnline(
+            final Activity activity,
+            final int position,
+            final List<FileModel> fileModelList,
+            final View view) {
         if (fileModelList == null || position >= fileModelList.size()) {
             return;
         }
@@ -686,24 +685,12 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
         if (FileTypeModelENUM.TEXT.type.equals(fileTypeModel)) {
             FileTextActivity.start(activity, fileModel, true);
         } else if (FileTypeModelENUM.IMAGE.type.equals(fileTypeModel)) {
-            final Intent intent = new Intent(activity, FileImageActivity.class);
-            intent.putExtra("ID", fileModel.getId());
-            intent.putExtra("TITLE", "" + fileModel.getFullName());
-            intent.putExtra("URL_FILE", "" + fileModel.getOnlineUrl());
-            intent.putExtra("CLOUD", true);
-            intent.putExtra("SIZE_FILE", fileModel.getSize());
-            intent.putExtra("DATE_FILE", fileModel.getDateCreation());
             if (view == null) {
-                activity.startActivity(intent);
-                activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                FileImageActivity.startOnlineImage(activity, fileModel);
             } else {
-                Pair<View, String> p1 = Pair.create(view.findViewById(R.id.tab_icon), "transitionIcon");
-                Pair<View, String> p2 = Pair.create(view.findViewById(R.id.title), "transitionTitle");
-                ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(activity, p1, p2);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    activity.startActivity(intent, options.toBundle());
-                }
+                FileImageActivity.startOnlineImage(activity, fileModel,
+                        view.findViewById(R.id.tab_file_card_icon),
+                        view.findViewById(R.id.tab_file_card_title));
             }
         } else if (FileTypeModelENUM.AUDIO.type.equals(fileTypeModel)) {
 
