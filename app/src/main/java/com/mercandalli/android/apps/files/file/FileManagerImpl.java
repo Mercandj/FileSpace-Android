@@ -680,53 +680,61 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
         if (fileModelList == null || position >= fileModelList.size()) {
             return;
         }
+
         final FileModel fileModel = fileModelList.get(position);
-        final FileTypeModel fileTypeModel = fileModel.getType();
-        if (FileTypeModelENUM.TEXT.type.equals(fileTypeModel)) {
-            FileTextActivity.start(activity, fileModel, true);
-        } else if (FileTypeModelENUM.IMAGE.type.equals(fileTypeModel)) {
-            if (view == null) {
-                FileImageActivity.startOnlineImage(activity, fileModel);
-            } else {
-                FileImageActivity.startOnlineImage(activity, fileModel,
-                        view.findViewById(R.id.tab_file_card_icon),
-                        view.findViewById(R.id.tab_file_card_title));
-            }
-        } else if (FileTypeModelENUM.AUDIO.type.equals(fileTypeModel)) {
-
-            int musicCurrentPosition = position;
-            final List<String> filesPath = new ArrayList<>();
-            for (int i = 0; i < fileModelList.size(); i++) {
-                final FileModel f = fileModelList.get(i);
-                if (f.getType() != null && f.getType().equals(FileTypeModelENUM.AUDIO.type) && f.getFile() != null) {
-                    filesPath.add(f.getFile().getAbsolutePath());
-                } else if (i < musicCurrentPosition) {
-                    musicCurrentPosition--;
-                }
-            }
-            FileAudioActivity.start(activity, musicCurrentPosition, filesPath, view, true);
-
-        } else if (FileTypeModelENUM.FILESPACE.type.equals(fileTypeModel)) {
-            final FileSpaceModel fileSpaceModel = fileModel.getContent();
-            if (fileSpaceModel == null) {
-                return;
-            }
-            if (fileSpaceModel.getTimer().timer_date != null) {
-                Intent intent = new Intent(activity, FileTimerActivity.class);
-                intent.putExtra("URL_FILE", "" + fileModel.getOnlineUrl());
-                intent.putExtra("LOGIN", "" + Config.getUser().getAccessLogin());
-                intent.putExtra("CLOUD", true);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                intent.putExtra("TIMER_DATE", "" + dateFormat.format(fileSpaceModel.getTimer().timer_date));
-                activity.startActivity(intent);
-                activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
-            } else if (!StringUtils.isNullOrEmpty(fileSpaceModel.getArticle().article_content_1)) {
+        final String mime = FileTypeModelENUM.openAs(fileModel.getType());
+        switch (mime) {
+            case FileTypeModelENUM.OPEN_AS_TEXT:
                 FileTextActivity.start(activity, fileModel, true);
-            }
+                break;
+            case FileTypeModelENUM.OPEN_AS_AUDIO:
+                int musicCurrentPosition = position;
+                final List<String> filesPath = new ArrayList<>();
+                for (int i = 0; i < fileModelList.size(); i++) {
+                    final FileModel f = fileModelList.get(i);
+                    if (f.getType() != null && f.getType().equals(FileTypeModelENUM.AUDIO.type) && f.getFile() != null) {
+                        filesPath.add(f.getFile().getAbsolutePath());
+                    } else if (i < musicCurrentPosition) {
+                        musicCurrentPosition--;
+                    }
+                }
+                FileAudioActivity.start(activity, musicCurrentPosition, filesPath, view, true);
+                break;
+            case FileTypeModelENUM.OPEN_AS_FILESPACE:
+                final FileSpaceModel fileSpaceModel = fileModel.getContent();
+                if (fileSpaceModel == null) {
+                    return;
+                }
+                if (fileSpaceModel.getTimer().timer_date != null) {
+                    Intent intent = new Intent(activity, FileTimerActivity.class);
+                    intent.putExtra("URL_FILE", "" + fileModel.getOnlineUrl());
+                    intent.putExtra("LOGIN", "" + Config.getUser().getAccessLogin());
+                    intent.putExtra("CLOUD", true);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    intent.putExtra("TIMER_DATE", "" + dateFormat.format(fileSpaceModel.getTimer().timer_date));
+                    activity.startActivity(intent);
+                    activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                } else if (!StringUtils.isNullOrEmpty(fileSpaceModel.getArticle().article_content_1)) {
+                    FileTextActivity.start(activity, fileModel, true);
+                }
+                break;
+            case FileTypeModelENUM.OPEN_AS_IMAGE:
+                if (view == null) {
+                    FileImageActivity.startOnlineImage(activity, fileModel);
+                } else {
+                    FileImageActivity.startOnlineImage(activity, fileModel,
+                            view.findViewById(R.id.tab_file_card_icon),
+                            view.findViewById(R.id.tab_file_card_title));
+                }
+                break;
         }
     }
 
-    private void executeLocal(final Activity activity, final int position, final List fileModelList, View view) {
+    private void executeLocal(
+            final Activity activity,
+            final int position,
+            final List fileModelList,
+            final View view) {
         if (fileModelList == null || position >= fileModelList.size()) {
             return;
         }
@@ -735,66 +743,33 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
             return;
         }
 
-        final FileTypeModel fileTypeModel = fileModel.getType();
-        if (FileTypeModelENUM.APK.type.equals(fileTypeModel)) {
-            final Intent apkIntent = new Intent();
-            apkIntent.setAction(Intent.ACTION_VIEW);
-            apkIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "application/vnd.android.package-archive");
-            activity.startActivity(apkIntent);
-        } else if (FileTypeModelENUM.TEXT.type.equals(fileTypeModel)) {
-            final Intent txtIntent = new Intent();
-            txtIntent.setAction(Intent.ACTION_VIEW);
-            txtIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), MIME_TEXT);
-            try {
-                activity.startActivity(txtIntent);
-            } catch (ActivityNotFoundException e) {
-                txtIntent.setType("text/*");
-                activity.startActivity(txtIntent);
-            }
-        } else if (FileTypeModelENUM.TEXT.type.equals(fileTypeModel)) {
-            final Intent htmlIntent = new Intent();
-            htmlIntent.setAction(Intent.ACTION_VIEW);
-            htmlIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "text/html");
-            try {
-                activity.startActivity(htmlIntent);
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(activity, "ERREUR", Toast.LENGTH_SHORT).show();
-            }
-        } else if (FileTypeModelENUM.AUDIO.type.equals(fileTypeModel)) {
-            int musicCurrentPosition = position;
-            final List<String> filesPath = new ArrayList<>();
-            for (int i = 0; i < fileModelList.size(); i++) {
-                final FileModel f = (FileModel) fileModelList.get(i);
-                if (f.getType() != null && f.getType().equals(FileTypeModelENUM.AUDIO.type) && f.getFile() != null) {
-                    filesPath.add(f.getFile().getAbsolutePath());
-                } else if (i < position) {
-                    musicCurrentPosition--;
+        final String mime = FileTypeModelENUM.openAs(fileModel.getType());
+        switch (mime) {
+            case FileTypeModelENUM.NOT_OPEN:
+                break;
+            case FileTypeModelENUM.OPEN_AS_AUDIO:
+                int musicCurrentPosition = position;
+                final List<String> filesPath = new ArrayList<>();
+                for (int i = 0; i < fileModelList.size(); i++) {
+                    final FileModel f = (FileModel) fileModelList.get(i);
+                    if (f.getType() != null && f.getType().equals(FileTypeModelENUM.AUDIO.type) && f.getFile() != null) {
+                        filesPath.add(f.getFile().getAbsolutePath());
+                    } else if (i < position) {
+                        musicCurrentPosition--;
+                    }
                 }
-            }
-            FileAudioActivity.start(activity, musicCurrentPosition, filesPath, view, false);
-        } else if (FileTypeModelENUM.IMAGE.type.equals(fileTypeModel)) {
-            final Intent picIntent = new Intent();
-            picIntent.setAction(Intent.ACTION_VIEW);
-            picIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "image/*");
-            activity.startActivity(picIntent);
-        } else if (FileTypeModelENUM.VIDEO.type.equals(fileTypeModel)) {
-            final Intent videoIntent = new Intent();
-            videoIntent.setAction(Intent.ACTION_VIEW);
-            videoIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "video/*");
-            try {
-                activity.startActivity(videoIntent);
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(activity, "ERREUR", Toast.LENGTH_SHORT).show();
-            }
-        } else if (FileTypeModelENUM.PDF.type.equals(fileTypeModel)) {
-            final Intent pdfIntent = new Intent();
-            pdfIntent.setAction(Intent.ACTION_VIEW);
-            pdfIntent.setDataAndType(Uri.fromFile(fileModel.getFile()), "application/pdf");
-            try {
-                activity.startActivity(pdfIntent);
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(activity, "ERREUR", Toast.LENGTH_SHORT).show();
-            }
+                FileAudioActivity.start(activity, musicCurrentPosition, filesPath, view, false);
+                break;
+            default:
+                final Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.fromFile(fileModel.getFile()), mime);
+                try {
+                    activity.startActivity(intent);
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(activity, "Oops, there is an error. Try with \"Open as...\"", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
 

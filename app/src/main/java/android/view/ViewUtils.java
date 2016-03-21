@@ -1,42 +1,36 @@
-/**
- * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
- * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
- * LICENSE:
- * <p/>
- * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
- * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
- * later version.
- * <p/>
- * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
- * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
- * details.
- *
- * @author Jonathan Mercandalli
- * @license http://www.gnu.org/licenses/gpl.html
- * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- */
-package com.mercandalli.android.apps.files.common.util;
+package android.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.annotation.IntDef;
 import android.widget.RelativeLayout;
 
-/**
- * Created by Jonathan on 12/06/15.
- */
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 public class ViewUtils {
+
+    @IntDef({View.VISIBLE, View.INVISIBLE, View.GONE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Visibility {
+    }
+
+    public static void setViewVisibility(final View view, @Visibility final int visibility) {
+        if (view.getVisibility() == visibility) {
+            return;
+        }
+        view.setVisibility(visibility);
+    }
+
     public static View setMargins(View v, int t, int r, int b, int l) {
-        if (v.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
-            RelativeLayout.LayoutParams p = (RelativeLayout.LayoutParams) v.getLayoutParams();
+        final ViewGroup.LayoutParams layoutParams = v.getLayoutParams();
+        if (layoutParams instanceof RelativeLayout.LayoutParams) {
+            RelativeLayout.LayoutParams p = (RelativeLayout.LayoutParams) layoutParams;
             p.setMargins(l, t, r, b);
             v.requestLayout();
-        } else if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+        } else if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) layoutParams;
             p.setMargins(l, t, r, b);
             v.requestLayout();
         }

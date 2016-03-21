@@ -158,8 +158,8 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
     }
 
     public void addItem(FileModel name, int position) {
-        this.mFiles.add(position, name);
-        this.notifyItemInserted(position);
+        mFiles.add(position, name);
+        notifyItemInserted(position);
     }
 
     /**

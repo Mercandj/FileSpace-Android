@@ -248,7 +248,7 @@ public class FileModel implements Parcelable {
     }
 
     public boolean isAudio() {
-        return !(mIsDirectory || mType == null) && mType.equals(FileTypeModelENUM.AUDIO.type);
+        return !(mIsDirectory || mType == null) && FileTypeModelENUM.AUDIO.type.equals(mType);
     }
 
     /*

@@ -172,6 +172,8 @@
     <string name="file_model_type_vcf">Business card</string>
     <string name="file_model_type_pdf">Pdf</string>
     <string name="file_model_type_source">Source code</string>
+    <string name="file_model_type_source_java">Java source code</string>
+    <string name="file_model_type_nomedia">Android file to hide</string>
     <string name="file_model_type_3d">3d buildModel</string>
     <string name="file_model_type_iso">Optical disc</string>
     <string name="file_model_type_tmp">Temporary</string>

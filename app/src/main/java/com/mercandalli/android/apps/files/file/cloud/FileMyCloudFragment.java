@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -22,10 +22,10 @@ package com.mercandalli.android.apps.files.file.cloud;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,11 +34,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewUtils;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
 import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
@@ -83,6 +85,8 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    private ScaleAnimationAdapter scaleAnimationAdapter;
+
     @Inject
     FileManager mFileManager;
 
@@ -126,7 +130,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                 if (!fileModel.isDirectory()) {
                     if (FileTypeModelENUM.IMAGE.type.equals(fileModel.getType())) {
                         menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (fileModel.isPublic()) ? "Become private" : "Become public", "Set as profile"};
-                    } else if ( FileTypeModelENUM.APK.type.equals(fileModel.getType()) && Config.isUserAdmin()) {
+                    } else if (FileTypeModelENUM.APK.type.equals(fileModel.getType()) && Config.isUserAdmin()) {
                         menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (fileModel.isPublic()) ? "Become private" : "Become public", (fileModel.isApkUpdate()) ? "Remove the update" : "Set as update"};
                     } else {
                         menuList = new String[]{getString(R.string.download), getString(R.string.rename), getString(R.string.delete), getString(R.string.cut), getString(R.string.properties), (fileModel.isPublic()) ? "Become private" : "Become public"};
@@ -184,7 +188,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                         break;
 
                                     case 3:
-                                        FileMyCloudFragment.this.mFilesToCutList.add(fileModel);
+                                        mFilesToCutList.add(fileModel);
                                         Toast.makeText(getContext(), "File ready to cut.", Toast.LENGTH_SHORT).show();
                                         refreshFab();
                                         break;
@@ -263,8 +267,8 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                 else
                 */
                 if (mFilesList.get(position).isDirectory()) {
-                    FileMyCloudFragment.this.mIdFileDirectoryStack.add(mFilesList.get(position).getId());
-                    refreshCurrentList();
+                    mIdFileDirectoryStack.add(mFilesList.get(position).getId());
+                    refreshCurrentList(true);
                 } else {
                     mFileManager.execute(getActivity(), position, mFilesList, view);
                 }
@@ -280,18 +284,18 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
             }
         });
 
-        mRecyclerView.setAdapter(mFileModelAdapter);
-        mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
-        //mRecyclerView.addItemDecoration(new FileDivider(ContextCompat.getColor(mActivity, R.color.file_divider)));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            scaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
+            scaleAnimationAdapter.setDuration(220);
+            scaleAnimationAdapter.setOffsetDuration(32);
+            mRecyclerView.setAdapter(scaleAnimationAdapter);
+        } else {
+            mRecyclerView.setAdapter(mFileModelAdapter);
+        }
 
-        refreshCurrentList();
+        refreshCurrentList(true);
 
         return rootView;
-    }
-
-    public void resetPath() {
-        this.mIdFileDirectoryStack.clear();
-        this.mIdFileDirectoryStack.add(-1);
     }
 
     @Override
@@ -300,68 +304,64 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
             return;
         }
 
-        if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
-
-            mFileManager.getFiles(
-                    new FileModel.FileModelBuilder().id(mIdFileDirectoryStack.peek()).isOnline(true).build(),
-                    true,
-                    new ResultCallback<List<FileModel>>() {
-                        @Override
-                        public void success(List<FileModel> result) {
-                            mSwipeRefreshLayout.setRefreshing(false);
-                            mFilesList.clear();
-                            mFilesList.addAll(result);
-                            updateAdapter();
-                        }
-
-                        @Override
-                        public void failure() {
-                            Toast.makeText(getContext(), R.string.action_failed, Toast.LENGTH_SHORT).show();
-                            mSwipeRefreshLayout.setRefreshing(false);
-                        }
-                    });
-
-        } else {
+        final boolean internetConnection = NetUtils.isInternetConnection(getContext());
+        if (!internetConnection || !mApplicationCallback.isLogged()) {
             mSwipeRefreshLayout.setRefreshing(false);
-            this.mProgressBar.setVisibility(View.GONE);
-            if (this.isAdded()) {
-                this.mMessageTextView.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+            mProgressBar.setVisibility(View.GONE);
+            if (isAdded()) {
+                mMessageTextView.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             }
-            this.mMessageTextView.setVisibility(View.VISIBLE);
+            mMessageTextView.setVisibility(View.VISIBLE);
 
-            if (!NetUtils.isInternetConnection(getContext())) {
-                this.setListVisibility(false);
+            if (!internetConnection) {
+                ViewUtils.setViewVisibility(mRecyclerView, View.GONE);
                 refreshFab();
             }
+            return;
         }
-    }
 
-    private void setListVisibility(boolean visible) {
-        if (this.mRecyclerView != null) {
-            this.mRecyclerView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
-        }
+        mFileManager.getFiles(
+                new FileModel.FileModelBuilder().id(mIdFileDirectoryStack.peek()).isOnline(true).build(),
+                true,
+                new ResultCallback<List<FileModel>>() {
+                    @Override
+                    public void success(List<FileModel> result) {
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        mFilesList.clear();
+                        mFilesList.addAll(result);
+                        updateAdapter();
+                    }
+
+                    @Override
+                    public void failure() {
+                        Toast.makeText(getContext(), R.string.action_failed, Toast.LENGTH_SHORT).show();
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                });
     }
 
     @Override
     public void updateAdapter() {
-        if (this.mRecyclerView != null && this.isAdded()) {
-
-            this.mProgressBar.setVisibility(View.GONE);
-
+        if (mRecyclerView != null && isAdded()) {
             if (mFilesList.size() == 0) {
-                if (this.mIdFileDirectoryStack.peek() == -1) {
-                    this.mMessageTextView.setText(getString(R.string.no_file_server));
+                if (mIdFileDirectoryStack.peek() == -1) {
+                    mMessageTextView.setText(getString(R.string.no_file_server));
                 } else {
-                    this.mMessageTextView.setText(getString(R.string.no_file_directory));
+                    mMessageTextView.setText(getString(R.string.no_file_directory));
                 }
-                this.mMessageTextView.setVisibility(View.VISIBLE);
+                ViewUtils.setViewVisibility(mMessageTextView, View.VISIBLE);
             } else {
-                this.mMessageTextView.setVisibility(View.GONE);
+                ViewUtils.setViewVisibility(mMessageTextView, View.GONE);
             }
 
+            mRecyclerView.scrollToPosition(0);
+            scaleAnimationAdapter.reset();
             mFileModelAdapter.setList(mFilesList);
 
             refreshFab();
+
+            ViewUtils.setViewVisibility(mProgressBar, View.GONE);
+            ViewUtils.setViewVisibility(mRecyclerView, View.VISIBLE);
         }
     }
 
@@ -370,9 +370,9 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
         if (hasItemSelected()) {
             deselectAll();
             return true;
-        } else if (this.mIdFileDirectoryStack.peek() != -1) {
-            FileMyCloudFragment.this.mIdFileDirectoryStack.pop();
-            FileMyCloudFragment.this.refreshCurrentList();
+        } else if (mIdFileDirectoryStack.peek() != -1) {
+            mIdFileDirectoryStack.pop();
+            refreshCurrentList();
             return true;
         } else if (mFilesToCutList.size() != 0) {
             mFilesToCutList.clear();
@@ -381,23 +381,6 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
         } else {
             return false;
         }
-    }
-
-    public boolean hasItemSelected() {
-        /*
-        for (ModelFile file : mFilesList)
-            if (file.selected)
-                return true;
-                */
-        return false;
-    }
-
-    public void deselectAll() {
-        /*
-        for (ModelFile file : mFilesList)
-            file.selected = false;
-            */
-        updateAdapter();
     }
 
     @Override
@@ -411,7 +394,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
             case 0:
                 if (mFilesToCutList.size() != 0) {
                     for (FileModel file : mFilesToCutList) {
-                        mFileManager.setParent(file, FileMyCloudFragment.this.mIdFileDirectoryStack.peek(), new IListener() {
+                        mFileManager.setParent(file, mIdFileDirectoryStack.peek(), new IListener() {
                             @Override
                             public void execute() {
                                 mApplicationCallback.refreshData();
@@ -421,10 +404,10 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                     mFilesToCutList.clear();
                 } else {
                     fab.hide();
-                    new FileAddDialog(getActivity(), mApplicationCallback, FileMyCloudFragment.this.mIdFileDirectoryStack.peek(), new IListener() {
+                    new FileAddDialog(getActivity(), mApplicationCallback, mIdFileDirectoryStack.peek(), new IListener() {
                         @Override
                         public void execute() {
-                            refreshCurrentList();
+                            refreshCurrentList(true);
                         }
                     }, new IListener() { // Dismiss
                         @Override
@@ -437,8 +420,8 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                 break;
             case 1:
                 if (mIdFileDirectoryStack.peek() != -1) {
-                    FileMyCloudFragment.this.mIdFileDirectoryStack.pop();
-                    FileMyCloudFragment.this.refreshCurrentList();
+                    mIdFileDirectoryStack.pop();
+                    refreshCurrentList(true);
                 }
                 break;
         }
@@ -453,7 +436,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
             case 0:
                 return true;
             case 1:
-                return !(mIdFileDirectoryStack.size() == 0) && this.mIdFileDirectoryStack.peek() != -1;
+                return !(mIdFileDirectoryStack.size() == 0) && mIdFileDirectoryStack.peek() != -1;
         }
         return false;
     }
@@ -480,6 +463,37 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
 
     @Override
     public void onRefresh() {
+        refreshCurrentList();
+    }
+
+    public boolean hasItemSelected() {
+        /*
+        for (ModelFile file : mFilesList)
+            if (file.selected)
+                return true;
+                */
+        return false;
+    }
+
+    public void deselectAll() {
+        /*
+        for (ModelFile file : mFilesList)
+            file.selected = false;
+            */
+        updateAdapter();
+    }
+
+    public void resetPath() {
+        mIdFileDirectoryStack.clear();
+        mIdFileDirectoryStack.add(-1);
+    }
+
+    private void refreshCurrentList(final boolean showProgressBar) {
+        if (showProgressBar) {
+            ViewUtils.setViewVisibility(mProgressBar, View.VISIBLE);
+            ViewUtils.setViewVisibility(mRecyclerView, View.GONE);
+            mFileModelAdapter.setList(new ArrayList<FileModel>());
+        }
         refreshCurrentList();
     }
 }
