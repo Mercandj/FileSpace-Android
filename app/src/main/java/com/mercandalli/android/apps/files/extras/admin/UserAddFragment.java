@@ -39,9 +39,9 @@ import com.mercandalli.android.apps.files.common.util.HashUtils;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.user.UserModel;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;

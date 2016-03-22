@@ -32,15 +32,15 @@ import java.util.List;
 
 public class NetUtils {
 
-    public static boolean isInternetConnection(Context context) {
+    public static boolean isInternetConnection(final Context context) {
         Preconditions.checkNotNull(context);
-        final Context applicationContext = context.getApplicationContext();
-        final ConnectivityManager conMgr = (ConnectivityManager) applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        final ConnectivityManager conMgr = (ConnectivityManager) context.getApplicationContext()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo activeNetwork = conMgr.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnected();
     }
 
-    public static String addUrlParameters(String url, List<StringPair> parameters) {
+    public static String addUrlParameters(String url, final List<StringPair> parameters) {
         if (parameters == null) {
             return url;
         }

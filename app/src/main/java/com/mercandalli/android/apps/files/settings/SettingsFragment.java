@@ -42,10 +42,10 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.TimeUtils;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.user.LoginRegisterActivity;
 
 import java.util.ArrayList;
@@ -251,7 +251,7 @@ public class SettingsFragment extends BackFragment {
 
     public void updateAdapter() {
         if (recyclerView != null && list != null) {
-            AdapterModelSetting adapter = new AdapterModelSetting(getActivity(), mApplicationCallback, list);
+            AdapterModelSetting adapter = new AdapterModelSetting(list);
             adapter.setOnItemClickListener(new AdapterModelSetting.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {

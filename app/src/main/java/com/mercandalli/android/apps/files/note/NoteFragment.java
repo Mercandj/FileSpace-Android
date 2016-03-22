@@ -14,8 +14,8 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.file.filespace.FileSpaceModel;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 

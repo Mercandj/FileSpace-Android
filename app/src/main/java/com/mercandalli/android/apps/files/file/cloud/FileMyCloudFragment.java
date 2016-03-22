@@ -34,7 +34,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewUtils;
+import com.mercandalli.android.apps.files.common.util.ViewUtils;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;

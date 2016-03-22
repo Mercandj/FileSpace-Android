@@ -42,9 +42,9 @@ import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
 import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -231,7 +231,7 @@ public class GenealogyTreeFragment extends FabFragment {
                 @Override
                 public void onClick(View v) {
                     if (genealogyPerson != null) {
-                        getChildren(genealogyPerson.id);
+                        getChildren(genealogyPerson.mId);
                     }
                 }
             });
@@ -321,7 +321,7 @@ public class GenealogyTreeFragment extends FabFragment {
             this.mAdapter.setOnItemClickListener(new AdapterModelGenealogyUser.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    changeUser(list.get(position).id);
+                    changeUser(list.get(position).mId);
                 }
             });
 

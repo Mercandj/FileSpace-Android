@@ -36,8 +36,8 @@ import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,10 +130,10 @@ public class DialogAddGenealogyPerson extends Dialog {
                         parameters.add(new StringPair("date_death", et_date_death.getText().toString() + " 12:00:00"));
                     }
                     if (father != null) {
-                        parameters.add(new StringPair("id_father", "" + father.id));
+                        parameters.add(new StringPair("id_father", "" + father.mId));
                     }
                     if (mother != null) {
-                        parameters.add(new StringPair("id_mother", "" + mother.id));
+                        parameters.add(new StringPair("id_mother", "" + mother.mId));
                     }
 
                     parameters.add(new StringPair("is_man", "" + sex.isChecked()));
@@ -141,7 +141,7 @@ public class DialogAddGenealogyPerson extends Dialog {
                     if (genealogyUser == null) {
                         (new TaskPost(mActivity, app, Constants.URL_DOMAIN + Config.routeGenealogy, listener, parameters)).execute();
                     } else {
-                        (new TaskPost(mActivity, app, Constants.URL_DOMAIN + Config.routeGenealogyPut + "/" + genealogyUser.id, listener, parameters)).execute();
+                        (new TaskPost(mActivity, app, Constants.URL_DOMAIN + Config.routeGenealogyPut + "/" + genealogyUser.mId, listener, parameters)).execute();
                     }
 
                     DialogAddGenealogyPerson.this.dismiss();
@@ -239,7 +239,7 @@ public class DialogAddGenealogyPerson extends Dialog {
         if (genealogyPerson != null) {
             boolean addPerson = true;
             for (ModelGenealogyPerson person : this.marriages) {
-                if (person.id == genealogyPerson.id) {
+                if (person.mId == genealogyPerson.mId) {
                     addPerson = false;
                 }
             }

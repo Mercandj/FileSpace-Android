@@ -271,6 +271,11 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
 
         if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 
+            final Context context = getContext();
+            if(context == null) {
+                return;
+            }
+
             float x = sensorEvent.values[0];
             float y = sensorEvent.values[1];
             float z = sensorEvent.values[2];
@@ -300,7 +305,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
 
                 //log("x = " + x + "    y = " + y + "    z = " + z);
 
-                if (NetUtils.isInternetConnection(getContext()) && request_ready && mModeConnection) {
+                if (NetUtils.isInternetConnection(context) && request_ready && mModeConnection) {
                     List<StringPair> parameters = new ArrayList<>();
 
                     mServo1.read = false; // write

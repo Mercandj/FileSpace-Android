@@ -150,7 +150,7 @@ public class GenealogyStatisticsFragment extends FabFragment {
         if (this.recyclerView != null && this.list != null && this.isAdded()) {
             this.circularProgressBar.setVisibility(View.GONE);
 
-            this.mAdapter = new AdapterModelInformation(getActivity(), list);
+            this.mAdapter = new AdapterModelInformation(list);
             this.recyclerView.setAdapter(mAdapter);
             this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
 

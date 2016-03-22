@@ -95,7 +95,7 @@ public class GenealogyBigTreeFragment extends FabFragment {
         if (NetUtils.isInternetConnection(getContext())) {
             new TaskGet(
                     getActivity(),
-                    Constants.URL_DOMAIN + Config.routeGenealogy + "/" + genealogyPerson.id,
+                    Constants.URL_DOMAIN + Config.routeGenealogy + "/" + genealogyPerson.mId,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {

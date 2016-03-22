@@ -165,7 +165,7 @@ public class GenealogyBigTreeView extends View {
         // --- voir les tableaux des ascendants et des positions dans les log
         for (int i = 0; i < tableau_ascendants.size(); i++) {
             personne = tableau_ascendants.get(i);
-            Log.d(TAG, "tableau_ascendants : " + personne.id + " " + personne.getAdapterTitle());
+            Log.d(TAG, "tableau_ascendants : " + personne.mId + " " + personne.getAdapterTitle());
         }
         for (int i = 0; i < tableau_positions_vertical.size(); i++) {
             Log.d(TAG, "tableau_positions : " + tableau_positions_vertical.get(i) + " " + tableau_positions_horizontal.get(i));

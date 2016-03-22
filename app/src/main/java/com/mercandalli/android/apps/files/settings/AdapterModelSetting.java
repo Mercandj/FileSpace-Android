@@ -19,8 +19,8 @@
  */
 package com.mercandalli.android.apps.files.settings;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import com.mercandalli.android.apps.files.common.util.FontUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,25 +29,18 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.util.FontUtils;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Constants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSetting.ViewHolder> {
-    private List<ModelSetting> itemsData;
-    OnItemClickListener mItemClickListener;
-    Context mContext;
-    ApplicationCallback mApplicationCallback;
 
-    public AdapterModelSetting(
-            final Context context,
-            final ApplicationCallback applicationCallback,
-            final List<ModelSetting> itemsData) {
-        this.itemsData = itemsData;
-        this.mContext = context;
-        this.mApplicationCallback = applicationCallback;
+    private final List<ModelSetting> mItemsData;
+    private OnItemClickListener mItemClickListener;
+
+    public AdapterModelSetting(final List<ModelSetting> itemsData) {
+        mItemsData = new ArrayList<>(itemsData);
     }
 
     @Override
@@ -62,7 +55,7 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        ModelSetting model = itemsData.get(position);
+        ModelSetting model = mItemsData.get(position);
         switch (model.viewType) {
             case Constants.TAB_VIEW_TYPE_NORMAL:
                 viewHolder.title.setText(String.format("%s", model.title));
@@ -82,7 +75,7 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
                 break;
             case Constants.TAB_VIEW_TYPE_SECTION:
                 viewHolder.title.setText(String.format("%s", model.title));
-                FontUtils.applyFont(mContext, viewHolder.title, "fonts/MYRIADAB.TTF");
+                FontUtils.applyFont(viewHolder.title, "fonts/MYRIADAB.TTF");
                 break;
         }
     }
@@ -118,19 +111,19 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
 
     @Override
     public int getItemCount() {
-        return itemsData.size();
+        return mItemsData.size();
     }
 
     public void addItem(ModelSetting name, int position) {
-        itemsData.add(position, name);
+        mItemsData.add(position, name);
         notifyItemInserted(position);
     }
 
     public void removeItem(int position) {
-        if (itemsData.size() <= 0) {
+        if (mItemsData.size() <= 0) {
             return;
         }
-        itemsData.remove(position);
+        mItemsData.remove(position);
         notifyItemRemoved(position);
     }
 
@@ -144,8 +137,8 @@ public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSettin
 
     @Override
     public int getItemViewType(int position) {
-        if (position < itemsData.size()) {
-            return itemsData.get(position).viewType;
+        if (position < mItemsData.size()) {
+            return mItemsData.get(position).viewType;
         }
         return 0;
     }
