@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
@@ -38,7 +40,6 @@ import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
 
 import org.json.JSONObject;
 
@@ -174,7 +175,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_file_audio_local_recycler_view);
         mRecyclerView.setHasFixedSize(true);
-        updateLayoutManager();
+        updateGridLayoutManager();
 
         mFileModels = new ArrayList<>();
 
@@ -536,12 +537,12 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
             }
 
             if (mCurrentPage == PAGE_FOLDERS) {
+                updateGridLayoutManager();
                 mFileModelCardAdapter.setList(mFileModels);
             } else {
+                updateStaggeredGridLayoutManager();
                 mFileImageAdapter.setList(mFileModels);
             }
-
-            updateLayoutManager();
         }
     }
 
@@ -555,8 +556,9 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    private void updateLayoutManager() {
-        final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.column_number_small_card));
+    private void updateGridLayoutManager() {
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),
+                getResources().getInteger(R.integer.column_number_small_card));
         mRecyclerView.setLayoutManager(gridLayoutManager);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -565,5 +567,11 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                         gridLayoutManager.getSpanCount() : 1;
             }
         });
+    }
+
+    private void updateStaggeredGridLayoutManager() {
+        final StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(
+                getResources().getInteger(R.integer.column_number_small_card), StaggeredGridLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
     }
 }

@@ -65,7 +65,7 @@ public class FileImageActivity extends ApplicationActivity {
     private boolean online;
     private long sizeFile;
     private Date date_creation;
-    private ImageButton circle;
+    private ImageButton mCircle;
     private TextView mTitleTextView, mProgressTextView;
 
     private Bitmap mBitmap;
@@ -123,29 +123,29 @@ public class FileImageActivity extends ApplicationActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
         // Get views
-        this.mProgressBar = (ProgressBar) this.findViewById(R.id.progressBar);
-        this.circle = (ImageButton) this.findViewById(R.id.circle);
-        this.mTitleTextView = (TextView) this.findViewById(R.id.title);
-        this.mProgressTextView = (TextView) this.findViewById(R.id.progress_tv);
+        mProgressBar = (ProgressBar) this.findViewById(R.id.progressBar);
+        mCircle = (ImageButton) this.findViewById(R.id.circle);
+        mTitleTextView = (TextView) this.findViewById(R.id.title);
+        mProgressTextView = (TextView) this.findViewById(R.id.progress_tv);
 
-        this.mProgressBar.setProgress(0);
+        mProgressBar.setProgress(0);
 
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
             Log.e("" + getClass().getName(), "extras == null");
-            this.finish();
-            this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            finish();
+            overridePendingTransition(R.anim.right_in, R.anim.right_out);
             return;
         } else {
-            this.mId = extras.getInt("ID");
-            this.mTitle = extras.getString("TITLE");
-            this.mUrl = extras.getString("URL_FILE");
-            this.online = extras.getBoolean("CLOUD");
-            this.sizeFile = extras.getLong("SIZE_FILE");
-            this.date_creation = (Date) extras.getSerializable("DATE_FILE");
+            mId = extras.getInt("ID");
+            mTitle = extras.getString("TITLE");
+            mUrl = extras.getString("URL_FILE");
+            online = extras.getBoolean("CLOUD");
+            sizeFile = extras.getLong("SIZE_FILE");
+            date_creation = (Date) extras.getSerializable("DATE_FILE");
 
-            if (this.mTitle != null) {
-                mTitleTextView.setText(this.mTitle);
+            if (mTitle != null) {
+                mTitleTextView.setText(mTitle);
             }
 
             if (ImageUtils.isImage(this, this.mId)) {
@@ -157,14 +157,14 @@ public class FileImageActivity extends ApplicationActivity {
                     mTitleTextView.setTextColor(ColorUtils.colorText(bgColor));
                     RippleDrawable cir = ImageUtils.getPressedColorRippleDrawable(bgColor, ColorUtils.getDarkMutedColor(mBitmap));
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        this.circle.setBackground(cir);
+                        mCircle.setBackground(cir);
                     }
                 }
-                this.mProgressBar.setVisibility(View.GONE);
-                this.mProgressTextView.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.GONE);
+                mProgressTextView.setVisibility(View.GONE);
             } else if (this.mId != 0) {
-                this.mProgressBar.setVisibility(View.VISIBLE);
-                this.mProgressTextView.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.VISIBLE);
+                mProgressTextView.setVisibility(View.VISIBLE);
                 (new TaskGetDownloadImage(this, this, mUrl, mId, sizeFile, -1, new IBitmapListener() {
                     @Override
                     public void execute(Bitmap bitmap) {
@@ -175,7 +175,7 @@ public class FileImageActivity extends ApplicationActivity {
                             mTitleTextView.setTextColor(ColorUtils.colorText(bgColor));
                             RippleDrawable cir = ImageUtils.getPressedColorRippleDrawable(bgColor, ColorUtils.getDarkMutedColor(bitmap));
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                circle.setBackground(cir);
+                                mCircle.setBackground(cir);
                             }
                         }
                         mProgressBar.setVisibility(View.GONE);
@@ -191,7 +191,7 @@ public class FileImageActivity extends ApplicationActivity {
             }
         }
 
-        this.circle.setOnClickListener(new View.OnClickListener() {
+        mCircle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent picIntent = new Intent();
