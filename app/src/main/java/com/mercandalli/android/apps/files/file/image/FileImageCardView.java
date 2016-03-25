@@ -22,6 +22,7 @@ import java.io.File;
 public class FileImageCardView extends CardView {
 
     private ImageView mImageView;
+    private int mWidth;
 
     public FileImageCardView(Context context) {
         super(context);
@@ -56,6 +57,18 @@ public class FileImageCardView extends CardView {
         }
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        mWidth = getMeasuredWidth();
+    }
+
+    /**
+     * @param file
+     * @return Height
+     */
     private void getDropboxIMGSize(final File file) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -63,10 +76,14 @@ public class FileImageCardView extends CardView {
         final int imageHeight = options.outHeight;
         final int imageWidth = options.outWidth;
 
+        int height = (int) (mWidth * (1.0 * imageHeight / imageWidth));
+        if (height == 0) {
+            height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
         setLayoutParams(
                 new ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
-                        (int) (getWidth() * (1.0 * imageHeight / imageWidth))));
+                        height));
     }
 
     private void init(final Context context) {
