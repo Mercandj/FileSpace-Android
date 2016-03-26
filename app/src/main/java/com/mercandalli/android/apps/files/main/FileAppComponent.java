@@ -14,6 +14,7 @@ import com.mercandalli.android.apps.files.file.cloud.FileCloudDownloadedFragment
 import com.mercandalli.android.apps.files.file.cloud.FileCloudFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileMyCloudFragment;
 import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
+import com.mercandalli.android.apps.files.file.image.FileImageManager;
 import com.mercandalli.android.apps.files.file.image.FileImageModule;
 import com.mercandalli.android.apps.files.file.image.FileImageAdapter;
 import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
@@ -69,6 +70,8 @@ public interface FileAppComponent {
     FileManager provideFileManager();
 
     FileLocalProviderManager provideFileProviderManager();
+
+    FileImageManager provideFileImageManager();
 
     FileAudioManager provideFileAudioManager();
 

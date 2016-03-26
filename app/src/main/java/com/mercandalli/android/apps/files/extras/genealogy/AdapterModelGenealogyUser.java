@@ -26,9 +26,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
@@ -39,39 +39,39 @@ import java.util.List;
 public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModelGenealogyUser.ViewHolder> {
 
     private final Activity mActivity;
-    public List<ModelGenealogyPerson> users;
+    public List<ModelGenealogyPerson> mUsers;
     OnItemClickListener mItemClickListener;
     OnItemLongClickListener mItemLongClickListener;
-    private IModelGenealogyUserListener moreListener;
-    private boolean isTree;
+    private IModelGenealogyUserListener mMoreListener;
+    private boolean mIsTree;
 
     public AdapterModelGenealogyUser(Activity activity, List<ModelGenealogyPerson> users, IModelGenealogyUserListener moreListener, boolean isTree) {
-        this.mActivity = activity;
-        this.users = users;
-        this.moreListener = moreListener;
-        this.isTree = isTree;
+        mActivity = activity;
+        mUsers = new ArrayList<>(users);
+        mMoreListener = moreListener;
+        mIsTree = isTree;
     }
 
     @Override
     public AdapterModelGenealogyUser.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (!isTree) {
-            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file, parent, false), viewType);
+        if (!mIsTree) {
+            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file, parent, false));
         }
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_genealogy_small, parent, false), viewType);
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_genealogy_small, parent, false));
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
-        if (position < users.size()) {
-            final ModelGenealogyPerson user = users.get(position);
+        if (position < mUsers.size()) {
+            final ModelGenealogyPerson user = mUsers.get(position);
 
             viewHolder.title.setText(user.getAdapterTitle());
             viewHolder.subtitle.setText(user.getAdapterSubtitle());
             viewHolder.more.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (moreListener != null) {
-                        moreListener.execute(user);
+                    if (mMoreListener != null) {
+                        mMoreListener.execute(user);
                     }
                 }
             });
@@ -93,12 +93,12 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
     public class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener, View.OnLongClickListener {
         public TextView title, subtitle;
         public ImageView icon;
-        public FrameLayout item;
+        public RelativeLayout item;
         public ImageButton more;
 
-        public ViewHolder(View itemLayoutView, int viewType) {
+        public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
-            item = (FrameLayout) itemLayoutView.findViewById(R.id.item);
+            item = (RelativeLayout) itemLayoutView.findViewById(R.id.item);
             title = (TextView) itemLayoutView.findViewById(R.id.title);
             subtitle = (TextView) itemLayoutView.findViewById(R.id.subtitle);
             icon = (ImageView) itemLayoutView.findViewById(R.id.tab_icon);
@@ -122,44 +122,16 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
 
     @Override
     public int getItemCount() {
-        return users.size();
-    }
-
-
-    public void remplaceList(ArrayList<ModelGenealogyPerson> list) {
-        users.clear();
-        users.addAll(0, list);
-        notifyDataSetChanged();
-    }
-
-    public void addFirst(ArrayList<ModelGenealogyPerson> list) {
-        users.addAll(0, list);
-        notifyDataSetChanged();
-    }
-
-    public void addLast(ArrayList<ModelGenealogyPerson> list) {
-        users.addAll(users.size(), list);
-        notifyDataSetChanged();
+        return mUsers.size();
     }
 
     public void addItem(ModelGenealogyPerson name, int position) {
-        this.users.add(position, name);
-        this.notifyItemInserted(position);
-    }
-
-    public void removeAll() {
-        int size = users.size();
-        if (size > 0) {
-            users = new ArrayList<>();
-            this.notifyItemRangeInserted(0, size - 1);
-        }
+        mUsers.add(position, name);
+        notifyItemInserted(position);
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position < users.size()) {
-            return users.get(position).viewType;
-        }
         return 0;
     }
 

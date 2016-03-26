@@ -41,8 +41,8 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.view.NonSwipeableViewPager;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 
 public class GenealogyFragment extends BackFragment implements ViewPager.OnPageChangeListener {
 
@@ -311,7 +311,6 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
         }
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
@@ -347,7 +346,6 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
         if (mSearchView != null) {
             mSearchView.setOnQueryTextListener(queryTextListener);
         }
-
     }
 
     @Override

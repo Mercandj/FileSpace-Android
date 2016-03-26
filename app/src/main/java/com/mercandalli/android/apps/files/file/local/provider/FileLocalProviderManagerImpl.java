@@ -18,7 +18,7 @@ import com.mercandalli.android.apps.files.precondition.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileLocalProviderManagerImpl extends FileLocalProviderManager {
+public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
 
     private static final String LIKE = " LIKE ?";
     private static final String TAG = "FileLocalProviderMa";
@@ -36,6 +36,8 @@ public class FileLocalProviderManagerImpl extends FileLocalProviderManager {
 
     private boolean mIsLoadLaunched = false;
     private boolean mIsLoaded = false;
+
+    protected final List<FileProviderListener> mFileProviderListeners = new ArrayList<>();
 
     /**
      * The manager constructor.
@@ -189,6 +191,32 @@ public class FileLocalProviderManagerImpl extends FileLocalProviderManager {
             mGetFileImageListeners.add(getFileImageListener);
         }
     }
+
+    @Override
+    public void clearCache() {
+        mFileAudioPaths.clear();
+        mFileImagePaths.clear();
+        mFilePaths.clear();
+    }
+
+    public boolean registerFileProviderListener(final FileProviderListener fileProviderListener) {
+        synchronized (mFileProviderListeners) {
+            //noinspection SimplifiableIfStatement
+            if (fileProviderListener == null || mFileProviderListeners.contains(fileProviderListener)) {
+                // We don't allow to register null listener
+                // And a listener can only be added once.
+                return false;
+            }
+            return mFileProviderListeners.add(fileProviderListener);
+        }
+    }
+
+    public boolean unregisterFileProviderListener(final FileProviderListener fileProviderListener) {
+        synchronized (mFileProviderListeners) {
+            return mFileProviderListeners.remove(fileProviderListener);
+        }
+    }
+
 
     private void notifyLoadSucceeded(
             final List<String> filePaths,

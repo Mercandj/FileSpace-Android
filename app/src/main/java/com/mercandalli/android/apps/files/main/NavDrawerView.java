@@ -113,7 +113,7 @@ class NavDrawerView extends FrameLayout implements View.OnClickListener {
         mNavDrawerHeaderView.setUser(userModel, profilePicture);
     }
 
-    private void initView(@NonNull Context context) {
+    private void initView(final @NonNull Context context) {
         inflate(context, R.layout.view_nav_drawer, this);
         setBackgroundColor(Color.WHITE);
 
@@ -121,7 +121,7 @@ class NavDrawerView extends FrameLayout implements View.OnClickListener {
 
         FileApp.logPerformance(TAG, "initView - Start");
 
-        FontUtils.applyFont(context, (TextView) findViewById(R.id.view_nav_drawer_other), "fonts/MYRIADAB.TTF");
+        FontUtils.applyFont((TextView) findViewById(R.id.view_nav_drawer_other), "fonts/MYRIADAB.TTF");
 
         for (final NavDrawerRow navDrawerRow : NavDrawerRow.values()) {
             final View view = findViewById(navDrawerRow.mId);

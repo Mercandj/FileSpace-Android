@@ -1,28 +1,28 @@
 package com.mercandalli.android.apps.files.common.util;
 
 public class StringPair {
-    private String name, value;
+    private String mName, mValue;
 
     public StringPair(String name, String value) {
-        this.name = name;
-        this.value = value;
+        mName = name;
+        mValue = value;
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
     public String getValue() {
-        return value;
+        return mValue;
     }
 
     public String toString() {
-        return name + "=" + value;
+        return mName + "=" + mValue;
     }
 
     @Override
     public int hashCode() {
-        return (name.hashCode() + " " + value.hashCode()).hashCode();
+        return (mName.hashCode() + " " + mValue.hashCode()).hashCode();
     }
 
     public boolean equals(Object o) {
@@ -32,7 +32,7 @@ public class StringPair {
         if (!(o instanceof StringPair)) {
             return false;
         }
-        StringPair obj = (StringPair) o;
-        return StringUtils.isEquals(this.name, obj.name) && StringUtils.isEquals(this.value, obj.value);
+        final StringPair obj = (StringPair) o;
+        return StringUtils.isEquals(mName, obj.mName) && StringUtils.isEquals(mValue, obj.mValue);
     }
 }

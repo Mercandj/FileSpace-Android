@@ -3,6 +3,7 @@ package com.mercandalli.android.apps.files.file;
 import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.mercandalli.android.apps.files.file.filespace.FileSpaceModel;
@@ -243,12 +244,13 @@ public class FileModel implements Parcelable {
         return mName + " - Copy" + (mIsDirectory ? "" : ("." + mType));
     }
 
+    @NonNull
     public String getOnlineUrl() {
         return Constants.URL_DOMAIN + Config.routeFile + "/" + getId();
     }
 
     public boolean isAudio() {
-        return !(mIsDirectory || mType == null) && mType.equals(FileTypeModelENUM.AUDIO.type);
+        return !(mIsDirectory || mType == null) && FileTypeModelENUM.AUDIO.type.equals(mType);
     }
 
     /*

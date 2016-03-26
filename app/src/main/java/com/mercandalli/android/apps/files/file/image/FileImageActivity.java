@@ -26,6 +26,10 @@ import android.graphics.drawable.RippleDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -43,7 +47,9 @@ import com.mercandalli.android.apps.files.common.listener.ILongListener;
 import com.mercandalli.android.apps.files.common.net.TaskGetDownloadImage;
 import com.mercandalli.android.apps.files.common.util.ColorUtils;
 import com.mercandalli.android.apps.files.common.util.ImageUtils;
+import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.main.ApplicationActivity;
+import com.mercandalli.android.apps.files.precondition.Preconditions;
 
 import java.io.File;
 import java.util.Date;
@@ -59,11 +65,45 @@ public class FileImageActivity extends ApplicationActivity {
     private boolean online;
     private long sizeFile;
     private Date date_creation;
-    private ImageButton circle;
+    private ImageButton mCircle;
     private TextView mTitleTextView, mProgressTextView;
 
-    Bitmap bitmap;
-    ProgressBar progressBar;
+    private Bitmap mBitmap;
+    private ProgressBar mProgressBar;
+
+    public static void startOnlineImage(
+            final Activity activity,
+            final FileModel fileModel) {
+        startOnlineImage(activity, fileModel, null, null);
+    }
+
+    public static void startOnlineImage(
+            final @NonNull Activity activity,
+            final @NonNull FileModel fileModel,
+            final @Nullable View iconAnimationView,
+            final @Nullable View titleAnimationView) {
+        Preconditions.checkNotNull(activity);
+        Preconditions.checkNotNull(fileModel);
+
+        final Intent intent = new Intent(activity, FileImageActivity.class);
+        intent.putExtra("ID", fileModel.getId());
+        intent.putExtra("TITLE", "" + fileModel.getFullName());
+        intent.putExtra("URL_FILE", "" + fileModel.getOnlineUrl());
+        intent.putExtra("CLOUD", true);
+        intent.putExtra("SIZE_FILE", fileModel.getSize());
+        intent.putExtra("DATE_FILE", fileModel.getDateCreation());
+        if (iconAnimationView == null || titleAnimationView == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            activity.startActivity(intent);
+            activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            activity.startActivity(intent, ActivityOptionsCompat.
+                    makeSceneTransitionAnimation(
+                            activity,
+                            Pair.create(iconAnimationView, "transitionIcon"),
+                            Pair.create(titleAnimationView, "transitionTitle"))
+                    .toBundle());
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,48 +123,48 @@ public class FileImageActivity extends ApplicationActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
         // Get views
-        this.progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
-        this.circle = (ImageButton) this.findViewById(R.id.circle);
-        this.mTitleTextView = (TextView) this.findViewById(R.id.title);
-        this.mProgressTextView = (TextView) this.findViewById(R.id.progress_tv);
+        mProgressBar = (ProgressBar) this.findViewById(R.id.progressBar);
+        mCircle = (ImageButton) this.findViewById(R.id.circle);
+        mTitleTextView = (TextView) this.findViewById(R.id.title);
+        mProgressTextView = (TextView) this.findViewById(R.id.progress_tv);
 
-        this.progressBar.setProgress(0);
+        mProgressBar.setProgress(0);
 
         Bundle extras = getIntent().getExtras();
         if (extras == null) {
             Log.e("" + getClass().getName(), "extras == null");
-            this.finish();
-            this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            finish();
+            overridePendingTransition(R.anim.right_in, R.anim.right_out);
             return;
         } else {
-            this.mId = extras.getInt("ID");
-            this.mTitle = extras.getString("TITLE");
-            this.mUrl = extras.getString("URL_FILE");
-            this.online = extras.getBoolean("CLOUD");
-            this.sizeFile = extras.getLong("SIZE_FILE");
-            this.date_creation = (Date) extras.getSerializable("DATE_FILE");
+            mId = extras.getInt("ID");
+            mTitle = extras.getString("TITLE");
+            mUrl = extras.getString("URL_FILE");
+            online = extras.getBoolean("CLOUD");
+            sizeFile = extras.getLong("SIZE_FILE");
+            date_creation = (Date) extras.getSerializable("DATE_FILE");
 
-            if (this.mTitle != null) {
-                mTitleTextView.setText(this.mTitle);
+            if (mTitle != null) {
+                mTitleTextView.setText(mTitle);
             }
 
             if (ImageUtils.isImage(this, this.mId)) {
-                bitmap = ImageUtils.loadImage(this, this.mId);
-                ((ImageView) this.findViewById(R.id.tab_icon)).setImageBitmap(bitmap);
-                int bgColor = ColorUtils.getMutedColor(bitmap);
+                mBitmap = ImageUtils.loadImage(this, this.mId);
+                ((ImageView) this.findViewById(R.id.tab_icon)).setImageBitmap(mBitmap);
+                int bgColor = ColorUtils.getMutedColor(mBitmap);
                 if (bgColor != 0) {
                     mTitleTextView.setBackgroundColor(bgColor);
                     mTitleTextView.setTextColor(ColorUtils.colorText(bgColor));
-                    RippleDrawable cir = ImageUtils.getPressedColorRippleDrawable(bgColor, ColorUtils.getDarkMutedColor(bitmap));
+                    RippleDrawable cir = ImageUtils.getPressedColorRippleDrawable(bgColor, ColorUtils.getDarkMutedColor(mBitmap));
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        this.circle.setBackground(cir);
+                        mCircle.setBackground(cir);
                     }
                 }
-                this.progressBar.setVisibility(View.GONE);
-                this.mProgressTextView.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.GONE);
+                mProgressTextView.setVisibility(View.GONE);
             } else if (this.mId != 0) {
-                this.progressBar.setVisibility(View.VISIBLE);
-                this.mProgressTextView.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.VISIBLE);
+                mProgressTextView.setVisibility(View.VISIBLE);
                 (new TaskGetDownloadImage(this, this, mUrl, mId, sizeFile, -1, new IBitmapListener() {
                     @Override
                     public void execute(Bitmap bitmap) {
@@ -135,23 +175,23 @@ public class FileImageActivity extends ApplicationActivity {
                             mTitleTextView.setTextColor(ColorUtils.colorText(bgColor));
                             RippleDrawable cir = ImageUtils.getPressedColorRippleDrawable(bgColor, ColorUtils.getDarkMutedColor(bitmap));
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                circle.setBackground(cir);
+                                mCircle.setBackground(cir);
                             }
                         }
-                        progressBar.setVisibility(View.GONE);
+                        mProgressBar.setVisibility(View.GONE);
                         mProgressTextView.setVisibility(View.GONE);
                     }
                 }, new ILongListener() {
                     @Override
                     public void execute(long text) {
-                        progressBar.setProgress((int) text);
+                        mProgressBar.setProgress((int) text);
                         mProgressTextView.setText(text + "%");
                     }
                 })).execute();
             }
         }
 
-        this.circle.setOnClickListener(new View.OnClickListener() {
+        mCircle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent picIntent = new Intent();

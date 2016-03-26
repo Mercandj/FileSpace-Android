@@ -70,6 +70,7 @@ public abstract class FileAudioManager {
             final Context context,
             final FileAudioModel fileAudioModel);
 
+    public abstract void clearCache();
 
     //region Register/Unregister.
 

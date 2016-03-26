@@ -41,7 +41,6 @@ import android.widget.TextView;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
 import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
@@ -50,6 +49,7 @@ import com.mercandalli.android.apps.files.file.audio.album.Album;
 import com.mercandalli.android.apps.files.file.audio.artist.Artist;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -74,7 +74,8 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         FileModelCardAdapter.OnFileSubtitleAdapter,
         ScaleAnimationAdapter.NoAnimatedPosition,
         SwipeRefreshLayout.OnRefreshListener,
-        FileAudioModelListener {
+        FileAudioModelListener,
+        FileLocalPagerFragment.ScrollTop {
 
     private static final String TAG = "FileAudioLocalFragment";
 
@@ -526,6 +527,14 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     @Override
     public void onAllLocalMusicAlbumsFailed() {
 
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void scrollTop() {
+        mRecyclerView.smoothScrollToPosition(0);
     }
 
     //region refresh

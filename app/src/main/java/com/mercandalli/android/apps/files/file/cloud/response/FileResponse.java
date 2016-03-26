@@ -4,10 +4,10 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileTypeModel;
 import com.mercandalli.android.apps.files.file.filespace.FileSpaceModel;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

@@ -20,16 +20,15 @@
 package com.mercandalli.android.apps.files.extras.genealogy;
 
 import android.app.Activity;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
 import android.text.Spanned;
 import android.util.Log;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.common.model.Model;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.HtmlUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
@@ -44,10 +43,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ModelGenealogyPerson extends Model {
+public class ModelGenealogyPerson {
+
+    protected Activity mActivity;
+    protected ApplicationCallback mApp;
 
     public String first_name_1, first_name_2, first_name_3, last_name, date_birth, date_death, description;
-    public int id, id_father, id_mother;
+    public int mId, id_father, id_mother;
     public Date date_creation;
     public boolean is_man = false;
 
@@ -68,11 +70,12 @@ public class ModelGenealogyPerson extends Model {
     }
 
     public ModelGenealogyPerson(Activity activity, ApplicationCallback app, JSONObject json) {
-        super(activity, app);
+        mActivity = activity;
+        mApp = app;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
             if (json.has("id")) {
-                this.id = json.getInt("id");
+                this.mId = json.getInt("id");
             }
             if (json.has("first_name_1")) {
                 this.first_name_1 = json.getString("first_name_1");
@@ -133,9 +136,9 @@ public class ModelGenealogyPerson extends Model {
     }
 
     public void delete(IPostExecuteListener listener) {
-        if (this.app != null && Config.isUserAdmin() && this.id != Config.getUserId()) {
-            String url = Constants.URL_DOMAIN + Config.routeGenealogyDelete + "/" + this.id;
-            new TaskPost(mActivity, this.app, url, listener).execute();
+        if (this.mApp != null && Config.isUserAdmin() && this.mId != Config.getUserId()) {
+            String url = Constants.URL_DOMAIN + Config.routeGenealogyDelete + "/" + this.mId;
+            new TaskPost(mActivity, this.mApp, url, listener).execute();
             return;
         }
         if (listener != null) {
@@ -144,8 +147,8 @@ public class ModelGenealogyPerson extends Model {
     }
 
     public void modify(IPostExecuteListener listener) {
-        if (this.app != null && Config.isUserAdmin() && this.id != Config.getUserId()) {
-            new DialogAddGenealogyPerson(mActivity, app, listener, mActivity.getString(R.string.modify), this);
+        if (this.mApp != null && Config.isUserAdmin() && this.mId != Config.getUserId()) {
+            new DialogAddGenealogyPerson(mActivity, mApp, listener, mActivity.getString(R.string.modify), this);
             return;
         }
         if (listener != null) {
@@ -211,13 +214,8 @@ public class ModelGenealogyPerson extends Model {
     }
 
     @Override
-    public JSONObject toJSONObject() {
-        return null;
-    }
-
-    @Override
     public int hashCode() {
-        return id;
+        return mId;
     }
 
     @Override
@@ -229,7 +227,7 @@ public class ModelGenealogyPerson extends Model {
             return false;
         }
         ModelGenealogyPerson obj = (ModelGenealogyPerson) o;
-        return obj.id == this.id;
+        return obj.mId == this.mId;
     }
 
     public List<ModelGenealogyPerson> getBrothersSisters() {
@@ -241,7 +239,7 @@ public class ModelGenealogyPerson extends Model {
             for (ModelGenealogyPerson tmp_father : this.brothers_sisters_from_father) {
                 boolean bool = true;
                 for (ModelGenealogyPerson tmp_mother : brothers_sisters_from_mother) {
-                    if (tmp_mother.id == tmp_father.id) {
+                    if (tmp_mother.mId == tmp_father.mId) {
                         bool = false;
                     }
                 }

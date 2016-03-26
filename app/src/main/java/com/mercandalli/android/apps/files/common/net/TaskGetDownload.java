@@ -138,7 +138,7 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
             conn.disconnect();
 
         } catch (IOException e) {
-            Log.e(getClass().getName(), "IOException", e);
+            Log.e(getClass().getName(), "IOException: Download exception.", e);
         }
     }
 

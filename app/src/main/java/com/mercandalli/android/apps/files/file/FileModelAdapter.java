@@ -30,8 +30,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +57,7 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
             final FileModelListener moreListener,
             final OnFileClickListener onFileClickListener,
             final OnFileLongClickListener onFileLongClickListener) {
+        Preconditions.checkNotNull(files);
         mContext = context;
         mFiles = new ArrayList<>();
         mFiles.addAll(files);
@@ -157,8 +158,8 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
     }
 
     public void addItem(FileModel name, int position) {
-        this.mFiles.add(position, name);
-        this.notifyItemInserted(position);
+        mFiles.add(position, name);
+        notifyItemInserted(position);
     }
 
     /**

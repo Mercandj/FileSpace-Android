@@ -119,12 +119,14 @@ public class FileAudioModel extends FileModel {
 
     @Nullable
     public String getPath() {
-        if (mFile != null) {
-            return mFile.getPath();
-        } else {
-            getOnlineUrl();
+        if (isOnline()) {
+            return getOnlineUrl();
         }
-        return null;
+        final File file = getFile();
+        if (file == null) {
+            return null;
+        }
+        return file.getPath();
     }
 
     /* Parcelable */

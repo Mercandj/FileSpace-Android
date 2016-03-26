@@ -22,6 +22,7 @@ package com.mercandalli.android.apps.files.file.text;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -60,7 +61,7 @@ public class FileTextActivity extends ApplicationActivity implements IPostExecut
         final Intent intent = new Intent(activity, FileTextActivity.class);
         intent.putExtra(EXTRA_MODEL_FILE_URL, "" + fileModel.getOnlineUrl());
 
-        if (fileModel.getType().equals(FileTypeModelENUM.FILESPACE.type)) {
+        if (FileTypeModelENUM.FILESPACE.type.equals(fileModel.getType())) {
             intent.putExtra(EXTRA_MODEL_FILE_ARTICLE_CONTENT_1, "" + fileModel.getContent().getArticle().article_content_1);
         }
 
@@ -77,7 +78,10 @@ public class FileTextActivity extends ApplicationActivity implements IPostExecut
         final Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            final ActionBar supportActionBar = getSupportActionBar();
+            if (supportActionBar != null) {
+                supportActionBar.setDisplayHomeAsUpEnabled(true);
+            }
         }
 
         mEditText = (EditText) findViewById(R.id.txt);
@@ -87,7 +91,7 @@ public class FileTextActivity extends ApplicationActivity implements IPostExecut
         mEditText.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.VISIBLE);
 
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
         if (extras == null) {
             finish();
             overridePendingTransition(R.anim.right_in, R.anim.right_out);

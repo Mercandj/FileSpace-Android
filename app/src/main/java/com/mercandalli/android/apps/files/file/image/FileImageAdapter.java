@@ -25,15 +25,16 @@ import android.graphics.Color;
 import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.util.StringUtils;
+import com.mercandalli.android.apps.files.common.util.ViewUtils;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
@@ -45,7 +46,6 @@ import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,12 +61,12 @@ public class FileImageAdapter extends RecyclerView.Adapter<FileImageAdapter.View
     private OnItemClickListener mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
     private FileModelListener mMoreListener;
-
     private boolean mHasHeader;
 
     private final String mStringDirectory;
     private final String mStringFile;
     private final String mStringFiles;
+    private final int mImageMargin;
 
     /**
      * The view type of the header.
@@ -94,6 +94,8 @@ public class FileImageAdapter extends RecyclerView.Adapter<FileImageAdapter.View
 
         FileApp.get().getFileAppComponent().inject(this);
         setHasStableIds(true);
+
+        mImageMargin = (int) ViewUtils.dpToPx(context, 4);
     }
 
     /**
@@ -133,7 +135,7 @@ public class FileImageAdapter extends RecyclerView.Adapter<FileImageAdapter.View
             return new RowCardsViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_file_row_cards, parent, false));
         }
         return new FileViewHolder(
-                LayoutInflater.from(parent.getContext()).inflate(R.layout.card_file, parent, false),
+                new FileImageCardView(parent.getContext()),
                 mHasHeader,
                 mItemClickListener,
                 mItemLongClickListener);
@@ -144,59 +146,18 @@ public class FileImageAdapter extends RecyclerView.Adapter<FileImageAdapter.View
         if (viewHolder instanceof HeaderViewHolder) {
             final HeaderViewHolder headerViewHolder = (HeaderViewHolder) viewHolder;
             headerViewHolder.setFileModelCardHeaderItems(mHeaderIds);
+
+            final StaggeredGridLayoutManager.LayoutParams layoutParams = new StaggeredGridLayoutManager
+                    .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.setFullSpan(true);
+            headerViewHolder.itemView.setLayoutParams(layoutParams);
         } else if (position < mFileModels.size() + (mHasHeader ? 1 : 0)) {
             final FileViewHolder fileViewHolder = (FileViewHolder) viewHolder;
-            final FileModel fileModel = mFileModels.get(position - (mHasHeader ? 1 : 0));
-
-            fileViewHolder.mTitle.setText(getAdapterTitle(fileModel));
-            fileViewHolder.mSubtitle.setText(getAdapterSubtitle(fileModel));
-
-            final ImageView icon = fileViewHolder.mIcon;
-            if (fileModel.isDirectory()) {
-                icon.setImageResource(R.drawable.directory);
-            } else if (fileModel.getType() != null) {
-                final FileTypeModel type = fileModel.getType();
-
-                if (FileTypeModelENUM.AUDIO.type.equals(type)) {
-                    icon.setImageResource(R.drawable.file_audio);
-                } else if (type.equals(FileTypeModelENUM.PDF.type)) {
-                    icon.setImageResource(R.drawable.file_pdf);
-                } else if (type.equals(FileTypeModelENUM.APK.type)) {
-                    icon.setImageResource(R.drawable.file_apk);
-                } else if (type.equals(FileTypeModelENUM.ARCHIVE.type)) {
-                    icon.setImageResource(R.drawable.file_archive);
-                } else if (type.equals(FileTypeModelENUM.FILESPACE.type)) {
-                    icon.setImageResource(R.drawable.file_space);
-                } else if (type.equals(FileTypeModelENUM.IMAGE.type)) {
-                    icon.setBackgroundColor(Color.TRANSPARENT);
-                    Picasso.with(fileViewHolder.mItem.getContext())
-                            .load(fileModel.getFile())
-                            .fit()
-                            .centerCrop()
-                            .placeholder(R.drawable.placeholder_picture)
-                            .into(icon);
-                } else {
-                    icon.setBackgroundColor(Color.parseColor("#0d84c8"));
-                    icon.setImageResource(R.drawable.file_default);
-                }
-            } else {
-                icon.setBackgroundColor(Color.parseColor("#0d84c8"));
-                icon.setImageResource(R.drawable.file_default);
-            }
-
-            //mFileManager.getCover(mActivity, file, fileViewHolder.icon);
-
-            if (mMoreListener == null) {
-                fileViewHolder.mMore.setVisibility(View.GONE);
-            }
-            fileViewHolder.mMore.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mMoreListener != null) {
-                        mMoreListener.executeFileModel(fileModel, v);
-                    }
-                }
-            });
+            fileViewHolder.setFileModel(mFileModels.get(position - (mHasHeader ? 1 : 0)));
+            final StaggeredGridLayoutManager.LayoutParams layoutParams = new StaggeredGridLayoutManager
+                    .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(mImageMargin, mImageMargin, mImageMargin, mImageMargin);
+            fileViewHolder.itemView.setLayoutParams(layoutParams);
         }
     }
 
@@ -213,14 +174,6 @@ public class FileImageAdapter extends RecyclerView.Adapter<FileImageAdapter.View
     public void addItem(final FileModel name, final int position) {
         mFileModels.add(position, name);
         notifyItemInserted(position);
-    }
-
-    public void removeAll() {
-        int size = mFileModels.size();
-        if (size > 0) {
-            mFileModels = new ArrayList<>();
-            notifyItemRangeInserted(0, size - 1);
-        }
     }
 
     public void setList(final List<FileModel> list) {
@@ -305,36 +258,33 @@ public class FileImageAdapter extends RecyclerView.Adapter<FileImageAdapter.View
     }
 
     private static class FileViewHolder extends ViewHolder implements OnClickListener, View.OnLongClickListener {
-        public TextView mTitle, mSubtitle;
-        public ImageView mIcon;
-        public View mItem;
-        public View mMore;
-        private boolean mHasHeader;
-        private OnItemClickListener mItemClickListener;
-        private OnItemLongClickListener mItemLongClickListener;
+        private final boolean mHasHeader;
+        private final OnItemClickListener mItemClickListener;
+        private final OnItemLongClickListener mItemLongClickListener;
+        private final FileImageCardView mFileImageCardView;
 
         public FileViewHolder(
-                final View itemLayoutView,
+                final FileImageCardView fileImageCardView,
                 final boolean hasHeader,
                 final OnItemClickListener itemClickListener,
                 final OnItemLongClickListener itemLongClickListener) {
-            super(itemLayoutView);
+            super(fileImageCardView);
+            mFileImageCardView = fileImageCardView;
             mHasHeader = hasHeader;
             mItemClickListener = itemClickListener;
             mItemLongClickListener = itemLongClickListener;
-            mItem = itemLayoutView.findViewById(R.id.card_file_item);
-            mTitle = (TextView) itemLayoutView.findViewById(R.id.card_file_title);
-            mSubtitle = (TextView) itemLayoutView.findViewById(R.id.card_file_subtitle);
-            mIcon = (ImageView) itemLayoutView.findViewById(R.id.card_file_icon);
-            mMore = itemLayoutView.findViewById(R.id.card_file_more);
-            itemLayoutView.setOnClickListener(this);
-            itemLayoutView.setOnLongClickListener(this);
+            fileImageCardView.setOnClickListener(this);
+            fileImageCardView.setOnLongClickListener(this);
+        }
+
+        public void setFileModel(final FileModel fileModel) {
+            mFileImageCardView.setFileModel(fileModel);
         }
 
         @Override
         public void onClick(View v) {
             if (mItemClickListener != null) {
-                mItemClickListener.onItemClick(mIcon, getAdapterPosition() - (mHasHeader ? 1 : 0));
+                mItemClickListener.onItemClick(mFileImageCardView, getAdapterPosition() - (mHasHeader ? 1 : 0));
             }
         }
 

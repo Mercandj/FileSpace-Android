@@ -53,11 +53,11 @@ import com.mercandalli.android.apps.files.common.util.HashUtils;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.common.view.PagerSlidingTabStrip;
 import com.mercandalli.android.apps.files.main.ApplicationActivity;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.MainActivity;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;

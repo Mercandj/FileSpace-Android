@@ -19,8 +19,8 @@
  */
 package com.mercandalli.android.apps.files.extras.admin;
 
-import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
+import com.mercandalli.android.apps.files.common.util.FontUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +28,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.util.FontUtils;
 import com.mercandalli.android.apps.files.main.Constants;
 
 import java.util.ArrayList;
@@ -36,14 +35,12 @@ import java.util.List;
 
 public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelInformation.ViewHolder> {
 
-    private final Activity mActivity;
     private final List<ModelInformation> mModelInformations;
     private OnItemClickListener mItemClickListener;
 
-    public AdapterModelInformation(final Activity activity, List<ModelInformation> modelInformations) {
+    public AdapterModelInformation(final List<ModelInformation> modelInformations) {
         this.mModelInformations = new ArrayList<>();
         this.mModelInformations.addAll(modelInformations);
-        this.mActivity = activity;
     }
 
     @Override
@@ -56,7 +53,7 @@ public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelIn
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        ModelInformation model = mModelInformations.get(position);
+        final ModelInformation model = mModelInformations.get(position);
         switch (model.viewType) {
             case Constants.TAB_VIEW_TYPE_NORMAL:
                 viewHolder.title.setText(String.format("%s", model.title));
@@ -64,7 +61,7 @@ public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelIn
                 break;
             case Constants.TAB_VIEW_TYPE_SECTION:
                 viewHolder.title.setText(String.format("%s", model.title));
-                FontUtils.applyFont(mActivity, viewHolder.title, "fonts/MYRIADAB.TTF");
+                FontUtils.applyFont(viewHolder.title, "fonts/MYRIADAB.TTF");
                 break;
         }
     }
@@ -114,8 +111,8 @@ public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelIn
         notifyItemRemoved(position);
     }
 
-    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
-        this.mItemClickListener = mItemClickListener;
+    public void setOnItemClickListener(final OnItemClickListener itemClickListener) {
+        mItemClickListener = itemClickListener;
     }
 
     @Override

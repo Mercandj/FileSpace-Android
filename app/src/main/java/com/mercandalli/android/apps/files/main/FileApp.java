@@ -50,7 +50,7 @@ public class FileApp extends Application {
     }
     //endregion - Performance
 
-    private FileAppComponent mFileAppComponent;
+    protected FileAppComponent mFileAppComponent;
 
     @Override
     public void onCreate() {
@@ -81,7 +81,7 @@ public class FileApp extends Application {
         return mFileAppComponent;
     }
 
-    private void setupGraph() {
+    protected void setupGraph() {
         mFileAppComponent = DaggerFileAppComponent.builder()
                 .fileAppModule(new FileAppModule(this))
                 .build();

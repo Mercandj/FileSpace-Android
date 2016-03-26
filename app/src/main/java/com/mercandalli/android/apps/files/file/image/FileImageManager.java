@@ -21,6 +21,8 @@ public interface FileImageManager {
      */
     void getLocalImage(final FileModel fileModelDirectParent);
 
+    void clearCache();
+
     boolean registerAllLocalImageListener(GetAllLocalImageListener getAllLocalImageListener);
 
     boolean unregisterAllLocalImageListener(GetAllLocalImageListener getAllLocalImageListener);

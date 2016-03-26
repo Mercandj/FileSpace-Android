@@ -252,9 +252,11 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
             if (fabFragment instanceof FileCloudFragment) {
                 FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
                 fragmentFileManagerFragment.refreshCurrentList();
-            }
-            if (fabFragment instanceof FileMyCloudFragment) {
+            } else if (fabFragment instanceof FileMyCloudFragment) {
                 FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fabFragment;
+                fragmentFileManagerFragment.refreshCurrentList();
+            } else if (fabFragment instanceof FileCloudDownloadedFragment) {
+                FileCloudDownloadedFragment fragmentFileManagerFragment = (FileCloudDownloadedFragment) fabFragment;
                 fragmentFileManagerFragment.refreshCurrentList();
             }
         }

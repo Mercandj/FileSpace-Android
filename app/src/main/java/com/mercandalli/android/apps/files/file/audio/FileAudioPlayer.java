@@ -23,6 +23,7 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.shared.SharedAudioData;
 import com.mercandalli.android.apps.files.shared.SharedAudioPlayerUtils;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -139,7 +140,7 @@ public class FileAudioPlayer implements
             mCurrentMusicIndex = 0;
         }
         final FileAudioModel currentMusic = mFileAudioModelList.get(mCurrentMusicIndex);
-        if (mCurrentMusic == null || !currentMusic.getPath().equals(mCurrentMusic.getPath())) {
+        if (mCurrentMusic == null || !StringUtils.isEquals(currentMusic.getPath(), mCurrentMusic.getPath())) {
             prepare(currentMusic);
         }
         notifyAudioChanged();
@@ -157,7 +158,7 @@ public class FileAudioPlayer implements
             mCurrentMusicIndex = mFileAudioModelList.size() - 1;
         }
         final FileAudioModel currentMusic = mFileAudioModelList.get(mCurrentMusicIndex);
-        if (mCurrentMusic == null || !currentMusic.getPath().equals(mCurrentMusic.getPath())) {
+        if (mCurrentMusic == null || !StringUtils.isEquals(currentMusic.getPath(), mCurrentMusic.getPath())) {
             prepare(currentMusic);
         }
         notifyAudioChanged();
@@ -204,6 +205,10 @@ public class FileAudioPlayer implements
         }
 
         if (mCurrentMusic == null || !newCurrentMusic.getPath().equals(mCurrentMusic.getPath())) {
+            if (SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PREPARING == mCurrentStatus) {
+                mMediaPlayer.reset();
+                setCurrentStatus(SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED, false);
+            }
             prepare(newCurrentMusic);
         } else if (mCurrentStatus == SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED) {
             play();

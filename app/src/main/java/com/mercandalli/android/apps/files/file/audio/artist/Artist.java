@@ -1,5 +1,9 @@
 package com.mercandalli.android.apps.files.file.audio.artist;
 
+import android.support.annotation.NonNull;
+
+import com.mercandalli.android.apps.files.precondition.Preconditions;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,10 +14,12 @@ public class Artist {
     protected final List<String> mFilePaths = new ArrayList<>();
 
     public Artist(final String uuid, final String name) {
+        Preconditions.checkNotNull(uuid);
         mUuid = uuid;
         mName = name;
     }
 
+    @NonNull
     public String getUuid() {
         return mUuid;
     }

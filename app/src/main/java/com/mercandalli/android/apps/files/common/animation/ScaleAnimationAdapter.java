@@ -234,6 +234,11 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
         mNoAnimatedPosition = noAnimatedPosition;
     }
 
+    public void reset() {
+        mLastPosition = -1;
+        mAnimsInitialized = false;
+    }
+
     public interface NoAnimatedPosition {
 
         /**

@@ -21,13 +21,13 @@ package com.mercandalli.android.apps.files.common.util;
 
 import java.util.Random;
 
-/**
- * Created by Jonathan on 15/05/2015.
- */
 public class MathUtils {
 
-    public static int random(int min, int max) {
-        Random r = new Random();
+    public static int random(final int min, final int max) {
+        return random(new Random(), min, max);
+    }
+
+    public static int random(final Random r, final int min, final int max) {
         return r.nextInt(max - min + 1) + min;
     }
 

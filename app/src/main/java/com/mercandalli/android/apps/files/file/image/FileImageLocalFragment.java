@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +61,8 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         FileImageManager.GetLocalImageListener,
         FileLocalPagerFragment.ListController,
         ScaleAnimationAdapter.NoAnimatedPosition,
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener,
+        FileLocalPagerFragment.ScrollTop {
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({
@@ -173,7 +175,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_file_audio_local_recycler_view);
         mRecyclerView.setHasFixedSize(true);
-        updateLayoutManager();
+        updateGridLayoutManager();
 
         mFileModels = new ArrayList<>();
 
@@ -487,6 +489,14 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void scrollTop() {
+        mRecyclerView.smoothScrollToPosition(0);
+    }
+
     public void refreshListFolders() {
         mCurrentFolder = null;
         mCurrentPage = PAGE_FOLDERS;
@@ -527,12 +537,12 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
             }
 
             if (mCurrentPage == PAGE_FOLDERS) {
+                updateGridLayoutManager();
                 mFileModelCardAdapter.setList(mFileModels);
             } else {
+                updateStaggeredGridLayoutManager();
                 mFileImageAdapter.setList(mFileModels);
             }
-
-            updateLayoutManager();
         }
     }
 
@@ -546,8 +556,9 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    private void updateLayoutManager() {
-        final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.column_number_small_card));
+    private void updateGridLayoutManager() {
+        final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),
+                getResources().getInteger(R.integer.column_number_small_card));
         mRecyclerView.setLayoutManager(gridLayoutManager);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -556,5 +567,11 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                         gridLayoutManager.getSpanCount() : 1;
             }
         });
+    }
+
+    private void updateStaggeredGridLayoutManager() {
+        final StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(
+                getResources().getInteger(R.integer.column_number_small_card), StaggeredGridLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
     }
 }

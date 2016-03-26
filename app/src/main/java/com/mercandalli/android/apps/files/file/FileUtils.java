@@ -273,6 +273,7 @@ public class FileUtils {
 
     /**
      * Get the size of the file (file or directory).
+     *
      * @param file The file.
      * @return The size in bytes.
      */

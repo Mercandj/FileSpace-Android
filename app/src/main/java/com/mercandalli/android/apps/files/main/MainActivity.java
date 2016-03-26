@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
+import com.mercandalli.android.apps.files.file.cloud.FileCloudPagerFragment;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.main.version.VersionManager;
 import com.mercandalli.android.apps.files.notificationpush.NotificationPush;
@@ -95,6 +96,8 @@ public class MainActivity extends NavDrawerActivity implements
         final Fragment fragment = getCurrentFragment();
         if (fragment instanceof FileLocalPagerFragment) {
             ((FileLocalPagerFragment) fragment).refreshData();
+        } else if(fragment instanceof FileCloudPagerFragment) {
+            ((FileCloudPagerFragment) fragment).refreshData();
         }
     }
 

@@ -26,21 +26,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class HashUtils {
-    private static String convertToHex(byte[] data) {
-        StringBuilder buf = new StringBuilder();
-        for (byte b : data) {
-            int halfByte = (b >>> 4) & 0x0F;
-            int twoHalf = 0;
-            do {
-                buf.append((0 <= halfByte) && (halfByte <= 9) ? (char) ('0' + halfByte)
-                        : (char) ('a' + (halfByte - 10)));
-                halfByte = b & 0x0F;
-            } while (twoHalf++ < 1);
-        }
-        return buf.toString();
-    }
 
-    public static String sha1(String text) {
+    public static String sha1(final String text) {
         if (text == null) {
             return null;
         }
@@ -54,5 +41,19 @@ public class HashUtils {
             Log.e("HashUtils sha1", "NoSuchAlgorithmException or UnsupportedEncodingException", e);
         }
         return convertToHex(sha1hash);
+    }
+
+    private static String convertToHex(byte[] data) {
+        final StringBuilder buf = new StringBuilder();
+        for (byte b : data) {
+            int halfByte = (b >>> 4) & 0x0F;
+            int twoHalf = 0;
+            do {
+                buf.append((0 <= halfByte) && (halfByte <= 9) ? (char) ('0' + halfByte)
+                        : (char) ('a' + (halfByte - 10)));
+                halfByte = b & 0x0F;
+            } while (twoHalf++ < 1);
+        }
+        return buf.toString();
     }
 }

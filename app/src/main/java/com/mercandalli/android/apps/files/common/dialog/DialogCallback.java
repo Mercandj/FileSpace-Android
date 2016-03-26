@@ -1,12 +1,9 @@
 package com.mercandalli.android.apps.files.common.dialog;
 
-/**
- * Created by Kevin-Djit on 07/10/2015.
- */
 public interface DialogCallback {
-    public void onPositiveClick();
+    void onPositiveClick();
 
-    public void onNegativeClick();
+    void onNegativeClick();
 
-    public void onNeutralClick();
+    void onNeutralClick();
 }

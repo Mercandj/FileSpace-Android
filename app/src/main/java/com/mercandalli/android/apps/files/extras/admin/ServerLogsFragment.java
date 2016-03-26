@@ -155,7 +155,7 @@ public class ServerLogsFragment extends BackFragment {
         if (this.recyclerView != null && this.list != null && this.isAdded()) {
             this.circularProgressBar.setVisibility(View.GONE);
 
-            this.mAdapter = new AdapterModelUserConnection(getActivity(), list);
+            this.mAdapter = new AdapterModelUserConnection(list);
             this.recyclerView.setAdapter(mAdapter);
             this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
 

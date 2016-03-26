@@ -15,12 +15,14 @@ public class FileTypeModel {
     private String mTitle;
     private String[] mExtensions;
 
-    public FileTypeModel(String value) {
+    public FileTypeModel(final String value) {
         mExtensions = new String[]{value};
+        label:
         for (FileTypeModelENUM t : FileTypeModelENUM.values()) {
             for (String ext : t.type.getExtensions()) {
                 if (value.equals(ext)) {
                     mTitleId = t.type.getTitleId();
+                    break label;
                 }
             }
         }

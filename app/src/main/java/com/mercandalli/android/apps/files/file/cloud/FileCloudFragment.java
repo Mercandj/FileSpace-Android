@@ -46,7 +46,6 @@ import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.FileManager;
@@ -58,6 +57,7 @@ import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -219,7 +219,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
         final AlertDialog.Builder menuAlert = new AlertDialog.Builder(getActivity());
         String[] menuList = {getString(R.string.download)};
         if (!fileModel.isDirectory() && mFileManager.isMine(fileModel)) {
-            if (fileModel.getType().equals(FileTypeModelENUM.IMAGE.type)) {
+            if (FileTypeModelENUM.IMAGE.type.equals(fileModel.getType())) {
                 menuList = new String[]{
                         getString(R.string.download),
                         getString(R.string.rename),
