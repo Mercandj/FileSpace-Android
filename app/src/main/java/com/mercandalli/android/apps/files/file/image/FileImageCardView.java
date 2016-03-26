@@ -39,51 +39,29 @@ public class FileImageCardView extends CardView {
         init(context);
     }
 
-    public void setFileModel(final FileModel fileModel) {
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        mWidth = getMeasuredWidth();
+    }
+
+    public void bindFileModel(final FileModel fileModel) {
         Preconditions.checkNotNull(fileModel);
         final File file = fileModel.getFile();
         Preconditions.checkNotNull(file);
 
-        getDropboxIMGSize(file);
+        //syncWithImageSize(file);
 
         if (FileTypeModelENUM.IMAGE.type.equals(fileModel.getType())) {
             mImageView.setBackgroundColor(Color.TRANSPARENT);
             Picasso.with(getContext())
                     .load(file)
+                    .transform(new BitmapTransform(600, 600))
                     .placeholder(R.drawable.placeholder_picture)
                     .into(mImageView);
         } else {
             throw new IllegalStateException(FileImageCardView.class.getName() + ": not an image.");
         }
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
-        mWidth = getMeasuredWidth();
-    }
-
-    /**
-     * @param file
-     * @return Height
-     */
-    private void getDropboxIMGSize(final File file) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-        final int imageHeight = options.outHeight;
-        final int imageWidth = options.outWidth;
-
-        int height = (int) (mWidth * (1.0 * imageHeight / imageWidth));
-        if (height == 0) {
-            height = ViewGroup.LayoutParams.WRAP_CONTENT;
-        }
-        setLayoutParams(
-                new ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        height));
     }
 
     private void init(final Context context) {
@@ -98,5 +76,27 @@ public class FileImageCardView extends CardView {
         final int backgroundResource = typedArray.getResourceId(0, 0);
         setForeground(ContextCompat.getDrawable(context, backgroundResource));
         typedArray.recycle();
+    }
+
+    /**
+     * Sync the card height with the image.
+     *
+     * @param file The image file.
+     */
+    private void syncWithImageSize(final File file) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+        final int imageHeight = options.outHeight;
+        final int imageWidth = options.outWidth;
+
+        int height = (int) (mWidth * (1.0 * imageHeight / imageWidth));
+        if (height == 0) {
+            height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
+        setLayoutParams(
+                new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        height));
     }
 }

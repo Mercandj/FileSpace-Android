@@ -278,7 +278,7 @@ public class FileImageAdapter extends RecyclerView.Adapter<FileImageAdapter.View
         }
 
         public void setFileModel(final FileModel fileModel) {
-            mFileImageCardView.setFileModel(fileModel);
+            mFileImageCardView.bindFileModel(fileModel);
         }
 
         @Override
