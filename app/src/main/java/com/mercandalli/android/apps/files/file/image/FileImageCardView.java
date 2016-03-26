@@ -60,7 +60,8 @@ public class FileImageCardView extends CardView {
                     .placeholder(R.drawable.placeholder_picture)
                     .into(mImageView);
         } else {
-            throw new IllegalStateException(FileImageCardView.class.getName() + ": not an image.");
+            throw new IllegalStateException(FileImageCardView.class.getName() + ": " +
+                    file.getAbsolutePath() + " is not an image. FileType = " + fileModel.getType());
         }
     }
 

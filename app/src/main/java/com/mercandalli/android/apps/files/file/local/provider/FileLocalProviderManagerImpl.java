@@ -295,7 +295,8 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
         }
     }
 
-    private boolean isAudioPath(@NonNull final String path) {
+    private boolean isAudioPath(@NonNull final String pathBrut) {
+        final String path = pathBrut.toLowerCase();
         for (final String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
             if (path.endsWith(end)) {
                 return true;
@@ -304,7 +305,8 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
         return false;
     }
 
-    private boolean isImagePath(@NonNull final String path) {
+    private boolean isImagePath(@NonNull final String pathBrut) {
+        final String path = pathBrut.toLowerCase();
         for (final String end : FileTypeModelENUM.IMAGE.type.getExtensions()) {
             if (path.endsWith(end)) {
                 return true;

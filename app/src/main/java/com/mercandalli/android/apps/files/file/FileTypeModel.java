@@ -16,7 +16,7 @@ public class FileTypeModel {
     private String[] mExtensions;
 
     public FileTypeModel(final String value) {
-        mExtensions = new String[]{value};
+        mExtensions = new String[]{value.toLowerCase()};
         label:
         for (FileTypeModelENUM t : FileTypeModelENUM.values()) {
             for (String ext : t.type.getExtensions()) {
