@@ -118,3 +118,5 @@ captures/
 *.db
 
 *.hprof
+
+/config/jenkins/authentication.json
