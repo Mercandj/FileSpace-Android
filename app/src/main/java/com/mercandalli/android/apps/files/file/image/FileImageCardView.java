@@ -15,6 +15,7 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.precondition.Preconditions;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -57,6 +58,7 @@ public class FileImageCardView extends CardView {
             Picasso.with(getContext())
                     .load(file)
                     .transform(new BitmapTransform(600, 600))
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .placeholder(R.drawable.placeholder_picture)
                     .into(mImageView);
         } else {
