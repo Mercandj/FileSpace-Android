@@ -8,7 +8,9 @@ import java.text.SimpleDateFormat
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
-
+/**
+ * Post http request: upload file.
+ */
 public class MultipartUtility {
 
     private static final String CRLF = "\r\n";
@@ -78,7 +80,6 @@ public class MultipartUtility {
         }
         outputStream.flush();
 
-
         writer.append(CRLF);
     }
 
@@ -86,7 +87,7 @@ public class MultipartUtility {
         writer.append(name).append(": ").append(value).append(CRLF);
     }
 
-    public byte[] finish() throws IOException {
+    public String finish() throws IOException {
         writer.append(CRLF).append("--").append(boundary).append("--")
                 .append(CRLF);
         writer.close();
@@ -105,11 +106,14 @@ public class MultipartUtility {
         }
 
         connection.disconnect();
-        return bytes.toByteArray();
+        return bytes.toString("UTF-8");
 
     }
 }
 
+/**
+ * Zip a folder.
+ */
 class Zipper {
 
     private ZipOutputStream mZipFile;
@@ -148,9 +152,10 @@ class Zipper {
     }
 }
 
+/**
+ * Gradle task that zip and upload test results.
+ */
 class SaveTestResultTask extends DefaultTask {
-
-    private static final String CRLF = "\r\n";
 
     @Input
     def String mInputDirPath
@@ -180,7 +185,6 @@ class SaveTestResultTask extends DefaultTask {
     }
 
     public static String sha1(final String text) {
-        println(text)
         if (text == null) {
             return null;
         }
@@ -219,7 +223,7 @@ class SaveTestResultTask extends DefaultTask {
 
         MultipartUtility connection = new MultipartUtility(new URL(postUrl), "Basic " + getUserToken(json.username, json.password));
         connection.addFilePart("file", new File(outputZipFilePath), "application/zip");
-        println(connection.finish().toString());
+        println(connection.finish());
     }
 }
 
@@ -230,6 +234,8 @@ class Time {
         return df.format(new Date());
     }
 }
+
+/* --- TASK --- */
 
 task saveTestResult(type: SaveTestResultTask) {
     mInputDirPath = "$buildDir/spoon-custom-report-dir/debug"
