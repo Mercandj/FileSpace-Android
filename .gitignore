@@ -119,4 +119,4 @@ captures/
 
 *.hprof
 
-/config/jenkins/authentication.json
+config/jenkins/authentication.json
