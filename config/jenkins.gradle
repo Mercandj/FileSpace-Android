@@ -28,13 +28,13 @@ public class MultipartUtility {
     public MultipartUtility(final URL url, final String authorization) throws IOException {
         this.url = url;
 
-        boundary = "---------------------------" ;
+        boundary = "---------------------------";
 
         connection = (HttpURLConnection) url.openConnection();
         connection.setConnectTimeout(CONNECT_TIMEOUT);
         connection.setReadTimeout(READ_TIMEOUT);
         connection.setRequestMethod("POST");
-        if(authorization != null) {
+        if (authorization != null) {
             connection.setRequestProperty("Authorization", authorization);
         }
         connection.setRequestProperty("Accept-Charset", CHARSET);
@@ -93,7 +93,7 @@ public class MultipartUtility {
 
         final int status = connection.getResponseCode();
         if (status != 200) {
-            println("Status "+status)
+            println("Status " + status)
         }
 
         final InputStream is = connection.getInputStream()
@@ -223,9 +223,17 @@ class SaveTestResultTask extends DefaultTask {
     }
 }
 
+class Time {
+    public static String getCurrentDate() {
+        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault());
+        df.setTimeZone(TimeZone.getTimeZone("gmt"));
+        return df.format(new Date());
+    }
+}
+
 task saveTestResult(type: SaveTestResultTask) {
     mInputDirPath = "$buildDir/spoon-custom-report-dir/debug"
-    mOutputZipFilePath = "$buildDir/spoon-custom-report-dir.zip"
+    mOutputZipFilePath = "$buildDir/filespace-tests-" + Time.getCurrentDate() + ".zip"
     mPostUrl = "http://mercandalli.com/FileSpace-API/file"
     mPostJsonAuthenticationFilePath = "$rootDir/config/jenkins/authentication.json"
 }
