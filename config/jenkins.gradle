@@ -1,5 +1,27 @@
+import groovy.json.JsonSlurper
+import sun.rmi.runtime.Log
+
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
+
+class Looper {
+    private Closure code
+
+    static Looper loop(Closure code) {
+        new Looper(code: code)
+    }
+
+    void until(Closure test) {
+        code()
+        while (!test()) {
+            code()
+        }
+    }
+}
 
 class Zipper {
 
@@ -25,7 +47,7 @@ class Zipper {
                 zipInternal(file, parentName + "/" + file.getName() + "/")
             } else {
                 mZipFile.putNextEntry(new ZipEntry(parentName + file.getName()))
-                def buffer = new byte[1024]
+                def buffer = new byte[1024 * 8]
                 file.withInputStream { i ->
                     def l = i.read(buffer)
                     // check wether the file is empty
@@ -39,28 +61,107 @@ class Zipper {
     }
 }
 
-class ZipResultTask extends DefaultTask {
+class SaveTestResultTask extends DefaultTask {
 
     @Input
-    def inputDirPath
+    def String mInputDirPath
 
     @Input
-    def String outputFilePath
+    def String mOutputZipFilePath
+
+    @Input
+    def String mPostUrl
+
+    @Input
+    def String mPostJsonAuthenticationFilePath
 
     @TaskAction
-    def zip() {
-        println("[ZipResultTask] - Start")
-        new Zipper(outputFilePath).zip(inputDirPath)
-        println("[ZipResultTask] - End")
+    def saveTest() {
+        println("[ZipTestResult] - Start")
+        new Zipper(mOutputZipFilePath).zip(mInputDirPath)
+        println("[ZipTestResult] - End")
+
+        println("[SendTestResult] - Start")
+        postFile(mPostUrl, mPostJsonAuthenticationFilePath, mOutputZipFilePath)
+        println("[SendTestResult] - End")
+    }
+
+    private static String convertToHex(byte[] data) {
+        return data.encodeHex().toString();
+    }
+
+    public static String sha1(final String text) {
+        println(text)
+        if (text == null) {
+            return null;
+        }
+        MessageDigest md;
+        byte[] sha1hash = null;
+        try {
+            md = MessageDigest.getInstance("SHA-1");
+            md.update(text.getBytes("iso-8859-1"), 0, text.length());
+            sha1hash = md.digest();
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            Log.e("HashUtils sha1", "NoSuchAlgorithmException or UnsupportedEncodingException", e);
+        }
+        final String hash = convertToHex(sha1hash)
+        return hash;
+    }
+
+    public static String getUserToken(final String username, final String password) {
+        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        df.setTimeZone(TimeZone.getTimeZone("gmt"));
+        final String currentDate = df.format(new Date());
+
+        String authentication = String.format("%s:%s", username, sha1(sha1(password) + currentDate));
+        return authentication.bytes.encodeBase64().toString();
+    }
+
+    static def postFile(
+            final String postUrl,
+            final String postJsonAuthenticationFilePath,
+            final String outputZipFilePath) {
+
+        final File jsonAuthenticationFile = new File(postJsonAuthenticationFilePath)
+        if (!jsonAuthenticationFile.exists()) {
+            println("postFile: json !exists")
+            return
+        }
+        def json = new JsonSlurper().parseText(jsonAuthenticationFile.text)
+
+        def queryString = ""
+//"""privatekey=${config.recaptcha.privateKey}&remoteip=${remoteIp}&challenge=${challenge}&response=${URLEncoder.encode(response)}"
+
+        def url = new URL(postUrl)
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection()
+        connection.setRequestMethod("GET")
+        connection.doOutput = true
+        connection.doInput = true
+        connection.useCaches = false
+
+        if (json != null && json.username != null && json.password != null) {
+            connection.setRequestProperty("Authorization", "Basic " + getUserToken(json.username, json.password));
+        }
+
+        def writer = new OutputStreamWriter(connection.outputStream)
+        writer.write(queryString)
+        writer.flush()
+        writer.close()
+        connection.connect()
+
+        def postResponse = connection.content.text
+        println(postResponse)
     }
 }
 
-task zipTestResult(type: ZipResultTask) {
-    inputDirPath = "$buildDir/spoon-custom-report-dir/debug"
-    outputFilePath = "$buildDir/spoon-custom-report-dir.zip"
+task saveTestResult(type: SaveTestResultTask) {
+    mInputDirPath = "$buildDir/spoon-custom-report-dir/debug"
+    mOutputZipFilePath = "$buildDir/spoon-custom-report-dir.zip"
+    mPostUrl = "http://mercandalli.com/FileSpace-API/file"
+    mPostJsonAuthenticationFilePath = "$rootDir/config/jenkins/authentication.json"
 }
 
-task jenkins(dependsOn: ['clean', 'spoon', 'zipTestResult']) {
+task jenkins(dependsOn: ['clean', 'spoon', 'saveTestResult']) {
 
 }
 
