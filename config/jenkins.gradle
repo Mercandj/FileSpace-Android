@@ -1,4 +1,66 @@
-task jenkins(dependsOn: ['clean', 'spoon']) {
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
+
+class Zipper {
+
+    ZipOutputStream mZipFile;
+
+    Zipper(String fileOutPutName) {
+        mZipFile = new ZipOutputStream(new FileOutputStream(fileOutPutName))
+    }
+
+    void zip(String folderName) {
+        println("[Zipper] - Start zip")
+        zipInternal(new File(folderName), "")
+        mZipFile.close()
+        println("[Zipper] - End zip")
+    }
+
+    private zipInternal(File folder, String parentName) {
+        if (!folder.exists()) {
+            return
+        }
+        folder.eachFile() { file ->
+            if (file.isDirectory()) {
+                zipInternal(file, parentName + "/" + file.getName() + "/")
+            } else {
+                mZipFile.putNextEntry(new ZipEntry(parentName + file.getName()))
+                def buffer = new byte[1024]
+                file.withInputStream { i ->
+                    def l = i.read(buffer)
+                    // check wether the file is empty
+                    if (l > 0) {
+                        mZipFile.write(buffer, 0, l)
+                    }
+                }
+                mZipFile.closeEntry()
+            }
+        }
+    }
+}
+
+class ZipResultTask extends DefaultTask {
+
+    @Input
+    def inputDirPath
+
+    @Input
+    def String outputFilePath
+
+    @TaskAction
+    def zip() {
+        println("[ZipResultTask] - Start")
+        new Zipper(outputFilePath).zip(inputDirPath)
+        println("[ZipResultTask] - End")
+    }
+}
+
+task zipTestResult(type: ZipResultTask) {
+    inputDirPath = "$buildDir/spoon-custom-report-dir/debug"
+    outputFilePath = "$buildDir/spoon-custom-report-dir.zip"
+}
+
+task jenkins(dependsOn: ['clean', 'spoon', 'zipTestResult']) {
 
 }
 
