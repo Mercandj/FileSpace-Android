@@ -88,8 +88,8 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
 
             URL tmp_url = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) tmp_url.openConnection();
-            conn.setReadTimeout(10000);
-            conn.setConnectTimeout(15000);
+            conn.setReadTimeout(10_000);
+            conn.setConnectTimeout(15_000);
             conn.setRequestMethod("GET");
             if (isAuthentication) {
                 conn.setRequestProperty("Authorization", "Basic " + Config.getUserToken());

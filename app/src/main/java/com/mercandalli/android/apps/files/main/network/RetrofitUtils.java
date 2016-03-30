@@ -43,8 +43,8 @@ public class RetrofitUtils {
 
     private static OkHttpClient getAuthorizedOkHttpClient() {
         final OkHttpClient.Builder builder = (new OkHttpClient.Builder())
-                .connectTimeout(60 * 1000, TimeUnit.MILLISECONDS)
-                .readTimeout(60 * 1000, TimeUnit.MILLISECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
                 .addInterceptor(new Interceptor() {
                     @Override
                     public Response intercept(Chain chain) throws IOException {

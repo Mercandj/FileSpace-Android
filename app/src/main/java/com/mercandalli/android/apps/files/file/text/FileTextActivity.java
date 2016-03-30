@@ -96,7 +96,8 @@ public class FileTextActivity extends ApplicationActivity implements IPostExecut
             finish();
             overridePendingTransition(R.anim.right_in, R.anim.right_out);
             return;
-        } else if (extras.containsKey(EXTRA_MODEL_FILE_ARTICLE_CONTENT_1)) {
+        }
+        if (extras.containsKey(EXTRA_MODEL_FILE_ARTICLE_CONTENT_1)) {
             mInitialText = extras.getString(EXTRA_MODEL_FILE_ARTICLE_CONTENT_1);
             mEditText.setText(mInitialText);
             mEditText.setVisibility(View.VISIBLE);

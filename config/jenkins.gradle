@@ -257,14 +257,15 @@ task sha1(type: Sha1Task) {
     mInput = ""
 }
 
-task saveTestResult(type: SaveTestResultTask, dependsOn:['jenkins'] ) {
+// Main jenkins task
+task jenkins(type: SaveTestResultTask, dependsOn:['jenkinsSpoon'] ) {
     mInputDirPath = "$buildDir/spoon-custom-report-dir/debug"
     mOutputZipFilePath = "$buildDir/filespace-tests-" + Time.getCurrentDate() + ".zip"
     mPostUrl = "http://mercandalli.com/FileSpace-API/file"
     mPostJsonAuthenticationFilePath = "$rootDir/config/jenkins/authentication.json"
 }
 
-task jenkins(dependsOn: ['clean', 'spoon']) {
+task jenkinsSpoon(dependsOn: ['clean', 'spoon']) {
 
 }
 

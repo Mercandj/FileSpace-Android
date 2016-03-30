@@ -113,8 +113,8 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
 
             URL tmp_url = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) tmp_url.openConnection();
-            conn.setReadTimeout(10000);
-            conn.setConnectTimeout(15000);
+            conn.setReadTimeout(10_000);
+            conn.setConnectTimeout(15_000);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Authorization", "Basic " + Config.getUserToken());
             conn.setUseCaches(false);

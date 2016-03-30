@@ -80,8 +80,8 @@ public class FileLocalFragment extends FabFragment implements
     private TextView mMessageTextView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private List<FileModel> mFilesToCutList = new ArrayList<>();
-    private List<FileModel> mFilesToCopyList = new ArrayList<>();
+    private final List<FileModel> mFilesToCutList = new ArrayList<>();
+    private final List<FileModel> mFilesToCopyList = new ArrayList<>();
 
     private FileManager mFileManager;
     private FileModelAdapter mFileModelAdapter;
@@ -167,7 +167,7 @@ public class FileLocalFragment extends FabFragment implements
         final Context context = getContext();
         switch (fab_id) {
             case 0:
-                if ((mFilesToCopyList != null && mFilesToCopyList.size() != 0) || (mFilesToCutList != null && mFilesToCutList.size() != 0)) {
+                if ((mFilesToCopyList.size() != 0) || (mFilesToCutList.size() != 0)) {
                     if (mFilesToCopyList != null) {
                         for (final FileModel file : mFilesToCopyList) {
                             mFileManager.copyLocalFile((Activity) context, file, mCurrentDirectory.getAbsolutePath() + File.separator);
