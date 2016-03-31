@@ -175,7 +175,7 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
 
         @Override
         public CharSequence getPageTitle(int i) {
-            String title = "null";
+            String title;
             switch (i) {
                 case 0:
                     title = "NOTES";

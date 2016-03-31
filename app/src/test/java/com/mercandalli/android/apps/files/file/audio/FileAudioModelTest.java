@@ -2,7 +2,6 @@ package com.mercandalli.android.apps.files.file.audio;
 
 import android.test.suitebuilder.annotation.SmallTest;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -10,6 +9,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.io.File;
 
 import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(MockitoJUnitRunner.class)
 @SmallTest
@@ -47,8 +48,7 @@ public class FileAudioModelTest {
                 .isOnline(false);
         final FileAudioModel fileAudioModel = fileAudioModelBuilder.build();
 
-        Assert.assertFalse(fileAudioModel.isOnline());
-        Assert.assertTrue(fileAudioModel.getId() == 1234);
+        assertFalse(fileAudioModel.isOnline());
+        assertEquals(fileAudioModel.getId(), 1234);
     }
-
 }

@@ -261,7 +261,6 @@ public class SupportFragment extends BackFragment implements
         }
         final SupportDevice supportDevice = getDevice(context);
 
-
         mSupportManager.addSupportComment(new SupportComment(
                 "",
                 mCurrentDeviceId,

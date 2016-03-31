@@ -1,1 +1,1 @@
-include ':app', ':wearable', ':shared'
+include ':app', ':wearable', ':shared', ':tv'

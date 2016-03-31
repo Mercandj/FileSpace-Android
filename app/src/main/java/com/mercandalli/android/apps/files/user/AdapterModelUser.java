@@ -36,14 +36,14 @@ import java.util.List;
 
 public class AdapterModelUser extends RecyclerView.Adapter<AdapterModelUser.ViewHolder> {
 
-    private List<UserModel> users;
-    OnItemClickListener mItemClickListener;
-    OnItemLongClickListener mItemLongClickListener;
-    private IModelUserListener moreListener;
+    private List<UserModel> mUsers;
+    private OnItemClickListener mItemClickListener;
+    private OnItemLongClickListener mItemLongClickListener;
+    private IModelUserListener mMoreListener;
 
     public AdapterModelUser(List<UserModel> users, IModelUserListener moreListener) {
-        this.users = users;
-        this.moreListener = moreListener;
+        mUsers = users;
+        mMoreListener = moreListener;
     }
 
     @Override
@@ -53,8 +53,8 @@ public class AdapterModelUser extends RecyclerView.Adapter<AdapterModelUser.View
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
-        if (position < users.size()) {
-            final UserModel user = users.get(position);
+        if (position < mUsers.size()) {
+            final UserModel user = mUsers.get(position);
 
             viewHolder.title.setText(user.getAdapterTitle());
             viewHolder.subtitle.setText(user.getAdapterSubtitle());
@@ -66,8 +66,8 @@ public class AdapterModelUser extends RecyclerView.Adapter<AdapterModelUser.View
             viewHolder.more.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (moreListener != null) {
-                        moreListener.execute(user);
+                    if (mMoreListener != null) {
+                        mMoreListener.execute(user);
                     }
                 }
             });
@@ -105,35 +105,35 @@ public class AdapterModelUser extends RecyclerView.Adapter<AdapterModelUser.View
 
     @Override
     public int getItemCount() {
-        return users.size();
+        return mUsers.size();
     }
 
 
     public void remplaceList(ArrayList<UserModel> list) {
-        users.clear();
-        users.addAll(0, list);
+        mUsers.clear();
+        mUsers.addAll(0, list);
         notifyDataSetChanged();
     }
 
     public void addFirst(ArrayList<UserModel> list) {
-        users.addAll(0, list);
+        mUsers.addAll(0, list);
         notifyDataSetChanged();
     }
 
     public void addLast(ArrayList<UserModel> list) {
-        users.addAll(users.size(), list);
+        mUsers.addAll(mUsers.size(), list);
         notifyDataSetChanged();
     }
 
     public void addItem(UserModel name, int position) {
-        this.users.add(position, name);
+        this.mUsers.add(position, name);
         this.notifyItemInserted(position);
     }
 
     public void removeAll() {
-        int size = users.size();
+        int size = mUsers.size();
         if (size > 0) {
-            users = new ArrayList<>();
+            mUsers = new ArrayList<>();
             this.notifyItemRangeInserted(0, size - 1);
         }
     }

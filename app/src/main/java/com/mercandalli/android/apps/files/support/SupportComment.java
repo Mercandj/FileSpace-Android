@@ -7,15 +7,15 @@ public class SupportComment {
     private final boolean mIsDevResponse;
     private final String mComment;
 
-    public String mAndroidAppVersionCode;
-    public String mAndroidAppVersionName;
-    public String mAndroidAppNotificationId;
+    private String mAndroidAppVersionCode;
+    private String mAndroidAppVersionName;
+    private String mAndroidAppNotificationId;
 
-    public String mAndroidDeviceVersionSdk;
-    public String mAndroidDeviceModel;
-    public String mAndroidDeviceManufacturer;
-    public String mAndroidDeviceDisplayLanguage;
-    public String mAndroidDeviceCountry;
+    private String mAndroidDeviceVersionSdk;
+    private String mAndroidDeviceModel;
+    private String mAndroidDeviceManufacturer;
+    private String mAndroidDeviceDisplayLanguage;
+    private String mAndroidDeviceCountry;
 
     private final int mNbCommentsWithThisIdDevice;
 

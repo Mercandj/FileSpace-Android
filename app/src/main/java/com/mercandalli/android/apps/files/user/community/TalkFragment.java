@@ -47,7 +47,7 @@ import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
 import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.apps.files.user.AdapterModelConnversationUser;
+import com.mercandalli.android.apps.files.user.AdapterModelConversationUser;
 import com.mercandalli.android.apps.files.user.ConversationUserModel;
 import com.mercandalli.android.apps.files.user.UserModel;
 
@@ -68,7 +68,7 @@ public class TalkFragment extends BackFragment {
     private View rootView;
 
     private RecyclerView recyclerView;
-    private AdapterModelConnversationUser mAdapter;
+    private AdapterModelConversationUser mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     List<ConversationUserModel> list;
     private ProgressBar circularProgressBar;
@@ -169,7 +169,7 @@ public class TalkFragment extends BackFragment {
             }
 
 
-            this.mAdapter = new AdapterModelConnversationUser(list, new IModelUserListener() {
+            this.mAdapter = new AdapterModelConversationUser(list, new IModelUserListener() {
                 @Override
                 public void execute(final UserModel userModel) {
                     DialogUtils.prompt(getContext(), "Send Message", "Write your message", "Send", new IStringListener() {
@@ -205,7 +205,7 @@ public class TalkFragment extends BackFragment {
                 }
             });
 
-            this.mAdapter.setOnItemClickListener(new AdapterModelConnversationUser.OnItemClickListener() {
+            this.mAdapter.setOnItemClickListener(new AdapterModelConversationUser.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
                     list.get(position).open(getActivity(), mApplicationCallback);

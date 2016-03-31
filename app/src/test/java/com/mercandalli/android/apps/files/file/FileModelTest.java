@@ -2,14 +2,15 @@ package com.mercandalli.android.apps.files.file;
 
 import android.test.suitebuilder.annotation.SmallTest;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(MockitoJUnitRunner.class)
 @SmallTest
@@ -45,8 +46,8 @@ public class FileModelTest {
                 .id(1234)
                 .isOnline(false)
                 .build();
-        Assert.assertFalse(fileModel.isOnline());
-        Assert.assertTrue(fileModel.getId() == 1234);
+        assertFalse(fileModel.isOnline());
+        assertEquals(fileModel.getId(), 1234);
     }
 
 }

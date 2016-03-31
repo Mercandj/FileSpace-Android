@@ -66,7 +66,6 @@ public class SharedAudioData {
         mAlbum = album;
     }
 
-    @Nullable
     public int getId() {
         return mId;
     }

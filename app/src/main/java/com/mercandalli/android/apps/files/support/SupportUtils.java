@@ -77,6 +77,13 @@ public class SupportUtils {
         return supportDevice;
     }
 
+    /**
+     * Check if two @Nullable {@link String} are equals.
+     *
+     * @param str1 The first {@link String}.
+     * @param str2 The second {@link String}.
+     * @return If the {@link String}s are equals.
+     */
     /* protected */
     static boolean equalsString(@Nullable final String str1, @Nullable final String str2) {
         if (str1 == null) {

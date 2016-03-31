@@ -1,5 +1,4 @@
 import groovy.json.JsonSlurper
-import sun.rmi.runtime.Log
 
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -23,7 +22,6 @@ class Hash {
             md.update(text.getBytes("iso-8859-1"), 0, text.length());
             sha1hash = md.digest();
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            Log.e("HashUtils sha1", "NoSuchAlgorithmException or UnsupportedEncodingException", e);
         }
         return sha1hash.encodeHex().toString();
     }
@@ -40,9 +38,9 @@ public class MultipartUtility {
     private static final int CONNECT_TIMEOUT = 15_000;
     private static final int READ_TIMEOUT = 10_000;
 
-    private final HttpURLConnection connection;
-    private final OutputStream outputStream;
-    private final PrintWriter writer;
+    private final HttpURLConnection mConnection;
+    private final OutputStream mOutputStream;
+    private final PrintWriter mWriter;
     private final String mBoundary;
 
     // for log formatting only
@@ -53,27 +51,27 @@ public class MultipartUtility {
 
         mBoundary = "---------------------------";
 
-        connection = (HttpURLConnection) mUrl.openConnection();
-        connection.setConnectTimeout(CONNECT_TIMEOUT);
-        connection.setReadTimeout(READ_TIMEOUT);
-        connection.setRequestMethod("POST");
+        mConnection = (HttpURLConnection) mUrl.openConnection();
+        mConnection.setConnectTimeout(CONNECT_TIMEOUT);
+        mConnection.setReadTimeout(READ_TIMEOUT);
+        mConnection.setRequestMethod("POST");
         if (authorization != null) {
-            connection.setRequestProperty("Authorization", authorization);
+            mConnection.setRequestProperty("Authorization", authorization);
         }
-        connection.setRequestProperty("Accept-Charset", CHARSET);
-        connection.setRequestProperty("Content-Type",
+        mConnection.setRequestProperty("Accept-Charset", CHARSET);
+        mConnection.setRequestProperty("Content-Type",
                 "multipart/form-data; boundary=" + mBoundary);
-        connection.setUseCaches(false);
-        connection.setDoInput(true);
-        connection.setDoOutput(true);
+        mConnection.setUseCaches(false);
+        mConnection.setDoInput(true);
+        mConnection.setDoOutput(true);
 
-        outputStream = connection.getOutputStream();
-        writer = new PrintWriter(new OutputStreamWriter(outputStream, CHARSET),
+        mOutputStream = mConnection.getOutputStream();
+        mWriter = new PrintWriter(new OutputStreamWriter(mOutputStream, CHARSET),
                 true);
     }
 
     public void addFormField(final String name, final String value) {
-        writer.append("--").append(mBoundary).append(CRLF)
+        mWriter.append("--").append(mBoundary).append(CRLF)
                 .append("Content-Disposition: form-data; name=\"").append(name)
                 .append("\"").append(CRLF)
                 .append("Content-Type: text/plain; charset=").append(CHARSET)
@@ -83,7 +81,7 @@ public class MultipartUtility {
     public void addFilePart(final String fieldName, final File uploadFile, final String contentType)
             throws IOException {
         final String fileName = uploadFile.getName();
-        writer.append("--").append(mBoundary).append(CRLF)
+        mWriter.append("--").append(mBoundary).append(CRLF)
                 .append("Content-Disposition: form-data; name=\"")
                 .append(fieldName).append("\"; filename=\"").append(fileName)
                 .append("\"").append(CRLF).append("Content-Type: ")
@@ -91,34 +89,34 @@ public class MultipartUtility {
                 .append("Content-Transfer-Encoding: binary").append(CRLF)
                 .append(CRLF);
 
-        writer.flush();
-        outputStream.flush();
+        mWriter.flush();
+        mOutputStream.flush();
         final FileInputStream inputStream = new FileInputStream(uploadFile)
         final byte[] buffer = new byte[4096];
         int bytesRead;
         while ((bytesRead = inputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, bytesRead);
+            mOutputStream.write(buffer, 0, bytesRead);
         }
-        outputStream.flush();
+        mOutputStream.flush();
 
-        writer.append(CRLF);
+        mWriter.append(CRLF);
     }
 
     public void addHeaderField(String name, String value) {
-        writer.append(name).append(": ").append(value).append(CRLF);
+        mWriter.append(name).append(": ").append(value).append(CRLF);
     }
 
     public String finish() throws IOException {
-        writer.append(CRLF).append("--").append(mBoundary).append("--")
+        mWriter.append(CRLF).append("--").append(mBoundary).append("--")
                 .append(CRLF);
-        writer.close();
+        mWriter.close();
 
-        final int status = connection.getResponseCode();
+        final int status = mConnection.getResponseCode();
         if (status != 200) {
             println("Status " + status)
         }
 
-        final InputStream is = connection.getInputStream()
+        final InputStream is = mConnection.getInputStream()
         final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         final byte[] buffer = new byte[4096];
         int bytesRead;
@@ -126,7 +124,7 @@ public class MultipartUtility {
             bytes.write(buffer, 0, bytesRead);
         }
 
-        connection.disconnect();
+        mConnection.disconnect();
         return bytes.toString("UTF-8");
     }
 }
@@ -258,7 +256,7 @@ task sha1(type: Sha1Task) {
 }
 
 // Main jenkins task
-task jenkins(type: SaveTestResultTask, dependsOn:['jenkinsSpoon'] ) {
+task jenkins(type: SaveTestResultTask, dependsOn: ['jenkinsSpoon']) {
     mInputDirPath = "$buildDir/spoon-custom-report-dir/debug"
     mOutputZipFilePath = "$buildDir/filespace-tests-" + Time.getCurrentDate() + ".zip"
     mPostUrl = "http://mercandalli.com/FileSpace-API/file"

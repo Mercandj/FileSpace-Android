@@ -21,7 +21,7 @@ android {
         versionName rootProject.ext.versionName
         multiDexEnabled true
         //testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunner "com.mercandalli.android.apps.files.core.FileSpaceJUnitRunner"
+        testInstrumentationRunner "com.mercandalli.android.apps.files.FileSpaceJUnitRunner"
     }
 
     buildTypes {
@@ -33,6 +33,20 @@ android {
         debug {
             versionNameSuffix ".dev"
         }
+    }
+
+    sourceSets {
+        //Everything related to connected test live in src/androidTest/core/java
+        androidTest.java.srcDir 'src/androidTest/core/java'
+
+        //Instrumented unit tests live in src/androidTest/unit
+        androidTest.java.srcDir 'src/androidTest/unit/java'
+
+        //Instrumented integration tests live in src/androidTest/integration
+        androidTest.java.srcDir 'src/androidTest/integration/java'
+
+        //Instrumented use cases tests live in src/androidTest/usecases
+        androidTest.java.srcDir 'src/androidTest/usecases/java'
     }
 
     packagingOptions {

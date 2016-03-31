@@ -74,7 +74,7 @@ public class GCMNotificationIntentService extends IntentService {
         mNotificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, i, 0);
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 this).setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle("FILESPACE")
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
@@ -82,7 +82,7 @@ public class GCMNotificationIntentService extends IntentService {
                 .setContentText(message)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
-        mBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        builder.setContentIntent(contentIntent);
+        mNotificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 }
