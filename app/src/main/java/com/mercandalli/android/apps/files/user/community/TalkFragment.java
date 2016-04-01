@@ -122,7 +122,7 @@ public class TalkFragment extends BackFragment {
         if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
             new TaskGet(
                     getActivity(),
-                    Constants.URL_DOMAIN + Config.routeUserConversation,
+                    Constants.URL_DOMAIN + Config.ROUTE_USER_CONVERSATION,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -175,7 +175,7 @@ public class TalkFragment extends BackFragment {
                     DialogUtils.prompt(getContext(), "Send Message", "Write your message", "Send", new IStringListener() {
                         @Override
                         public void execute(String text) {
-                            String url = Constants.URL_DOMAIN + Config.routeUserMessage + "/" + userModel.id;
+                            String url = Constants.URL_DOMAIN + Config.ROUTE_USER_MESSAGE + "/" + userModel.id;
                             List<StringPair> parameters = new ArrayList<>();
                             parameters.add(new StringPair("message", "" + text));
 

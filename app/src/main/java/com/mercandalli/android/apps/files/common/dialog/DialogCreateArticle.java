@@ -88,7 +88,7 @@ public class DialogCreateArticle extends Dialog {
                     parameters.add(new StringPair("name", "ARTICLE_" + nowAsISO));
                     new TaskPost(mActivity,
                             applicationCallback,
-                            Constants.URL_DOMAIN + Config.routeFile,
+                            Constants.URL_DOMAIN + Config.ROUTE_FILE,
                             new IPostExecuteListener() {
                                 @Override
                                 public void onPostExecute(JSONObject json, String body) {

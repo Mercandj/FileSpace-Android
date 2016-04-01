@@ -316,7 +316,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
                             case 6:
                                 List<StringPair> parameters = new ArrayList<>();
                                 parameters.add(new StringPair("id_file_profile_picture", "" + fileModel.getId()));
-                                (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.routeUserPut, new IPostExecuteListener() {
+                                (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_USER_PUT, new IPostExecuteListener() {
                                     @Override
                                     public void onPostExecute(JSONObject json, String body) {
                                         try {

@@ -125,7 +125,7 @@ public class GenealogyTreeFragment extends FabFragment {
                 requestReady = false;
                 new TaskGet(
                         getActivity(),
-                        Constants.URL_DOMAIN + Config.routeGenealogyChildren + "/" + id_user,
+                        Constants.URL_DOMAIN + Config.ROUTE_GENEALOGY_CHILDREN + "/" + id_user,
                         new IPostExecuteListener() {
                             @Override
                             public void onPostExecute(JSONObject json, String body) {
@@ -172,7 +172,7 @@ public class GenealogyTreeFragment extends FabFragment {
                 requestReady = false;
                 new TaskGet(
                         getActivity(),
-                        Constants.URL_DOMAIN + Config.routeGenealogy + "/" + id_user,
+                        Constants.URL_DOMAIN + Config.ROUTE_GENEALOGY + "/" + id_user,
                         new IPostExecuteListener() {
                             @Override
                             public void onPostExecute(JSONObject json, String body) {

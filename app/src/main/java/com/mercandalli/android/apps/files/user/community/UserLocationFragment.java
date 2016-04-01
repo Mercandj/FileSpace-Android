@@ -128,7 +128,7 @@ public class UserLocationFragment extends BackFragment {
                                                 parameters.add(new StringPair("longitude", "" + longitude));
                                                 parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.routeUserPut, new IPostExecuteListener() {
+                                                (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_USER_PUT, new IPostExecuteListener() {
                                                     @Override
                                                     public void onPostExecute(JSONObject json, String body) {
 
@@ -148,7 +148,7 @@ public class UserLocationFragment extends BackFragment {
                                         parameters.add(new StringPair("longitude", "" + longitude));
                                         parameters.add(new StringPair("latitude", "" + latitude));
 
-                                        (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.routeUserPut, new IPostExecuteListener() {
+                                        (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_USER_PUT, new IPostExecuteListener() {
                                             @Override
                                             public void onPostExecute(JSONObject json, String body) {
                                                 refreshMap();
@@ -171,7 +171,7 @@ public class UserLocationFragment extends BackFragment {
         if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
             new TaskGet(
                     getContext(),
-                    Constants.URL_DOMAIN + Config.routeUser,
+                    Constants.URL_DOMAIN + Config.ROUTE_USER,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {

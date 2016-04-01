@@ -39,9 +39,9 @@ import java.util.List;
 public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModelGenealogyUser.ViewHolder> {
 
     private final Activity mActivity;
-    public List<ModelGenealogyPerson> mUsers;
-    OnItemClickListener mItemClickListener;
-    OnItemLongClickListener mItemLongClickListener;
+    private final List<ModelGenealogyPerson> mUsers;
+    private OnItemClickListener mItemClickListener;
+    private OnItemLongClickListener mItemLongClickListener;
     private IModelGenealogyUserListener mMoreListener;
     private boolean mIsTree;
 
@@ -139,15 +139,15 @@ public class AdapterModelGenealogyUser extends RecyclerView.Adapter<AdapterModel
         void onItemClick(View view, int position);
     }
 
-    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
-        this.mItemClickListener = mItemClickListener;
+    public void setOnItemClickListener(final OnItemClickListener itemClickListener) {
+        mItemClickListener = itemClickListener;
     }
 
     public interface OnItemLongClickListener {
         boolean onItemLongClick(View view, int position);
     }
 
-    public void setOnItemLongClickListener(final OnItemLongClickListener mItemLongClickListener) {
-        this.mItemLongClickListener = mItemLongClickListener;
+    public void setOnItemLongClickListener(final OnItemLongClickListener itemLongClickListener) {
+        mItemLongClickListener = itemLongClickListener;
     }
 }

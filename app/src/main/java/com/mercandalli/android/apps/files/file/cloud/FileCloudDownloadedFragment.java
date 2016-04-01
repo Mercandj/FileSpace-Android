@@ -116,7 +116,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
         }
         //mRecyclerView.addItemDecoration(new FileDivider(ContextCompat.getColor(mActivity, R.color.file_divider)));
 
-        mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.localFolderNameDefault);
+        mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.LOCAL_FOLDER_NAME_DEFAULT);
         if (!mCurrentDirectory.exists()) {
             mCurrentDirectory.mkdir();
         }

@@ -324,7 +324,7 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
                     new TaskPost(
                             getActivity(),
                             mApplicationCallback,
-                            Constants.URL_DOMAIN + Config.routeRobotics,
+                            Constants.URL_DOMAIN + Config.ROUTE_ROBOTICS,
                             new IPostExecuteListener() {
                                 @Override
                                 public void onPostExecute(JSONObject json, String body) {

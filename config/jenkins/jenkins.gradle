@@ -156,7 +156,7 @@ class Zipper {
                 zipInternal(file, parentName + "/" + file.getName() + "/")
             } else {
                 mZipFile.putNextEntry(new ZipEntry(parentName + file.getName()))
-                def buffer = new byte[1024 * 8]
+                def buffer = new byte[1024 * 1024]
                 file.withInputStream { i ->
                     def l = i.read(buffer)
                     // check wether the file is empty

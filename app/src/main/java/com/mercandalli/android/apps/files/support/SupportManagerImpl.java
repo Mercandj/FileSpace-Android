@@ -67,10 +67,10 @@ public class SupportManagerImpl extends SupportManager {
                 supportComment.getAndroidAppNotificationId(),
 
                 supportComment.getAndroidDeviceVersionSdk(),
-                supportComment.mAndroidDeviceModel,
-                supportComment.mAndroidDeviceManufacturer,
-                supportComment.mAndroidDeviceDisplayLanguage,
-                supportComment.mAndroidDeviceCountry
+                supportComment.getAndroidDeviceModel(),
+                supportComment.getAndroidDeviceManufacturer(),
+                supportComment.getAndroidDeviceDisplayLanguage(),
+                supportComment.getAndroidDeviceCountry()
         );
         call.enqueue(new Callback<SupportCommentsResponse>() {
             @Override

@@ -125,7 +125,7 @@ public class UserFragment extends BackFragment {
         if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
             new TaskGet(
                     getContext(),
-                    Constants.URL_DOMAIN + Config.routeUser,
+                    Constants.URL_DOMAIN + Config.ROUTE_USER,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -188,7 +188,7 @@ public class UserFragment extends BackFragment {
                                             DialogUtils.prompt(getContext(), "Send Message", "Write your message", "Send", new IStringListener() {
                                                 @Override
                                                 public void execute(String text) {
-                                                    String url = Constants.URL_DOMAIN + Config.routeUserConversation + "/" + userModel.id;
+                                                    String url = Constants.URL_DOMAIN + Config.ROUTE_USER_CONVERSATION + "/" + userModel.id;
                                                     List<StringPair> parameters = new ArrayList<>();
                                                     parameters.add(new StringPair("message", "" + text));
 

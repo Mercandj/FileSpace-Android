@@ -113,7 +113,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             if (mPhotoFile != null && mPhotoFile.getFile() != null) {
                 List<StringPair> parameters = FileManager.getForUpload(mPhotoFile);
-                (new TaskPost(this, this, Constants.URL_DOMAIN + Config.routeFile, new IPostExecuteListener() {
+                (new TaskPost(this, this, Constants.URL_DOMAIN + Config.ROUTE_FILE, new IPostExecuteListener() {
                     @Override
                     public void onPostExecute(JSONObject json, String body) {
                         if (mPhotoFileListener != null) {

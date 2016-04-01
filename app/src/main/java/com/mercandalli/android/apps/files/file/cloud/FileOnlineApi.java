@@ -23,14 +23,14 @@ import retrofit2.http.Query;
  */
 public interface FileOnlineApi {
 
-    @GET("/" + Config.routeFile)
+    @GET("/" + Config.ROUTE_FILE)
     Call<FilesResponse> getFiles(
             @Query("id_file_parent") int fileParentId,
             @Query("all-public") String publicFiles,
             @Query("search") String search);
 
     @Multipart
-    @POST("/" + Config.routeFile)
+    @POST("/" + Config.ROUTE_FILE)
     Call<FilesResponse> uploadFile(
             @PartMap() Map<String, RequestBody> mapPhoto
             //@Part("file") FileUploadTypedFile file,
@@ -40,24 +40,24 @@ public interface FileOnlineApi {
     );
 
     @FormUrlEncoded
-    @POST("/" + Config.routeFile + "/{id_file_to_rename}")
+    @POST("/" + Config.ROUTE_FILE + "/{id_file_to_rename}")
     Call<FilesResponse> rename(
             @Path("id_file_to_rename") int fileId,
             @Field("url") String newFullName);
 
-    @POST("/" + Config.routeFileDelete + "/{id_file_to_delete}")
+    @POST("/" + Config.ROUTE_FILE_DELETE + "/{id_file_to_delete}")
     Call<FilesResponse> delete(
             @Path("id_file_to_delete") int fileId,
             @Body String body);
 
     @FormUrlEncoded
-    @POST("/" + Config.routeFile + "/{id_file}")
+    @POST("/" + Config.ROUTE_FILE + "/{id_file}")
     Call<FilesResponse> setParent(
             @Path("id_file") int fileId,
             @Field("id_file_parent") String idFileParent);
 
     @FormUrlEncoded
-    @POST("/" + Config.routeFile + "/{id_file}")
+    @POST("/" + Config.ROUTE_FILE + "/{id_file}")
     Call<FilesResponse> setPublic(
             @Path("id_file") int fileId,
             @Field("public") String isPublic);

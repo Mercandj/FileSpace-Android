@@ -154,7 +154,7 @@ public class LoginFragment extends BackFragment {
                 Config.getUserUsername() + " isInternetConnection=" +
                 NetUtils.isInternetConnection(getContext()));
         if (NetUtils.isInternetConnection(getContext())) {
-            (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.routeUser, new IPostExecuteListener() {
+            (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_USER, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     requestLaunched = false;

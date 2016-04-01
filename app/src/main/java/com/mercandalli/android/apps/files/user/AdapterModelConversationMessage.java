@@ -31,30 +31,29 @@ import android.widget.TextView;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.IModelUserListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class AdapterModelConnversationMessage extends RecyclerView.Adapter<AdapterModelConnversationMessage.ViewHolder> {
+public class AdapterModelConversationMessage extends RecyclerView.Adapter<AdapterModelConversationMessage.ViewHolder> {
 
-    private List<UserConversationMessageModel> users;
-    OnItemClickListener mItemClickListener;
-    OnItemLongClickListener mItemLongClickListener;
-    private IModelUserListener moreListener;
+    private List<UserConversationMessageModel> mUsers;
+    private OnItemClickListener mItemClickListener;
+    private OnItemLongClickListener mItemLongClickListener;
+    private IModelUserListener mMoreListener;
 
-    public AdapterModelConnversationMessage(List<UserConversationMessageModel> users, IModelUserListener moreListener) {
-        this.users = users;
-        this.moreListener = moreListener;
+    public AdapterModelConversationMessage(List<UserConversationMessageModel> users, IModelUserListener moreListener) {
+        this.mUsers = users;
+        this.mMoreListener = moreListener;
     }
 
     @Override
-    public AdapterModelConnversationMessage.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AdapterModelConversationMessage.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_user, parent, false), viewType);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
-        if (position < users.size()) {
-            final UserConversationMessageModel userConversationMessageModel = users.get(position);
+        if (position < mUsers.size()) {
+            final UserConversationMessageModel userConversationMessageModel = mUsers.get(position);
             if (userConversationMessageModel.user != null && userConversationMessageModel.user.bitmap != null) {
                 viewHolder.icon.setImageBitmap(userConversationMessageModel.user.bitmap);
             }
@@ -93,37 +92,13 @@ public class AdapterModelConnversationMessage extends RecyclerView.Adapter<Adapt
 
     @Override
     public int getItemCount() {
-        return users.size();
+        return mUsers.size();
     }
 
-
-    public void remplaceList(ArrayList<UserConversationMessageModel> list) {
-        users.clear();
-        users.addAll(0, list);
+    public void replaceList(final List<UserConversationMessageModel> list) {
+        mUsers.clear();
+        mUsers.addAll(0, list);
         notifyDataSetChanged();
-    }
-
-    public void addFirst(ArrayList<UserConversationMessageModel> list) {
-        users.addAll(0, list);
-        notifyDataSetChanged();
-    }
-
-    public void addLast(ArrayList<UserConversationMessageModel> list) {
-        users.addAll(users.size(), list);
-        notifyDataSetChanged();
-    }
-
-    public void addItem(UserConversationMessageModel name, int position) {
-        this.users.add(position, name);
-        this.notifyItemInserted(position);
-    }
-
-    public void removeAll() {
-        int size = users.size();
-        if (size > 0) {
-            users = new ArrayList<>();
-            this.notifyItemRangeInserted(0, size - 1);
-        }
     }
 
     @Override
@@ -135,15 +110,15 @@ public class AdapterModelConnversationMessage extends RecyclerView.Adapter<Adapt
         void onItemClick(View view, int position);
     }
 
-    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
-        this.mItemClickListener = mItemClickListener;
+    public void setOnItemClickListener(final OnItemClickListener itemClickListener) {
+        mItemClickListener = itemClickListener;
     }
 
     public interface OnItemLongClickListener {
         boolean onItemLongClick(View view, int position);
     }
 
-    public void setOnItemLongClickListener(final OnItemLongClickListener mItemLongClickListener) {
-        this.mItemLongClickListener = mItemLongClickListener;
+    public void setOnItemLongClickListener(final OnItemLongClickListener itemLongClickListener) {
+        mItemLongClickListener = itemLongClickListener;
     }
 }

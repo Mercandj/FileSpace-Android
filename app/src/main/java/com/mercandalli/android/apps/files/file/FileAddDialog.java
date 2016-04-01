@@ -177,7 +177,7 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
                                     parameters.add(new StringPair("name", "TIMER_" + nowAsISO));
                                     parameters.add(new StringPair("id_file_parent", "" + id_file_parent));
                                     new TaskPost(mActivity, mApplicationCallback,
-                                            Constants.URL_DOMAIN + Config.routeFile,
+                                            Constants.URL_DOMAIN + Config.ROUTE_FILE,
                                             new IPostExecuteListener() {
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
@@ -239,7 +239,7 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
                         fileModelBuilder.isDirectory(true);
                         fileModelBuilder.idFileParent(mFileParentId);
                         List<StringPair> parameters = FileManager.getForUpload(fileModelBuilder.build());
-                        (new TaskPost(mActivity, mApplicationCallback, Constants.URL_DOMAIN + Config.routeFile, new IPostExecuteListener() {
+                        (new TaskPost(mActivity, mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_FILE, new IPostExecuteListener() {
                             @Override
                             public void onPostExecute(JSONObject json, String body) {
                                 if (mListener != null) {

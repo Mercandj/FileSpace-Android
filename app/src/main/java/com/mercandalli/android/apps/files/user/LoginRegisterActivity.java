@@ -385,7 +385,7 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
         parameters.add(new StringPair("username", "" + user.username));
         parameters.add(new StringPair("password", "" + user.password));
         if (NetUtils.isInternetConnection(this)) {
-            (new TaskPost(this, this, Constants.URL_DOMAIN + Config.routeUser, new IPostExecuteListener() {
+            (new TaskPost(this, this, Constants.URL_DOMAIN + Config.ROUTE_USER, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     try {

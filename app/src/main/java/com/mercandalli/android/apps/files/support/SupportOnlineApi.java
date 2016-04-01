@@ -12,12 +12,12 @@ import retrofit2.http.Query;
 
 public interface SupportOnlineApi {
 
-    @GET("/" + Config.routeSupportComment)
+    @GET("/" + Config.ROUTE_SUPPORT_COMMENT)
     Call<SupportCommentsResponse> getSupportComments(
             @Query("id_device") String deviceId);
 
     @FormUrlEncoded
-    @POST("/" + Config.routeSupportComment)
+    @POST("/" + Config.ROUTE_SUPPORT_COMMENT)
     Call<SupportCommentsResponse> postSupportComment(
             @Field("id_device") String deviceId,
             @Field("is_dev_response") boolean isDevResponse,
@@ -35,11 +35,11 @@ public interface SupportOnlineApi {
     );
 
     @FormUrlEncoded
-    @POST("/" + Config.routeSupportCommentDelete)
+    @POST("/" + Config.ROUTE_SUPPORT_COMMENT_DELETE)
     Call<SupportCommentsResponse> deleteSupportComment(
             @Field("id") String id,
             @Field("id_device") String deviceId);
 
-    @GET("/" + Config.routeSupportCommentDeviceId)
+    @GET("/" + Config.ROUTE_SUPPORT_COMMENT_DEVICE_ID)
     Call<SupportCommentsResponse> getAllDeviceIdSupportComment();
 }

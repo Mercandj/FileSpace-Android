@@ -39,12 +39,12 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
 import com.mercandalli.android.apps.files.main.ApplicationActivity;
+import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,12 +58,14 @@ import java.util.List;
  */
 public class ConversationActivity extends ApplicationActivity {
 
-    private String login, password, url;
+    private String login;
+    private String password;
+    private String url;
     private String id_conversation;
 
     private RecyclerView listView;
-    private AdapterModelConnversationMessage adapter;
-    private ArrayList<UserConversationMessageModel> list = new ArrayList<>();
+    private AdapterModelConversationMessage adapter;
+    private final List<UserConversationMessageModel> list = new ArrayList<>();
     private ProgressBar circularProgressBar;
     private TextView message;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -91,7 +93,7 @@ public class ConversationActivity extends ApplicationActivity {
         this.input = (EditText) findViewById(R.id.input);
 
         this.id_conversation = extras.getString("ID_CONVERSATION");
-        this.url = Constants.URL_DOMAIN + Config.routeUserMessage + "/" + this.id_conversation;
+        this.url = Constants.URL_DOMAIN + Config.ROUTE_USER_MESSAGE + "/" + this.id_conversation;
 
         this.circularProgressBar = (ProgressBar) findViewById(R.id.circularProgressBar);
         this.message = (TextView) findViewById(R.id.message);
@@ -116,19 +118,19 @@ public class ConversationActivity extends ApplicationActivity {
             }
         });
 
-        this.adapter = new AdapterModelConnversationMessage(list, null);
+        this.adapter = new AdapterModelConversationMessage(list, null);
         this.listView.setAdapter(adapter);
         this.listView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
         this.listView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
 
-        this.adapter.setOnItemClickListener(new AdapterModelConnversationMessage.OnItemClickListener() {
+        this.adapter.setOnItemClickListener(new AdapterModelConversationMessage.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
 
             }
         });
 
-        this.adapter.setOnItemLongClickListener(new AdapterModelConnversationMessage.OnItemLongClickListener() {
+        this.adapter.setOnItemLongClickListener(new AdapterModelConversationMessage.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(View view, int position) {
 
@@ -139,7 +141,7 @@ public class ConversationActivity extends ApplicationActivity {
         this.input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    String url = Constants.URL_DOMAIN + Config.routeUserMessage + "/" + id_conversation;
+                    String url = Constants.URL_DOMAIN + Config.ROUTE_USER_MESSAGE + "/" + id_conversation;
                     List<StringPair> parameters = new ArrayList<>();
                     parameters.add(new StringPair("message", "" + input.getText().toString()));
                     input.setText("");
@@ -167,7 +169,7 @@ public class ConversationActivity extends ApplicationActivity {
 
     @Override
     public void updateAdapters() {
-        if (this.listView != null && this.list != null) {
+        if (this.listView != null) {
             if (this.list.size() == 0) {
                 if (this.url == null) {
                     this.message.setText(getString(R.string.no_file_server));
@@ -181,7 +183,7 @@ public class ConversationActivity extends ApplicationActivity {
                 this.message.setVisibility(View.GONE);
             }
 
-            this.adapter.remplaceList(this.list);
+            this.adapter.replaceList(this.list);
             listView.scrollToPosition(list.size() - 1);
 
             this.circularProgressBar.setVisibility(View.GONE);
@@ -208,7 +210,7 @@ public class ConversationActivity extends ApplicationActivity {
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
-                            list = new ArrayList<>();
+                            list.clear();
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {

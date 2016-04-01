@@ -103,7 +103,7 @@ public class ServerDataFragment extends BackFragment {
         if (NetUtils.isInternetConnection(getContext())) {
             new TaskGet(
                     getActivity(),
-                    Constants.URL_DOMAIN + Config.routeInformation,
+                    Constants.URL_DOMAIN + Config.ROUTE_INFORMATION,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {

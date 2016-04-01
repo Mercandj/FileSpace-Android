@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'com.neenbedankt.android-apt'
-apply from: '../config/jenkins.gradle'
-apply from: '../config/quality.gradle'
+apply from: '../config/jenkins/jenkins.gradle'
+apply from: '../config/quality/quality.gradle'
 apply plugin: 'spoon'
 
 android {

@@ -11,6 +11,6 @@ import retrofit2.http.GET;
 /* package */
 interface VersionApi {
 
-    @GET("/" + Config.routeVersionSupported)
+    @GET("/" + Config.ROUTE_VERSION_SUPPORTED)
     Call<VersionResponse> getVersionSupported();
 }

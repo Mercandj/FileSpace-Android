@@ -159,7 +159,7 @@ public class GenealogyListFragment extends FabFragment {
         if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
             new TaskGet(
                     mActivity,
-                    Constants.URL_DOMAIN + Config.routeGenealogy,
+                    Constants.URL_DOMAIN + Config.ROUTE_GENEALOGY,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {

@@ -40,9 +40,9 @@ public class FileUploadDialog extends Dialog {
 
     private final Activity mActivity;
     private final ApplicationCallback mApplicationCallback;
-    FileChooserDialog mFileChooserDialog;
-    FileModel mFileModel;
-    int id_file_parent;
+    private FileChooserDialog mFileChooserDialog;
+    private FileModel mFileModel;
+    private int mIdFileParent;
 
     public FileUploadDialog(
             final Activity activity,
@@ -60,7 +60,7 @@ public class FileUploadDialog extends Dialog {
     public FileUploadDialog(
             final Activity activity,
             final ApplicationCallback applicationCallback,
-            final int id_file_parent,
+            final int idFileParent,
             @Nullable final IListener listener) {
         super(activity);
 
@@ -68,7 +68,7 @@ public class FileUploadDialog extends Dialog {
 
         mActivity = activity;
         mApplicationCallback = applicationCallback;
-        this.id_file_parent = id_file_parent;
+        mIdFileParent = idFileParent;
 
         this.setContentView(R.layout.dialog_upload);
         this.setTitle(R.string.app_name);
@@ -78,7 +78,7 @@ public class FileUploadDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 if (mFileModel != null && !mFileModel.isDirectory()) {
-                    mFileManager.upload(mFileModel, id_file_parent, listener);
+                    mFileManager.upload(mFileModel, idFileParent, listener);
                 } else {
                     Toast.makeText(mActivity, mActivity.getString(R.string.no_file), Toast.LENGTH_SHORT).show();
                 }
@@ -93,7 +93,7 @@ public class FileUploadDialog extends Dialog {
                 mFileChooserDialog = new FileChooserDialog(mActivity, new FileModelListener() {
                     @Override
                     public void executeFileModel(FileModel fileModel, final View view) {
-                        fileModel.setIdFileParent(id_file_parent);
+                        fileModel.setIdFileParent(idFileParent);
                         ((TextView) FileUploadDialog.this.findViewById(R.id.label)).setText(fileModel.getUrl());
                         FileUploadDialog.this.mFileModel = fileModel;
                     }

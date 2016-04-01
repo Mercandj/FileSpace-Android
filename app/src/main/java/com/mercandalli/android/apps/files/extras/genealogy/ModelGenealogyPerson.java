@@ -137,7 +137,7 @@ public class ModelGenealogyPerson {
 
     public void delete(IPostExecuteListener listener) {
         if (this.mApp != null && Config.isUserAdmin() && this.mId != Config.getUserId()) {
-            String url = Constants.URL_DOMAIN + Config.routeGenealogyDelete + "/" + this.mId;
+            String url = Constants.URL_DOMAIN + Config.ROUTE_GENEALOGY_DELETE + "/" + this.mId;
             new TaskPost(mActivity, this.mApp, url, listener).execute();
             return;
         }

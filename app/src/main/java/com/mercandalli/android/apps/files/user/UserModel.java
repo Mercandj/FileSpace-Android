@@ -178,7 +178,7 @@ public class UserModel {
     public void delete(Activity activity, ApplicationCallback applicationCallback, IPostExecuteListener listener) {
         if (applicationCallback != null &&
                 applicationCallback.getConfig().isUserAdmin() && this.id != Config.getUserId()) {
-            String url = Constants.URL_DOMAIN + Config.routeUserDelete + "/" + this.id;
+            String url = Constants.URL_DOMAIN + Config.ROUTE_USER_DELETE + "/" + this.id;
             new TaskPost(activity, applicationCallback, url, listener).execute();
             return;
         }

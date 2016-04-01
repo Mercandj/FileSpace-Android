@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -50,35 +50,35 @@ import java.util.TimeZone;
 public class Config {
 
     private static final String TAG = "Config";
-    private ApplicationCallback app;
+    private ApplicationCallback mApp;
 
     // Local routes
-    public static final String localFolderNameDefault = "FileSpace";
-    private static final String fileName = "settings_json_1.txt";
+    public static final String LOCAL_FOLDER_NAME_DEFAULT = "FileSpace";
+    private static final String FILE_NAME = "settings_json_1.txt";
 
     // Server routes
-    public static final String aboutURL = "http://mercandalli.com/";
-    public static final String webApplication = "http://mercandalli.com/FileSpace";
-    private static final String startRoute = "FileSpace-API/";
-    public static final String routeFile = startRoute + "file";
-    public static final String routeFileDelete = startRoute + "file_delete";
-    public static final String routeSupportComment = startRoute + "support/comment";
-    public static final String routeSupportCommentDelete = startRoute + "support/comment/delete";
-    public static final String routeSupportCommentDeviceId = startRoute + "support/comment/device_id";
-    public static final String routeVersionSupported = startRoute + "version/supported";
-    public static final String routeInformation = startRoute + "information";
-    public static final String routeRobotics = startRoute + "robotics";
-    public static final String routeGenealogy = startRoute + "genealogy";
-    public static final String routeGenealogyDelete = startRoute + "genealogy_delete";
-    public static final String routeGenealogyPut = startRoute + "genealogy_put";
-    public static final String routeGenealogyChildren = startRoute + "genealogy_children";
-    public static final String routeGenealogyStatistics = startRoute + "genealogy_statistics";
-    public static final String routeUser = startRoute + "user";
-    public static final String routeUserDelete = startRoute + "user_delete";
-    public static final String routeUserPut = startRoute + "user_put";
-    public static final String routeUserMessage = startRoute + "user_message";
-    public static final String routeUserConversation = startRoute + "user_conversation";
-    public static final String routeUserConnection = startRoute + "user_connection";
+    public static final String ABOUT_URL = "http://mercandalli.com/";
+    public static final String WEB_APPLICATION = "http://mercandalli.com/FileSpace";
+    private static final String START_ROUTE = "FileSpace-API/";
+    public static final String ROUTE_FILE = START_ROUTE + "file";
+    public static final String ROUTE_FILE_DELETE = START_ROUTE + "file_delete";
+    public static final String ROUTE_SUPPORT_COMMENT = START_ROUTE + "support/comment";
+    public static final String ROUTE_SUPPORT_COMMENT_DELETE = START_ROUTE + "support/comment/delete";
+    public static final String ROUTE_SUPPORT_COMMENT_DEVICE_ID = START_ROUTE + "support/comment/device_id";
+    public static final String ROUTE_VERSION_SUPPORTED = START_ROUTE + "version/supported";
+    public static final String ROUTE_INFORMATION = START_ROUTE + "information";
+    public static final String ROUTE_ROBOTICS = START_ROUTE + "robotics";
+    public static final String ROUTE_GENEALOGY = START_ROUTE + "genealogy";
+    public static final String ROUTE_GENEALOGY_DELETE = START_ROUTE + "genealogy_delete";
+    public static final String ROUTE_GENEALOGY_PUT = START_ROUTE + "genealogy_put";
+    public static final String ROUTE_GENEALOGY_CHILDREN = START_ROUTE + "genealogy_children";
+    public static final String ROUTE_GENEALOGY_STATISTICS = START_ROUTE + "genealogy_statistics";
+    public static final String ROUTE_USER = START_ROUTE + "user";
+    public static final String ROUTE_USER_DELETE = START_ROUTE + "user_delete";
+    public static final String ROUTE_USER_PUT = START_ROUTE + "user_put";
+    public static final String ROUTE_USER_MESSAGE = START_ROUTE + "user_message";
+    public static final String ROUTE_USER_CONVERSATION = START_ROUTE + "user_conversation";
+    public static final String ROUTE_USER_CONNECTION = START_ROUTE + "user_connection";
 
     /**
      * Static int to save/load
@@ -133,7 +133,7 @@ public class Config {
     }
 
     public Config(Activity activity, ApplicationCallback app) {
-        this.app = app;
+        mApp = app;
         load(activity);
     }
 
@@ -151,7 +151,7 @@ public class Config {
                 tmpSettings1.put(enum_string.key, enum_string.value);
             }
             tmpJson.put("settings_1", tmpSettings1);
-            FileUtils.writeStringFile(context, fileName, tmpJson.toString());
+            FileUtils.writeStringFile(context, FILE_NAME, tmpJson.toString());
 
         } catch (JSONException e) {
             Log.e(TAG, "Failed to convert Json", e);
@@ -159,7 +159,7 @@ public class Config {
     }
 
     private void load(final Context context) {
-        final String fileContent = FileUtils.readStringFile(context, fileName);
+        final String fileContent = FileUtils.readStringFile(context, FILE_NAME);
         if (fileContent == null) {
             return;
         }
@@ -282,7 +282,7 @@ public class Config {
         } else if (NetUtils.isInternetConnection(activity)) {
             FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
             fileModelBuilder.id(getUserIdFileProfilePicture());
-            new TaskGetDownloadImage(activity, app, fileModelBuilder.build(), 100_000, new IBitmapListener() {
+            new TaskGetDownloadImage(activity, mApp, fileModelBuilder.build(), 100_000, new IBitmapListener() {
                 @Override
                 public void execute(Bitmap bitmap) {
                     //TODO photo profile
@@ -341,7 +341,7 @@ public class Config {
     }
 
     public static String getFileName() {
-        return fileName;
+        return FILE_NAME;
     }
 
     /**

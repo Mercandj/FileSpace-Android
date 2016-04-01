@@ -155,7 +155,7 @@ public class RegistrationFragment extends BackFragment {
         //parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
 
         if (NetUtils.isInternetConnection(getContext())) {
-            (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.routeUser, new IPostExecuteListener() {
+            (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_USER, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     try {

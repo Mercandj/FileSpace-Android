@@ -108,7 +108,7 @@ public class ServerLogsFragment extends BackFragment {
         if (NetUtils.isInternetConnection(getContext())) {
             new TaskGet(
                     getActivity(),
-                    Constants.URL_DOMAIN + Config.routeUserConnection,
+                    Constants.URL_DOMAIN + Config.ROUTE_USER_CONNECTION,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {

@@ -87,8 +87,8 @@ public class DialogAuthorLabel extends Dialog {
                 if (count == 1) {
                     try {
                         getShimmer(tv).start(tv);
-                        PackageInfo pInfo = mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0);
-                        version(tv, "Version: " + pInfo.versionName, 0);
+                        PackageInfo info = mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0);
+                        version(tv, "Version: " + info.versionName, 0);
                     } catch (PackageManager.NameNotFoundException e) {
                         Log.e(getClass().getName(), "Exception", e);
                     }

@@ -166,7 +166,7 @@ public class SettingsFragment extends BackFragment {
             list.add(new ModelSetting("Web application", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    NetUtils.search(context, Config.webApplication);
+                    NetUtils.search(context, Config.WEB_APPLICATION);
                 }
             }));
         }

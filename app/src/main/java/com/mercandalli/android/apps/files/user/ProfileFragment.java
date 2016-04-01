@@ -132,7 +132,7 @@ public class ProfileFragment extends BackFragment {
             List<StringPair> parameters = null;
             new TaskGet(
                     getActivity(),
-                    Constants.URL_DOMAIN + Config.routeUser + "/" + Config.getUserId(),
+                    Constants.URL_DOMAIN + Config.ROUTE_USER + "/" + Config.getUserId(),
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
@@ -174,7 +174,7 @@ public class ProfileFragment extends BackFragment {
                                                         parameters.add(new StringPair("longitude", "" + longitude));
                                                         parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                        (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.routeUserPut, new IPostExecuteListener() {
+                                                        (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_USER_PUT, new IPostExecuteListener() {
                                                             @Override
                                                             public void onPostExecute(JSONObject json, String body) {
 
@@ -197,7 +197,7 @@ public class ProfileFragment extends BackFragment {
                                                 parameters.add(new StringPair("longitude", "" + longitude));
                                                 parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.routeUserPut, new IPostExecuteListener() {
+                                                (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_USER_PUT, new IPostExecuteListener() {
                                                     @Override
                                                     public void onPostExecute(JSONObject json, String body) {
 

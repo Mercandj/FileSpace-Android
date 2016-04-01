@@ -139,9 +139,9 @@ public class DialogAddGenealogyPerson extends Dialog {
                     parameters.add(new StringPair("is_man", "" + sex.isChecked()));
 
                     if (genealogyUser == null) {
-                        (new TaskPost(mActivity, app, Constants.URL_DOMAIN + Config.routeGenealogy, listener, parameters)).execute();
+                        (new TaskPost(mActivity, app, Constants.URL_DOMAIN + Config.ROUTE_GENEALOGY, listener, parameters)).execute();
                     } else {
-                        (new TaskPost(mActivity, app, Constants.URL_DOMAIN + Config.routeGenealogyPut + "/" + genealogyUser.mId, listener, parameters)).execute();
+                        (new TaskPost(mActivity, app, Constants.URL_DOMAIN + Config.ROUTE_GENEALOGY_PUT + "/" + genealogyUser.mId, listener, parameters)).execute();
                     }
 
                     DialogAddGenealogyPerson.this.dismiss();

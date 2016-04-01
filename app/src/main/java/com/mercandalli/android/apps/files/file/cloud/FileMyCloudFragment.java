@@ -220,7 +220,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                         if (FileTypeModelENUM.IMAGE.type.equals(fileModel.getType())) {
                                             List<StringPair> parameters = new ArrayList<>();
                                             parameters.add(new StringPair("id_file_profile_picture", "" + fileModel.getId()));
-                                            (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.routeUserPut, new IPostExecuteListener() {
+                                            (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_USER_PUT, new IPostExecuteListener() {
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
                                                     try {
@@ -235,7 +235,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                         } else if (FileTypeModelENUM.APK.type.equals(fileModel.getType()) && Config.isUserAdmin()) {
                                             List<StringPair> parameters = new ArrayList<>();
                                             parameters.add(new StringPair("is_apk_update", "" + !fileModel.isApkUpdate()));
-                                            (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.routeFile + "/" + fileModel.getId(), new IPostExecuteListener() {
+                                            (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_FILE + "/" + fileModel.getId(), new IPostExecuteListener() {
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
                                                     try {

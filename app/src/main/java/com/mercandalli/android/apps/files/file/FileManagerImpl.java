@@ -179,7 +179,7 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
             return;
         }
         final String pathFolderDownloaded = Environment.getExternalStorageDirectory()
-                .getAbsolutePath() + File.separator + Config.localFolderNameDefault;
+                .getAbsolutePath() + File.separator + Config.LOCAL_FOLDER_NAME_DEFAULT;
         final File folder = new File(pathFolderDownloaded);
         if (!folder.exists()) {
             //noinspection ResultOfMethodCallIgnored
