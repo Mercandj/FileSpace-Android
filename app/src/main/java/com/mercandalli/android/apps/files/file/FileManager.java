@@ -13,32 +13,31 @@ import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The {@link FileModel} Manager abstract class.
  */
-public abstract class FileManager {
+public interface FileManager {
 
     /**
      * Get the {@link FileModel}s from a local parent.
      */
-    public abstract void getFiles(
+    void getFiles(
             final File fileParent,
             final ResultCallback<List<FileModel>> resultCallback);
 
     /**
      * Get the {@link FileModel}s from a parent. (Could be local or online.)
      */
-    public abstract void getFiles(
+    void getFiles(
             final FileModel fileParent,
             final ResultCallback<List<FileModel>> resultCallback);
 
     /**
      * Get the {@link FileModel}s from a parent and a search. (Could be local or online.)
      */
-    public abstract void getFiles(
+    void getFiles(
             final FileModel fileParent,
             boolean areMyFiles,
             final ResultCallback<List<FileModel>> resultCallback);
@@ -46,7 +45,7 @@ public abstract class FileManager {
     /**
      * Download an online {@link FileModel}.
      */
-    public abstract void download(
+    void download(
             final Activity activity,
             final FileModel fileModel,
             final IListener listener);
@@ -54,7 +53,7 @@ public abstract class FileManager {
     /**
      * Upload a local {@link FileModel}.
      */
-    public abstract void upload(
+    void upload(
             final FileModel fileModel,
             final int idFileParent,
             final IListener listener);
@@ -62,26 +61,26 @@ public abstract class FileManager {
     /**
      * Rename a {@link FileModel}.
      */
-    public abstract void rename(
+    void rename(
             final FileModel fileModel,
             final String newName,
             final IListener listener);
 
-    public abstract void renameLocalByPath(
+    void renameLocalByPath(
             final FileModel fileModel,
             final String path);
 
     /**
      * Delete a {@link FileModel}.
      */
-    public abstract void delete(
+    void delete(
             final FileModel fileModel,
             final IListener listener);
 
     /**
      * Cut a file.
      */
-    public abstract void setParent(
+    void setParent(
             final FileModel fileModel,
             final int newIdFileParent,
             final IListener listener);
@@ -89,7 +88,7 @@ public abstract class FileManager {
     /**
      * Set the file visibility (now online online files).
      */
-    public abstract void setPublic(
+    void setPublic(
             final FileModel fileModel,
             final boolean isPublic,
             final IListener listener);
@@ -97,7 +96,7 @@ public abstract class FileManager {
     /**
      * Default click action. Call and {@link android.content.Intent} or a specific {@link Activity}.
      */
-    public abstract void execute(
+    void execute(
             final Activity activity,
             final int position,
             final List fileModelList, View view);
@@ -105,23 +104,23 @@ public abstract class FileManager {
     /**
      * Open local file as... (Open a dialog to select).
      */
-    public abstract void openLocalAs(
+    void openLocalAs(
             final Activity activity,
             final FileModel fileModel);
 
     /**
      * Get the {@link FileModel} overview.
      */
-    public abstract Spanned toSpanned(
+    Spanned toSpanned(
             final Context context,
             final FileModel fileModel);
 
-    public abstract void copyLocalFile(
+    void copyLocalFile(
             final Activity activity,
             final FileModel fileModel,
             final String outputPath);
 
-    public abstract void copyLocalFile(
+    void copyLocalFile(
             final Activity activity,
             final FileModel fileModel,
             final String outputPath,
@@ -130,30 +129,23 @@ public abstract class FileManager {
     /**
      * Is this online file mine.
      */
-    public abstract boolean isMine(
-            final FileModel fileModel);
+    boolean isMine(final FileModel fileModel);
 
-    public abstract void searchLocal(
+    void searchLocal(
             final Context context,
             final String search,
             final ResultCallback<List<FileModel>> resultCallback);
 
-    public abstract void getCover(
+    void getCover(
             final Context context,
             final FileAudioModel fileAudioModel,
             final ImageView imageView);
 
-    public static List<StringPair> getForUpload(final FileModel fileModel) {
-        List<StringPair> parameters = new ArrayList<>();
-        if (fileModel.getName() != null) {
-            parameters.add(new StringPair("url", fileModel.getName()));
-        }
-        if (fileModel.isDirectory()) {
-            parameters.add(new StringPair("directory", "true"));
-        }
-        if (fileModel.getIdFileParent() != -1) {
-            parameters.add(new StringPair("id_file_parent", "" + fileModel.getIdFileParent()));
-        }
-        return parameters;
-    }
+    /**
+     * Get the parameters to upload a local {@link FileModel}.
+     *
+     * @param fileModel A local {@link FileModel}
+     * @return The upload parameters.
+     */
+    List<StringPair> getForUpload(final FileModel fileModel);
 }

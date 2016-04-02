@@ -69,7 +69,8 @@ import retrofit2.Response;
 /**
  * A {@link FileModel} Manager.
  */
-public class FileManagerImpl extends FileManager /*implements FileUploadTypedFile.FileUploadListener*/ {
+/* package */
+class FileManagerImpl implements FileManager /*implements FileUploadTypedFile.FileUploadListener*/ {
 
     private static final String LIKE = " LIKE ?";
     private static final String MIME_TEXT = "text/plain";
@@ -786,5 +787,20 @@ public class FileManagerImpl extends FileManager /*implements FileUploadTypedFil
             return;
         }
         resultCallback.success(fileModels);
+    }
+
+    @Override
+    public List<StringPair> getForUpload(final FileModel fileModel) {
+        final List<StringPair> parameters = new ArrayList<>();
+        if (fileModel.getName() != null) {
+            parameters.add(new StringPair("url", fileModel.getName()));
+        }
+        if (fileModel.isDirectory()) {
+            parameters.add(new StringPair("directory", "true"));
+        }
+        if (fileModel.getIdFileParent() != -1) {
+            parameters.add(new StringPair("id_file_parent", "" + fileModel.getIdFileParent()));
+        }
+        return parameters;
     }
 }

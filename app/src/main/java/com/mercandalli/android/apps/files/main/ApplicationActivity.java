@@ -35,7 +35,6 @@ import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.StringPair;
-import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 
 import org.json.JSONObject;
@@ -112,7 +111,8 @@ public abstract class ApplicationActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             if (mPhotoFile != null && mPhotoFile.getFile() != null) {
-                List<StringPair> parameters = FileManager.getForUpload(mPhotoFile);
+                List<StringPair> parameters = FileApp.get().getFileAppComponent()
+                        .provideFileManager().getForUpload(mPhotoFile);
                 (new TaskPost(this, this, Constants.URL_DOMAIN + Config.ROUTE_FILE, new IPostExecuteListener() {
                     @Override
                     public void onPostExecute(JSONObject json, String body) {

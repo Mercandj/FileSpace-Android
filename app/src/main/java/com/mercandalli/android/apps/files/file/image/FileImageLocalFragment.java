@@ -210,7 +210,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                                                 @Override
                                                 public void execute() {
                                                     if (fileModel.getFile() != null) {
-                                                        List<StringPair> parameters = FileManager.getForUpload(fileModel);
+                                                        List<StringPair> parameters = mFileManager.getForUpload(fileModel);
                                                         (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_FILE, new IPostExecuteListener() {
                                                             @Override
                                                             public void onPostExecute(JSONObject json, String body) {
