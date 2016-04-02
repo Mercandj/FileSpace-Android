@@ -230,7 +230,7 @@ class SaveTestResultTask extends DefaultTask {
 
         final File jsonAuthenticationFile = new File(postJsonAuthenticationFilePath)
         if (!jsonAuthenticationFile.exists()) {
-            println("postFile: json !exists")
+            println("postFile: json !exists at this path '" + postJsonAuthenticationFilePath + "'")
             return
         }
         def json = new JsonSlurper().parseText(jsonAuthenticationFile.text)
