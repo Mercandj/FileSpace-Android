@@ -1,5 +1,6 @@
 package com.mercandalli.android.apps.files.view;
 
+import android.content.Context;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.view.View;
@@ -30,5 +31,9 @@ public class ViewUtils {
                 action.perform(uiController, view);
             }
         };
+    }
+
+    private static float dpToPx(final Context context, final float dp) {
+        return dp * context.getResources().getDisplayMetrics().density;
     }
 }

@@ -18,6 +18,10 @@ import com.mercandalli.android.apps.files.precondition.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Tha main {@link FileLocalProviderManager} implementation.
+ * Manage {@link List}s of path.
+ */
 public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
 
     private static final String LIKE = " LIKE ?";

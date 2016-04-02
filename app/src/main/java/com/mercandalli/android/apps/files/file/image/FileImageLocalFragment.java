@@ -151,7 +151,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_file_audio_local, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_file_image_local, container, false);
         final Context context = getContext();
 
         mStringDirectory = context.getString(R.string.file_image_model_directory);
@@ -162,18 +162,18 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         mFileImageManager.registerLocalImageFoldersListener(this);
         mFileImageManager.registerLocalImageListener(this);
 
-        mProgressBar = (ProgressBar) rootView.findViewById(R.id.fragment_file_audio_local_progress_bar);
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.fragment_file_image_local_progress_bar);
         mProgressBar.setVisibility(View.GONE);
-        mMessageTextView = (TextView) rootView.findViewById(R.id.fragment_file_audio_local_message);
+        mMessageTextView = (TextView) rootView.findViewById(R.id.fragment_file_image_local_message);
 
-        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.fragment_file_audio_local_swipe_refresh_layout);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.fragment_file_image_local_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_file_audio_local_recycler_view);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_file_image_local_recycler_view);
         mRecyclerView.setHasFixedSize(true);
         updateGridLayoutManager();
 

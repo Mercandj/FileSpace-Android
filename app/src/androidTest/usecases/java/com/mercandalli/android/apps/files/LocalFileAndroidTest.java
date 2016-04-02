@@ -13,6 +13,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.widget.EditText;
 
 import com.mercandalli.android.apps.files.main.MainActivity;
+import com.mercandalli.android.apps.files.splash.SplashActivity;
 import com.mercandalli.android.apps.files.view.RecyclerViewUtils;
 
 import org.junit.Before;
@@ -42,7 +43,7 @@ import static com.mercandalli.android.apps.files.view.DrawerLayoutUtils.actionCl
 public final class LocalFileAndroidTest {
 
     @Rule
-    public final ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<MainActivity>(MainActivity.class) {
+    public final ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<SplashActivity>(SplashActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
             super.beforeActivityLaunched();

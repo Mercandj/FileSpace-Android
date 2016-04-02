@@ -15,5 +15,4 @@ public class FileLocalProviderModule {
     FileLocalProviderManager provideFileProviderManager(Application application) {
         return new FileLocalProviderManagerImpl(application);
     }
-
 }

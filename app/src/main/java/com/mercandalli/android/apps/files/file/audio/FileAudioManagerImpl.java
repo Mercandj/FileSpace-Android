@@ -42,7 +42,8 @@ import static com.mercandalli.android.apps.files.file.FileUtils.getNameFromPath;
 /**
  * A {@link FileModel} Manager.
  */
-public class FileAudioManagerImpl extends FileAudioManager {
+/* package */
+class FileAudioManagerImpl extends FileAudioManagerNotifier {
 
     private static final String LIKE = " LIKE ?";
 
@@ -200,7 +201,6 @@ public class FileAudioManagerImpl extends FileAudioManager {
                 }.start();
             }
         });
-
     }
 
     @Override

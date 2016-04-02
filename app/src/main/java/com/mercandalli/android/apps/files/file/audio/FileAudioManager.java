@@ -8,46 +8,36 @@ import com.mercandalli.android.apps.files.file.audio.album.Album;
 import com.mercandalli.android.apps.files.file.audio.artist.Artist;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The {@link FileModel} Manager abstract class.
+ * The {@link FileModel} Manager manage {@link FileModel}.
  */
-public abstract class FileAudioManager {
-
-    /* Listeners */
-    protected final List<GetAllLocalMusicListener> mGetAllLocalMusicListeners = new ArrayList<>();
-    protected final List<GetAllLocalMusicArtistsListener> mGetAllLocalMusicArtistsListeners = new ArrayList<>();
-    protected final List<GetAllLocalMusicAlbumsListener> mGetAllLocalMusicAlbumsListeners = new ArrayList<>();
-    protected final List<GetLocalMusicFoldersListener> mGetLocalMusicFoldersListeners = new ArrayList<>();
-    protected final List<GetLocalMusicListener> mGetLocalMusicListeners = new ArrayList<>();
-    protected final List<MusicsChangeListener> mMusicsChangeListeners = new ArrayList<>();
+public interface FileAudioManager {
 
     /**
      * Get all the {@link FileAudioModel} in the device.
      */
-    public abstract void getAllLocalMusic();
+    void getAllLocalMusic();
 
     /**
      * Get all the {@link FileAudioModel} in a folder.
      */
-    public abstract void getLocalMusic(
-            final FileModel fileModelDirectParent);
+    void getLocalMusic(final FileModel fileModelDirectParent);
 
     /**
      * Get all local folders that contain music.
      */
-    public abstract void getLocalMusicFolders();
+    void getLocalMusicFolders();
 
-    public abstract void getAllLocalMusicAlbums();
+    void getAllLocalMusicAlbums();
 
-    public abstract void getAllLocalMusicArtists();
+    void getAllLocalMusicArtists();
 
     /**
      * Edit the metadata.
      */
-    public abstract boolean setFileAudioMetaData(
+    boolean setFileAudioMetaData(
             final File fileAudio,
             final String newTitle,
             final String newArtist,
@@ -57,7 +47,7 @@ public abstract class FileAudioManager {
      * Edit the metadata.
      */
     @SuppressWarnings("unused")
-    public abstract boolean setFileAudioMetaData(
+    boolean setFileAudioMetaData(
             final FileAudioModel fileAudio,
             final String newTitle,
             final String newArtist,
@@ -66,121 +56,40 @@ public abstract class FileAudioManager {
     /**
      * Get the {@link FileAudioModel} overview.
      */
-    public abstract Spanned toSpanned(
+    Spanned toSpanned(
             final Context context,
             final FileAudioModel fileAudioModel);
 
-    public abstract void clearCache();
+    /**
+     * Clear all the cache.
+     */
+    void clearCache();
 
     //region Register/Unregister.
 
-    public boolean registerAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener) {
-        synchronized (mGetAllLocalMusicListeners) {
-            //noinspection SimplifiableIfStatement
-            if (getAllLocalMusicListener == null || mGetAllLocalMusicListeners.contains(getAllLocalMusicListener)) {
-                // We don't allow to register null listener
-                // And a listener can only be added once.
-                return false;
-            }
-            return mGetAllLocalMusicListeners.add(getAllLocalMusicListener);
-        }
-    }
+    boolean registerAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener);
 
-    public boolean unregisterAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener) {
-        synchronized (mGetAllLocalMusicListeners) {
-            return mGetAllLocalMusicListeners.remove(getAllLocalMusicListener);
-        }
-    }
+    boolean unregisterAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener);
 
-    public boolean registerLocalMusicFoldersListener(GetLocalMusicFoldersListener getLocalImageFoldersListener) {
-        synchronized (mGetLocalMusicFoldersListeners) {
-            //noinspection SimplifiableIfStatement
-            if (getLocalImageFoldersListener == null || mGetLocalMusicFoldersListeners.contains(getLocalImageFoldersListener)) {
-                // We don't allow to register null listener
-                // And a listener can only be added once.
-                return false;
-            }
-            return mGetLocalMusicFoldersListeners.add(getLocalImageFoldersListener);
-        }
-    }
+    boolean registerLocalMusicFoldersListener(GetLocalMusicFoldersListener getLocalImageFoldersListener);
 
-    public boolean unregisterLocalMusicFoldersListener(GetLocalMusicFoldersListener getLocalImageFoldersListener) {
-        synchronized (mGetLocalMusicFoldersListeners) {
-            return mGetLocalMusicFoldersListeners.remove(getLocalImageFoldersListener);
-        }
-    }
+    boolean unregisterLocalMusicFoldersListener(GetLocalMusicFoldersListener getLocalImageFoldersListener);
 
-    public boolean registerLocalMusicListener(GetLocalMusicListener getLocalImageListener) {
-        synchronized (mGetLocalMusicListeners) {
-            //noinspection SimplifiableIfStatement
-            if (getLocalImageListener == null || mGetLocalMusicListeners.contains(getLocalImageListener)) {
-                // We don't allow to register null listener
-                // And a listener can only be added once.
-                return false;
-            }
-            return mGetLocalMusicListeners.add(getLocalImageListener);
-        }
-    }
+    boolean registerLocalMusicListener(GetLocalMusicListener getLocalImageListener);
 
-    public boolean unregisterLocalMusicListener(GetLocalMusicListener getLocalImageListener) {
-        synchronized (mGetLocalMusicListeners) {
-            return mGetLocalMusicListeners.remove(getLocalImageListener);
-        }
-    }
+    boolean unregisterLocalMusicListener(GetLocalMusicListener getLocalImageListener);
 
-    public boolean registerOnMusicUpdateListener(MusicsChangeListener musicsChangeListener) {
-        synchronized (mMusicsChangeListeners) {
-            //noinspection SimplifiableIfStatement
-            if (musicsChangeListener == null || mMusicsChangeListeners.contains(musicsChangeListener)) {
-                // We don't allow to register null listener
-                // And a listener can only be added once.
-                return false;
-            }
-            return mMusicsChangeListeners.add(musicsChangeListener);
-        }
-    }
+    boolean registerOnMusicUpdateListener(MusicsChangeListener musicsChangeListener);
 
-    public boolean unregisterOnMusicUpdateListener(MusicsChangeListener musicsChangeListener) {
-        synchronized (mMusicsChangeListeners) {
-            return mMusicsChangeListeners.remove(musicsChangeListener);
-        }
-    }
+    boolean unregisterOnMusicUpdateListener(MusicsChangeListener musicsChangeListener);
 
-    public boolean registerAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener) {
-        synchronized (mGetAllLocalMusicArtistsListeners) {
-            //noinspection SimplifiableIfStatement
-            if (getAllLocalMusicArtistsListener == null || mGetAllLocalMusicArtistsListeners.contains(getAllLocalMusicArtistsListener)) {
-                // We don't allow to register null listener
-                // And a listener can only be added once.
-                return false;
-            }
-            return mGetAllLocalMusicArtistsListeners.add(getAllLocalMusicArtistsListener);
-        }
-    }
+    boolean registerAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener);
 
-    public boolean unregisterAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener) {
-        synchronized (mGetAllLocalMusicArtistsListeners) {
-            return mGetAllLocalMusicArtistsListeners.remove(getAllLocalMusicArtistsListener);
-        }
-    }
+    boolean unregisterAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener);
 
-    public boolean registerAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener) {
-        synchronized (mGetAllLocalMusicAlbumsListeners) {
-            //noinspection SimplifiableIfStatement
-            if (getAllLocalMusicAlbumsListener == null || mGetAllLocalMusicAlbumsListeners.contains(getAllLocalMusicAlbumsListener)) {
-                // We don't allow to register null listener
-                // And a listener can only be added once.
-                return false;
-            }
-            return mGetAllLocalMusicAlbumsListeners.add(getAllLocalMusicAlbumsListener);
-        }
-    }
+    boolean registerAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener);
 
-    public boolean unregisterAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener) {
-        synchronized (mGetAllLocalMusicAlbumsListeners) {
-            return mGetAllLocalMusicAlbumsListeners.remove(getAllLocalMusicAlbumsListener);
-        }
-    }
+    boolean unregisterAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener);
 
     //endregion Register/Unregister.
 
@@ -190,7 +99,7 @@ public abstract class FileAudioManager {
      * http://stackoverflow.com/questions/81346/most-efficient-way-to-increment-a-map-value-in-java
      * Used to count with a map.
      */
-    protected class MutableInt {
+    class MutableInt {
         int value = 1; // note that we start at 1 since we're counting
 
         public void increment() {

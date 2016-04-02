@@ -8,6 +8,7 @@ import android.support.test.uiautomator.UiObjectNotFoundException;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.mercandalli.android.apps.files.main.MainActivity;
+import com.mercandalli.android.apps.files.splash.SplashActivity;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,7 +27,7 @@ import static com.mercandalli.android.apps.files.view.DrawerLayoutUtils.actionCl
 public final class LocalImageFileAndroidTest {
 
     @Rule
-    public final ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<MainActivity>(MainActivity.class) {
+    public final ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<SplashActivity>(SplashActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
             super.beforeActivityLaunched();

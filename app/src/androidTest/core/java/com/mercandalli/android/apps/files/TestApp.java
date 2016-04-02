@@ -4,6 +4,8 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 import android.support.test.InstrumentationRegistry;
 
+import com.mercandalli.android.apps.files.file.audio.FileAudioModuleTest;
+import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderModuleTest;
 import com.mercandalli.android.apps.files.main.DaggerFileAppComponent;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
@@ -15,6 +17,8 @@ public class TestApp extends FileApp {
     protected void setupGraph() {
         mFileAppComponent = DaggerFileAppComponent.builder()
                 .fileAppModule(new FileAppModule(this))
+                .fileLocalProviderModule(new FileLocalProviderModuleTest())
+                .fileAudioModule(new FileAudioModuleTest())
                 .build();
 
         mFileAppComponent.inject(this);

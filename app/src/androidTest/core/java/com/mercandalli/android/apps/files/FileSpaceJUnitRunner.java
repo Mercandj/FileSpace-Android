@@ -1,8 +1,11 @@
 package com.mercandalli.android.apps.files;
 
+import android.app.Activity;
 import android.app.Application;
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.test.runner.AndroidJUnitRunner;
 
@@ -64,5 +67,13 @@ public class FileSpaceJUnitRunner extends AndroidJUnitRunner {
             }
         });
         super.onDestroy();
+    }
+
+    @Override
+    public void callActivityOnCreate(Activity activity, Bundle bundle) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            LayoutInflaterWrapper.wrap(activity);
+        }
+        super.callActivityOnCreate(activity, bundle);
     }
 }
