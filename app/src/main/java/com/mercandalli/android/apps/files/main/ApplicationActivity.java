@@ -69,7 +69,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements
 
         logPerformance(TAG, "ApplicationActivity#onCreate() - Start");
 
-        mConfig = new Config(this, this);
+        mConfig = new Config(this);
 
         logPerformance(TAG, "ApplicationActivity#onCreate() - Start Config");
 
@@ -102,7 +102,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements
     @Override
     public Config getConfig() {
         if (mConfig == null) {
-            mConfig = new Config(this, this);
+            mConfig = new Config(this);
         }
         return mConfig;
     }
@@ -111,7 +111,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             if (mPhotoFile != null && mPhotoFile.getFile() != null) {
-                List<StringPair> parameters = FileApp.get().getFileAppComponent()
+                final List<StringPair> parameters = FileApp.get().getFileAppComponent()
                         .provideFileManager().getForUpload(mPhotoFile);
                 (new TaskPost(this, this, Constants.URL_DOMAIN + Config.ROUTE_FILE, new IPostExecuteListener() {
                     @Override

@@ -52,11 +52,11 @@ import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 
 public class FileLocalPagerFragment extends BackFragment implements
         ViewPager.OnPageChangeListener,
-        FabFragment.RefreshFabCallback, TabLayout.OnTabSelectedListener {
+        FabFragment.RefreshFabCallback,
+        TabLayout.OnTabSelectedListener {
 
     private static final int NB_FRAGMENT = 3;
     private static final int INIT_FRAGMENT = 0;
@@ -80,7 +80,7 @@ public class FileLocalPagerFragment extends BackFragment implements
 
     private SetToolbarCallback mSetToolbarCallback;
 
-    private static final int[] mImageResId = {
+    private final int[] mImageResId = {
             R.drawable.ic_folder_open_white_24dp,
             R.drawable.ic_sd_storage_white_24dp,
             R.drawable.ic_music_note_white_24dp,
@@ -88,7 +88,7 @@ public class FileLocalPagerFragment extends BackFragment implements
             R.drawable.ic_video_library_white_24dp
     };
 
-    private static final int[] mTitleIds = {
+    private final int[] mTitleIds = {
             R.string.tab_files,
             R.string.tab_sdcard,
             R.string.tab_musics,
@@ -108,8 +108,8 @@ public class FileLocalPagerFragment extends BackFragment implements
 
     @Override
     public void onDetach() {
-        super.onDetach();
         mSetToolbarCallback = null;
+        super.onDetach();
     }
 
     @Nullable
@@ -119,6 +119,7 @@ public class FileLocalPagerFragment extends BackFragment implements
         findViews(rootView);
         initToolbar(rootView);
         initViews(savedInstanceState);
+        onPageSelected(mViewPager.getCurrentItem());
         return rootView;
     }
 
@@ -313,7 +314,7 @@ public class FileLocalPagerFragment extends BackFragment implements
 
     private void initViews(@Nullable Bundle savedInstanceState) {
         mPagerAdapter = new FileManagerFragmentPagerAdapter(
-                getChildFragmentManager(), mApplicationCallback, isSdCardFragmentVisible());
+                getChildFragmentManager(), isSdCardFragmentVisible());
 
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
@@ -446,15 +447,12 @@ public class FileLocalPagerFragment extends BackFragment implements
      * A simple {@link FragmentPagerAdapter}.
      */
     private static class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
-        ApplicationCallback mApplicationCallback;
         private final boolean mIsSdcardVisible;
 
         public FileManagerFragmentPagerAdapter(
                 final FragmentManager fm,
-                final ApplicationCallback applicationCallback,
                 final boolean isSdcardVisible) {
             super(fm);
-            mApplicationCallback = applicationCallback;
             mIsSdcardVisible = isSdcardVisible;
         }
 

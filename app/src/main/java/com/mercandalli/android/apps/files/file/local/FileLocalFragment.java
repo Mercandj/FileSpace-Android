@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -76,7 +77,7 @@ public class FileLocalFragment extends FabFragment implements
     private RecyclerView mRecyclerView;
     private final List<FileModel> mFilesList = new ArrayList<>();
     private ProgressBar mProgressBar;
-    protected File mCurrentDirectory;
+    private File mCurrentDirectory = createInitialDirectory();
     private TextView mMessageTextView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -106,8 +107,8 @@ public class FileLocalFragment extends FabFragment implements
 
     /**
      * Default Constructor.
-     * <p>
-     * <p>
+     * <p/>
+     * <p/>
      * lint [ValidFragment]
      * http://developer.android.com/reference/android/app/Fragment.html#Fragment()
      * Every fragment must have an empty constructor, so it can be instantiated when restoring its activity's state.
@@ -145,11 +146,11 @@ public class FileLocalFragment extends FabFragment implements
                 refreshCurrentList();
                 return true;
             }
-        } else if ((mFilesToCopyList != null && mFilesToCopyList.size() != 0) || (mFilesToCutList != null && mFilesToCutList.size() != 0)) {
-            if (mFilesToCopyList != null) {
+        } else if (!mFilesToCopyList.isEmpty() || !mFilesToCutList.isEmpty()) {
+            if (!mFilesToCopyList.isEmpty()) {
                 mFilesToCopyList.clear();
             }
-            if (mFilesToCutList != null) {
+            if (!mFilesToCutList.isEmpty()) {
                 mFilesToCutList.clear();
             }
             refreshFab();
@@ -225,7 +226,7 @@ public class FileLocalFragment extends FabFragment implements
             case 0:
                 return true;
             case 1:
-                return this.mCurrentDirectory != null &&
+                return mCurrentDirectory != null &&
                         mCurrentDirectory.getParent() != null;
         }
         return false;
@@ -298,12 +299,12 @@ public class FileLocalFragment extends FabFragment implements
 
     @Override
     public boolean isFileToCut() {
-        return mFilesToCutList != null && mFilesToCutList.size() != 0;
+        return !mFilesToCutList.isEmpty();
     }
 
     @Override
     public boolean isFileToCopy() {
-        return mFilesToCopyList != null && mFilesToCopyList.size() != 0;
+        return !mFilesToCopyList.isEmpty();
     }
 
     @Override
@@ -317,7 +318,7 @@ public class FileLocalFragment extends FabFragment implements
     }
 
     public void goHome() {
-        initCurrentDirectory();
+        mCurrentDirectory = createInitialDirectory();
         this.refreshCurrentList();
     }
 
@@ -447,8 +448,6 @@ public class FileLocalFragment extends FabFragment implements
             mRecyclerView.setLayoutManager(new GridLayoutManager(activity, nbColumn));
         }
 
-        initCurrentDirectory();
-
         mFileModelAdapter = new FileModelAdapter(getContext(), mFilesList, this, this, this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelAdapter);
@@ -488,11 +487,14 @@ public class FileLocalFragment extends FabFragment implements
         });
     }
 
-    protected void initCurrentDirectory() {
-        mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.getLocalFolderName());
-        if (!mCurrentDirectory.exists()) {
-            mCurrentDirectory.mkdir();
+    @NonNull
+    protected File createInitialDirectory() {
+        final File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +
+                File.separator + Config.getLocalFolderName());
+        if (!file.exists()) {
+            file.mkdir();
         }
+        return file;
     }
 
     protected String initialPath() {

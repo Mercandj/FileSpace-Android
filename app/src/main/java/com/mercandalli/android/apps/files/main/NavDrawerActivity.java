@@ -77,6 +77,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private NavigationView mNavigationView;
+    private NavDrawerView mNavDrawerView;
 
     private final FragmentManager mFragmentManager = getSupportFragmentManager();
 
@@ -114,12 +115,12 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
 
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        final NavDrawerView navDrawerView = (NavDrawerView) findViewById(R.id.activity_main_nav_drawer_view);
-        navDrawerView.setOnNavDrawerClickCallback(this);
-        navDrawerView.setSelectedRow(this, getInitFragmentId());
-        navDrawerView.setConnected(isLogged());
+        mNavDrawerView = (NavDrawerView) findViewById(R.id.activity_main_nav_drawer_view);
+        mNavDrawerView.setOnNavDrawerClickCallback(this);
+        mNavDrawerView.setSelectedRow(this, getInitFragmentId());
+        mNavDrawerView.setConnected(isLogged());
         if (isLogged()) {
-            navDrawerView.setUser(Config.getUser(), getConfig().getUserProfilePicture(this));
+            mNavDrawerView.setUser(Config.getUser(), getConfig().getUserProfilePicture(this, this));
         }
 
         logPerformance(TAG, "NavDrawerActivity#onCreate() - Middle");
@@ -132,7 +133,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
         }
 
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name);
-        mDrawerLayout.setDrawerListener(mActionBarDrawerToggle);
+        mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
 
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
         // per the navigation drawer design guidelines.
@@ -143,6 +144,12 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
         initAds();
 
         logPerformance(TAG, "NavDrawerActivity#onCreate() - End");
+    }
+
+    @Override
+    protected void onDestroy() {
+        mNavDrawerView.setOnNavDrawerClickCallback(null);
+        super.onDestroy();
     }
 
     /**
@@ -171,11 +178,11 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
     }
 
     @Override
-    public void setToolbar(Toolbar toolbar) {
+    public void setToolbar(final Toolbar toolbar) {
         setSupportActionBar(toolbar);
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawerLayout.setDrawerListener(this);
+        mDrawerLayout.addDrawerListener(this);
         mActionBarDrawerToggle.syncState();
     }
 

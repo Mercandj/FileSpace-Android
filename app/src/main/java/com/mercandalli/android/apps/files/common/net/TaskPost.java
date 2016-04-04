@@ -61,8 +61,8 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
     List<StringPair> parameters;
     IPostExecuteListener listener;
     File file;
-    ApplicationCallback mApplicationCallback;
-    Activity mActivity;
+    private ApplicationCallback mApplicationCallback;
+    private Activity mActivity;
 
     public TaskPost(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener) {
         mActivity = activity;

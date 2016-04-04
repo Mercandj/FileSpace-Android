@@ -50,7 +50,6 @@ import java.util.TimeZone;
 public class Config {
 
     private static final String TAG = "Config";
-    private ApplicationCallback mApp;
 
     // Local routes
     public static final String LOCAL_FOLDER_NAME_DEFAULT = "FileSpace";
@@ -132,8 +131,7 @@ public class Config {
         }
     }
 
-    public Config(Activity activity, ApplicationCallback app) {
-        mApp = app;
+    public Config(final Activity activity) {
         load(activity);
     }
 
@@ -275,14 +273,14 @@ public class Config {
         }
     }
 
-    public Bitmap getUserProfilePicture(Activity activity) {
+    public Bitmap getUserProfilePicture(Activity activity, ConfigCallback configCallback) {
         File file = new File(activity.getFilesDir() + "/file_" + this.getUserIdFileProfilePicture());
         if (file.exists()) {
             return BitmapFactory.decodeFile(file.getPath());
         } else if (NetUtils.isInternetConnection(activity)) {
             FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
             fileModelBuilder.id(getUserIdFileProfilePicture());
-            new TaskGetDownloadImage(activity, mApp, fileModelBuilder.build(), 100_000, new IBitmapListener() {
+            new TaskGetDownloadImage(activity, configCallback, fileModelBuilder.build(), 100_000, new IBitmapListener() {
                 @Override
                 public void execute(Bitmap bitmap) {
                     //TODO photo profile

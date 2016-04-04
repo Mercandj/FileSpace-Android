@@ -1,5 +1,7 @@
 package com.mercandalli.android.apps.files.file.local;
 
+import android.support.annotation.NonNull;
+
 import com.mercandalli.android.apps.files.main.Config;
 
 import java.io.File;
@@ -12,12 +14,14 @@ public class FileLocalSdFragment extends FileLocalFragment {
         return new FileLocalSdFragment();
     }
 
+    @NonNull
     @Override
-    protected void initCurrentDirectory() {
-        mCurrentDirectory = new File(getSdCardPath() + File.separator + Config.getLocalFolderName());
-        if (!mCurrentDirectory.exists()) {
-            mCurrentDirectory.mkdir();
+    protected File createInitialDirectory() {
+        final File file = new File(getSdCardPath() + File.separator + Config.getLocalFolderName());
+        if (!file.exists()) {
+            file.mkdir();
         }
+        return file;
     }
 
     @Override

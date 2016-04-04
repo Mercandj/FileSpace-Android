@@ -57,8 +57,8 @@ public abstract class BackFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        super.onDetach();
         mApplicationCallback = null;
+        super.onDetach();
     }
 
     /**

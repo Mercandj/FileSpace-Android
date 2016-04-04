@@ -14,7 +14,14 @@ import com.mercandalli.android.apps.files.common.listener.IStringListener;
  */
 public class DialogUtils {
 
-    public static void alert(Context context, String title, String message, String positive, final IListener positiveListener, String negative, final IListener negativeListener) {
+    public static void alert(
+            final Context context,
+            final String title,
+            final String message,
+            final String positive,
+            final IListener positiveListener,
+            final String negative,
+            final IListener negativeListener) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
         builder.setMessage(message);
@@ -119,7 +126,7 @@ public class DialogUtils {
         );
 
         //alert.show();
-        AlertDialog alertDialog = alert.create();
+        final AlertDialog alertDialog = alert.create();
         alertDialog.setView(input, 38, 20, 38, 0);
         alertDialog.show();
     }

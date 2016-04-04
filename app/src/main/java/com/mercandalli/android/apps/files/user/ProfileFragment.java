@@ -24,6 +24,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -44,6 +45,7 @@ import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.GpsUtils;
 import com.mercandalli.android.apps.files.common.util.ImageUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.common.util.TimeUtils;
 import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.main.Config;
@@ -51,7 +53,6 @@ import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.settings.AdapterModelSetting;
 import com.mercandalli.android.apps.files.settings.ModelSetting;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -64,16 +65,15 @@ import java.util.List;
  */
 public class ProfileFragment extends BackFragment {
 
-    private View rootView;
-    private ProgressBar circularProgressBar;
-    private UserModel user;
+    private ProgressBar mProgressBar;
+    private UserModel mUserModel;
 
-    private TextView username;
-    private RecyclerView recyclerView;
+    private TextView mUsernameTextView;
+    private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<ModelSetting> list = new ArrayList<>();
+    private final List<ModelSetting> mModelSettings = new ArrayList<>();
 
-    private ImageView icon_back;
+    private ImageView mIconBack;
 
     public static ProfileFragment newInstance() {
         return new ProfileFragment();
@@ -81,25 +81,27 @@ public class ProfileFragment extends BackFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+        final FragmentActivity activity = getActivity();
+        final View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        this.circularProgressBar = (ProgressBar) this.rootView.findViewById(R.id.circularProgressBar);
-        this.circularProgressBar.setVisibility(View.VISIBLE);
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
+        mProgressBar.setVisibility(View.VISIBLE);
 
-        icon_back = (ImageView) rootView.findViewById(R.id.icon_back);
+        mIconBack = (ImageView) rootView.findViewById(R.id.icon_back);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(activity);
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
-        Bitmap icon_profile_online = mApplicationCallback.getConfig().getUserProfilePicture(getActivity());
-        if (icon_profile_online != null) {
-            icon_back.setImageBitmap(ImageUtils.setBlur(ImageUtils.setBrightness(icon_profile_online, -50), 15));
+        final Bitmap iconProfileOnline = mApplicationCallback.getConfig()
+                .getUserProfilePicture(activity, mApplicationCallback);
+        if (iconProfileOnline != null) {
+            mIconBack.setImageBitmap(ImageUtils.setBlur(ImageUtils.setBrightness(iconProfileOnline, -50), 15));
         }
 
-        this.username = (TextView) this.rootView.findViewById(R.id.username);
-        this.username.setText(StringUtils.capitalize(Config.getUserUsername()));
+        this.mUsernameTextView = (TextView) rootView.findViewById(R.id.username);
+        this.mUsernameTextView.setText(StringUtils.capitalize(Config.getUserUsername()));
 
         refreshView();
 
@@ -110,7 +112,7 @@ public class ProfileFragment extends BackFragment {
     public void onDestroy() {
         super.onDestroy();
 
-        Drawable drawable = icon_back.getDrawable();
+        Drawable drawable = mIconBack.getDrawable();
         if (drawable instanceof BitmapDrawable) {
             BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
             bitmapDrawable.getBitmap().recycle();
@@ -142,20 +144,20 @@ public class ProfileFragment extends BackFragment {
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
-                                        user = new UserModel(getActivity(), mApplicationCallback, json.getJSONObject("result"));
-                                        list.clear();
-                                        list.add(new ModelSetting("Username", "" + user.username));
-                                        list.add(new ModelSetting("Files size", FileUtils.humanReadableByteCount(user.size_files) + " / " + FileUtils.humanReadableByteCount(user.server_max_size_end_user)));
-                                        list.add(new ModelSetting("Files count", "" + user.num_files));
-                                        list.add(new ModelSetting("Creation date", "" + TimeUtils.getDate(user.date_creation)));
-                                        list.add(new ModelSetting("Connection date", "" + TimeUtils.getDate(user.date_last_connection)));
-                                        if (user.isAdmin()) {
-                                            list.add(new ModelSetting("Admin", "" + user.isAdmin()));
+                                        mUserModel = new UserModel(getActivity(), mApplicationCallback, json.getJSONObject("result"));
+                                        mModelSettings.clear();
+                                        mModelSettings.add(new ModelSetting("Username", "" + mUserModel.username));
+                                        mModelSettings.add(new ModelSetting("Files size", FileUtils.humanReadableByteCount(mUserModel.size_files) + " / " + FileUtils.humanReadableByteCount(mUserModel.server_max_size_end_user)));
+                                        mModelSettings.add(new ModelSetting("Files count", "" + mUserModel.num_files));
+                                        mModelSettings.add(new ModelSetting("Creation date", "" + TimeUtils.getDate(mUserModel.date_creation)));
+                                        mModelSettings.add(new ModelSetting("Connection date", "" + TimeUtils.getDate(mUserModel.date_last_connection)));
+                                        if (mUserModel.isAdmin()) {
+                                            mModelSettings.add(new ModelSetting("Admin", "" + mUserModel.isAdmin()));
 
-                                            if (user.userLocation != null) {
-                                                list.add(new ModelSetting("Longitude", "" + user.userLocation.longitude));
-                                                list.add(new ModelSetting("Latitude", "" + user.userLocation.latitude));
-                                                list.add(new ModelSetting("Altitude", "" + user.userLocation.altitude));
+                                            if (mUserModel.userLocation != null) {
+                                                mModelSettings.add(new ModelSetting("Longitude", "" + mUserModel.userLocation.longitude));
+                                                mModelSettings.add(new ModelSetting("Latitude", "" + mUserModel.userLocation.latitude));
+                                                mModelSettings.add(new ModelSetting("Altitude", "" + mUserModel.userLocation.altitude));
                                             }
                                         }
 
@@ -166,8 +168,8 @@ public class ProfileFragment extends BackFragment {
                                                     double longitude = location.getLongitude(),
                                                             latitude = location.getLatitude();
 
-                                                    list.add(new ModelSetting("Gps Longitude", "" + longitude));
-                                                    list.add(new ModelSetting("Gps Latitude", "" + latitude));
+                                                    mModelSettings.add(new ModelSetting("Gps Longitude", "" + longitude));
+                                                    mModelSettings.add(new ModelSetting("Gps Latitude", "" + latitude));
 
                                                     if (NetUtils.isInternetConnection(getContext()) && longitude != 0 && latitude != 0) {
                                                         List<StringPair> parameters = new ArrayList<>();
@@ -189,8 +191,8 @@ public class ProfileFragment extends BackFragment {
                                             double longitude = location.getLongitude(),
                                                     latitude = location.getLatitude();
 
-                                            list.add(new ModelSetting("Gps Longitude", "" + longitude));
-                                            list.add(new ModelSetting("Gps Latitude", "" + latitude));
+                                            mModelSettings.add(new ModelSetting("Gps Longitude", "" + longitude));
+                                            mModelSettings.add(new ModelSetting("Gps Latitude", "" + latitude));
 
                                             if (NetUtils.isInternetConnection(getContext()) && longitude != 0 && latitude != 0) {
                                                 List<StringPair> parameters = new ArrayList<>();
@@ -221,20 +223,20 @@ public class ProfileFragment extends BackFragment {
     }
 
     public void updateView() {
-        this.circularProgressBar.setVisibility(View.GONE);
+        this.mProgressBar.setVisibility(View.GONE);
 
-        if (recyclerView != null && list != null) {
-            AdapterModelSetting adapter = new AdapterModelSetting(list);
+        if (mRecyclerView != null && mModelSettings != null) {
+            AdapterModelSetting adapter = new AdapterModelSetting(mModelSettings);
             adapter.setOnItemClickListener(new AdapterModelSetting.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    if (position < list.size()) {
+                    if (position < mModelSettings.size()) {
                         switch (position) {
                         }
                     }
                 }
             });
-            recyclerView.setAdapter(adapter);
+            mRecyclerView.setAdapter(adapter);
         }
     }
 }
