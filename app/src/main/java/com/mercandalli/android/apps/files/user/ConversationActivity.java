@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -58,18 +58,16 @@ import java.util.List;
  */
 public class ConversationActivity extends ApplicationActivity {
 
-    private String login;
-    private String password;
-    private String url;
-    private String id_conversation;
+    private String mUrl;
+    private String mIdConversation;
 
-    private RecyclerView listView;
-    private AdapterModelConversationMessage adapter;
-    private final List<UserConversationMessageModel> list = new ArrayList<>();
-    private ProgressBar circularProgressBar;
-    private TextView message;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private EditText input;
+    private RecyclerView mRecyclerView;
+    private AdapterModelConversationMessage mAdapterModelConversationMessage;
+    private final List<UserConversationMessageModel> mUserConversationMessageModels = new ArrayList<>();
+    private ProgressBar mProgressBar;
+    private TextView mMessageTextView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private EditText mInputEditText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,47 +88,47 @@ public class ConversationActivity extends ApplicationActivity {
             return;
         }
 
-        this.input = (EditText) findViewById(R.id.input);
+        mInputEditText = (EditText) findViewById(R.id.input);
 
-        this.id_conversation = extras.getString("ID_CONVERSATION");
-        this.url = Constants.URL_DOMAIN + Config.ROUTE_USER_MESSAGE + "/" + this.id_conversation;
+        mIdConversation = extras.getString("ID_CONVERSATION");
+        mUrl = Constants.URL_DOMAIN + Config.ROUTE_USER_MESSAGE + "/" + mIdConversation;
 
-        this.circularProgressBar = (ProgressBar) findViewById(R.id.circularProgressBar);
-        this.message = (TextView) findViewById(R.id.message);
+        mProgressBar = (ProgressBar) findViewById(R.id.circularProgressBar);
+        mMessageTextView = (TextView) findViewById(R.id.message);
 
-        this.listView = (RecyclerView) findViewById(R.id.listView);
-        this.listView.setHasFixedSize(true);
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mLayoutManager.setStackFromEnd(true);
-        this.listView.setLayoutManager(mLayoutManager);
+        mRecyclerView = (RecyclerView) findViewById(R.id.listView);
+        mRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        this.swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
-        this.swipeRefreshLayout.setColorSchemeResources(
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setColorSchemeResources(
                 android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        this.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        this.mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshList();
             }
         });
 
-        this.adapter = new AdapterModelConversationMessage(list, null);
-        this.listView.setAdapter(adapter);
-        this.listView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
-        this.listView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
+        mAdapterModelConversationMessage = new AdapterModelConversationMessage(mUserConversationMessageModels, null);
+        mRecyclerView.setAdapter(mAdapterModelConversationMessage);
+        mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
 
-        this.adapter.setOnItemClickListener(new AdapterModelConversationMessage.OnItemClickListener() {
+        mAdapterModelConversationMessage.setOnItemClickListener(new AdapterModelConversationMessage.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
 
             }
         });
 
-        this.adapter.setOnItemLongClickListener(new AdapterModelConversationMessage.OnItemLongClickListener() {
+        mAdapterModelConversationMessage.setOnItemLongClickListener(new AdapterModelConversationMessage.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(View view, int position) {
 
@@ -138,13 +136,13 @@ public class ConversationActivity extends ApplicationActivity {
             }
         });
 
-        this.input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mInputEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    String url = Constants.URL_DOMAIN + Config.ROUTE_USER_MESSAGE + "/" + id_conversation;
+                    String url = Constants.URL_DOMAIN + Config.ROUTE_USER_MESSAGE + "/" + mIdConversation;
                     List<StringPair> parameters = new ArrayList<>();
-                    parameters.add(new StringPair("message", "" + input.getText().toString()));
-                    input.setText("");
+                    parameters.add(new StringPair("message", "" + mInputEditText.getText().toString()));
+                    mInputEditText.setText("");
 
                     new TaskPost(ConversationActivity.this, ConversationActivity.this, url, new IPostExecuteListener() {
                         @Override
@@ -169,25 +167,25 @@ public class ConversationActivity extends ApplicationActivity {
 
     @Override
     public void updateAdapters() {
-        if (this.listView != null) {
-            if (this.list.size() == 0) {
-                if (this.url == null) {
-                    this.message.setText(getString(R.string.no_file_server));
-                } else if (this.url.equals("")) {
-                    this.message.setText(getString(R.string.no_file_server));
+        if (mRecyclerView != null) {
+            if (mUserConversationMessageModels.size() == 0) {
+                if (mUrl == null) {
+                    mMessageTextView.setText(getString(R.string.no_file_server));
+                } else if (mUrl.equals("")) {
+                    mMessageTextView.setText(getString(R.string.no_file_server));
                 } else {
-                    this.message.setText(getString(R.string.no_file_directory));
+                    mMessageTextView.setText(getString(R.string.no_file_directory));
                 }
-                this.message.setVisibility(View.VISIBLE);
+                mMessageTextView.setVisibility(View.VISIBLE);
             } else {
-                this.message.setVisibility(View.GONE);
+                mMessageTextView.setVisibility(View.GONE);
             }
 
-            this.adapter.replaceList(this.list);
-            listView.scrollToPosition(list.size() - 1);
+            mAdapterModelConversationMessage.replaceList(mUserConversationMessageModels);
+            mRecyclerView.scrollToPosition(mUserConversationMessageModels.size() - 1);
 
-            this.circularProgressBar.setVisibility(View.GONE);
-            this.swipeRefreshLayout.setRefreshing(false);
+            mProgressBar.setVisibility(View.GONE);
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -196,9 +194,9 @@ public class ConversationActivity extends ApplicationActivity {
     }
 
     public void refreshList(String search) {
-        if (url == null) {
-            this.finish();
-            this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+        if (mUrl == null) {
+            finish();
+            overridePendingTransition(R.anim.right_in, R.anim.right_out);
             return;
         }
 
@@ -206,18 +204,18 @@ public class ConversationActivity extends ApplicationActivity {
         if (NetUtils.isInternetConnection(this)) {
             new TaskGet(
                     this,
-                    this.url,
+                    this.mUrl,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
-                            list.clear();
+                            mUserConversationMessageModels.clear();
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
                                             UserConversationMessageModel modelFile = new UserConversationMessageModel(ConversationActivity.this, ConversationActivity.this, array.getJSONObject(i));
-                                            list.add(modelFile);
+                                            mUserConversationMessageModels.add(modelFile);
                                         }
                                     }
                                 } else {
@@ -232,10 +230,10 @@ public class ConversationActivity extends ApplicationActivity {
                     parameters
             ).execute();
         } else {
-            this.circularProgressBar.setVisibility(View.GONE);
-            this.message.setText(getString(R.string.no_internet_connection));
-            this.message.setVisibility(View.VISIBLE);
-            this.swipeRefreshLayout.setRefreshing(false);
+            mProgressBar.setVisibility(View.GONE);
+            mMessageTextView.setText(getString(R.string.no_internet_connection));
+            mMessageTextView.setVisibility(View.VISIBLE);
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
@@ -243,8 +241,8 @@ public class ConversationActivity extends ApplicationActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                this.finish();
-                this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                finish();
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -253,8 +251,8 @@ public class ConversationActivity extends ApplicationActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            this.finish();
-            this.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            finish();
+            overridePendingTransition(R.anim.right_in, R.anim.right_out);
         }
         return super.onKeyDown(keyCode, event);
     }
