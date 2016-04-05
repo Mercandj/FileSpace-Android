@@ -49,10 +49,10 @@ public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFile
     private RecyclerView mRecyclerView;
     private final List<FileModel> mFileModelList;
     private File mCurrentFile;
-    private FileModelListener mFileModelListener;
+    private FileChooserDialogSelection mFileModelListener;
     private final String mRootPath;
 
-    public FileChooserDialog(final Activity activity, FileModelListener listener) {
+    public FileChooserDialog(final Activity activity, FileChooserDialogSelection listener) {
         super(activity);
 
         FileApp.get().getFileAppComponent().inject(this);
@@ -108,7 +108,7 @@ public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFile
                     refreshList();
                 }
             } else {
-                mFileModelListener.executeFileModel(file, view);
+                mFileModelListener.onFileChooserDialogSelected(file, view);
                 dismiss();
             }
         }
@@ -139,5 +139,9 @@ public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFile
         scaleAnimationAdapter.setOffsetDuration(32);
 
         mRecyclerView.setAdapter(scaleAnimationAdapter);
+    }
+
+    public interface FileChooserDialogSelection {
+        void onFileChooserDialogSelected(final FileModel fileModel, final View view);
     }
 }

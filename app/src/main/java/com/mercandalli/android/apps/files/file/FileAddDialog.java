@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -61,7 +61,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-public class FileAddDialog extends Dialog implements View.OnClickListener {
+public class FileAddDialog extends Dialog implements
+        View.OnClickListener,
+        FileChooserDialog.FileChooserDialogSelection {
 
     private final Activity mActivity;
     private final ApplicationCallback mApplicationCallback;
@@ -90,22 +92,11 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
         rootView.startAnimation(AnimationUtils.loadAnimation(mActivity, R.anim.dialog_add_file_open));
         rootView.setOnClickListener(this);
 
-        findViewById(R.id.uploadFile).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new FileChooserDialog(mActivity, new FileModelListener() {
-                    @Override
-                    public void executeFileModel(final FileModel fileModel, final View view) {
-                        new FileUploadDialog(mActivity, mApplicationCallback, id_file_parent, fileModel, listener);
-                    }
-                });
-                FileAddDialog.this.dismiss();
-            }
-        });
+        findViewById(R.id.dialog_add_file_upload_file).setOnClickListener(this);
 
         findViewById(R.id.dialog_add_file_add_directory).setOnClickListener(this);
 
-        findViewById(R.id.txtFile).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.dialog_add_file_text_doc).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogUtils.prompt(mActivity, mActivity.getString(R.string.dialog_file_create_txt), mActivity.getString(R.string.dialog_file_name_interrogation), mActivity.getString(R.string.dialog_file_create), new IStringListener() {
@@ -119,7 +110,7 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
             }
         });
 
-        findViewById(R.id.scan).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.dialog_add_file_scan).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -140,11 +131,11 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
             }
         });
 
-        findViewById(R.id.addTimer).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.dialog_add_file_add_timer).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Calendar mCurrentTime = Calendar.getInstance();
+                final Calendar currentTime = Calendar.getInstance();
 
                 DialogDatePicker dialogDate = new DialogDatePicker(mActivity, new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -157,23 +148,23 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 Log.d("TIme Picker", hourOfDay + ":" + minute);
 
-                                SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                final SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                 dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
-                                SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                final SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
                                 String nowAsISO = dateFormatGmt.format(new Date());
 
-                                JSONObject json = new JSONObject();
+                                final JSONObject json = new JSONObject();
                                 try {
                                     json.put("type", "timer");
                                     json.put("date_creation", nowAsISO);
                                     json.put("timer_date", "" + dateFormatGmt.format(dateFormatLocal.parse(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth + " " + hourOfDay + ":" + minute + ":00")));
 
-                                    SimpleDateFormat dateFormatGmtTZ = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm'Z'");
+                                    final SimpleDateFormat dateFormatGmtTZ = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm'Z'");
                                     dateFormatGmtTZ.setTimeZone(TimeZone.getTimeZone("UTC"));
                                     nowAsISO = dateFormatGmtTZ.format(new Date());
 
-                                    List<StringPair> parameters = new ArrayList<>();
+                                    final List<StringPair> parameters = new ArrayList<>();
                                     parameters.add(new StringPair("content", json.toString()));
                                     parameters.add(new StringPair("name", "TIMER_" + nowAsISO));
                                     parameters.add(new StringPair("id_file_parent", "" + id_file_parent));
@@ -197,14 +188,14 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
                         dialogTime.show();
 
                     }
-                }, mCurrentTime.get(Calendar.YEAR), mCurrentTime.get(Calendar.MONTH), mCurrentTime.get(Calendar.DAY_OF_MONTH));
+                }, currentTime.get(Calendar.YEAR), currentTime.get(Calendar.MONTH), currentTime.get(Calendar.DAY_OF_MONTH));
                 dialogDate.show();
 
                 FileAddDialog.this.dismiss();
             }
         });
 
-        findViewById(R.id.addArticle).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.dialog_add_file_article).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogCreateArticle dialogCreateArticle = new DialogCreateArticle(mActivity, mApplicationCallback, listener);
@@ -253,6 +244,15 @@ public class FileAddDialog extends Dialog implements View.OnClickListener {
                 }, mActivity.getString(android.R.string.cancel), null);
                 FileAddDialog.this.dismiss();
                 break;
+            case R.id.dialog_add_file_upload_file:
+                new FileChooserDialog(mActivity, this);
+                FileAddDialog.this.dismiss();
+                break;
         }
+    }
+
+    @Override
+    public void onFileChooserDialogSelected(final FileModel fileModel, final View view) {
+        new FileUploadDialog(mActivity, mApplicationCallback, mFileParentId, fileModel, mListener);
     }
 }

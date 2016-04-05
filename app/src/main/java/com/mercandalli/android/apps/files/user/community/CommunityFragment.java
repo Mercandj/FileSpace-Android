@@ -219,7 +219,7 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
         }
         if (mBackFragmentArray[1] != null && mBackFragmentArray[1] instanceof TalkFragment) {
             TalkFragment fragmentFileManagerFragment = (TalkFragment) mBackFragmentArray[1];
-            fragmentFileManagerFragment.refreshList(search);
+            fragmentFileManagerFragment.refreshList();
         }
     }
 

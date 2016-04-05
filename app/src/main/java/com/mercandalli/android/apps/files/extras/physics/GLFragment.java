@@ -63,9 +63,9 @@ public class GLFragment extends Fragment implements SensorEventListener {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    mGLView.mRenderer.camera.forward = false;
+                    mGLView.mRenderer.camera.isForward = false;
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mGLView.mRenderer.camera.forward = true;
+                    mGLView.mRenderer.camera.isForward = true;
                 }
                 return false;
             }
@@ -77,9 +77,9 @@ public class GLFragment extends Fragment implements SensorEventListener {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    mGLView.mRenderer.camera.back = false;
+                    mGLView.mRenderer.camera.isBack = false;
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mGLView.mRenderer.camera.back = true;
+                    mGLView.mRenderer.camera.isBack = true;
                 }
                 return false;
             }
@@ -91,9 +91,9 @@ public class GLFragment extends Fragment implements SensorEventListener {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    mGLView.mRenderer.camera.left = false;
+                    mGLView.mRenderer.camera.isLeft = false;
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mGLView.mRenderer.camera.left = true;
+                    mGLView.mRenderer.camera.isLeft = true;
                 }
                 return false;
             }
@@ -105,9 +105,9 @@ public class GLFragment extends Fragment implements SensorEventListener {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    mGLView.mRenderer.camera.right = false;
+                    mGLView.mRenderer.camera.isRight = false;
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mGLView.mRenderer.camera.right = true;
+                    mGLView.mRenderer.camera.isRight = true;
                 }
                 return false;
             }
@@ -125,10 +125,10 @@ public class GLFragment extends Fragment implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         //Log.v("mysensors: ", Float.toString(event.values[0]) +","+ Float.toString(event.values[1]) +","+ Float.toString(event.values[2]));
         //((MyGLSurfaceView)mGLView).mRenderer.myobj.color[0]= lux;
-        if ((((MyGLSurfaceView) mGLView).mRenderer).camera.mEye != null) {
-            /*(((MyGLSurfaceView)mGLView).mRenderer.mEye.dX) += (event.values[0]/1000.0);
-            (((MyGLSurfaceView)mGLView).mRenderer.mEye.dY) += (event.values[1]/1000.0);
-			(((MyGLSurfaceView)mGLView).mRenderer.mEye.dZ) += (event.values[2]/1000.0);*/
+        if ((((MyGLSurfaceView) mGLView).mRenderer).camera.eyeVector3D != null) {
+            /*(((MyGLSurfaceView)mGLView).mRenderer.eyeVector3D.dX) += (event.values[0]/1000.0);
+            (((MyGLSurfaceView)mGLView).mRenderer.eyeVector3D.dY) += (event.values[1]/1000.0);
+			(((MyGLSurfaceView)mGLView).mRenderer.eyeVector3D.dZ) += (event.values[2]/1000.0);*/
             //(((MyGLSurfaceView)mGLView).mRenderer.myobj).translateM((float)(event.values[0]/10.0), 0, (float)(event.values[2]/10.0));
 
             //SensorManager.getRotationMatrixFromVector(((MyGLSurfaceView)mGLView).mRenderer.myobj.transformationMatrix, event.values);

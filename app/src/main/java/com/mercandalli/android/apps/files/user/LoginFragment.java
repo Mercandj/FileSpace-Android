@@ -27,11 +27,11 @@ import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.HashUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
+import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.MainActivity;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,10 +47,7 @@ public class LoginFragment extends BackFragment {
     private EditText username, password;
 
     public static LoginFragment newInstance() {
-        Bundle args = new Bundle();
-        LoginFragment fragment = new LoginFragment();
-        fragment.setArguments(args);
-        return fragment;
+        return new LoginFragment();
     }
 
     @Override

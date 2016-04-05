@@ -29,8 +29,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.listener.IModelUserListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterModelConversationMessage extends RecyclerView.Adapter<AdapterModelConversationMessage.ViewHolder> {
@@ -38,11 +38,9 @@ public class AdapterModelConversationMessage extends RecyclerView.Adapter<Adapte
     private List<UserConversationMessageModel> mUsers;
     private OnItemClickListener mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
-    private IModelUserListener mMoreListener;
 
-    public AdapterModelConversationMessage(List<UserConversationMessageModel> users, IModelUserListener moreListener) {
-        this.mUsers = users;
-        this.mMoreListener = moreListener;
+    public AdapterModelConversationMessage(List<UserConversationMessageModel> users) {
+        mUsers = new ArrayList<>(users);
     }
 
     @Override
@@ -62,11 +60,34 @@ public class AdapterModelConversationMessage extends RecyclerView.Adapter<Adapte
         }
     }
 
+    @Override
+    public int getItemCount() {
+        return mUsers.size();
+    }
+
+    public void replaceList(final List<UserConversationMessageModel> list) {
+        mUsers.clear();
+        mUsers.addAll(0, list);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return 0;
+    }
+
+    public void setOnItemClickListener(final OnItemClickListener itemClickListener) {
+        mItemClickListener = itemClickListener;
+    }
+    public void setOnItemLongClickListener(final OnItemLongClickListener itemLongClickListener) {
+        mItemLongClickListener = itemLongClickListener;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener, View.OnLongClickListener {
+
         public TextView title, subtitle;
         public ImageView icon;
         public RelativeLayout item, more;
-
         public ViewHolder(View itemLayoutView, int viewType) {
             super(itemLayoutView);
             item = (RelativeLayout) itemLayoutView.findViewById(R.id.item);
@@ -90,35 +111,13 @@ public class AdapterModelConversationMessage extends RecyclerView.Adapter<Adapte
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return mUsers.size();
-    }
-
-    public void replaceList(final List<UserConversationMessageModel> list) {
-        mUsers.clear();
-        mUsers.addAll(0, list);
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return 0;
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
-
-    public void setOnItemClickListener(final OnItemClickListener itemClickListener) {
-        mItemClickListener = itemClickListener;
-    }
-
     public interface OnItemLongClickListener {
+
         boolean onItemLongClick(View view, int position);
     }
 
-    public void setOnItemLongClickListener(final OnItemLongClickListener itemLongClickListener) {
-        mItemLongClickListener = itemLongClickListener;
+    public interface OnItemClickListener {
+
+        void onItemClick(View view, int position);
     }
 }

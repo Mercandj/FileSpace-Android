@@ -42,8 +42,8 @@ public class AdapterModelConversationUser extends RecyclerView.Adapter<AdapterMo
     private IModelUserListener mMoreListener;
 
     public AdapterModelConversationUser(List<ConversationUserModel> users, IModelUserListener moreListener) {
-        this.mUsers = users;
-        this.mMoreListener = moreListener;
+        mUsers = new ArrayList<>(users);
+        mMoreListener = moreListener;
     }
 
     @Override
@@ -59,6 +59,29 @@ public class AdapterModelConversationUser extends RecyclerView.Adapter<AdapterMo
             viewHolder.title.setText(user.getAdapterTitle());
             viewHolder.subtitle.setText(user.getAdapterSubtitle());
         }
+    }
+
+    @Override
+    public int getItemCount() {
+        return mUsers.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return 0;
+    }
+
+    public void addItem(ConversationUserModel name, int position) {
+        mUsers.add(position, name);
+        notifyItemInserted(position);
+    }
+
+    public void setOnItemClickListener(final OnItemClickListener itemClickListener) {
+        mItemClickListener = itemClickListener;
+    }
+
+    public void setOnItemLongClickListener(final OnItemLongClickListener itemLongClickListener) {
+        mItemLongClickListener = itemLongClickListener;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener, View.OnLongClickListener {
@@ -92,59 +115,11 @@ public class AdapterModelConversationUser extends RecyclerView.Adapter<AdapterMo
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return mUsers.size();
-    }
-
-
-    public void remplaceList(ArrayList<ConversationUserModel> list) {
-        mUsers.clear();
-        mUsers.addAll(0, list);
-        notifyDataSetChanged();
-    }
-
-    public void addFirst(ArrayList<ConversationUserModel> list) {
-        mUsers.addAll(0, list);
-        notifyDataSetChanged();
-    }
-
-    public void addLast(ArrayList<ConversationUserModel> list) {
-        mUsers.addAll(mUsers.size(), list);
-        notifyDataSetChanged();
-    }
-
-    public void addItem(ConversationUserModel name, int position) {
-        this.mUsers.add(position, name);
-        this.notifyItemInserted(position);
-    }
-
-    public void removeAll() {
-        int size = mUsers.size();
-        if (size > 0) {
-            mUsers = new ArrayList<>();
-            this.notifyItemRangeInserted(0, size - 1);
-        }
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return 0;
-    }
-
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }
 
-    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
-        this.mItemClickListener = mItemClickListener;
-    }
-
     public interface OnItemLongClickListener {
         boolean onItemLongClick(View view, int position);
-    }
-
-    public void setOnItemLongClickListener(final OnItemLongClickListener mItemLongClickListener) {
-        this.mItemLongClickListener = mItemLongClickListener;
     }
 }

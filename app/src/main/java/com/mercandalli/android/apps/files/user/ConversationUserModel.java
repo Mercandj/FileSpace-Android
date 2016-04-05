@@ -25,6 +25,7 @@ import android.util.Log;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
+import com.mercandalli.android.apps.files.main.Config;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,9 +39,12 @@ import java.util.List;
 
 public class ConversationUserModel {
 
-    public int id, id_conversation, id_user, num_messages;
+    public int id;
+    public int id_conversation;
+    public int id_user;
+    public int num_messages;
     public Date date_creation;
-    public List<UserModel> users;
+    private final List<UserModel> users;
     public boolean to_all = false, to_yourself = false;
 
     public ConversationUserModel(Activity activity, ApplicationCallback applicationCallback, JSONObject json) {
@@ -97,10 +101,10 @@ public class ConversationUserModel {
         return "" + this.num_messages + "  message" + ((this.num_messages != 0) ? "s" : "");
     }
 
-    public void open(final Activity activity, final ApplicationCallback applicationCallback) {
-        Intent intent = new Intent(activity, ConversationActivity.class);
-        intent.putExtra("LOGIN", "" + applicationCallback.getConfig().getUser().getAccessLogin());
-        intent.putExtra("PASSWORD", "" + applicationCallback.getConfig().getUser().getAccessPassword());
+    public void open(final Activity activity) {
+        final Intent intent = new Intent(activity, ConversationActivity.class);
+        intent.putExtra("LOGIN", "" + Config.getUser().getAccessLogin());
+        intent.putExtra("PASSWORD", "" + Config.getUser().getAccessPassword());
         intent.putExtra("ID_CONVERSATION", "" + this.id_conversation);
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);

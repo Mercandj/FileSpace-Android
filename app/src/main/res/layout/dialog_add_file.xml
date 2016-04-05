@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/dialog_add_file_root"
+<FrameLayout android:id="@+id/dialog_add_file_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -14,7 +14,6 @@
         android:translationZ="16dp">
 
         <FrameLayout
-            android:id="@+id/rl_title"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="#ddd"
@@ -33,10 +32,10 @@
                 android:paddingStart="20dp"
                 android:text="New"
                 android:textColor="#666" />
+
         </FrameLayout>
 
         <RelativeLayout
-            android:id="@+id/relativeLayout2"
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:orientation="vertical">
@@ -45,8 +44,10 @@
                 android:id="@+id/dialog_add_file_add_directory"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="40dp"
                 android:layout_marginStart="40dp"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
@@ -74,12 +75,12 @@
             </FrameLayout>
 
             <FrameLayout
-                android:id="@+id/uploadFile"
+                android:id="@+id/dialog_add_file_upload_file"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_alignTop="@+id/dialog_add_file_add_directory"
                 android:layout_centerHorizontal="true"
-                android:background="?android:attr/selectableItemBackground"
+                android:background="?selectableItemBackground"
                 android:clickable="true"
                 android:orientation="vertical"
                 android:padding="2dp">
@@ -104,13 +105,13 @@
             </FrameLayout>
 
             <RelativeLayout
-                android:id="@+id/scan"
+                android:id="@+id/dialog_add_file_scan"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/dialog_add_file_add_directory"
                 android:layout_marginEnd="40dp"
-                android:background="?android:attr/selectableItemBackground"
+                android:background="?selectableItemBackground"
                 android:clickable="true"
                 android:orientation="vertical"
                 android:padding="2dp">
@@ -129,6 +130,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
                     android:layout_alignParentStart="true"
                     android:layout_marginBottom="3dp"
                     android:gravity="center_vertical|center_horizontal"
@@ -137,9 +140,7 @@
 
             </RelativeLayout>
 
-
         </RelativeLayout>
-
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -147,13 +148,15 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:id="@+id/txtFile"
+                android:id="@+id/dialog_add_file_text_doc"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="40dp"
                 android:layout_marginStart="40dp"
-                android:background="?android:attr/selectableItemBackground"
+                android:background="?selectableItemBackground"
                 android:clickable="true"
                 android:orientation="vertical"
                 android:padding="2dp">
@@ -172,6 +175,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
                     android:layout_alignParentStart="true"
                     android:layout_marginBottom="3dp"
                     android:gravity="center_vertical|center_horizontal"
@@ -180,14 +185,13 @@
 
             </RelativeLayout>
 
-
             <RelativeLayout
-                android:id="@+id/addTimer"
+                android:id="@+id/dialog_add_file_add_timer"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:layout_alignTop="@+id/txtFile"
+                android:layout_alignTop="@+id/dialog_add_file_text_doc"
                 android:layout_centerHorizontal="true"
-                android:background="?android:attr/selectableItemBackground"
+                android:background="?selectableItemBackground"
                 android:clickable="true"
                 android:orientation="vertical"
                 android:padding="2dp">
@@ -206,6 +210,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
                     android:layout_alignParentStart="true"
                     android:layout_marginBottom="3dp"
                     android:gravity="center_vertical|center_horizontal"
@@ -223,13 +229,14 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/addArticle"
+                android:id="@+id/dialog_add_file_article"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/addTimer"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/dialog_add_file_add_timer"
                 android:layout_marginRight="40dp"
-                android:background="?android:attr/selectableItemBackground"
+                android:background="?selectableItemBackground"
                 android:clickable="true"
                 android:orientation="vertical"
                 android:padding="2dp">
@@ -248,6 +255,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
                     android:layout_alignParentStart="true"
                     android:layout_marginBottom="3dp"
                     android:gravity="center_vertical|center_horizontal"
@@ -258,6 +267,6 @@
 
         </RelativeLayout>
 
-
     </LinearLayout>
+
 </FrameLayout>

@@ -21,14 +21,15 @@ public class Camera {
 
     Context context;
 
-    public boolean forward = false;
-    public boolean back = false;
-    public boolean left = false;
-    public boolean right = false;
+    public boolean isForward = false;
+    public boolean isBack = false;
+    public boolean isLeft = false;
+    public boolean isRight = false;
 
-    public Vector3D mEye;
-    public Vector3D mForward;
-    public Vector3D mUp;
+    public Vector3D eyeVector3D;
+    public Vector3D forwardVector3D;
+    public Vector3D upVector3D;
+
     public float fovy, zNear, zFar;
 
     public Camera(Context context) {
@@ -36,18 +37,18 @@ public class Camera {
     }
 
     public void init() {
-        mEye = new Vector3D(0, 35, 35);
-        mForward = new Vector3D(0, 0, -1);
-        mUp = new Vector3D(0, 1, 0);
+        eyeVector3D = new Vector3D(0, 35, 35);
+        forwardVector3D = new Vector3D(0, 0, -1);
+        upVector3D = new Vector3D(0, 1, 0);
         fovy = 90;
         zNear = 0.1f;
         zFar = 150;
     }
 
     public void look(float[] mVMatrix) {
-        Matrix.setLookAtM(mVMatrix, 0, mEye.dX, mEye.dY, mEye.dZ,
-                mEye.dX + mForward.dX, mEye.dY + mForward.dY, mEye.dZ + mForward.dZ,
-                mUp.dX, mUp.dY, mUp.dZ);
+        Matrix.setLookAtM(mVMatrix, 0, eyeVector3D.dX, eyeVector3D.dY, eyeVector3D.dZ,
+                eyeVector3D.dX + forwardVector3D.dX, eyeVector3D.dY + forwardVector3D.dY, eyeVector3D.dZ + forwardVector3D.dZ,
+                upVector3D.dX, upVector3D.dY, upVector3D.dZ);
     }
 
     float vx;
@@ -60,12 +61,12 @@ public class Camera {
     }
 
     public void computeForward() {
-        if (mForward == null) {
+        if (forwardVector3D == null) {
             return;
         }
-        mForward.dX = (float) Math.sin(vx) * (float) Math.cos(vy);
-        mForward.dY = (float) Math.sin(vy);
-        mForward.dZ = -(float) Math.cos(vx) * (float) Math.cos(vy);
-        mForward.normalize();
+        forwardVector3D.dX = (float) Math.sin(vx) * (float) Math.cos(vy);
+        forwardVector3D.dY = (float) Math.sin(vy);
+        forwardVector3D.dZ = -(float) Math.cos(vx) * (float) Math.cos(vy);
+        forwardVector3D.normalize();
     }
 }

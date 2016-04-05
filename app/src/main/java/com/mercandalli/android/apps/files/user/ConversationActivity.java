@@ -116,7 +116,7 @@ public class ConversationActivity extends ApplicationActivity {
             }
         });
 
-        mAdapterModelConversationMessage = new AdapterModelConversationMessage(mUserConversationMessageModels, null);
+        mAdapterModelConversationMessage = new AdapterModelConversationMessage(mUserConversationMessageModels);
         mRecyclerView.setAdapter(mAdapterModelConversationMessage);
         mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));

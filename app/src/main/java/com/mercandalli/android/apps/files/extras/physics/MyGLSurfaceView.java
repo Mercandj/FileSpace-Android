@@ -129,14 +129,14 @@ public class MyGLSurfaceView extends GLSurfaceView implements SensorEventListene
                 mScaleFactor = -1 / mScaleFactor;
             }
             mScaleFactor /= -4;
-            mScaleFactor *= Math.sqrt(mRenderer.camera.mEye.length()) / 10;
+            mScaleFactor *= Math.sqrt(mRenderer.camera.eyeVector3D.length()) / 10;
 
-            //mRenderer.mEye[2] *= (1 + mScaleFactor);
-            mRenderer.camera.mEye = mRenderer.camera.mEye.plus(mRenderer.camera.mForward.mult(mScaleFactor));
+            //mRenderer.eyeVector3D[2] *= (1 + mScaleFactor);
+            mRenderer.camera.eyeVector3D = mRenderer.camera.eyeVector3D.plus(mRenderer.camera.forwardVector3D.mult(mScaleFactor));
 
-            //mRenderer.mEye[0] += mRenderer.mForwarddirection[0]*mScaleFactor;
-            //mRenderer.mEye[1] += mRenderer.mForwarddirection[1]*mScaleFactor;
-            //mRenderer.mEye[2] += mRenderer.mForwarddirection[2]*mScaleFactor;
+            //mRenderer.eyeVector3D[0] += mRenderer.mForwarddirection[0]*mScaleFactor;
+            //mRenderer.eyeVector3D[1] += mRenderer.mForwarddirection[1]*mScaleFactor;
+            //mRenderer.eyeVector3D[2] += mRenderer.mForwarddirection[2]*mScaleFactor;
 
             requestRender();
             return true;

@@ -42,11 +42,11 @@ import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
-import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
 import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.user.AdapterModelConversationUser;
 import com.mercandalli.android.apps.files.user.ConversationUserModel;
 import com.mercandalli.android.apps.files.user.UserModel;
@@ -63,46 +63,41 @@ import java.util.List;
  */
 public class TalkFragment extends BackFragment {
 
-    private static final String BUNDLE_ARG_TITLE = "TalkFragment.Args.BUNDLE_ARG_TITLE";
+    private View mRootView;
 
-    private View rootView;
-
-    private RecyclerView recyclerView;
-    private AdapterModelConversationUser mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    List<ConversationUserModel> list;
-    private ProgressBar circularProgressBar;
-    private TextView message;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView mRecyclerView;
+    private final List<ConversationUserModel> mConversationUserModels = new ArrayList<>();
+    private ProgressBar mCircularProgressBar;
+    private TextView mMessageTextView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public static UserFragment newInstance() {
         return new UserFragment();
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.rootView = inflater.inflate(R.layout.fragment_user, container, false);
-        this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
-        this.message = (TextView) rootView.findViewById(R.id.message);
+        mRootView = inflater.inflate(R.layout.fragment_user, container, false);
+        mCircularProgressBar = (ProgressBar) mRootView.findViewById(R.id.circularProgressBar);
+        mMessageTextView = (TextView) mRootView.findViewById(R.id.message);
 
-        this.recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
-        this.recyclerView.setHasFixedSize(true);
-        this.mLayoutManager = new LinearLayoutManager(getActivity());
-        this.recyclerView.setLayoutManager(mLayoutManager);
-        this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
-        this.recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+        mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.my_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
-        rootView.findViewById(R.id.circle).setVisibility(View.GONE);
+        mRootView.findViewById(R.id.circle).setVisibility(View.GONE);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setColorSchemeResources(
+        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setColorSchemeResources(
                 android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshList();
@@ -111,14 +106,10 @@ public class TalkFragment extends BackFragment {
 
         refreshList();
 
-        return rootView;
+        return mRootView;
     }
 
     public void refreshList() {
-        refreshList(null);
-    }
-
-    public void refreshList(String search) {
         if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
             new TaskGet(
                     getActivity(),
@@ -126,14 +117,14 @@ public class TalkFragment extends BackFragment {
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
-                            list = new ArrayList<>();
+                            mConversationUserModels.clear();
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
                                             ConversationUserModel modelUser = new ConversationUserModel(getActivity(), mApplicationCallback, array.getJSONObject(i));
-                                            list.add(modelUser);
+                                            mConversationUserModels.add(modelUser);
                                         }
                                     }
                                 } else {
@@ -148,28 +139,25 @@ public class TalkFragment extends BackFragment {
                     null
             ).execute();
         } else {
-            this.circularProgressBar.setVisibility(View.GONE);
-            this.message.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
-            this.message.setVisibility(View.VISIBLE);
-            this.swipeRefreshLayout.setRefreshing(false);
+            mCircularProgressBar.setVisibility(View.GONE);
+            mMessageTextView.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+            mMessageTextView.setVisibility(View.VISIBLE);
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
-    int i;
-
     public void updateAdapter() {
-        if (this.recyclerView != null && this.list != null && this.isAdded()) {
-            this.circularProgressBar.setVisibility(View.GONE);
+        if (mRecyclerView != null && this.isAdded()) {
+            mCircularProgressBar.setVisibility(View.GONE);
 
-            if (this.list.size() == 0) {
-                this.message.setText(getString(R.string.no_talk));
-                this.message.setVisibility(View.VISIBLE);
+            if (mConversationUserModels.isEmpty()) {
+                mMessageTextView.setText(getString(R.string.no_talk));
+                mMessageTextView.setVisibility(View.VISIBLE);
             } else {
-                this.message.setVisibility(View.GONE);
+                mMessageTextView.setVisibility(View.GONE);
             }
 
-
-            this.mAdapter = new AdapterModelConversationUser(list, new IModelUserListener() {
+            final AdapterModelConversationUser adapter = new AdapterModelConversationUser(mConversationUserModels, new IModelUserListener() {
                 @Override
                 public void execute(final UserModel userModel) {
                     DialogUtils.prompt(getContext(), "Send Message", "Write your message", "Send", new IStringListener() {
@@ -189,15 +177,15 @@ public class TalkFragment extends BackFragment {
                     }, "Cancel", null);
                 }
             });
-            this.recyclerView.setAdapter(mAdapter);
+            mRecyclerView.setAdapter(adapter);
 
-            if (rootView.findViewById(R.id.circle).getVisibility() == View.GONE) {
-                rootView.findViewById(R.id.circle).setVisibility(View.VISIBLE);
+            if (mRootView.findViewById(R.id.circle).getVisibility() == View.GONE) {
+                mRootView.findViewById(R.id.circle).setVisibility(View.VISIBLE);
                 Animation animOpen = AnimationUtils.loadAnimation(getContext(), R.anim.circle_button_bottom_open);
-                rootView.findViewById(R.id.circle).startAnimation(animOpen);
+                mRootView.findViewById(R.id.circle).startAnimation(animOpen);
             }
 
-            rootView.findViewById(R.id.circle).setOnClickListener(new View.OnClickListener() {
+            mRootView.findViewById(R.id.circle).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // TODO Fab TalkFragment
@@ -205,15 +193,14 @@ public class TalkFragment extends BackFragment {
                 }
             });
 
-            this.mAdapter.setOnItemClickListener(new AdapterModelConversationUser.OnItemClickListener() {
+            adapter.setOnItemClickListener(new AdapterModelConversationUser.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    list.get(position).open(getActivity(), mApplicationCallback);
+                    mConversationUserModels.get(position).open(getActivity());
                 }
             });
 
-            this.swipeRefreshLayout.setRefreshing(false);
-            i = 0;
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 

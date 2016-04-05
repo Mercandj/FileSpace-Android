@@ -52,9 +52,9 @@ public class StatisticsFragment extends BackFragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    mGLView.mRenderer.camera.forward = false;
+                    mGLView.mRenderer.camera.isForward = false;
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mGLView.mRenderer.camera.forward = true;
+                    mGLView.mRenderer.camera.isForward = true;
                 }
                 return false;
             }
@@ -65,9 +65,9 @@ public class StatisticsFragment extends BackFragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    mGLView.mRenderer.camera.back = false;
+                    mGLView.mRenderer.camera.isBack = false;
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mGLView.mRenderer.camera.back = true;
+                    mGLView.mRenderer.camera.isBack = true;
                 }
                 return false;
             }
@@ -78,9 +78,9 @@ public class StatisticsFragment extends BackFragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    mGLView.mRenderer.camera.left = false;
+                    mGLView.mRenderer.camera.isLeft = false;
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mGLView.mRenderer.camera.left = true;
+                    mGLView.mRenderer.camera.isLeft = true;
                 }
                 return false;
             }
@@ -91,9 +91,9 @@ public class StatisticsFragment extends BackFragment {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    mGLView.mRenderer.camera.right = false;
+                    mGLView.mRenderer.camera.isRight = false;
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mGLView.mRenderer.camera.right = true;
+                    mGLView.mRenderer.camera.isRight = true;
                 }
                 return false;
             }

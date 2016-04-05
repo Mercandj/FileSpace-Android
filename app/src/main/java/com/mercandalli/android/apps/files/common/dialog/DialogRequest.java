@@ -32,7 +32,6 @@ import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.file.FileChooserDialog;
 import com.mercandalli.android.apps.files.file.FileModel;
-import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Constants;
 
@@ -114,9 +113,9 @@ public class DialogRequest extends Dialog {
         findViewById(R.id.fileButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFileChooserDialog = new FileChooserDialog(mActivity, new FileModelListener() {
+                mFileChooserDialog = new FileChooserDialog(mActivity, new FileChooserDialog.FileChooserDialogSelection() {
                     @Override
-                    public void executeFileModel(FileModel fileModel, View view) {
+                    public void onFileChooserDialogSelected(FileModel fileModel, View view) {
                         ((TextView) DialogRequest.this.findViewById(R.id.label)).setText(fileModel.getUrl());
                         DialogRequest.this.file = new File(fileModel.getUrl());
                         DialogRequest.this.mFileModel = fileModel;

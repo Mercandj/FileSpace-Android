@@ -88,7 +88,7 @@ public class PhysicsRenderer implements GLSurfaceView.Renderer {
             handler.post(new Runnable() { // Access UIThred
                 public void run() {
                     String txt_display = "";
-                    txt_display += "pos" + camera.mEye + " \t";
+                    txt_display += "pos" + camera.eyeVector3D + " \t";
                     txt_display += "time = " + tmp_time + "\t  fps = " + fps + " fps";
                     GLFragment.info = txt_display;
                 }
