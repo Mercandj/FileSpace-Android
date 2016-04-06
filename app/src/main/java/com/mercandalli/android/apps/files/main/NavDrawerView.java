@@ -14,9 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.util.FontUtils;
 import com.mercandalli.android.apps.files.user.UserModel;
 import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
+import com.mercandalli.android.library.baselibrary.view.ViewUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,13 +70,13 @@ class NavDrawerView extends FrameLayout implements View.OnClickListener {
         }
 
         if (mLastClicked != null && mLastClicked.mNavDrawerSimpleRow != null) {
-            applyFont(context, mTextViews.get(mLastClicked.mId), mLastClicked, false);
+            applyFont(mTextViews.get(mLastClicked.mId), mLastClicked, false);
             mImageViews.get(mLastClicked.mId).setImageResource(mLastClicked.mNavDrawerSimpleRow.mDrawableId);
         }
 
         if (mOnNavDrawerClickCallback != null) {
             if (navDrawerRow.mNavDrawerSimpleRow != null) {
-                applyFont(context, mTextViews.get(navDrawerRow.mId), navDrawerRow, true);
+                applyFont(mTextViews.get(navDrawerRow.mId), navDrawerRow, true);
                 if (!isOtherSection(navDrawerRow)) {
                     mImageViews.get(navDrawerRow.mId).setImageResource(navDrawerRow.mNavDrawerSimpleRow.mDrawablePressedId);
                 }
@@ -121,7 +121,7 @@ class NavDrawerView extends FrameLayout implements View.OnClickListener {
 
         FileApp.logPerformance(TAG, "initView - Start");
 
-        FontUtils.applyFont((TextView) findViewById(R.id.view_nav_drawer_other), "fonts/MYRIADAB.TTF");
+        ViewUtils.applyFont((TextView) findViewById(R.id.view_nav_drawer_other), "fonts/MYRIADAB.TTF");
 
         for (final NavDrawerRow navDrawerRow : NavDrawerRow.values()) {
             final View view = findViewById(navDrawerRow.mId);
@@ -129,7 +129,7 @@ class NavDrawerView extends FrameLayout implements View.OnClickListener {
             view.setOnClickListener(this);
             if (navDrawerRow.mNavDrawerSimpleRow != null) {
                 final TextView textView = (TextView) findViewById(navDrawerRow.mNavDrawerSimpleRow.mTitleId);
-                applyFont(context, textView, navDrawerRow, false);
+                applyFont(textView, navDrawerRow, false);
                 mTextViews.put(navDrawerRow.mId, textView);
                 mImageViews.put(navDrawerRow.mId, (ImageView) findViewById(navDrawerRow.mNavDrawerSimpleRow.mIconId));
             }
@@ -138,7 +138,7 @@ class NavDrawerView extends FrameLayout implements View.OnClickListener {
         FileApp.logPerformance(TAG, "initView - End");
     }
 
-    private void applyFont(Context context, TextView textView, NavDrawerRow navDrawerRow, boolean selected) {
+    private void applyFont(TextView textView, NavDrawerRow navDrawerRow, boolean selected) {
         if (navDrawerRow.mNavDrawerSimpleRow == null) {
             return;
         }

@@ -20,7 +20,6 @@
 package com.mercandalli.android.apps.files.user;
 
 import android.support.v7.widget.RecyclerView;
-import com.mercandalli.android.apps.files.common.util.FontUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +29,7 @@ import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.library.baselibrary.view.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public class AdapterModelUserConnection extends RecyclerView.Adapter<AdapterMode
                 break;
             case Constants.TAB_VIEW_TYPE_SECTION:
                 viewHolder.title.setText(String.format("%s", model.title));
-                FontUtils.applyFont(viewHolder.title, "fonts/MYRIADAB.TTF");
+                ViewUtils.applyFont(viewHolder.title, "fonts/MYRIADAB.TTF");
                 break;
         }
     }
