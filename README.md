@@ -14,7 +14,7 @@ FileSpace - ANDROID
 <br /><br />
 **_Now you cannot compile this project without the 'com.mercandalli.android.library:baselibrary:1.0.0'_**
 <br />
-**_This library is not open source (not finished). You have to copy and paste gradle.properties.template to gradle.properties with your local "localMavenUrl"_**
+**_This library is not open source (not finished). If you have this library, copy and paste gradle.properties.template to gradle.properties and update "localMavenUrl" to your maven folder_**
 <br /><br />
 
 
