@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.library.mainlibrary.precondition.Preconditions;
+import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
 
 public class ArtistCard extends CardView implements View.OnClickListener {
 

@@ -32,7 +32,7 @@ import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.user.UserModel;
-import com.mercandalli.android.library.mainlibrary.java.HashUtils;
+import com.mercandalli.android.library.baselibrary.java.HashUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;

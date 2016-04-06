@@ -19,4 +19,4 @@
 org.gradle.parallel=true
 org.gradle.daemon=true
 
-mercandalliMavenUrl=file:///D:/perso/maven
+localMavenUrl=file:///D:/Programmation_Android/workspace/maven

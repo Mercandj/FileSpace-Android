@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileApp;
-import com.mercandalli.android.library.mainlibrary.precondition.Preconditions;
+import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
 
 public class SupportCommentCardView extends CardView implements View.OnClickListener {
 

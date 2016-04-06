@@ -54,7 +54,7 @@ import com.mercandalli.android.apps.files.settings.SettingsFragment;
 import com.mercandalli.android.apps.files.support.SupportFragment;
 import com.mercandalli.android.apps.files.user.ProfileFragment;
 import com.mercandalli.android.apps.files.user.community.CommunityFragment;
-import com.mercandalli.android.library.mainlibrary.precondition.Preconditions;
+import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
 
 import static com.mercandalli.android.apps.files.main.FileApp.logPerformance;
 

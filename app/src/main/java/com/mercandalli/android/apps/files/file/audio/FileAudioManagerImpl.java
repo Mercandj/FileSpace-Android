@@ -24,7 +24,7 @@ import com.mercandalli.android.apps.files.file.audio.artist.Artist;
 import com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataUtils;
 import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
 import com.mercandalli.android.apps.files.main.FileApp;
-import com.mercandalli.android.library.mainlibrary.precondition.Preconditions;
+import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
 
 import org.cmc.music.myid3.MyID3;
 

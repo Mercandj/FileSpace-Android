@@ -22,7 +22,7 @@ allprojects {
         jcenter()
 
         maven {
-            url mercandalliMavenUrl
+            url localMavenUrl
         }
     }
 }
