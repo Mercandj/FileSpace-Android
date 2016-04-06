@@ -11,6 +11,9 @@ FileSpace - ANDROID
 
 **_Unfinished project, still in development_** [API Required](https://github.com/Mercandj/FileSpace-API)
 
+**_Now you cannot compile this project without the 'com.mercandalli.android.library:baselibrary:1.0.0'_**
+**_This library is not open source (not finished)_**
+
 ## PROJECT DESCRIPTION
 
 * Name : FileSpace
