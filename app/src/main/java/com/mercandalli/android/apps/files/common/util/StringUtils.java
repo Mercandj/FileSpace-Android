@@ -21,7 +21,7 @@ public class StringUtils {
         return messageTab;
     }
 
-    public static String nomalizeString(final String message) {
+    public static String normalizeString(final String message) {
         if (message == null) {
             return null;
         }
