@@ -31,7 +31,7 @@ import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.library.mainlibrary.java.StringUtils;
+import com.mercandalli.android.library.baselibrary.java.StringUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -39,7 +39,7 @@ import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
-import com.mercandalli.android.library.mainlibrary.java.StringUtils;
+import com.mercandalli.android.library.baselibrary.java.StringUtils;
 
 import org.json.JSONObject;
 

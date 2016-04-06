@@ -39,7 +39,7 @@ import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
 import com.mercandalli.android.apps.files.file.FileTypeModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.FileUtils;
-import com.mercandalli.android.library.mainlibrary.java.StringUtils;
+import com.mercandalli.android.library.baselibrary.java.StringUtils;
 import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
 
 import java.util.ArrayList;

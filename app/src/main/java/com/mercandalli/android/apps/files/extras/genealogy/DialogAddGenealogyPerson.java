@@ -37,7 +37,7 @@ import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
-import com.mercandalli.android.library.mainlibrary.java.StringUtils;
+import com.mercandalli.android.library.baselibrary.java.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;

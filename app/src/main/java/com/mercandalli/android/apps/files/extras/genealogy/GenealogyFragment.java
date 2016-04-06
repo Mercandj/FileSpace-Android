@@ -42,6 +42,7 @@ import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
+import com.mercandalli.android.library.baselibrary.view.NonSwipeableViewPager;
 
 public class GenealogyFragment extends BackFragment implements ViewPager.OnPageChangeListener {
 

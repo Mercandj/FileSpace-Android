@@ -56,8 +56,8 @@ import com.mercandalli.android.apps.files.common.view.PagerSlidingTabStrip;
 import com.mercandalli.android.apps.files.main.ApplicationActivity;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.MainActivity;
-import com.mercandalli.android.library.mainlibrary.java.HashUtils;
-import com.mercandalli.android.library.mainlibrary.java.StringUtils;
+import com.mercandalli.android.library.baselibrary.java.HashUtils;
+import com.mercandalli.android.library.baselibrary.java.StringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;

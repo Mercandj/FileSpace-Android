@@ -59,7 +59,7 @@ import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
-import com.mercandalli.android.library.mainlibrary.view.ViewUtils;
+import com.mercandalli.android.library.baselibrary.view.ViewUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -49,7 +49,7 @@ import com.mercandalli.android.apps.files.file.audio.album.Album;
 import com.mercandalli.android.apps.files.file.audio.artist.Artist;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
-import com.mercandalli.android.library.mainlibrary.java.StringUtils;
+import com.mercandalli.android.library.baselibrary.java.StringUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
