@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.google.android.gms.cast.CastPresentation;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
-import com.mercandalli.android.apps.files.precondition.Preconditions;
+import com.mercandalli.android.library.mainlibrary.precondition.Preconditions;
 
 import java.util.List;
 

@@ -45,7 +45,6 @@ import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.GpsUtils;
 import com.mercandalli.android.apps.files.common.util.ImageUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
 import com.mercandalli.android.apps.files.common.util.TimeUtils;
 import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.main.Config;
@@ -53,6 +52,7 @@ import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.settings.AdapterModelSetting;
 import com.mercandalli.android.apps.files.settings.ModelSetting;
+import com.mercandalli.android.library.mainlibrary.java.StringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;

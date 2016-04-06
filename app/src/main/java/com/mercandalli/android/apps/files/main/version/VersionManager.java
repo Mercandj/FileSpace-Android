@@ -3,7 +3,7 @@ package com.mercandalli.android.apps.files.main.version;
 import android.app.Application;
 import android.content.Context;
 
-import com.mercandalli.android.apps.files.precondition.Preconditions;
+import com.mercandalli.android.library.mainlibrary.precondition.Preconditions;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -28,11 +28,11 @@ import android.util.Log;
 import com.mercandalli.android.apps.files.common.listener.IBitmapListener;
 import com.mercandalli.android.apps.files.common.net.Base64;
 import com.mercandalli.android.apps.files.common.net.TaskGetDownloadImage;
-import com.mercandalli.android.apps.files.common.util.HashUtils;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.user.UserModel;
+import com.mercandalli.android.library.mainlibrary.java.HashUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;

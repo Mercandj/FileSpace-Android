@@ -33,8 +33,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
-import com.mercandalli.android.apps.files.common.util.ViewUtils;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
@@ -45,7 +43,9 @@ import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
 import com.mercandalli.android.apps.files.main.FileApp;
-import com.mercandalli.android.apps.files.precondition.Preconditions;
+import com.mercandalli.android.library.mainlibrary.java.StringUtils;
+import com.mercandalli.android.library.mainlibrary.precondition.Preconditions;
+import com.mercandalli.android.library.mainlibrary.view.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -20,10 +20,10 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.shared.SharedAudioData;
 import com.mercandalli.android.apps.files.shared.SharedAudioPlayerUtils;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
+import com.mercandalli.android.library.mainlibrary.java.StringUtils;
+import com.mercandalli.android.library.mainlibrary.precondition.Preconditions;
 
 import java.io.IOException;
 import java.util.ArrayList;

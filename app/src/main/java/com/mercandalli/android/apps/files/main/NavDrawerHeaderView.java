@@ -15,8 +15,8 @@ import android.widget.TextView;
 import com.mercandalli.android.apps.files.BuildConfig;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.file.FileUtils;
-import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.user.UserModel;
+import com.mercandalli.android.library.mainlibrary.precondition.Preconditions;
 
 /**
  * The nav drawer header.

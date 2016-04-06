@@ -20,6 +20,10 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+
+        maven {
+            url mercandalliMavenUrl
+        }
     }
 }
 

@@ -142,6 +142,9 @@ dependencies {
         transitive = true;
     }
 
+    // Mercandalli main library
+    compile 'com.mercandalli.android.library:baselibrary:1.0.0'
+
     // Testing-only dependencies
     androidTestCompile 'com.android.support:support-annotations:23.2.1'
     androidTestCompile 'com.android.support.test:runner:0.5'

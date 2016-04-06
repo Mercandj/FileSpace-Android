@@ -15,8 +15,8 @@ import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.util.FontUtils;
-import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.user.UserModel;
+import com.mercandalli.android.library.mainlibrary.precondition.Preconditions;
 
 import java.util.HashMap;
 import java.util.Map;

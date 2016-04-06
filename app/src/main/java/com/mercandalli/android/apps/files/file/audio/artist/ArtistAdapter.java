@@ -3,7 +3,7 @@ package com.mercandalli.android.apps.files.file.audio.artist;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.mercandalli.android.apps.files.precondition.Preconditions;
+import com.mercandalli.android.library.mainlibrary.precondition.Preconditions;
 
 import java.util.ArrayList;
 import java.util.List;

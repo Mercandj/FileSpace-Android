@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.google.gson.annotations.SerializedName;
 import com.mercandalli.android.apps.files.file.cloud.response.FileResponse;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
+import com.mercandalli.android.library.mainlibrary.java.StringUtils;
 
 import java.util.List;
 

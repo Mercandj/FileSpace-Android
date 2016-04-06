@@ -43,8 +43,8 @@ import com.mercandalli.android.apps.files.common.view.PlayPauseView;
 import com.mercandalli.android.apps.files.common.view.slider.Slider;
 import com.mercandalli.android.apps.files.file.audio.cast.FileAudioCast;
 import com.mercandalli.android.apps.files.main.FileApp;
-import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.shared.SharedAudioPlayerUtils;
+import com.mercandalli.android.library.mainlibrary.precondition.Preconditions;
 
 import java.io.File;
 import java.util.ArrayList;

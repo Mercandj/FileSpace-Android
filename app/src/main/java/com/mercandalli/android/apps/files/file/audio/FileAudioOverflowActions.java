@@ -18,7 +18,7 @@ import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataEditionDialog;
 import com.mercandalli.android.apps.files.main.FileApp;
-import com.mercandalli.android.apps.files.precondition.Preconditions;
+import com.mercandalli.android.library.mainlibrary.precondition.Preconditions;
 
 /**
  * A simple class that open a Dialog with the actions related to the {@link FileModel}.

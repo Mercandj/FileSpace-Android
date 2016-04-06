@@ -2,8 +2,8 @@ package com.mercandalli.android.apps.files.file.audio;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Wearable;
-import com.mercandalli.android.apps.files.precondition.Preconditions;
 import com.mercandalli.android.apps.files.shared.SharedAudioPlayerUtils;
+import com.mercandalli.android.library.mainlibrary.precondition.Preconditions;
 
 import java.util.concurrent.TimeUnit;
 

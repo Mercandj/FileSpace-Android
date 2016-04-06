@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
-import com.mercandalli.android.apps.files.precondition.Preconditions;
+import com.mercandalli.android.library.mainlibrary.precondition.Preconditions;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 

@@ -20,7 +20,6 @@
 package com.mercandalli.android.apps.files.extras.genealogy;
 
 import android.app.Activity;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
 import android.text.Spanned;
 import android.util.Log;
 
@@ -32,6 +31,7 @@ import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.library.mainlibrary.java.StringUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;

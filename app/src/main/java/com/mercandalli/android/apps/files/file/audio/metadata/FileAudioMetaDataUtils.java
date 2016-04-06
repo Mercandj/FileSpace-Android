@@ -3,7 +3,7 @@ package com.mercandalli.android.apps.files.file.audio.metadata;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.mercandalli.android.apps.files.precondition.Preconditions;
+import com.mercandalli.android.library.mainlibrary.precondition.Preconditions;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;

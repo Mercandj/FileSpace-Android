@@ -1,5 +1,7 @@
 package com.mercandalli.android.apps.files.common.util;
 
+import com.mercandalli.android.library.mainlibrary.java.StringUtils;
+
 public class StringPair {
     private String mName, mValue;
 

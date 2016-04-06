@@ -34,8 +34,8 @@ import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.file.filespace.FileSpaceModel;
-import com.mercandalli.android.apps.files.precondition.Preconditions;
-import com.mercandalli.android.apps.files.common.util.StringUtils;
+import com.mercandalli.android.library.mainlibrary.java.StringUtils;
+import com.mercandalli.android.library.mainlibrary.precondition.Preconditions;
 
 import java.util.ArrayList;
 import java.util.List;
