@@ -2,12 +2,12 @@ package com.mercandalli.android.apps.files.common.fragment;
 
 import android.content.Context;
 
-import com.mercandalli.android.apps.files.fab.FabController;
+import com.mercandalli.android.apps.files.fab.FabContainer;
 
 /**
  * Manage the floating button.
  */
-public abstract class FabFragment extends BackFragment implements FabController {
+public abstract class FabFragment extends BackFragment implements FabContainer {
 
     protected RefreshFabCallback mRefreshFabCallback;
 

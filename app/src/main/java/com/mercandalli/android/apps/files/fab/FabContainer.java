@@ -2,7 +2,7 @@ package com.mercandalli.android.apps.files.fab;
 
 import android.support.design.widget.FloatingActionButton;
 
-public interface FabController {
+public interface FabContainer {
 
     void onFabClick(int fab_id, FloatingActionButton fab);
 

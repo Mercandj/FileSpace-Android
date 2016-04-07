@@ -47,7 +47,7 @@ import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
-import com.mercandalli.android.apps.files.fab.FabController;
+import com.mercandalli.android.apps.files.fab.FabContainer;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
@@ -361,20 +361,20 @@ public class FileLocalPagerFragment extends BackFragment implements
             return;
         }
         final Fragment fabFragment = getCurrentFragment();
-        if (fabFragment == null || !(fabFragment instanceof FabController)) {
+        if (fabFragment == null || !(fabFragment instanceof FabContainer)) {
             return;
         }
-        refreshFab((FabController) fabFragment);
+        refreshFab((FabContainer) fabFragment);
     }
 
-    private void refreshFab(final FabController fabController) {
+    private void refreshFab(final FabContainer fabContainer) {
         if (mFab1 == null) {
             return;
         }
         int imageResource;
-        if (fabController.isFabVisible(0)) {
+        if (fabContainer.isFabVisible(0)) {
             showFab(0);
-            imageResource = fabController.getFabImageResource(0);
+            imageResource = fabContainer.getFabImageResource(0);
             if (imageResource == -1) {
                 imageResource = android.R.drawable.ic_input_add;
             }
@@ -382,7 +382,7 @@ public class FileLocalPagerFragment extends BackFragment implements
             mFab1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    fabController.onFabClick(0, mFab1);
+                    fabContainer.onFabClick(0, mFab1);
                 }
             });
         } else {
@@ -392,9 +392,9 @@ public class FileLocalPagerFragment extends BackFragment implements
         if (mFab2 == null) {
             return;
         }
-        if (fabController.isFabVisible(1)) {
+        if (fabContainer.isFabVisible(1)) {
             showFab(1);
-            imageResource = fabController.getFabImageResource(1);
+            imageResource = fabContainer.getFabImageResource(1);
             if (imageResource == -1) {
                 imageResource = android.R.drawable.ic_input_add;
             }
@@ -402,7 +402,7 @@ public class FileLocalPagerFragment extends BackFragment implements
             mFab2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    fabController.onFabClick(1, mFab2);
+                    fabContainer.onFabClick(1, mFab2);
                 }
             });
         } else {
