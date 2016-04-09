@@ -54,6 +54,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mercandalli.android.library.baselibrary.view.StatusBarUtils.setStatusBarColor;
+
 public class RoboticsFragment extends BackFragment implements SensorEventListener {
 
     private static final String BUNDLE_ARG_TITLE = "RoboticsFragment.Args.BUNDLE_ARG_TITLE";

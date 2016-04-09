@@ -51,6 +51,8 @@ import com.mercandalli.android.apps.files.user.LoginRegisterActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mercandalli.android.library.baselibrary.view.StatusBarUtils.setStatusBarColor;
+
 public class SettingsFragment extends BackFragment {
 
     private static final String BUNDLE_ARG_TITLE = "HomeFragment.Args.BUNDLE_ARG_TITLE";

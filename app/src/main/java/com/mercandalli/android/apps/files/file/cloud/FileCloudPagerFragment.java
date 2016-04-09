@@ -45,8 +45,9 @@ import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.local.SearchActivity;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
+
+import static com.mercandalli.android.library.baselibrary.view.StatusBarUtils.setStatusBarColor;
 
 public class FileCloudPagerFragment extends BackFragment implements ViewPager.OnPageChangeListener, FabFragment.RefreshFabCallback {
 
@@ -100,9 +101,9 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_file, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_file, container, false);
 
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.fragment_file_toolbar);
+        final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.fragment_file_toolbar);
         toolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(toolbar);
         setStatusBarColor(getContext(), R.color.status_bar);
@@ -110,7 +111,7 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
 
         mCoordinatorLayoutView = rootView.findViewById(R.id.fragment_file_coordinator_layout);
 
-        mPagerAdapter = new FileManagerFragmentPagerAdapter(getChildFragmentManager(), mApplicationCallback);
+        mPagerAdapter = new FileManagerFragmentPagerAdapter(getChildFragmentManager());
         mViewPager = (ViewPager) rootView.findViewById(R.id.fragment_file_view_pager);
         mViewPager.setAdapter(mPagerAdapter);
 
@@ -247,7 +248,7 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
     }
 
     public void refreshData() {
-        FabFragment fabFragment = getCurrentFragment();
+        final FabFragment fabFragment = getCurrentFragment();
         if (fabFragment != null) {
             if (fabFragment instanceof FileCloudFragment) {
                 FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
@@ -365,11 +366,9 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
     }
 
     public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
-        ApplicationCallback mApplicationCallback;
 
-        public FileManagerFragmentPagerAdapter(FragmentManager fm, ApplicationCallback applicationCallback) {
+        public FileManagerFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
-            mApplicationCallback = applicationCallback;
         }
 
         @Override

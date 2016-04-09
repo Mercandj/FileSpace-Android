@@ -42,6 +42,8 @@ import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.extras.admin.game.GameFragment;
 import com.mercandalli.android.library.baselibrary.view.NonSwipeableViewPager;
 
+import static com.mercandalli.android.library.baselibrary.view.StatusBarUtils.setStatusBarColor;
+
 public class AdminFragment extends BackFragment implements ViewPager.OnPageChangeListener {
 
     private static final String BUNDLE_ARG_TITLE = "AdminFragment.Args.BUNDLE_ARG_TITLE";

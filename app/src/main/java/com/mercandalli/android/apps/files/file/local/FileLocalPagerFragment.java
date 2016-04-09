@@ -53,6 +53,8 @@ import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
 
+import static com.mercandalli.android.library.baselibrary.view.StatusBarUtils.setStatusBarColor;
+
 public class FileLocalPagerFragment extends BackFragment implements
         ViewPager.OnPageChangeListener,
         FabFragment.RefreshFabCallback,

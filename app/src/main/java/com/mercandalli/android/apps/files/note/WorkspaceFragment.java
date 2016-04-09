@@ -38,6 +38,8 @@ import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
 
+import static com.mercandalli.android.library.baselibrary.view.StatusBarUtils.setStatusBarColor;
+
 public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageChangeListener {
 
     private static final String BUNDLE_ARG_TITLE = "WorkspaceFragment.Args.BUNDLE_ARG_TITLE";
