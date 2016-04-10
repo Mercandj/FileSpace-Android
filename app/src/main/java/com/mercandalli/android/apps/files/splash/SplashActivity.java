@@ -7,11 +7,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.MainActivity;
-import com.mercandalli.android.apps.files.main.Permission;
+import com.mercandalli.android.library.baselibrary.permission.Permission;
 
 /**
  * The first {@link Activity} launched.
@@ -52,12 +53,16 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
             start = true;
         }
 
+        mPermission = new Permission(PERMISSIONS);
         if (start) {
-            mPermission = new Permission(PERMISSIONS);
             mPermission.askPermissions(this, this);
-        } else {
-            launchMainActivity();
+            return;
         }
+        if (!mPermission.checkPermission(this)) {
+            mPermission.askPermissions(this, this);
+            return;
+        }
+        launchMainActivity();
     }
 
     @Override
@@ -71,6 +76,7 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
         if (allSucceed) {
             end();
         } else {
+            Toast.makeText(this, R.string.activity_splash_no_permission, Toast.LENGTH_LONG).show();
             finish();
         }
     }

@@ -33,6 +33,9 @@
 
     <!-- NEW tags -->
 
+    <!-- Splash -->
+    <string name="activity_splash_no_permission">Sans permission FileSpace ne peut fonctionner.</string>
+
     <!-- NavDrawer -->
     <string name="tab_files">Fichiers</string>
     <string name="tab_sdcard">SdCard</string>
