@@ -25,7 +25,11 @@ import java.util.Map;
 
 import static com.mercandalli.android.apps.files.file.FileUtils.getNameFromPath;
 
-public class FileImageManagerImpl implements FileImageManager {
+/**
+ * {@inheritDoc}
+ */
+/* package */
+class FileImageManagerImpl implements FileImageManager {
 
     private static final String LIKE = " LIKE ?";
 
@@ -206,13 +210,14 @@ public class FileImageManagerImpl implements FileImageManager {
             final FileModel fileModelDirectParent) {
 
         Preconditions.checkNotNull(fileModelDirectParent);
-        if (!fileModelDirectParent.isDirectory()) {
+        final File fileDirectoryParent = fileModelDirectParent.getFile();
+        if (!fileModelDirectParent.isDirectory() || fileDirectoryParent == null) {
             notifyLocalImageListenerFailed();
             return;
         }
         final List<FileModel> files = new ArrayList<>();
 
-        final File[] filesArray = fileModelDirectParent.getFile().listFiles(
+        final File[] filesArray = fileDirectoryParent.listFiles(
                 new FilenameFilter() {
                     @Override
                     public boolean accept(File dir, String name) {
@@ -225,7 +230,7 @@ public class FileImageManagerImpl implements FileImageManager {
         if (filesArray != null) {
             fs.addAll(Arrays.asList(filesArray));
         }
-        for (File file : fs) {
+        for (final File file : fs) {
             final FileModel.FileModelBuilder fileModelBuilder = new FileAudioModel.FileModelBuilder()
                     .file(file);
             files.add(fileModelBuilder.build());

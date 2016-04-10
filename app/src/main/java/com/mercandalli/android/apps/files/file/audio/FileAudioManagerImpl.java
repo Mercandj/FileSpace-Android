@@ -147,7 +147,7 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
         }
 
         final File file = fileModelDirectParent.getFile();
-        if (!file.exists()) {
+        if (file == null || !file.exists()) {
             return;
         }
 
