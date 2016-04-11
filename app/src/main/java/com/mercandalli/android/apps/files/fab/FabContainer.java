@@ -4,11 +4,11 @@ import android.support.design.widget.FloatingActionButton;
 
 public interface FabContainer {
 
-    void onFabClick(int fab_id, FloatingActionButton fab);
+    void onFabClick(int fabId, FloatingActionButton fab);
 
-    boolean isFabVisible(int fab_id);
+    boolean isFabVisible(int fabId);
 
-    int getFabImageResource(int fab_id);
+    int getFabImageResource(int fabId);
 
     void refreshFab();
 

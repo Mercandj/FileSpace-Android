@@ -11,6 +11,7 @@ import android.util.Log;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.FileUtils;
+import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,8 +29,8 @@ import static com.mercandalli.android.apps.files.file.FileUtils.getNameFromPath;
     private static final String TAG = "FileAudioManagerMockImp";
     private static final String LIKE = " LIKE ?";
 
-    public FileAudioManagerMock(final Context contextApp) {
-        super(contextApp);
+    public FileAudioManagerMock(final Context contextApp, final FileLocalProviderManager fileLocalProviderManager) {
+        super(contextApp, fileLocalProviderManager);
     }
 
     /**

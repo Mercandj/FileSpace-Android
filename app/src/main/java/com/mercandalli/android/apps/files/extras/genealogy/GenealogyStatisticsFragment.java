@@ -69,17 +69,17 @@ public class GenealogyStatisticsFragment extends FabFragment {
     }
 
     @Override
-    public void onFabClick(int fab_id, FloatingActionButton fab) {
+    public void onFabClick(int fabId, FloatingActionButton fab) {
 
     }
 
     @Override
-    public boolean isFabVisible(int fab_id) {
+    public boolean isFabVisible(int fabId) {
         return false;
     }
 
     @Override
-    public int getFabImageResource(int fab_id) {
+    public int getFabImageResource(int fabId) {
         return -1;
     }
 

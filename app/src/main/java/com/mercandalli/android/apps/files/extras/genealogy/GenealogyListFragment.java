@@ -350,17 +350,17 @@ public class GenealogyListFragment extends FabFragment {
     }
 
     @Override
-    public void onFabClick(int fab_id, FloatingActionButton fab) {
+    public void onFabClick(int fabId, FloatingActionButton fab) {
         add();
     }
 
     @Override
-    public boolean isFabVisible(int fab_id) {
+    public boolean isFabVisible(int fabId) {
         return true;
     }
 
     @Override
-    public int getFabImageResource(int fab_id) {
+    public int getFabImageResource(int fabId) {
         return android.R.drawable.ic_input_add;
     }
 }

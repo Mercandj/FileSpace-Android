@@ -163,8 +163,8 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public void onFabClick(int fab_id, FloatingActionButton fab) {
-        switch (fab_id) {
+    public void onFabClick(int fabId, FloatingActionButton fab) {
+        switch (fabId) {
             case 0:
                 if ((mFilesToCopyList != null && mFilesToCopyList.size() != 0) || (mFilesToCutList != null && mFilesToCutList.size() != 0)) {
                     if (mFilesToCopyList != null) {
@@ -217,8 +217,8 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public boolean isFabVisible(int fab_id) {
-        switch (fab_id) {
+    public boolean isFabVisible(int fabId) {
+        switch (fabId) {
             case 0:
                 return true;
             case 1:
@@ -228,8 +228,8 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public int getFabImageResource(int fab_id) {
-        switch (fab_id) {
+    public int getFabImageResource(int fabId) {
+        switch (fabId) {
             case 0:
                 if (mFilesToCopyList != null && mFilesToCopyList.size() != 0) {
                     return R.drawable.ic_menu_paste_holo_dark;

@@ -7,9 +7,10 @@ import com.mercandalli.android.apps.files.file.cloud.FileOnlineApi;
 /**
  * A MockUp to test.
  */
-public class FileManagerMock extends FileManagerImpl {
+@SuppressWarnings("unused")
+/* package */ class FileManagerMock extends FileManagerImpl {
 
-    public FileManagerMock(Context contextApp, FileOnlineApi fileOnlineApi) {
+    /* package */ FileManagerMock(final Context contextApp, final FileOnlineApi fileOnlineApi) {
         super(contextApp, fileOnlineApi);
     }
 }

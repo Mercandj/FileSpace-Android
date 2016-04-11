@@ -272,19 +272,19 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public void onFabClick(int fab_id, FloatingActionButton fab) {
-        if (fab_id == 0) {
+    public void onFabClick(int fabId, FloatingActionButton fab) {
+        if (fabId == 0) {
             refreshListFolders();
         }
     }
 
     @Override
-    public boolean isFabVisible(int fab_id) {
-        return fab_id == 0 && mCurrentPage == PAGE_FOLDER_INSIDE;
+    public boolean isFabVisible(int fabId) {
+        return fabId == 0 && mCurrentPage == PAGE_FOLDER_INSIDE;
     }
 
     @Override
-    public int getFabImageResource(int fab_id) {
+    public int getFabImageResource(int fabId) {
         return R.drawable.arrow_up;
     }
 

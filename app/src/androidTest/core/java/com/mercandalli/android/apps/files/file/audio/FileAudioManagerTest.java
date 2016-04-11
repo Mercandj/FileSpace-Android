@@ -7,6 +7,7 @@ import android.text.Spanned;
 import android.util.Log;
 
 import com.mercandalli.android.apps.files.file.FileModel;
+import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
 
 import java.io.File;
 import java.util.List;
@@ -19,8 +20,8 @@ public class FileAudioManagerTest implements FileAudioManager {
     private final CountingIdlingResource mLocalMusicFoldersCountingIdlingResource;
     private final CountingIdlingResource mAllLocalCountingIdlingResource;
 
-    public FileAudioManagerTest(final Context contextApp) {
-        mFileAudioManager = new FileAudioManagerImpl(contextApp);
+    public FileAudioManagerTest(final Context contextApp, final FileLocalProviderManager fileLocalProviderManager) {
+        mFileAudioManager = new FileAudioManagerImpl(contextApp, fileLocalProviderManager);
 
         mLocalMusicFoldersCountingIdlingResource =
                 new CountingIdlingResource(TAG + "#getLocalMusicFolders", true);

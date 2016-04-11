@@ -23,7 +23,6 @@ import com.mercandalli.android.apps.files.file.audio.album.Album;
 import com.mercandalli.android.apps.files.file.audio.artist.Artist;
 import com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataUtils;
 import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
-import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
 
 import org.cmc.music.myid3.MyID3;
@@ -65,11 +64,12 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
      *
      * @param contextApp The {@link Context} of this application.
      */
-    public FileAudioManagerImpl(final Context contextApp) {
+    public FileAudioManagerImpl(final Context contextApp, final FileLocalProviderManager fileLocalProviderManager) {
         Preconditions.checkNotNull(contextApp);
-
+        Preconditions.checkNotNull(fileLocalProviderManager);
         mContextApp = contextApp;
-        mFileLocalProviderManager = FileApp.get().getFileAppComponent().provideFileProviderManager();
+        mFileLocalProviderManager = fileLocalProviderManager;
+
         mFileLocalProviderManager.registerFileProviderListener(new FileLocalProviderManager.FileProviderListener() {
             @Override
             public void onFileProviderReloadStarted() {

@@ -83,7 +83,7 @@ class FileManagerImpl implements FileManager /*implements FileUploadTypedFile.Fi
     private final Handler mUiHandler;
     private final Thread mUiThread;
 
-    public FileManagerImpl(final Context contextApp, final FileOnlineApi fileOnlineApi) {
+    /* package */ FileManagerImpl(final Context contextApp, final FileOnlineApi fileOnlineApi) {
         Preconditions.checkNotNull(contextApp);
 
         mContextApp = contextApp;

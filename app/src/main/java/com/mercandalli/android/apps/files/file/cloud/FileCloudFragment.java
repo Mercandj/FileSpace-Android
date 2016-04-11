@@ -146,8 +146,8 @@ public class FileCloudFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public void onFabClick(int fab_id, final FloatingActionButton fab) {
-        switch (fab_id) {
+    public void onFabClick(int fabId, final FloatingActionButton fab) {
+        switch (fabId) {
             case 0:
                 fab.hide();
                 new FileAddDialog(getActivity(), mApplicationCallback, -1, new IListener() {
@@ -172,13 +172,13 @@ public class FileCloudFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public boolean isFabVisible(int fab_id) {
+    public boolean isFabVisible(int fabId) {
         return false;
     }
 
     @Override
-    public int getFabImageResource(int fab_id) {
-        switch (fab_id) {
+    public int getFabImageResource(int fabId) {
+        switch (fabId) {
             case 0:
                 if (filesToCut != null && filesToCut.size() != 0) {
                     return R.drawable.ic_menu_paste_holo_dark;

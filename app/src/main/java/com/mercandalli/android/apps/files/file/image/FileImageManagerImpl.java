@@ -13,6 +13,7 @@ import com.mercandalli.android.apps.files.file.FileTypeModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
+import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
 import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
 
 import java.io.File;
@@ -34,6 +35,7 @@ class FileImageManagerImpl implements FileImageManager {
     private static final String LIKE = " LIKE ?";
 
     private final Context mContextApp;
+    protected final FileLocalProviderManager mFileLocalProviderManager;
 
     private final List<GetAllLocalImageListener> mGetAllLocalImageListeners = new ArrayList<>();
     private final List<GetLocalImageFoldersListener> mGetLocalImageFoldersListeners = new ArrayList<>();
@@ -46,9 +48,11 @@ class FileImageManagerImpl implements FileImageManager {
     private boolean mIsGetAllLocalImageLaunched;
     private boolean mIsGetLocalImageFoldersLaunched;
 
-    public FileImageManagerImpl(Context contextApp) {
+    public FileImageManagerImpl(final Context contextApp, final FileLocalProviderManager fileLocalProviderManager) {
         Preconditions.checkNotNull(contextApp);
+        Preconditions.checkNotNull(fileLocalProviderManager);
         mContextApp = contextApp;
+        mFileLocalProviderManager = fileLocalProviderManager;
     }
 
     @Override
@@ -68,58 +72,27 @@ class FileImageManagerImpl implements FileImageManager {
             return;
         }
         mIsGetAllLocalImageLaunched = true;
-        new AsyncTask<Void, Void, List<FileModel>>() {
+
+        mFileLocalProviderManager.getFileImagePaths(new FileLocalProviderManager.GetFileImageListener() {
             @Override
-            protected List<FileModel> doInBackground(Void... params) {
-                final List<FileModel> files = new ArrayList<>();
+            public void onGetFileImage(final List<String> fileImagePaths) {
 
-                final String[] PROJECTION = {MediaStore.Files.FileColumns.DATA};
-
-                final Uri allSongsUri = MediaStore.Files.getContentUri("external");
-                final List<String> searchArray = new ArrayList<>();
-
-                String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
-
-                for (String end : FileTypeModelENUM.IMAGE.type.getExtensions()) {
-                    selection += " OR " + MediaStore.Files.FileColumns.DATA + LIKE;
-                    searchArray.add("%" + end);
-                }
-                selection += " )";
-
-                final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
-                if (cursor != null) {
-                    if (cursor.moveToFirst()) {
-                        do {
-                            final String path = cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA));
-                            if (!path.startsWith("/storage/emulated/0/Android/")) {
-                                final File file = new File(path);
-                                if (file.exists() && !file.isDirectory()) {
-
-                                    FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder()
-                                            .file(file);
-
-                                    //if (mSortMode == SharedAudioPlayerUtils.SORT_SIZE)
-                                    //    fileMusicModel.adapterTitleStart = FileUtils.humanReadableByteCount(fileMusicModel.getSize()) + " - ";
-
-                                    files.add(fileModelBuilder.build());
-                                }
-                            }
-                        } while (cursor.moveToNext());
+                final List<FileModel> fileModels = new ArrayList<>();
+                for(final String path:fileImagePaths) {
+                    if (!path.startsWith("/storage/emulated/0/Android/")) {
+                        final File file = new File(path);
+                        if (file.exists() && !file.isDirectory()) {
+                            fileModels.add(new FileModel.FileModelBuilder().file(file).build());
+                        }
                     }
-                    cursor.close();
                 }
-                return files;
-            }
 
-            @Override
-            protected void onPostExecute(List<FileModel> fileModels) {
                 notifyAllLocalImageListenerSucceeded(fileModels);
                 mCacheGetAllLocalImage.clear();
                 mCacheGetAllLocalImage.addAll(fileModels);
                 mIsGetAllLocalImageLaunched = false;
-                super.onPostExecute(fileModels);
             }
-        }.execute();
+        });
     }
 
     //region getLocalImageFolders
@@ -141,39 +114,21 @@ class FileImageManagerImpl implements FileImageManager {
         }
         mIsGetLocalImageFoldersLaunched = true;
 
-        new AsyncTask<Void, Void, List<FileModel>>() {
+        mFileLocalProviderManager.getFileImagePaths(new FileLocalProviderManager.GetFileImageListener() {
             @Override
-            protected List<FileModel> doInBackground(Void... params) {
+            public void onGetFileImage(final List<String> fileImagePaths) {
                 // Used to count the number of music inside.
                 final Map<String, MutableInt> directories = new HashMap<>();
 
-                final String[] PROJECTION = new String[]{MediaStore.Files.FileColumns.DATA};
+                for(final String path:fileImagePaths) {
 
-                final Uri allSongsUri = MediaStore.Files.getContentUri("external");
-                final List<String> searchArray = new ArrayList<>();
-
-                String selection = "( " + MediaStore.Files.FileColumns.MEDIA_TYPE + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
-
-                for (String end : FileTypeModelENUM.IMAGE.type.getExtensions()) {
-                    selection += " OR " + MediaStore.Files.FileColumns.DATA + LIKE;
-                    searchArray.add("%" + end);
-                }
-                selection += " )";
-
-                final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection, searchArray.toArray(new String[searchArray.size()]), null);
-                if (cursor != null) {
-                    if (cursor.moveToFirst()) {
-                        do {
-                            final String parentPath = FileUtils.getParentPathFromPath(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
-                            final MutableInt count = directories.get(parentPath);
-                            if (count == null) {
-                                directories.put(parentPath, new MutableInt());
-                            } else {
-                                count.increment();
-                            }
-                        } while (cursor.moveToNext());
+                    final String parentPath = FileUtils.getParentPathFromPath(path);
+                    final MutableInt count = directories.get(parentPath);
+                    if (count == null) {
+                        directories.put(parentPath, new MutableInt());
+                    } else {
+                        count.increment();
                     }
-                    cursor.close();
                 }
 
                 final List<FileModel> result = new ArrayList<>();
@@ -189,26 +144,19 @@ class FileImageManagerImpl implements FileImageManager {
                                 .build());
                     }
                 }
-                return result;
-            }
 
-            @Override
-            protected void onPostExecute(final List<FileModel> fileModels) {
-                notifyLocalImageFoldersListenerSucceeded(fileModels);
+                notifyLocalImageFoldersListenerSucceeded(result);
                 mCacheGetLocalImagesFolders.clear();
-                mCacheGetLocalImagesFolders.addAll(fileModels);
+                mCacheGetLocalImagesFolders.addAll(result);
                 mIsGetLocalImageFoldersLaunched = false;
-                super.onPostExecute(fileModels);
             }
-        }.execute();
+        });
     }
     //endregion getLocalImageFolders
 
     //region getLocalImage
     @Override
-    public void getLocalImage(
-            final FileModel fileModelDirectParent) {
-
+    public void getLocalImage(final FileModel fileModelDirectParent) {
         Preconditions.checkNotNull(fileModelDirectParent);
         final File fileDirectoryParent = fileModelDirectParent.getFile();
         if (!fileModelDirectParent.isDirectory() || fileDirectoryParent == null) {

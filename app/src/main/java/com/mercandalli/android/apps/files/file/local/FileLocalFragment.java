@@ -164,9 +164,9 @@ public class FileLocalFragment extends FabFragment implements
     }
 
     @Override
-    public void onFabClick(int fab_id, FloatingActionButton fab) {
+    public void onFabClick(int fabId, FloatingActionButton fab) {
         final Context context = getContext();
-        switch (fab_id) {
+        switch (fabId) {
             case 0:
                 if ((mFilesToCopyList.size() != 0) || (mFilesToCutList.size() != 0)) {
                     if (mFilesToCopyList != null) {
@@ -221,8 +221,8 @@ public class FileLocalFragment extends FabFragment implements
     }
 
     @Override
-    public boolean isFabVisible(int fab_id) {
-        switch (fab_id) {
+    public boolean isFabVisible(int fabId) {
+        switch (fabId) {
             case 0:
                 return true;
             case 1:
@@ -233,8 +233,8 @@ public class FileLocalFragment extends FabFragment implements
     }
 
     @Override
-    public int getFabImageResource(int fab_id) {
-        switch (fab_id) {
+    public int getFabImageResource(int fabId) {
+        switch (fabId) {
             case 0:
                 if (mFilesToCopyList != null && mFilesToCopyList.size() != 0) {
                     return R.drawable.ic_menu_paste_holo_dark;

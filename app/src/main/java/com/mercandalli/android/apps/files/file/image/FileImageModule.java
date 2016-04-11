@@ -2,6 +2,7 @@ package com.mercandalli.android.apps.files.file.image;
 
 import android.app.Application;
 
+import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 
 import javax.inject.Singleton;
@@ -17,7 +18,9 @@ public class FileImageModule {
 
     @Provides
     @Singleton
-    FileImageManager provideFileImageManager(Application application) {
-        return new FileImageManagerImpl(application);
+    FileImageManager provideFileImageManager(
+            final Application application,
+            final FileLocalProviderManager fileLocalProviderManager) {
+        return new FileImageManagerImpl(application, fileLocalProviderManager);
     }
 }
