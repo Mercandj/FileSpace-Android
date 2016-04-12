@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -42,7 +42,7 @@ import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
-import com.mercandalli.android.apps.files.common.fragment.FabFragment;
+import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
@@ -51,6 +51,7 @@ import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
 import com.mercandalli.android.apps.files.file.FileModelListener;
+import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileApp;
 
@@ -64,7 +65,7 @@ import static com.mercandalli.android.apps.files.file.FileUtils.createFile;
  * A {@link InjectedFabFragment} used to buildDisplay the local {@link FileModel} provide by the
  * {@link FileLocalApi}.
  */
-public class FileLocalFragment extends FabFragment implements
+public class FileLocalFragment extends BackFragment implements
         FileLocalPagerFragment.ListController,
         FileModelAdapter.OnFileClickListener,
         FileModelAdapter.OnFileLongClickListener,
@@ -72,7 +73,13 @@ public class FileLocalFragment extends FabFragment implements
         FileLocalPagerFragment.HomeIconVisible,
         FileLocalOverflowActions.FileLocalActionCallback,
         SwipeRefreshLayout.OnRefreshListener,
-        FileLocalPagerFragment.ScrollTop {
+        FileLocalPagerFragment.ScrollTop,
+        FileLocalFabManager.FabController {
+
+    /**
+     * A key for the view pager position.
+     */
+    private static final String ARG_POSITION_IN_VIEW_PAGER = "FileLocalFragment.Args.ARG_POSITION_IN_VIEW_PAGER";
 
     private RecyclerView mRecyclerView;
     private final List<FileModel> mFilesList = new ArrayList<>();
@@ -84,7 +91,10 @@ public class FileLocalFragment extends FabFragment implements
     private final List<FileModel> mFilesToCutList = new ArrayList<>();
     private final List<FileModel> mFilesToCopyList = new ArrayList<>();
 
+    /* Managers */
     private FileManager mFileManager;
+    private FileLocalFabManager mFileLocalFabManager;
+
     private FileModelAdapter mFileModelAdapter;
     private FileLocalOverflowActions mFileLocalOverflowActions;
 
@@ -100,15 +110,22 @@ public class FileLocalFragment extends FabFragment implements
     };
 
     private boolean mIsRefreshing = false;
+    private int mPositionInViewPager;
 
-    public static FileLocalFragment newInstance() {
-        return new FileLocalFragment();
+    private boolean mIsFabHidden;
+
+    public static FileLocalFragment newInstance(final int positionInViewPager) {
+        final FileLocalFragment fileLocalFragment = new FileLocalFragment();
+        final Bundle args = new Bundle();
+        args.putInt(ARG_POSITION_IN_VIEW_PAGER, positionInViewPager);
+        fileLocalFragment.setArguments(args);
+        return fileLocalFragment;
     }
 
     /**
      * Default Constructor.
-     * <p/>
-     * <p/>
+     * <p>
+     * <p>
      * lint [ValidFragment]
      * http://developer.android.com/reference/android/app/Fragment.html#Fragment()
      * Every fragment must have an empty constructor, so it can be instantiated when restoring its activity's state.
@@ -120,6 +137,20 @@ public class FileLocalFragment extends FabFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFileManager = FileApp.get().getFileAppComponent().provideFileManager();
+        mFileLocalFabManager = FileApp.get().getFileAppComponent().provideFileLocalFabManager();
+
+        final Bundle args = getArguments();
+        if (!args.containsKey(ARG_POSITION_IN_VIEW_PAGER)) {
+            throw new IllegalStateException("Missing args. Please use newInstance()");
+        }
+        mPositionInViewPager = args.getInt(ARG_POSITION_IN_VIEW_PAGER);
+        mFileLocalFabManager.addFabContainer(mPositionInViewPager, this);
+    }
+
+    @Override
+    public void onDestroy() {
+        mFileLocalFabManager.removeFabContainer(mPositionInViewPager);
+        super.onDestroy();
     }
 
     @Override
@@ -132,6 +163,7 @@ public class FileLocalFragment extends FabFragment implements
         mFileLocalOverflowActions = new FileLocalOverflowActions(getContext(), this);
 
         mApplicationCallback.invalidateMenu();
+        mFileLocalFabManager.updateFabButtons();
         return rootView;
     }
 
@@ -164,23 +196,19 @@ public class FileLocalFragment extends FabFragment implements
     }
 
     @Override
-    public void onFabClick(int fabId, FloatingActionButton fab) {
+    public void onFabClick(int fabId, FloatingActionButton floatingActionButton) {
         final Context context = getContext();
         switch (fabId) {
             case 0:
                 if ((mFilesToCopyList.size() != 0) || (mFilesToCutList.size() != 0)) {
-                    if (mFilesToCopyList != null) {
-                        for (final FileModel file : mFilesToCopyList) {
-                            mFileManager.copyLocalFile((Activity) context, file, mCurrentDirectory.getAbsolutePath() + File.separator);
-                        }
-                        mFilesToCopyList.clear();
+                    for (final FileModel file : mFilesToCopyList) {
+                        mFileManager.copyLocalFile((Activity) context, file, mCurrentDirectory.getAbsolutePath() + File.separator);
                     }
-                    if (mFilesToCutList != null) {
-                        for (final FileModel file : mFilesToCutList) {
-                            mFileManager.renameLocalByPath(file, mCurrentDirectory.getAbsolutePath() + File.separator + file.getFullName());
-                        }
-                        mFilesToCutList.clear();
+                    mFilesToCopyList.clear();
+                    for (final FileModel file : mFilesToCutList) {
+                        mFileManager.renameLocalByPath(file, mCurrentDirectory.getAbsolutePath() + File.separator + file.getFullName());
                     }
+                    mFilesToCutList.clear();
                     refreshCurrentList();
                 } else {
                     final AlertDialog.Builder menuAlert = new AlertDialog.Builder(context);
@@ -222,6 +250,9 @@ public class FileLocalFragment extends FabFragment implements
 
     @Override
     public boolean isFabVisible(int fabId) {
+        if (mIsFabHidden) {
+            return false;
+        }
         switch (fabId) {
             case 0:
                 return true;
@@ -236,9 +267,9 @@ public class FileLocalFragment extends FabFragment implements
     public int getFabImageResource(int fabId) {
         switch (fabId) {
             case 0:
-                if (mFilesToCopyList != null && mFilesToCopyList.size() != 0) {
+                if (!mFilesToCopyList.isEmpty()) {
                     return R.drawable.ic_menu_paste_holo_dark;
-                } else if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
+                } else if (!mFilesToCutList.isEmpty()) {
                     return R.drawable.ic_menu_paste_holo_dark;
                 } else {
                     return R.drawable.add;
@@ -280,6 +311,11 @@ public class FileLocalFragment extends FabFragment implements
     @Override
     public boolean isHomeVisible() {
         return !mCurrentDirectory.getPath().equals(initialPath());
+    }
+
+    @Override
+    public void refreshFab() {
+        mFileLocalFabManager.updateFabButtons();
     }
 
     @Override
@@ -412,7 +448,7 @@ public class FileLocalFragment extends FabFragment implements
      */
     @Override
     public void onRefresh() {
-        refreshData();
+        refreshCurrentList();
     }
 
     /**
@@ -465,20 +501,16 @@ public class FileLocalFragment extends FabFragment implements
                 if (dy <= 0) {
                     if (!mIsFabAnimating) {
                         mIsFabAnimating = true;
-                        if (isFabVisible(0)) {
-                            mRefreshFabCallback.showFab(0);
-                        }
-                        if (isFabVisible(1)) {
-                            mRefreshFabCallback.showFab(1);
-                        }
+                        mIsFabHidden = false;
+                        mFileLocalFabManager.updateFabButtons();
                         mHandler.removeCallbacks(mRunnable);
                         mHandler.postDelayed(mRunnable, 250);
                     }
                 } else {
                     if (!mIsFabAnimating) {
                         mIsFabAnimating = true;
-                        mRefreshFabCallback.hideFab(0);
-                        mRefreshFabCallback.hideFab(1);
+                        mIsFabHidden = true;
+                        mFileLocalFabManager.updateFabButtons();
                         mHandler.removeCallbacks(mRunnable);
                         mHandler.postDelayed(mRunnable, 250);
                     }

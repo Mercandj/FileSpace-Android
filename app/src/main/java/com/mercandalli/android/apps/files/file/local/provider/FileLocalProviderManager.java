@@ -29,6 +29,8 @@ public interface FileLocalProviderManager {
 
     void getFileImagePaths(final GetFileImageListener getFileImageListener);
 
+    void getFileVideoPaths(final GetFileVideoListener getFileVideoListener);
+
     boolean registerFileProviderListener(final FileProviderListener fileProviderListener);
 
     boolean unregisterFileProviderListener(final FileProviderListener fileProviderListener);
@@ -45,6 +47,10 @@ public interface FileLocalProviderManager {
 
     interface GetFileImageListener {
         void onGetFileImage(final List<String> fileImagePaths);
+    }
+
+    interface GetFileVideoListener {
+        void onGetFileVideo(final List<String> fileVideoPaths);
     }
 
     abstract class FileProviderListener {
@@ -71,6 +77,13 @@ public interface FileLocalProviderManager {
          * Image.
          */
         protected void onFileProviderImageLoaded(final List<String> fileImagePaths) {
+            // To override
+        }
+
+        /**
+         * Video.
+         */
+        protected void onFileProviderVideoLoaded(final List<String> fileImagePaths) {
             // To override
         }
 

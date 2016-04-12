@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -40,7 +40,6 @@ import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
-import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
@@ -49,7 +48,7 @@ import com.mercandalli.android.apps.files.main.network.NetUtils;
 
 import static com.mercandalli.android.library.baselibrary.view.StatusBarUtils.setStatusBarColor;
 
-public class FileCloudPagerFragment extends BackFragment implements ViewPager.OnPageChangeListener, FabFragment.RefreshFabCallback {
+public class FileCloudPagerFragment extends BackFragment implements ViewPager.OnPageChangeListener {
 
     private static final String BUNDLE_ARG_TITLE = "FileOnlineFragment.Args.BUNDLE_ARG_TITLE";
 
@@ -137,12 +136,12 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
         if (currentFragmentId == -1) {
             return false;
         }
-        FabFragment fabFragment = getCurrentFragment();
+        Fragment fabFragment = getCurrentFragment();
         if (fabFragment == null) {
             return false;
         }
         refreshFab(fabFragment);
-        return fabFragment.back();
+        return ((BackFragment) fabFragment).back();
     }
 
     @Override
@@ -164,17 +163,17 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
         refreshFab(position);
     }
 
-    @Override
+    //@Override
     public void onRefreshFab() {
         refreshFab();
     }
 
-    @Override
+    //@Override
     public void hideFab(int fab_id) {
 
     }
 
-    @Override
+    //@Override
     public void showFab(int fab_id) {
 
     }
@@ -213,16 +212,12 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
         return mViewPager.getCurrentItem();
     }
 
-    public FabFragment getCurrentFragment() {
-        Fragment fragment = getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.fragment_file_view_pager + ":" + mPagerAdapter.getItemId(getCurrentFragmentIndex()));
-        if (fragment == null || !(fragment instanceof FabFragment)) {
-            return null;
-        }
-        return (FabFragment) fragment;
+    public Fragment getCurrentFragment() {
+        return getChildFragmentManager().findFragmentByTag("android:switcher:" + R.id.fragment_file_view_pager + ":" + mPagerAdapter.getItemId(getCurrentFragmentIndex()));
     }
 
     public void refreshListServer() {
-        FabFragment fabFragment = getCurrentFragment();
+        Fragment fabFragment = getCurrentFragment();
         if (fabFragment != null) {
             if (fabFragment instanceof FileCloudFragment) {
                 FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
@@ -235,7 +230,7 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
     }
 
     public void updateAdapterListServer() {
-        FabFragment fabFragment = getCurrentFragment();
+        Fragment fabFragment = getCurrentFragment();
         if (fabFragment != null) {
             if (fabFragment instanceof FileCloudFragment) {
                 FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
@@ -248,7 +243,7 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
     }
 
     public void refreshData() {
-        final FabFragment fabFragment = getCurrentFragment();
+        final Fragment fabFragment = getCurrentFragment();
         if (fabFragment != null) {
             if (fabFragment instanceof FileCloudFragment) {
                 FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
@@ -273,7 +268,7 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
     }
 
     public void goHome() {
-        FabFragment fabFragment = getCurrentFragment();
+        Fragment fabFragment = getCurrentFragment();
         if (fabFragment != null) {
             if (fabFragment instanceof FileCloudFragment) {
                 // TODO
@@ -291,9 +286,9 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
                             @Override
                             public void onClick(View v) {
                                 if (NetUtils.isInternetConnection(getContext())) {
-                                    FabFragment fabFragment = getCurrentFragment();
+                                    Fragment fabFragment = getCurrentFragment();
                                     if (fabFragment != null) {
-                                        fabFragment.onFocus();
+                                        //fabFragment.onFocus();
                                     }
                                 } else {
                                     updateNoInternet();
@@ -315,17 +310,18 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
         if (currentFragmentId == -1) {
             return;
         }
-        FabFragment fabFragment = getCurrentFragment();
+        Fragment fabFragment = getCurrentFragment();
         if (fabFragment == null) {
             return;
         }
         refreshFab(fabFragment);
     }
 
-    private void refreshFab(final FabFragment currentFragment) {
+    private void refreshFab(final Fragment currentFragment) {
         if (mFab1 == null) {
             return;
         }
+        /*
         int imageResource;
         if (currentFragment.isFabVisible(0)) {
             mFab1.show();
@@ -363,6 +359,7 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
         } else {
             mFab2.hide();
         }
+        */
     }
 
     public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -372,7 +369,7 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
         }
 
         @Override
-        public FabFragment getItem(int i) {
+        public Fragment getItem(int i) {
             switch (i) {
                 case 0:
                     return FileCloudFragment.newInstance();

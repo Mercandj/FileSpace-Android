@@ -6,9 +6,9 @@ import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 
 /**
- * A Dagger injected {@link FabFragment}.
+ * A Dagger injected {@link BackFragment}.
  */
-public abstract class InjectedFabFragment extends FabFragment {
+public abstract class InjectedFabFragment extends BackFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -18,25 +17,33 @@ import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mercandalli.android.apps.files.file.FileUtils.isAudioPath;
+import static com.mercandalli.android.apps.files.file.FileUtils.isImagePath;
+import static com.mercandalli.android.apps.files.file.FileUtils.isVideoPath;
+
 /**
  * Tha main {@link FileLocalProviderManager} implementation.
  * Manage {@link List}s of path.
  */
 public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
 
-    private static final String LIKE = " LIKE ?";
+
+    private static final String STRING_SQL_OR = " OR ";
+    private static final String STRING_SQL_LIKE = " LIKE ?";
     private static final String TAG = "FileLocalProviderMa";
 
     private final Handler mUiHandler;
     private final Thread mUiThread;
     private final Context mContextApp;
 
-    private final List<String> mFilePaths;
-    private final List<String> mFileAudioPaths;
-    private final List<String> mFileImagePaths;
-    private final List<GetFileListener> mGetFileListeners;
-    private final List<GetFileAudioListener> mGetFileAudioListeners;
-    private final List<GetFileImageListener> mGetFileImageListeners;
+    private final List<String> mFilePaths = new ArrayList<>();
+    private final List<String> mFileAudioPaths = new ArrayList<>();
+    private final List<String> mFileImagePaths = new ArrayList<>();
+    private final List<String> mFileVideoPaths = new ArrayList<>();
+    private final List<GetFileListener> mGetFileListeners = new ArrayList<>();
+    private final List<GetFileAudioListener> mGetFileAudioListeners = new ArrayList<>();
+    private final List<GetFileImageListener> mGetFileImageListeners = new ArrayList<>();
+    private final List<GetFileVideoListener> mGetFileVideoListeners = new ArrayList<>();
 
     private boolean mIsLoadLaunched = false;
     private boolean mIsLoaded = false;
@@ -55,12 +62,6 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
         final Looper mainLooper = Looper.getMainLooper();
         mUiHandler = new Handler(mainLooper);
         mUiThread = mainLooper.getThread();
-        mFilePaths = new ArrayList<>();
-        mFileAudioPaths = new ArrayList<>();
-        mFileImagePaths = new ArrayList<>();
-        mGetFileListeners = new ArrayList<>();
-        mGetFileAudioListeners = new ArrayList<>();
-        mGetFileImageListeners = new ArrayList<>();
     }
 
     @SuppressLint("NewApi")
@@ -95,6 +96,7 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
                 final List<String> filePaths = new ArrayList<>();
                 final List<String> fileAudioPaths = new ArrayList<>();
                 final List<String> fileImagePaths = new ArrayList<>();
+                final List<String> fileVideoPaths = new ArrayList<>();
 
                 final String[] PROJECTION = {MediaStore.Files.FileColumns.DATA};
 
@@ -102,16 +104,21 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
                 final List<String> searchArray = new ArrayList<>();
 
                 final String mediaTypeKey = MediaStore.Files.FileColumns.MEDIA_TYPE;
-                final StringBuilder selection = new StringBuilder("( " + mediaTypeKey + " = " +
-                        MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO + " OR " + mediaTypeKey + " = " +
-                        MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE);
+                final StringBuilder selection = new StringBuilder("( " +
+                        mediaTypeKey + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO + STRING_SQL_OR +
+                        mediaTypeKey + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE + STRING_SQL_OR +
+                        mediaTypeKey + " = " + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO);
 
                 for (final String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
-                    selection.append(" OR " + MediaStore.Files.FileColumns.DATA + LIKE);
+                    selection.append(STRING_SQL_OR + MediaStore.Files.FileColumns.DATA + STRING_SQL_LIKE);
                     searchArray.add('%' + end);
                 }
                 for (final String end : FileTypeModelENUM.IMAGE.type.getExtensions()) {
-                    selection.append(" OR " + MediaStore.Files.FileColumns.DATA + LIKE);
+                    selection.append(STRING_SQL_OR + MediaStore.Files.FileColumns.DATA + STRING_SQL_LIKE);
+                    searchArray.add('%' + end);
+                }
+                for (final String end : FileTypeModelENUM.VIDEO.type.getExtensions()) {
+                    selection.append(STRING_SQL_OR + MediaStore.Files.FileColumns.DATA + STRING_SQL_LIKE);
                     searchArray.add('%' + end);
                 }
                 selection.append(" )");
@@ -133,6 +140,8 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
                                 fileAudioPaths.add(path);
                             } else if (isImagePath(pathLower)) {
                                 fileImagePaths.add(path);
+                            } else if (isVideoPath(pathLower)) {
+                                fileVideoPaths.add(path);
                             }
                             filePaths.add(path);
                         } while (cursor.moveToNext());
@@ -140,7 +149,7 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
                     cursor.close();
                 }
 
-                notifyLoadSucceeded(filePaths, fileAudioPaths, fileImagePaths, fileProviderListener);
+                notifyLoadSucceeded(filePaths, fileAudioPaths, fileImagePaths, fileVideoPaths, fileProviderListener);
             }
         }.start();
     }
@@ -197,6 +206,23 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
     }
 
     @Override
+    public void getFileVideoPaths(final GetFileVideoListener getFileVideoListener) {
+        if (mIsLoaded) {
+            getFileVideoListener.onGetFileVideo(new ArrayList<>(mFileVideoPaths));
+            return;
+        }
+        synchronized (mGetFileVideoListeners) {
+            //noinspection SimplifiableIfStatement
+            if (getFileVideoListener == null || mGetFileVideoListeners.contains(getFileVideoListener)) {
+                // We don't allow to register null listener
+                // And a listener can only be added once.
+                return;
+            }
+            mGetFileVideoListeners.add(getFileVideoListener);
+        }
+    }
+
+    @Override
     public void clearCache() {
         mFileAudioPaths.clear();
         mFileImagePaths.clear();
@@ -226,13 +252,14 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
             final List<String> filePaths,
             final List<String> fileAudioPaths,
             final List<String> fileImagePaths,
+            final List<String> fileVideoPaths,
             @Nullable final FileProviderListener fileProviderListener) {
 
         if (mUiThread != Thread.currentThread()) {
             mUiHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    notifyLoadSucceeded(filePaths, fileAudioPaths, fileImagePaths, fileProviderListener);
+                    notifyLoadSucceeded(filePaths, fileAudioPaths, fileImagePaths, fileVideoPaths, fileProviderListener);
                 }
             });
             return;
@@ -243,6 +270,8 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
         mFileAudioPaths.addAll(fileAudioPaths);
         mFileImagePaths.clear();
         mFileImagePaths.addAll(fileImagePaths);
+        mFileVideoPaths.clear();
+        mFileVideoPaths.addAll(fileVideoPaths);
 
         mIsLoaded = true;
 
@@ -250,6 +279,7 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
             fileProviderListener.onFileProviderAllBasicLoaded(filePaths);
             fileProviderListener.onFileProviderAudioLoaded(fileAudioPaths);
             fileProviderListener.onFileProviderImageLoaded(fileImagePaths);
+            fileProviderListener.onFileProviderVideoLoaded(fileVideoPaths);
         }
 
         synchronized (mGetFileListeners) {
@@ -273,11 +303,19 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
             mGetFileImageListeners.clear();
         }
 
+        synchronized (mGetFileVideoListeners) {
+            for (final GetFileVideoListener getFileVideoListener : mGetFileVideoListeners) {
+                getFileVideoListener.onGetFileVideo(fileVideoPaths);
+            }
+            mGetFileVideoListeners.clear();
+        }
+
         synchronized (mFileProviderListeners) {
             for (final FileProviderListener fileProviderManager : mFileProviderListeners) {
                 fileProviderManager.onFileProviderAllBasicLoaded(filePaths);
                 fileProviderManager.onFileProviderAudioLoaded(fileAudioPaths);
                 fileProviderManager.onFileProviderImageLoaded(fileImagePaths);
+                fileProviderManager.onFileProviderVideoLoaded(fileVideoPaths);
             }
         }
         mIsLoadLaunched = false;
@@ -297,25 +335,5 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
                 fileProviderManager.onFileProviderFailed(error);
             }
         }
-    }
-
-    private boolean isAudioPath(@NonNull final String pathBrut) {
-        final String path = pathBrut.toLowerCase();
-        for (final String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
-            if (path.endsWith(end)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isImagePath(@NonNull final String pathBrut) {
-        final String path = pathBrut.toLowerCase();
-        for (final String end : FileTypeModelENUM.IMAGE.type.getExtensions()) {
-            if (path.endsWith(end)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

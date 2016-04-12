@@ -96,6 +96,11 @@ public class FileLocalProviderManagerTest implements FileLocalProviderManager {
     }
 
     @Override
+    public void getFileVideoPaths(final GetFileVideoListener getFileVideoListener) {
+        mFileLocalProviderManager.getFileVideoPaths(getFileVideoListener);
+    }
+
+    @Override
     public boolean registerFileProviderListener(FileProviderListener fileProviderListener) {
         return mFileLocalProviderManager.registerFileProviderListener(fileProviderListener);
     }

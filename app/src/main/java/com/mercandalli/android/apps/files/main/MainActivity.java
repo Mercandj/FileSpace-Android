@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -24,10 +24,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudPagerFragment;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
@@ -42,7 +42,6 @@ import static com.mercandalli.android.apps.files.main.FileApp.logPerformance;
  */
 public class MainActivity extends NavDrawerActivity implements
         SetToolbarCallback,
-        FabFragment.RefreshFabCallback,
         VersionManager.UpdateCheckedListener {
 
     @SuppressWarnings("unused")
@@ -94,14 +93,18 @@ public class MainActivity extends NavDrawerActivity implements
     @Override
     public void refreshData() {
         final Fragment fragment = getCurrentFragment();
+        if (fragment == null) {
+            Log.e(TAG, "getCurrentFragment() return null");
+            return;
+        }
         if (fragment instanceof FileLocalPagerFragment) {
             ((FileLocalPagerFragment) fragment).refreshData();
-        } else if(fragment instanceof FileCloudPagerFragment) {
+        } else if (fragment instanceof FileCloudPagerFragment) {
             ((FileCloudPagerFragment) fragment).refreshData();
         }
     }
 
-    @Override
+    /*@Override
     public void onRefreshFab() {
         final Fragment fragment = getCurrentFragment();
         if (fragment instanceof FabFragment.RefreshFabCallback) {
@@ -123,7 +126,7 @@ public class MainActivity extends NavDrawerActivity implements
         if (fragment instanceof FabFragment.RefreshFabCallback) {
             ((FabFragment.RefreshFabCallback) fragment).showFab(fab_id);
         }
-    }
+    }*/
 
     /**
      * {@inheritDoc}

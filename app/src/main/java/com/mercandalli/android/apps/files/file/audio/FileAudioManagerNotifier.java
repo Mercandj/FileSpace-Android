@@ -95,7 +95,7 @@ abstract class FileAudioManagerNotifier implements FileAudioManager {
      * {@inheritDoc}
      */
     @Override
-    public boolean registerAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener) {
+    public boolean addGetAllLocalMusicListener(final GetAllLocalMusicListener getAllLocalMusicListener) {
         synchronized (mGetAllLocalMusicListeners) {
             //noinspection SimplifiableIfStatement
             if (getAllLocalMusicListener == null || mGetAllLocalMusicListeners.contains(getAllLocalMusicListener)) {
@@ -111,7 +111,7 @@ abstract class FileAudioManagerNotifier implements FileAudioManager {
      * {@inheritDoc}
      */
     @Override
-    public boolean unregisterAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener) {
+    public boolean removeGetAllLocalMusicListener(final GetAllLocalMusicListener getAllLocalMusicListener) {
         synchronized (mGetAllLocalMusicListeners) {
             return mGetAllLocalMusicListeners.remove(getAllLocalMusicListener);
         }
@@ -121,7 +121,7 @@ abstract class FileAudioManagerNotifier implements FileAudioManager {
      * {@inheritDoc}
      */
     @Override
-    public boolean registerLocalMusicFoldersListener(GetLocalMusicFoldersListener getLocalImageFoldersListener) {
+    public boolean addGetLocalMusicFoldersListener(final GetLocalMusicFoldersListener getLocalImageFoldersListener) {
         synchronized (mGetLocalMusicFoldersListeners) {
             //noinspection SimplifiableIfStatement
             if (getLocalImageFoldersListener == null || mGetLocalMusicFoldersListeners.contains(getLocalImageFoldersListener)) {
@@ -137,7 +137,7 @@ abstract class FileAudioManagerNotifier implements FileAudioManager {
      * {@inheritDoc}
      */
     @Override
-    public boolean unregisterLocalMusicFoldersListener(GetLocalMusicFoldersListener getLocalImageFoldersListener) {
+    public boolean removeGetLocalMusicFoldersListener(final GetLocalMusicFoldersListener getLocalImageFoldersListener) {
         synchronized (mGetLocalMusicFoldersListeners) {
             return mGetLocalMusicFoldersListeners.remove(getLocalImageFoldersListener);
         }
@@ -147,7 +147,7 @@ abstract class FileAudioManagerNotifier implements FileAudioManager {
      * {@inheritDoc}
      */
     @Override
-    public boolean registerLocalMusicListener(GetLocalMusicListener getLocalImageListener) {
+    public boolean addGetLocalMusicListener(final GetLocalMusicListener getLocalImageListener) {
         synchronized (mGetLocalMusicListeners) {
             //noinspection SimplifiableIfStatement
             if (getLocalImageListener == null || mGetLocalMusicListeners.contains(getLocalImageListener)) {
@@ -163,7 +163,7 @@ abstract class FileAudioManagerNotifier implements FileAudioManager {
      * {@inheritDoc}
      */
     @Override
-    public boolean unregisterLocalMusicListener(GetLocalMusicListener getLocalImageListener) {
+    public boolean removeGetLocalMusicListener(final GetLocalMusicListener getLocalImageListener) {
         synchronized (mGetLocalMusicListeners) {
             return mGetLocalMusicListeners.remove(getLocalImageListener);
         }
@@ -173,7 +173,7 @@ abstract class FileAudioManagerNotifier implements FileAudioManager {
      * {@inheritDoc}
      */
     @Override
-    public boolean registerOnMusicUpdateListener(MusicsChangeListener musicsChangeListener) {
+    public boolean addMusicChangeListener(final MusicsChangeListener musicsChangeListener) {
         synchronized (mMusicsChangeListeners) {
             //noinspection SimplifiableIfStatement
             if (musicsChangeListener == null || mMusicsChangeListeners.contains(musicsChangeListener)) {
@@ -189,7 +189,7 @@ abstract class FileAudioManagerNotifier implements FileAudioManager {
      * {@inheritDoc}
      */
     @Override
-    public boolean unregisterOnMusicUpdateListener(MusicsChangeListener musicsChangeListener) {
+    public boolean removeMusicChangeListener(final MusicsChangeListener musicsChangeListener) {
         synchronized (mMusicsChangeListeners) {
             return mMusicsChangeListeners.remove(musicsChangeListener);
         }
@@ -199,7 +199,7 @@ abstract class FileAudioManagerNotifier implements FileAudioManager {
      * {@inheritDoc}
      */
     @Override
-    public boolean registerAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener) {
+    public boolean addGetAllLocalMusicArtistsListener(final GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener) {
         synchronized (mGetAllLocalMusicArtistsListeners) {
             //noinspection SimplifiableIfStatement
             if (getAllLocalMusicArtistsListener == null || mGetAllLocalMusicArtistsListeners.contains(getAllLocalMusicArtistsListener)) {
@@ -215,7 +215,7 @@ abstract class FileAudioManagerNotifier implements FileAudioManager {
      * {@inheritDoc}
      */
     @Override
-    public boolean unregisterAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener) {
+    public boolean removeGetAllLocalMusicArtistsListener(final GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener) {
         synchronized (mGetAllLocalMusicArtistsListeners) {
             return mGetAllLocalMusicArtistsListeners.remove(getAllLocalMusicArtistsListener);
         }
@@ -225,7 +225,7 @@ abstract class FileAudioManagerNotifier implements FileAudioManager {
      * {@inheritDoc}
      */
     @Override
-    public boolean registerAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener) {
+    public boolean addGetAllLocalMusicAlbumsListener(final GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener) {
         synchronized (mGetAllLocalMusicAlbumsListeners) {
             //noinspection SimplifiableIfStatement
             if (getAllLocalMusicAlbumsListener == null || mGetAllLocalMusicAlbumsListeners.contains(getAllLocalMusicAlbumsListener)) {
@@ -241,7 +241,7 @@ abstract class FileAudioManagerNotifier implements FileAudioManager {
      * {@inheritDoc}
      */
     @Override
-    public boolean unregisterAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener) {
+    public boolean removeGetAllLocalMusicAlbumsListener(final GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener) {
         synchronized (mGetAllLocalMusicAlbumsListeners) {
             return mGetAllLocalMusicAlbumsListeners.remove(getAllLocalMusicAlbumsListener);
         }

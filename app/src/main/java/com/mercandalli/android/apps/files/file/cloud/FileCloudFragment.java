@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -23,7 +23,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -38,7 +37,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
@@ -47,7 +45,6 @@ import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
-import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
@@ -68,7 +65,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
- * A {@link FabFragment} used by {@link FileLocalPagerFragment} to buildDisplay the public cloud {@link FileModel}.
+ * A {@link android.support.v4.app.Fragment} used by {@link FileLocalPagerFragment} to buildDisplay the public cloud {@link FileModel}.
  */
 public class FileCloudFragment extends InjectedFabFragment implements
         FileLocalPagerFragment.ListController,
@@ -134,7 +131,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
             return true;
         } else if (filesToCut != null && filesToCut.size() != 0) {
             filesToCut.clear();
-            refreshFab();
+            //refreshFab();
             return true;
         }
         return false;
@@ -145,7 +142,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
         refreshCurrentList();
     }
 
-    @Override
+    /*@Override
     public void onFabClick(int fabId, final FloatingActionButton fab) {
         switch (fabId) {
             case 0:
@@ -189,7 +186,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
                 return R.drawable.arrow_up;
         }
         return android.R.drawable.ic_input_add;
-    }
+    }*/
 
     @Override
     public void onFileClick(View view, int position) {
@@ -261,7 +258,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
                                             public void execute() {
                                                 if (filesToCut != null && filesToCut.size() != 0) {
                                                     filesToCut.clear();
-                                                    refreshFab();
+                                                    //refreshFab();
                                                 }
                                                 mApplicationCallback.refreshData();
                                             }
@@ -279,7 +276,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
                                             public void execute() {
                                                 if (filesToCut != null && filesToCut.size() != 0) {
                                                     filesToCut.clear();
-                                                    refreshFab();
+                                                    //refreshFab();
                                                 }
                                                 mApplicationCallback.refreshData();
                                             }
@@ -386,7 +383,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
 
             if (!NetUtils.isInternetConnection(getContext())) {
                 this.setListVisibility(false);
-                refreshFab();
+                //refreshFab();
             }
         }
     }
@@ -415,7 +412,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
 
             mAdapterModelFile.setList(mFilesList);
 
-            refreshFab();
+            //refreshFab();
         }
     }
 

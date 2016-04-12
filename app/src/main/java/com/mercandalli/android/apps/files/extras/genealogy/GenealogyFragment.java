@@ -25,6 +25,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -39,7 +40,6 @@ import android.view.ViewGroup;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
-import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.library.baselibrary.view.NonSwipeableViewPager;
@@ -52,7 +52,7 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
 
     private static final int NB_FRAGMENT = 4;
     private static final int INIT_FRAGMENT = 0;
-    public static FabFragment listFragment[] = new FabFragment[NB_FRAGMENT];
+    public static Fragment listFragment[] = new Fragment[NB_FRAGMENT];
     private NonSwipeableViewPager mViewPager;
     private FileManagerFragmentPagerAdapter mPagerAdapter;
     private TabLayout tabs;
@@ -150,7 +150,7 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
         if (listFragment == null || currentFragmentId == -1) {
             return false;
         }
-        BackFragment backFragment = listFragment[currentFragmentId];
+        BackFragment backFragment = (BackFragment) listFragment[currentFragmentId];
         return backFragment != null && backFragment.back();
     }
 
@@ -167,14 +167,15 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
         if (listFragment == null || currentFragmentId == -1) {
             return;
         }
-        FabFragment fragment = listFragment[currentFragmentId];
+        Fragment fragment = listFragment[currentFragmentId];
         if (fragment == null) {
             return;
         }
         refreshFab(fragment);
     }
 
-    private void refreshFab(final FabFragment currentFragment) {
+    private void refreshFab(final Fragment currentFragment) {
+        /*
         if (currentFragment.isFabVisible(0)) {
             this.circle.show();
             int imageResource = currentFragment.getFabImageResource(0);
@@ -191,6 +192,7 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
         } else {
             this.circle.hide();
         }
+        */
     }
 
     @Override
@@ -206,7 +208,7 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
             ((GenealogyTreeFragment) listFragment[position]).update();
         }
         if (position < NB_FRAGMENT && listFragment[position] != null) {
-            listFragment[position].onFocus();
+            //listFragment[position].onFocus();
         }
         updateNoInternet();
         refreshFab(position);
@@ -224,15 +226,15 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
         }
 
         @Override
-        public BackFragment getItem(int i) {
-            FabFragment fragment;
+        public Fragment getItem(int i) {
+            Fragment fragment;
             switch (i) {
                 case 0:
                     GenealogyListFragment fr = GenealogyListFragment.newInstance();
                     fr.setOnSelect(new IModelGenealogyUserListener() {
                         @Override
                         public void execute(ModelGenealogyPerson modelPerson) {
-                            for (BackFragment fr : listFragment) {
+                            for (Fragment fr : listFragment) {
                                 if (fr instanceof GenealogyTreeFragment) {
                                     ((GenealogyTreeFragment) fr).select(modelPerson);
                                 } else if (fr instanceof GenealogyBigTreeFragment) {
@@ -303,7 +305,7 @@ public class GenealogyFragment extends BackFragment implements ViewPager.OnPageC
                         @Override
                         public void onClick(View v) {
                             if (NetUtils.isInternetConnection(getContext())) {
-                                listFragment[getCurrentFragmentIndex()].onFocus();
+                                //listFragment[getCurrentFragmentIndex()].onFocus();
                             } else {
                                 updateNoInternet();
                             }

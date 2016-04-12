@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -25,6 +25,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IntDef;
+import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -48,6 +49,7 @@ import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
 import com.mercandalli.android.apps.files.file.audio.album.Album;
 import com.mercandalli.android.apps.files.file.audio.artist.Artist;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
+import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.library.baselibrary.java.StringUtils;
 
@@ -75,9 +77,15 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         ScaleAnimationAdapter.NoAnimatedPosition,
         SwipeRefreshLayout.OnRefreshListener,
         FileAudioModelListener,
-        FileLocalPagerFragment.ScrollTop {
+        FileLocalPagerFragment.ScrollTop,
+        FileLocalFabManager.FabController {
 
     private static final String TAG = "FileAudioLocalFragment";
+
+    /**
+     * A key for the view pager position.
+     */
+    private static final String ARG_POSITION_IN_VIEW_PAGER = "FileLocalFragment.Args.ARG_POSITION_IN_VIEW_PAGER";
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({
@@ -137,18 +145,27 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
 
     private FileAudioOverflowActions mFileAudioOverflowActions;
 
+    private int mPositionInViewPager;
+
+    @Inject
+    FileLocalFabManager mFileLocalFabManager;
+
     @Inject
     FileManager mFileManager;
 
     @Inject
     FileAudioManager mFileAudioManager;
 
-    public static FileAudioLocalFragment newInstance() {
-        return new FileAudioLocalFragment();
+    public static FileAudioLocalFragment newInstance(final int positionInViewPager) {
+        final FileAudioLocalFragment fileAudioLocalFragment = new FileAudioLocalFragment();
+        final Bundle args = new Bundle();
+        args.putInt(ARG_POSITION_IN_VIEW_PAGER, positionInViewPager);
+        fileAudioLocalFragment.setArguments(args);
+        return fileAudioLocalFragment;
     }
 
     /**
-     * Do not use this constructor. Call {@link #newInstance()} instead.
+     * Do not use this constructor. Call {@link #newInstance(int)} instead.
      */
     public FileAudioLocalFragment() {
         mProgressBarActivationHandler = new Handler();
@@ -162,6 +179,23 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     }
 
     @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final Bundle args = getArguments();
+        if (!args.containsKey(ARG_POSITION_IN_VIEW_PAGER)) {
+            throw new IllegalStateException("Missing args. Please use newInstance()");
+        }
+        mPositionInViewPager = args.getInt(ARG_POSITION_IN_VIEW_PAGER);
+        mFileLocalFabManager.addFabContainer(mPositionInViewPager, this);
+    }
+
+    @Override
+    public void onDestroy() {
+        mFileLocalFabManager.removeFabContainer(mPositionInViewPager);
+        super.onDestroy();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_file_audio_local, container, false);
         final Context context = getContext();
@@ -172,12 +206,12 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mStringMusic = context.getString(R.string.file_audio_model_music);
         mStringMusics = context.getString(R.string.file_audio_model_musics);
 
-        mFileAudioManager.registerAllLocalMusicListener(this);
-        mFileAudioManager.registerLocalMusicFoldersListener(this);
-        mFileAudioManager.registerLocalMusicListener(this);
-        mFileAudioManager.registerOnMusicUpdateListener(this);
-        mFileAudioManager.registerAllLocalMusicArtistsListener(this);
-        mFileAudioManager.registerAllLocalMusicAlbumsListener(this);
+        mFileAudioManager.addGetAllLocalMusicListener(this);
+        mFileAudioManager.addGetLocalMusicFoldersListener(this);
+        mFileAudioManager.addGetLocalMusicListener(this);
+        mFileAudioManager.addMusicChangeListener(this);
+        mFileAudioManager.addGetAllLocalMusicArtistsListener(this);
+        mFileAudioManager.addGetAllLocalMusicAlbumsListener(this);
 
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.fragment_file_audio_local_progress_bar);
         mProgressBar.setVisibility(View.GONE);
@@ -272,19 +306,19 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public void onFabClick(int fabId, FloatingActionButton fab) {
+    public void onFabClick(@IntRange(from = 0, to = 1) final int fabId, final FloatingActionButton floatingActionButton) {
         if (fabId == 0) {
             refreshListFolders();
         }
     }
 
     @Override
-    public boolean isFabVisible(int fabId) {
+    public boolean isFabVisible(@IntRange(from = 0, to = 1) final int fabId) {
         return fabId == 0 && mCurrentPage == PAGE_FOLDER_INSIDE;
     }
 
     @Override
-    public int getFabImageResource(int fabId) {
+    public int getFabImageResource(@IntRange(from = 0, to = 1) final int fabId) {
         return R.drawable.arrow_up;
     }
 
@@ -295,7 +329,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
 
     @Nullable
     @Override
-    public String onFileSubtitleModify(FileModel fileModel) {
+    public String onFileSubtitleModify(final FileModel fileModel) {
         if (fileModel != null && fileModel.isDirectory() && fileModel.getCountAudio() != 0) {
             return mStringDirectory + ": " + StringUtils.longToShortString(fileModel.getCountAudio()) + " " + (fileModel.getCountAudio() > 1 ? mStringMusics : mStringMusic);
         }
@@ -383,7 +417,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     public void updateAdapter() {
         if (mRecyclerView != null && isAdded()) {
             mSwipeRefreshLayout.setRefreshing(false);
-            refreshFab();
+            mFileLocalFabManager.updateFabButtons();
 
             final boolean isEmpty = (mFileModels.size() == 0 && mCurrentPage == PAGE_FOLDERS) ||
                     (mFileAudioModels.size() == 0 && mCurrentPage != PAGE_FOLDERS);
@@ -406,12 +440,12 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
 
     @Override
     public void onDestroyView() {
-        mFileAudioManager.unregisterAllLocalMusicListener(this);
-        mFileAudioManager.unregisterLocalMusicFoldersListener(this);
-        mFileAudioManager.unregisterLocalMusicListener(this);
-        mFileAudioManager.unregisterOnMusicUpdateListener(this);
-        mFileAudioManager.unregisterAllLocalMusicArtistsListener(this);
-        mFileAudioManager.unregisterAllLocalMusicAlbumsListener(this);
+        mFileAudioManager.removeGetAllLocalMusicListener(this);
+        mFileAudioManager.removeGetLocalMusicFoldersListener(this);
+        mFileAudioManager.removeGetLocalMusicListener(this);
+        mFileAudioManager.removeMusicChangeListener(this);
+        mFileAudioManager.removeGetAllLocalMusicArtistsListener(this);
+        mFileAudioManager.removeGetAllLocalMusicAlbumsListener(this);
         super.onDestroyView();
     }
 

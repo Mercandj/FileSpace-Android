@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -24,7 +24,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -57,8 +56,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import static com.mercandalli.android.apps.files.file.FileUtils.createFile;
 
 /**
  * A {@link InjectedFabFragment} used to buildDisplay the local {@link FileModel} provide by the
@@ -152,7 +149,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
             if (mFilesToCutList != null) {
                 mFilesToCutList.clear();
             }
-            refreshFab();
+            //refreshFab();
             return true;
         }
         return false;
@@ -162,6 +159,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
     public void onFocus() {
     }
 
+    /*
     @Override
     public void onFabClick(int fabId, FloatingActionButton fab) {
         switch (fabId) {
@@ -243,7 +241,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
         }
         return R.drawable.add;
     }
-
+*/
     @Override
     protected void inject(FileAppComponent fileAppComponent) {
         fileAppComponent.inject(this);
@@ -323,11 +321,11 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
                                             public void execute() {
                                                 if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
                                                     mFilesToCutList.clear();
-                                                    refreshFab();
+                                                    //refreshFab();
                                                 }
                                                 if (mFilesToCopyList != null && mFilesToCopyList.size() != 0) {
                                                     mFilesToCopyList.clear();
-                                                    refreshFab();
+                                                    //refreshFab();
                                                 }
                                                 mApplicationCallback.refreshData();
                                             }
@@ -344,11 +342,11 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
                                             public void execute() {
                                                 if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
                                                     mFilesToCutList.clear();
-                                                    refreshFab();
+                                                    //refreshFab();
                                                 }
                                                 if (mFilesToCopyList != null && mFilesToCopyList.size() != 0) {
                                                     mFilesToCopyList.clear();
-                                                    refreshFab();
+                                                    //refreshFab();
                                                 }
                                                 mApplicationCallback.refreshData();
                                             }
@@ -359,12 +357,12 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
                             case 4:
                                 FileCloudDownloadedFragment.this.mFilesToCopyList.add(fileModel);
                                 Toast.makeText(getContext(), "File ready to copy.", Toast.LENGTH_SHORT).show();
-                                refreshFab();
+                                //refreshFab();
                                 break;
                             case 5:
                                 FileCloudDownloadedFragment.this.mFilesToCutList.add(fileModel);
                                 Toast.makeText(getContext(), "File ready to cut.", Toast.LENGTH_SHORT).show();
-                                refreshFab();
+                                //refreshFab();
                                 break;
                             case 6:
                                 DialogUtils.alert(getActivity(),
@@ -435,7 +433,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
             }
         }
 
-        refreshFab();
+        //refreshFab();
 
         if (mFilesList.size() == 0) {
             mMessageTextView.setText(getString(R.string.no_file_local_folder, "" + mCurrentDirectory.getName()));
@@ -456,7 +454,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
 
     public void updateAdapter() {
         if (mRecyclerView != null && isAdded()) {
-            refreshFab();
+            //refreshFab();
             mFileModelAdapter.setList(mFilesList);
         }
         mSwipeRefreshLayout.setRefreshing(false);

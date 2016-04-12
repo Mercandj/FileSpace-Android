@@ -12,9 +12,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.text.Spanned;
 
-import com.mercandalli.android.apps.files.common.util.HtmlUtils;
-import com.mercandalli.android.apps.files.common.util.StringPair;
-import com.mercandalli.android.apps.files.common.util.TimeUtils;
+import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileTypeModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
@@ -31,7 +29,6 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +45,7 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
 
     protected final Context mContextApp;
     protected final FileLocalProviderManager mFileLocalProviderManager;
+    protected final FileManager mFileManager;
 
     /* Cache */
     protected final List<FileAudioModel> mCacheAllLocalMusics = new ArrayList<>();
@@ -64,11 +62,16 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
      *
      * @param contextApp The {@link Context} of this application.
      */
-    public FileAudioManagerImpl(final Context contextApp, final FileLocalProviderManager fileLocalProviderManager) {
+    public FileAudioManagerImpl(
+            final Context contextApp,
+            final FileLocalProviderManager fileLocalProviderManager,
+            final FileManager fileManager) {
         Preconditions.checkNotNull(contextApp);
         Preconditions.checkNotNull(fileLocalProviderManager);
+        Preconditions.checkNotNull(fileManager);
         mContextApp = contextApp;
         mFileLocalProviderManager = fileLocalProviderManager;
+        mFileManager = fileManager;
 
         mFileLocalProviderManager.registerFileProviderListener(new FileLocalProviderManager.FileProviderListener() {
             @Override
@@ -203,6 +206,9 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @SuppressLint("NewApi")
     public void getAllLocalMusicAlbums() {
@@ -261,6 +267,9 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
         }.execute();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void getAllLocalMusicArtists() {
 
@@ -288,39 +297,7 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
 
     @Override
     public Spanned toSpanned(final Context context, final FileAudioModel fileAudioModel) {
-        Preconditions.checkNotNull(context);
-        Preconditions.checkNotNull(fileAudioModel);
-
-        final FileTypeModel type = fileAudioModel.getType();
-        final boolean isDirectory = fileAudioModel.isDirectory();
-        final long size = fileAudioModel.getSize();
-        final boolean isPublic = fileAudioModel.isPublic();
-        final Date dateCreation = fileAudioModel.getDateCreation();
-
-        final List<StringPair> spl = new ArrayList<>();
-        spl.add(new StringPair("Name", fileAudioModel.getName()));
-        if (!fileAudioModel.isDirectory()) {
-            spl.add(new StringPair("Extension", type.toString()));
-        }
-        spl.add(new StringPair("Type", type.getTitle(context)));
-        spl.add(new StringPair("Title", fileAudioModel.getTitle()));
-        spl.add(new StringPair("Artist", fileAudioModel.getArtist()));
-        spl.add(new StringPair("Album", fileAudioModel.getAlbum()));
-        if (!isDirectory || size != 0) {
-            spl.add(new StringPair("Size", FileUtils.humanReadableByteCount(size)));
-        }
-        if (dateCreation != null) {
-            if (fileAudioModel.isOnline()) {
-                spl.add(new StringPair("Upload date", TimeUtils.getDate(dateCreation)));
-            } else {
-                spl.add(new StringPair("Last modification date", TimeUtils.getDate(dateCreation)));
-            }
-        }
-        if (fileAudioModel.isOnline()) {
-            spl.add(new StringPair("Visibility", isPublic ? "Public" : "Private"));
-        }
-        spl.add(new StringPair("Path", fileAudioModel.getUrl()));
-        return HtmlUtils.createListItem(spl);
+        return mFileManager.toSpanned(context, fileAudioModel);
     }
 
     //region Create.

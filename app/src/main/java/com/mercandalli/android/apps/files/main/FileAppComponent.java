@@ -13,10 +13,12 @@ import com.mercandalli.android.apps.files.file.audio.FileAudioPlayer;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudDownloadedFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileMyCloudFragment;
+import com.mercandalli.android.apps.files.file.image.FileImageAdapter;
 import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
 import com.mercandalli.android.apps.files.file.image.FileImageManager;
 import com.mercandalli.android.apps.files.file.image.FileImageModule;
-import com.mercandalli.android.apps.files.file.image.FileImageAdapter;
+import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
+import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabModule;
 import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
 import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderModule;
 import com.mercandalli.android.apps.files.main.version.VersionManager;
@@ -38,7 +40,8 @@ import dagger.Component;
                 FileLocalProviderModule.class,
                 FileImageModule.class,
                 SupportModule.class,
-                VersionModule.class
+                VersionModule.class,
+                FileLocalFabModule.class
         }
 )
 public interface FileAppComponent {
@@ -80,4 +83,6 @@ public interface FileAppComponent {
     SupportManager provideSupportManager();
 
     VersionManager provideVersionManager();
+
+    FileLocalFabManager provideFileLocalFabManager();
 }

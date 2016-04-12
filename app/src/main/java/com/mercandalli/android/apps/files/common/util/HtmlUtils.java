@@ -10,12 +10,17 @@ import java.util.List;
  */
 public class HtmlUtils {
 
-    public static Spanned createListItem(List<StringPair> list) {
-        String tmp = "<ul>";
-        for (StringPair sp : list) {
-            tmp += "<li><div><font color='#444'><b>" + sp.getName() + " : </b></font>" + sp.getValue() + "</div></li>";
+    public static Spanned createListItem(final List<StringPair> list) {
+        final StringBuilder tmp = new StringBuilder(400);
+        tmp.append("<ul>");
+        for (final StringPair sp : list) {
+            tmp.append("<li><div><font color='#444'><b>")
+                    .append(sp.getName())
+                    .append(" : </b></font>")
+                    .append(sp.getValue())
+                    .append("</div></li>");
         }
-        return Html.fromHtml(tmp + "</ul>");
+        return Html.fromHtml(tmp.append("</ul>").toString());
     }
 
 }

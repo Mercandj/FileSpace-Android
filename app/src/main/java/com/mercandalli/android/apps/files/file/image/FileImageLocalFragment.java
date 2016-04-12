@@ -36,6 +36,7 @@ import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
 import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
+import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
@@ -62,7 +63,13 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         FileLocalPagerFragment.ListController,
         ScaleAnimationAdapter.NoAnimatedPosition,
         SwipeRefreshLayout.OnRefreshListener,
-        FileLocalPagerFragment.ScrollTop {
+        FileLocalPagerFragment.ScrollTop,
+        FileLocalFabManager.FabController {
+
+    /**
+     * A key for the view pager position.
+     */
+    private static final String ARG_POSITION_IN_VIEW_PAGER = "FileLocalFragment.Args.ARG_POSITION_IN_VIEW_PAGER";
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({
@@ -114,21 +121,27 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
 
     private FileModel mCurrentFolder;
 
+    private int mPositionInViewPager;
+
+    @Inject
+    FileLocalFabManager mFileLocalFabManager;
+
     @Inject
     FileManager mFileManager;
 
     @Inject
     FileImageManager mFileImageManager;
 
-    public static FileImageLocalFragment newInstance() {
-        Bundle args = new Bundle();
-        FileImageLocalFragment fragment = new FileImageLocalFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public static FileImageLocalFragment newInstance(final int positionInViewPager) {
+        final FileImageLocalFragment fileAudioLocalFragment = new FileImageLocalFragment();
+        final Bundle args = new Bundle();
+        args.putInt(ARG_POSITION_IN_VIEW_PAGER, positionInViewPager);
+        fileAudioLocalFragment.setArguments(args);
+        return fileAudioLocalFragment;
     }
 
     /**
-     * Do not use this constructor. Call {@link #newInstance()} instead.
+     * Do not use this constructor. Call {@link #newInstance(int)} instead.
      */
     public FileImageLocalFragment() {
         mRefreshActivityAdapterListener = new IListener() {
@@ -147,6 +160,23 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                 mRecyclerView.setVisibility(View.GONE);
             }
         };
+    }
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final Bundle args = getArguments();
+        if (!args.containsKey(ARG_POSITION_IN_VIEW_PAGER)) {
+            throw new IllegalStateException("Missing args. Please use newInstance()");
+        }
+        mPositionInViewPager = args.getInt(ARG_POSITION_IN_VIEW_PAGER);
+        mFileLocalFabManager.addFabContainer(mPositionInViewPager, this);
+    }
+
+    @Override
+    public void onDestroy() {
+        mFileLocalFabManager.removeFabContainer(mPositionInViewPager);
+        super.onDestroy();
     }
 
     @Override
@@ -527,7 +557,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
 
     public void updateAdapter() {
         if (mRecyclerView != null && mFileModels != null && isAdded()) {
-            refreshFab();
+            mFileLocalFabManager.updateFabButtons();
 
             if (mFileModels.size() == 0) {
                 mMessageTextView.setText(getString(R.string.no_image));

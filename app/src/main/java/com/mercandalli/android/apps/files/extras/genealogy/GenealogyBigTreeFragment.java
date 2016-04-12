@@ -29,7 +29,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.fragment.FabFragment;
+import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.main.Constants;
@@ -43,7 +43,7 @@ import org.json.JSONObject;
 /**
  * Created by Jonathan on 28/08/2015.
  */
-public class GenealogyBigTreeFragment extends FabFragment {
+public class GenealogyBigTreeFragment extends BackFragment {
 
     private View rootView;
 
@@ -119,17 +119,17 @@ public class GenealogyBigTreeFragment extends FabFragment {
         this.bigTreeView.select(genealogyUser);
     }
 
-    @Override
+    //@Override
     public void onFabClick(int fabId, FloatingActionButton fab) {
 
     }
 
-    @Override
+    //@Override
     public boolean isFabVisible(int fabId) {
         return false;
     }
 
-    @Override
+    //@Override
     public int getFabImageResource(int fabId) {
         return -1;
     }

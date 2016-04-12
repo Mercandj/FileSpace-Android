@@ -2,6 +2,7 @@ package com.mercandalli.android.apps.files.file.audio;
 
 import android.app.Application;
 
+import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 
@@ -20,9 +21,10 @@ public class FileAudioModule {
     @Singleton
     FileAudioManager provideFileAudioManager(
             final Application application,
-            final FileLocalProviderManager fileLocalProviderManager) {
-        // return new FileAudioManagerMock(application);
-        return new FileAudioManagerImpl(application, fileLocalProviderManager);
+            final FileLocalProviderManager fileLocalProviderManager,
+            final FileManager fileManager) {
+        // return new FileAudioManagerMock(application, fileLocalProviderManager, fileManager);
+        return new FileAudioManagerImpl(application, fileLocalProviderManager, fileManager);
     }
 
     @Provides

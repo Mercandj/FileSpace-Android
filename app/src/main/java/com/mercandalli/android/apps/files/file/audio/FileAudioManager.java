@@ -30,8 +30,20 @@ public interface FileAudioManager {
      */
     void getLocalMusicFolders();
 
+    /**
+     * Get all the {@link Album}s.
+     * <p>
+     * Call {@link #addGetAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener)} and
+     * {@link #removeGetAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener)} to get the result.
+     */
     void getAllLocalMusicAlbums();
 
+    /**
+     * Get all the {@link Artist}s.
+     * <p>
+     * Call {@link #addGetAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener)} and
+     * {@link #removeGetAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener)} to get the result.
+     */
     void getAllLocalMusicArtists();
 
     /**
@@ -67,29 +79,29 @@ public interface FileAudioManager {
 
     //region Register/Unregister.
 
-    boolean registerAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener);
+    boolean addGetAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener);
 
-    boolean unregisterAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener);
+    boolean removeGetAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener);
 
-    boolean registerLocalMusicFoldersListener(GetLocalMusicFoldersListener getLocalImageFoldersListener);
+    boolean addGetLocalMusicFoldersListener(GetLocalMusicFoldersListener getLocalImageFoldersListener);
 
-    boolean unregisterLocalMusicFoldersListener(GetLocalMusicFoldersListener getLocalImageFoldersListener);
+    boolean removeGetLocalMusicFoldersListener(GetLocalMusicFoldersListener getLocalImageFoldersListener);
 
-    boolean registerLocalMusicListener(GetLocalMusicListener getLocalImageListener);
+    boolean addGetLocalMusicListener(GetLocalMusicListener getLocalImageListener);
 
-    boolean unregisterLocalMusicListener(GetLocalMusicListener getLocalImageListener);
+    boolean removeGetLocalMusicListener(GetLocalMusicListener getLocalImageListener);
 
-    boolean registerOnMusicUpdateListener(MusicsChangeListener musicsChangeListener);
+    boolean addMusicChangeListener(MusicsChangeListener musicsChangeListener);
 
-    boolean unregisterOnMusicUpdateListener(MusicsChangeListener musicsChangeListener);
+    boolean removeMusicChangeListener(MusicsChangeListener musicsChangeListener);
 
-    boolean registerAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener);
+    boolean addGetAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener);
 
-    boolean unregisterAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener);
+    boolean removeGetAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener);
 
-    boolean registerAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener);
+    boolean addGetAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener);
 
-    boolean unregisterAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener);
+    boolean removeGetAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener);
 
     //endregion Register/Unregister.
 

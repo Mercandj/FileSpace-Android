@@ -44,21 +44,21 @@ import android.view.ViewGroup;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
-import com.mercandalli.android.apps.files.common.fragment.FabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
-import com.mercandalli.android.apps.files.fab.FabContainer;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
+import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
+import com.mercandalli.android.apps.files.main.FileApp;
 
 import static com.mercandalli.android.library.baselibrary.view.StatusBarUtils.setStatusBarColor;
 
 public class FileLocalPagerFragment extends BackFragment implements
         ViewPager.OnPageChangeListener,
-        FabFragment.RefreshFabCallback,
-        TabLayout.OnTabSelectedListener {
+        TabLayout.OnTabSelectedListener,
+        FileLocalFabManager.FabContainer, View.OnClickListener {
 
     private static final int NB_FRAGMENT = 3;
     private static final int INIT_FRAGMENT = 0;
@@ -79,6 +79,8 @@ public class FileLocalPagerFragment extends BackFragment implements
     private FloatingActionButton mFab1;
     private FloatingActionButton mFab2;
     //endregion Views
+
+    private FileLocalFabManager mFileLocalFabManager;
 
     private SetToolbarCallback mSetToolbarCallback;
 
@@ -114,6 +116,13 @@ public class FileLocalPagerFragment extends BackFragment implements
         super.onDetach();
     }
 
+    @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mFileLocalFabManager = FileApp.get().getFileAppComponent().provideFileLocalFabManager();
+        mFileLocalFabManager.setFabContainer(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -128,12 +137,14 @@ public class FileLocalPagerFragment extends BackFragment implements
     @Override
     public boolean back() {
         final Fragment fragment = getCurrentFragment();
-        if (fragment == null || !(fragment instanceof FabFragment)) {
+        if (fragment == null) {
             return false;
         }
-        final FabFragment fabFragment = (FabFragment) fragment;
-        refreshFab(fabFragment);
-        return fabFragment.back();
+        //noinspection SimplifiableIfStatement
+        if (!(fragment instanceof BackFragment)) {
+            return false;
+        }
+        return ((BackFragment) fragment).back();
     }
 
     @Override
@@ -152,18 +163,35 @@ public class FileLocalPagerFragment extends BackFragment implements
     @Override
     public void onPageSelected(int position) {
         mApplicationCallback.invalidateMenu();
-        refreshFab(position);
+        mFileLocalFabManager.onCurrentViewPagerPageChange(position);
         syncTabLayout();
     }
     //endregion Override - ViewPager
 
     @Override
-    public void onRefreshFab() {
-        refreshFab();
+    public void updateFabs(final FileLocalFabManager.FabState[] fabStates) {
+        for (int i = 0; i < fabStates.length; i++) {
+            final FileLocalFabManager.FabState fabState = fabStates[i];
+            if (fabState.fabVisible) {
+                showFab(i);
+            } else {
+                hideFab(i);
+            }
+            int imageResource = fabState.fabImageResource;
+            if (imageResource == -1) {
+                imageResource = android.R.drawable.ic_input_add;
+            }
+            if (i == 0) {
+                mFab1.setImageResource(imageResource);
+            } else {
+                mFab2.setImageResource(imageResource);
+            }
+        }
+
+        //refreshFab();
     }
 
-    @Override
-    public void hideFab(int fab_id) {
+    private void hideFab(int fab_id) {
         switch (fab_id) {
             case 0:
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
@@ -182,8 +210,7 @@ public class FileLocalPagerFragment extends BackFragment implements
         }
     }
 
-    @Override
-    public void showFab(int fab_id) {
+    private void showFab(int fab_id) {
         switch (fab_id) {
             case 0:
                 mFab1.show();
@@ -193,6 +220,7 @@ public class FileLocalPagerFragment extends BackFragment implements
                 break;
         }
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -335,6 +363,9 @@ public class FileLocalPagerFragment extends BackFragment implements
 
         mFab1.setVisibility(View.GONE);
         mFab2.setVisibility(View.GONE);
+
+        mFab1.setOnClickListener(this);
+        mFab2.setOnClickListener(this);
     }
 
     private void syncTabLayout() {
@@ -354,6 +385,8 @@ public class FileLocalPagerFragment extends BackFragment implements
     }
 
     //region Fab
+
+    /*
     private void refreshFab() {
         refreshFab(getCurrentFragmentIndex());
     }
@@ -363,13 +396,16 @@ public class FileLocalPagerFragment extends BackFragment implements
             return;
         }
         final Fragment fabFragment = getCurrentFragment();
-        if (fabFragment == null || !(fabFragment instanceof FabContainer)) {
+
+        if (fabFragment == null || !(fabFragment instanceof FabController)) {
             return;
         }
-        refreshFab((FabContainer) fabFragment);
+        refreshFab((FabController) fabFragment);
+
     }
 
-    private void refreshFab(final FabContainer fabContainer) {
+
+    private void refreshFab(final FabController fabContainer) {
         if (mFab1 == null) {
             return;
         }
@@ -411,6 +447,7 @@ public class FileLocalPagerFragment extends BackFragment implements
             hideFab(1);
         }
     }
+    */
     //endregion Fab
 
     private boolean isSdCardFragmentVisible() {
@@ -443,6 +480,15 @@ public class FileLocalPagerFragment extends BackFragment implements
         return NB_FRAGMENT + (isSdCardFragmentVisible() ? 1 : 0);
     }
 
+    @Override
+    public void onClick(final View v) {
+        if (v == mFab1) {
+            mFileLocalFabManager.onFabClick(0, mFab1);
+        } else if (v == mFab2) {
+            mFileLocalFabManager.onFabClick(1, mFab2);
+        }
+    }
+
     //region Inner class and interface
 
     /**
@@ -459,30 +505,30 @@ public class FileLocalPagerFragment extends BackFragment implements
         }
 
         @Override
-        public FabFragment getItem(int i) {
+        public Fragment getItem(int position) {
             if (mIsSdcardVisible) {
-                switch (i) {
+                switch (position) {
                     case 0:
-                        return FileLocalFragment.newInstance();
+                        return FileLocalFragment.newInstance(position);
                     case 1:
-                        return FileLocalSdFragment.newInstance();
+                        return FileLocalSdFragment.newInstance(position);
                     case 2:
-                        return FileAudioLocalFragment.newInstance();
+                        return FileAudioLocalFragment.newInstance(position);
                     case 3:
-                        return FileImageLocalFragment.newInstance();
+                        return FileImageLocalFragment.newInstance(position);
                     default:
-                        return FileLocalFragment.newInstance();
+                        return FileLocalFragment.newInstance(position);
                 }
             } else {
-                switch (i) {
+                switch (position) {
                     case 0:
-                        return FileLocalFragment.newInstance();
+                        return FileLocalFragment.newInstance(position);
                     case 1:
-                        return FileAudioLocalFragment.newInstance();
+                        return FileAudioLocalFragment.newInstance(position);
                     case 2:
-                        return FileImageLocalFragment.newInstance();
+                        return FileImageLocalFragment.newInstance(position);
                     default:
-                        return FileLocalFragment.newInstance();
+                        return FileLocalFragment.newInstance(position);
                 }
             }
         }

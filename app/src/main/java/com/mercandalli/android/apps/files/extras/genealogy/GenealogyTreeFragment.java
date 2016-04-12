@@ -36,7 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.fragment.FabFragment;
+import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.main.Constants;
@@ -56,7 +56,7 @@ import java.util.List;
 /**
  * Created by Jonathan on 28/08/2015.
  */
-public class GenealogyTreeFragment extends FabFragment {
+public class GenealogyTreeFragment extends BackFragment {
 
     private static final String RESULT = "result";
     private View rootView;
@@ -355,17 +355,17 @@ public class GenealogyTreeFragment extends FabFragment {
         genealogyPerson = genealogyUser_;
     }
 
-    @Override
+    //@Override
     public void onFabClick(int fabId, FloatingActionButton fab) {
 
     }
 
-    @Override
+    //@Override
     public boolean isFabVisible(int fabId) {
         return false;
     }
 
-    @Override
+    //@Override
     public int getFabImageResource(int fabId) {
         return -1;
     }

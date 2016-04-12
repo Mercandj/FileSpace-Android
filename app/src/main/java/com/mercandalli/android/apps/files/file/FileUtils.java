@@ -25,6 +25,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -50,13 +51,43 @@ public class FileUtils {
 
     private static String sSdCardPath = null;
 
+    public static boolean isAudioPath(@NonNull final String pathBrut) {
+        final String path = pathBrut.toLowerCase();
+        for (final String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
+            if (path.endsWith(end)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isImagePath(@NonNull final String pathBrut) {
+        final String path = pathBrut.toLowerCase();
+        for (final String end : FileTypeModelENUM.IMAGE.type.getExtensions()) {
+            if (path.endsWith(end)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isVideoPath(@NonNull final String pathBrut) {
+        final String path = pathBrut.toLowerCase();
+        for (final String end : FileTypeModelENUM.VIDEO.type.getExtensions()) {
+            if (path.endsWith(end)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static String humanReadableByteCount(long bytes) {
         return humanReadableByteCount(bytes, true);
     }
 
     @SuppressLint("DefaultLocale")
     public static String humanReadableByteCount(long bytes, boolean si) {
-        int unit = si ? 1000 : 1024;
+        int unit = si ? 1_000 : 1_024;
         if (bytes < unit) {
             return bytes + " B";
         }
@@ -109,7 +140,7 @@ public class FileUtils {
         Writer writer = new StringWriter();
         try {
             InputStream is = context.getResources().getAssets().open(file);
-            char[] buffer = new char[2048];
+            char[] buffer = new char[2_048];
             try {
                 Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                 int n;

@@ -428,25 +428,27 @@ class FileManagerImpl implements FileManager /*implements FileUploadTypedFile.Fi
         menuAlert.setItems(menuList,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        String type_mime = "*/*";
+                        final String typeMime;
                         switch (item) {
                             case 0:
-                                type_mime = MIME_TEXT;
+                                typeMime = MIME_TEXT;
                                 break;
                             case 1:
-                                type_mime = "image/*";
+                                typeMime = "image/*";
                                 break;
                             case 2:
-                                type_mime = "audio/*";
+                                typeMime = "audio/*";
                                 break;
                             case 3:
-                                type_mime = "video/*";
+                                typeMime = "video/*";
                                 break;
+                            default:
+                                typeMime = "*/*";
                         }
-                        Intent i = new Intent();
-                        i.setAction(Intent.ACTION_VIEW);
-                        i.setDataAndType(Uri.fromFile(fileModel.getFile()), type_mime);
-                        activity.startActivity(i);
+                        final Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        intent.setDataAndType(Uri.fromFile(fileModel.getFile()), typeMime);
+                        activity.startActivity(intent);
                     }
                 });
         AlertDialog menuDrop = menuAlert.create();
@@ -467,27 +469,45 @@ class FileManagerImpl implements FileManager /*implements FileUploadTypedFile.Fi
         final boolean isPublic = fileModel.isPublic();
         final Date dateCreation = fileModel.getDateCreation();
 
-        final List<StringPair> spl = new ArrayList<>();
-        spl.add(new StringPair("Name", fileModel.getName()));
-        if (!fileModel.isDirectory()) {
-            spl.add(new StringPair("Extension", type.toString()));
+        final List<StringPair> stringPairs = new ArrayList<>();
+        stringPairs.add(new StringPair("Name", fileModel.getName()));
+        if (type != null) {
+            if (!fileModel.isDirectory()) {
+                stringPairs.add(new StringPair("Extension", type.toString()));
+            }
+            stringPairs.add(new StringPair("Type", type.getTitle(context)));
         }
-        spl.add(new StringPair("Type", type.getTitle(context)));
+        if (fileModel instanceof FileAudioModel) {
+            final FileAudioModel fileAudioModel = (FileAudioModel) fileModel;
+            final String title = fileAudioModel.getTitle();
+            final String artist = fileAudioModel.getArtist();
+            final String album = fileAudioModel.getAlbum();
+            if (title != null) {
+                stringPairs.add(new StringPair("Audio title", title));
+            }
+            if (artist != null) {
+                stringPairs.add(new StringPair("Audio artist", artist));
+            }
+            if (album != null) {
+                stringPairs.add(new StringPair("Audio album", album));
+            }
+        }
+
         if (!isDirectory || size != 0) {
-            spl.add(new StringPair("Size", FileUtils.humanReadableByteCount(size)));
+            stringPairs.add(new StringPair("Size", FileUtils.humanReadableByteCount(size)));
         }
         if (dateCreation != null) {
             if (fileModel.isOnline()) {
-                spl.add(new StringPair("Upload date", TimeUtils.getDate(dateCreation)));
+                stringPairs.add(new StringPair("Upload date", TimeUtils.getDate(dateCreation)));
             } else {
-                spl.add(new StringPair("Last modification date", TimeUtils.getDate(dateCreation)));
+                stringPairs.add(new StringPair("Last modification date", TimeUtils.getDate(dateCreation)));
             }
         }
         if (fileModel.isOnline()) {
-            spl.add(new StringPair("Visibility", isPublic ? "Public" : "Private"));
+            stringPairs.add(new StringPair("Visibility", isPublic ? "Public" : "Private"));
         }
-        spl.add(new StringPair("Path", fileModel.getUrl()));
-        return HtmlUtils.createListItem(spl);
+        stringPairs.add(new StringPair("Path", fileModel.getUrl()));
+        return HtmlUtils.createListItem(stringPairs);
     }
 
     /**
@@ -512,8 +532,7 @@ class FileManagerImpl implements FileManager /*implements FileUploadTypedFile.Fi
             //TODO copy online
             Toast.makeText(activity, activity.getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
         } else {
-            InputStream in;
-            OutputStream out;
+
             try {
                 final File dir = new File(outputPath);
                 if (!dir.exists()) {
@@ -536,8 +555,8 @@ class FileManagerImpl implements FileManager /*implements FileUploadTypedFile.Fi
                                 copy.getAbsolutePath() + File.separator);
                     }
                 } else {
-                    in = new FileInputStream(fileModel.getFile().getAbsoluteFile());
-                    out = new FileOutputStream(outputUrl);
+                    final InputStream in = new FileInputStream(fileModel.getFile().getAbsoluteFile());
+                    final OutputStream out = new FileOutputStream(outputUrl);
 
                     byte[] buffer = new byte[1024];
                     int read;

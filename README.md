@@ -41,6 +41,10 @@ Remote and secure file manager.
 
 * [FileSpace Rest API PHP](https://github.com/Mercandj/FileSpace-API)
 
+## GRADLE
+
+* Check [dependencies](https://github.com/ben-manes/gradle-versions-plugin): gradlew dependencyUpdates -Drevision=release
+* Jenkins (Require authentication with the [Rest API](https://github.com/Mercandj/FileSpace-API) to upload the result): gradlew :app:jenkins
 
 ## DEVELOPER
 

@@ -39,7 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.fragment.FabFragment;
+import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
@@ -59,7 +59,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenealogyListFragment extends FabFragment {
+public class GenealogyListFragment extends BackFragment {
 
     private View rootView;
 
@@ -192,7 +192,7 @@ public class GenealogyListFragment extends FabFragment {
 
             if (!NetUtils.isInternetConnection(mActivity)) {
                 this.setListVisibility(false);
-                this.mRefreshFabCallback.onRefreshFab();
+                //this.mRefreshFabCallback.onRefreshFab();
             }
         }
     }
@@ -201,7 +201,7 @@ public class GenealogyListFragment extends FabFragment {
         if (this.recyclerView != null && this.list != null && this.isAdded()) {
             this.circularProgressBar.setVisibility(View.GONE);
 
-            this.mRefreshFabCallback.onRefreshFab();
+            //this.mRefreshFabCallback.onRefreshFab();
             this.recyclerView.setVisibility(View.VISIBLE);
 
             if (this.list.size() == 0) {
@@ -349,17 +349,17 @@ public class GenealogyListFragment extends FabFragment {
         });
     }
 
-    @Override
+    //@Override
     public void onFabClick(int fabId, FloatingActionButton fab) {
         add();
     }
 
-    @Override
+    //@Override
     public boolean isFabVisible(int fabId) {
         return true;
     }
 
-    @Override
+    //@Override
     public int getFabImageResource(int fabId) {
         return android.R.drawable.ic_input_add;
     }

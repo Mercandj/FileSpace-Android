@@ -65,16 +65,16 @@ public class FileAudioModel extends FileModel {
 
         public FileAudioModelBuilder file(final File file, final MyID3 myID3) {
             super.file(file);
-            if (mUrl == null || !mUrl.toLowerCase().endsWith(".mp3")) {
+            if (mUrl != null && mUrl.toLowerCase().endsWith(".mp3")) {
+                try {
+                    final IMusicMetadata metadata = (myID3.read(file)).getSimplified();
+                    title(metadata.getSongTitle());
+                    album(metadata.getAlbum());
+                    artist(metadata.getArtist());
+                } catch (Exception e) {
+                    Log.e(getClass().getName(), "Exception", e);
+                }
                 return this;
-            }
-            try {
-                final IMusicMetadata metadata = (myID3.read(file)).getSimplified();
-                title(metadata.getSongTitle());
-                album(metadata.getAlbum());
-                artist(metadata.getArtist());
-            } catch (Exception e) {
-                Log.e(getClass().getName(), "Exception", e);
             }
             return this;
         }
@@ -105,14 +105,17 @@ public class FileAudioModel extends FileModel {
         }
     }
 
+    @Nullable
     public String getTitle() {
         return mTitle;
     }
 
+    @Nullable
     public String getAlbum() {
         return mAlbum;
     }
 
+    @Nullable
     public String getArtist() {
         return mArtist;
     }

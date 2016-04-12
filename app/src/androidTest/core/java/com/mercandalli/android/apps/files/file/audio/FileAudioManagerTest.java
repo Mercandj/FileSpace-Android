@@ -6,6 +6,7 @@ import android.support.test.espresso.contrib.CountingIdlingResource;
 import android.text.Spanned;
 import android.util.Log;
 
+import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
 
@@ -16,17 +17,21 @@ public class FileAudioManagerTest implements FileAudioManager {
 
     private static final String TAG = "FileAudioManagerTest";
 
-    private FileAudioManager mFileAudioManager;
+    private final FileAudioManager mFileAudioManager;
     private final CountingIdlingResource mLocalMusicFoldersCountingIdlingResource;
     private final CountingIdlingResource mAllLocalCountingIdlingResource;
 
-    public FileAudioManagerTest(final Context contextApp, final FileLocalProviderManager fileLocalProviderManager) {
-        mFileAudioManager = new FileAudioManagerImpl(contextApp, fileLocalProviderManager);
+    public FileAudioManagerTest(
+            final Context contextApp,
+            final FileLocalProviderManager fileLocalProviderManager,
+            final FileManager fileManager) {
+
+        mFileAudioManager = new FileAudioManagerImpl(contextApp, fileLocalProviderManager, fileManager);
 
         mLocalMusicFoldersCountingIdlingResource =
                 new CountingIdlingResource(TAG + "#getLocalMusicFolders", true);
         Espresso.registerIdlingResources(mLocalMusicFoldersCountingIdlingResource);
-        mFileAudioManager.registerLocalMusicFoldersListener(new GetLocalMusicFoldersListener() {
+        mFileAudioManager.addGetLocalMusicFoldersListener(new GetLocalMusicFoldersListener() {
             @Override
             public void onLocalMusicFoldersSucceeded(List<FileModel> fileModels) {
                 mLocalMusicFoldersCountingIdlingResource.decrement();
@@ -43,7 +48,7 @@ public class FileAudioManagerTest implements FileAudioManager {
         mAllLocalCountingIdlingResource =
                 new CountingIdlingResource("FileAudioManagerTest#getAllLocalMusic", true);
         Espresso.registerIdlingResources(mAllLocalCountingIdlingResource);
-        registerAllLocalMusicListener(new GetAllLocalMusicListener() {
+        addGetAllLocalMusicListener(new GetAllLocalMusicListener() {
             @Override
             public void onAllLocalMusicSucceeded(List<FileAudioModel> fileModels) {
                 if (!mAllLocalCountingIdlingResource.isIdleNow()) {
@@ -70,7 +75,7 @@ public class FileAudioManagerTest implements FileAudioManager {
     }
 
     @Override
-    public void getLocalMusic(FileModel fileModelDirectParent) {
+    public void getLocalMusic(final FileModel fileModelDirectParent) {
         mFileAudioManager.getLocalMusic(fileModelDirectParent);
     }
 
@@ -94,17 +99,25 @@ public class FileAudioManagerTest implements FileAudioManager {
     }
 
     @Override
-    public boolean setFileAudioMetaData(File fileAudio, String newTitle, String newArtist, String newAlbum) {
+    public boolean setFileAudioMetaData(
+            final File fileAudio,
+            final String newTitle,
+            final String newArtist,
+            final String newAlbum) {
         return mFileAudioManager.setFileAudioMetaData(fileAudio, newTitle, newArtist, newAlbum);
     }
 
     @Override
-    public boolean setFileAudioMetaData(FileAudioModel fileAudio, String newTitle, String newArtist, String newAlbum) {
+    public boolean setFileAudioMetaData(
+            final FileAudioModel fileAudio,
+            final String newTitle,
+            final String newArtist,
+            final String newAlbum) {
         return mFileAudioManager.setFileAudioMetaData(fileAudio, newTitle, newArtist, newAlbum);
     }
 
     @Override
-    public Spanned toSpanned(Context context, FileAudioModel fileAudioModel) {
+    public Spanned toSpanned(final Context context, final FileAudioModel fileAudioModel) {
         return mFileAudioManager.toSpanned(context, fileAudioModel);
     }
 
@@ -114,62 +127,62 @@ public class FileAudioManagerTest implements FileAudioManager {
     }
 
     @Override
-    public boolean registerAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener) {
-        return mFileAudioManager.registerAllLocalMusicListener(getAllLocalMusicListener);
+    public boolean addGetAllLocalMusicListener(final GetAllLocalMusicListener getAllLocalMusicListener) {
+        return mFileAudioManager.addGetAllLocalMusicListener(getAllLocalMusicListener);
     }
 
     @Override
-    public boolean unregisterAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener) {
-        return mFileAudioManager.unregisterAllLocalMusicListener(getAllLocalMusicListener);
+    public boolean removeGetAllLocalMusicListener(final GetAllLocalMusicListener getAllLocalMusicListener) {
+        return mFileAudioManager.removeGetAllLocalMusicListener(getAllLocalMusicListener);
     }
 
     @Override
-    public boolean registerLocalMusicFoldersListener(GetLocalMusicFoldersListener getLocalImageFoldersListener) {
-        return mFileAudioManager.registerLocalMusicFoldersListener(getLocalImageFoldersListener);
+    public boolean addGetLocalMusicFoldersListener(final GetLocalMusicFoldersListener getLocalImageFoldersListener) {
+        return mFileAudioManager.addGetLocalMusicFoldersListener(getLocalImageFoldersListener);
     }
 
     @Override
-    public boolean unregisterLocalMusicFoldersListener(GetLocalMusicFoldersListener getLocalImageFoldersListener) {
-        return mFileAudioManager.unregisterLocalMusicFoldersListener(getLocalImageFoldersListener);
+    public boolean removeGetLocalMusicFoldersListener(final GetLocalMusicFoldersListener getLocalImageFoldersListener) {
+        return mFileAudioManager.removeGetLocalMusicFoldersListener(getLocalImageFoldersListener);
     }
 
     @Override
-    public boolean registerLocalMusicListener(GetLocalMusicListener getLocalImageListener) {
-        return mFileAudioManager.registerLocalMusicListener(getLocalImageListener);
+    public boolean addGetLocalMusicListener(final GetLocalMusicListener getLocalImageListener) {
+        return mFileAudioManager.addGetLocalMusicListener(getLocalImageListener);
     }
 
     @Override
-    public boolean unregisterLocalMusicListener(GetLocalMusicListener getLocalImageListener) {
-        return mFileAudioManager.unregisterLocalMusicListener(getLocalImageListener);
+    public boolean removeGetLocalMusicListener(final GetLocalMusicListener getLocalImageListener) {
+        return mFileAudioManager.removeGetLocalMusicListener(getLocalImageListener);
     }
 
     @Override
-    public boolean registerOnMusicUpdateListener(MusicsChangeListener musicsChangeListener) {
-        return mFileAudioManager.registerOnMusicUpdateListener(musicsChangeListener);
+    public boolean addMusicChangeListener(final MusicsChangeListener musicsChangeListener) {
+        return mFileAudioManager.addMusicChangeListener(musicsChangeListener);
     }
 
     @Override
-    public boolean unregisterOnMusicUpdateListener(MusicsChangeListener musicsChangeListener) {
-        return mFileAudioManager.unregisterOnMusicUpdateListener(musicsChangeListener);
+    public boolean removeMusicChangeListener(final MusicsChangeListener musicsChangeListener) {
+        return mFileAudioManager.removeMusicChangeListener(musicsChangeListener);
     }
 
     @Override
-    public boolean registerAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener) {
-        return mFileAudioManager.registerAllLocalMusicArtistsListener(getAllLocalMusicArtistsListener);
+    public boolean addGetAllLocalMusicArtistsListener(final GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener) {
+        return mFileAudioManager.addGetAllLocalMusicArtistsListener(getAllLocalMusicArtistsListener);
     }
 
     @Override
-    public boolean unregisterAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener) {
-        return mFileAudioManager.unregisterAllLocalMusicArtistsListener(getAllLocalMusicArtistsListener);
+    public boolean removeGetAllLocalMusicArtistsListener(final GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener) {
+        return mFileAudioManager.removeGetAllLocalMusicArtistsListener(getAllLocalMusicArtistsListener);
     }
 
     @Override
-    public boolean registerAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener) {
-        return mFileAudioManager.registerAllLocalMusicAlbumsListener(getAllLocalMusicAlbumsListener);
+    public boolean addGetAllLocalMusicAlbumsListener(final GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener) {
+        return mFileAudioManager.addGetAllLocalMusicAlbumsListener(getAllLocalMusicAlbumsListener);
     }
 
     @Override
-    public boolean unregisterAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener) {
-        return mFileAudioManager.unregisterAllLocalMusicAlbumsListener(getAllLocalMusicAlbumsListener);
+    public boolean removeGetAllLocalMusicAlbumsListener(final GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener) {
+        return mFileAudioManager.removeGetAllLocalMusicAlbumsListener(getAllLocalMusicAlbumsListener);
     }
 }

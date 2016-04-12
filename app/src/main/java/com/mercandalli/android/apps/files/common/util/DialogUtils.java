@@ -50,8 +50,16 @@ public class DialogUtils {
         alert.show();
     }
 
-    public static void alert(Context context, String title, Spanned message, String positive, final IListener positiveListener, String negative, final IListener negativeListener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    public static void alert(
+            final Context context,
+            final String title,
+            final Spanned message,
+            final String positive,
+            final IListener positiveListener,
+            final String negative,
+            final IListener negativeListener) {
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
         builder.setMessage(message);
         if (positive != null) {

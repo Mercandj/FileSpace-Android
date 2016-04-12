@@ -2,11 +2,7 @@ package com.mercandalli.android.apps.files.file.image;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.provider.MediaStore;
 
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileTypeModel;
@@ -78,7 +74,7 @@ class FileImageManagerImpl implements FileImageManager {
             public void onGetFileImage(final List<String> fileImagePaths) {
 
                 final List<FileModel> fileModels = new ArrayList<>();
-                for(final String path:fileImagePaths) {
+                for (final String path : fileImagePaths) {
                     if (!path.startsWith("/storage/emulated/0/Android/")) {
                         final File file = new File(path);
                         if (file.exists() && !file.isDirectory()) {
@@ -120,7 +116,7 @@ class FileImageManagerImpl implements FileImageManager {
                 // Used to count the number of music inside.
                 final Map<String, MutableInt> directories = new HashMap<>();
 
-                for(final String path:fileImagePaths) {
+                for (final String path : fileImagePaths) {
 
                     final String parentPath = FileUtils.getParentPathFromPath(path);
                     final MutableInt count = directories.get(parentPath);
