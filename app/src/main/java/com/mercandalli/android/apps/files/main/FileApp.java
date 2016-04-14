@@ -1,6 +1,7 @@
 package com.mercandalli.android.apps.files.main;
 
 import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -12,7 +13,7 @@ import io.fabric.sdk.android.Fabric;
 /**
  * The main {@link Application}.
  */
-public class FileApp extends Application {
+public class FileApp extends MultiDexApplication {
 
     private static final String TAG = "FileApp";
     private static FileApp sApplication;
