@@ -17,7 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package com.mercandalli.android.apps.files.notificationpush;
+package com.mercandalli.android.apps.files.push;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -25,7 +25,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
-public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
+/* package */ class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {

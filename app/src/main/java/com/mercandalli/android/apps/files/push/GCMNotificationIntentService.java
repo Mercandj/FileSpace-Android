@@ -17,7 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package com.mercandalli.android.apps.files.notificationpush;
+package com.mercandalli.android.apps.files.push;
 
 import android.app.IntentService;
 import android.app.NotificationManager;

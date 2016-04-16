@@ -154,7 +154,7 @@
             android:theme="@style/AppTheme" />
 
         <receiver
-            android:name=".notificationpush.GcmBroadcastReceiver"
+            android:name=".push.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -164,7 +164,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".notificationpush.GCMNotificationIntentService" />
+        <service android:name=".push.GCMNotificationIntentService" />
 
         <service android:name=".file.audio.WearableService">
             <intent-filter>
