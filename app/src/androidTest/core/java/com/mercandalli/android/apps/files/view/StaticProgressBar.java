@@ -10,7 +10,7 @@ import android.widget.ProgressBar;
 
 import com.mercandalli.android.apps.files.R;
 
-import static com.mercandalli.android.apps.files.common.util.ViewUtils.dpToPx;
+import static com.mercandalli.android.library.baselibrary.view.ViewUtils.dpToPx;
 
 public class StaticProgressBar extends ProgressBar {
 
