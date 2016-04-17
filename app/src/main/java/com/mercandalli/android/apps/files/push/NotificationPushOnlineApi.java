@@ -14,9 +14,12 @@ import retrofit2.http.POST;
 interface NotificationPushOnlineApi {
 
     @FormUrlEncoded
-    @POST("/" + Config.ROUTE_PUSH_DEVICE_ADD)
-    Call<NotificationPushResponse> add(
-            final @Field("id_gcm") String gcmId,
+    @POST("/" + Config.ROUTE_DEVICE_ADD)
+    Call<NotificationPushResponse> addOrUpdate(
+            final @Field("operating_system") String platform,
+            final @Field("android_app_gcm_id") String androidAppGcmId,
             final @Field("android_app_version_code") String androidAppVersionCode,
-            final @Field("android_app_version_name") String androidAppVersionName);
+            final @Field("android_app_version_name") String androidAppVersionName,
+            final @Field("android_device_display_language") String androidDeviceDisplayLanguage,
+            final @Field("android_device_country") String androidDeviceCountry);
 }

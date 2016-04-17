@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.mercandalli.android.apps.files.main.ApplicationActivity;
@@ -47,7 +48,7 @@ import java.lang.ref.WeakReference;
     /* package */ void requestId(final Context context, final int currentVersionCode) {
         Preconditions.checkNotNull(context);
         final String registrationId = getRegistrationId(context, currentVersionCode);
-        if (registrationId != null) {
+        if (!TextUtils.isEmpty(registrationId)) {
             mOnGetGcmIdListener.onGetGcmId(registrationId);
             return;
         }
@@ -83,6 +84,8 @@ import java.lang.ref.WeakReference;
                     final Context contextRef = contextWeakReference.get();
                     if (mGoogleCloudMessaging == null && contextRef != null) {
                         mGoogleCloudMessaging = GoogleCloudMessaging.getInstance(contextRef);
+                    }
+                    if (mGoogleCloudMessaging != null) {
                         notificationId = mGoogleCloudMessaging.register("807253530972");
                     }
 

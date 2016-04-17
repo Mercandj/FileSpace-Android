@@ -4,7 +4,10 @@ import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
 
+import com.mercandalli.android.library.baselibrary.device.Device;
+import com.mercandalli.android.library.baselibrary.device.DeviceUtils;
 import com.mercandalli.android.library.baselibrary.network.NetworkUtils;
 
 import retrofit2.Call;
@@ -58,15 +61,19 @@ class NotificationPushManagerImpl implements
      */
     @Override
     public void onGetGcmId(final String gcmId) {
-        if (gcmId == null) {
+        if (TextUtils.isEmpty(gcmId)) {
             // Nothing here.
             return;
         }
+        final Device device = DeviceUtils.getDevice(mAppContext);
         final Call<NotificationPushResponse> notificationPushResponseCall =
-                mNotificationPushOnlineApi.add(
+                mNotificationPushOnlineApi.addOrUpdate(
+                        device.getOperationSystem(),
                         gcmId,
                         String.valueOf(mVersionCode),
-                        mVersionName);
+                        mVersionName,
+                        device.getDisplayLanguage(),
+                        device.getCountry());
         notificationPushResponseCall.enqueue(new Callback<NotificationPushResponse>() {
             @Override
             public void onResponse(
