@@ -73,7 +73,8 @@ class NotificationPushManagerImpl implements
                         String.valueOf(mVersionCode),
                         mVersionName,
                         device.getDisplayLanguage(),
-                        device.getCountry());
+                        device.getCountry(),
+                        device.getOperatingSystemVersionSdkInt());
         notificationPushResponseCall.enqueue(new Callback<NotificationPushResponse>() {
             @Override
             public void onResponse(

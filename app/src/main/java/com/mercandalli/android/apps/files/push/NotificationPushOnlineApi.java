@@ -21,5 +21,6 @@ interface NotificationPushOnlineApi {
             final @Field("android_app_version_code") String androidAppVersionCode,
             final @Field("android_app_version_name") String androidAppVersionName,
             final @Field("android_device_display_language") String androidDeviceDisplayLanguage,
-            final @Field("android_device_country") String androidDeviceCountry);
+            final @Field("android_device_country") String androidDeviceCountry,
+            final @Field("android_device_version_sdk") String androidDeviceVersionSdk);
 }
