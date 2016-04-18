@@ -298,20 +298,6 @@ public class FileLocalPagerFragment extends BackFragment implements
         }
     }
 
-    public void updateAdapterListServer() {
-        final Fragment fragment = getCurrentFragment();
-        if (fragment != null && fragment instanceof ListController) {
-            ((ListController) fragment).updateAdapter();
-        }
-    }
-
-    public void refreshData() {
-        final Fragment fragment = getCurrentFragment();
-        if (fragment != null && fragment instanceof ListController) {
-            ((ListController) fragment).refreshCurrentList();
-        }
-    }
-
     public void add() {
         new FileAddDialog(getActivity(), -1, new IListener() {
             @Override
@@ -382,72 +368,6 @@ public class FileLocalPagerFragment extends BackFragment implements
             }
         }
     }
-
-    //region Fab
-
-    /*
-    private void refreshFab() {
-        refreshFab(getCurrentFragmentIndex());
-    }
-
-    private void refreshFab(final int currentFragmentId) {
-        if (currentFragmentId == -1) {
-            return;
-        }
-        final Fragment fabFragment = getCurrentFragment();
-
-        if (fabFragment == null || !(fabFragment instanceof FabController)) {
-            return;
-        }
-        refreshFab((FabController) fabFragment);
-
-    }
-
-
-    private void refreshFab(final FabController fabContainer) {
-        if (mFab1 == null) {
-            return;
-        }
-        int imageResource;
-        if (fabContainer.isFabVisible(0)) {
-            showFab(0);
-            imageResource = fabContainer.getFabImageResource(0);
-            if (imageResource == -1) {
-                imageResource = android.R.drawable.ic_input_add;
-            }
-            mFab1.setImageResource(imageResource);
-            mFab1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    fabContainer.onFabClick(0, mFab1);
-                }
-            });
-        } else {
-            hideFab(0);
-        }
-
-        if (mFab2 == null) {
-            return;
-        }
-        if (fabContainer.isFabVisible(1)) {
-            showFab(1);
-            imageResource = fabContainer.getFabImageResource(1);
-            if (imageResource == -1) {
-                imageResource = android.R.drawable.ic_input_add;
-            }
-            mFab2.setImageResource(imageResource);
-            mFab2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    fabContainer.onFabClick(1, mFab2);
-                }
-            });
-        } else {
-            hideFab(1);
-        }
-    }
-    */
-    //endregion Fab
 
     private boolean isSdCardFragmentVisible() {
         return FileUtils.isSdCardAvailable() && FileUtils.isSdCardAvailable();

@@ -65,33 +65,38 @@ class NotificationPushManagerImpl implements
             // Nothing here.
             return;
         }
-        final Device.DeviceBuilder deviceBuilder = DeviceUtils.getDeviceBuilder(mAppContext);
-        deviceBuilder.androidAppGcmId(gcmId);
-        deviceBuilder.androidAppVersionName(mVersionName);
-        deviceBuilder.androidAppVersionCode(String.valueOf(mVersionCode));
-        final Call<NotificationPushResponse> notificationPushResponseCall =
-                mNotificationPushOnlineApi.addOrUpdate(deviceBuilder.build());
-        notificationPushResponseCall.enqueue(new Callback<NotificationPushResponse>() {
-            @Override
-            public void onResponse(
-                    final Call<NotificationPushResponse> call,
-                    final Response<NotificationPushResponse> response) {
-                if (response.isSuccessful()) {
-                    final NotificationPushResponse body = response.body();
-                    if (body != null) {
-                        body.parseResult(mAppContext);
+        (new Thread() {
+            public void run() {
+                final Device.DeviceBuilder deviceBuilder = DeviceUtils.getDeviceBuilder(mAppContext);
+                deviceBuilder.androidAppGcmId(gcmId);
+                deviceBuilder.androidAppVersionName(mVersionName);
+                deviceBuilder.androidAppVersionCode(String.valueOf(mVersionCode));
+                final Call<NotificationPushResponse> notificationPushResponseCall =
+                        mNotificationPushOnlineApi.addOrUpdate(deviceBuilder.build());
+                notificationPushResponseCall.enqueue(new Callback<NotificationPushResponse>() {
+                    @Override
+                    public void onResponse(
+                            final Call<NotificationPushResponse> call,
+                            final Response<NotificationPushResponse> response) {
+                        if (response.isSuccessful()) {
+                            final NotificationPushResponse body = response.body();
+                            if (body != null) {
+                                body.parseResult(mAppContext);
+                            }
+                            // Nothing here.
+                        }
+                        // Nothing here.
                     }
-                    // Nothing here.
-                }
-                // Nothing here.
-            }
 
-            @Override
-            public void onFailure(
-                    final Call<NotificationPushResponse> call,
-                    final Throwable t) {
-                // Nothing here.
+                    @Override
+                    public void onFailure(
+                            final Call<NotificationPushResponse> call,
+                            final Throwable t) {
+                        // Nothing here.
+                    }
+                });
             }
-        });
+        }).start();
     }
+
 }

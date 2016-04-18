@@ -47,8 +47,8 @@ import static com.mercandalli.android.apps.files.main.FileApp.logPerformance;
 public abstract class ApplicationActivity extends AppCompatActivity {
 
     private static final String TAG = "ApplicationActivity";
-    public static FileModel mPhotoFile = null;
-    public static IListener mPhotoFileListener = null;
+    public static FileModel sPhotoFile = null;
+    public static IListener sPhotoFileListener = null;
 
     /* OnResult code */
     public static final int REQUEST_TAKE_PHOTO = 1;
@@ -62,42 +62,22 @@ public abstract class ApplicationActivity extends AppCompatActivity {
         Config.getInstance(this);
 
         logPerformance(TAG, "ApplicationActivity#onCreate() - Start Config");
-
-        //region Handle NFC
-        final Intent intent = getIntent();
-        NdefMessage[] msgs;
-        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
-            String type = intent.getType();
-            Toast.makeText(this, "" + type, Toast.LENGTH_SHORT).show();
-
-            // Check the MIME
-            if (type.equals("text/plain")) {
-                Parcelable[] rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES);
-                if (rawMsgs != null) {
-                    msgs = new NdefMessage[rawMsgs.length];
-                    for (int i = 0; i < rawMsgs.length; i++) {
-                        msgs[i] = (NdefMessage) rawMsgs[i];
-                    }
-                }
-            }
-        }
-        //endregion Handle NFC
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            if (mPhotoFile != null && mPhotoFile.getFile() != null) {
+            if (sPhotoFile != null && sPhotoFile.getFile() != null) {
                 final List<StringPair> parameters = FileApp.get().getFileAppComponent()
-                        .provideFileManager().getForUpload(mPhotoFile);
+                        .provideFileManager().getForUpload(sPhotoFile);
                 (new TaskPost(this, Constants.URL_DOMAIN + Config.ROUTE_FILE, new IPostExecuteListener() {
                     @Override
                     public void onPostExecute(JSONObject json, String body) {
-                        if (mPhotoFileListener != null) {
-                            mPhotoFileListener.execute();
+                        if (sPhotoFileListener != null) {
+                            sPhotoFileListener.execute();
                         }
                     }
-                }, parameters, mPhotoFile.getFile())).execute();
+                }, parameters, sPhotoFile.getFile())).execute();
             } else {
                 Toast.makeText(this, this.getString(R.string.no_file), Toast.LENGTH_SHORT).show();
             }

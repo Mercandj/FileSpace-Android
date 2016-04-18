@@ -116,13 +116,13 @@ public class FileAddDialog extends Dialog implements
                 // Ensure that there's a camera activity to handle the intent
                 if (takePictureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
                     // Create the File where the photo should go
-                    ApplicationActivity.mPhotoFile = createImageFile();
+                    ApplicationActivity.sPhotoFile = createImageFile();
                     // Continue only if the File was successfully created
-                    if (ApplicationActivity.mPhotoFile != null) {
+                    if (ApplicationActivity.sPhotoFile != null) {
                         if (listener != null) {
-                            ApplicationActivity.mPhotoFileListener = listener;
+                            ApplicationActivity.sPhotoFileListener = listener;
                         }
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(ApplicationActivity.mPhotoFile.getFile()));
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(ApplicationActivity.sPhotoFile.getFile()));
                         mActivity.startActivityForResult(takePictureIntent, ApplicationActivity.REQUEST_TAKE_PHOTO);
                     }
                 }

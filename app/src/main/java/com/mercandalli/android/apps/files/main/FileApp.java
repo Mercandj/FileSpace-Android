@@ -1,12 +1,15 @@
 package com.mercandalli.android.apps.files.main;
 
 import android.app.Application;
+import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.mercandalli.android.apps.files.BuildConfig;
 import com.mercandalli.android.apps.files.analytics.AnalyticsTrackers;
+
+import java.lang.ref.WeakReference;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -61,21 +64,30 @@ public class FileApp extends MultiDexApplication {
 
         sApplication = this;
 
-        // Fabric - Crashlytics
-        Fabric.with(this, new Crashlytics());
-
-        logPerformance(TAG, "FileApp#onCreate() - Fabric");
+        logPerformance(TAG, "FileApp#onCreate()");
 
         // Dagger - Object graph creation
         setupGraph();
 
         logPerformance(TAG, "FileApp#onCreate() - Fabric Dagger");
 
-        // Google Analytics
-        AnalyticsTrackers.initialize(this);
-        AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
+        final WeakReference<Context> contextWeakReference = new WeakReference<>(getApplicationContext());
+        (new Thread() {
+            public void run() {
+                final Context context = contextWeakReference.get();
+                if (context == null) {
+                    return;
+                }
+                // Fabric - Crashlytics
+                Fabric.with(context, new Crashlytics());
 
-        logPerformance(TAG, "FileApp#onCreate() - Fabric Dagger Analytics");
+                // Google Analytics
+                AnalyticsTrackers.initialize(context);
+                AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
+            }
+        }).start();
+
+        logPerformance(TAG, "FileApp#onCreate() - Fabric Fabric Analytics");
     }
 
     public FileAppComponent getFileAppComponent() {

@@ -164,7 +164,6 @@ public class FileLocalFragment extends BackFragment implements
         refreshCurrentList();
         mFileLocalOverflowActions = new FileLocalOverflowActions(getContext(), this);
 
-
         final Context context = getContext();
         if (context instanceof AppCompatActivity) {
             ((AppCompatActivity) context).invalidateOptionsMenu();
