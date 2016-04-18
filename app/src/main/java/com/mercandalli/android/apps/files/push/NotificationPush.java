@@ -17,71 +17,77 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package com.mercandalli.android.apps.files.notificationpush;
+package com.mercandalli.android.apps.files.push;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.mercandalli.android.apps.files.main.ApplicationActivity;
 import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
 
-public class NotificationPush {
+import java.lang.ref.WeakReference;
+
+/* package */ class NotificationPush {
 
     private static final String TAG_REG_ID = "regId";
     private static final String APP_VERSION = "appVersion";
 
     private GoogleCloudMessaging mGoogleCloudMessaging;
-    private String mNotificationId;
 
-    public NotificationPush(final Context context) {
-        if (TextUtils.isEmpty(mNotificationId)) {
-            mGoogleCloudMessaging = GoogleCloudMessaging.getInstance(context);
-            mNotificationId = getRegistrationId(context);
-            registerInBackground(context);
-            return;
-        }
-        Config.setNotificationId(context, mNotificationId);
+    private final OnGetGcmIdListener mOnGetGcmIdListener;
+
+    /* package */ NotificationPush(final OnGetGcmIdListener onGetGcmIdListener) {
+        mOnGetGcmIdListener = onGetGcmIdListener;
     }
 
-    private String getRegistrationId(Context context) {
+    /* package */ void requestId(final Context context, final int currentVersionCode) {
+        Preconditions.checkNotNull(context);
+        final String registrationId = getRegistrationId(context, currentVersionCode);
+        if (!TextUtils.isEmpty(registrationId)) {
+            mOnGetGcmIdListener.onGetGcmId(registrationId);
+            return;
+        }
+
+        mGoogleCloudMessaging = GoogleCloudMessaging.getInstance(context);
+        registerInBackground(context, currentVersionCode);
+    }
+
+    private String getRegistrationId(
+            final @NonNull Context context,
+            final int currentVersionCode) {
         final SharedPreferences prefs = context.getSharedPreferences(ApplicationActivity.class.getSimpleName(), Context.MODE_PRIVATE);
         String registrationId = prefs.getString(TAG_REG_ID, "");
         if (registrationId.isEmpty()) {
             return "";
         }
         int registeredVersion = prefs.getInt(APP_VERSION, Integer.MIN_VALUE);
-        int currentVersion = getAppVersion(context);
-        if (registeredVersion != currentVersion) {
+        if (registeredVersion != currentVersionCode) {
             return "";
         }
         return registrationId;
     }
 
-    private int getAppVersion(Context context) {
-        try {
-            PackageInfo packageInfo = context.getPackageManager()
-                    .getPackageInfo(context.getPackageName(), 0);
-            return packageInfo.versionCode;
-        } catch (NameNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void registerInBackground(final Context context) {
+    private void registerInBackground(
+            final @NonNull Context context,
+            final int currentVersionCode) {
+        final WeakReference<Context> contextWeakReference = new WeakReference<>(context);
         new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {
                 String notificationId = null;
                 try {
-                    if (mGoogleCloudMessaging == null) {
-                        mGoogleCloudMessaging = GoogleCloudMessaging.getInstance(context);
+                    final Context contextRef = contextWeakReference.get();
+                    if (mGoogleCloudMessaging == null && contextRef != null) {
+                        mGoogleCloudMessaging = GoogleCloudMessaging.getInstance(contextRef);
                     }
-                    notificationId = mGoogleCloudMessaging.register("807253530972");
+                    if (mGoogleCloudMessaging != null) {
+                        notificationId = mGoogleCloudMessaging.register("807253530972");
+                    }
 
                 } catch (Exception ignored) {
                 }
@@ -90,18 +96,30 @@ public class NotificationPush {
 
             @Override
             protected void onPostExecute(String notificationId) {
-                storeRegistrationId(context, notificationId);
+                final Context contextRef = contextWeakReference.get();
+                if (contextRef != null) {
+                    storeRegistrationId(contextRef, notificationId, currentVersionCode);
+                }
             }
         }.execute(null, null, null);
     }
 
-    private void storeRegistrationId(Context context, String notificationId) {
+    private void storeRegistrationId(
+            final @NonNull Context context,
+            final String notificationId,
+            final int currentVersionCode) {
+        if (mOnGetGcmIdListener != null) {
+            mOnGetGcmIdListener.onGetGcmId(notificationId);
+        }
         Config.setNotificationId(context, notificationId);
         final SharedPreferences prefs = context.getSharedPreferences(ApplicationActivity.class.getSimpleName(), Context.MODE_PRIVATE);
-        int appVersion = getAppVersion(context);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(TAG_REG_ID, notificationId);
-        editor.putInt(APP_VERSION, appVersion);
+        editor.putInt(APP_VERSION, currentVersionCode);
         editor.commit();
+    }
+
+    interface OnGetGcmIdListener {
+        void onGetGcmId(final String gcmId);
     }
 }

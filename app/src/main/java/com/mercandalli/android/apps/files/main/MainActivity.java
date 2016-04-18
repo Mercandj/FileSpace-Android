@@ -28,7 +28,6 @@ import android.widget.Toast;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.main.version.VersionManager;
-import com.mercandalli.android.apps.files.notificationpush.NotificationPush;
 
 import static com.mercandalli.android.apps.files.main.FileApp.logPerformance;
 
@@ -54,11 +53,12 @@ public class MainActivity extends NavDrawerActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mVersionManager = FileApp.get().getFileAppComponent().provideVersionManager();
+        final FileAppComponent fileAppComponent = FileApp.get().getFileAppComponent();
+        mVersionManager = fileAppComponent.provideVersionManager();
         mVersionManager.registerUpdateCheckedListener(this);
 
         // Notification
-        new NotificationPush(this);
+        fileAppComponent.proideNotificationPushManager().sendGcmId();
     }
 
     @Override

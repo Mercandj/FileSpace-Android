@@ -22,5 +22,4 @@ public class SupportModule {
         return new SupportManagerImpl(application, RetrofitUtils.getAuthorizedRetrofit().create(SupportOnlineApi.class));
         //return new SupportManagerMock(application);
     }
-
 }

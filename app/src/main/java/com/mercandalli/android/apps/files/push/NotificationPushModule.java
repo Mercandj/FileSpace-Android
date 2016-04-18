@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.main.version;
+package com.mercandalli.android.apps.files.push;
 
 import android.app.Application;
 
@@ -14,13 +14,13 @@ import dagger.Provides;
  * A Dagger module used by the {@link FileAppComponent}.
  */
 @Module
-public class VersionModule {
+public class NotificationPushModule {
 
     @Provides
     @Singleton
-    VersionManager provideVersionManager(final Application application) {
-        return new VersionManager(
+    /* package */ NotificationPushManager provideNotificationPushManager(Application application) {
+        return new NotificationPushManagerImpl(
                 application,
-                RetrofitUtils.getRetrofit().create(VersionApi.class));
+                RetrofitUtils.getRetrofit().create(NotificationPushOnlineApi.class));
     }
 }
