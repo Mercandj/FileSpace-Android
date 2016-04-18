@@ -67,10 +67,11 @@ class NotificationPushManagerImpl implements
         }
         (new Thread() {
             public void run() {
-                final Device.DeviceBuilder deviceBuilder = DeviceUtils.getDeviceBuilder(mAppContext);
-                deviceBuilder.androidAppGcmId(gcmId);
-                deviceBuilder.androidAppVersionName(mVersionName);
-                deviceBuilder.androidAppVersionCode(String.valueOf(mVersionCode));
+                final Device.DeviceBuilder deviceBuilder = DeviceUtils.getDeviceBuilder(mAppContext)
+                        .androidAppGcmId(gcmId)
+                        .androidAppVersionName(mVersionName)
+                        .androidAppVersionCode(String.valueOf(mVersionCode))
+                        .androidAppPackage(mAppContext.getPackageName());
                 final Call<NotificationPushResponse> notificationPushResponseCall =
                         mNotificationPushOnlineApi.addOrUpdate(deviceBuilder.build());
                 notificationPushResponseCall.enqueue(new Callback<NotificationPushResponse>() {
