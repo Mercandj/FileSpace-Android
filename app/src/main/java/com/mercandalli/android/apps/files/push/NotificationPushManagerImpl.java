@@ -72,9 +72,11 @@ class NotificationPushManagerImpl implements
                         gcmId,
                         String.valueOf(mVersionCode),
                         mVersionName,
+                        device.getLanguage(),
                         device.getDisplayLanguage(),
                         device.getCountry(),
-                        device.getOperatingSystemVersionSdkInt());
+                        device.getOperatingSystemVersionSdkInt(),
+                        device.isRooted());
         notificationPushResponseCall.enqueue(new Callback<NotificationPushResponse>() {
             @Override
             public void onResponse(
