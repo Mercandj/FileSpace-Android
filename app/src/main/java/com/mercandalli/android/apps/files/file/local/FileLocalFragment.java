@@ -28,9 +28,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -162,7 +164,11 @@ public class FileLocalFragment extends BackFragment implements
         refreshCurrentList();
         mFileLocalOverflowActions = new FileLocalOverflowActions(getContext(), this);
 
-        mApplicationCallback.invalidateMenu();
+
+        final Context context = getContext();
+        if (context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).invalidateOptionsMenu();
+        }
         mFileLocalFabManager.updateFabButtons();
         return rootView;
     }
@@ -191,14 +197,15 @@ public class FileLocalFragment extends BackFragment implements
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void onFocus() {
-    }
-
-    @Override
-    public void onFabClick(int fabId, FloatingActionButton floatingActionButton) {
+    public void onFabClick(
+            final @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition,
+            final @NonNull FloatingActionButton floatingActionButton) {
         final Context context = getContext();
-        switch (fabId) {
+        switch (fabPosition) {
             case 0:
                 if ((mFilesToCopyList.size() != 0) || (mFilesToCutList.size() != 0)) {
                     for (final FileModel file : mFilesToCopyList) {
@@ -248,12 +255,16 @@ public class FileLocalFragment extends BackFragment implements
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public boolean isFabVisible(int fabId) {
+    public boolean isFabVisible(
+            final @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition) {
         if (mIsFabHidden) {
             return false;
         }
-        switch (fabId) {
+        switch (fabPosition) {
             case 0:
                 return true;
             case 1:
@@ -264,8 +275,9 @@ public class FileLocalFragment extends BackFragment implements
     }
 
     @Override
-    public int getFabImageResource(int fabId) {
-        switch (fabId) {
+    public int getFabImageResource(
+            final @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition) {
+        switch (fabPosition) {
             case 0:
                 if (!mFilesToCopyList.isEmpty()) {
                     return R.drawable.ic_menu_paste_holo_dark;
@@ -305,7 +317,7 @@ public class FileLocalFragment extends BackFragment implements
 
     @Override
     public void executeFileModel(final FileModel fileModel, final View view) {
-        mFileLocalOverflowActions.show(fileModel, view, mApplicationCallback.isLogged());
+        mFileLocalOverflowActions.show(fileModel, view, Config.isLogged());
     }
 
     @Override
@@ -320,7 +332,7 @@ public class FileLocalFragment extends BackFragment implements
 
     @Override
     public void refreshData() {
-        mApplicationCallback.refreshData();
+        refreshCurrentList();
     }
 
     @Override
@@ -384,7 +396,10 @@ public class FileLocalFragment extends BackFragment implements
             return;
         }
         mIsRefreshing = true;
-        mApplicationCallback.invalidateMenu();
+        final Context context = getContext();
+        if (context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).invalidateOptionsMenu();
+        }
 
         mFilesList.clear();
 

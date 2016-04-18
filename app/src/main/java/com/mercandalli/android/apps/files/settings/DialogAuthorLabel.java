@@ -31,7 +31,6 @@ import android.view.animation.Animation;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.library.baselibrary.java.StringUtils;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
@@ -39,13 +38,12 @@ import com.romainpiel.shimmer.ShimmerTextView;
 public class DialogAuthorLabel extends Dialog {
 
     private Activity mActivity;
-    ApplicationCallback app;
     ShimmerTextView myShimmerTextView, version_tv;
 
-    public DialogAuthorLabel(final Activity activity, final ApplicationCallback app) {
+    public DialogAuthorLabel(
+            final Activity activity) {
         super(activity, android.R.style.Theme_Material_Dialog);
         mActivity = activity;
-        this.app = app;
 
         this.setContentView(R.layout.dialog_author_label);
         this.setTitle(R.string.app_name);

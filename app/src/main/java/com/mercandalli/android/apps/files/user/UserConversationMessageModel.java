@@ -23,7 +23,6 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.mercandalli.android.apps.files.common.util.TimeUtils;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +39,9 @@ public class UserConversationMessageModel {
     public String content;
     public UserModel user;
 
-    public UserConversationMessageModel(Activity activity, ApplicationCallback app, JSONObject json) {
+    public UserConversationMessageModel(
+            final Activity activity,
+            final JSONObject json) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
             if (json.has("id")) {
@@ -56,7 +57,7 @@ public class UserConversationMessageModel {
                 this.content = json.getString("content");
             }
             if (json.has("user")) {
-                this.user = new UserModel(activity, app, json.getJSONObject("user"));
+                this.user = new UserModel(activity, json.getJSONObject("user"));
             }
             if (json.has("date_creation") && !json.isNull("date_creation")) {
                 this.date_creation = dateFormat.parse(json.getString("date_creation"));

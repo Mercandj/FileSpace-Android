@@ -19,38 +19,17 @@
  */
 package com.mercandalli.android.apps.files.common.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 
 /**
  * A simple {@link Fragment} that forwards the back button click.
  */
 public abstract class BackFragment extends Fragment {
 
-    protected ApplicationCallback mApplicationCallback;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof ApplicationCallback) {
-            mApplicationCallback = (ApplicationCallback) context;
-        } else {
-            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        mApplicationCallback = null;
-        super.onDetach();
     }
 
     /**
@@ -59,10 +38,4 @@ public abstract class BackFragment extends Fragment {
      * @return true if action
      */
     public abstract boolean back();
-
-    /**
-     * Get the focus.
-     * For example: on a ViewPager.
-     */
-    public abstract void onFocus();
 }

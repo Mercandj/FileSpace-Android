@@ -29,6 +29,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -145,10 +146,6 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
     }
 
     @Override
-    public void onFocus() {
-    }
-
-    @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
     }
 
@@ -158,7 +155,10 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
 
     @Override
     public void onPageSelected(int position) {
-        mApplicationCallback.invalidateMenu();
+        final Context context = getContext();
+        if (context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).invalidateOptionsMenu();
+        }
         updateNoInternet();
         refreshFab(position);
     }
@@ -259,7 +259,7 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
     }
 
     public void add() {
-        new FileAddDialog(getActivity(), mApplicationCallback, -1, new IListener() {
+        new FileAddDialog(getActivity(), -1, new IListener() {
             @Override
             public void execute() {
                 refreshListServer();

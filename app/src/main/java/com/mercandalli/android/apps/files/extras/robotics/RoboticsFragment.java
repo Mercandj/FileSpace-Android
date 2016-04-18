@@ -251,12 +251,6 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
         return false;
     }
 
-    @Override
-    public void onFocus() {
-
-    }
-
-
     /********
      * SENSOR
      **********/
@@ -325,7 +319,6 @@ public class RoboticsFragment extends BackFragment implements SensorEventListene
 
                     new TaskPost(
                             getActivity(),
-                            mApplicationCallback,
                             Constants.URL_DOMAIN + Config.ROUTE_ROBOTICS,
                             new IPostExecuteListener() {
                                 @Override

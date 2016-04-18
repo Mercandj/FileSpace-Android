@@ -19,12 +19,13 @@
  */
 package com.mercandalli.android.apps.files.file.cloud;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -90,7 +91,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_file_files, container, false);
 
-        final Activity activity = getActivity();
+        final Context context = getContext();
 
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         mProgressBar.setVisibility(View.INVISIBLE);
@@ -106,10 +107,10 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.fragment_file_files_recycler_view);
         mRecyclerView.setHasFixedSize(true);
-        if (activity.getResources().getBoolean(R.bool.is_landscape)) {
-            mRecyclerView.setLayoutManager(new GridLayoutManager(activity, 2));
+        if (context.getResources().getBoolean(R.bool.is_landscape)) {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(context, 2));
         } else {
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         }
         //mRecyclerView.addItemDecoration(new FileDivider(ContextCompat.getColor(mActivity, R.color.file_divider)));
 
@@ -126,7 +127,9 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
 
         refreshList();
 
-        mApplicationCallback.invalidateMenu();
+        if (context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).invalidateOptionsMenu();
+        }
 
         return rootView;
     }
@@ -153,10 +156,6 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void onFocus() {
     }
 
     /*
@@ -279,14 +278,14 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
     public void executeFileModel(final FileModel fileModel, final View view) {
         final AlertDialog.Builder menuAlert = new AlertDialog.Builder(getContext());
         String[] menuList = {getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties)};
-        if (mApplicationCallback.isLogged()) {
+        if (Config.isLogged()) {
             menuList = new String[]{getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.copy), getString(R.string.cut), getString(R.string.properties)};
         }
         menuAlert.setTitle("Action");
         menuAlert.setItems(menuList,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        if (!mApplicationCallback.isLogged()) {
+                        if (!Config.isLogged()) {
                             item += 1;
                         }
                         switch (item) {
@@ -301,7 +300,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
                                                 mFileManager.upload(fileModel, -1, new IListener() {
                                                     @Override
                                                     public void execute() {
-                                                        mApplicationCallback.refreshData();
+
                                                     }
                                                 });
                                             }
@@ -327,7 +326,6 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
                                                     mFilesToCopyList.clear();
                                                     //refreshFab();
                                                 }
-                                                mApplicationCallback.refreshData();
                                             }
                                         });
                                     }
@@ -348,7 +346,6 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
                                                     mFilesToCopyList.clear();
                                                     //refreshFab();
                                                 }
-                                                mApplicationCallback.refreshData();
                                             }
                                         });
                                     }
@@ -381,7 +378,7 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
     }
 
     public void goHome() {
-        this.mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + mApplicationCallback.getConfig().getLocalFolderName());
+        this.mCurrentDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.getLocalFolderName());
         this.refreshList();
     }
 

@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -144,7 +144,6 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                             @Override
                                             public void execute() {
                                                 Toast.makeText(getContext(), "Download finished.", Toast.LENGTH_SHORT).show();
-                                                mApplicationCallback.refreshData();
                                             }
                                         });
                                         break;
@@ -160,7 +159,6 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                                             mFilesToCutList.clear();
                                                             //refreshFab();
                                                         }
-                                                        mApplicationCallback.refreshData();
                                                     }
                                                 });
                                             }
@@ -178,7 +176,6 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                                             mFilesToCutList.clear();
                                                             //refreshFab();
                                                         }
-                                                        mApplicationCallback.refreshData();
                                                     }
                                                 });
                                             }
@@ -208,7 +205,6 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                         mFileManager.setPublic(fileModel, !fileModel.isPublic(), new IListener() {
                                             @Override
                                             public void execute() {
-                                                mApplicationCallback.refreshData();
                                             }
                                         });
                                         break;
@@ -218,12 +214,12 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                         if (FileTypeModelENUM.IMAGE.type.equals(fileModel.getType())) {
                                             List<StringPair> parameters = new ArrayList<>();
                                             parameters.add(new StringPair("id_file_profile_picture", "" + fileModel.getId()));
-                                            (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_USER_PUT, new IPostExecuteListener() {
+                                            (new TaskPost(getActivity(), Constants.URL_DOMAIN + Config.ROUTE_USER_PUT, new IPostExecuteListener() {
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
                                                     try {
                                                         if (json != null && json.has(succeed) && json.getBoolean(succeed)) {
-                                                            mApplicationCallback.getConfig().setUserIdFileProfilePicture(getActivity(), fileModel.getId());
+                                                            Config.setUserIdFileProfilePicture(getActivity(), fileModel.getId());
                                                         }
                                                     } catch (JSONException e) {
                                                         Log.e(getClass().getName(), "Failed to convert Json", e);
@@ -233,12 +229,12 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                         } else if (FileTypeModelENUM.APK.type.equals(fileModel.getType()) && Config.isUserAdmin()) {
                                             List<StringPair> parameters = new ArrayList<>();
                                             parameters.add(new StringPair("is_apk_update", "" + !fileModel.isApkUpdate()));
-                                            (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_FILE + "/" + fileModel.getId(), new IPostExecuteListener() {
+                                            (new TaskPost(getActivity(), Constants.URL_DOMAIN + Config.ROUTE_FILE + "/" + fileModel.getId(), new IPostExecuteListener() {
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
                                                     try {
                                                         if (json != null && json.has(succeed) && json.getBoolean(succeed)) {
-                                                            mApplicationCallback.refreshData();
+
                                                         }
                                                     } catch (JSONException e) {
                                                         Log.e(getClass().getName(), "Failed to convert Json", e);
@@ -303,11 +299,11 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
         }
 
         final boolean internetConnection = NetUtils.isInternetConnection(getContext());
-        if (!internetConnection || !mApplicationCallback.isLogged()) {
+        if (!internetConnection || !Config.isLogged()) {
             mSwipeRefreshLayout.setRefreshing(false);
             mProgressBar.setVisibility(View.GONE);
             if (isAdded()) {
-                mMessageTextView.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+                mMessageTextView.setText(Config.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             }
             mMessageTextView.setVisibility(View.VISIBLE);
 
@@ -379,11 +375,6 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
         } else {
             return false;
         }
-    }
-
-    @Override
-    public void onFocus() {
-        refreshCurrentList();
     }
 
     /*

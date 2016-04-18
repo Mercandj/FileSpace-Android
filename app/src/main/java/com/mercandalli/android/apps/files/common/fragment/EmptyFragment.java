@@ -44,9 +44,4 @@ public class EmptyFragment extends BackFragment {
     public boolean back() {
         return false;
     }
-
-    @Override
-    public void onFocus() {
-
-    }
 }

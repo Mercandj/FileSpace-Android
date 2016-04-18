@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -30,7 +30,6 @@ import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.ImageUtils;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileUtils;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.library.baselibrary.java.HashUtils;
@@ -71,7 +70,7 @@ public class UserModel {
         this.admin = admin;
     }
 
-    public UserModel(final Activity activity, final ApplicationCallback applicationCallback, JSONObject json) {
+    public UserModel(final Activity activity, JSONObject json) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
             if (json.has("id")) {
@@ -126,17 +125,15 @@ public class UserModel {
         if (hasPicture()) {
             if (ImageUtils.isImage(activity, this.id_file_profile_picture)) {
                 UserModel.this.bitmap = ImageUtils.loadImage(activity, this.id_file_profile_picture);
-                applicationCallback.updateAdapters();
             } else {
                 FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
                 fileModelBuilder.id(this.id_file_profile_picture);
                 fileModelBuilder.size(this.file_profile_picture_size);
-                new TaskGetDownloadImage(activity, applicationCallback, fileModelBuilder.build(), Constants.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
+                new TaskGetDownloadImage(activity, fileModelBuilder.build(), Constants.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
                     @Override
                     public void execute(Bitmap bitmap) {
                         if (bitmap != null) {
                             UserModel.this.bitmap = bitmap;
-                            applicationCallback.updateAdapters();
                         }
                     }
                 }).execute();
@@ -175,11 +172,10 @@ public class UserModel {
         return admin;
     }
 
-    public void delete(Activity activity, ApplicationCallback applicationCallback, IPostExecuteListener listener) {
-        if (applicationCallback != null &&
-                applicationCallback.getConfig().isUserAdmin() && this.id != Config.getUserId()) {
+    public void delete(Activity activity, IPostExecuteListener listener) {
+        if (Config.isUserAdmin() && this.id != Config.getUserId()) {
             String url = Constants.URL_DOMAIN + Config.ROUTE_USER_DELETE + "/" + this.id;
-            new TaskPost(activity, applicationCallback, url, listener).execute();
+            new TaskPost(activity, url, listener).execute();
             return;
         }
         if (listener != null) {

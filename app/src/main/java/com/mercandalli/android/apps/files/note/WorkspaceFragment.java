@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -130,20 +131,15 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     @Override
-    public void onFocus() {
-
-    }
-
-    @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
     }
 
     @Override
     public void onPageSelected(int position) {
-        mApplicationCallback.invalidateMenu();
-        if (position < NB_FRAGMENT && LIST_BACK_FRAGMENT[position] != null) {
-            LIST_BACK_FRAGMENT[position].onFocus();
+        final Context context = getContext();
+        if (context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).invalidateOptionsMenu();
         }
     }
 
@@ -203,7 +199,7 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public void add() {
-        new FileAddDialog(getActivity(), mApplicationCallback, -1, new IListener() {
+        new FileAddDialog(getActivity(), -1, new IListener() {
             @Override
             public void execute() {
                 refreshListServer();

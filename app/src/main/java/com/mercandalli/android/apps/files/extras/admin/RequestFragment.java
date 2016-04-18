@@ -54,7 +54,7 @@ public class RequestFragment extends BackFragment {
         rootView.findViewById(R.id.circle).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DialogRequest(getActivity(), mApplicationCallback, new IPostExecuteListener() {
+                new DialogRequest(getActivity(), new IPostExecuteListener() {
                     @Override
                     public void onPostExecute(JSONObject json, String body) {
                         if (json != null) {
@@ -77,10 +77,5 @@ public class RequestFragment extends BackFragment {
     @Override
     public boolean back() {
         return false;
-    }
-
-    @Override
-    public void onFocus() {
-
     }
 }

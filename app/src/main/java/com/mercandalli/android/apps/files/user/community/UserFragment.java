@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -45,11 +45,11 @@ import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
-import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
 import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.user.AdapterModelUser;
 import com.mercandalli.android.apps.files.user.UserModel;
 
@@ -122,7 +122,7 @@ public class UserFragment extends BackFragment {
     }
 
     public void refreshList(String search) {
-        if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
+        if (NetUtils.isInternetConnection(getContext()) && Config.isLogged()) {
             new TaskGet(
                     getContext(),
                     Constants.URL_DOMAIN + Config.ROUTE_USER,
@@ -135,7 +135,7 @@ public class UserFragment extends BackFragment {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            UserModel userModel = new UserModel(getActivity(), mApplicationCallback, array.getJSONObject(i));
+                                            UserModel userModel = new UserModel(getActivity(), array.getJSONObject(i));
                                             list.add(userModel);
                                         }
                                     }
@@ -152,7 +152,7 @@ public class UserFragment extends BackFragment {
             ).execute();
         } else {
             this.circularProgressBar.setVisibility(View.GONE);
-            this.message.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+            this.message.setText(Config.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
         }
@@ -176,7 +176,7 @@ public class UserFragment extends BackFragment {
                 public void execute(final UserModel userModel) {
                     final AlertDialog.Builder menuAleart = new AlertDialog.Builder(getContext());
                     String[] menuList = {getString(R.string.talk)};
-                    if (mApplicationCallback.getConfig().isUserAdmin()) {
+                    if (Config.isUserAdmin()) {
                         menuList = new String[]{getString(R.string.talk), getString(R.string.delete)};
                     }
                     menuAleart.setTitle(getString(R.string.action));
@@ -192,7 +192,7 @@ public class UserFragment extends BackFragment {
                                                     List<StringPair> parameters = new ArrayList<>();
                                                     parameters.add(new StringPair("message", "" + text));
 
-                                                    new TaskPost(getActivity(), mApplicationCallback, url, new IPostExecuteListener() {
+                                                    new TaskPost(getActivity(), url, new IPostExecuteListener() {
                                                         @Override
                                                         public void onPostExecute(JSONObject json, String body) {
 
@@ -205,8 +205,8 @@ public class UserFragment extends BackFragment {
                                             DialogUtils.alert(getContext(), "Delete " + userModel.username + "?", "This process cannot be undone.", getString(R.string.delete), new IListener() {
                                                 @Override
                                                 public void execute() {
-                                                    if (mApplicationCallback.getConfig().isUserAdmin()) {
-                                                        userModel.delete(getActivity(), mApplicationCallback, new IPostExecuteListener() {
+                                                    if (Config.isUserAdmin()) {
+                                                        userModel.delete(getActivity(), new IPostExecuteListener() {
                                                             @Override
                                                             public void onPostExecute(JSONObject json, String body) {
                                                                 UserFragment.this.refreshList();
@@ -256,10 +256,5 @@ public class UserFragment extends BackFragment {
     @Override
     public boolean back() {
         return false;
-    }
-
-    @Override
-    public void onFocus() {
-
     }
 }

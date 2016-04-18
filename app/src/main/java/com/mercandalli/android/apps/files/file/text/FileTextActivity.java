@@ -126,16 +126,6 @@ public class FileTextActivity extends ApplicationActivity implements IPostExecut
     }
 
     @Override
-    public void refreshData() {
-
-    }
-
-    @Override
-    public void updateAdapters() {
-
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:

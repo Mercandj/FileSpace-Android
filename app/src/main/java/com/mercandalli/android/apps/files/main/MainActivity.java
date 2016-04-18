@@ -23,17 +23,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
-import com.mercandalli.android.apps.files.file.cloud.FileCloudPagerFragment;
-import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.main.version.VersionManager;
 import com.mercandalli.android.apps.files.notificationpush.NotificationPush;
-import com.mercandalli.android.apps.files.user.community.CommunityFragment;
 
 import static com.mercandalli.android.apps.files.main.FileApp.logPerformance;
 
@@ -47,7 +42,7 @@ public class MainActivity extends NavDrawerActivity implements
     @SuppressWarnings("unused")
     private static final String TAG = "MainActivity";
 
-    public static void start(Activity activity) {
+    public static void start(final Activity activity) {
         activity.startActivity(new Intent(activity, MainActivity.class));
     }
 
@@ -79,54 +74,6 @@ public class MainActivity extends NavDrawerActivity implements
         mVersionManager.unregisterUpdateCheckedListener(this);
         super.onDestroy();
     }
-
-    @Override
-    public void updateAdapters() {
-        final Fragment fragment = getCurrentFragment();
-        if (fragment instanceof FileLocalPagerFragment) {
-            ((FileLocalPagerFragment) fragment).updateAdapterListServer();
-        } else if (fragment instanceof CommunityFragment) {
-            ((CommunityFragment) fragment).updateAdapterListServer();
-        }
-    }
-
-    @Override
-    public void refreshData() {
-        final Fragment fragment = getCurrentFragment();
-        if (fragment == null) {
-            Log.e(TAG, "getCurrentFragment() return null");
-            return;
-        }
-        if (fragment instanceof FileLocalPagerFragment) {
-            ((FileLocalPagerFragment) fragment).refreshData();
-        } else if (fragment instanceof FileCloudPagerFragment) {
-            ((FileCloudPagerFragment) fragment).refreshData();
-        }
-    }
-
-    /*@Override
-    public void onRefreshFab() {
-        final Fragment fragment = getCurrentFragment();
-        if (fragment instanceof FabFragment.RefreshFabCallback) {
-            ((FabFragment.RefreshFabCallback) fragment).onRefreshFab();
-        }
-    }
-
-    @Override
-    public void hideFab(int fab_id) {
-        final Fragment fragment = getCurrentFragment();
-        if (fragment instanceof FabFragment.RefreshFabCallback) {
-            ((FabFragment.RefreshFabCallback) fragment).hideFab(fab_id);
-        }
-    }
-
-    @Override
-    public void showFab(int fab_id) {
-        final Fragment fragment = getCurrentFragment();
-        if (fragment instanceof FabFragment.RefreshFabCallback) {
-            ((FabFragment.RefreshFabCallback) fragment).showFab(fab_id);
-        }
-    }*/
 
     /**
      * {@inheritDoc}

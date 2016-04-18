@@ -25,6 +25,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -45,7 +46,6 @@ import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.main.ApplicationActivity;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileApp;
@@ -53,6 +53,8 @@ import com.mercandalli.android.apps.files.main.FileApp;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,7 +68,6 @@ public class FileAddDialog extends Dialog implements
         FileChooserDialog.FileChooserDialogSelection {
 
     private final Activity mActivity;
-    private final ApplicationCallback mApplicationCallback;
     private IListener mDismissListener;
     private final int mFileParentId;
     private IListener mListener;
@@ -74,13 +75,11 @@ public class FileAddDialog extends Dialog implements
     @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
     public FileAddDialog(
             final Activity activity,
-            final ApplicationCallback applicationCallback,
             final int id_file_parent,
-            @Nullable final IListener listener,
-            @Nullable final IListener dismissListener) {
+            final @Nullable IListener listener,
+            final @Nullable IListener dismissListener) {
         super(activity, R.style.DialogFullscreen);
         mActivity = activity;
-        mApplicationCallback = applicationCallback;
         mDismissListener = dismissListener;
         mFileParentId = id_file_parent;
         mListener = listener;
@@ -117,7 +116,7 @@ public class FileAddDialog extends Dialog implements
                 // Ensure that there's a camera activity to handle the intent
                 if (takePictureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
                     // Create the File where the photo should go
-                    ApplicationActivity.mPhotoFile = mApplicationCallback.createImageFile();
+                    ApplicationActivity.mPhotoFile = createImageFile();
                     // Continue only if the File was successfully created
                     if (ApplicationActivity.mPhotoFile != null) {
                         if (listener != null) {
@@ -168,8 +167,7 @@ public class FileAddDialog extends Dialog implements
                                     parameters.add(new StringPair("content", json.toString()));
                                     parameters.add(new StringPair("name", "TIMER_" + nowAsISO));
                                     parameters.add(new StringPair("id_file_parent", "" + id_file_parent));
-                                    new TaskPost(mActivity, mApplicationCallback,
-                                            Constants.URL_DOMAIN + Config.ROUTE_FILE,
+                                    new TaskPost(mActivity, Constants.URL_DOMAIN + Config.ROUTE_FILE,
                                             new IPostExecuteListener() {
                                                 @Override
                                                 public void onPostExecute(JSONObject json, String body) {
@@ -198,13 +196,28 @@ public class FileAddDialog extends Dialog implements
         findViewById(R.id.dialog_add_file_article).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogCreateArticle dialogCreateArticle = new DialogCreateArticle(mActivity, mApplicationCallback, listener);
+                DialogCreateArticle dialogCreateArticle = new DialogCreateArticle(mActivity, listener);
                 dialogCreateArticle.show();
                 FileAddDialog.this.dismiss();
             }
         });
 
         FileAddDialog.this.show();
+    }
+
+    public FileModel createImageFile() {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_FileSpace_";
+        File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.getLocalFolderName());
+        FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
+        fileModelBuilder.name(imageFileName + ".jpg");
+        try {
+            fileModelBuilder.file(File.createTempFile(imageFileName, ".jpg", storageDir));
+        } catch (IOException e) {
+            Log.e(getClass().getName(), "Exception", e);
+        }
+        return fileModelBuilder.build();
     }
 
     @Override
@@ -232,7 +245,7 @@ public class FileAddDialog extends Dialog implements
                         fileModelBuilder.idFileParent(mFileParentId);
                         List<StringPair> parameters = FileApp.get().getFileAppComponent()
                                 .provideFileManager().getForUpload(fileModelBuilder.build());
-                        (new TaskPost(mActivity, mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_FILE, new IPostExecuteListener() {
+                        (new TaskPost(mActivity, Constants.URL_DOMAIN + Config.ROUTE_FILE, new IPostExecuteListener() {
                             @Override
                             public void onPostExecute(JSONObject json, String body) {
                                 if (mListener != null) {
@@ -253,6 +266,6 @@ public class FileAddDialog extends Dialog implements
 
     @Override
     public void onFileChooserDialogSelected(final FileModel fileModel, final View view) {
-        new FileUploadDialog(mActivity, mApplicationCallback, mFileParentId, fileModel, mListener);
+        new FileUploadDialog(mActivity, mFileParentId, fileModel, mListener);
     }
 }

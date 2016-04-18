@@ -137,11 +137,6 @@ public class FileCloudFragment extends InjectedFabFragment implements
         return false;
     }
 
-    @Override
-    public void onFocus() {
-        refreshCurrentList();
-    }
-
     /*@Override
     public void onFabClick(int fabId, final FloatingActionButton fab) {
         switch (fabId) {
@@ -244,7 +239,6 @@ public class FileCloudFragment extends InjectedFabFragment implements
                                     @Override
                                     public void execute() {
                                         Toast.makeText(getActivity(), "Download finished.", Toast.LENGTH_SHORT).show();
-                                        mApplicationCallback.refreshData();
                                     }
                                 });
                                 break;
@@ -260,7 +254,6 @@ public class FileCloudFragment extends InjectedFabFragment implements
                                                     filesToCut.clear();
                                                     //refreshFab();
                                                 }
-                                                mApplicationCallback.refreshData();
                                             }
                                         });
                                     }
@@ -278,7 +271,6 @@ public class FileCloudFragment extends InjectedFabFragment implements
                                                     filesToCut.clear();
                                                     //refreshFab();
                                                 }
-                                                mApplicationCallback.refreshData();
                                             }
                                         });
                                     }
@@ -304,7 +296,6 @@ public class FileCloudFragment extends InjectedFabFragment implements
                                 mFileManager.setPublic(fileModel, !fileModel.isPublic(), new IListener() {
                                     @Override
                                     public void execute() {
-                                        mApplicationCallback.refreshData();
                                     }
                                 });
                                 break;
@@ -313,12 +304,12 @@ public class FileCloudFragment extends InjectedFabFragment implements
                             case 6:
                                 List<StringPair> parameters = new ArrayList<>();
                                 parameters.add(new StringPair("id_file_profile_picture", "" + fileModel.getId()));
-                                (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_USER_PUT, new IPostExecuteListener() {
+                                (new TaskPost(getActivity(), Constants.URL_DOMAIN + Config.ROUTE_USER_PUT, new IPostExecuteListener() {
                                     @Override
                                     public void onPostExecute(JSONObject json, String body) {
                                         try {
                                             if (json != null && json.has("succeed") && json.getBoolean("succeed")) {
-                                                mApplicationCallback.getConfig().setUserIdFileProfilePicture(getActivity(), fileModel.getId());
+                                                Config.setUserIdFileProfilePicture(getActivity(), fileModel.getId());
                                             }
                                         } catch (JSONException e) {
                                             Log.e(getClass().getName(), "Failed to convert Json", e);
@@ -355,7 +346,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
             return;
         }
 
-        if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
+        if (NetUtils.isInternetConnection(getContext()) && Config.isLogged()) {
             mFileManager.getFiles(
                     new FileModel.FileModelBuilder().id(-1).isOnline(true).build(),
                     false,
@@ -377,7 +368,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
             mSwipeRefreshLayout.setRefreshing(false);
             this.mProgressBar.setVisibility(View.GONE);
             if (isAdded()) {
-                this.mMessageTextView.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+                this.mMessageTextView.setText(Config.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             }
             this.mMessageTextView.setVisibility(View.VISIBLE);
 

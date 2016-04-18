@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -26,9 +26,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +52,7 @@ import com.mercandalli.android.apps.files.file.audio.album.Album;
 import com.mercandalli.android.apps.files.file.audio.artist.Artist;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
+import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.library.baselibrary.java.StringUtils;
 
@@ -277,19 +280,21 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
 
         refreshListFolders();
 
-        mApplicationCallback.invalidateMenu();
+        if (context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).invalidateOptionsMenu();
+        }
 
         return rootView;
     }
 
     @Override
     public void executeFileAudioModel(final FileAudioModel fileAudioModel, final View view) {
-        mFileAudioOverflowActions.show(fileAudioModel, view, mApplicationCallback.isLogged());
+        mFileAudioOverflowActions.show(fileAudioModel, view, Config.isLogged());
     }
 
     @Override
     public void refreshData() {
-        mApplicationCallback.refreshData();
+        refreshCurrentList();
     }
 
     @Override
@@ -302,23 +307,23 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public void onFocus() {
-    }
-
-    @Override
-    public void onFabClick(@IntRange(from = 0, to = 1) final int fabId, final FloatingActionButton floatingActionButton) {
-        if (fabId == 0) {
+    public void onFabClick(
+            final @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition,
+            final @NonNull FloatingActionButton floatingActionButton) {
+        if (fabPosition == 0) {
             refreshListFolders();
         }
     }
 
     @Override
-    public boolean isFabVisible(@IntRange(from = 0, to = 1) final int fabId) {
-        return fabId == 0 && mCurrentPage == PAGE_FOLDER_INSIDE;
+    public boolean isFabVisible(
+            @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) final int fabPosition) {
+        return fabPosition == 0 && mCurrentPage == PAGE_FOLDER_INSIDE;
     }
 
     @Override
-    public int getFabImageResource(@IntRange(from = 0, to = 1) final int fabId) {
+    public int getFabImageResource(
+            @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) final int fabPosition) {
         return R.drawable.arrow_up;
     }
 

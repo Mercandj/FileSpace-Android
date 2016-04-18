@@ -106,16 +106,6 @@ public class FileTimerActivity extends ApplicationActivity {
     }
 
     @Override
-    public void refreshData() {
-
-    }
-
-    @Override
-    public void updateAdapters() {
-
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:

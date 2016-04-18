@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -47,7 +47,6 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
     String url;
     Bitmap bitmap;
     IBitmapListener listener;
-    Config.ConfigCallback app;
     Activity mActivity;
     int idFile;
     long sizeLimit, sizeFile;
@@ -55,9 +54,8 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
     private boolean isAuthentication = true;
     private boolean isModelFile = true;
 
-    public TaskGetDownloadImage(Activity activity, Config.ConfigCallback app, String url, long sizeLimit, IBitmapListener listener, boolean isAuthentication, boolean isModelFile) {
+    public TaskGetDownloadImage(Activity activity, String url, long sizeLimit, IBitmapListener listener, boolean isAuthentication, boolean isModelFile) {
         mActivity = activity;
-        this.app = app;
         this.url = url;
         this.listener = listener;
         this.sizeLimit = sizeLimit;
@@ -65,9 +63,8 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         this.isModelFile = isModelFile;
     }
 
-    public TaskGetDownloadImage(Activity activity, Config.ConfigCallback app, FileModel fileModel, long sizeLimit, IBitmapListener listener) {
+    public TaskGetDownloadImage(Activity activity, FileModel fileModel, long sizeLimit, IBitmapListener listener) {
         mActivity = activity;
-        this.app = app;
         this.url = fileModel.getOnlineUrl();
         this.idFile = fileModel.getId();
         this.sizeFile = fileModel.getSize();
@@ -75,9 +72,8 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         this.sizeLimit = sizeLimit;
     }
 
-    public TaskGetDownloadImage(Activity activity, Config.ConfigCallback app, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener) {
+    public TaskGetDownloadImage(Activity activity, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener) {
         mActivity = activity;
-        this.app = app;
         this.url = onlineUrl;
         this.idFile = idFile;
         this.sizeFile = sizeFile;
@@ -85,9 +81,8 @@ public class TaskGetDownloadImage extends AsyncTask<Void, Long, Void> {
         this.sizeLimit = sizeLimit;
     }
 
-    public TaskGetDownloadImage(Activity activity, Config.ConfigCallback app, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener, ILongListener progressListener) {
+    public TaskGetDownloadImage(Activity activity, String onlineUrl, int idFile, long sizeFile, long sizeLimit, IBitmapListener listener, ILongListener progressListener) {
         mActivity = activity;
-        this.app = app;
         this.url = onlineUrl;
         this.idFile = idFile;
         this.sizeFile = sizeFile;

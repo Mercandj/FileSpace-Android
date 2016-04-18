@@ -144,7 +144,7 @@ public class ConversationActivity extends ApplicationActivity {
                     parameters.add(new StringPair("message", "" + mInputEditText.getText().toString()));
                     mInputEditText.setText("");
 
-                    new TaskPost(ConversationActivity.this, ConversationActivity.this, url, new IPostExecuteListener() {
+                    new TaskPost(ConversationActivity.this, url, new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
                             refreshList();
@@ -160,12 +160,6 @@ public class ConversationActivity extends ApplicationActivity {
         refreshList();
     }
 
-    @Override
-    public void refreshData() {
-
-    }
-
-    @Override
     public void updateAdapters() {
         if (mRecyclerView != null) {
             if (mUserConversationMessageModels.size() == 0) {
@@ -214,7 +208,7 @@ public class ConversationActivity extends ApplicationActivity {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            UserConversationMessageModel modelFile = new UserConversationMessageModel(ConversationActivity.this, ConversationActivity.this, array.getJSONObject(i));
+                                            UserConversationMessageModel modelFile = new UserConversationMessageModel(ConversationActivity.this, array.getJSONObject(i));
                                             mUserConversationMessageModels.add(modelFile);
                                         }
                                     }

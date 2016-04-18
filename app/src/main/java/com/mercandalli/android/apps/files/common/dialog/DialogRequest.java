@@ -32,7 +32,6 @@ import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.file.FileChooserDialog;
 import com.mercandalli.android.apps.files.file.FileModel;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Constants;
 
 import org.json.JSONObject;
@@ -43,7 +42,6 @@ public class DialogRequest extends Dialog {
 
     FileChooserDialog mFileChooserDialog;
     private final Activity mActivity;
-    private final ApplicationCallback mApplicationCallback;
     private File file;
     FileModel mFileModel;
 
@@ -54,10 +52,9 @@ public class DialogRequest extends Dialog {
     private final int nbMethod = 4;
     private int currentMethod = GET;
 
-    public DialogRequest(final Activity activity, final ApplicationCallback applicationCallback, final IPostExecuteListener listener) {
+    public DialogRequest(final Activity activity, final IPostExecuteListener listener) {
         super(activity);
         this.mActivity = activity;
-        this.mApplicationCallback = applicationCallback;
 
         this.setContentView(R.layout.dialog_request);
         this.setTitle(R.string.app_name);
@@ -71,7 +68,7 @@ public class DialogRequest extends Dialog {
 
                     case POST:
                         if (!((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString().equals("")) {
-                            (new TaskPost(mActivity, mApplicationCallback, Constants.URL_DOMAIN + "FileSpace-API/" + ((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString(), new IPostExecuteListener() {
+                            (new TaskPost(mActivity, Constants.URL_DOMAIN + "FileSpace-API/" + ((EditText) DialogRequest.this.findViewById(R.id.server)).getText().toString(), new IPostExecuteListener() {
                                 @Override
                                 public void onPostExecute(JSONObject json, String body) {
                                     if (listener != null) {

@@ -30,7 +30,6 @@ import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.StringPair;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 
@@ -47,14 +46,14 @@ public class DialogCreateArticle extends Dialog {
 
     private static final String TAG = "DialogCreateArticle";
     private Activity mActivity;
-    private ApplicationCallback mApplicationCallback;
 
     EditText article_title_1, article_content_1;
 
-    public DialogCreateArticle(final Activity activity, final ApplicationCallback applicationCallback, final IListener listener) {
+    public DialogCreateArticle(
+            final Activity activity,
+            final IListener listener) {
         super(activity);
         this.mActivity = activity;
-        this.mApplicationCallback = applicationCallback;
 
         this.setContentView(R.layout.dialog_create_article);
         this.setTitle("Create Article");
@@ -87,7 +86,6 @@ public class DialogCreateArticle extends Dialog {
                     parameters.add(new StringPair("content", json.toString()));
                     parameters.add(new StringPair("name", "ARTICLE_" + nowAsISO));
                     new TaskPost(mActivity,
-                            applicationCallback,
                             Constants.URL_DOMAIN + Config.ROUTE_FILE,
                             new IPostExecuteListener() {
                                 @Override

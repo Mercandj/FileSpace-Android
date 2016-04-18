@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -28,7 +28,6 @@ import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.IListener;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.FileApp;
 
 import javax.inject.Inject;
@@ -39,18 +38,16 @@ public class FileUploadDialog extends Dialog {
     FileManager mFileManager;
 
     private final Activity mActivity;
-    private final ApplicationCallback mApplicationCallback;
     private FileChooserDialog mFileChooserDialog;
     private FileModel mFileModel;
     private int mIdFileParent;
 
     public FileUploadDialog(
             final Activity activity,
-            final ApplicationCallback applicationCallback,
             final int id_file_parent,
             final FileModel fileModel,
-            @Nullable final IListener listener) {
-        this(activity, applicationCallback, id_file_parent, listener);
+            final @Nullable IListener listener) {
+        this(activity, id_file_parent, listener);
 
         fileModel.setIdFileParent(id_file_parent);
         ((TextView) FileUploadDialog.this.findViewById(R.id.label)).setText(fileModel.getUrl());
@@ -59,15 +56,13 @@ public class FileUploadDialog extends Dialog {
 
     public FileUploadDialog(
             final Activity activity,
-            final ApplicationCallback applicationCallback,
             final int idFileParent,
-            @Nullable final IListener listener) {
+            final @Nullable IListener listener) {
         super(activity);
 
         FileApp.get().getFileAppComponent().inject(this);
 
         mActivity = activity;
-        mApplicationCallback = applicationCallback;
         mIdFileParent = idFileParent;
 
         this.setContentView(R.layout.dialog_upload);

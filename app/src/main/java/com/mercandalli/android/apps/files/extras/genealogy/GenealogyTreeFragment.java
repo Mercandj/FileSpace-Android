@@ -120,7 +120,7 @@ public class GenealogyTreeFragment extends BackFragment {
 
     public void getChildren(int id_user) {
         List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
+        if (NetUtils.isInternetConnection(getContext()) && Config.isLogged()) {
             if (requestReady) {
                 requestReady = false;
                 new TaskGet(
@@ -136,7 +136,7 @@ public class GenealogyTreeFragment extends BackFragment {
                                         if (json.has(RESULT)) {
                                             JSONArray array = json.getJSONArray(RESULT);
                                             for (int i = 0; i < array.length(); i++) {
-                                                listChildren.add(new ModelGenealogyPerson(getActivity(), mApplicationCallback, array.getJSONObject(i)));
+                                                listChildren.add(new ModelGenealogyPerson(getActivity(), array.getJSONObject(i)));
                                             }
                                         }
                                     } else {
@@ -167,7 +167,7 @@ public class GenealogyTreeFragment extends BackFragment {
     public void changeUser(int id_user) {
 
         List<StringPair> parameters = null;
-        if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
+        if (NetUtils.isInternetConnection(getContext()) && Config.isLogged()) {
             if (requestReady) {
                 requestReady = false;
                 new TaskGet(
@@ -180,7 +180,7 @@ public class GenealogyTreeFragment extends BackFragment {
                                 try {
                                     if (json != null) {
                                         if (json.has(RESULT)) {
-                                            GenealogyTreeFragment.this.genealogyPerson = new ModelGenealogyPerson(getActivity(), mApplicationCallback, json.getJSONObject(RESULT));
+                                            GenealogyTreeFragment.this.genealogyPerson = new ModelGenealogyPerson(getActivity(), json.getJSONObject(RESULT));
                                             GenealogyTreeFragment.this.genealogyPerson.selected = true;
                                         }
                                     } else {
@@ -344,11 +344,6 @@ public class GenealogyTreeFragment extends BackFragment {
     @Override
     public boolean back() {
         return false;
-    }
-
-    @Override
-    public void onFocus() {
-        update();
     }
 
     public void select(ModelGenealogyPerson genealogyUser_) {

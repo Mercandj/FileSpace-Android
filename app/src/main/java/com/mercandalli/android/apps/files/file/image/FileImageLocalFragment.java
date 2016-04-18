@@ -7,9 +7,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IntDef;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -147,9 +150,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         mRefreshActivityAdapterListener = new IListener() {
             @Override
             public void execute() {
-                if (mApplicationCallback != null) {
-                    mApplicationCallback.refreshData();
-                }
+                refreshCurrentList();
             }
         };
         mProgressBarActivationHandler = new Handler();
@@ -221,14 +222,14 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
             public void executeFileModel(final FileModel fileModel, final View view) {
                 final AlertDialog.Builder menuAlert = new AlertDialog.Builder(getContext());
                 String[] menuList = {getString(R.string.rename), getString(R.string.delete), getString(R.string.properties)};
-                if (mApplicationCallback.isLogged()) {
+                if (Config.isLogged()) {
                     menuList = new String[]{getString(R.string.upload), getString(R.string.open_as), getString(R.string.rename), getString(R.string.delete), getString(R.string.properties)};
                 }
                 menuAlert.setTitle("Action");
                 menuAlert.setItems(menuList,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int item) {
-                                if (!mApplicationCallback.isLogged()) {
+                                if (!Config.isLogged()) {
                                     item += 2;
                                 }
                                 switch (item) {
@@ -241,7 +242,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                                                 public void execute() {
                                                     if (fileModel.getFile() != null) {
                                                         List<StringPair> parameters = mFileManager.getForUpload(fileModel);
-                                                        (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_FILE, new IPostExecuteListener() {
+                                                        (new TaskPost(getActivity(), Constants.URL_DOMAIN + Config.ROUTE_FILE, new IPostExecuteListener() {
                                                             @Override
                                                             public void onPostExecute(JSONObject json, String body) {
 
@@ -319,7 +320,9 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
 
         refreshListFolders();
 
-        mApplicationCallback.invalidateMenu();
+        if (context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).invalidateOptionsMenu();
+        }
 
         return rootView;
     }
@@ -342,23 +345,23 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public void onFocus() {
-    }
-
-    @Override
-    public void onFabClick(int fabId, FloatingActionButton fab) {
-        if (fabId == 0) {
+    public void onFabClick(
+            final @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition,
+            final @NonNull FloatingActionButton fab) {
+        if (fabPosition == 0) {
             refreshListFolders();
         }
     }
 
     @Override
-    public boolean isFabVisible(int fabId) {
-        return fabId == 0 && mCurrentPage == PAGE_FOLDER_INSIDE;
+    public boolean isFabVisible(
+            final @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition) {
+        return fabPosition == 0 && mCurrentPage == PAGE_FOLDER_INSIDE;
     }
 
     @Override
-    public int getFabImageResource(int fabId) {
+    public int getFabImageResource(
+            final @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition) {
         return R.drawable.arrow_up;
     }
 

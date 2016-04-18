@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -46,7 +46,6 @@ import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
@@ -82,7 +81,6 @@ public class GenealogyListFragment extends BackFragment {
     public static boolean mModeSelectionPartner = false;
 
     private Activity mActivity;
-    private ApplicationCallback mApplicationCallback;
 
     public static void resetMode() {
         mModeSelectionFather = false;
@@ -101,15 +99,11 @@ public class GenealogyListFragment extends BackFragment {
     @Override
     public void onAttach(Context context) {
         mActivity = (Activity) context;
-        if (context instanceof ApplicationCallback) {
-            mApplicationCallback = (ApplicationCallback) context;
-        }
         super.onAttach(context);
     }
 
     @Override
     public void onDetach() {
-        mApplicationCallback = null;
         mActivity = null;
         super.onDetach();
     }
@@ -156,7 +150,7 @@ public class GenealogyListFragment extends BackFragment {
         if (!StringUtils.isNullOrEmpty(search)) {
             parameters.add(new StringPair("search", search));
         }
-        if (NetUtils.isInternetConnection(mActivity) && mApplicationCallback.isLogged()) {
+        if (NetUtils.isInternetConnection(mActivity) && Config.isLogged()) {
             new TaskGet(
                     mActivity,
                     Constants.URL_DOMAIN + Config.ROUTE_GENEALOGY,
@@ -169,7 +163,7 @@ public class GenealogyListFragment extends BackFragment {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ModelGenealogyPerson modelUser = new ModelGenealogyPerson(mActivity, mApplicationCallback, array.getJSONObject(i));
+                                            ModelGenealogyPerson modelUser = new ModelGenealogyPerson(mActivity, array.getJSONObject(i));
                                             list.add(modelUser);
                                         }
                                     }
@@ -186,7 +180,7 @@ public class GenealogyListFragment extends BackFragment {
             ).execute();
         } else {
             this.circularProgressBar.setVisibility(View.GONE);
-            this.message.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+            this.message.setText(Config.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
 
@@ -329,11 +323,6 @@ public class GenealogyListFragment extends BackFragment {
         return false;
     }
 
-    @Override
-    public void onFocus() {
-        //refreshListFolders();
-    }
-
     private void setListVisibility(boolean visible) {
         if (this.recyclerView != null) {
             this.recyclerView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
@@ -341,7 +330,7 @@ public class GenealogyListFragment extends BackFragment {
     }
 
     public void add() {
-        mDialog = new DialogAddGenealogyPerson(mActivity, mApplicationCallback, new IPostExecuteListener() {
+        mDialog = new DialogAddGenealogyPerson(mActivity, new IPostExecuteListener() {
             @Override
             public void onPostExecute(JSONObject json, String body) {
                 refreshList();

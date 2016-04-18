@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -71,11 +71,11 @@ public class RegistrationFragment extends BackFragment {
         this.mUsername = (EditText) rootView.findViewById(R.id.fragment_registration_username);
         this.mPassword = (EditText) rootView.findViewById(R.id.fragment_registration_password);
 
-        ((CheckBox) rootView.findViewById(R.id.fragment_registration_auto_connection)).setChecked(mApplicationCallback.getConfig().isAutoConnection());
+        ((CheckBox) rootView.findViewById(R.id.fragment_registration_auto_connection)).setChecked(Config.isAutoConnection());
         ((CheckBox) rootView.findViewById(R.id.fragment_registration_auto_connection)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mApplicationCallback.getConfig().setAutoConnection(getContext(), isChecked);
+                Config.setAutoConnection(getContext(), isChecked);
             }
         });
 
@@ -130,13 +130,13 @@ public class RegistrationFragment extends BackFragment {
         mRequestLaunched = true;
 
         if (!StringUtils.isNullOrEmpty(user.username)) {
-            mApplicationCallback.getConfig().setUserUsername(getContext(), user.username);
+            Config.setUserUsername(getContext(), user.username);
         } else {
             user.username = Config.getUserUsername();
         }
 
         if (!StringUtils.isNullOrEmpty(user.password)) {
-            mApplicationCallback.getConfig().setUserPassword(getContext(), user.password);
+            Config.setUserPassword(getContext(), user.password);
         } else {
             user.password = Config.getUserPassword();
         }
@@ -155,7 +155,7 @@ public class RegistrationFragment extends BackFragment {
         //parameters.add(new StringPair("altitude", "" + GpsUtils.getAltitude(getActivity())));
 
         if (NetUtils.isInternetConnection(getContext())) {
-            (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_USER, new IPostExecuteListener() {
+            (new TaskPost(getActivity(), Constants.URL_DOMAIN + Config.ROUTE_USER, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     try {
@@ -166,7 +166,7 @@ public class RegistrationFragment extends BackFragment {
                             if (json.has("user")) {
                                 JSONObject user = json.getJSONObject("user");
                                 if (user.has("id")) {
-                                    mApplicationCallback.getConfig().setUserId(getContext(), user.getInt("id"));
+                                    Config.setUserId(getContext(), user.getInt("id"));
                                 }
                             }
                         } else {
@@ -186,10 +186,5 @@ public class RegistrationFragment extends BackFragment {
     @Override
     public boolean back() {
         return false;
-    }
-
-    @Override
-    public void onFocus() {
-
     }
 }

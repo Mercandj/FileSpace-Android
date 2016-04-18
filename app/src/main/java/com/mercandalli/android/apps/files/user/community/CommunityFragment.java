@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -25,6 +25,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -134,20 +135,15 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     @Override
-    public void onFocus() {
-
-    }
-
-    @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
     }
 
     @Override
     public void onPageSelected(int position) {
-        mApplicationCallback.invalidateMenu();
-        if (position < NB_FRAGMENT && mBackFragmentArray[position] != null) {
-            mBackFragmentArray[position].onFocus();
+        final Context context = getContext();
+        if (context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).invalidateOptionsMenu();
         }
     }
 
@@ -248,7 +244,7 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
     }
 
     public void add() {
-        new FileAddDialog(getActivity(), mApplicationCallback, -1, new IListener() {
+        new FileAddDialog(getActivity(), -1, new IListener() {
             @Override
             public void execute() {
                 refreshListServer();

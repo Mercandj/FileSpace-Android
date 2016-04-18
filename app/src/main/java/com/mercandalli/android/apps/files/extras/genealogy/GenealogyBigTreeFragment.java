@@ -85,10 +85,6 @@ public class GenealogyBigTreeFragment extends BackFragment {
         return false;
     }
 
-    @Override
-    public void onFocus() {
-    }
-
     public void select(final ModelGenealogyPerson genealogyUser) {
         this.genealogyPerson = genealogyUser;
 
@@ -102,7 +98,7 @@ public class GenealogyBigTreeFragment extends BackFragment {
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
-                                        genealogyPerson = new ModelGenealogyPerson(getActivity(), mApplicationCallback, json.getJSONObject("result"));
+                                        genealogyPerson = new ModelGenealogyPerson(getActivity(), json.getJSONObject("result"));
                                         bigTreeView.select(genealogyPerson);
                                     }
                                 } else {

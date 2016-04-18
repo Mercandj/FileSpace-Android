@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -26,10 +26,9 @@ import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.library.baselibrary.java.StringUtils;
 
 import org.json.JSONException;
@@ -61,36 +60,31 @@ public class TaskPost extends AsyncTask<Void, Void, String> {
     List<StringPair> parameters;
     IPostExecuteListener listener;
     File file;
-    private ApplicationCallback mApplicationCallback;
     private Activity mActivity;
 
-    public TaskPost(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener) {
+    public TaskPost(Activity activity, String url, IPostExecuteListener listener) {
         mActivity = activity;
-        this.mApplicationCallback = app;
         this.url = url;
         this.listener = listener;
     }
 
-    public TaskPost(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener, List<StringPair> parameters) {
+    public TaskPost(Activity activity, String url, IPostExecuteListener listener, List<StringPair> parameters) {
         mActivity = activity;
-        this.mApplicationCallback = app;
         this.url = url;
         this.parameters = parameters;
         this.listener = listener;
     }
 
-    public TaskPost(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener, List<StringPair> parameters, String contentType) {
+    public TaskPost(Activity activity, String url, IPostExecuteListener listener, List<StringPair> parameters, String contentType) {
         mActivity = activity;
-        this.mApplicationCallback = app;
         this.url = url;
         this.parameters = parameters;
         this.contentType = contentType;
         this.listener = listener;
     }
 
-    public TaskPost(Activity activity, ApplicationCallback app, String url, IPostExecuteListener listener, List<StringPair> parameters, File file) {
+    public TaskPost(Activity activity, String url, IPostExecuteListener listener, List<StringPair> parameters, File file) {
         mActivity = activity;
-        this.mApplicationCallback = app;
         this.url = url;
         this.parameters = parameters;
         this.listener = listener;

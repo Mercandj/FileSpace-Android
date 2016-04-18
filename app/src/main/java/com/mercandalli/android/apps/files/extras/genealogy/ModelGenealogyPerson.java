@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -28,7 +28,6 @@ import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.HtmlUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.library.baselibrary.java.StringUtils;
@@ -46,7 +45,6 @@ import java.util.List;
 public class ModelGenealogyPerson {
 
     protected Activity mActivity;
-    protected ApplicationCallback mApp;
 
     public String first_name_1, first_name_2, first_name_3, last_name, date_birth, date_death, description;
     public int mId, id_father, id_mother;
@@ -69,9 +67,8 @@ public class ModelGenealogyPerson {
         this.valid = valid;
     }
 
-    public ModelGenealogyPerson(Activity activity, ApplicationCallback app, JSONObject json) {
+    public ModelGenealogyPerson(Activity activity, JSONObject json) {
         mActivity = activity;
-        mApp = app;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
             if (json.has("id")) {
@@ -111,23 +108,23 @@ public class ModelGenealogyPerson {
                 this.is_man = json.getInt("is_man") != 0;
             }
             if (json.has("father")) {
-                this.father = new ModelGenealogyPerson(activity, app, json.getJSONObject("father"));
+                this.father = new ModelGenealogyPerson(activity, json.getJSONObject("father"));
             }
             if (json.has("mother")) {
-                this.mother = new ModelGenealogyPerson(activity, app, json.getJSONObject("mother"));
+                this.mother = new ModelGenealogyPerson(activity, json.getJSONObject("mother"));
             }
             if (json.has("brothers_sisters_from_mother")) {
                 this.brothers_sisters_from_mother = new ArrayList<>();
                 JSONArray json_b_s = json.getJSONArray("brothers_sisters_from_mother");
                 for (int i = 0; i < json_b_s.length(); i++) {
-                    this.brothers_sisters_from_mother.add(new ModelGenealogyPerson(activity, app, json_b_s.getJSONObject(i)));
+                    this.brothers_sisters_from_mother.add(new ModelGenealogyPerson(activity, json_b_s.getJSONObject(i)));
                 }
             }
             if (json.has("brothers_sisters_from_father")) {
                 this.brothers_sisters_from_father = new ArrayList<>();
                 JSONArray json_b_s = json.getJSONArray("brothers_sisters_from_father");
                 for (int i = 0; i < json_b_s.length(); i++) {
-                    this.brothers_sisters_from_father.add(new ModelGenealogyPerson(activity, app, json_b_s.getJSONObject(i)));
+                    this.brothers_sisters_from_father.add(new ModelGenealogyPerson(activity, json_b_s.getJSONObject(i)));
                 }
             }
         } catch (JSONException | ParseException e) {
@@ -136,9 +133,9 @@ public class ModelGenealogyPerson {
     }
 
     public void delete(IPostExecuteListener listener) {
-        if (this.mApp != null && Config.isUserAdmin() && this.mId != Config.getUserId()) {
+        if (Config.isUserAdmin() && this.mId != Config.getUserId()) {
             String url = Constants.URL_DOMAIN + Config.ROUTE_GENEALOGY_DELETE + "/" + this.mId;
-            new TaskPost(mActivity, this.mApp, url, listener).execute();
+            new TaskPost(mActivity, url, listener).execute();
             return;
         }
         if (listener != null) {
@@ -147,8 +144,8 @@ public class ModelGenealogyPerson {
     }
 
     public void modify(IPostExecuteListener listener) {
-        if (this.mApp != null && Config.isUserAdmin() && this.mId != Config.getUserId()) {
-            new DialogAddGenealogyPerson(mActivity, mApp, listener, mActivity.getString(R.string.modify), this);
+        if (Config.isUserAdmin() && this.mId != Config.getUserId()) {
+            new DialogAddGenealogyPerson(mActivity, listener, mActivity.getString(R.string.modify), this);
             return;
         }
         if (listener != null) {

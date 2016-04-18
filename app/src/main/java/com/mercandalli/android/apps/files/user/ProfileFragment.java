@@ -94,8 +94,8 @@ public class ProfileFragment extends BackFragment {
         mLayoutManager = new LinearLayoutManager(activity);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        final Bitmap iconProfileOnline = mApplicationCallback.getConfig()
-                .getUserProfilePicture(activity, mApplicationCallback);
+        final Bitmap iconProfileOnline = Config
+                .getUserProfilePicture(activity);
         if (iconProfileOnline != null) {
             mIconBack.setImageBitmap(ImageUtils.setBlur(ImageUtils.setBrightness(iconProfileOnline, -50), 15));
         }
@@ -124,13 +124,8 @@ public class ProfileFragment extends BackFragment {
         return false;
     }
 
-    @Override
-    public void onFocus() {
-
-    }
-
     public void refreshView() {
-        if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
+        if (NetUtils.isInternetConnection(getContext()) && Config.isLogged()) {
             List<StringPair> parameters = null;
             new TaskGet(
                     getActivity(),
@@ -144,7 +139,7 @@ public class ProfileFragment extends BackFragment {
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
-                                        mUserModel = new UserModel(getActivity(), mApplicationCallback, json.getJSONObject("result"));
+                                        mUserModel = new UserModel(getActivity(), json.getJSONObject("result"));
                                         mModelSettings.clear();
                                         mModelSettings.add(new ModelSetting("Username", "" + mUserModel.username));
                                         mModelSettings.add(new ModelSetting("Files size", FileUtils.humanReadableByteCount(mUserModel.size_files) + " / " + FileUtils.humanReadableByteCount(mUserModel.server_max_size_end_user)));
@@ -176,7 +171,7 @@ public class ProfileFragment extends BackFragment {
                                                         parameters.add(new StringPair("longitude", "" + longitude));
                                                         parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                        (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_USER_PUT, new IPostExecuteListener() {
+                                                        (new TaskPost(getActivity(), Constants.URL_DOMAIN + Config.ROUTE_USER_PUT, new IPostExecuteListener() {
                                                             @Override
                                                             public void onPostExecute(JSONObject json, String body) {
 
@@ -199,7 +194,7 @@ public class ProfileFragment extends BackFragment {
                                                 parameters.add(new StringPair("longitude", "" + longitude));
                                                 parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_USER_PUT, new IPostExecuteListener() {
+                                                (new TaskPost(getActivity(), Constants.URL_DOMAIN + Config.ROUTE_USER_PUT, new IPostExecuteListener() {
                                                     @Override
                                                     public void onPostExecute(JSONObject json, String body) {
 

@@ -153,9 +153,4 @@ public class GenealogyStatisticsFragment extends BackFragment {
     public boolean back() {
         return false;
     }
-
-    @Override
-    public void onFocus() {
-        refreshList();
-    }
 }

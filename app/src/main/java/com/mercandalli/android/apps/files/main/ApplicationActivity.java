@@ -24,10 +24,8 @@ import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
@@ -39,10 +37,6 @@ import com.mercandalli.android.apps.files.file.FileModel;
 
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import static com.mercandalli.android.apps.files.main.FileApp.logPerformance;
@@ -50,15 +44,11 @@ import static com.mercandalli.android.apps.files.main.FileApp.logPerformance;
 /**
  * Mother class of the {@link Activity} MainActivity.
  */
-public abstract class ApplicationActivity extends AppCompatActivity implements
-        ApplicationCallback,
-        Config.ConfigCallback {
+public abstract class ApplicationActivity extends AppCompatActivity {
 
     private static final String TAG = "ApplicationActivity";
     public static FileModel mPhotoFile = null;
     public static IListener mPhotoFileListener = null;
-
-    private Config mConfig;
 
     /* OnResult code */
     public static final int REQUEST_TAKE_PHOTO = 1;
@@ -69,7 +59,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements
 
         logPerformance(TAG, "ApplicationActivity#onCreate() - Start");
 
-        mConfig = new Config(this);
+        Config.getInstance(this);
 
         logPerformance(TAG, "ApplicationActivity#onCreate() - Start Config");
 
@@ -91,20 +81,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements
                 }
             }
         }
-        //endregion
-    }
-
-    @Override
-    public void invalidateMenu() {
-        invalidateOptionsMenu();
-    }
-
-    @Override
-    public Config getConfig() {
-        if (mConfig == null) {
-            mConfig = new Config(this);
-        }
-        return mConfig;
+        //endregion Handle NFC
     }
 
     @Override
@@ -113,7 +90,7 @@ public abstract class ApplicationActivity extends AppCompatActivity implements
             if (mPhotoFile != null && mPhotoFile.getFile() != null) {
                 final List<StringPair> parameters = FileApp.get().getFileAppComponent()
                         .provideFileManager().getForUpload(mPhotoFile);
-                (new TaskPost(this, this, Constants.URL_DOMAIN + Config.ROUTE_FILE, new IPostExecuteListener() {
+                (new TaskPost(this, Constants.URL_DOMAIN + Config.ROUTE_FILE, new IPostExecuteListener() {
                     @Override
                     public void onPostExecute(JSONObject json, String body) {
                         if (mPhotoFileListener != null) {
@@ -126,29 +103,4 @@ public abstract class ApplicationActivity extends AppCompatActivity implements
             }
         }
     }
-
-    @Override
-    public FileModel createImageFile() {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_FileSpace_";
-        File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + this.getConfig().getLocalFolderName());
-        FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
-        fileModelBuilder.name(imageFileName + ".jpg");
-        try {
-            fileModelBuilder.file(File.createTempFile(imageFileName, ".jpg", storageDir));
-        } catch (IOException e) {
-            Log.e(getClass().getName(), "Exception", e);
-        }
-        return fileModelBuilder.build();
-    }
-
-    @Override
-    public boolean isLogged() {
-        return Config.isLogged();
-    }
-
-    public abstract void refreshData();
-
-    public abstract void updateAdapters();
 }

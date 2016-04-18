@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -131,8 +131,17 @@ public class Config {
         }
     }
 
-    public Config(final Activity activity) {
-        load(activity);
+    private static Config sInstance;
+
+    public static Config getInstance(final Activity activity) {
+        if (sInstance == null) {
+            sInstance = new Config(activity.getApplicationContext());
+        }
+        return sInstance;
+    }
+
+    private Config(final Context context) {
+        load(context);
     }
 
     private static void save(Context context) {
@@ -194,18 +203,18 @@ public class Config {
         return ENUM_Int.INTEGER_USER_ID.value;
     }
 
-    public void setUserId(Context context, int value) {
+    public static void setUserId(Context context, int value) {
         if (ENUM_Int.INTEGER_USER_ID.value != value) {
             ENUM_Int.INTEGER_USER_ID.value = value;
             save(context);
         }
     }
 
-    public String getUserNoteWorkspace1() {
+    public static String getUserNoteWorkspace1() {
         return ENUM_String.STRING_USER_NOTE_WORKSPACE_1.value;
     }
 
-    public void setUserNoteWorkspace1(Context context, String value) {
+    public static void setUserNoteWorkspace1(Context context, String value) {
         if (value == null) {
             return;
         }
@@ -231,7 +240,7 @@ public class Config {
         return Base64.encodeBytes(authentication.getBytes());
     }
 
-    public void setUserUsername(Context context, String value) {
+    public static void setUserUsername(Context context, String value) {
         if (value == null) {
             return;
         }
@@ -249,7 +258,7 @@ public class Config {
         return ENUM_String.STRING_USER_PASSWORD.value;
     }
 
-    public void setUserPassword(Context context, String value) {
+    public static void setUserPassword(Context context, String value) {
         if (value == null) {
             return;
         }
@@ -273,14 +282,14 @@ public class Config {
         }
     }
 
-    public Bitmap getUserProfilePicture(Activity activity, ConfigCallback configCallback) {
-        File file = new File(activity.getFilesDir() + "/file_" + this.getUserIdFileProfilePicture());
+    public static Bitmap getUserProfilePicture(Activity activity) {
+        File file = new File(activity.getFilesDir() + "/file_" + getUserIdFileProfilePicture());
         if (file.exists()) {
             return BitmapFactory.decodeFile(file.getPath());
         } else if (NetUtils.isInternetConnection(activity)) {
             FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
             fileModelBuilder.id(getUserIdFileProfilePicture());
-            new TaskGetDownloadImage(activity, configCallback, fileModelBuilder.build(), 100_000, new IBitmapListener() {
+            new TaskGetDownloadImage(activity, fileModelBuilder.build(), 100_000, new IBitmapListener() {
                 @Override
                 public void execute(Bitmap bitmap) {
                     //TODO photo profile
@@ -290,11 +299,11 @@ public class Config {
         return null;
     }
 
-    public int getUserIdFileProfilePicture() {
+    public static int getUserIdFileProfilePicture() {
         return ENUM_Int.INTEGER_USER_ID_FILE_PROFILE_PICTURE.value;
     }
 
-    public void setUserIdFileProfilePicture(Activity activity, int value) {
+    public static void setUserIdFileProfilePicture(Activity activity, int value) {
         if (ENUM_Int.INTEGER_USER_ID_FILE_PROFILE_PICTURE.value != value) {
             ENUM_Int.INTEGER_USER_ID_FILE_PROFILE_PICTURE.value = value;
             save(activity);
@@ -316,18 +325,18 @@ public class Config {
         return ENUM_Boolean.BOOLEAN_USER_ADMIN.value;
     }
 
-    public void setUserAdmin(Context context, boolean value) {
+    public static void setUserAdmin(Context context, boolean value) {
         if (ENUM_Boolean.BOOLEAN_USER_ADMIN.value != value) {
             ENUM_Boolean.BOOLEAN_USER_ADMIN.value = value;
             save(context);
         }
     }
 
-    public boolean isAutoConnection() {
+    public static boolean isAutoConnection() {
         return ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value;
     }
 
-    public void setAutoConnection(Context context, boolean value) {
+    public static void setAutoConnection(Context context, boolean value) {
         if (ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value != value) {
             ENUM_Boolean.BOOLEAN_AUTO_CONNECTION.value = value;
             save(context);
@@ -346,7 +355,7 @@ public class Config {
      * Reset the saved values
      * (When the user log out)
      */
-    public void reset(Activity activity) {
+    public static void reset(Activity activity) {
         setNotificationId(activity, "");
         setUserUsername(activity, "");
         setUserPassword(activity, "");
@@ -354,9 +363,5 @@ public class Config {
         setUserId(activity, -1);
         setUserAdmin(activity, false);
         setUserIdFileProfilePicture(activity, -1);
-    }
-
-    public interface ConfigCallback {
-        Config getConfig();
     }
 }

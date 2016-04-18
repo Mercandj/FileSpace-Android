@@ -144,7 +144,7 @@ public class ServerLogsFragment extends BackFragment {
         } else {
             this.circularProgressBar.setVisibility(View.GONE);
             if (isAdded()) {
-                this.message.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+                this.message.setText(Config.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             }
             this.message.setVisibility(View.VISIBLE);
             this.swipeRefreshLayout.setRefreshing(false);
@@ -189,10 +189,5 @@ public class ServerLogsFragment extends BackFragment {
     @Override
     public boolean back() {
         return false;
-    }
-
-    @Override
-    public void onFocus() {
-
     }
 }

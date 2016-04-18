@@ -162,9 +162,9 @@ public class SettingsFragment extends BackFragment {
             list.add(new ModelSetting("Auto connection", new OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    mApplicationCallback.getConfig().setAutoConnection(context, isChecked);
+                    Config.setAutoConnection(context, isChecked);
                 }
-            }, mApplicationCallback.getConfig().isAutoConnection()));
+            }, Config.isAutoConnection()));
             list.add(new ModelSetting("Web application", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -195,7 +195,7 @@ public class SettingsFragment extends BackFragment {
         list.add(new ModelSetting(getString(R.string.settings_about), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DialogAuthorLabel(getActivity(), mApplicationCallback);
+                new DialogAuthorLabel(getActivity());
             }
         }));
         list.add(new ModelSetting(getString(R.string.settings_licences), new View.OnClickListener() {
@@ -271,18 +271,12 @@ public class SettingsFragment extends BackFragment {
         return false;
     }
 
-    @Override
-    public void onFocus() {
-
-    }
-
     /**
      * Load a new interstitial ad asynchronously.
      */
     private void requestNewInterstitial() {
-        AdRequest adRequest = new AdRequest.Builder()
+        final AdRequest adRequest = new AdRequest.Builder()
                 .build();
-
         mInterstitialAd.loadAd(adRequest);
     }
 }

@@ -15,6 +15,7 @@ import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.file.filespace.FileSpaceModel;
+import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.library.baselibrary.java.StringUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -39,7 +40,7 @@ public class NoteFragment extends BackFragment {
         mFileSpaceModel = new FileSpaceModel.FileSpaceModelBuilder().type("article").build();
         mInputEdiText = (EditText) rootView.findViewById(R.id.fragment_workspace_note_input);
 
-        final String txt = mApplicationCallback.getConfig().getUserNoteWorkspace1();
+        final String txt = Config.getUserNoteWorkspace1();
         if (!StringUtils.isNullOrEmpty(txt)) {
             try {
                 String txt_tmp = new String(txt.getBytes("ISO-8859-1"), "UTF-8");
@@ -58,7 +59,7 @@ public class NoteFragment extends BackFragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s != null) {
-                    mApplicationCallback.getConfig().setUserNoteWorkspace1(getContext(), s.toString());
+                    Config.setUserNoteWorkspace1(getContext(), s.toString());
                     mFileSpaceModel.getArticle().article_content_1 = s.toString();
                 }
             }
@@ -76,11 +77,6 @@ public class NoteFragment extends BackFragment {
         return false;
     }
 
-    @Override
-    public void onFocus() {
-
-    }
-
     /**
      * Delete the current note. Delete the {@link #mInputEdiText} content.
      */
@@ -89,7 +85,7 @@ public class NoteFragment extends BackFragment {
             @Override
             public void execute() {
                 mInputEdiText.setText("");
-                mApplicationCallback.getConfig().setUserNoteWorkspace1(getContext(), "");
+                Config.setUserNoteWorkspace1(getContext(), "");
             }
         }, getString(android.R.string.no), null);
     }

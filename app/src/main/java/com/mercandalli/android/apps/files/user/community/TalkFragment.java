@@ -110,7 +110,7 @@ public class TalkFragment extends BackFragment {
     }
 
     public void refreshList() {
-        if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
+        if (NetUtils.isInternetConnection(getContext()) && Config.isLogged()) {
             new TaskGet(
                     getActivity(),
                     Constants.URL_DOMAIN + Config.ROUTE_USER_CONVERSATION,
@@ -123,7 +123,7 @@ public class TalkFragment extends BackFragment {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ConversationUserModel modelUser = new ConversationUserModel(getActivity(), mApplicationCallback, array.getJSONObject(i));
+                                            ConversationUserModel modelUser = new ConversationUserModel(getActivity(), array.getJSONObject(i));
                                             mConversationUserModels.add(modelUser);
                                         }
                                     }
@@ -140,7 +140,7 @@ public class TalkFragment extends BackFragment {
             ).execute();
         } else {
             mCircularProgressBar.setVisibility(View.GONE);
-            mMessageTextView.setText(mApplicationCallback.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+            mMessageTextView.setText(Config.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
             mMessageTextView.setVisibility(View.VISIBLE);
             mSwipeRefreshLayout.setRefreshing(false);
         }
@@ -167,7 +167,7 @@ public class TalkFragment extends BackFragment {
                             List<StringPair> parameters = new ArrayList<>();
                             parameters.add(new StringPair("message", "" + text));
 
-                            new TaskPost(getActivity(), mApplicationCallback, url, new IPostExecuteListener() {
+                            new TaskPost(getActivity(), url, new IPostExecuteListener() {
                                 @Override
                                 public void onPostExecute(JSONObject json, String body) {
 
@@ -207,10 +207,5 @@ public class TalkFragment extends BackFragment {
     @Override
     public boolean back() {
         return false;
-    }
-
-    @Override
-    public void onFocus() {
-
     }
 }

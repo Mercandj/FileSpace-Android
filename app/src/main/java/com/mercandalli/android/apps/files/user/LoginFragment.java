@@ -66,11 +66,11 @@ public class LoginFragment extends BackFragment {
             this.password.setHint(Html.fromHtml("&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"));
         }
 
-        ((CheckBox) rootView.findViewById(R.id.fragment_registration_auto_connection)).setChecked(mApplicationCallback.getConfig().isAutoConnection());
+        ((CheckBox) rootView.findViewById(R.id.fragment_registration_auto_connection)).setChecked(Config.isAutoConnection());
         ((CheckBox) rootView.findViewById(R.id.fragment_registration_auto_connection)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mApplicationCallback.getConfig().setAutoConnection(getContext(), isChecked);
+                Config.setAutoConnection(getContext(), isChecked);
             }
         });
 
@@ -126,13 +126,13 @@ public class LoginFragment extends BackFragment {
         requestLaunched = true;
 
         if (!StringUtils.isNullOrEmpty(user.username)) {
-            mApplicationCallback.getConfig().setUserUsername(getContext(), user.username);
+            Config.setUserUsername(getContext(), user.username);
         } else {
             user.username = Config.getUserUsername();
         }
 
         if (!StringUtils.isNullOrEmpty(user.password)) {
-            mApplicationCallback.getConfig().setUserPassword(getContext(), user.password);
+            Config.setUserPassword(getContext(), user.password);
         } else {
             user.password = Config.getUserPassword();
         }
@@ -151,7 +151,7 @@ public class LoginFragment extends BackFragment {
                 Config.getUserUsername() + " isInternetConnection=" +
                 NetUtils.isInternetConnection(getContext()));
         if (NetUtils.isInternetConnection(getContext())) {
-            (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_USER, new IPostExecuteListener() {
+            (new TaskPost(getActivity(), Constants.URL_DOMAIN + Config.ROUTE_USER, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     requestLaunched = false;
@@ -163,18 +163,18 @@ public class LoginFragment extends BackFragment {
                             if (json.has("user")) {
                                 JSONObject user = json.getJSONObject("user");
                                 if (user.has("id")) {
-                                    mApplicationCallback.getConfig().setUserId(getContext(), user.getInt("id"));
+                                    Config.setUserId(getContext(), user.getInt("id"));
                                 }
                                 if (user.has(ADMIN)) {
                                     Object admin_obj = user.get(ADMIN);
                                     if (admin_obj instanceof Integer) {
-                                        mApplicationCallback.getConfig().setUserAdmin(getContext(), user.getInt(ADMIN) == 1);
+                                        Config.setUserAdmin(getContext(), user.getInt(ADMIN) == 1);
                                     } else if (admin_obj instanceof Boolean) {
-                                        mApplicationCallback.getConfig().setUserAdmin(getContext(), user.getBoolean(ADMIN));
+                                        Config.setUserAdmin(getContext(), user.getBoolean(ADMIN));
                                     }
                                 }
                                 if (user.has("id_file_profile_picture")) {
-                                    mApplicationCallback.getConfig().setUserIdFileProfilePicture(getActivity(), user.getInt("id_file_profile_picture"));
+                                    Config.setUserIdFileProfilePicture(getActivity(), user.getInt("id_file_profile_picture"));
                                 }
                             }
                         } else {
@@ -193,10 +193,5 @@ public class LoginFragment extends BackFragment {
     @Override
     public boolean back() {
         return false;
-    }
-
-    @Override
-    public void onFocus() {
-
     }
 }

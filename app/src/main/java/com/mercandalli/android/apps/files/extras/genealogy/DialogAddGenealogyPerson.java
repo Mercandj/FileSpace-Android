@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -32,11 +32,10 @@ import android.widget.Toast;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
+import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
-import com.mercandalli.android.apps.files.common.util.StringPair;
-import com.mercandalli.android.apps.files.main.ApplicationCallback;
 import com.mercandalli.android.library.baselibrary.java.StringUtils;
 
 import java.util.ArrayList;
@@ -45,7 +44,6 @@ import java.util.List;
 public class DialogAddGenealogyPerson extends Dialog {
 
     private Activity mActivity;
-    private ApplicationCallback app;
     private EditText et_first_name_1;
     private EditText et_first_name_2;
     private EditText et_first_name_3;
@@ -61,14 +59,13 @@ public class DialogAddGenealogyPerson extends Dialog {
     private ModelGenealogyPerson mother, father;
     private List<ModelGenealogyPerson> marriages;
 
-    public DialogAddGenealogyPerson(Activity activity, final ApplicationCallback app, final IPostExecuteListener listener) {
-        this(activity, app, listener, activity.getString(R.string.genealogy_add_person), null);
+    public DialogAddGenealogyPerson(Activity activity, final IPostExecuteListener listener) {
+        this(activity, listener, activity.getString(R.string.genealogy_add_person), null);
     }
 
-    public DialogAddGenealogyPerson(Activity activity, final ApplicationCallback app, final IPostExecuteListener listener, String title, final ModelGenealogyPerson genealogyUser) {
+    public DialogAddGenealogyPerson(Activity activity, final IPostExecuteListener listener, String title, final ModelGenealogyPerson genealogyUser) {
         super(activity);
         mActivity = activity;
-        this.app = app;
 
         this.setContentView(R.layout.dialog_add_genealogy_person);
         this.setTitle(title);
@@ -139,9 +136,9 @@ public class DialogAddGenealogyPerson extends Dialog {
                     parameters.add(new StringPair("is_man", "" + sex.isChecked()));
 
                     if (genealogyUser == null) {
-                        (new TaskPost(mActivity, app, Constants.URL_DOMAIN + Config.ROUTE_GENEALOGY, listener, parameters)).execute();
+                        (new TaskPost(mActivity, Constants.URL_DOMAIN + Config.ROUTE_GENEALOGY, listener, parameters)).execute();
                     } else {
-                        (new TaskPost(mActivity, app, Constants.URL_DOMAIN + Config.ROUTE_GENEALOGY_PUT + "/" + genealogyUser.mId, listener, parameters)).execute();
+                        (new TaskPost(mActivity, Constants.URL_DOMAIN + Config.ROUTE_GENEALOGY_PUT + "/" + genealogyUser.mId, listener, parameters)).execute();
                     }
 
                     DialogAddGenealogyPerson.this.dismiss();

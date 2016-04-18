@@ -123,7 +123,7 @@ public class UserAddFragment extends BackFragment {
 
                 if (NetUtils.isInternetConnection(getContext()) && !StringUtils.isNullOrEmpty(newUser.username) && !StringUtils.isNullOrEmpty(newUser.password)) {
                     requestLaunched = true;
-                    (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_USER, new IPostExecuteListener() {
+                    (new TaskPost(getActivity(),  Constants.URL_DOMAIN + Config.ROUTE_USER, new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
                             try {
@@ -134,7 +134,7 @@ public class UserAddFragment extends BackFragment {
                                     if (json.has("user")) {
                                         JSONObject user = json.getJSONObject("user");
                                         if (user.has("id")) {
-                                            mApplicationCallback.getConfig().setUserId(getActivity(), user.getInt("id"));
+                                            Config.setUserId(getActivity(), user.getInt("id"));
                                         }
                                     }
                                 } else {
@@ -159,10 +159,5 @@ public class UserAddFragment extends BackFragment {
     @Override
     public boolean back() {
         return false;
-    }
-
-    @Override
-    public void onFocus() {
-
     }
 }

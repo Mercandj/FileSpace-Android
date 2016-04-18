@@ -128,7 +128,7 @@ public class UserLocationFragment extends BackFragment {
                                                 parameters.add(new StringPair("longitude", "" + longitude));
                                                 parameters.add(new StringPair("latitude", "" + latitude));
 
-                                                (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_USER_PUT, new IPostExecuteListener() {
+                                                (new TaskPost(getActivity(), Constants.URL_DOMAIN + Config.ROUTE_USER_PUT, new IPostExecuteListener() {
                                                     @Override
                                                     public void onPostExecute(JSONObject json, String body) {
 
@@ -148,7 +148,7 @@ public class UserLocationFragment extends BackFragment {
                                         parameters.add(new StringPair("longitude", "" + longitude));
                                         parameters.add(new StringPair("latitude", "" + latitude));
 
-                                        (new TaskPost(getActivity(), mApplicationCallback, Constants.URL_DOMAIN + Config.ROUTE_USER_PUT, new IPostExecuteListener() {
+                                        (new TaskPost(getActivity(), Constants.URL_DOMAIN + Config.ROUTE_USER_PUT, new IPostExecuteListener() {
                                             @Override
                                             public void onPostExecute(JSONObject json, String body) {
                                                 refreshMap();
@@ -168,7 +168,7 @@ public class UserLocationFragment extends BackFragment {
     }
 
     public void refreshMap() {
-        if (NetUtils.isInternetConnection(getContext()) && mApplicationCallback.isLogged()) {
+        if (NetUtils.isInternetConnection(getContext()) && Config.isLogged()) {
             new TaskGet(
                     getContext(),
                     Constants.URL_DOMAIN + Config.ROUTE_USER,
@@ -181,7 +181,7 @@ public class UserLocationFragment extends BackFragment {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            UserModel userModel = new UserModel(getActivity(), mApplicationCallback, array.getJSONObject(i));
+                                            UserModel userModel = new UserModel(getActivity(), array.getJSONObject(i));
                                             locations.add(userModel.userLocation);
                                         }
                                     }
@@ -260,10 +260,5 @@ public class UserLocationFragment extends BackFragment {
     @Override
     public boolean back() {
         return false;
-    }
-
-    @Override
-    public void onFocus() {
-
     }
 }

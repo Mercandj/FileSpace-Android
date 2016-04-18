@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -49,13 +49,13 @@ import com.mercandalli.android.apps.files.common.dialog.ConfirmationDialog;
 import com.mercandalli.android.apps.files.common.dialog.DialogCallback;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.view.PagerSlidingTabStrip;
 import com.mercandalli.android.apps.files.main.ApplicationActivity;
 import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.MainActivity;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.library.baselibrary.java.HashUtils;
 import com.mercandalli.android.library.baselibrary.java.StringUtils;
 
@@ -130,7 +130,7 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
         tabs.setViewPager(mViewPager);
         tabs.setIndicatorColor(ContextCompat.getColor(this, android.R.color.white));
 
-        if (this.getConfig().isAutoConnection() && Config.getUserUsername() != null && Config.getUserPassword() != null &&
+        if (Config.isAutoConnection() && Config.getUserUsername() != null && Config.getUserPassword() != null &&
                 !Config.getUserUsername().equals("") && !Config.getUserPassword().equals("") && Config.getUserId() != -1) {
             connectionSucceed();
         }
@@ -163,16 +163,6 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
         this.startActivity(intent);
         this.overridePendingTransition(R.anim.left_in, R.anim.left_out);
         this.finish();
-    }
-
-    @Override
-    public void updateAdapters() {
-
-    }
-
-    @Override
-    public void refreshData() {
-
     }
 
     @Override
@@ -236,7 +226,7 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
 
     /**
      * Show a UI rationale for requesting the {@link android.Manifest.permission#GET_ACCOUNTS}.
-     * <p/>
+     * <p>
      * If the user agree, a native poop-up will appear.
      */
     private void requestAccountPermissionRationale() {
@@ -385,18 +375,18 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
         parameters.add(new StringPair("username", "" + user.username));
         parameters.add(new StringPair("password", "" + user.password));
         if (NetUtils.isInternetConnection(this)) {
-            (new TaskPost(this, this, Constants.URL_DOMAIN + Config.ROUTE_USER, new IPostExecuteListener() {
+            (new TaskPost(this, Constants.URL_DOMAIN + Config.ROUTE_USER, new IPostExecuteListener() {
                 @Override
                 public void onPostExecute(JSONObject json, String body) {
                     try {
                         if (json != null) {
                             if (json.has("succeed") && json.getBoolean("succeed")) {
                                 if (!StringUtils.isNullOrEmpty(user.username)) {
-                                    LoginRegisterActivity.this.getConfig().setUserUsername(LoginRegisterActivity.this, user.username);
+                                    Config.setUserUsername(LoginRegisterActivity.this, user.username);
                                 }
 
                                 if (!StringUtils.isNullOrEmpty(user.password)) {
-                                    LoginRegisterActivity.this.getConfig().setUserPassword(LoginRegisterActivity.this, user.password);
+                                    Config.setUserPassword(LoginRegisterActivity.this, user.password);
                                 }
 
                                 connectionSucceed();
@@ -404,18 +394,18 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
                             if (json.has("user")) {
                                 JSONObject user = json.getJSONObject("user");
                                 if (user.has("id")) {
-                                    LoginRegisterActivity.this.getConfig().setUserId(LoginRegisterActivity.this, user.getInt("id"));
+                                    Config.setUserId(LoginRegisterActivity.this, user.getInt("id"));
                                 }
                                 if (user.has(ADMIN)) {
                                     Object admin_obj = user.get(ADMIN);
                                     if (admin_obj instanceof Integer) {
-                                        LoginRegisterActivity.this.getConfig().setUserAdmin(LoginRegisterActivity.this, user.getInt(ADMIN) == 1);
+                                        Config.setUserAdmin(LoginRegisterActivity.this, user.getInt(ADMIN) == 1);
                                     } else if (admin_obj instanceof Boolean) {
-                                        LoginRegisterActivity.this.getConfig().setUserAdmin(LoginRegisterActivity.this, user.getBoolean(ADMIN));
+                                        Config.setUserAdmin(LoginRegisterActivity.this, user.getBoolean(ADMIN));
                                     }
                                 }
                                 if (user.has("id_file_profile_picture")) {
-                                    LoginRegisterActivity.this.getConfig().setUserIdFileProfilePicture(LoginRegisterActivity.this, user.getInt("id_file_profile_picture"));
+                                    Config.setUserIdFileProfilePicture(LoginRegisterActivity.this, user.getInt("id_file_profile_picture"));
                                 }
                             }
                         } else {

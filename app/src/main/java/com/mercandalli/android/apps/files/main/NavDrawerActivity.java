@@ -118,9 +118,9 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
         mNavDrawerView = (NavDrawerView) findViewById(R.id.activity_main_nav_drawer_view);
         mNavDrawerView.setOnNavDrawerClickCallback(this);
         mNavDrawerView.setSelectedRow(this, getInitFragmentId());
-        mNavDrawerView.setConnected(isLogged());
-        if (isLogged()) {
-            mNavDrawerView.setUser(Config.getUser(), getConfig().getUserProfilePicture(this, this));
+        mNavDrawerView.setConnected(Config.isLogged());
+        if (Config.isLogged()) {
+            mNavDrawerView.setUser(Config.getUser(), Config.getUserProfilePicture(this));
         }
 
         logPerformance(TAG, "NavDrawerActivity#onCreate() - Middle");
@@ -215,7 +215,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
             // The user manually closed the drawer; store this flag to prevent auto-showing
             // the navigation drawer automatically in the future.
             mUserLearnedDrawer = true;
-            PreferenceManager.getDefaultSharedPreferences(NavDrawerActivity.this).edit()
+            PreferenceManager.getDefaultSharedPreferences(this).edit()
                     .putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
         }
 
@@ -238,10 +238,10 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
         Preconditions.checkNotNull(navDrawerRow);
 
         if (NavDrawerView.NavDrawerRow.LOGOUT.equals(navDrawerRow)) {
-            DialogUtils.alert(NavDrawerActivity.this, "Log out", "Do you want to log out?", "Yes", new IListener() {
+            DialogUtils.alert(this, "Log out", "Do you want to log out?", "Yes", new IListener() {
                 @Override
                 public void execute() {
-                    NavDrawerActivity.this.getConfig().reset(NavDrawerActivity.this);
+                    Config.reset(NavDrawerActivity.this);
                     NavDrawerActivity.this.finish();
                 }
             }, getString(android.R.string.cancel), null);
@@ -253,7 +253,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
         if (fragment == null) {
             switch (navDrawerRow) {
                 case HEADER:
-                    if (isLogged()) {
+                    if (Config.isLogged()) {
                         fragment = ProfileFragment.newInstance();
                     } else {
                         return;
@@ -370,6 +370,4 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
             }
         }
     }
-
-    public abstract void updateAdapters();
 }

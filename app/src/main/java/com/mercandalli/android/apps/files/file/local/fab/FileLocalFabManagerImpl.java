@@ -1,29 +1,40 @@
 package com.mercandalli.android.apps.files.file.local.fab;
 
 import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/* package */ class FileLocalFabManagerImpl implements FileLocalFabManager {
+/**
+ * A {@link FileLocalFabManager} implementation.
+ */
+/* package */
+class FileLocalFabManagerImpl implements FileLocalFabManager {
 
     @Nullable
     private FabContainer mFabContainer;
     private final Map<Integer, FabController> mFabContainers = new HashMap<>();
     private int mViewPagerPosition;
 
-    public FileLocalFabManagerImpl() {
+    /* package */ FileLocalFabManagerImpl() {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onCurrentViewPagerPageChange(final int viewPagerPosition) {
         mViewPagerPosition = viewPagerPosition;
         updateFabButtons();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateFabButtons() {
         if (mFabContainer == null) {
@@ -44,23 +55,37 @@ import java.util.Map;
         mFabContainer.updateFabs(fabStates);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setFabContainer(@Nullable final FabContainer fabContainer) {
         mFabContainer = fabContainer;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addFabContainer(final int positionInViewPager, final FabController fabController) {
         return mFabContainers.put(positionInViewPager, fabController) == fabController;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean removeFabContainer(final int positionInViewPager) {
         return mFabContainers.remove(positionInViewPager) != null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void onFabClick(@IntRange(from=0,to=1) final int fabId, final FloatingActionButton floatingActionButton) {
+    public void onFabClick(
+            final @IntRange(from = 0, to = 1) int fabId,
+            final @NonNull FloatingActionButton floatingActionButton) {
         if (mFabContainer == null) {
             return;
         }

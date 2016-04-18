@@ -116,11 +116,6 @@ public class SupportFragment extends BackFragment implements
     }
 
     @Override
-    public void onFocus() {
-
-    }
-
-    @Override
     public boolean onSupportCommentLongClick(View view, int position) {
         return false;
     }

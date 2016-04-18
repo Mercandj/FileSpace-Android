@@ -129,14 +129,14 @@ dependencies {
     apt 'com.google.dagger:dagger-compiler:2.2'
 
     // Network
-    compile('com.squareup.retrofit2:retrofit:2.0.0') {
+    compile('com.squareup.retrofit2:retrofit:2.0.2') {
         // exclude Retrofit’s OkHttp peer-dependency module and define your own module import
         exclude module: 'okhttp'
     }
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.google.code.gson:gson:2.6.2'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0'
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.5'
     compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
 
     // Audio
@@ -160,7 +160,7 @@ dependencies {
     androidTestCompile 'com.android.support:support-annotations:23.3.0'
     androidTestCompile 'com.android.support.test:runner:0.5'
     androidTestCompile 'com.android.support.test:rules:0.5'
-    androidTestCompile 'com.squareup.spoon:spoon-client:1.3.2'
+    androidTestCompile 'com.squareup.spoon:spoon-client:1.4.0'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
     androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.1'
     androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.1') {
