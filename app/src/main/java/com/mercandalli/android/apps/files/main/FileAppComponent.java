@@ -13,6 +13,8 @@ import com.mercandalli.android.apps.files.file.audio.FileAudioPlayer;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudDownloadedFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileMyCloudFragment;
+import com.mercandalli.android.apps.files.file.cloud.fab.FileCloudFabManager;
+import com.mercandalli.android.apps.files.file.cloud.fab.FileCloudFabModule;
 import com.mercandalli.android.apps.files.file.image.FileImageAdapter;
 import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
 import com.mercandalli.android.apps.files.file.image.FileImageManager;
@@ -44,6 +46,7 @@ import dagger.Component;
                 SupportModule.class,
                 VersionModule.class,
                 FileLocalFabModule.class,
+                FileCloudFabModule.class,
                 NotificationPushModule.class
         }
 )
@@ -88,6 +91,8 @@ public interface FileAppComponent {
     VersionManager provideVersionManager();
 
     FileLocalFabManager provideFileLocalFabManager();
+
+    FileCloudFabManager provideFileCloudFabManager();
 
     NotificationPushManager proideNotificationPushManager();
 }

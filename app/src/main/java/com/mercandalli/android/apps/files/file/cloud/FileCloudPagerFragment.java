@@ -20,7 +20,9 @@
 package com.mercandalli.android.apps.files.file.cloud;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -44,16 +46,22 @@ import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
+import com.mercandalli.android.apps.files.file.cloud.fab.FileCloudFabManager;
 import com.mercandalli.android.apps.files.file.local.SearchActivity;
+import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
+import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 
 import static com.mercandalli.android.library.baselibrary.view.StatusBarUtils.setStatusBarColor;
 
-public class FileCloudPagerFragment extends BackFragment implements ViewPager.OnPageChangeListener {
+public class FileCloudPagerFragment extends BackFragment implements
+        ViewPager.OnPageChangeListener,
+        FileCloudFabManager.FabContainer, View.OnClickListener {
 
     private static final String BUNDLE_ARG_TITLE = "FileOnlineFragment.Args.BUNDLE_ARG_TITLE";
 
     private static final int NB_FRAGMENT = 3;
+    private static final int INIT_VIEW_PAGER_POSITION = 1;
     private ViewPager mViewPager;
     private FileManagerFragmentPagerAdapter mPagerAdapter;
 
@@ -63,6 +71,8 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
 
     private String mTitle;
     private SetToolbarCallback mSetToolbarCallback;
+
+    private FileCloudFabManager mFileCloudFabManager;
 
     public static FileCloudPagerFragment newInstance(String title) {
         final FileCloudPagerFragment fragment = new FileCloudPagerFragment();
@@ -96,6 +106,8 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
             throw new IllegalStateException("Missing args. Please use newInstance()");
         }
         mTitle = args.getString(BUNDLE_ARG_TITLE);
+        mFileCloudFabManager = FileApp.get().getFileAppComponent().provideFileCloudFabManager();
+        mFileCloudFabManager.setFabContainer(this, INIT_VIEW_PAGER_POSITION);
     }
 
     @Nullable
@@ -118,13 +130,14 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
         ((TabLayout) rootView.findViewById(R.id.fragment_file_tab_layout)).setupWithViewPager(mViewPager);
 
         mFab1 = ((FloatingActionButton) rootView.findViewById(R.id.fragment_file_fab_1));
-        mFab1.setVisibility(View.GONE);
         mFab2 = ((FloatingActionButton) rootView.findViewById(R.id.fragment_file_fab_2));
+        mFab1.setVisibility(View.GONE);
         mFab2.setVisibility(View.GONE);
+        mFab1.setOnClickListener(this);
+        mFab2.setOnClickListener(this);
 
         if (savedInstanceState == null) {
-            //mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
-            mViewPager.setCurrentItem(1);
+            mViewPager.setCurrentItem(INIT_VIEW_PAGER_POSITION);
         }
         mViewPager.addOnPageChangeListener(this);
 
@@ -141,8 +154,29 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
         if (fabFragment == null) {
             return false;
         }
-        refreshFab(fabFragment);
+        mFileCloudFabManager.updateFabButtons();
         return ((BackFragment) fabFragment).back();
+    }
+
+    @Override
+    public void updateFabs(final FileCloudFabManager.FabState[] fabStates) {
+        for (int i = 0; i < fabStates.length; i++) {
+            final FileCloudFabManager.FabState fabState = fabStates[i];
+            if (fabState.fabVisible) {
+                showFab(i);
+            } else {
+                hideFab(i);
+            }
+            int imageResource = fabState.fabImageResource;
+            if (imageResource == -1) {
+                imageResource = android.R.drawable.ic_input_add;
+            }
+            if (i == 0) {
+                mFab1.setImageResource(imageResource);
+            } else {
+                mFab2.setImageResource(imageResource);
+            }
+        }
     }
 
     @Override
@@ -160,22 +194,7 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
             ((AppCompatActivity) context).invalidateOptionsMenu();
         }
         updateNoInternet();
-        refreshFab(position);
-    }
-
-    //@Override
-    public void onRefreshFab() {
-        refreshFab();
-    }
-
-    //@Override
-    public void hideFab(int fab_id) {
-
-    }
-
-    //@Override
-    public void showFab(int fab_id) {
-
+        mFileCloudFabManager.onCurrentViewPagerPageChange(position);
     }
 
     @Override
@@ -206,6 +225,15 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(final View v) {
+        if (v == mFab1) {
+            mFileCloudFabManager.onFabClick(0, mFab1);
+        } else if (v == mFab2) {
+            mFileCloudFabManager.onFabClick(1, mFab2);
+        }
     }
 
     public int getCurrentFragmentIndex() {
@@ -302,64 +330,36 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
         }
     }
 
-    private void refreshFab() {
-        refreshFab(getCurrentFragmentIndex());
+    private void hideFab(
+            final @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition) {
+        switch (fabPosition) {
+            case 0:
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
+                    mFab1.hide();
+                } else {
+                    mFab1.setVisibility(View.GONE);
+                }
+                break;
+            case 1:
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
+                    mFab2.hide();
+                } else {
+                    mFab2.setVisibility(View.GONE);
+                }
+                break;
+        }
     }
 
-    private void refreshFab(int currentFragmentId) {
-        if (currentFragmentId == -1) {
-            return;
+    private void showFab(
+            final @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition) {
+        switch (fabPosition) {
+            case 0:
+                mFab1.show();
+                break;
+            case 1:
+                mFab2.show();
+                break;
         }
-        Fragment fabFragment = getCurrentFragment();
-        if (fabFragment == null) {
-            return;
-        }
-        refreshFab(fabFragment);
-    }
-
-    private void refreshFab(final Fragment currentFragment) {
-        if (mFab1 == null) {
-            return;
-        }
-        /*
-        int imageResource;
-        if (currentFragment.isFabVisible(0)) {
-            mFab1.show();
-            imageResource = currentFragment.getFabImageResource(0);
-            if (imageResource == -1) {
-                imageResource = android.R.drawable.ic_input_add;
-            }
-            mFab1.setImageResource(imageResource);
-            mFab1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    currentFragment.onFabClick(0, mFab1);
-                }
-            });
-        } else {
-            mFab1.hide();
-        }
-
-        if (mFab2 == null) {
-            return;
-        }
-        if (currentFragment.isFabVisible(1)) {
-            mFab2.show();
-            imageResource = currentFragment.getFabImageResource(1);
-            if (imageResource == -1) {
-                imageResource = android.R.drawable.ic_input_add;
-            }
-            mFab2.setImageResource(imageResource);
-            mFab2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    currentFragment.onFabClick(1, mFab2);
-                }
-            });
-        } else {
-            mFab2.hide();
-        }
-        */
     }
 
     public class FileManagerFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -369,16 +369,16 @@ public class FileCloudPagerFragment extends BackFragment implements ViewPager.On
         }
 
         @Override
-        public Fragment getItem(int i) {
-            switch (i) {
+        public Fragment getItem(int position) {
+            switch (position) {
                 case 0:
-                    return FileCloudFragment.newInstance();
+                    return FileCloudFragment.newInstance(position);
                 case 1:
-                    return FileMyCloudFragment.newInstance();
+                    return FileMyCloudFragment.newInstance(position);
                 case 2:
-                    return FileCloudDownloadedFragment.newInstance();
+                    return FileCloudDownloadedFragment.newInstance(position);
                 default:
-                    return FileCloudFragment.newInstance();
+                    return FileCloudFragment.newInstance(position);
             }
         }
 

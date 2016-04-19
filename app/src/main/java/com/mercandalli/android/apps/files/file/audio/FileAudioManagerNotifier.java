@@ -1,6 +1,7 @@
 package com.mercandalli.android.apps.files.file.audio;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.Spanned;
 
 import com.mercandalli.android.apps.files.file.FileModel;
@@ -17,11 +18,17 @@ import java.util.List;
 abstract class FileAudioManagerNotifier implements FileAudioManager {
 
     /* Listeners */
+    @NonNull
     protected final List<GetAllLocalMusicListener> mGetAllLocalMusicListeners = new ArrayList<>();
+    @NonNull
     protected final List<GetAllLocalMusicArtistsListener> mGetAllLocalMusicArtistsListeners = new ArrayList<>();
+    @NonNull
     protected final List<GetAllLocalMusicAlbumsListener> mGetAllLocalMusicAlbumsListeners = new ArrayList<>();
+    @NonNull
     protected final List<GetLocalMusicFoldersListener> mGetLocalMusicFoldersListeners = new ArrayList<>();
+    @NonNull
     protected final List<GetLocalMusicListener> mGetLocalMusicListeners = new ArrayList<>();
+    @NonNull
     protected final List<MusicsChangeListener> mMusicsChangeListeners = new ArrayList<>();
 
     /**

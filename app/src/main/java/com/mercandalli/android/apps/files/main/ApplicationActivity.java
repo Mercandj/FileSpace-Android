@@ -21,10 +21,7 @@ package com.mercandalli.android.apps.files.main;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.nfc.NdefMessage;
-import android.nfc.NfcAdapter;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 

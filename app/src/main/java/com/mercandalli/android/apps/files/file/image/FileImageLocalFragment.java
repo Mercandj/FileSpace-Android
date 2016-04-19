@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
@@ -171,12 +172,12 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
             throw new IllegalStateException("Missing args. Please use newInstance()");
         }
         mPositionInViewPager = args.getInt(ARG_POSITION_IN_VIEW_PAGER);
-        mFileLocalFabManager.addFabContainer(mPositionInViewPager, this);
+        mFileLocalFabManager.addFabController(mPositionInViewPager, this);
     }
 
     @Override
     public void onDestroy() {
-        mFileLocalFabManager.removeFabContainer(mPositionInViewPager);
+        mFileLocalFabManager.removeFabController(mPositionInViewPager);
         super.onDestroy();
     }
 
@@ -359,6 +360,7 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         return fabPosition == 0 && mCurrentPage == PAGE_FOLDER_INSIDE;
     }
 
+    @DrawableRes
     @Override
     public int getFabImageResource(
             final @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition) {

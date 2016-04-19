@@ -24,6 +24,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -46,6 +49,7 @@ import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
 import com.mercandalli.android.apps.files.file.FileModelListener;
+import com.mercandalli.android.apps.files.file.cloud.fab.FileCloudFabManager;
 import com.mercandalli.android.apps.files.file.local.FileLocalApi;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
@@ -66,7 +70,13 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
         FileModelAdapter.OnFileClickListener,
         FileModelAdapter.OnFileLongClickListener,
         FileModelListener,
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener,
+        FileCloudFabManager.FabController {
+
+    /**
+     * A key for the view pager position.
+     */
+    private static final String ARG_POSITION_IN_VIEW_PAGER = "FileCloudDownloadedFragment.Args.ARG_POSITION_IN_VIEW_PAGER";
 
     private RecyclerView mRecyclerView;
     private final List<FileModel> mFilesList = new ArrayList<>();
@@ -78,13 +88,32 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
 
     private List<FileModel> mFilesToCutList = new ArrayList<>();
     private List<FileModel> mFilesToCopyList = new ArrayList<>();
+    private FileModelAdapter mFileModelAdapter;
+    private int mPositionInViewPager;
 
     @Inject
     FileManager mFileManager;
-    private FileModelAdapter mFileModelAdapter;
 
-    public static FileCloudDownloadedFragment newInstance() {
-        return new FileCloudDownloadedFragment();
+    @Inject
+    FileCloudFabManager mFileCloudFabManager;
+
+    public static FileCloudDownloadedFragment newInstance(final int positionInViewPager) {
+        final FileCloudDownloadedFragment fileCloudDownloadedFragment = new FileCloudDownloadedFragment();
+        final Bundle args = new Bundle();
+        args.putInt(ARG_POSITION_IN_VIEW_PAGER, positionInViewPager);
+        fileCloudDownloadedFragment.setArguments(args);
+        return fileCloudDownloadedFragment;
+    }
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final Bundle args = getArguments();
+        if (!args.containsKey(ARG_POSITION_IN_VIEW_PAGER)) {
+            throw new IllegalStateException("Missing args. Please use newInstance()");
+        }
+        mPositionInViewPager = args.getInt(ARG_POSITION_IN_VIEW_PAGER);
+        mFileCloudFabManager.addFabController(mPositionInViewPager, this);
     }
 
     @Override
@@ -158,89 +187,23 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
         return false;
     }
 
-    /*
-    @Override
-    public void onFabClick(int fabId, FloatingActionButton fab) {
-        switch (fabId) {
-            case 0:
-                if ((mFilesToCopyList != null && mFilesToCopyList.size() != 0) || (mFilesToCutList != null && mFilesToCutList.size() != 0)) {
-                    if (mFilesToCopyList != null) {
-                        for (FileModel file : mFilesToCopyList) {
-                            mFileManager.copyLocalFile(getActivity(), file, mCurrentDirectory.getAbsolutePath() + File.separator);
-                        }
-                        mFilesToCopyList.clear();
-                    }
-                    if (mFilesToCutList != null) {
-                        for (FileModel file : mFilesToCutList) {
-                            mFileManager.renameLocalByPath(file, mCurrentDirectory.getAbsolutePath() + File.separator + file.getFullName());
-                        }
-                        mFilesToCutList.clear();
-                    }
-                    refreshList();
-                } else {
-                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(getContext());
-                    final String[] menuList = {"New Folder or File"};
-                    menuAlert.setTitle("Action");
-                    menuAlert.setItems(menuList,
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int item) {
-                                    switch (item) {
-                                        case 0:
-                                            DialogUtils.prompt(getActivity(), "New Folder or File", "Choose a file name with ext or a folder name.", getString(R.string.ok), new IStringListener() {
-                                                @Override
-                                                public void execute(String text) {
-                                                    createFile(mCurrentDirectory.getPath() + File.separator, text);
-                                                    refreshList();
-                                                }
-                                            }, getString(android.R.string.cancel), null, null, "Name");
-                                            break;
-                                    }
-                                }
-                            });
-                    AlertDialog menuDrop = menuAlert.create();
-                    menuDrop.show();
-                }
-                refreshFab();
-                break;
 
-            case 1:
-                if (mCurrentDirectory.getParent() != null && !mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath())) {
-                    FileCloudDownloadedFragment.this.mCurrentDirectory = new File(mCurrentDirectory.getParentFile().getPath());
-                    //Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+FileManagerFragmentLocal.this.app.getConfig().localFolderName);
-                    FileCloudDownloadedFragment.this.refreshList();
-                }
-                break;
-        }
+    @Override
+    public void onFabClick(
+            @IntRange(from = 0, to = FileCloudFabManager.NUMBER_MAX_OF_FAB - 1) final int fabPosition,
+            @NonNull final FloatingActionButton floatingActionButton) {
     }
 
     @Override
-    public boolean isFabVisible(int fabId) {
-        switch (fabId) {
-            case 0:
-                return true;
-            case 1:
-                return this.mCurrentDirectory != null && mCurrentDirectory.getParent() != null && !mCurrentDirectory.getPath().equals(Environment.getExternalStorageDirectory().getAbsolutePath());
-        }
+    public boolean isFabVisible(@IntRange(from = 0, to = FileCloudFabManager.NUMBER_MAX_OF_FAB - 1) final int fabPosition) {
         return false;
     }
 
     @Override
-    public int getFabImageResource(int fabId) {
-        switch (fabId) {
-            case 0:
-                if (mFilesToCopyList != null && mFilesToCopyList.size() != 0) {
-                    return R.drawable.ic_menu_paste_holo_dark;
-                } else if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
-                    return R.drawable.ic_menu_paste_holo_dark;
-                } else {
-                    return R.drawable.add;
-                }
-            case 1:
-                return R.drawable.arrow_up;
-        }
-        return R.drawable.add;
+    public int getFabImageResource(@IntRange(from = 0, to = FileCloudFabManager.NUMBER_MAX_OF_FAB - 1) final int fabPosition) {
+        return 0;
     }
-*/
+
     @Override
     protected void inject(FileAppComponent fileAppComponent) {
         fileAppComponent.inject(this);

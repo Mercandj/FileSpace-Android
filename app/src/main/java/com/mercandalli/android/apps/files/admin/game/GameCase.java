@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.extras.admin.game;
+package com.mercandalli.android.apps.files.admin.game;
 
 public class GameCase {
 

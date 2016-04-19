@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.file.local.fab;
+package com.mercandalli.android.apps.files.file.cloud.fab;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntRange;
@@ -8,7 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 /**
  * Manage the {@link FloatingActionButton}s visibility, images, clicks...
  */
-public interface FileLocalFabManager {
+public interface FileCloudFabManager {
 
     /**
      * The number of {@link FloatingActionButton} maximum.
@@ -33,9 +33,10 @@ public interface FileLocalFabManager {
      * Set the {@link FabContainer}. Build to be the {@link android.support.v4.view.ViewPager}
      * container.
      *
-     * @param fabContainer The {@link FabContainer}.
+     * @param fabContainer            The {@link FabContainer}.
+     * @param initPositionInViewPager The initial {@link android.support.v4.view.ViewPager} position.
      */
-    void setFabContainer(final FabContainer fabContainer);
+    void setFabContainer(final FabContainer fabContainer, final int initPositionInViewPager);
 
     /**
      * Add a {@link FabController}.
@@ -92,7 +93,7 @@ public interface FileLocalFabManager {
          * Notify the current {@link FabController} that a {@link FloatingActionButton} has been clicked.
          *
          * @param fabPosition          The {@link FloatingActionButton} position, between 0 and
-         *                             {@link FileLocalFabManager#NUMBER_MAX_OF_FAB}.
+         *                             {@link FileCloudFabManager#NUMBER_MAX_OF_FAB}.
          * @param floatingActionButton The {@link FloatingActionButton} {@link  android.view.View}.
          */
         void onFabClick(

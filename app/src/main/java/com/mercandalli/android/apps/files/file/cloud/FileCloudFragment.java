@@ -23,6 +23,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -45,11 +48,13 @@ import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
+import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
 import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
+import com.mercandalli.android.apps.files.file.cloud.fab.FileCloudFabManager;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
@@ -71,7 +76,14 @@ public class FileCloudFragment extends InjectedFabFragment implements
         FileLocalPagerFragment.ListController,
         FileModelAdapter.OnFileClickListener,
         FileModelAdapter.OnFileLongClickListener,
-        FileModelListener, SwipeRefreshLayout.OnRefreshListener {
+        FileModelListener,
+        SwipeRefreshLayout.OnRefreshListener,
+        FileCloudFabManager.FabController {
+
+    /**
+     * A key for the view pager position.
+     */
+    private static final String ARG_POSITION_IN_VIEW_PAGER = "FileCloudFragment.Args.ARG_POSITION_IN_VIEW_PAGER";
 
     private RecyclerView mRecyclerView;
     private FileModelAdapter mAdapterModelFile;
@@ -81,12 +93,32 @@ public class FileCloudFragment extends InjectedFabFragment implements
 
     private List<FileModel> filesToCut = new ArrayList<>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private int mPositionInViewPager;
+    private boolean mForceFab0Hidden = false;
 
     @Inject
     FileManager mFileManager;
 
-    public static FileCloudFragment newInstance() {
-        return new FileCloudFragment();
+    @Inject
+    FileCloudFabManager mFileCloudFabManager;
+
+    public static FileCloudFragment newInstance(final int positionInViewPager) {
+        final FileCloudFragment fileCloudFragment = new FileCloudFragment();
+        final Bundle args = new Bundle();
+        args.putInt(ARG_POSITION_IN_VIEW_PAGER, positionInViewPager);
+        fileCloudFragment.setArguments(args);
+        return fileCloudFragment;
+    }
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final Bundle args = getArguments();
+        if (!args.containsKey(ARG_POSITION_IN_VIEW_PAGER)) {
+            throw new IllegalStateException("Missing args. Please use newInstance()");
+        }
+        mPositionInViewPager = args.getInt(ARG_POSITION_IN_VIEW_PAGER);
+        mFileCloudFabManager.addFabController(mPositionInViewPager, this);
     }
 
     @Override
@@ -137,12 +169,16 @@ public class FileCloudFragment extends InjectedFabFragment implements
         return false;
     }
 
-    /*@Override
-    public void onFabClick(int fabId, final FloatingActionButton fab) {
-        switch (fabId) {
+
+    @Override
+    public void onFabClick(
+            final @IntRange(from = 0, to = FileCloudFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition,
+            final @NonNull FloatingActionButton floatingActionButton) {
+        switch (fabPosition) {
             case 0:
-                fab.hide();
-                new FileAddDialog(getActivity(), mApplicationCallback, -1, new IListener() {
+                mForceFab0Hidden = true;
+                FileCloudFragment.this.mFileCloudFabManager.updateFabButtons();
+                new FileAddDialog(getActivity(), -1, new IListener() {
                     @Override
                     public void execute() {
                         refreshCurrentList();
@@ -150,7 +186,8 @@ public class FileCloudFragment extends InjectedFabFragment implements
                 }, new IListener() { // Dismiss
                     @Override
                     public void execute() {
-                        fab.show();
+                        mForceFab0Hidden = false;
+                        FileCloudFragment.this.mFileCloudFabManager.updateFabButtons();
                     }
                 });
                 break;
@@ -164,13 +201,15 @@ public class FileCloudFragment extends InjectedFabFragment implements
     }
 
     @Override
-    public boolean isFabVisible(int fabId) {
+    public boolean isFabVisible(
+            final @IntRange(from = 0, to = FileCloudFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition) {
         return false;
     }
 
     @Override
-    public int getFabImageResource(int fabId) {
-        switch (fabId) {
+    public int getFabImageResource(
+            final @IntRange(from = 0, to = FileCloudFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition) {
+        switch (fabPosition) {
             case 0:
                 if (filesToCut != null && filesToCut.size() != 0) {
                     return R.drawable.ic_menu_paste_holo_dark;
@@ -181,7 +220,7 @@ public class FileCloudFragment extends InjectedFabFragment implements
                 return R.drawable.arrow_up;
         }
         return android.R.drawable.ic_input_add;
-    }*/
+    }
 
     @Override
     public void onFileClick(View view, int position) {

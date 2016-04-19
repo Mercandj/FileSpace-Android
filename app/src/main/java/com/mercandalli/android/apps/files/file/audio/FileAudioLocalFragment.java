@@ -24,6 +24,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
@@ -181,6 +182,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         };
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,15 +193,21 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
             throw new IllegalStateException("Missing args. Please use newInstance()");
         }
         mPositionInViewPager = args.getInt(ARG_POSITION_IN_VIEW_PAGER);
-        mFileLocalFabManager.addFabContainer(mPositionInViewPager, this);
+        mFileLocalFabManager.addFabController(mPositionInViewPager, this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onDestroy() {
-        mFileLocalFabManager.removeFabContainer(mPositionInViewPager);
+        mFileLocalFabManager.removeFabController(mPositionInViewPager);
         super.onDestroy();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_file_audio_local, container, false);
@@ -287,16 +297,25 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         return rootView;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void executeFileAudioModel(final FileAudioModel fileAudioModel, final View view) {
         mFileAudioOverflowActions.show(fileAudioModel, view, Config.isLogged());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void refreshData() {
         refreshCurrentList();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean back() {
         if (mCurrentPage == PAGE_FOLDER_INSIDE) {
@@ -306,6 +325,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onFabClick(
             final @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition,
@@ -315,23 +337,36 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isFabVisible(
             @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) final int fabPosition) {
         return fabPosition == 0 && mCurrentPage == PAGE_FOLDER_INSIDE;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @DrawableRes
     @Override
     public int getFabImageResource(
             @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) final int fabPosition) {
         return R.drawable.arrow_up;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void inject(FileAppComponent fileAppComponent) {
         fileAppComponent.inject(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Nullable
     @Override
     public String onFileSubtitleModify(final FileModel fileModel) {
@@ -341,6 +376,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean onHeaderClick(View v, List<FileModelCardHeaderItem> fileModelCardHeaderItems) {
         mHeaderIds.clear();
@@ -443,6 +481,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onDestroyView() {
         mFileAudioManager.removeGetAllLocalMusicListener(this);
@@ -454,6 +495,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         super.onDestroyView();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onAllLocalMusicSucceeded(final List<FileAudioModel> fileModels) {
         if (mCurrentPage != PAGE_ALL) {
@@ -477,6 +521,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         updateAdapter();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onAllLocalMusicFailed() {
         if (mCurrentPage != PAGE_ALL) {
@@ -485,6 +532,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         updateAdapter();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onLocalMusicFoldersSucceeded(final List<FileModel> fileModels) {
         if (mCurrentPage != PAGE_FOLDERS) {
@@ -503,6 +553,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         updateAdapter();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onLocalMusicFoldersFailed() {
         if (mCurrentPage != PAGE_FOLDERS) {
@@ -511,6 +564,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         hideProgressBar();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onLocalMusicSucceeded(final List<FileAudioModel> fileModels) {
         if (mCurrentPage != PAGE_FOLDER_INSIDE) {
@@ -530,6 +586,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         updateAdapter();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onLocalMusicFailed() {
         if (mCurrentPage != PAGE_FOLDER_INSIDE) {
@@ -538,6 +597,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         updateAdapter();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onAllLocalMusicArtistsSucceeded(final List<Artist> artists) {
         if (mCurrentPage != PAGE_ARTIST) {
@@ -548,11 +610,17 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         updateAdapter();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onAllLocalMusicArtistsFailed() {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onAllLocalMusicAlbumsSucceeded(final List<Album> albums) {
         if (mCurrentPage != PAGE_ALBUM) {
@@ -563,6 +631,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         updateAdapter();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onAllLocalMusicAlbumsFailed() {
 

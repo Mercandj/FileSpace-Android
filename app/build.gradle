@@ -46,6 +46,16 @@ android {
     }
 
     sourceSets {
+        main {
+            // https://medium.com/google-developer-experts/android-project-structure-alternative-way-29ce766682f0#.sjnhetuhb
+            res.srcDirs = [
+                    'src/main/res-main',
+                    'src/main/res-screen/note',
+                    'src/main/res-screen/support',
+                    'src/main/res-screen/admin'
+            ]
+        }
+
         //Everything related to connected test live in src/androidTest/core/java
         androidTest.java.srcDir 'src/androidTest/core/java'
 

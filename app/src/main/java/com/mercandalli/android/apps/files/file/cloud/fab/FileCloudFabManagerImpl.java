@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.file.local.fab;
+package com.mercandalli.android.apps.files.file.cloud.fab;
 
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
@@ -9,17 +9,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A {@link FileLocalFabManager} implementation.
+ * A {@link FileCloudFabManager} implementation.
  */
 /* package */
-class FileLocalFabManagerImpl implements FileLocalFabManager {
+class FileCloudFabManagerImpl implements FileCloudFabManager {
 
     @Nullable
     private FabContainer mFabContainer;
     private final Map<Integer, FabController> mFabContainers = new HashMap<>();
     private int mViewPagerPosition;
 
-    /* package */ FileLocalFabManagerImpl() {
+    /* package */ FileCloudFabManagerImpl() {
 
     }
 
@@ -59,8 +59,9 @@ class FileLocalFabManagerImpl implements FileLocalFabManager {
      * {@inheritDoc}
      */
     @Override
-    public void setFabContainer(@Nullable final FabContainer fabContainer) {
+    public void setFabContainer(@Nullable final FabContainer fabContainer, final int initPositionInViewPager) {
         mFabContainer = fabContainer;
+        mViewPagerPosition = initPositionInViewPager;
     }
 
     /**

@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -24,6 +24,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,11 +50,13 @@ import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
+import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
 import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
+import com.mercandalli.android.apps.files.file.cloud.fab.FileCloudFabManager;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
@@ -70,7 +75,13 @@ import javax.inject.Inject;
 
 public class FileMyCloudFragment extends InjectedFabFragment implements
         FileLocalPagerFragment.ListController,
-        SwipeRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener,
+        FileCloudFabManager.FabController {
+
+    /**
+     * A key for the view pager position.
+     */
+    private static final String ARG_POSITION_IN_VIEW_PAGER = "FileMyCloudFragment.Args.ARG_POSITION_IN_VIEW_PAGER";
 
     private RecyclerView mRecyclerView;
     private FileModelAdapter mFileModelAdapter;
@@ -82,14 +93,34 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
     private final List<FileModel> mFilesToCutList = new ArrayList<>();
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private int mPositionInViewPager;
+    private boolean mForceFab0Hidden = false;
 
     private ScaleAnimationAdapter scaleAnimationAdapter;
 
     @Inject
     FileManager mFileManager;
 
-    public static FileMyCloudFragment newInstance() {
-        return new FileMyCloudFragment();
+    @Inject
+    FileCloudFabManager mFileCloudFabManager;
+
+    public static FileMyCloudFragment newInstance(final int positionInViewPager) {
+        final FileMyCloudFragment fileMyCloudLocalFragment = new FileMyCloudFragment();
+        final Bundle args = new Bundle();
+        args.putInt(ARG_POSITION_IN_VIEW_PAGER, positionInViewPager);
+        fileMyCloudLocalFragment.setArguments(args);
+        return fileMyCloudLocalFragment;
+    }
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final Bundle args = getArguments();
+        if (!args.containsKey(ARG_POSITION_IN_VIEW_PAGER)) {
+            throw new IllegalStateException("Missing args. Please use newInstance()");
+        }
+        mPositionInViewPager = args.getInt(ARG_POSITION_IN_VIEW_PAGER);
+        mFileCloudFabManager.addFabController(mPositionInViewPager, this);
     }
 
     @Override
@@ -157,7 +188,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                                     public void execute() {
                                                         if (mFilesToCutList.size() != 0) {
                                                             mFilesToCutList.clear();
-                                                            //refreshFab();
+                                                            mFileCloudFabManager.updateFabButtons();
                                                         }
                                                     }
                                                 });
@@ -174,7 +205,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                                     public void execute() {
                                                         if (mFilesToCutList.size() != 0) {
                                                             mFilesToCutList.clear();
-                                                            //refreshFab();
+                                                            mFileCloudFabManager.updateFabButtons();
                                                         }
                                                     }
                                                 });
@@ -185,7 +216,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                     case 3:
                                         mFilesToCutList.add(fileModel);
                                         Toast.makeText(getContext(), "File ready to cut.", Toast.LENGTH_SHORT).show();
-                                        //refreshFab();
+                                        mFileCloudFabManager.updateFabButtons();
                                         break;
 
                                     case 4:
@@ -309,7 +340,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
 
             if (!internetConnection) {
                 ViewUtils.setViewVisibility(mRecyclerView, View.GONE);
-                //refreshFab();
+                mFileCloudFabManager.updateFabButtons();
             }
             return;
         }
@@ -352,7 +383,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
             scaleAnimationAdapter.reset();
             mFileModelAdapter.setList(mFilesList);
 
-            //refreshFab();
+            mFileCloudFabManager.updateFabButtons();
 
             ViewUtils.setViewVisibility(mProgressBar, View.GONE);
             ViewUtils.setViewVisibility(mRecyclerView, View.VISIBLE);
@@ -370,12 +401,87 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
             return true;
         } else if (mFilesToCutList.size() != 0) {
             mFilesToCutList.clear();
-            //refreshFab();
+            mFileCloudFabManager.updateFabButtons();
             return true;
         } else {
             return false;
         }
     }
+
+    //region FloatingActionButton
+    @Override
+    public void onFabClick(
+            final @IntRange(from = 0, to = FileCloudFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition,
+            final @NonNull FloatingActionButton floatingActionButton) {
+        switch (fabPosition) {
+            case 0:
+                if (mFilesToCutList.size() != 0) {
+                    for (FileModel file : mFilesToCutList) {
+                        mFileManager.setParent(file, mIdFileDirectoryStack.peek(), new IListener() {
+                            @Override
+                            public void execute() {
+                                FileMyCloudFragment.this.refreshCurrentList();
+                            }
+                        });
+                    }
+                    mFilesToCutList.clear();
+                } else {
+                    mForceFab0Hidden = true;
+                    new FileAddDialog(getActivity(), mIdFileDirectoryStack.peek(), new IListener() {
+                        @Override
+                        public void execute() {
+                            refreshCurrentList(true);
+                        }
+                    }, new IListener() { // Dismiss
+                        @Override
+                        public void execute() {
+                            mForceFab0Hidden = false;
+                            FileMyCloudFragment.this.mFileCloudFabManager.updateFabButtons();
+                        }
+                    });
+                }
+                FileMyCloudFragment.this.mFileCloudFabManager.updateFabButtons();
+                break;
+            case 1:
+                if (mIdFileDirectoryStack.peek() != -1) {
+                    mIdFileDirectoryStack.pop();
+                    refreshCurrentList(true);
+                }
+                break;
+        }
+    }
+
+    @Override
+    public boolean isFabVisible(
+            final @IntRange(from = 0, to = FileCloudFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition) {
+        if ((!NetUtils.isInternetConnection(getContext()) || !Config.isLogged())) {
+            return false;
+        }
+        switch (fabPosition) {
+            case 0:
+                return !mForceFab0Hidden;
+            case 1:
+                return !(mIdFileDirectoryStack.size() == 0) && mIdFileDirectoryStack.peek() != -1;
+        }
+        return false;
+    }
+
+    @Override
+    public int getFabImageResource(
+            final @IntRange(from = 0, to = FileCloudFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition) {
+        switch (fabPosition) {
+            case 0:
+                if (mFilesToCutList.size() != 0) {
+                    return R.drawable.ic_menu_paste_holo_dark;
+                } else {
+                    return R.drawable.add;
+                }
+            case 1:
+                return R.drawable.arrow_up;
+        }
+        return R.drawable.add;
+    }
+    //endregion FloatingActionButton
 
     /*
     @Override

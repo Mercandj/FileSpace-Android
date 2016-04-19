@@ -26,6 +26,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.IntRange;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
@@ -188,12 +189,11 @@ public class FileLocalPagerFragment extends BackFragment implements
                 mFab2.setImageResource(imageResource);
             }
         }
-
-        //refreshFab();
     }
 
-    private void hideFab(int fab_id) {
-        switch (fab_id) {
+    private void hideFab(
+            final @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition) {
+        switch (fabPosition) {
             case 0:
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
                     mFab1.hide();
@@ -211,8 +211,9 @@ public class FileLocalPagerFragment extends BackFragment implements
         }
     }
 
-    private void showFab(int fab_id) {
-        switch (fab_id) {
+    private void showFab(
+            final @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition) {
+        switch (fabPosition) {
             case 0:
                 mFab1.show();
                 break;
@@ -221,7 +222,6 @@ public class FileLocalPagerFragment extends BackFragment implements
                 break;
         }
     }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

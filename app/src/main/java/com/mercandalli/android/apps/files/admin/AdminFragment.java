@@ -17,7 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package com.mercandalli.android.apps.files.extras.admin;
+package com.mercandalli.android.apps.files.admin;
 
 import android.app.Activity;
 import android.content.Context;
@@ -40,7 +40,7 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.EmptyFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
-import com.mercandalli.android.apps.files.extras.admin.game.GameFragment;
+import com.mercandalli.android.apps.files.admin.game.GameFragment;
 import com.mercandalli.android.library.baselibrary.view.NonSwipeableViewPager;
 
 import static com.mercandalli.android.library.baselibrary.view.StatusBarUtils.setStatusBarColor;
@@ -49,7 +49,7 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
 
     private static final String BUNDLE_ARG_TITLE = "AdminFragment.Args.BUNDLE_ARG_TITLE";
 
-    private static final int NB_FRAGMENT = 8;
+    private static final int NB_FRAGMENT = 9;
     private static final int INIT_FRAGMENT = 0;
     public static final BackFragment LIST_BACK_FRAGMENT[] = new BackFragment[NB_FRAGMENT];
     private NonSwipeableViewPager mViewPager;
@@ -176,21 +176,24 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
             BackFragment backFragment;
             switch (i) {
                 case 0:
-                    backFragment = ServerDataFragment.newInstance();
+                    backFragment = SendNotificationFragment.newInstance();
                     break;
                 case 1:
-                    backFragment = ServerLogsFragment.newInstance();
+                    backFragment = ServerDataFragment.newInstance();
                     break;
                 case 2:
+                    backFragment = ServerLogsFragment.newInstance();
+                    break;
+                case 3:
                     backFragment = UserAddFragment.newInstance();
                     break;
-                case 5:
+                case 4:
                     backFragment = RequestFragment.newInstance();
                     break;
-                case 6:
+                case 7:
                     backFragment = GameFragment.newInstance();
                     break;
-                case 7:
+                case 8:
                     backFragment = StatisticsFragment.newInstance();
                     break;
                 default:
@@ -211,27 +214,30 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
             String title = "null";
             switch (i) {
                 case 0:
-                    title = "SERVER DATA";
+                    title = "NOTIF";
                     break;
                 case 1:
-                    title = "SERVER LOGS";
+                    title = "SERVER DATA";
                     break;
                 case 2:
-                    title = "USER ADD";
+                    title = "SERVER LOGS";
                     break;
                 case 3:
-                    title = "USER DATA";
+                    title = "USER ADD";
                     break;
                 case 4:
-                    title = "USER LICENCES";
+                    title = "USER DATA";
                     break;
                 case 5:
-                    title = "REQUEST";
+                    title = "USER LICENCES";
                     break;
                 case 6:
-                    title = "GAME";
+                    title = "REQUEST";
                     break;
                 case 7:
+                    title = "GAME";
+                    break;
+                case 8:
                     title = "STATS";
                     break;
             }

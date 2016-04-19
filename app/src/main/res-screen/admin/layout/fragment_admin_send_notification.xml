@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/fragment_admin_send_notification_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="Message"
+            android:padding="10dp"
+            android:textSize="22sp" />
+
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/fragment_admin_send_notification_circle"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="25dp"
+        android:background="@drawable/circle_button_ripple"
+        android:elevation="@dimen/circle_button_elevation_high"
+        android:padding="15dp"
+        android:scaleType="fitXY"
+        android:src="@android:drawable/ic_input_add"
+        android:stateListAnimator="@drawable/circle_button_elevation"
+        android:tint="@android:color/white" />
+
+</FrameLayout>

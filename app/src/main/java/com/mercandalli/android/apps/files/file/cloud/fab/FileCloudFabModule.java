@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.file.local.fab;
+package com.mercandalli.android.apps.files.file.cloud.fab;
 
 import javax.inject.Singleton;
 
@@ -9,11 +9,11 @@ import dagger.Provides;
  * A Dagger module used by the {@link com.mercandalli.android.apps.files.main.FileAppComponent}.
  */
 @Module
-public class FileLocalFabModule {
+public class FileCloudFabModule {
 
     @Provides
     @Singleton
-    FileLocalFabManager provideFileLocalFabManager() {
-        return new FileLocalFabManagerImpl();
+    FileCloudFabManager provideFileCloudFabManager() {
+        return new FileCloudFabManagerImpl();
     }
 }

@@ -17,7 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package com.mercandalli.android.apps.files.extras.admin;
+package com.mercandalli.android.apps.files.admin;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -33,18 +33,16 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
+import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.apps.files.user.AdapterModelUserConnection;
-import com.mercandalli.android.apps.files.user.UserConnectionModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,30 +51,26 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+public class ServerDataFragment extends BackFragment {
 
-public class ServerLogsFragment extends BackFragment {
-
+    private static final String TAG = "ServerDataFragment";
     private View rootView;
 
     private RecyclerView recyclerView;
-    private AdapterModelUserConnection mAdapter;
+    private AdapterModelInformation mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<UserConnectionModel> list;
+    List<ModelInformation> list;
     private ProgressBar circularProgressBar;
-    private TextView message;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    int mNewItemPosition;
-
-    public static ServerLogsFragment newInstance() {
-        return new ServerLogsFragment();
+    public static ServerDataFragment newInstance() {
+        return new ServerDataFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_admin_data, container, false);
         circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
-        this.message = (TextView) rootView.findViewById(R.id.message);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -105,76 +99,65 @@ public class ServerLogsFragment extends BackFragment {
     }
 
     public void refreshList() {
+        List<StringPair> parameters = null;
         if (NetUtils.isInternetConnection(getContext())) {
             new TaskGet(
                     getActivity(),
-                    Constants.URL_DOMAIN + Config.ROUTE_USER_CONNECTION,
+                    Constants.URL_DOMAIN + Config.ROUTE_INFORMATION,
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
                             list = new ArrayList<>();
-
+                            list.add(new ModelInformation("Server Data", Constants.TAB_VIEW_TYPE_SECTION));
                             try {
                                 if (json != null) {
-                                    if (json.has("result_count_all")) {
-                                        list.add(new UserConnectionModel("Server Logs (" + json.getInt("result_count_all") + ")", Constants.TAB_VIEW_TYPE_SECTION));
-                                    } else {
-                                        list.add(new UserConnectionModel("Server Logs", Constants.TAB_VIEW_TYPE_SECTION));
-                                    }
-
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
-                                        int array_length = array.length();
-                                        for (int i = 0; i < array_length; i++) {
-                                            list.add(new UserConnectionModel(array.getJSONObject(i)));
+                                        for (int i = 0; i < array.length(); i++) {
+                                            ModelInformation modelFile = new ModelInformation(array.getJSONObject(i));
+                                            list.add(modelFile);
                                         }
                                     }
-
                                 } else {
                                     Toast.makeText(getContext(), R.string.action_failed, Toast.LENGTH_SHORT).show();
                                 }
                             } catch (JSONException e) {
-                                Log.e(getClass().getName(), "Failed to convert Json", e);
+                                Log.e(TAG, "ServerDataFragment: failed to convert Json", e);
                             }
                             updateAdapter();
                         }
                     },
-                    null
+                    parameters
             ).execute();
-        } else {
-            this.circularProgressBar.setVisibility(View.GONE);
-            if (isAdded()) {
-                this.message.setText(Config.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
-            }
-            this.message.setVisibility(View.VISIBLE);
-            this.swipeRefreshLayout.setRefreshing(false);
         }
     }
+
+    int i;
 
     public void updateAdapter() {
         if (this.recyclerView != null && this.list != null && this.isAdded()) {
             this.circularProgressBar.setVisibility(View.GONE);
 
-            this.mAdapter = new AdapterModelUserConnection(list);
+            this.mAdapter = new AdapterModelInformation(list);
             this.recyclerView.setAdapter(mAdapter);
             this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
 
-            if ((rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
-                (rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
+            if (rootView.findViewById(R.id.circle).getVisibility() == View.GONE) {
+                rootView.findViewById(R.id.circle).setVisibility(View.VISIBLE);
                 Animation animOpen = AnimationUtils.loadAnimation(getContext(), R.anim.circle_button_bottom_open);
-                (rootView.findViewById(R.id.circle)).startAnimation(animOpen);
+                rootView.findViewById(R.id.circle).startAnimation(animOpen);
             }
 
-            (rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {
+            rootView.findViewById(R.id.circle).setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mAdapter.addItem(new UserConnectionModel("Number", "" + mNewItemPosition), 0);
+                    mAdapter.addItem(new ModelInformation("Number", "" + i), 0);
                     recyclerView.scrollToPosition(0);
-                    mNewItemPosition++;
+                    i++;
                 }
             });
 
-            this.mAdapter.setOnItemClickListener(new AdapterModelUserConnection.OnItemClickListener() {
+            this.mAdapter.setOnItemClickListener(new AdapterModelInformation.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
 
@@ -182,7 +165,7 @@ public class ServerLogsFragment extends BackFragment {
             });
 
             this.swipeRefreshLayout.setRefreshing(false);
-            mNewItemPosition = 0;
+            i = 0;
         }
     }
 

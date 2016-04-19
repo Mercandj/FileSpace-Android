@@ -79,6 +79,7 @@ public class Config {
     public static final String ROUTE_USER_CONVERSATION = START_ROUTE + "user_conversation";
     public static final String ROUTE_USER_CONNECTION = START_ROUTE + "user_connection";
     public static final String ROUTE_DEVICE_ADD = START_ROUTE + "device/add";
+    public static final String ROUTE_DEVICE_SEND_PUSH = START_ROUTE + "device/push";
 
     /**
      * Static int to save/load

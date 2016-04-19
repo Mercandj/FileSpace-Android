@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -146,12 +147,12 @@ public class FileLocalFragment extends BackFragment implements
             throw new IllegalStateException("Missing args. Please use newInstance()");
         }
         mPositionInViewPager = args.getInt(ARG_POSITION_IN_VIEW_PAGER);
-        mFileLocalFabManager.addFabContainer(mPositionInViewPager, this);
+        mFileLocalFabManager.addFabController(mPositionInViewPager, this);
     }
 
     @Override
     public void onDestroy() {
-        mFileLocalFabManager.removeFabContainer(mPositionInViewPager);
+        mFileLocalFabManager.removeFabController(mPositionInViewPager);
         super.onDestroy();
     }
 
@@ -273,6 +274,7 @@ public class FileLocalFragment extends BackFragment implements
         return false;
     }
 
+    @DrawableRes
     @Override
     public int getFabImageResource(
             final @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition) {

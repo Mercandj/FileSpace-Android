@@ -43,12 +43,17 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
 
     private static final String LIKE = " LIKE ?";
 
+    @NonNull
     protected final Context mContextApp;
+    @NonNull
     protected final FileLocalProviderManager mFileLocalProviderManager;
+    @NonNull
     protected final FileManager mFileManager;
 
     /* Cache */
+    @NonNull
     protected final List<FileAudioModel> mCacheAllLocalMusics = new ArrayList<>();
+    @NonNull
     protected final List<FileModel> mCacheLocalMusicFolders = new ArrayList<>();
 
     protected boolean mIsGetAllLocalMusicLaunched;
@@ -63,9 +68,9 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
      * @param contextApp The {@link Context} of this application.
      */
     public FileAudioManagerImpl(
-            final Context contextApp,
-            final FileLocalProviderManager fileLocalProviderManager,
-            final FileManager fileManager) {
+            final @NonNull Context contextApp,
+            final @NonNull FileLocalProviderManager fileLocalProviderManager,
+            final @NonNull FileManager fileManager) {
         Preconditions.checkNotNull(contextApp);
         Preconditions.checkNotNull(fileLocalProviderManager);
         Preconditions.checkNotNull(fileManager);
