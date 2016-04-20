@@ -94,5 +94,5 @@ public interface FileAppComponent {
 
     FileCloudFabManager provideFileCloudFabManager();
 
-    NotificationPushManager proideNotificationPushManager();
+    NotificationPushManager provideNotificationPushManager();
 }

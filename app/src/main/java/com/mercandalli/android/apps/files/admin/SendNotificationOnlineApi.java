@@ -27,8 +27,12 @@ import retrofit2.http.POST;
 
 public interface SendNotificationOnlineApi {
 
-    @POST("/" + Config.ROUTE_DEVICE_SEND_PUSH)
+    @POST("/" + Config.ROUTE_DEVICE_SEND_PUSH_BY_GCM)
     Call<SendNotificationResponse> sendPush(
             @Body SendNotificationRequest sendNotificationRequest);
+
+    @POST("/" + Config.ROUTE_DEVICE_SEND_PUSH_TO_DEV)
+    Call<SendNotificationResponse> sendPushToDev(
+            @Body SendNotificationDevRequest sendNotificationRequest);
 
 }

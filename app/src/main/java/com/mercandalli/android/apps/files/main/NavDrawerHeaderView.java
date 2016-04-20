@@ -1,7 +1,6 @@
 package com.mercandalli.android.apps.files.main;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
@@ -12,6 +11,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.mercandalli.android.apps.files.BuildConfig;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.file.FileUtils;
@@ -49,10 +51,9 @@ class NavDrawerHeaderView extends FrameLayout {
     /**
      * Set the current {@link UserModel}.
      *
-     * @param userModel      The {@link UserModel}.
-     * @param profilePicture The user profile picture.
+     * @param userModel The {@link UserModel}.
      */
-    /* package */ void setUser(final UserModel userModel, final Bitmap profilePicture) {
+    /* package */ void setUser(final UserModel userModel) {
         Preconditions.checkNotNull(userModel);
 
         mTitleTextView.setText(userModel.username);
@@ -60,8 +61,12 @@ class NavDrawerHeaderView extends FrameLayout {
         mIconImageView.setVisibility(View.VISIBLE);
         mStorageImageView.setVisibility(View.GONE);
 
-        if (profilePicture != null) {
-            mIconImageView.setImageBitmap(profilePicture);
+        if (userModel.mPictureUrl != null) {
+            Glide.with(getContext())
+                    .load(new GlideUrl(userModel.mPictureUrl, new LazyHeaders.Builder()
+                            .addHeader("Authorization", "Basic " + Config.getUserToken())
+                            .build()))
+                    .into(mIconImageView);
         }
     }
 

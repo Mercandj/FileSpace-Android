@@ -20,6 +20,7 @@
 package com.mercandalli.android.apps.files.admin;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,46 +35,32 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SendNotificationFragment extends BackFragment {
+public class SendNotificationFragment extends BackFragment implements View.OnClickListener {
+
+    private static final String INIT_GCM = "";
+    private static final String INIT_API = "";
 
     public static SendNotificationFragment newInstance() {
         return new SendNotificationFragment();
     }
 
     private SendNotificationOnlineApi mSendNotificationOnlineApi;
-    private EditText mEditText;
+    private EditText mMessageEditText;
+    private EditText mGcmEditText;
+    private EditText mApiEditText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_admin_send_notification, container, false);
 
-
         mSendNotificationOnlineApi = RetrofitUtils.getRetrofit().create(SendNotificationOnlineApi.class);
+        mMessageEditText = (EditText) rootView.findViewById(R.id.fragment_admin_send_notification_message);
+        mGcmEditText = (EditText) rootView.findViewById(R.id.fragment_admin_send_notification_gcm);
+        mApiEditText = (EditText) rootView.findViewById(R.id.fragment_admin_send_notification_api);
 
-        mEditText = (EditText) rootView.findViewById(R.id.fragment_admin_send_notification_message);
-
-
-        rootView.findViewById(R.id.fragment_admin_send_notification_circle).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                final Call<SendNotificationResponse> call = mSendNotificationOnlineApi.sendPush(new SendNotificationRequest(
-                        "",
-                        "",
-                        mEditText.getText().toString()));
-                call.enqueue(new Callback<SendNotificationResponse>() {
-                    @Override
-                    public void onResponse(final Call<SendNotificationResponse> call, final Response<SendNotificationResponse> response) {
-                        mEditText.setText("");
-                    }
-
-                    @Override
-                    public void onFailure(final Call<SendNotificationResponse> call, final Throwable t) {
-                        mEditText.setText("");
-                        Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
+        mGcmEditText.setText(INIT_GCM);
+        mApiEditText.setText(INIT_API);
+        rootView.findViewById(R.id.fragment_admin_send_notification_circle).setOnClickListener(this);
 
         return rootView;
     }
@@ -81,5 +68,51 @@ public class SendNotificationFragment extends BackFragment {
     @Override
     public boolean back() {
         return false;
+    }
+
+    @Override
+    public void onClick(final View v) {
+        final int viewId = v.getId();
+        if (viewId == R.id.fragment_admin_send_notification_circle) {
+
+            final String gcmId = mGcmEditText.getText().toString();
+            final String googleApiKey = mApiEditText.getText().toString();
+            final String pushMessage = mMessageEditText.getText().toString();
+
+            if (TextUtils.isEmpty(gcmId) && TextUtils.isEmpty(googleApiKey)) {
+                final Call<SendNotificationResponse> call = mSendNotificationOnlineApi.sendPushToDev(
+                        new SendNotificationDevRequest(pushMessage));
+                call.enqueue(new Callback<SendNotificationResponse>() {
+                    @Override
+                    public void onResponse(final Call<SendNotificationResponse> call, final Response<SendNotificationResponse> response) {
+                        mMessageEditText.setText("");
+                    }
+
+                    @Override
+                    public void onFailure(final Call<SendNotificationResponse> call, final Throwable t) {
+                        mMessageEditText.setText("");
+                        Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                return;
+            }
+
+            final Call<SendNotificationResponse> call = mSendNotificationOnlineApi.sendPush(new SendNotificationRequest(
+                    gcmId,
+                    googleApiKey,
+                    pushMessage));
+            call.enqueue(new Callback<SendNotificationResponse>() {
+                @Override
+                public void onResponse(final Call<SendNotificationResponse> call, final Response<SendNotificationResponse> response) {
+                    mMessageEditText.setText("");
+                }
+
+                @Override
+                public void onFailure(final Call<SendNotificationResponse> call, final Throwable t) {
+                    mMessageEditText.setText("");
+                    Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }

@@ -135,7 +135,7 @@ public class UserFragment extends BackFragment {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            UserModel userModel = new UserModel(getActivity(), array.getJSONObject(i));
+                                            UserModel userModel = new UserModel(array.getJSONObject(i));
                                             list.add(userModel);
                                         }
                                     }

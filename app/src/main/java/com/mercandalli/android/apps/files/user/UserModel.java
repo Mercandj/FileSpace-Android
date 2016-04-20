@@ -55,7 +55,7 @@ public class UserModel {
     public Date date_creation, date_last_connection;
     public long size_files, file_profile_picture_size = -1, num_files, server_max_size_end_user;
     private boolean admin = false;
-    public Bitmap bitmap;
+    public String mPictureUrl;
     public UserLocationModel userLocation;
 
     public UserModel() {
@@ -70,7 +70,7 @@ public class UserModel {
         this.admin = admin;
     }
 
-    public UserModel(final Activity activity, JSONObject json) {
+    public UserModel(JSONObject json) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         try {
             if (json.has("id")) {
@@ -123,21 +123,10 @@ public class UserModel {
         }
 
         if (hasPicture()) {
-            if (ImageUtils.isImage(activity, this.id_file_profile_picture)) {
-                UserModel.this.bitmap = ImageUtils.loadImage(activity, this.id_file_profile_picture);
-            } else {
-                FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
-                fileModelBuilder.id(this.id_file_profile_picture);
-                fileModelBuilder.size(this.file_profile_picture_size);
-                new TaskGetDownloadImage(activity, fileModelBuilder.build(), Constants.SIZE_MAX_ONLINE_PICTURE_ICON, new IBitmapListener() {
-                    @Override
-                    public void execute(Bitmap bitmap) {
-                        if (bitmap != null) {
-                            UserModel.this.bitmap = bitmap;
-                        }
-                    }
-                }).execute();
-            }
+            FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
+            fileModelBuilder.id(this.id_file_profile_picture);
+            fileModelBuilder.size(this.file_profile_picture_size);
+            mPictureUrl = fileModelBuilder.build().getOnlineUrl();
         }
     }
 

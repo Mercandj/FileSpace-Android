@@ -43,10 +43,10 @@ import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.GpsUtils;
-import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.user.UserLocationModel;
 import com.mercandalli.android.apps.files.user.UserModel;
 
@@ -181,7 +181,7 @@ public class UserLocationFragment extends BackFragment {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            UserModel userModel = new UserModel(getActivity(), array.getJSONObject(i));
+                                            UserModel userModel = new UserModel(array.getJSONObject(i));
                                             locations.add(userModel.userLocation);
                                         }
                                     }

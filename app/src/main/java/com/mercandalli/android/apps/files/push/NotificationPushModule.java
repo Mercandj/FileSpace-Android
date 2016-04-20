@@ -20,7 +20,6 @@ public class NotificationPushModule {
     @Singleton
     /* package */ NotificationPushManager provideNotificationPushManager(Application application) {
         return new NotificationPushManagerImpl(
-                application,
-                RetrofitUtils.getRetrofit().create(NotificationPushOnlineApi.class));
+                application);
     }
 }

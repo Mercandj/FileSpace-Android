@@ -5,5 +5,7 @@ package com.mercandalli.android.apps.files.push;
  */
 public interface NotificationPushManager {
 
-    void sendGcmId();
+    void initialize();
+
+    void reset();
 }

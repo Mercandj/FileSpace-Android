@@ -40,19 +40,21 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.admin.AdminFragment;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
-import com.mercandalli.android.apps.files.admin.AdminFragment;
 import com.mercandalli.android.apps.files.extras.genealogy.GenealogyFragment;
 import com.mercandalli.android.apps.files.extras.robotics.RoboticsFragment;
+import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudPagerFragment;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.note.WorkspaceFragment;
 import com.mercandalli.android.apps.files.settings.SettingsFragment;
 import com.mercandalli.android.apps.files.support.SupportFragment;
 import com.mercandalli.android.apps.files.user.ProfileFragment;
+import com.mercandalli.android.apps.files.user.UserModel;
 import com.mercandalli.android.apps.files.user.community.CommunityFragment;
 import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
 
@@ -120,7 +122,7 @@ public abstract class NavDrawerActivity extends ApplicationActivity implements
         mNavDrawerView.setSelectedRow(this, getInitFragmentId());
         mNavDrawerView.setConnected(Config.isLogged());
         if (Config.isLogged()) {
-            mNavDrawerView.setUser(Config.getUser(), Config.getUserProfilePicture(this));
+            mNavDrawerView.setUser(Config.getUser());
         }
 
         logPerformance(TAG, "NavDrawerActivity#onCreate() - Middle");

@@ -28,8 +28,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.IModelUserListener;
+import com.mercandalli.android.apps.files.main.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +63,12 @@ public class AdapterModelUser extends RecyclerView.Adapter<AdapterModelUser.View
             viewHolder.title.setText(user.getAdapterTitle());
             viewHolder.subtitle.setText(user.getAdapterSubtitle());
 
-            if (user.bitmap != null) {
-                viewHolder.icon.setImageBitmap(user.bitmap);
+            if (user.mPictureUrl != null) {
+                Glide.with(viewHolder.title.getContext())
+                        .load(new GlideUrl(user.mPictureUrl, new LazyHeaders.Builder()
+                                .addHeader("Authorization", "Basic " + Config.getUserToken())
+                                .build()))
+                        .into(viewHolder.icon);
             }
 
             viewHolder.more.setOnClickListener(new OnClickListener() {

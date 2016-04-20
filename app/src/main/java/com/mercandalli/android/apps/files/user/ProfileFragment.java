@@ -139,7 +139,7 @@ public class ProfileFragment extends BackFragment {
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
-                                        mUserModel = new UserModel(getActivity(), json.getJSONObject("result"));
+                                        mUserModel = new UserModel(json.getJSONObject("result"));
                                         mModelSettings.clear();
                                         mModelSettings.add(new ModelSetting("Username", "" + mUserModel.username));
                                         mModelSettings.add(new ModelSetting("Files size", FileUtils.humanReadableByteCount(mUserModel.size_files) + " / " + FileUtils.humanReadableByteCount(mUserModel.server_max_size_end_user)));

@@ -35,7 +35,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <com.mercandalli.android.apps.files.common.view.NonSwipeableViewPager
+    <com.mercandalli.android.library.baselibrary.view.NonSwipeableViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

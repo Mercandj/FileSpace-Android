@@ -28,7 +28,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.main.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,8 +56,13 @@ public class AdapterModelConversationMessage extends RecyclerView.Adapter<Adapte
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         if (position < mUsers.size()) {
             final UserConversationMessageModel userConversationMessageModel = mUsers.get(position);
-            if (userConversationMessageModel.user != null && userConversationMessageModel.user.bitmap != null) {
-                viewHolder.icon.setImageBitmap(userConversationMessageModel.user.bitmap);
+            final UserModel user = userConversationMessageModel.user;
+            if (user != null && user.mPictureUrl != null) {
+                Glide.with(viewHolder.title.getContext())
+                        .load(new GlideUrl(user.mPictureUrl, new LazyHeaders.Builder()
+                                .addHeader("Authorization", "Basic " + Config.getUserToken())
+                                .build()))
+                        .into(viewHolder.icon);
             }
             viewHolder.title.setText(userConversationMessageModel.getAdapterTitle());
             viewHolder.subtitle.setText(userConversationMessageModel.getAdapterSubtitle());
@@ -79,6 +88,7 @@ public class AdapterModelConversationMessage extends RecyclerView.Adapter<Adapte
     public void setOnItemClickListener(final OnItemClickListener itemClickListener) {
         mItemClickListener = itemClickListener;
     }
+
     public void setOnItemLongClickListener(final OnItemLongClickListener itemLongClickListener) {
         mItemLongClickListener = itemLongClickListener;
     }
@@ -88,6 +98,7 @@ public class AdapterModelConversationMessage extends RecyclerView.Adapter<Adapte
         public TextView title, subtitle;
         public ImageView icon;
         public RelativeLayout item, more;
+
         public ViewHolder(View itemLayoutView, int viewType) {
             super(itemLayoutView);
             item = (RelativeLayout) itemLayoutView.findViewById(R.id.item);

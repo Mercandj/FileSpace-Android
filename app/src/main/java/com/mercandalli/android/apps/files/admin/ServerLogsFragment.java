@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -40,9 +40,9 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.user.AdapterModelUserConnection;
 import com.mercandalli.android.apps.files.user.UserConnectionModel;
 
@@ -56,8 +56,6 @@ import java.util.List;
 
 public class ServerLogsFragment extends BackFragment {
 
-    private View rootView;
-
     private RecyclerView recyclerView;
     private AdapterModelUserConnection mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -65,6 +63,7 @@ public class ServerLogsFragment extends BackFragment {
     private ProgressBar circularProgressBar;
     private TextView message;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private View circle;
 
     int mNewItemPosition;
 
@@ -74,9 +73,11 @@ public class ServerLogsFragment extends BackFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_admin_data, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_admin_data, container, false);
         circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
         this.message = (TextView) rootView.findViewById(R.id.message);
+
+        circle = rootView.findViewById(R.id.circle);
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -159,13 +160,13 @@ public class ServerLogsFragment extends BackFragment {
             this.recyclerView.setAdapter(mAdapter);
             this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
 
-            if ((rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
-                (rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
+            if (circle.getVisibility() == View.GONE) {
+                circle.setVisibility(View.VISIBLE);
                 Animation animOpen = AnimationUtils.loadAnimation(getContext(), R.anim.circle_button_bottom_open);
-                (rootView.findViewById(R.id.circle)).startAnimation(animOpen);
+                circle.startAnimation(animOpen);
             }
 
-            (rootView.findViewById(R.id.circle)).setOnClickListener(new OnClickListener() {
+            circle.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mAdapter.addItem(new UserConnectionModel("Number", "" + mNewItemPosition), 0);

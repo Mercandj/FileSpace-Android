@@ -156,6 +156,7 @@ dependencies {
     compile 'com.romainpiel.shimmer:library:1.4.0@aar' // TextView
     compile 'de.hdodenhof:circleimageview:2.0.0' // CircleImageView
     compile 'com.squareup.picasso:picasso:2.5.2' // ImageView
+    compile 'com.github.bumptech.glide:glide:3.6.1' // ImageView
 
     // Other
     compile 'org.glassfish:javax.annotation:10.0-b28'

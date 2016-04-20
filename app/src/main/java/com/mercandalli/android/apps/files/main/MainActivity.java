@@ -56,9 +56,6 @@ public class MainActivity extends NavDrawerActivity implements
         final FileAppComponent fileAppComponent = FileApp.get().getFileAppComponent();
         mVersionManager = fileAppComponent.provideVersionManager();
         mVersionManager.registerUpdateCheckedListener(this);
-
-        // Notification
-        fileAppComponent.proideNotificationPushManager().sendGcmId();
     }
 
     @Override

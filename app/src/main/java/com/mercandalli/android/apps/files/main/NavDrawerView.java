@@ -103,14 +103,14 @@ class NavDrawerView extends FrameLayout implements View.OnClickListener {
         }
     }
 
-    /* package */ void setUser(final UserModel userModel, Bitmap profilePicture) {
+    /* package */ void setUser(final UserModel userModel) {
         final boolean isAdmin = userModel.isAdmin();
         for (final NavDrawerRow navDrawerRow : NavDrawerRow.values()) {
             if (!navDrawerRow.mVisibleIfNotAdmin) {
                 mChildrenViews.get(navDrawerRow.mId).setVisibility(isAdmin ? VISIBLE : GONE);
             }
         }
-        mNavDrawerHeaderView.setUser(userModel, profilePicture);
+        mNavDrawerHeaderView.setUser(userModel);
     }
 
     private void initView(final @NonNull Context context) {

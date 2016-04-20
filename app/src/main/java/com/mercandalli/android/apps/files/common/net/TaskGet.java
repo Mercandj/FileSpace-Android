@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -20,8 +20,6 @@
 package com.mercandalli.android.apps.files.common.net;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -32,7 +30,6 @@ import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.library.baselibrary.java.StringUtils;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -125,9 +122,9 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
      * @return
      * @throws IOException
      */
-    private String convertInputStreamToString(InputStream inputStream) throws IOException {
+    private String convertInputStreamToString(final InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = "";
+        String line;
         final StringBuilder result = new StringBuilder();
         while ((line = bufferedReader.readLine()) != null) {
             result.append(line);
@@ -151,28 +148,11 @@ public class TaskGet extends AsyncTask<Void, Void, String> {
                 if (json.has("toast") && !json.getString("toast").equals("")) {
                     Toast.makeText(mContext, json.getString("toast"), Toast.LENGTH_SHORT).show();
                 }
-                if (json.has("apk_update")) {
-                    JSONArray array = json.getJSONArray("apk_update");
-                    PackageManager packageManager = mContext.getPackageManager();
-                    PackageInfo packageInfo = packageManager.getPackageInfo(mContext.getPackageName(), 0);
-                    /*
-                    label:
-                    for (int i = 0; i < array.length(); i++) {
-                        ModelFile file = new ModelFile(mContext, mApplicationCallback, array.getJSONObject(i));
-                        if (packageInfo.lastUpdateTime < file.date_creation.getTime()) {
-                            Toast.makeText(mContext, "You have an update.", Toast.LENGTH_SHORT).show();
-                            break label;
-                        }
-                    }
-                    */
-                }
             } catch (JSONException e) {
                 Log.e(getClass().getName(), "Failed to convert Json", e);
                 if (this.listener != null) {
                     this.listener.onPostExecute(null, response);
                 }
-            } catch (PackageManager.NameNotFoundException e) {
-                Log.e(getClass().getName(), "NameNotFoundException", e);
             }
         }
     }

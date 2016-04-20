@@ -74,7 +74,7 @@ public class TaskGetDownload extends AsyncTask<Void, Long, Void> {
         mBuilder = new NotificationCompat.Builder(this.mActivity);
         mBuilder.setContentTitle(mFileTypeTitle + " Download")
                 .setContentText("Download in progress : 0 / " + FileUtils.humanReadableByteCount(mFileSize) + " : 0%")
-                .setSmallIcon(R.drawable.ic_notification);
+                .setSmallIcon(R.drawable.ic_notification_cloud);
     }
 
     @Override

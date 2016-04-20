@@ -57,7 +57,7 @@ public class UserConversationMessageModel {
                 this.content = json.getString("content");
             }
             if (json.has("user")) {
-                this.user = new UserModel(activity, json.getJSONObject("user"));
+                this.user = new UserModel(json.getJSONObject("user"));
             }
             if (json.has("date_creation") && !json.isNull("date_creation")) {
                 this.date_creation = dateFormat.parse(json.getString("date_creation"));

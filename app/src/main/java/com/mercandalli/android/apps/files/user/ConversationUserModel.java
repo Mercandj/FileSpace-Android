@@ -65,7 +65,7 @@ public class ConversationUserModel {
             if (json.has("users")) {
                 JSONArray users_json = json.getJSONArray("users");
                 for (int i = 0; i < users_json.length(); i++) {
-                    this.users.add(new UserModel(activity, users_json.getJSONObject(i)));
+                    this.users.add(new UserModel(users_json.getJSONObject(i)));
                 }
             }
             if (json.has("to_all")) {

@@ -37,10 +37,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.apps.files.admin.game.GameFragment;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.EmptyFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
-import com.mercandalli.android.apps.files.admin.game.GameFragment;
 import com.mercandalli.android.library.baselibrary.view.NonSwipeableViewPager;
 
 import static com.mercandalli.android.library.baselibrary.view.StatusBarUtils.setStatusBarColor;
@@ -98,14 +98,13 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_admin, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_admin, container, false);
 
         mToolbar = (Toolbar) rootView.findViewById(R.id.fragment_admin_toolbar);
         mToolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(mToolbar);
         setStatusBarColor((Activity) getContext(), R.color.status_bar);
         setHasOptionsMenu(true);
-
 
         mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.fragment_admin_app_bar_layout);
         mPagerAdapter = new FileManagerFragmentPagerAdapter(this.getChildFragmentManager());
@@ -114,9 +113,7 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
         mViewPager = (NonSwipeableViewPager) rootView.findViewById(R.id.pager);
         mViewPager.setNonSwipeableItem(7);
         mViewPager.setAdapter(mPagerAdapter);
-
         mViewPager.addOnPageChangeListener(this);
-
         mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
         mViewPager.setCurrentItem(INIT_FRAGMENT);
 

@@ -27,6 +27,57 @@ public class FileApp extends MultiDexApplication {
         return sApplication;
     }
 
+    protected FileAppComponent mFileAppComponent;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        sTimeLaunch = System.currentTimeMillis();
+
+        sApplication = this;
+
+        logPerformance(TAG, "FileApp#onCreate()");
+
+        // Dagger - Object graph creation
+        setupGraph();
+
+        logPerformance(TAG, "FileApp#onCreate() - Fabric Dagger");
+
+        final WeakReference<Context> contextWeakReference = new WeakReference<>(getApplicationContext());
+        (new Thread() {
+            public void run() {
+                final Context context = contextWeakReference.get();
+                if (context == null) {
+                    return;
+                }
+                // Fabric - Crashlytics.
+                Fabric.with(context, new Crashlytics());
+
+                // Google Analytics.
+                AnalyticsTrackers.initialize(context);
+                AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
+
+                // Init the notifications.
+                getFileAppComponent().provideNotificationPushManager().initialize();
+            }
+        }).start();
+
+        logPerformance(TAG, "FileApp#onCreate() - Fabric Fabric Analytics");
+    }
+
+    public FileAppComponent getFileAppComponent() {
+        return mFileAppComponent;
+    }
+
+    protected void setupGraph() {
+        mFileAppComponent = DaggerFileAppComponent.builder()
+                .fileAppModule(new FileAppModule(this))
+                .build();
+
+        mFileAppComponent.inject(this);
+    }
+
     //region - Performance
     public static void logPerformance(final String tag, final String message) {
         if (!BuildConfig.DEBUG) {
@@ -53,52 +104,4 @@ public class FileApp extends MultiDexApplication {
         return result;
     }
     //endregion - Performance
-
-    protected FileAppComponent mFileAppComponent;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        sTimeLaunch = System.currentTimeMillis();
-
-        sApplication = this;
-
-        logPerformance(TAG, "FileApp#onCreate()");
-
-        // Dagger - Object graph creation
-        setupGraph();
-
-        logPerformance(TAG, "FileApp#onCreate() - Fabric Dagger");
-
-        final WeakReference<Context> contextWeakReference = new WeakReference<>(getApplicationContext());
-        (new Thread() {
-            public void run() {
-                final Context context = contextWeakReference.get();
-                if (context == null) {
-                    return;
-                }
-                // Fabric - Crashlytics
-                Fabric.with(context, new Crashlytics());
-
-                // Google Analytics
-                AnalyticsTrackers.initialize(context);
-                AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
-            }
-        }).start();
-
-        logPerformance(TAG, "FileApp#onCreate() - Fabric Fabric Analytics");
-    }
-
-    public FileAppComponent getFileAppComponent() {
-        return mFileAppComponent;
-    }
-
-    protected void setupGraph() {
-        mFileAppComponent = DaggerFileAppComponent.builder()
-                .fileAppModule(new FileAppModule(this))
-                .build();
-
-        mFileAppComponent.inject(this);
-    }
 }
