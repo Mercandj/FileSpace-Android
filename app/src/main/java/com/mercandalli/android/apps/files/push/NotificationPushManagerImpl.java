@@ -1,20 +1,17 @@
 package com.mercandalli.android.apps.files.push;
 
 import android.app.Application;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.media.RingtoneManager;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
 import com.mercandalli.android.apps.files.BuildConfig;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.library.baselibrary.network.NetworkUtils;
 import com.mercandalli.android.library.baselibrary.push.PushManager;
 
 import static com.mercandalli.android.library.baselibrary.device.DeviceUtils.getDeviceBuilder;
@@ -59,29 +56,39 @@ class NotificationPushManagerImpl implements NotificationPushManager, PushManage
     }
 
     @Override
-    public void onGcmMessageReceived(final String from, final Bundle data) {
-        sendNotification(mAppContext, data.toString());
-    }
-
-    public static final int NOTIFICATION_ID = 1;
-
-    private void sendNotification(final Context context, String message) {
-        final PackageManager manager = context.getPackageManager();
-        final Intent intent = manager.getLaunchIntentForPackage("com.mercandalli.android.apps.files");
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-
-        final NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        final PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, 0);
-
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                .setSmallIcon(R.drawable.ic_notification_cloud)
-                .setContentTitle(context.getString(R.string.app_name))
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
-                .setLights(ContextCompat.getColor(context, R.color.accent), 500, 2200)
-                .setContentText(message)
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-
-        builder.setContentIntent(contentIntent);
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
+    public void onGcmMessageReceived(
+            final @Nullable String from,
+            final @NonNull Bundle data,
+            final @PushManager.PushType String type,
+            final @Nullable String message,
+            final @Nullable String title,
+            final @Nullable String actionData) {
+        switch (type) {
+            case PushManager.PUSH_NOTIFICATION_TYPE_MESSAGE_ONLY:
+                if (message == null) {
+                    break;
+                }
+                NetworkUtils.sendNotification(
+                        mAppContext,
+                        message,
+                        title == null ? mAppContext.getString(R.string.app_name) : title,
+                        "com.mercandalli.android.apps.files",
+                        R.drawable.ic_notification_cloud,
+                        ContextCompat.getColor(mAppContext, R.color.accent),
+                        1);
+                break;
+            case PushManager.PUSH_NOTIFICATION_TYPE_OPEN_PLAY_STORE:
+                if (actionData == null) {
+                    break;
+                }
+                NetworkUtils.openPlayStore(mAppContext, actionData);
+                break;
+            case PushManager.PUSH_NOTIFICATION_TYPE_OPEN_URL:
+                if (actionData == null) {
+                    break;
+                }
+                NetworkUtils.openUrl(mAppContext, actionData);
+                break;
+        }
     }
 }

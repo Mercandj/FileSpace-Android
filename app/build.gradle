@@ -50,9 +50,10 @@ android {
             // https://medium.com/google-developer-experts/android-project-structure-alternative-way-29ce766682f0#.sjnhetuhb
             res.srcDirs = [
                     'src/main/res-main',
+                    'src/main/res-screen/admin',
+                    'src/main/res-screen/file',
                     'src/main/res-screen/note',
-                    'src/main/res-screen/support',
-                    'src/main/res-screen/admin'
+                    'src/main/res-screen/support'
             ]
         }
 
@@ -156,7 +157,7 @@ dependencies {
     compile 'com.romainpiel.shimmer:library:1.4.0@aar' // TextView
     compile 'de.hdodenhof:circleimageview:2.0.0' // CircleImageView
     compile 'com.squareup.picasso:picasso:2.5.2' // ImageView
-    compile 'com.github.bumptech.glide:glide:3.6.1' // ImageView
+    compile 'com.github.bumptech.glide:glide:3.7.0' // ImageView
 
     // Other
     compile 'org.glassfish:javax.annotation:10.0-b28'
