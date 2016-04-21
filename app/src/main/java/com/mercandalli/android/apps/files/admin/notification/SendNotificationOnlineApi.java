@@ -17,8 +17,9 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package com.mercandalli.android.apps.files.admin;
+package com.mercandalli.android.apps.files.admin.notification;
 
+import com.mercandalli.android.apps.files.admin.notification.simple.SendNotificationSimpleResponse;
 import com.mercandalli.android.apps.files.main.Config;
 
 import retrofit2.Call;
@@ -27,12 +28,12 @@ import retrofit2.http.POST;
 
 public interface SendNotificationOnlineApi {
 
-    @POST("/" + Config.ROUTE_DEVICE_SEND_PUSH_BY_GCM)
-    Call<SendNotificationResponse> sendPush(
-            @Body SendNotificationRequest sendNotificationRequest);
+    @POST("/" + Config.ROUTE_DEVICE_SEND_PUSH_TO_ALL)
+    Call<SendNotificationSimpleResponse> sendPushToAll(
+            @Body SendNotificationRequest sendNotificationSimpleRequest);
 
     @POST("/" + Config.ROUTE_DEVICE_SEND_PUSH_TO_DEV)
-    Call<SendNotificationResponse> sendPushToDev(
-            @Body SendNotificationDevRequest sendNotificationRequest);
+    Call<SendNotificationSimpleResponse> sendPushToDev(
+            @Body SendNotificationRequest sendNotificationRequest);
 
 }

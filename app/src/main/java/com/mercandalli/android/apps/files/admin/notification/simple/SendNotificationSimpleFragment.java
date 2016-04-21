@@ -17,7 +17,7 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package com.mercandalli.android.apps.files.admin;
+package com.mercandalli.android.apps.files.admin.notification.simple;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -35,32 +35,32 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SendNotificationFragment extends BackFragment implements View.OnClickListener {
+public class SendNotificationSimpleFragment extends BackFragment implements View.OnClickListener {
 
     private static final String INIT_GCM = "";
     private static final String INIT_API = "";
 
-    public static SendNotificationFragment newInstance() {
-        return new SendNotificationFragment();
+    public static SendNotificationSimpleFragment newInstance() {
+        return new SendNotificationSimpleFragment();
     }
 
-    private SendNotificationOnlineApi mSendNotificationOnlineApi;
+    private SendNotificationSimpleOnlineApi mSendNotificationSimpleOnlineApi;
     private EditText mMessageEditText;
     private EditText mGcmEditText;
     private EditText mApiEditText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_admin_send_notification, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_admin_send_simple_notification, container, false);
 
-        mSendNotificationOnlineApi = RetrofitUtils.getRetrofit().create(SendNotificationOnlineApi.class);
-        mMessageEditText = (EditText) rootView.findViewById(R.id.fragment_admin_send_notification_message);
-        mGcmEditText = (EditText) rootView.findViewById(R.id.fragment_admin_send_notification_gcm);
-        mApiEditText = (EditText) rootView.findViewById(R.id.fragment_admin_send_notification_api);
+        mSendNotificationSimpleOnlineApi = RetrofitUtils.getRetrofit().create(SendNotificationSimpleOnlineApi.class);
+        mMessageEditText = (EditText) rootView.findViewById(R.id.fragment_admin_send_notification_simple_message);
+        mGcmEditText = (EditText) rootView.findViewById(R.id.fragment_admin_send_notification_simple_gcm);
+        mApiEditText = (EditText) rootView.findViewById(R.id.fragment_admin_send_notification_simple_api);
 
         mGcmEditText.setText(INIT_GCM);
         mApiEditText.setText(INIT_API);
-        rootView.findViewById(R.id.fragment_admin_send_notification_circle).setOnClickListener(this);
+        rootView.findViewById(R.id.fragment_admin_send_notification_simple_circle).setOnClickListener(this);
 
         return rootView;
     }
@@ -73,23 +73,23 @@ public class SendNotificationFragment extends BackFragment implements View.OnCli
     @Override
     public void onClick(final View v) {
         final int viewId = v.getId();
-        if (viewId == R.id.fragment_admin_send_notification_circle) {
+        if (viewId == R.id.fragment_admin_send_notification_simple_circle) {
 
             final String gcmId = mGcmEditText.getText().toString();
             final String googleApiKey = mApiEditText.getText().toString();
             final String pushMessage = mMessageEditText.getText().toString();
 
             if (TextUtils.isEmpty(gcmId) && TextUtils.isEmpty(googleApiKey)) {
-                final Call<SendNotificationResponse> call = mSendNotificationOnlineApi.sendPushToDev(
-                        new SendNotificationDevRequest(pushMessage));
-                call.enqueue(new Callback<SendNotificationResponse>() {
+                final Call<SendNotificationSimpleResponse> call = mSendNotificationSimpleOnlineApi.sendPushToDev(
+                        new SendNotificationSimpleDevRequest(pushMessage));
+                call.enqueue(new Callback<SendNotificationSimpleResponse>() {
                     @Override
-                    public void onResponse(final Call<SendNotificationResponse> call, final Response<SendNotificationResponse> response) {
+                    public void onResponse(final Call<SendNotificationSimpleResponse> call, final Response<SendNotificationSimpleResponse> response) {
                         mMessageEditText.setText("");
                     }
 
                     @Override
-                    public void onFailure(final Call<SendNotificationResponse> call, final Throwable t) {
+                    public void onFailure(final Call<SendNotificationSimpleResponse> call, final Throwable t) {
                         mMessageEditText.setText("");
                         Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
                     }
@@ -97,18 +97,18 @@ public class SendNotificationFragment extends BackFragment implements View.OnCli
                 return;
             }
 
-            final Call<SendNotificationResponse> call = mSendNotificationOnlineApi.sendPush(new SendNotificationRequest(
+            final Call<SendNotificationSimpleResponse> call = mSendNotificationSimpleOnlineApi.sendPush(new SendNotificationSimpleRequest(
                     gcmId,
                     googleApiKey,
                     pushMessage));
-            call.enqueue(new Callback<SendNotificationResponse>() {
+            call.enqueue(new Callback<SendNotificationSimpleResponse>() {
                 @Override
-                public void onResponse(final Call<SendNotificationResponse> call, final Response<SendNotificationResponse> response) {
+                public void onResponse(final Call<SendNotificationSimpleResponse> call, final Response<SendNotificationSimpleResponse> response) {
                     mMessageEditText.setText("");
                 }
 
                 @Override
-                public void onFailure(final Call<SendNotificationResponse> call, final Throwable t) {
+                public void onFailure(final Call<SendNotificationSimpleResponse> call, final Throwable t) {
                     mMessageEditText.setText("");
                     Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
                 }

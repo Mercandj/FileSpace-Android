@@ -17,17 +17,8 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package com.mercandalli.android.apps.files.admin;
+package com.mercandalli.android.apps.files.admin.notification.simple;
 
-import com.google.gson.annotations.SerializedName;
+public class SendNotificationSimpleResponse {
 
-public class SendNotificationDevRequest {
-
-
-    @SerializedName("pushMessage")
-    private String mPushMessage;
-
-    public SendNotificationDevRequest(final String pushMessage) {
-        mPushMessage = pushMessage;
-    }
 }

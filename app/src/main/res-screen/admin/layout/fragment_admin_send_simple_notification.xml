@@ -11,20 +11,7 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/fragment_admin_send_notification_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:ems="9"
-            android:hint="Title"
-            android:lines="1"
-            android:maxLines="1"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/fragment_admin_send_notification_message"
+            android:id="@+id/fragment_admin_send_notification_simple_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -36,27 +23,36 @@
             android:singleLine="true"
             android:textSize="20sp" />
 
-        <LinearLayout
+        <EditText
+            android:id="@+id/fragment_admin_send_notification_simple_gcm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginTop="10dp"
+            android:ems="9"
+            android:hint="GCM"
+            android:lines="1"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textSize="20sp" />
 
-            <android.support.v7.widget.SwitchCompat
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="Send to dev" />
-
-            <Spinner
-                android:id="@+id/planets_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
+        <EditText
+            android:id="@+id/fragment_admin_send_notification_simple_api"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ems="9"
+            android:hint="Api"
+            android:lines="1"
+            android:maxLines="1"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:textSize="20sp" />
 
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fragment_admin_send_notification_circle"
+        android:id="@+id/fragment_admin_send_notification_simple_circle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

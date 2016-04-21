@@ -17,24 +17,33 @@
  * @license http://www.gnu.org/licenses/gpl.html
  * @copyright 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
  */
-package com.mercandalli.android.apps.files.admin;
+package com.mercandalli.android.apps.files.admin.notification;
 
 import com.google.gson.annotations.SerializedName;
+import com.mercandalli.android.library.baselibrary.push.PushManager;
 
 public class SendNotificationRequest {
 
-    @SerializedName("gcmId")
-    private String mGcmId;
+    @SerializedName(PushManager.PUSH_NOTIFICATION_KEY_TYPE)
+    private final String mType;
 
-    @SerializedName("googleApiKey")
-    private String mGoogleApiKey;
+    @SerializedName(PushManager.PUSH_NOTIFICATION_KEY_TITLE)
+    private final String mTitle;
 
-    @SerializedName("pushMessage")
-    private String mPushMessage;
+    @SerializedName(PushManager.PUSH_NOTIFICATION_KEY_MESSAGE)
+    private final String mMessage;
 
-    public SendNotificationRequest(final String gcmId, final String googleApiKey, final String pushMessage) {
-        mGcmId = gcmId;
-        mGoogleApiKey = googleApiKey;
-        mPushMessage = pushMessage;
+    @SerializedName(PushManager.PUSH_NOTIFICATION_KEY_ACTION_DATA)
+    private final String mActionData;
+
+    public SendNotificationRequest(
+            final String type,
+            final String title,
+            final String message,
+            final String actionData) {
+        mType = type;
+        mTitle = title;
+        mMessage = message;
+        mActionData = actionData;
     }
 }
