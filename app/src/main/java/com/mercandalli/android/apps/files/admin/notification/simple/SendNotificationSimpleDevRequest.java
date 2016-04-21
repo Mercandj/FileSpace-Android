@@ -20,10 +20,11 @@
 package com.mercandalli.android.apps.files.admin.notification.simple;
 
 import com.google.gson.annotations.SerializedName;
+import com.mercandalli.android.library.baselibrary.push.PushManager;
 
 public class SendNotificationSimpleDevRequest {
 
-    @SerializedName("pushMessage")
+    @SerializedName(PushManager.PUSH_NOTIFICATION_KEY_MESSAGE)
     private String mPushMessage;
 
     public SendNotificationSimpleDevRequest(final String pushMessage) {

@@ -48,7 +48,7 @@ public class FileAudioPlayer implements
     private final List<FileAudioModel> mFileAudioModelList = new ArrayList<>();
     private int mCurrentMusicIndex;
 
-    private MediaPlayer mMediaPlayer;
+    private final MediaPlayer mMediaPlayer;
     private final Context mAppContext;
     private final AudioManager mAudioManager;
 
@@ -69,8 +69,8 @@ public class FileAudioPlayer implements
         retrieveDeviceNode(mAppContext);
 
         // Register the local broadcast receiver, defined in step 3.
-        IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
-        MessageReceiver messageReceiver = new MessageReceiver();
+        final IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
+        final MessageReceiver messageReceiver = new MessageReceiver();
         LocalBroadcastManager.getInstance(mAppContext).registerReceiver(messageReceiver, messageFilter);
     }
 

@@ -1,59 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="20dp"
-        android:orientation="vertical">
-
-        <EditText
-            android:id="@+id/fragment_admin_send_notification_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:ems="9"
-            android:hint="Title"
-            android:lines="1"
-            android:maxLines="1"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/fragment_admin_send_notification_message"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:ems="9"
-            android:hint="Message"
-            android:lines="1"
-            android:maxLines="1"
-            android:padding="10dp"
-            android:singleLine="true"
-            android:textSize="20sp" />
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_margin="20dp"
+            android:orientation="vertical">
 
-            <android.support.v7.widget.SwitchCompat
-                android:layout_width="100dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Send to dev" />
+                android:layout_marginBottom="6dp"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
 
-            <Spinner
-                android:id="@+id/planets_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/fragment_admin_send_notification_dev_switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:checked="true"
+                    android:text="Send to dev" />
+
+                <Spinner
+                    android:id="@+id/fragment_admin_send_notification_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginStart="24dp" />
+
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/fragment_admin_send_notification_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ems="9"
+                android:hint="Title"
+                android:lines="1"
+                android:maxLines="1"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/fragment_admin_send_notification_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ems="9"
+                android:hint="Message"
+                android:lines="1"
+                android:maxLines="1"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/fragment_admin_send_notification_package"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ems="9"
+                android:hint="Package"
+                android:lines="1"
+                android:maxLines="1"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <EditText
+                android:id="@+id/fragment_admin_send_notification_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ems="9"
+                android:hint="Url"
+                android:lines="1"
+                android:maxLines="1"
+                android:padding="10dp"
+                android:singleLine="true"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
         </LinearLayout>
 
-    </LinearLayout>
+    </ScrollView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fragment_admin_send_notification_circle"

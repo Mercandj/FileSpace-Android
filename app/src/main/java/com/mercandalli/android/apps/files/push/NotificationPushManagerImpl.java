@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 
 import com.mercandalli.android.apps.files.BuildConfig;
 import com.mercandalli.android.apps.files.R;
@@ -71,7 +72,7 @@ class NotificationPushManagerImpl implements NotificationPushManager, PushManage
                 NetworkUtils.sendNotification(
                         mAppContext,
                         message,
-                        title == null ? mAppContext.getString(R.string.app_name) : title,
+                        TextUtils.isEmpty(title) ? mAppContext.getString(R.string.app_name) : title,
                         "com.mercandalli.android.apps.files",
                         R.drawable.ic_notification_cloud,
                         ContextCompat.getColor(mAppContext, R.color.accent),
