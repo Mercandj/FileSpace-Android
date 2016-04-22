@@ -136,8 +136,8 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
 
     // Dagger
-    compile 'com.google.dagger:dagger:2.2'
-    apt 'com.google.dagger:dagger-compiler:2.2'
+    compile 'com.google.dagger:dagger:2.4'
+    apt 'com.google.dagger:dagger-compiler:2.4'
 
     // Network
     compile('com.squareup.retrofit2:retrofit:2.0.2') {

@@ -77,7 +77,7 @@ class NotificationPushManagerImpl implements
                         message,
                         TextUtils.isEmpty(title) ? mAppContext.getString(R.string.app_name) : title,
                         "com.mercandalli.android.apps.files",
-                        R.drawable.ic_notification_cloud,
+                        R.drawable.ic_notification_folder,
                         ContextCompat.getColor(mAppContext, R.color.accent),
                         1);
                 break;
@@ -92,7 +92,7 @@ class NotificationPushManagerImpl implements
                         openPlayStoreIntent,
                         message,
                         TextUtils.isEmpty(title) ? mAppContext.getString(R.string.app_name) : title,
-                        R.drawable.ic_notification_cloud,
+                        R.drawable.ic_notification_folder,
                         ContextCompat.getColor(mAppContext, R.color.accent),
                         1);
                 break;
@@ -109,7 +109,7 @@ class NotificationPushManagerImpl implements
                         openUrlIntent,
                         message,
                         TextUtils.isEmpty(title) ? mAppContext.getString(R.string.app_name) : title,
-                        R.drawable.ic_notification_cloud,
+                        R.drawable.ic_notification_folder,
                         ContextCompat.getColor(mAppContext, R.color.accent),
                         1);
                 break;

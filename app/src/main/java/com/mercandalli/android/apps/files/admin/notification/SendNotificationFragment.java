@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -60,19 +60,26 @@ public class SendNotificationFragment extends BackFragment implements
     private EditText mPackageEditText;
     private EditText mUrlEditText;
     private SwitchCompat mDevSwitchCompat;
-    private Spinner mSpinner;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_admin_send_notification, container, false);
+        final View rootView = inflater.inflate(
+                R.layout.fragment_admin_send_notification, container, false);
 
-        mSendNotificationOnlineApi = RetrofitUtils.getRetrofit().create(SendNotificationOnlineApi.class);
-        mMessageEditText = (EditText) rootView.findViewById(R.id.fragment_admin_send_notification_message);
-        mTitleEditText = (EditText) rootView.findViewById(R.id.fragment_admin_send_notification_title);
-        mPackageEditText = (EditText) rootView.findViewById(R.id.fragment_admin_send_notification_package);
-        mUrlEditText = (EditText) rootView.findViewById(R.id.fragment_admin_send_notification_url);
-        mDevSwitchCompat = (SwitchCompat) rootView.findViewById(R.id.fragment_admin_send_notification_dev_switch);
-        mSpinner = (Spinner) rootView.findViewById(R.id.fragment_admin_send_notification_spinner);
+        mSendNotificationOnlineApi =
+                RetrofitUtils.getAuthorizedRetrofit().create(SendNotificationOnlineApi.class);
+        mMessageEditText = (EditText) rootView.findViewById(
+                R.id.fragment_admin_send_notification_message);
+        mTitleEditText = (EditText) rootView.findViewById(
+                R.id.fragment_admin_send_notification_title);
+        mPackageEditText = (EditText) rootView.findViewById(
+                R.id.fragment_admin_send_notification_package);
+        mUrlEditText = (EditText) rootView.findViewById(
+                R.id.fragment_admin_send_notification_url);
+        mDevSwitchCompat = (SwitchCompat) rootView.findViewById(
+                R.id.fragment_admin_send_notification_dev_switch);
+        final Spinner spinner = (Spinner) rootView.findViewById(
+                R.id.fragment_admin_send_notification_spinner);
 
         final List<String> list = new ArrayList<>();
         list.add("Notif message");
@@ -83,8 +90,8 @@ public class SendNotificationFragment extends BackFragment implements
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinner.setAdapter(dataAdapter);
-        mSpinner.setOnItemSelectedListener(this);
+        spinner.setAdapter(dataAdapter);
+        spinner.setOnItemSelectedListener(this);
 
         rootView.findViewById(R.id.fragment_admin_send_notification_circle).setOnClickListener(this);
         return rootView;
@@ -124,7 +131,11 @@ public class SendNotificationFragment extends BackFragment implements
     }
 
     @Override
-    public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
+    public void onItemSelected(
+            final AdapterView<?> parent,
+            final View view,
+            final int position,
+            final long id) {
         switch (position) {
             case 0:
                 mCurrentMode = PushManager.PUSH_TYPE_NOTIFICATION_MESSAGE;
@@ -159,7 +170,10 @@ public class SendNotificationFragment extends BackFragment implements
                 "");
     }
 
-    private void sendNotificationOpenStore(final String title, final String message, final String packageStr) {
+    private void sendNotificationOpenStore(
+            final String title,
+            final String message,
+            final String packageStr) {
         sendToApi(
                 PushManager.PUSH_TYPE_NOTIFICATION_OPEN_PLAY_STORE,
                 title,
@@ -167,7 +181,10 @@ public class SendNotificationFragment extends BackFragment implements
                 packageStr);
     }
 
-    private void sendNotificationOpenUrl(final String title, final String message, final String url) {
+    private void sendNotificationOpenUrl(
+            final String title,
+            final String message,
+            final String url) {
         sendToApi(
                 PushManager.PUSH_TYPE_NOTIFICATION_OPEN_URL,
                 title,
@@ -204,12 +221,16 @@ public class SendNotificationFragment extends BackFragment implements
                     actionData
             )).enqueue(new Callback<SendNotificationSimpleResponse>() {
                 @Override
-                public void onResponse(final Call<SendNotificationSimpleResponse> call, final Response<SendNotificationSimpleResponse> response) {
+                public void onResponse(
+                        final Call<SendNotificationSimpleResponse> call,
+                        final Response<SendNotificationSimpleResponse> response) {
                     resetEditTexts();
                 }
 
                 @Override
-                public void onFailure(final Call<SendNotificationSimpleResponse> call, final Throwable t) {
+                public void onFailure(
+                        final Call<SendNotificationSimpleResponse> call,
+                        final Throwable t) {
                     resetEditTexts();
                     Toast.makeText(getContext(), "Failed " + type, Toast.LENGTH_SHORT).show();
                 }
@@ -222,12 +243,16 @@ public class SendNotificationFragment extends BackFragment implements
                     actionData
             )).enqueue(new Callback<SendNotificationSimpleResponse>() {
                 @Override
-                public void onResponse(final Call<SendNotificationSimpleResponse> call, final Response<SendNotificationSimpleResponse> response) {
+                public void onResponse(
+                        final Call<SendNotificationSimpleResponse> call,
+                        final Response<SendNotificationSimpleResponse> response) {
                     resetEditTexts();
                 }
 
                 @Override
-                public void onFailure(final Call<SendNotificationSimpleResponse> call, final Throwable t) {
+                public void onFailure(
+                        final Call<SendNotificationSimpleResponse> call,
+                        final Throwable t) {
                     resetEditTexts();
                     Toast.makeText(getContext(), "Failed " + type, Toast.LENGTH_SHORT).show();
                 }
