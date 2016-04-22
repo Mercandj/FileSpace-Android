@@ -113,7 +113,7 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
 
         tabs = (TabLayout) rootView.findViewById(R.id.fragment_admin_tab_layout);
         mViewPager = (NonSwipeableViewPager) rootView.findViewById(R.id.pager);
-        mViewPager.setNonSwipeableItem(7);
+        mViewPager.setNonSwipeableItem(NB_FRAGMENT - 1);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
         mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
@@ -263,7 +263,7 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
         menu.findItem(R.id.action_add).setVisible(false);
         menu.findItem(R.id.action_home).setVisible(false);
 
-        if (getCurrentFragmentIndex() == 5) {
+        if (getCurrentFragmentIndex() == 7) {
             menu.findItem(R.id.action_delete).setVisible(true);
         }
     }
@@ -272,7 +272,7 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_delete:
-                if (getCurrentFragmentIndex() == 5) {
+                if (getCurrentFragmentIndex() == 7) {
                     ((RequestFragment) AdminFragment.LIST_BACK_FRAGMENT[getCurrentFragmentIndex()]).delete();
                 }
                 return true;

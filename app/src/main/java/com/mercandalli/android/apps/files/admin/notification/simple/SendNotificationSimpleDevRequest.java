@@ -24,7 +24,7 @@ import com.mercandalli.android.library.baselibrary.push.PushManager;
 
 public class SendNotificationSimpleDevRequest {
 
-    @SerializedName(PushManager.PUSH_NOTIFICATION_KEY_MESSAGE)
+    @SerializedName(PushManager.PUSH_KEY_NOTIFICATION_MESSAGE)
     private String mPushMessage;
 
     public SendNotificationSimpleDevRequest(final String pushMessage) {

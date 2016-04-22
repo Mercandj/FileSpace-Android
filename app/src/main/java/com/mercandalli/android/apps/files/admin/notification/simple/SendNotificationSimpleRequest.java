@@ -30,7 +30,7 @@ public class SendNotificationSimpleRequest {
     @SerializedName("googleApiKey")
     private String mGoogleApiKey;
 
-    @SerializedName(PushManager.PUSH_NOTIFICATION_KEY_MESSAGE)
+    @SerializedName(PushManager.PUSH_KEY_NOTIFICATION_MESSAGE)
     private String mPushMessage;
 
     public SendNotificationSimpleRequest(final String gcmId, final String googleApiKey, final String pushMessage) {

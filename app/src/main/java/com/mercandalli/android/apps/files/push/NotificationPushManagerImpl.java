@@ -2,6 +2,7 @@ package com.mercandalli.android.apps.files.push;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,7 +23,9 @@ import static com.mercandalli.android.library.baselibrary.network.NetworkUtils.i
  * Manage the notification push: id...
  */
 /* package */
-class NotificationPushManagerImpl implements NotificationPushManager, PushManager.OnGcmMessageListener {
+class NotificationPushManagerImpl implements
+        NotificationPushManager,
+        PushManager.OnGcmMessageListener {
 
     private static final String GCM_SENDER = "807253530972";
 
@@ -58,14 +61,14 @@ class NotificationPushManagerImpl implements NotificationPushManager, PushManage
 
     @Override
     public void onGcmMessageReceived(
-            final @Nullable String from,
-            final @NonNull Bundle data,
-            final @PushManager.PushType String type,
-            final @Nullable String message,
-            final @Nullable String title,
-            final @Nullable String actionData) {
+            @Nullable final String from,
+            @NonNull final Bundle data,
+            @PushManager.PushType final String type,
+            @Nullable final String message,
+            @Nullable final String title,
+            @Nullable final String actionData) {
         switch (type) {
-            case PushManager.PUSH_NOTIFICATION_TYPE_MESSAGE_ONLY:
+            case PushManager.PUSH_TYPE_NOTIFICATION_MESSAGE:
                 if (message == null) {
                     break;
                 }
@@ -78,13 +81,45 @@ class NotificationPushManagerImpl implements NotificationPushManager, PushManage
                         ContextCompat.getColor(mAppContext, R.color.accent),
                         1);
                 break;
-            case PushManager.PUSH_NOTIFICATION_TYPE_OPEN_PLAY_STORE:
+            case PushManager.PUSH_TYPE_NOTIFICATION_OPEN_PLAY_STORE:
+                if (actionData == null) {
+                    break;
+                }
+                final Intent openPlayStoreIntent =
+                        NetworkUtils.getOpenPlayStoreIntent(mAppContext, actionData);
+                NetworkUtils.sendNotification(
+                        mAppContext,
+                        openPlayStoreIntent,
+                        message,
+                        TextUtils.isEmpty(title) ? mAppContext.getString(R.string.app_name) : title,
+                        R.drawable.ic_notification_cloud,
+                        ContextCompat.getColor(mAppContext, R.color.accent),
+                        1);
+                break;
+            case PushManager.PUSH_TYPE_NOTIFICATION_OPEN_URL:
+                if (actionData == null) {
+                    break;
+                }
+                final Intent openUrlIntent = NetworkUtils.getOpenUrlIntent(mAppContext, actionData);
+                if (openUrlIntent == null) {
+                    break;
+                }
+                NetworkUtils.sendNotification(
+                        mAppContext,
+                        openUrlIntent,
+                        message,
+                        TextUtils.isEmpty(title) ? mAppContext.getString(R.string.app_name) : title,
+                        R.drawable.ic_notification_cloud,
+                        ContextCompat.getColor(mAppContext, R.color.accent),
+                        1);
+                break;
+            case PushManager.PUSH_TYPE_OPEN_PLAY_STORE:
                 if (actionData == null) {
                     break;
                 }
                 NetworkUtils.openPlayStore(mAppContext, actionData);
                 break;
-            case PushManager.PUSH_NOTIFICATION_TYPE_OPEN_URL:
+            case PushManager.PUSH_TYPE_OPEN_URL:
                 if (actionData == null) {
                     break;
                 }

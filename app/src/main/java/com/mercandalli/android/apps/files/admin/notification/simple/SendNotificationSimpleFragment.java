@@ -37,7 +37,7 @@ import retrofit2.Response;
 
 public class SendNotificationSimpleFragment extends BackFragment implements View.OnClickListener {
 
-    private static final String INIT_GCM = "fAII_318cWs:APA91bHF1pAhxJ4IsL_wE5tNOtbLi5x8ZfLAn3HEhaRHmVjAPK6ouLWPGySOQCyU9u5XXC90hP_N8n9tVCQWZcVDMgp_5jU33m2gl7BB-oJQaqbaJT1X7U953-J9zCARmep-IaUwNNH1";
+    private static final String INIT_GCM = "fslDUi5sxzk:APA91bHeujPF2PSUdeDjsalKdMlIZfsuQYyALRGXPHVN_IJypuSPFi1RTjw1q61anFaNetqPuOKQgYh0kQW2jhZaBOTKkMyFzQtSvfl2c_w1QG0DFUxUfZQQhuiOjo-IUUu4UKEOR8J9";
     private static final String INIT_API = "AIzaSyD7zDFkA8VEOs4egESBEy-sHHBqyEZj3WU";
 
     public static SendNotificationSimpleFragment newInstance() {
