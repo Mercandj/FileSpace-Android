@@ -29,6 +29,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -329,6 +331,14 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
                     .isOnline(false)
                     .build());
         }
+
+        // Sorting
+        Collections.sort(result, new Comparator<FileModel>() {
+            @Override
+            public int compare(final FileModel fileModel1, final FileModel fileModel2) {
+                return fileModel2.getCountAudio() - fileModel1.getCountAudio();
+            }
+        });
 
         notifyLocalMusicFoldersListenerSucceeded(result, true);
     }
