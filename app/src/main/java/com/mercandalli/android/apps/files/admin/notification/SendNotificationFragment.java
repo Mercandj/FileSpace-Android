@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -19,47 +19,34 @@
  */
 package com.mercandalli.android.apps.files.admin.notification;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.widget.SwitchCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.admin.notification.simple.SendNotificationSimpleResponse;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.main.network.RetrofitUtils;
-import com.mercandalli.android.library.baselibrary.push.PushManager;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SendNotificationFragment extends BackFragment implements
-        View.OnClickListener,
-        AdapterView.OnItemSelectedListener {
+public class SendNotificationFragment extends BackFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
-    @PushManager.PushType
-    private String mCurrentMode = PushManager.PUSH_TYPE_NOTIFICATION_MESSAGE;
+    private SendNotificationAdapter mAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public static SendNotificationFragment newInstance() {
         return new SendNotificationFragment();
     }
 
     private SendNotificationOnlineApi mSendNotificationOnlineApi;
-    private EditText mMessageEditText;
-    private EditText mTitleEditText;
-    private EditText mPackageEditText;
-    private EditText mUrlEditText;
-    private SwitchCompat mDevSwitchCompat;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,33 +55,31 @@ public class SendNotificationFragment extends BackFragment implements
 
         mSendNotificationOnlineApi =
                 RetrofitUtils.getAuthorizedRetrofit().create(SendNotificationOnlineApi.class);
-        mMessageEditText = (EditText) rootView.findViewById(
-                R.id.fragment_admin_send_notification_message);
-        mTitleEditText = (EditText) rootView.findViewById(
-                R.id.fragment_admin_send_notification_title);
-        mPackageEditText = (EditText) rootView.findViewById(
-                R.id.fragment_admin_send_notification_package);
-        mUrlEditText = (EditText) rootView.findViewById(
-                R.id.fragment_admin_send_notification_url);
-        mDevSwitchCompat = (SwitchCompat) rootView.findViewById(
-                R.id.fragment_admin_send_notification_dev_switch);
-        final Spinner spinner = (Spinner) rootView.findViewById(
-                R.id.fragment_admin_send_notification_spinner);
+        final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(
+                R.id.fragment_admin_send_notification_recycler_view);
+        mAdapter = new SendNotificationAdapter();
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(mAdapter);
 
-        final List<String> list = new ArrayList<>();
-        list.add("Notif message");
-        list.add("Notif PlayStore");
-        list.add("Notif Url");
-        list.add("PlayStore");
-        list.add("Url");
-        final ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_item, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(dataAdapter);
-        spinner.setOnItemSelectedListener(this);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(
+                R.id.fragment_admin_send_notification_swipe_refresh_layout);
+        mSwipeRefreshLayout.setEnabled(true);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         rootView.findViewById(R.id.fragment_admin_send_notification_circle).setOnClickListener(this);
+
+        getDevices();
         return rootView;
+    }
+
+    @Override
+    public void onRefresh() {
+        getDevices();
     }
 
     @Override
@@ -102,200 +87,39 @@ public class SendNotificationFragment extends BackFragment implements
         return false;
     }
 
+    private void getDevices() {
+        if (mSendNotificationOnlineApi == null) {
+            return;
+        }
+        final Call<DevicesResponse> callGet = mSendNotificationOnlineApi.getDevice();
+        callGet.enqueue(new Callback<DevicesResponse>() {
+            @Override
+            public void onResponse(
+                    final Call<DevicesResponse> call,
+                    final Response<DevicesResponse> response) {
+                final Context context = getContext();
+                if (!response.isSuccessful() || context == null || !(context instanceof Activity)) {
+                    return;
+                }
+                final Activity activity = (Activity) context;
+                if (activity.isFinishing()) {
+                    return;
+                }
+                mAdapter.setDeviceList(response.body().getResult(context));
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(
+                    final Call<DevicesResponse> call,
+                    final Throwable t) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
     @Override
     public void onClick(final View v) {
-        final int viewId = v.getId();
-        if (viewId == R.id.fragment_admin_send_notification_circle) {
-            final String title = mTitleEditText.getText().toString();
-            final String message = mMessageEditText.getText().toString();
-            final String packageStr = mPackageEditText.getText().toString();
-            final String url = mUrlEditText.getText().toString();
-            switch (mCurrentMode) {
-                case PushManager.PUSH_TYPE_NOTIFICATION_MESSAGE:
-                    sendNotificationMessage(title, message);
-                    break;
-                case PushManager.PUSH_TYPE_NOTIFICATION_OPEN_PLAY_STORE:
-                    sendNotificationOpenStore(title, message, packageStr);
-                    break;
-                case PushManager.PUSH_TYPE_NOTIFICATION_OPEN_URL:
-                    sendNotificationOpenUrl(title, message, url);
-                    break;
-                case PushManager.PUSH_TYPE_OPEN_PLAY_STORE:
-                    sendOpenStore(packageStr);
-                    break;
-                case PushManager.PUSH_TYPE_OPEN_URL:
-                    sendOpenUrl(url);
-                    break;
-            }
-        }
-    }
-
-    @Override
-    public void onItemSelected(
-            final AdapterView<?> parent,
-            final View view,
-            final int position,
-            final long id) {
-        switch (position) {
-            case 0:
-                mCurrentMode = PushManager.PUSH_TYPE_NOTIFICATION_MESSAGE;
-                break;
-            case 1:
-                mCurrentMode = PushManager.PUSH_TYPE_NOTIFICATION_OPEN_PLAY_STORE;
-                break;
-            case 2:
-                mCurrentMode = PushManager.PUSH_TYPE_NOTIFICATION_OPEN_URL;
-                break;
-            case 3:
-                mCurrentMode = PushManager.PUSH_TYPE_OPEN_PLAY_STORE;
-                break;
-            case 4:
-                mCurrentMode = PushManager.PUSH_TYPE_OPEN_URL;
-                break;
-            default:
-        }
-        resetEditTexts();
-    }
-
-    @Override
-    public void onNothingSelected(final AdapterView<?> parent) {
-
-    }
-
-    private void sendNotificationMessage(final String title, final String message) {
-        sendToApi(
-                PushManager.PUSH_TYPE_NOTIFICATION_MESSAGE,
-                title,
-                message,
-                "");
-    }
-
-    private void sendNotificationOpenStore(
-            final String title,
-            final String message,
-            final String packageStr) {
-        sendToApi(
-                PushManager.PUSH_TYPE_NOTIFICATION_OPEN_PLAY_STORE,
-                title,
-                message,
-                packageStr);
-    }
-
-    private void sendNotificationOpenUrl(
-            final String title,
-            final String message,
-            final String url) {
-        sendToApi(
-                PushManager.PUSH_TYPE_NOTIFICATION_OPEN_URL,
-                title,
-                message,
-                url);
-    }
-
-    private void sendOpenStore(final String packageStr) {
-        sendToApi(
-                PushManager.PUSH_TYPE_OPEN_PLAY_STORE,
-                "",
-                "",
-                packageStr);
-    }
-
-    private void sendOpenUrl(final String url) {
-        sendToApi(
-                PushManager.PUSH_TYPE_OPEN_URL,
-                "",
-                "",
-                url);
-    }
-
-    private void sendToApi(
-            @PushManager.PushType final String type,
-            final String title,
-            final String message,
-            final String actionData) {
-        if (mDevSwitchCompat.isChecked()) {
-            mSendNotificationOnlineApi.sendPushToDev(new SendNotificationRequest(
-                    type,
-                    title,
-                    message,
-                    actionData
-            )).enqueue(new Callback<SendNotificationSimpleResponse>() {
-                @Override
-                public void onResponse(
-                        final Call<SendNotificationSimpleResponse> call,
-                        final Response<SendNotificationSimpleResponse> response) {
-                    resetEditTexts();
-                }
-
-                @Override
-                public void onFailure(
-                        final Call<SendNotificationSimpleResponse> call,
-                        final Throwable t) {
-                    resetEditTexts();
-                    Toast.makeText(getContext(), "Failed " + type, Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else {
-            mSendNotificationOnlineApi.sendPushToAll(new SendNotificationRequest(
-                    type,
-                    title,
-                    message,
-                    actionData
-            )).enqueue(new Callback<SendNotificationSimpleResponse>() {
-                @Override
-                public void onResponse(
-                        final Call<SendNotificationSimpleResponse> call,
-                        final Response<SendNotificationSimpleResponse> response) {
-                    resetEditTexts();
-                }
-
-                @Override
-                public void onFailure(
-                        final Call<SendNotificationSimpleResponse> call,
-                        final Throwable t) {
-                    resetEditTexts();
-                    Toast.makeText(getContext(), "Failed " + type, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
-    private void resetEditTexts() {
-        mTitleEditText.setText("");
-        mMessageEditText.setText("");
-        mPackageEditText.setText("");
-        mUrlEditText.setText("");
-        switch (mCurrentMode) {
-            case PushManager.PUSH_TYPE_NOTIFICATION_MESSAGE:
-                mTitleEditText.setVisibility(View.VISIBLE);
-                mMessageEditText.setVisibility(View.VISIBLE);
-                mPackageEditText.setVisibility(View.GONE);
-                mUrlEditText.setVisibility(View.GONE);
-                break;
-            case PushManager.PUSH_TYPE_NOTIFICATION_OPEN_PLAY_STORE:
-                mTitleEditText.setVisibility(View.VISIBLE);
-                mMessageEditText.setVisibility(View.VISIBLE);
-                mPackageEditText.setVisibility(View.VISIBLE);
-                mUrlEditText.setVisibility(View.GONE);
-                break;
-            case PushManager.PUSH_TYPE_NOTIFICATION_OPEN_URL:
-                mTitleEditText.setVisibility(View.VISIBLE);
-                mMessageEditText.setVisibility(View.VISIBLE);
-                mPackageEditText.setVisibility(View.GONE);
-                mUrlEditText.setVisibility(View.VISIBLE);
-                break;
-            case PushManager.PUSH_TYPE_OPEN_PLAY_STORE:
-                mTitleEditText.setVisibility(View.GONE);
-                mMessageEditText.setVisibility(View.GONE);
-                mPackageEditText.setVisibility(View.VISIBLE);
-                mUrlEditText.setVisibility(View.GONE);
-                break;
-            case PushManager.PUSH_TYPE_OPEN_URL:
-                mTitleEditText.setVisibility(View.GONE);
-                mMessageEditText.setVisibility(View.GONE);
-                mPackageEditText.setVisibility(View.GONE);
-                mUrlEditText.setVisibility(View.VISIBLE);
-                break;
-        }
+        SendNotificationManager.getInstance().onFabClicked(v);
     }
 }

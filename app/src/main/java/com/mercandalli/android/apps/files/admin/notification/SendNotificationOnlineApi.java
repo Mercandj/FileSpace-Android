@@ -24,6 +24,7 @@ import com.mercandalli.android.apps.files.main.Config;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 
 public interface SendNotificationOnlineApi {
@@ -36,4 +37,6 @@ public interface SendNotificationOnlineApi {
     Call<SendNotificationSimpleResponse> sendPushToDev(
             @Body SendNotificationRequest sendNotificationRequest);
 
+    @GET("/" + Config.ROUTE_DEVICE_GET_ALL)
+    Call<DevicesResponse> getDevice();
 }

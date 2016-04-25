@@ -39,6 +39,7 @@ public class FileModel implements Parcelable {
     // Nb of files inside this folder
     protected int mCount;
     private int mCountAudio;
+    private int mCountImage;
 
     /**
      * A Builder to instantiate immutable object.
@@ -65,6 +66,7 @@ public class FileModel implements Parcelable {
         protected long mLastModified;
         protected int mCount;
         protected int mCountAudio;
+        protected int mCountImage;
 
         public FileModelBuilder id(int id) {
             this.mId = id;
@@ -177,6 +179,11 @@ public class FileModel implements Parcelable {
             return this;
         }
 
+        public FileModelBuilder countImage(int countImage) {
+            this.mCountImage = countImage;
+            return this;
+        }
+
         public FileModelBuilder isOnline(boolean isOnline) {
             this.mIsOnline = isOnline;
             return this;
@@ -212,6 +219,7 @@ public class FileModel implements Parcelable {
             fileModel.mLastModified = mLastModified;
             fileModel.mCount = mCount;
             fileModel.mCountAudio = mCountAudio;
+            fileModel.mCountImage = mCountImage;
             fileModel.mIsOnline = mIsOnline;
             return fileModel;
         }
@@ -338,6 +346,10 @@ public class FileModel implements Parcelable {
 
     public int getCountAudio() {
         return mCountAudio;
+    }
+
+    public int getCountImage() {
+        return mCountImage;
     }
 
 

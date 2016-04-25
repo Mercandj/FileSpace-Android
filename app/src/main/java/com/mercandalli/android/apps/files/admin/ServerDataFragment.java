@@ -19,6 +19,7 @@
  */
 package com.mercandalli.android.apps.files.admin;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -120,7 +121,10 @@ public class ServerDataFragment extends BackFragment {
                                         }
                                     }
                                 } else {
-                                    Toast.makeText(getContext(), R.string.action_failed, Toast.LENGTH_SHORT).show();
+                                    final Context context = getContext();
+                                    if (context != null) {
+                                        Toast.makeText(context, R.string.action_failed, Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             } catch (JSONException e) {
                                 Log.e(TAG, "ServerDataFragment: failed to convert Json", e);

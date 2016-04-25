@@ -3,6 +3,7 @@ package com.mercandalli.android.apps.files.file.image;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileTypeModel;
@@ -16,6 +17,8 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,23 +31,28 @@ import static com.mercandalli.android.apps.files.file.FileUtils.getNameFromPath;
 /* package */
 class FileImageManagerImpl implements FileImageManager {
 
-    private static final String LIKE = " LIKE ?";
-
     private final Context mContextApp;
     protected final FileLocalProviderManager mFileLocalProviderManager;
 
+    @NonNull
     private final List<GetAllLocalImageListener> mGetAllLocalImageListeners = new ArrayList<>();
+    @NonNull
     private final List<GetLocalImageFoldersListener> mGetLocalImageFoldersListeners = new ArrayList<>();
 
+    @NonNull
     private final List<GetLocalImageListener> mGetLocalImageListeners = new ArrayList<>();
     /* Cache */
+    @NonNull
     private final List<FileModel> mCacheGetAllLocalImage = new ArrayList<>();
+    @NonNull
     private final List<FileModel> mCacheGetLocalImagesFolders = new ArrayList<>();
 
     private boolean mIsGetAllLocalImageLaunched;
     private boolean mIsGetLocalImageFoldersLaunched;
 
-    public FileImageManagerImpl(final Context contextApp, final FileLocalProviderManager fileLocalProviderManager) {
+    public FileImageManagerImpl(
+            final Context contextApp,
+            final FileLocalProviderManager fileLocalProviderManager) {
         Preconditions.checkNotNull(contextApp);
         Preconditions.checkNotNull(fileLocalProviderManager);
         mContextApp = contextApp;
@@ -110,43 +118,52 @@ class FileImageManagerImpl implements FileImageManager {
         }
         mIsGetLocalImageFoldersLaunched = true;
 
-        mFileLocalProviderManager.getFileImagePaths(new FileLocalProviderManager.GetFileImageListener() {
-            @Override
-            public void onGetFileImage(final List<String> fileImagePaths) {
-                // Used to count the number of music inside.
-                final Map<String, MutableInt> directories = new HashMap<>();
+        mFileLocalProviderManager.getFileImagePaths(
+                new FileLocalProviderManager.GetFileImageListener() {
+                    @Override
+                    public void onGetFileImage(final List<String> fileImagePaths) {
+                        // Used to count the number of music inside.
+                        final Map<String, MutableInt> directories = new HashMap<>();
 
-                for (final String path : fileImagePaths) {
+                        for (final String path : fileImagePaths) {
 
-                    final String parentPath = FileUtils.getParentPathFromPath(path);
-                    final MutableInt count = directories.get(parentPath);
-                    if (count == null) {
-                        directories.put(parentPath, new MutableInt());
-                    } else {
-                        count.increment();
+                            final String parentPath = FileUtils.getParentPathFromPath(path);
+                            final MutableInt count = directories.get(parentPath);
+                            if (count == null) {
+                                directories.put(parentPath, new MutableInt());
+                            } else {
+                                count.increment();
+                            }
+                        }
+
+                        final List<FileModel> result = new ArrayList<>();
+                        for (String path : directories.keySet()) {
+                            if (!path.startsWith("/storage/emulated/0/Android/")) {
+                                result.add(new FileModel.FileModelBuilder()
+                                        .id(path.hashCode())
+                                        .url(path)
+                                        .name(getNameFromPath(path))
+                                        .isDirectory(true)
+                                        .countImage(directories.get(path).value)
+                                        .isOnline(false)
+                                        .build());
+                            }
+                        }
+
+                        // Sorting
+                        Collections.sort(result, new Comparator<FileModel>() {
+                            @Override
+                            public int compare(final FileModel fileModel1, final FileModel fileModel2) {
+                                return fileModel2.getCountImage() - fileModel1.getCountImage();
+                            }
+                        });
+
+                        notifyLocalImageFoldersListenerSucceeded(result);
+                        mCacheGetLocalImagesFolders.clear();
+                        mCacheGetLocalImagesFolders.addAll(result);
+                        mIsGetLocalImageFoldersLaunched = false;
                     }
-                }
-
-                final List<FileModel> result = new ArrayList<>();
-                for (String path : directories.keySet()) {
-                    if (!path.startsWith("/storage/emulated/0/Android/")) {
-                        result.add(new FileModel.FileModelBuilder()
-                                .id(path.hashCode())
-                                .url(path)
-                                .name(getNameFromPath(path))
-                                .isDirectory(true)
-                                .countAudio(directories.get(path).value)
-                                .isOnline(false)
-                                .build());
-                    }
-                }
-
-                notifyLocalImageFoldersListenerSucceeded(result);
-                mCacheGetLocalImagesFolders.clear();
-                mCacheGetLocalImagesFolders.addAll(result);
-                mIsGetLocalImageFoldersLaunched = false;
-            }
-        });
+                });
     }
     //endregion getLocalImageFolders
 
@@ -189,10 +206,12 @@ class FileImageManagerImpl implements FileImageManager {
     }
 
     @Override
-    public boolean registerAllLocalImageListener(final GetAllLocalImageListener getAllLocalImageListener) {
+    public boolean registerAllLocalImageListener(
+            final GetAllLocalImageListener getAllLocalImageListener) {
         synchronized (mGetAllLocalImageListeners) {
             //noinspection SimplifiableIfStatement
-            if (getAllLocalImageListener == null || mGetAllLocalImageListeners.contains(getAllLocalImageListener)) {
+            if (getAllLocalImageListener == null ||
+                    mGetAllLocalImageListeners.contains(getAllLocalImageListener)) {
                 // We don't allow to register null listener
                 // And a listener can only be added once.
                 return false;
@@ -202,7 +221,8 @@ class FileImageManagerImpl implements FileImageManager {
     }
 
     @Override
-    public boolean unregisterAllLocalImageListener(final GetAllLocalImageListener getAllLocalImageListener) {
+    public boolean unregisterAllLocalImageListener(
+            final GetAllLocalImageListener getAllLocalImageListener) {
         synchronized (mGetAllLocalImageListeners) {
             return mGetAllLocalImageListeners.remove(getAllLocalImageListener);
         }
@@ -211,10 +231,12 @@ class FileImageManagerImpl implements FileImageManager {
 
     //region Register / Unregister listeners
     @Override
-    public boolean registerLocalImageFoldersListener(final GetLocalImageFoldersListener getLocalImageFoldersListener) {
+    public boolean registerLocalImageFoldersListener(
+            final GetLocalImageFoldersListener getLocalImageFoldersListener) {
         synchronized (mGetLocalImageFoldersListeners) {
             //noinspection SimplifiableIfStatement
-            if (getLocalImageFoldersListener == null || mGetLocalImageFoldersListeners.contains(getLocalImageFoldersListener)) {
+            if (getLocalImageFoldersListener == null ||
+                    mGetLocalImageFoldersListeners.contains(getLocalImageFoldersListener)) {
                 // We don't allow to register null listener
                 // And a listener can only be added once.
                 return false;
@@ -224,7 +246,8 @@ class FileImageManagerImpl implements FileImageManager {
     }
 
     @Override
-    public boolean unregisterLocalImageFoldersListener(final GetLocalImageFoldersListener getLocalImageFoldersListener) {
+    public boolean unregisterLocalImageFoldersListener(
+            final GetLocalImageFoldersListener getLocalImageFoldersListener) {
         synchronized (mGetLocalImageFoldersListeners) {
             return mGetLocalImageFoldersListeners.remove(getLocalImageFoldersListener);
         }
@@ -234,7 +257,8 @@ class FileImageManagerImpl implements FileImageManager {
     public boolean registerLocalImageListener(final GetLocalImageListener getLocalImageListener) {
         synchronized (mGetLocalImageListeners) {
             //noinspection SimplifiableIfStatement
-            if (getLocalImageListener == null || mGetLocalImageListeners.contains(getLocalImageListener)) {
+            if (getLocalImageListener == null ||
+                    mGetLocalImageListeners.contains(getLocalImageListener)) {
                 // We don't allow to register null listener
                 // And a listener can only be added once.
                 return false;
@@ -244,7 +268,8 @@ class FileImageManagerImpl implements FileImageManager {
     }
 
     @Override
-    public boolean unregisterLocalImageListener(final GetLocalImageListener getLocalImageListener) {
+    public boolean unregisterLocalImageListener(
+            final GetLocalImageListener getLocalImageListener) {
         synchronized (mGetLocalImageListeners) {
             return mGetLocalImageListeners.remove(getLocalImageListener);
         }

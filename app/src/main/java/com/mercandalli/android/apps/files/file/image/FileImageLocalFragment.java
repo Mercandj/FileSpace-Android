@@ -374,9 +374,10 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
 
     @Nullable
     @Override
-    public String onFileSubtitleModify(FileModel fileModel) {
-        if (fileModel != null && fileModel.isDirectory() && fileModel.getCountAudio() != 0) {
-            return mStringDirectory + ": " + StringUtils.longToShortString(fileModel.getCountAudio()) + " " + (fileModel.getCountAudio() > 1 ? mStringImages : mStringImage);
+    public String onFileSubtitleModify(final FileModel fileModel) {
+        if (fileModel != null && fileModel.isDirectory() && fileModel.getCountImage() != 0) {
+            return mStringDirectory + ": " + StringUtils.longToShortString(fileModel.getCountImage())
+                    + " " + (fileModel.getCountImage() > 1 ? mStringImages : mStringImage);
         }
         return null;
     }
