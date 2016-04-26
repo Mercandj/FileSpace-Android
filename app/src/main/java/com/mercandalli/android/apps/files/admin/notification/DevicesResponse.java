@@ -7,7 +7,7 @@ import com.mercandalli.android.library.baselibrary.device.Device;
 
 import java.util.List;
 
-public class DevicesResponse extends MyResponse<Device> {
+/* package */ class DevicesResponse extends MyResponse<Device> {
 
     @Override
     public List<Device> getResult(final Context context) {

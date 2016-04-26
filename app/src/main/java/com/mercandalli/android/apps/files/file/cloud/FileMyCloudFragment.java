@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -62,7 +62,6 @@ import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
-import com.mercandalli.android.library.baselibrary.view.ViewUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -339,7 +338,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
             mMessageTextView.setVisibility(View.VISIBLE);
 
             if (!internetConnection) {
-                ViewUtils.setViewVisibility(mRecyclerView, View.GONE);
+                mRecyclerView.setVisibility(View.GONE);
                 mFileCloudFabManager.updateFabButtons();
             }
             return;
@@ -374,9 +373,9 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                 } else {
                     mMessageTextView.setText(getString(R.string.no_file_directory));
                 }
-                ViewUtils.setViewVisibility(mMessageTextView, View.VISIBLE);
+                mMessageTextView.setVisibility(View.VISIBLE);
             } else {
-                ViewUtils.setViewVisibility(mMessageTextView, View.GONE);
+                mMessageTextView.setVisibility(View.GONE);
             }
 
             mRecyclerView.scrollToPosition(0);
@@ -385,8 +384,8 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
 
             mFileCloudFabManager.updateFabButtons();
 
-            ViewUtils.setViewVisibility(mProgressBar, View.GONE);
-            ViewUtils.setViewVisibility(mRecyclerView, View.VISIBLE);
+            mProgressBar.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -586,8 +585,8 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
 
     private void refreshCurrentList(final boolean showProgressBar) {
         if (showProgressBar) {
-            ViewUtils.setViewVisibility(mProgressBar, View.VISIBLE);
-            ViewUtils.setViewVisibility(mRecyclerView, View.GONE);
+            mProgressBar.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
             mFileModelAdapter.setList(new ArrayList<FileModel>());
         }
         refreshCurrentList();

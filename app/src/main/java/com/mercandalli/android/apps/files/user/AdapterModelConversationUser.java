@@ -34,14 +34,17 @@ import com.mercandalli.android.apps.files.common.listener.IModelUserListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdapterModelConversationUser extends RecyclerView.Adapter<AdapterModelConversationUser.ViewHolder> {
+public class AdapterModelConversationUser extends
+        RecyclerView.Adapter<AdapterModelConversationUser.ViewHolder> {
 
     private List<ConversationUserModel> mUsers;
     private OnItemClickListener mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
     private IModelUserListener mMoreListener;
 
-    public AdapterModelConversationUser(List<ConversationUserModel> users, IModelUserListener moreListener) {
+    public AdapterModelConversationUser(
+            final List<ConversationUserModel> users,
+            final IModelUserListener moreListener) {
         mUsers = new ArrayList<>(users);
         mMoreListener = moreListener;
     }

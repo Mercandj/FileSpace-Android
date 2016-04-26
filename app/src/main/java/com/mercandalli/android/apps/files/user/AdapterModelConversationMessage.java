@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -37,7 +37,8 @@ import com.mercandalli.android.apps.files.main.Config;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdapterModelConversationMessage extends RecyclerView.Adapter<AdapterModelConversationMessage.ViewHolder> {
+public class AdapterModelConversationMessage extends
+        RecyclerView.Adapter<AdapterModelConversationMessage.ViewHolder> {
 
     private List<UserConversationMessageModel> mUsers;
     private OnItemClickListener mItemClickListener;
@@ -49,7 +50,8 @@ public class AdapterModelConversationMessage extends RecyclerView.Adapter<Adapte
 
     @Override
     public AdapterModelConversationMessage.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.tab_user, parent, false), viewType);
+        return new ViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.tab_user, parent, false), viewType);
     }
 
     @Override
@@ -93,7 +95,8 @@ public class AdapterModelConversationMessage extends RecyclerView.Adapter<Adapte
         mItemLongClickListener = itemLongClickListener;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener, View.OnLongClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements
+            OnClickListener, View.OnLongClickListener {
 
         public TextView title, subtitle;
         public ImageView icon;

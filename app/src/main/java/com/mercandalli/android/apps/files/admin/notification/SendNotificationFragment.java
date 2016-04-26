@@ -37,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SendNotificationFragment extends BackFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class SendNotificationFragment extends BackFragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, SendNotificationManager.OnRefreshDevice {
 
     private SendNotificationAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -47,6 +47,18 @@ public class SendNotificationFragment extends BackFragment implements View.OnCli
     }
 
     private SendNotificationOnlineApi mSendNotificationOnlineApi;
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        SendNotificationManager.getInstance().setOnRefreshDevice(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        SendNotificationManager.getInstance().setOnRefreshDevice(null);
+        super.onDestroy();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,6 +91,11 @@ public class SendNotificationFragment extends BackFragment implements View.OnCli
 
     @Override
     public void onRefresh() {
+        getDevices();
+    }
+
+    @Override
+    public void onRefreshDevice() {
         getDevices();
     }
 

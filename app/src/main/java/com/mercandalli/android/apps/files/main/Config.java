@@ -82,6 +82,7 @@ public class Config {
     public static final String ROUTE_DEVICE_SEND_PUSH_BY_GCM = START_ROUTE + "device/push/gcm";
     public static final String ROUTE_DEVICE_SEND_PUSH_TO_DEV = START_ROUTE + "device/push/dev";
     public static final String ROUTE_DEVICE_SEND_PUSH_TO_ALL = START_ROUTE + "device/push/all";
+    public static final String ROUTE_DEVICE_DELETE = START_ROUTE + "device/delete";
     public static final String ROUTE_DEVICE_GET_ALL = START_ROUTE + "device/all";
 
     /**

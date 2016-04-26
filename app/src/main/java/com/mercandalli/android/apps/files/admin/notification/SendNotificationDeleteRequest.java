@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -19,28 +19,16 @@
  */
 package com.mercandalli.android.apps.files.admin.notification;
 
-import com.mercandalli.android.apps.files.admin.notification.simple.SendNotificationSimpleResponse;
-import com.mercandalli.android.apps.files.main.Config;
+import com.google.gson.annotations.SerializedName;
+import com.mercandalli.android.library.baselibrary.push.PushManager;
 
-import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
+public class SendNotificationDeleteRequest {
 
-public interface SendNotificationOnlineApi {
+    @SerializedName("id")
+    private final String mId;
 
-    @POST("/" + Config.ROUTE_DEVICE_SEND_PUSH_TO_ALL)
-    Call<SendNotificationSimpleResponse> sendPushToAll(
-            @Body SendNotificationRequest sendNotificationSimpleRequest);
-
-    @POST("/" + Config.ROUTE_DEVICE_SEND_PUSH_TO_DEV)
-    Call<SendNotificationSimpleResponse> sendPushToDev(
-            @Body SendNotificationRequest sendNotificationRequest);
-
-    @POST("/" + Config.ROUTE_DEVICE_DELETE)
-    Call<SendNotificationSimpleResponse> delete(
-            @Body SendNotificationDeleteRequest delete);
-
-    @GET("/" + Config.ROUTE_DEVICE_GET_ALL)
-    Call<DevicesResponse> getDevice();
+    public SendNotificationDeleteRequest(
+            final String id) {
+        mId = id;
+    }
 }
