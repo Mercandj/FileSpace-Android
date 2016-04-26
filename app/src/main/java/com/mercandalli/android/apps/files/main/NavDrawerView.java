@@ -1,7 +1,6 @@
 package com.mercandalli.android.apps.files.main;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.annotation.DrawableRes;

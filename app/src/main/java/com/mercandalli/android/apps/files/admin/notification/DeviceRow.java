@@ -29,13 +29,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.admin.notification.simple.SendNotificationSimpleResponse;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.util.DialogUtils;
-import com.mercandalli.android.apps.files.main.network.RetrofitUtils;
 import com.mercandalli.android.library.baselibrary.device.Device;
-
-import retrofit2.Call;
 
 import static com.mercandalli.android.library.baselibrary.view.ViewUtils.dpToPx;
 

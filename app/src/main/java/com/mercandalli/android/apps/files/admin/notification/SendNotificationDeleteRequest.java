@@ -20,7 +20,6 @@
 package com.mercandalli.android.apps.files.admin.notification;
 
 import com.google.gson.annotations.SerializedName;
-import com.mercandalli.android.library.baselibrary.push.PushManager;
 
 public class SendNotificationDeleteRequest {
 

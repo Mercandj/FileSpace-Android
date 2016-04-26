@@ -3,7 +3,6 @@ package com.mercandalli.android.apps.files.push;
 import android.app.Application;
 
 import com.mercandalli.android.apps.files.main.FileAppComponent;
-import com.mercandalli.android.apps.files.main.network.RetrofitUtils;
 
 import javax.inject.Singleton;
 
