@@ -21,5 +21,4 @@ public class FileAppModule {
     public Application provideApp() {
         return mFileApp;
     }
-
 }
