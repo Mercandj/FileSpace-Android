@@ -61,10 +61,10 @@ import static com.mercandalli.android.library.baselibrary.view.ViewUtils.dpToPx;
         inflate(context, R.layout.fragment_admin_device, this);
         final LayoutParams layoutParams =
                 new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        final int margin = (int) dpToPx(2);
+        final int margin = (int) dpToPx(4);
         final int padding = 4 * margin;
         setMinimumHeight((int) dpToPx(76));
-        layoutParams.setMargins(4 * margin, margin, 4 * margin, margin);
+        layoutParams.setMargins(3 * margin, margin, 3 * margin, margin);
         setLayoutParams(layoutParams);
         setPadding(padding, 4 * padding, padding, 4 * padding);
         setCardBackgroundColor(ContextCompat.getColor(context, R.color.tab_file));

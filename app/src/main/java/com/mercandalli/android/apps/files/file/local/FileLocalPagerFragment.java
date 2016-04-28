@@ -37,6 +37,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.ViewUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -54,6 +56,7 @@ import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
 import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
 import com.mercandalli.android.apps.files.main.FileApp;
+import com.mercandalli.android.library.baselibrary.view.RtlViewPager;
 
 import static com.mercandalli.android.library.baselibrary.view.StatusBarUtils.setStatusBarColor;
 
@@ -77,7 +80,7 @@ public class FileLocalPagerFragment extends BackFragment implements
 
     //region Views
     private TabLayout mTabLayout;
-    private ViewPager mViewPager;
+    private RtlViewPager mViewPager;
     private FileManagerFragmentPagerAdapter mPagerAdapter;
     private FloatingActionButton mFab1;
     private FloatingActionButton mFab2;
@@ -315,7 +318,7 @@ public class FileLocalPagerFragment extends BackFragment implements
     }
 
     private void findViews(final View rootView) {
-        mViewPager = (ViewPager) rootView.findViewById(R.id.fragment_file_view_pager);
+        mViewPager = (RtlViewPager) rootView.findViewById(R.id.fragment_file_view_pager);
         mTabLayout = (TabLayout) rootView.findViewById(R.id.fragment_file_tab_layout);
         mFab1 = (FloatingActionButton) rootView.findViewById(R.id.fragment_file_fab_1);
         mFab2 = (FloatingActionButton) rootView.findViewById(R.id.fragment_file_fab_2);

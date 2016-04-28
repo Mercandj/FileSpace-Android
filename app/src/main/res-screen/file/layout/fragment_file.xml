@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.view.ViewPager
+        <com.mercandalli.android.library.baselibrary.view.RtlViewPager
             android:id="@+id/fragment_file_view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -79,7 +79,7 @@ public class SendNotificationHeaderView extends CardView implements
         inflate(context, R.layout.fragment_admin_send_notification_header, this);
         final LayoutParams layoutParams =
                 new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins((int) dpToPx(8), (int) dpToPx(8), (int) dpToPx(8), (int) dpToPx(2));
+        layoutParams.setMargins((int) dpToPx(12), (int) dpToPx(12), (int) dpToPx(12), (int) dpToPx(4));
         setLayoutParams(layoutParams);
         setCardBackgroundColor(ContextCompat.getColor(context, R.color.tab_file));
 
