@@ -6,7 +6,7 @@ import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
 
 /**
- * Created by Jonathan on 02/04/2016.
+ * A Dagger module used to test the app.
  */
 public class FileAudioModuleTest extends FileAudioModule {
 

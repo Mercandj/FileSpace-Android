@@ -2,7 +2,7 @@ package com.mercandalli.android.apps.files.file.audio;
 
 import android.content.Context;
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.contrib.CountingIdlingResource;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.text.Spanned;
 import android.util.Log;
 
@@ -13,7 +13,7 @@ import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderM
 import java.io.File;
 import java.util.List;
 
-public class FileAudioManagerTest implements FileAudioManager {
+/* package */ class FileAudioManagerTest implements FileAudioManager {
 
     private static final String TAG = "FileAudioManagerTest";
 

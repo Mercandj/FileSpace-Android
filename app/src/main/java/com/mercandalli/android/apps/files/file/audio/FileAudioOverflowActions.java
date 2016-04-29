@@ -23,7 +23,8 @@ import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
 /**
  * A simple class that open a Dialog with the actions related to the {@link FileModel}.
  */
-public class FileAudioOverflowActions implements PopupMenu.OnMenuItemClickListener {
+/* package */
+class FileAudioOverflowActions implements PopupMenu.OnMenuItemClickListener {
 
     private final Activity mActivity;
 

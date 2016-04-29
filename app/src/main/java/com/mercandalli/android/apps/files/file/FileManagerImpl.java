@@ -617,9 +617,12 @@ class FileManagerImpl implements FileManager /*implements FileUploadTypedFile.Fi
                 }
                 if (cursor.moveToFirst()) {
                     do {
-                        result.add(new FileModel.FileModelBuilder()
-                                .file(new File(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))))
-                                .build());
+                        final File file = new File(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
+                        if (file.exists()) {
+                            result.add(new FileModel.FileModelBuilder()
+                                    .file(file)
+                                    .build());
+                        }
                     } while (cursor.moveToNext());
                 }
                 cursor.close();

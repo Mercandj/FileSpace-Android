@@ -44,6 +44,7 @@ Remote and secure file manager.
 ## GRADLE
 
 * Check [dependencies](https://github.com/ben-manes/gradle-versions-plugin): gradlew dependencyUpdates -Drevision=release -DoutputFormatter=json
+* Check [methods count](https://github.com/KeepSafe/dexcount-gradle-plugin): gradlew assembleDebug 
 * Jenkins (Require authentication with the [Rest API](https://github.com/Mercandj/FileSpace-API) to upload the result): gradlew :app:jenkins
 
 ## DEVELOPER

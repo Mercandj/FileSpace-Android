@@ -191,3 +191,8 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+
+// Count methods.
+// https://github.com/KeepSafe/dexcount-gradle-plugin
+// make sure this line comes *after* you apply the Android plugin
+apply plugin: 'com.getkeepsafe.dexcount'

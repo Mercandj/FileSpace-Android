@@ -2,14 +2,15 @@ package com.mercandalli.android.apps.files.file.audio;
 
 import android.os.Parcel;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.mercandalli.android.apps.files.file.FileModel;
+import com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataExtractor;
 
 import org.cmc.music.metadata.IMusicMetadata;
 import org.cmc.music.myid3.MyID3;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * An audio {@link FileModel}. Contains a title, album, artist.
@@ -66,14 +67,27 @@ public class FileAudioModel extends FileModel {
         public FileAudioModelBuilder file(final File file, final MyID3 myID3) {
             super.file(file);
             if (mUrl != null && mUrl.toLowerCase().endsWith(".mp3")) {
+
+                if (true) {
+                    final FileAudioMetaDataExtractor.MetaData extract = FileAudioMetaDataExtractor.getInstance().extract(file);
+                    if (extract == null) {
+                        return this;
+                    }
+                    title(extract.title);
+                    album(extract.album);
+                    artist(extract.artist);
+                    return this;
+                }
+
                 try {
                     final IMusicMetadata metadata = (myID3.read(file)).getSimplified();
                     title(metadata.getSongTitle());
                     album(metadata.getAlbum());
                     artist(metadata.getArtist());
-                } catch (Exception e) {
-                    Log.e(getClass().getName(), "Exception", e);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+
                 return this;
             }
             return this;

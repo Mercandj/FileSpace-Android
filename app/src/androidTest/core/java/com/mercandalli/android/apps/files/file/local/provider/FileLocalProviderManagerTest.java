@@ -3,7 +3,7 @@ package com.mercandalli.android.apps.files.file.local.provider;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.test.espresso.Espresso;
-import android.support.test.espresso.contrib.CountingIdlingResource;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.util.Log;
 
 import java.util.List;
@@ -11,7 +11,8 @@ import java.util.List;
 /**
  * Block espresso with {@link CountingIdlingResource} during load.
  */
-public class FileLocalProviderManagerTest implements FileLocalProviderManager {
+/* package */
+class FileLocalProviderManagerTest implements FileLocalProviderManager {
 
     private static final String TAG = "FileLocalProvManTest";
 

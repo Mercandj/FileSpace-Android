@@ -44,7 +44,8 @@ public class FileApp extends MultiDexApplication {
 
         logPerformance(TAG, "FileApp#onCreate() - Fabric Dagger");
 
-        final WeakReference<Context> contextWeakReference = new WeakReference<>(getApplicationContext());
+        final WeakReference<Context> contextWeakReference = new WeakReference<>(
+                getApplicationContext());
         (new Thread() {
             public void run() {
                 final Context context = contextWeakReference.get();
@@ -83,7 +84,8 @@ public class FileApp extends MultiDexApplication {
         if (!BuildConfig.DEBUG) {
             return;
         }
-        Log.d(getPerformanceTag(tag), "Performance \t\t- " + getPerformanceTime(System.currentTimeMillis() - FileApp.sTimeLaunch) + " - " + message);
+        Log.d(getPerformanceTag(tag), "Performance \t\t- " + getPerformanceTime(
+                System.currentTimeMillis() - FileApp.sTimeLaunch) + " - " + message);
     }
 
     private static String getPerformanceTime(final long timeDiff) {
