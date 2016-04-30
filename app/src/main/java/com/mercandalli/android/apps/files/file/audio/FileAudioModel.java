@@ -4,13 +4,11 @@ import android.os.Parcel;
 import android.support.annotation.Nullable;
 
 import com.mercandalli.android.apps.files.file.FileModel;
-import com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataExtractor;
-
-import org.cmc.music.metadata.IMusicMetadata;
-import org.cmc.music.myid3.MyID3;
+import com.mercandalli.android.library.baselibrary.audio.metadata.read.AudioMetaDataRead;
+import com.mercandalli.android.library.baselibrary.audio.metadata.read.MusicMetadata;
+import com.mercandalli.android.library.baselibrary.audio.metadata.read.MusicMetadataSet;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * An audio {@link FileModel}. Contains a title, album, artist.
@@ -61,35 +59,32 @@ public class FileAudioModel extends FileModel {
         }
 
         public FileAudioModelBuilder file(final File file) {
-            return file(file, new MyID3());
-        }
-
-        public FileAudioModelBuilder file(final File file, final MyID3 myID3) {
             super.file(file);
-            if (mUrl != null && mUrl.toLowerCase().endsWith(".mp3")) {
-
-                if (true) {
-                    final FileAudioMetaDataExtractor.MetaData extract = FileAudioMetaDataExtractor.getInstance().extract(file);
-                    if (extract == null) {
-                        return this;
-                    }
-                    title(extract.title);
-                    album(extract.album);
-                    artist(extract.artist);
-                    return this;
-                }
-
-                try {
-                    final IMusicMetadata metadata = (myID3.read(file)).getSimplified();
-                    title(metadata.getSongTitle());
-                    album(metadata.getAlbum());
-                    artist(metadata.getArtist());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+            //jaudiotage
+            /*
+            if (mUrl == null || !mUrl.toLowerCase().endsWith(".mp3")) {
                 return this;
             }
+            final IMusicMetadata metadata;
+            try {
+                metadata = (new MyID3().read(file)).getSimplified();
+
+                title(metadata.getSongTitle());
+                album(metadata.getAlbum());
+                artist(metadata.getArtist());
+                return this;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            */
+            final MusicMetadataSet extract = AudioMetaDataRead.extract(file);
+            if (extract == null) {
+                return this;
+            }
+            final MusicMetadata metadata = extract.getSimplified();
+            title(metadata.getSongTitle());
+            album(metadata.getAlbum());
+            artist(metadata.getArtist());
             return this;
         }
 

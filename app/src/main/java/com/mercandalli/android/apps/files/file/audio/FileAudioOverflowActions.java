@@ -17,6 +17,7 @@ import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataEditionDialog;
+import com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataUtils;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
 
@@ -106,7 +107,7 @@ class FileAudioOverflowActions implements PopupMenu.OnMenuItemClickListener {
             } else if (currentId == R.id.popup_overflow_file_audio_open_as && fileAudioModel.isDirectory()) {
                 menuItem.setVisible(false);
             } else if (currentId == R.id.popup_overflow_file_audio_meta_data) {
-                menuItem.setVisible(fileAudioModel.getPath().endsWith(".mp3"));
+                menuItem.setVisible(FileAudioMetaDataUtils.isMetaDataEditable(fileAudioModel));
             }
         }
         popupMenu.setOnMenuItemClickListener(this);

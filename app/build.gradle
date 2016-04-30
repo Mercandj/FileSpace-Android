@@ -151,7 +151,8 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
 
     // Audio
-    compile 'org.jaudiotagger:jaudiotagger:2.0.1'
+    // Try to remove 'org.jaudiotagger:jaudiotagger:2.0.1'
+    // compile 'org.jaudiotagger:jaudiotagger:2.0.1' // 4_810 methods
 
     // View
     compile 'com.romainpiel.shimmer:library:1.4.0@aar' // TextView
@@ -195,4 +196,4 @@ apply plugin: 'com.google.gms.google-services'
 // Count methods.
 // https://github.com/KeepSafe/dexcount-gradle-plugin
 // make sure this line comes *after* you apply the Android plugin
-apply plugin: 'com.getkeepsafe.dexcount'
+// apply plugin: 'com.getkeepsafe.dexcount'

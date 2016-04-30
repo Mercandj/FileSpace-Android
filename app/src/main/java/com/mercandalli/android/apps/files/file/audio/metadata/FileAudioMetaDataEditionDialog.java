@@ -21,7 +21,7 @@ import com.mercandalli.android.apps.files.main.FileApp;
 
 import java.io.File;
 
-import static com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataUtils.equalsString;
+import static com.mercandalli.android.library.baselibrary.java.StringUtils.isEquals;
 
 public class FileAudioMetaDataEditionDialog extends DialogFragment {
 
@@ -137,8 +137,8 @@ public class FileAudioMetaDataEditionDialog extends DialogFragment {
             @Nullable final String newArtist,
             @Nullable final String newAlbum) {
 
-        return equalsString(mTitle, newTitle) &&
-                equalsString(mArtist, newArtist) &&
-                equalsString(mAlbum, newAlbum);
+        return isEquals(mTitle, newTitle) &&
+                isEquals(mArtist, newArtist) &&
+                isEquals(mAlbum, newAlbum);
     }
 }

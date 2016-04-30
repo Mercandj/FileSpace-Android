@@ -1,10 +1,13 @@
 package com.mercandalli.android.apps.files.file.audio.metadata;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 
+import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
 import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
 
+import java.io.File;
+
+/*
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
@@ -15,13 +18,15 @@ import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
-
-import java.io.File;
-import java.io.IOException;
+*/
 
 public class FileAudioMetaDataUtils {
 
     private static final String TAG = "FileAudioMetaDataUtils";
+
+    public static boolean isMetaDataEditable(FileAudioModel fileAudioModel) {
+        return false;//fileAudioModel.getPath().endsWith(".mp3");
+    }
 
     public static boolean setMetaData(
             final File file,
@@ -37,6 +42,8 @@ public class FileAudioMetaDataUtils {
         if (!file.exists()) {
             return false;
         }
+        // Try to remove 'org.jaudiotagger:jaudiotagger:2.0.1'
+        /*
         AudioFile audioFile = null;
         try {
             audioFile = AudioFileIO.read(file);
@@ -66,16 +73,7 @@ public class FileAudioMetaDataUtils {
                 Log.e(TAG, "Cannot write MetaData");
             }
         }
+        */
         return false;
-    }
-
-    /* protected */ static boolean equalsString(@Nullable final String str1, @Nullable final String str2) {
-        if (str1 == null) {
-            return str2 == null || str2.isEmpty();
-        }
-        if (str2 == null) {
-            return str1.isEmpty();
-        }
-        return str1.equals(str2);
     }
 }

@@ -23,8 +23,6 @@ import com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataU
 import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
 import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
 
-import org.cmc.music.myid3.MyID3;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
@@ -345,11 +343,10 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
 
     private void threadWorkerCreateAllLocalMusic(@NonNull final List<String> fileAudioPaths) {
         final List<FileAudioModel> files = new ArrayList<>();
-        final MyID3 myID3 = new MyID3();
         for (final String path : fileAudioPaths) {
             final File file = new File(path);
             if (file.exists() && !file.isDirectory()) {
-                files.add(new FileAudioModel.FileAudioModelBuilder().file(file, myID3).build());
+                files.add(new FileAudioModel.FileAudioModelBuilder().file(file).build());
             }
         }
         notifyAllLocalMusicListenerSucceeded(files, true);

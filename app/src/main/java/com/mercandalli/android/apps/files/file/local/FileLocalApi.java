@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
 
-import org.cmc.music.myid3.MyID3;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,11 +37,10 @@ public class FileLocalApi {
         });
         filesList.clear();
 
-        final MyID3 myID3 = new MyID3();
         for (final File file : fs) {
             if (file.exists()) {
                 if (!file.isDirectory() && isAudioPath(file.getPath().toLowerCase())) {
-                    filesList.add(new FileAudioModel.FileAudioModelBuilder().file(file, myID3).build());
+                    filesList.add(new FileAudioModel.FileAudioModelBuilder().file(file).build());
                 } else {
                     filesList.add(new FileModel.FileModelBuilder().file(file).build());
                 }
@@ -51,5 +48,4 @@ public class FileLocalApi {
         }
         return filesList;
     }
-
 }
