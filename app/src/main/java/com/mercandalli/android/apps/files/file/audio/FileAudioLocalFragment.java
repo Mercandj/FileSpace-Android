@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -51,6 +51,8 @@ import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
 import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
 import com.mercandalli.android.apps.files.file.audio.album.Album;
 import com.mercandalli.android.apps.files.file.audio.artist.Artist;
+import com.mercandalli.android.apps.files.file.audio.playlist.AudioPlayList;
+import com.mercandalli.android.apps.files.file.audio.playlist.AudioPlayListManager;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
 import com.mercandalli.android.apps.files.main.Config;
@@ -82,7 +84,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         SwipeRefreshLayout.OnRefreshListener,
         FileAudioModelListener,
         FileLocalPagerFragment.ScrollTop,
-        FileLocalFabManager.FabController {
+        FileLocalFabManager.FabController, AudioPlayListManager.GetPlayListsListener {
 
     private static final String TAG = "FileAudioLocalFragment";
 
@@ -94,6 +96,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({
             PAGE_FOLDERS,
+            PAGE_PLAYLIST,
             PAGE_FOLDER_INSIDE,
             PAGE_ARTIST,
             PAGE_ALBUM,
@@ -102,10 +105,11 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     }
 
     private static final int PAGE_FOLDERS = 0;
-    private static final int PAGE_FOLDER_INSIDE = 1;
-    private static final int PAGE_ARTIST = 2;
-    private static final int PAGE_ALBUM = 3;
-    private static final int PAGE_ALL = 4;
+    private static final int PAGE_PLAYLIST = 1;
+    private static final int PAGE_FOLDER_INSIDE = 2;
+    private static final int PAGE_ARTIST = 3;
+    private static final int PAGE_ALBUM = 4;
+    private static final int PAGE_ALL = 5;
 
     @CurrentPage
     private int mCurrentPage = PAGE_FOLDERS;
@@ -159,6 +163,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
 
     @Inject
     FileAudioManager mFileAudioManager;
+
+    @Inject
+    AudioPlayListManager mAudioPlayListManager;
 
     public static FileAudioLocalFragment newInstance(final int positionInViewPager) {
         final FileAudioLocalFragment fileAudioLocalFragment = new FileAudioLocalFragment();
@@ -225,6 +232,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mFileAudioManager.addMusicChangeListener(this);
         mFileAudioManager.addGetAllLocalMusicArtistsListener(this);
         mFileAudioManager.addGetAllLocalMusicAlbumsListener(this);
+        mAudioPlayListManager.addGetPlayListsListener(this);
 
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.fragment_file_audio_local_progress_bar);
         mProgressBar.setVisibility(View.GONE);
@@ -243,6 +251,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
 
         mHeaderIds = new ArrayList<>();
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_folder, true));
+        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_playlist, false));
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_recent, false));
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_artist, false));
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_album, false));
@@ -295,6 +304,21 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         }
 
         return rootView;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onDestroyView() {
+        mFileAudioManager.removeGetAllLocalMusicListener(this);
+        mFileAudioManager.removeGetLocalMusicFoldersListener(this);
+        mFileAudioManager.removeGetLocalMusicListener(this);
+        mFileAudioManager.removeMusicChangeListener(this);
+        mFileAudioManager.removeGetAllLocalMusicArtistsListener(this);
+        mFileAudioManager.removeGetAllLocalMusicAlbumsListener(this);
+        mAudioPlayListManager.removeGetPlayListsListener(this);
+        super.onDestroyView();
     }
 
     /**
@@ -388,6 +412,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
             case R.id.view_file_header_audio_folder:
                 refreshListFolders();
                 break;
+            case R.id.view_file_header_audio_playlist:
+                refreshListPlaylist();
+                break;
             case R.id.view_file_header_audio_recent:
                 //TODO
                 break;
@@ -438,6 +465,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
             case PAGE_ALL:
                 mFileAudioManager.getAllLocalMusic();
                 break;
+            case PAGE_PLAYLIST:
+                mAudioPlayListManager.getPlayLists();
+                break;
             case PAGE_FOLDERS:
                 mFileAudioManager.getLocalMusicFolders();
                 break;
@@ -485,20 +515,6 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
      * {@inheritDoc}
      */
     @Override
-    public void onDestroyView() {
-        mFileAudioManager.removeGetAllLocalMusicListener(this);
-        mFileAudioManager.removeGetLocalMusicFoldersListener(this);
-        mFileAudioManager.removeGetLocalMusicListener(this);
-        mFileAudioManager.removeMusicChangeListener(this);
-        mFileAudioManager.removeGetAllLocalMusicArtistsListener(this);
-        mFileAudioManager.removeGetAllLocalMusicAlbumsListener(this);
-        super.onDestroyView();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void onAllLocalMusicSucceeded(final List<FileAudioModel> fileModels) {
         if (mCurrentPage != PAGE_ALL) {
             return;
@@ -529,6 +545,44 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         if (mCurrentPage != PAGE_ALL) {
             return;
         }
+        hideProgressBar();
+        updateAdapter();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onGetPlayListsSucceeded(@NonNull final List<AudioPlayList> audioPlayLists) {
+        if (mCurrentPage != PAGE_PLAYLIST) {
+            return;
+        }
+        hideProgressBar();
+
+        mFileAudioModels.clear();
+        mFileAudioRowAdapter.setHasHeader(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileAudioRowAdapter);
+            mScaleAnimationAdapter.setDuration(220);
+            mScaleAnimationAdapter.setOffsetDuration(32);
+            mScaleAnimationAdapter.setNoAnimatedPosition(FileAudioLocalFragment.this);
+            mRecyclerView.setAdapter(mScaleAnimationAdapter);
+        } else {
+            mRecyclerView.setAdapter(mFileAudioRowAdapter);
+        }
+        updateAdapter();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onGetPlayListsFailed() {
+        if (mCurrentPage != PAGE_PLAYLIST) {
+            return;
+        }
+        hideProgressBar();
         updateAdapter();
     }
 
@@ -651,6 +705,12 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     public void refreshListFolders() {
         mCurrentFolder = null;
         mCurrentPage = PAGE_FOLDERS;
+        showProgressBar();
+        refreshCurrentList();
+    }
+
+    public void refreshListPlaylist() {
+        mCurrentPage = PAGE_PLAYLIST;
         showProgressBar();
         refreshCurrentList();
     }

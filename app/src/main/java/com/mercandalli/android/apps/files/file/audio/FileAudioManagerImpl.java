@@ -59,7 +59,9 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
     protected boolean mIsGetAllLocalMusicLaunched;
     protected boolean mIsGetLocalMusicFoldersLaunched;
 
+    @NonNull
     private final Handler mUiHandler;
+    @NonNull
     private final Thread mUiThread;
 
     /**

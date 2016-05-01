@@ -22,8 +22,6 @@ import org.jaudiotagger.tag.TagException;
 
 public class FileAudioMetaDataUtils {
 
-    private static final String TAG = "FileAudioMetaDataUtils";
-
     public static boolean isMetaDataEditable(FileAudioModel fileAudioModel) {
         return false;//fileAudioModel.getPath().endsWith(".mp3");
     }
@@ -49,7 +47,6 @@ public class FileAudioMetaDataUtils {
             audioFile = AudioFileIO.read(file);
         } catch (CannotReadException | TagException | IOException | InvalidAudioFrameException |
                 ReadOnlyFileException e) {
-            Log.e(TAG, "Cannot get AudioFile");
         }
         if (audioFile == null) {
             return false;
@@ -70,7 +67,6 @@ public class FileAudioMetaDataUtils {
                 audioFile.commit();
                 return true;
             } catch (FieldDataInvalidException | CannotWriteException e) {
-                Log.e(TAG, "Cannot write MetaData");
             }
         }
         */

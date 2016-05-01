@@ -31,6 +31,25 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/view_file_header_audio_playlist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_16"
+            android:layout_marginEnd="@dimen/default_8"
+            android:layout_marginStart="@dimen/default_8"
+            android:layout_marginTop="@dimen/default_16"
+            android:background="@drawable/file_local_audio_rounded_bg"
+            android:paddingBottom="@dimen/default_8"
+            android:paddingLeft="@dimen/default_16"
+            android:paddingRight="@dimen/default_16"
+            android:paddingTop="@dimen/default_8"
+            android:singleLine="true"
+            android:text="PLAYLIST"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/default_text_12"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/view_file_header_audio_recent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

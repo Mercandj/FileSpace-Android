@@ -105,7 +105,8 @@ abstract class FileAudioManagerNotifier implements FileAudioManager {
     public boolean addGetAllLocalMusicListener(final GetAllLocalMusicListener getAllLocalMusicListener) {
         synchronized (mGetAllLocalMusicListeners) {
             //noinspection SimplifiableIfStatement
-            if (getAllLocalMusicListener == null || mGetAllLocalMusicListeners.contains(getAllLocalMusicListener)) {
+            if (getAllLocalMusicListener == null ||
+                    mGetAllLocalMusicListeners.contains(getAllLocalMusicListener)) {
                 // We don't allow to register null listener
                 // And a listener can only be added once.
                 return false;
@@ -131,7 +132,8 @@ abstract class FileAudioManagerNotifier implements FileAudioManager {
     public boolean addGetLocalMusicFoldersListener(final GetLocalMusicFoldersListener getLocalImageFoldersListener) {
         synchronized (mGetLocalMusicFoldersListeners) {
             //noinspection SimplifiableIfStatement
-            if (getLocalImageFoldersListener == null || mGetLocalMusicFoldersListeners.contains(getLocalImageFoldersListener)) {
+            if (getLocalImageFoldersListener == null ||
+                    mGetLocalMusicFoldersListeners.contains(getLocalImageFoldersListener)) {
                 // We don't allow to register null listener
                 // And a listener can only be added once.
                 return false;

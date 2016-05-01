@@ -21,5 +21,4 @@ public class AudioPlayListModule {
             final Application application) {
         return new AudioPlayListManagerImpl(application);
     }
-
 }
