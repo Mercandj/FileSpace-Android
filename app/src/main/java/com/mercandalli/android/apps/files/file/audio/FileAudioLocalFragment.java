@@ -84,7 +84,8 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         SwipeRefreshLayout.OnRefreshListener,
         FileAudioModelListener,
         FileLocalPagerFragment.ScrollTop,
-        FileLocalFabManager.FabController, AudioPlayListManager.GetPlayListsListener {
+        FileLocalFabManager.FabController,
+        AudioPlayListManager.GetPlayListsListener {
 
     private static final String TAG = "FileAudioLocalFragment";
 

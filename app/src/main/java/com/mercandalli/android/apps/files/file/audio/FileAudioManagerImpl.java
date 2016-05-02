@@ -16,7 +16,6 @@ import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileTypeModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
-import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.album.Album;
 import com.mercandalli.android.apps.files.file.audio.artist.Artist;
 import com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataUtils;
@@ -33,7 +32,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.mercandalli.android.apps.files.file.FileUtils.getNameFromPath;
+import static com.mercandalli.android.library.baselibrary.java.FileUtils.getExtensionFromPath;
+import static com.mercandalli.android.library.baselibrary.java.FileUtils.getNameFromPath;
+import static com.mercandalli.android.library.baselibrary.java.FileUtils.getParentPathFromPath;
 
 /**
  * A {@link FileModel} Manager.
@@ -166,7 +167,7 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
                 new FilenameFilter() {
                     @Override
                     public boolean accept(File dir, String name) {
-                        return (new FileTypeModel(FileUtils.getExtensionFromPath(name)))
+                        return (new FileTypeModel(getExtensionFromPath(name)))
                                 .equals(FileTypeModelENUM.AUDIO.type);
                     }
                 }
@@ -311,7 +312,7 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
     private void threadWorkerCreateLocalMusicFolders(@NonNull final List<String> fileAudioPaths) {
         final Map<String, MutableInt> directories = new HashMap<>();
         for (final String path : fileAudioPaths) {
-            final String parentPath = FileUtils.getParentPathFromPath(path);
+            final String parentPath = getParentPathFromPath(path);
             final MutableInt count = directories.get(parentPath);
             if (count == null) {
                 directories.put(parentPath, new MutableInt());

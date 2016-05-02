@@ -4,14 +4,9 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.provider.Settings.Secure;
-import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 
 import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
 
 import java.util.Locale;
 
@@ -19,39 +14,6 @@ import java.util.Locale;
  * Support utils.
  */
 public class SupportUtils {
-
-    private static String sDeviceId;
-
-    /* package */
-    static String getDeviceId(final Context context) {
-        Preconditions.checkNotNull(context);
-        if (sDeviceId != null) {
-            return sDeviceId;
-        }
-        return sDeviceId = Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);
-    }
-
-    /**
-     * Manage the soft input (keyboard).
-     */
-    public static void hideSoftInput(final EditText editText) {
-        Preconditions.checkNotNull(editText);
-        final Context context = editText.getContext();
-        final InputMethodManager inputMethodManager = (InputMethodManager)
-                context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-    }
-
-    /**
-     * Manage the soft input (keyboard).
-     */
-    public static void showSoftInput(final EditText editText) {
-        Preconditions.checkNotNull(editText);
-        final Context context = editText.getContext();
-        final InputMethodManager inputMethodManager = (InputMethodManager)
-                context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
-    }
 
     /* package */
     static SupportDevice getDevice(final Context context) {
@@ -75,23 +37,5 @@ public class SupportUtils {
         supportDevice.mAndroidAppNotificationId = Config.getNotificationId();
 
         return supportDevice;
-    }
-
-    /**
-     * Check if two @Nullable {@link String} are equals.
-     *
-     * @param str1 The first {@link String}.
-     * @param str2 The second {@link String}.
-     * @return If the {@link String}s are equals.
-     */
-    /* protected */
-    static boolean equalsString(@Nullable final String str1, @Nullable final String str2) {
-        if (str1 == null) {
-            return str2 == null || str2.isEmpty();
-        }
-        if (str2 == null) {
-            return str1.isEmpty();
-        }
-        return str1.equals(str2);
     }
 }

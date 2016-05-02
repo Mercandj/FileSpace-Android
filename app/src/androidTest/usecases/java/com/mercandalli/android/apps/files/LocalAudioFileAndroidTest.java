@@ -31,8 +31,11 @@ import static org.hamcrest.core.AllOf.allOf;
 @RunWith(AndroidJUnit4.class)
 public final class LocalAudioFileAndroidTest {
 
+    /**
+     * Has to be public.
+     */
     @Rule
-    public final ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<SplashActivity>(SplashActivity.class) {
+    public final ActivityTestRule<SplashActivity> activityRule = new ActivityTestRule<SplashActivity>(SplashActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
             super.beforeActivityLaunched();

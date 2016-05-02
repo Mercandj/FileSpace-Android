@@ -30,17 +30,19 @@ import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
 import com.mercandalli.android.apps.files.file.FileModelListener;
-import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.main.FileApp;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mercandalli.android.library.baselibrary.input.KeyboardUtils.hideSoftInput;
+
 public class SearchActivity extends AppCompatActivity implements
         FileModelAdapter.OnFileClickListener,
         ResultCallback<List<FileModel>>,
         View.OnClickListener,
-        FileModelListener, FileLocalOverflowActions.FileLocalActionCallback {
+        FileModelListener,
+        FileLocalOverflowActions.FileLocalActionCallback {
 
     private FileManager mFileManager;
 
@@ -130,7 +132,7 @@ public class SearchActivity extends AppCompatActivity implements
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (dy != 0) {
-                    FileUtils.hideSoftInput(mSearchEditText);
+                    hideSoftInput(mSearchEditText);
                 }
             }
         });

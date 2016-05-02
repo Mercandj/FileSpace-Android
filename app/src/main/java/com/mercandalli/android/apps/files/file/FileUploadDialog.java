@@ -65,11 +65,11 @@ public class FileUploadDialog extends Dialog {
         mActivity = activity;
         mIdFileParent = idFileParent;
 
-        this.setContentView(R.layout.dialog_upload);
-        this.setTitle(R.string.app_name);
-        this.setCancelable(true);
+        setContentView(R.layout.dialog_upload);
+        setTitle(R.string.app_name);
+        setCancelable(true);
 
-        this.findViewById(R.id.request).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.request).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mFileModel != null && !mFileModel.isDirectory()) {
@@ -82,7 +82,7 @@ public class FileUploadDialog extends Dialog {
             }
         });
 
-        this.findViewById(R.id.fileButton).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.fileButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mFileChooserDialog = new FileChooserDialog(mActivity, new FileChooserDialog.FileChooserDialogSelection() {

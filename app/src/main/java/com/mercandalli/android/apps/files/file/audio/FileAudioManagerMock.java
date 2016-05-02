@@ -11,7 +11,6 @@ import android.util.Log;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
-import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
 
 import java.util.ArrayList;
@@ -19,7 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.mercandalli.android.apps.files.file.FileUtils.getNameFromPath;
+import static com.mercandalli.android.library.baselibrary.java.FileUtils.getNameFromPath;
+import static com.mercandalli.android.library.baselibrary.java.FileUtils.getParentPathFromPath;
 
 /**
  * A MockUp to test.
@@ -81,7 +81,7 @@ import static com.mercandalli.android.apps.files.file.FileUtils.getNameFromPath;
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         do {
-                            final String parentPath = FileUtils.getParentPathFromPath(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
+                            final String parentPath = getParentPathFromPath(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
                             final MutableInt count = directories.get(parentPath);
                             if (count == null) {
                                 directories.put(parentPath, new MutableInt());

@@ -43,9 +43,9 @@ Remote and secure file manager.
 
 ## GRADLE
 
-* Check [dependencies](https://github.com/ben-manes/gradle-versions-plugin): gradlew dependencyUpdates -Drevision=release -DoutputFormatter=json
-* Check [methods count](https://github.com/KeepSafe/dexcount-gradle-plugin): gradlew assembleDebug 
-* Jenkins (Require authentication with the [Rest API](https://github.com/Mercandj/FileSpace-API) to upload the result): gradlew :app:jenkins
+* Check [dependencies](https://github.com/ben-manes/gradle-versions-plugin): _gradlew dependencyUpdates -Drevision=release -DoutputFormatter=json_
+* Check [methods count](https://github.com/KeepSafe/dexcount-gradle-plugin): Uncomment "Count methods." and launch _gradlew assembleDebug_
+* Jenkins (Require authentication with the [Rest API](https://github.com/Mercandj/FileSpace-API) to upload the result): _gradlew :app:jenkins_
 
 ## DEVELOPER
 
@@ -55,3 +55,12 @@ Remote and secure file manager.
 ## LICENSE
 
 OpenSource : just mention developer name if you use the code.
+
+## DEV INFO
+
+2016-04-02
+Total methods in app-debug.apk: 61501 (93,84% used)
+Total fields in app-debug.apk:  35492 (54,16% used)
+Methods remaining in app-debug.apk: 4034
+Fields remaining in app-debug.apk:  30043
+

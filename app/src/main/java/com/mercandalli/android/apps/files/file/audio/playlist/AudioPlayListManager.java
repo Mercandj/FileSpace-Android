@@ -9,6 +9,11 @@ import java.util.List;
  */
 public interface AudioPlayListManager {
 
+    void add(@NonNull final AudioPlayList audioPlayList);
+
+    @NonNull
+    List<AudioPlayList> get();
+
     void getPlayLists();
 
     boolean addGetPlayListsListener(GetPlayListsListener getPlayListsListener);
@@ -16,12 +21,6 @@ public interface AudioPlayListManager {
     boolean removeGetPlayListsListener(GetPlayListsListener getPlayListsListener);
 
     interface GetPlayListsListener {
-
-        /**
-         * Called when the call of {@link #getPlayLists()} succeeded.
-         *
-         * @param audioPlayLists the {@link List} of result.
-         */
         void onGetPlayListsSucceeded(@NonNull final List<AudioPlayList> audioPlayLists);
 
         void onGetPlayListsFailed();

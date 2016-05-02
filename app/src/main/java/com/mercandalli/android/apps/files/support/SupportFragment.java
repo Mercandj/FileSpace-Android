@@ -24,10 +24,13 @@ import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
+import com.mercandalli.android.library.baselibrary.java.StringUtils;
 
 import java.util.List;
 
 import static com.mercandalli.android.apps.files.support.SupportUtils.getDevice;
+import static com.mercandalli.android.library.baselibrary.device.DeviceUtils.getDeviceId;
+import static com.mercandalli.android.library.baselibrary.input.KeyboardUtils.hideSoftInput;
 
 public class SupportFragment extends BackFragment implements
         SupportCommentAdapter.OnSupportCommentLongClickListener,
@@ -150,8 +153,8 @@ public class SupportFragment extends BackFragment implements
         } else if (v == mCancelView) {
             mEditText.setText("");
         } else if (v == mAdminTextView) {
-            final String myDeviceId = SupportUtils.getDeviceId(getContext());
-            if (!SupportUtils.equalsString(mCurrentDeviceId, myDeviceId)) {
+            final String myDeviceId = getDeviceId(getContext());
+            if (!StringUtils.isEquals(mCurrentDeviceId, myDeviceId)) {
                 mCurrentDeviceId = myDeviceId;
                 refreshList();
                 mAdminTextView.setText("Go Adm");
@@ -190,7 +193,7 @@ public class SupportFragment extends BackFragment implements
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (dy < -5) {
-                    SupportUtils.hideSoftInput(mEditText);
+                    hideSoftInput(mEditText);
                 }
             }
         });
@@ -201,7 +204,7 @@ public class SupportFragment extends BackFragment implements
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        mCurrentDeviceId = SupportUtils.getDeviceId(context);
+        mCurrentDeviceId = getDeviceId(context);
         refreshList();
 
         mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {

@@ -136,26 +136,6 @@ public class FileUtils {
         return res;
     }
 
-    public static String readStringAssets(Context context, String file) {
-        Writer writer = new StringWriter();
-        try {
-            InputStream is = context.getResources().getAssets().open(file);
-            char[] buffer = new char[2_048];
-            try {
-                Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-                int n;
-                while ((n = reader.read(buffer)) != -1) {
-                    writer.write(buffer, 0, n);
-                }
-            } finally {
-                is.close();
-            }
-        } catch (IOException e) {
-            Log.e(TAG, "readStringAssets: Exception", e);
-        }
-        return writer.toString();
-    }
-
     /**
      * Deletes a directory recursively.
      *
@@ -177,76 +157,6 @@ public class FileUtils {
 
         // The directory is now empty so delete it
         return directory.delete();
-    }
-
-    public static String getExtensionFromPath(String path) {
-        if (!path.contains(".")) {
-            return "";
-        }
-        return path.substring(path.lastIndexOf('.') + 1);
-    }
-
-    public static String getNameFromPath(@Nullable final String path) {
-        if (path == null) {
-            return "";
-        }
-        if (!path.contains("/")) {
-            return "";
-        }
-        if (path.endsWith("/")) {
-            return getNameFromPath(path.substring(0, path.length() - 1));
-        }
-        return path.substring(path.lastIndexOf('/') + 1);
-    }
-
-    public static String getParentPathFromPath(@Nullable final String path) {
-        if (path == null) {
-            return "";
-        }
-        if (!path.contains("/")) {
-            return "";
-        }
-        if (path.endsWith("/")) {
-            return getParentPathFromPath(path.substring(0, path.length() - 1));
-        }
-        return path.substring(0, path.lastIndexOf('/'));
-    }
-
-    public static String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            String[] proj = {MediaStore.Images.Media.DATA};
-            cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
-
-    /**
-     * Manage the soft input (keyboard).
-     */
-    public static void hideSoftInput(final EditText editText) {
-        Preconditions.checkNotNull(editText);
-        final Context context = editText.getContext();
-        final InputMethodManager inputMethodManager = (InputMethodManager)
-                context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(editText.getWindowToken(), 0);
-    }
-
-    /**
-     * Manage the soft input (keyboard).
-     */
-    public static void showSoftInput(final EditText editText) {
-        Preconditions.checkNotNull(editText);
-        final Context context = editText.getContext();
-        final InputMethodManager inputMethodManager = (InputMethodManager)
-                context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
     }
 
     public static boolean createFile(String path, String name) {

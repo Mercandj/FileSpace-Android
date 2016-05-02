@@ -23,7 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.mercandalli.android.apps.files.file.FileUtils.getNameFromPath;
+import static com.mercandalli.android.library.baselibrary.java.FileUtils.getExtensionFromPath;
+import static com.mercandalli.android.library.baselibrary.java.FileUtils.getNameFromPath;
+import static com.mercandalli.android.library.baselibrary.java.FileUtils.getParentPathFromPath;
 
 /**
  * {@inheritDoc}
@@ -127,7 +129,7 @@ class FileImageManagerImpl implements FileImageManager {
 
                         for (final String path : fileImagePaths) {
 
-                            final String parentPath = FileUtils.getParentPathFromPath(path);
+                            final String parentPath = getParentPathFromPath(path);
                             final MutableInt count = directories.get(parentPath);
                             if (count == null) {
                                 directories.put(parentPath, new MutableInt());
@@ -182,7 +184,7 @@ class FileImageManagerImpl implements FileImageManager {
                 new FilenameFilter() {
                     @Override
                     public boolean accept(File dir, String name) {
-                        return (new FileTypeModel(FileUtils.getExtensionFromPath(name)))
+                        return (new FileTypeModel(getExtensionFromPath(name)))
                                 .equals(FileTypeModelENUM.IMAGE.type);
                     }
                 }

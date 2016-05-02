@@ -27,8 +27,11 @@ import static com.mercandalli.android.apps.files.view.DrawerLayoutUtils.actionOp
 @RunWith(AndroidJUnit4.class)
 public class NoteAndroidTest {
 
+    /**
+     * Has to be public.
+     */
     @Rule
-    public final ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<SplashActivity>(SplashActivity.class) {
+    public final ActivityTestRule<SplashActivity> activityRule = new ActivityTestRule<SplashActivity>(SplashActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
             super.beforeActivityLaunched();

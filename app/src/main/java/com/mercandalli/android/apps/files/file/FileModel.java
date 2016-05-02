@@ -13,6 +13,8 @@ import com.mercandalli.android.apps.files.main.Constants;
 import java.io.File;
 import java.util.Date;
 
+import static com.mercandalli.android.library.baselibrary.java.FileUtils.getExtensionFromPath;
+
 /**
  * The main file buildModel.
  */
@@ -144,7 +146,7 @@ public class FileModel implements Parcelable {
             mId = mUrl.hashCode();
             final String tmpName = file.getName();
             mName = (tmpName.lastIndexOf('.') == -1) ? tmpName : tmpName.substring(0, tmpName.lastIndexOf('.'));
-            mType = new FileTypeModel(FileUtils.getExtensionFromPath(mUrl));
+            mType = new FileTypeModel(getExtensionFromPath(mUrl));
             mLastModified = file.lastModified();
             mDateCreation = new Date(mLastModified);
             if (mIsDirectory) {
@@ -153,7 +155,7 @@ public class FileModel implements Parcelable {
                     mCount = tmpListFiles.length;
                     mCountAudio = 0;
                     for (File f : tmpListFiles) {
-                        if ((new FileTypeModel(FileUtils.getExtensionFromPath(f.getPath())))
+                        if ((new FileTypeModel(getExtensionFromPath(f.getPath())))
                                 .equals(FileTypeModelENUM.AUDIO.type)) {
                             mCountAudio++;
                         }
