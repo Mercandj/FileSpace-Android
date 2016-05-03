@@ -6,6 +6,7 @@
     <color name="primary_dark">#37474F</color>
     <color name="primary_dark_dark">#263238</color>
     <color name="accent">#0d84c8</color>
+    <color name="accent_alpha">#800d84c8</color>
 
     <color name="app_background">#EEEEEE</color>
     <color name="action_bar">@color/primary</color>
@@ -35,5 +36,7 @@
     <color name="actionbar_robotics">#009688</color>
     <color name="notifications_bar_robotics">#00695C</color>
 
+    <color name="rating_accent">#41a8e2</color>
+    <color name="rating_accent_alpha">#8041a8e2</color>
 
 </resources>

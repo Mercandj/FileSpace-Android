@@ -58,6 +58,7 @@ import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.library.baselibrary.java.StringUtils;
+import com.mercandalli.android.library.baselibrary.rating.Rating;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -628,6 +629,13 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
             return;
         }
         hideProgressBar();
+
+        Rating.askRating(
+                getContext(),
+                5,
+                R.style.RatingDialog,
+                getString(R.string.rating_popup_title),
+                getFragmentManager());
 
         mFileAudioModels.clear();
         mFileAudioModels.addAll(fileModels);

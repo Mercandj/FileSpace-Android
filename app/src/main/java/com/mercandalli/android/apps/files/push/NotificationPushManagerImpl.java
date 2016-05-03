@@ -15,6 +15,7 @@ import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.library.baselibrary.network.NetworkUtils;
 import com.mercandalli.android.library.baselibrary.push.PushManager;
+import com.mercandalli.android.library.baselibrary.store.StoreUtils;
 
 import static com.mercandalli.android.library.baselibrary.device.DeviceUtils.getDeviceBuilder;
 import static com.mercandalli.android.library.baselibrary.network.NetworkUtils.isNetworkAvailable;
@@ -86,7 +87,7 @@ class NotificationPushManagerImpl implements
                     break;
                 }
                 final Intent openPlayStoreIntent =
-                        NetworkUtils.getOpenPlayStoreIntent(mAppContext, actionData);
+                        StoreUtils.getOpenPlayStoreIntent(mAppContext, actionData);
                 NetworkUtils.sendNotification(
                         mAppContext,
                         openPlayStoreIntent,
@@ -117,7 +118,7 @@ class NotificationPushManagerImpl implements
                 if (actionData == null) {
                     break;
                 }
-                NetworkUtils.openPlayStore(mAppContext, actionData);
+                StoreUtils.openPlayStore(mAppContext, actionData);
                 break;
             case PushManager.PUSH_TYPE_OPEN_URL:
                 if (actionData == null) {

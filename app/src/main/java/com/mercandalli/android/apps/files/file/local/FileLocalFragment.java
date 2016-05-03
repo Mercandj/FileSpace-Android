@@ -57,6 +57,7 @@ import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileApp;
+import com.mercandalli.android.library.baselibrary.rating.Rating;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -300,6 +301,12 @@ public class FileLocalFragment extends BackFragment implements
             adapter.notifyItemChanged(position);
         } else */
         if (mFilesList.get(position).isDirectory()) {
+            Rating.askRating(
+                    getContext(),
+                    5,
+                    R.style.RatingDialog,
+                    getString(R.string.rating_popup_title),
+                    getFragmentManager());
             mCurrentDirectory = new File(mFilesList.get(position).getUrl());
             refreshCurrentList();
         } else {

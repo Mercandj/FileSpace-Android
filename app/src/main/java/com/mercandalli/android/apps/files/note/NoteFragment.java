@@ -17,6 +17,7 @@ import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.file.filespace.FileSpaceModel;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.library.baselibrary.java.StringUtils;
+import com.mercandalli.android.library.baselibrary.rating.Rating;
 
 import java.io.UnsupportedEncodingException;
 
@@ -43,9 +44,9 @@ public class NoteFragment extends BackFragment {
         final String txt = Config.getUserNoteWorkspace1();
         if (!StringUtils.isNullOrEmpty(txt)) {
             try {
-                String txt_tmp = new String(txt.getBytes("ISO-8859-1"), "UTF-8");
-                this.mInputEdiText.setText(txt_tmp);
-                mFileSpaceModel.getArticle().article_content_1 = txt_tmp;
+                final String txtTmp = new String(txt.getBytes("ISO-8859-1"), "UTF-8");
+                this.mInputEdiText.setText(txtTmp);
+                mFileSpaceModel.getArticle().article_content_1 = txtTmp;
             } catch (UnsupportedEncodingException e) {
                 Log.e(getClass().getName(), "Failed UnsupportedEncodingException", e);
             }

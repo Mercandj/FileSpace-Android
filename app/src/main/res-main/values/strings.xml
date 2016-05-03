@@ -211,4 +211,7 @@
     <!-- Search -->
     <string name="search_title_hint">Search</string>
 
+    <!-- Rating -->
+    <string name="rating_popup_title">Rating</string>
+
 </resources>

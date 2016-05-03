@@ -51,13 +51,11 @@
         <item name="android:background">@color/action_bar</item>
     </style>
 
-
     <style name="TextAppearanceTabLayout">
         <item name="android:textSize">12sp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">bold</item>
     </style>
-
 
     <style name="DialogFullscreen" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -67,6 +65,12 @@
         <item name="colorAccent">@color/primary</item>
         <item name="colorControlHighlight">#99999a</item>
         <item name="android:textColor">#363637</item>
+    </style>
+
+    <style name="RatingDialog" parent="Theme.AppCompat.Dialog">
+        <item name="colorAccent">@android:color/white</item>
+        <item name="colorControlActivated">@color/rating_accent_alpha</item>
+        <item name="colorControlNormal">@color/rating_accent</item>
     </style>
 
 </resources>

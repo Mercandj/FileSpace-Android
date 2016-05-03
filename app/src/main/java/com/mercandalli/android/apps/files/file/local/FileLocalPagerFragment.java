@@ -54,6 +54,7 @@ import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
 import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
 import com.mercandalli.android.apps.files.main.FileApp;
+import com.mercandalli.android.library.baselibrary.rating.Rating;
 import com.mercandalli.android.library.baselibrary.view.RtlViewPager;
 
 import static com.mercandalli.android.library.baselibrary.view.StatusBarUtils.setStatusBarColor;
