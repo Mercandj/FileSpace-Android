@@ -9,16 +9,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
-import com.mercandalli.android.apps.files.BuildConfig;
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.library.baselibrary.network.NetworkUtils;
 import com.mercandalli.android.library.baselibrary.push.PushManager;
 import com.mercandalli.android.library.baselibrary.store.StoreUtils;
-
-import static com.mercandalli.android.library.baselibrary.device.DeviceUtils.getDeviceBuilder;
-import static com.mercandalli.android.library.baselibrary.network.NetworkUtils.isNetworkAvailable;
 
 /**
  * Manage the notification push: id...
@@ -28,14 +22,14 @@ class NotificationPushManagerImpl implements
         NotificationPushManager,
         PushManager.OnGcmMessageListener {
 
-    private static final String GCM_SENDER = "807253530972";
 
     private final Context mAppContext;
     private final PushManager mPushManager;
 
     /* package */ NotificationPushManagerImpl(final Application application) {
         mAppContext = application.getApplicationContext();
-        mPushManager = PushManager.getInstance(mAppContext);
+        mPushManager = PushManager.getInstance();
+        mPushManager.addOnGcmMessageListener(this);
     }
 
     /**
@@ -43,16 +37,7 @@ class NotificationPushManagerImpl implements
      */
     @Override
     public void initialize() {
-        if (!isNetworkAvailable(mAppContext)) {
-            return;
-        }
-        mPushManager.addOnGcmMessageListener(this);
-        mPushManager.initialize(
-                BuildConfig.DEBUG,
-                getDeviceBuilder(mAppContext),
-                GCM_SENDER,
-                Constants.URL_DOMAIN,
-                Config.ROUTE_DEVICE_ADD);
+        // Nothing here but will call the constructor.
     }
 
     @Override

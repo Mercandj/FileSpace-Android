@@ -105,7 +105,7 @@ public class FileUtils {
     @Nullable
     public static String readStringFile(final Context context, @Nullable final String filePath) {
         Preconditions.checkNotNull(context);
-        if (filePath == null || !new File(filePath).exists()) {
+        if (filePath == null) {
             return "";
         }
         String res = null;
