@@ -53,6 +53,7 @@ android {
                     'src/main/res-screen/admin',
                     'src/main/res-screen/file',
                     'src/main/res-screen/note',
+                    'src/main/res-screen/storage',
                     'src/main/res-screen/support'
             ]
         }

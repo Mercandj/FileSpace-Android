@@ -91,7 +91,7 @@ public class WorkspaceFragment extends BackFragment implements ViewPager.OnPageC
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_workspace, container, false);
 
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.fragment_workspace_toolbar);
+        final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.fragment_workspace_toolbar);
         toolbar.setTitle(mTitle);
         mSetToolbarCallback.setToolbar(toolbar);
         setStatusBarColor(getActivity(), R.color.status_bar);

@@ -6,7 +6,7 @@
     <color name="primary_dark">#37474F</color>
     <color name="primary_dark_dark">#263238</color>
     <color name="accent">#0d84c8</color>
-    <color name="accent_alpha">#800d84c8</color>
+    <color name="accent_alpha_80">#800d84c8</color>
 
     <color name="app_background">#EEEEEE</color>
     <color name="action_bar">@color/primary</color>

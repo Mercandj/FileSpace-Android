@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@android:id/secondaryProgress">
+        <shape
+            android:shape="ring"
+            android:thickness="4dp">
+            <solid android:color="@color/storage_main_progress_bar_empty" />
+        </shape>
+    </item>
+    <item android:id="@android:id/progress">
+        <rotate
+            android:fromDegrees="-90"
+            android:toDegrees="-90">
+            <shape
+                android:shape="ring"
+                android:thickness="4dp">
+                <solid android:color="@color/storage_main_progress_bar" />
+            </shape>
+        </rotate>
+    </item>
+
+</layer-list>

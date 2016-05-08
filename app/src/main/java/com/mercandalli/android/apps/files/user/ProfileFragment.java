@@ -24,6 +24,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,7 +38,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.ILocationListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
@@ -63,7 +63,7 @@ import java.util.List;
 /**
  * Created by Jonathan on 03/01/2015.
  */
-public class ProfileFragment extends BackFragment {
+public class ProfileFragment extends Fragment {
 
     private ProgressBar mProgressBar;
     private UserModel mUserModel;
@@ -117,11 +117,6 @@ public class ProfileFragment extends BackFragment {
             BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
             bitmapDrawable.getBitmap().recycle();
         }
-    }
-
-    @Override
-    public boolean back() {
-        return false;
     }
 
     public void refreshView() {

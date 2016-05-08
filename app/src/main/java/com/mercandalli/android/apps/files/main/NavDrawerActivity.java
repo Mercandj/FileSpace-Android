@@ -51,6 +51,7 @@ import com.mercandalli.android.apps.files.file.cloud.FileCloudPagerFragment;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.note.WorkspaceFragment;
 import com.mercandalli.android.apps.files.settings.SettingsFragment;
+import com.mercandalli.android.apps.files.storage.StorageFragment;
 import com.mercandalli.android.apps.files.support.SupportFragment;
 import com.mercandalli.android.apps.files.user.ProfileFragment;
 import com.mercandalli.android.apps.files.user.community.CommunityFragment;
@@ -257,7 +258,7 @@ abstract class NavDrawerActivity extends ApplicationActivity implements
                     if (Config.isLogged()) {
                         fragment = ProfileFragment.newInstance();
                     } else {
-                        return;
+                        fragment = StorageFragment.newInstance();
                     }
                     break;
                 case FILES:

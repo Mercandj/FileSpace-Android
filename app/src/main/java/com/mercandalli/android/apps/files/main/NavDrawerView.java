@@ -70,14 +70,16 @@ class NavDrawerView extends FrameLayout implements View.OnClickListener {
 
         if (mLastClicked != null && mLastClicked.mNavDrawerSimpleRow != null) {
             applyFont(mTextViews.get(mLastClicked.mId), mLastClicked, false);
-            mImageViews.get(mLastClicked.mId).setImageResource(mLastClicked.mNavDrawerSimpleRow.mDrawableId);
+            mImageViews.get(mLastClicked.mId).setImageResource(
+                    mLastClicked.mNavDrawerSimpleRow.mDrawableId);
         }
 
         if (mOnNavDrawerClickCallback != null) {
             if (navDrawerRow.mNavDrawerSimpleRow != null) {
                 applyFont(mTextViews.get(navDrawerRow.mId), navDrawerRow, true);
                 if (!isOtherSection(navDrawerRow)) {
-                    mImageViews.get(navDrawerRow.mId).setImageResource(navDrawerRow.mNavDrawerSimpleRow.mDrawablePressedId);
+                    mImageViews.get(navDrawerRow.mId)
+                            .setImageResource(navDrawerRow.mNavDrawerSimpleRow.mDrawablePressedId);
                 }
             }
             mLastClicked = navDrawerRow;
