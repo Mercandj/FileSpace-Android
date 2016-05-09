@@ -2,8 +2,12 @@ package com.mercandalli.android.apps.files.storage;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
@@ -11,6 +15,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
+
+import static com.mercandalli.android.library.baselibrary.view.ViewUtils.spToPx;
+
 
 public class StorageProgressBarWrapper extends FrameLayout {
 
@@ -35,29 +42,40 @@ public class StorageProgressBarWrapper extends FrameLayout {
     private TextView mTextView;
     private int mDuration = 300;
 
+    /**
+     * Default selector label size (SP).
+     */
+    private static final int DEFAULT_SELECTOR_LABEL_SIZE = 30;
+
+    private int mTextViewSize;
+
     public StorageProgressBarWrapper(Context context) {
         super(context);
-        init(context);
+        init(context, null);
     }
 
     public StorageProgressBarWrapper(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        init(context, attrs);
     }
 
     public StorageProgressBarWrapper(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
+        init(context, attrs);
     }
 
-    private void init(Context context) {
+    private void init(@NonNull final Context context, @Nullable final AttributeSet attrs) {
         final View rootView = inflate(context, R.layout.view_storage_progress_bar_wrapper, this);
 
         mTextView = (TextView) rootView.findViewById(R.id.view_storage_progress_bar_wrapper_text_view);
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.view_storage_progress_bar_wrapper_progress_bar);
-
         mTextView.setText(String.format("%d %%", 0));
-        mProgressBar.setMax(PROGRESS_BAR_VIEW_MAX);
+
+        if (!isInEditMode()) {
+            extractAttrs(context, attrs);
+            mTextView.setTextSize(mTextViewSize);
+            mProgressBar.setMax(PROGRESS_BAR_VIEW_MAX);
+        }
     }
 
     /**
@@ -109,6 +127,22 @@ public class StorageProgressBarWrapper extends FrameLayout {
     public void setProgressInternal(final int progress) {
         mTextView.setText(String.format("%d %%", progress / 10));
         mProgressBar.setProgress(progress);
+    }
+
+    protected void extractAttrs(@NonNull final Context context, @Nullable final AttributeSet attrs) {
+        if (attrs == null) {
+            return;
+        }
+        final DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        final TypedArray a = context.getTheme().obtainStyledAttributes(
+                attrs, R.styleable.StorageProgressBarWrapper, 0, 0);
+        try {
+            mTextViewSize = a.getDimensionPixelSize(
+                    R.styleable.StorageProgressBarWrapper_spb_textLabelSize,
+                    (int) spToPx(displayMetrics, DEFAULT_SELECTOR_LABEL_SIZE));
+        } finally {
+            a.recycle();
+        }
     }
 }
 

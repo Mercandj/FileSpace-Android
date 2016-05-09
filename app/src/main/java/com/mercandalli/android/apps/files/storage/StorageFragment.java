@@ -43,9 +43,6 @@ public class StorageFragment extends Fragment {
     @Nullable
     private SetToolbarCallback mSetToolbarCallback;
 
-    @Nullable
-    private StorageProgressBarWrapper mMainProgressBar;
-
     public static StorageFragment newInstance() {
         return new StorageFragment();
     }
@@ -55,8 +52,6 @@ public class StorageFragment extends Fragment {
         final FragmentActivity activity = getActivity();
         final View rootView = inflater.inflate(R.layout.fragment_storage, container, false);
 
-        mMainProgressBar = (StorageProgressBarWrapper) rootView.findViewById(R.id.fragment_storage_progress_bar);
-        mMainProgressBar.setDuration(800);
         final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.fragment_storage_toolbar);
         if (mSetToolbarCallback != null && toolbar != null) {
             toolbar.setTitle("Storage");
@@ -64,7 +59,14 @@ public class StorageFragment extends Fragment {
         }
         setStatusBarColor(activity, R.color.status_bar);
 
-        updateView(StorageManager.getInstance().getStorage());
+        updateView(
+                (StorageProgressBarWrapper) rootView.findViewById(R.id.fragment_storage_progress_bar),
+                1_000,
+                StorageManager.getInstance().getStorageDisk());
+        updateView(
+                (StorageProgressBarWrapper) rootView.findViewById(R.id.fragment_storage_progress_bar_ram),
+                1_000,
+                StorageManager.getInstance().getRam(getContext()));
 
         return rootView;
     }
@@ -75,7 +77,7 @@ public class StorageFragment extends Fragment {
         if (context instanceof SetToolbarCallback) {
             mSetToolbarCallback = (SetToolbarCallback) context;
         } else {
-            throw new IllegalArgumentException("Must be attached to a HomeActivity. Found: " + context);
+            throw new IllegalArgumentException("Must be attached to a SetToolbarCallback. Found: " + context);
         }
     }
 
@@ -85,12 +87,16 @@ public class StorageFragment extends Fragment {
         mSetToolbarCallback = null;
     }
 
-    private void updateView(@NonNull final Storage storage) {
-        if (mMainProgressBar == null) {
+    private void updateView(
+            final StorageProgressBarWrapper mainStorageProgressBarWrapper,
+            final int animationDuration,
+            @NonNull final Storage storage) {
+        if (mainStorageProgressBarWrapper == null) {
             return;
         }
         final long totalSize = storage.getTotalSize();
-        mMainProgressBar.setProgress(
+        mainStorageProgressBarWrapper.setDuration(animationDuration);
+        mainStorageProgressBarWrapper.setProgress(
                 (int) ((100f * (totalSize - storage.getAvailableSize())) / totalSize));
     }
 }

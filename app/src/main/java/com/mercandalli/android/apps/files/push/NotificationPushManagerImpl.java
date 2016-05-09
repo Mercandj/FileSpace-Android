@@ -11,6 +11,7 @@ import android.text.TextUtils;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.library.baselibrary.network.NetworkUtils;
+import com.mercandalli.android.library.baselibrary.notification.NotificationUtils;
 import com.mercandalli.android.library.baselibrary.push.PushManager;
 import com.mercandalli.android.library.baselibrary.store.StoreUtils;
 
@@ -58,7 +59,7 @@ class NotificationPushManagerImpl implements
                 if (message == null) {
                     break;
                 }
-                NetworkUtils.sendNotification(
+                NotificationUtils.sendNotification(
                         mAppContext,
                         message,
                         TextUtils.isEmpty(title) ? mAppContext.getString(R.string.app_name) : title,
@@ -73,7 +74,7 @@ class NotificationPushManagerImpl implements
                 }
                 final Intent openPlayStoreIntent =
                         StoreUtils.getOpenPlayStoreIntent(mAppContext, actionData);
-                NetworkUtils.sendNotification(
+                NotificationUtils.sendNotification(
                         mAppContext,
                         openPlayStoreIntent,
                         message,
@@ -90,7 +91,7 @@ class NotificationPushManagerImpl implements
                 if (openUrlIntent == null) {
                     break;
                 }
-                NetworkUtils.sendNotification(
+                NotificationUtils.sendNotification(
                         mAppContext,
                         openUrlIntent,
                         message,
