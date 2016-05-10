@@ -2,9 +2,10 @@ package com.mercandalli.android.apps.files.file;
 
 import android.app.Application;
 
-import com.mercandalli.android.apps.files.main.network.RetrofitUtils;
 import com.mercandalli.android.apps.files.file.cloud.FileOnlineApi;
+import com.mercandalli.android.apps.files.file.cloud.FileUploadOnlineApi;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
+import com.mercandalli.android.apps.files.main.network.RetrofitUtils;
 
 import javax.inject.Singleton;
 
@@ -19,10 +20,11 @@ public class FileModule {
 
     @Provides
     @Singleton
-    FileManager provideFileManager(Application application) {
+    FileManager provideFileManager(final Application application) {
         final FileOnlineApi fileOnlineApi = RetrofitUtils.getAuthorizedRetrofit().create(FileOnlineApi.class);
+        final FileUploadOnlineApi fileUploadOnlineApi = RetrofitUtils.getAuthorizedRetrofitUpload().create(FileUploadOnlineApi.class);
 
-        return new FileManagerImpl(application, fileOnlineApi);
-        // return new FileManagerMock(application, fileOnlineApi);
+        return new FileManagerImpl(application, fileOnlineApi, fileUploadOnlineApi);
+        // return new FileManagerMock(application, fileOnlineApi, fileUploadOnlineApi);
     }
 }

@@ -29,16 +29,6 @@ public interface FileOnlineApi {
             @Query("all-public") String publicFiles,
             @Query("search") String search);
 
-    @Multipart
-    @POST("/" + Config.ROUTE_FILE)
-    Call<FilesResponse> uploadFile(
-            @PartMap() Map<String, RequestBody> mapPhoto
-            //@Part("file") FileUploadTypedFile file,
-            //@Field("url") String url,
-            //@Field("id_file_parent") String id_file_parent,
-            //@Field("directory") String directory
-    );
-
     @FormUrlEncoded
     @POST("/" + Config.ROUTE_FILE + "/{id_file_to_rename}")
     Call<FilesResponse> rename(

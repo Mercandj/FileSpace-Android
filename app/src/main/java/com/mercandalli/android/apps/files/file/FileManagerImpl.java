@@ -3,6 +3,7 @@ package com.mercandalli.android.apps.files.file;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,6 +16,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
@@ -33,6 +35,8 @@ import com.mercandalli.android.apps.files.file.audio.CoverUtils;
 import com.mercandalli.android.apps.files.file.audio.FileAudioActivity;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
 import com.mercandalli.android.apps.files.file.cloud.FileOnlineApi;
+import com.mercandalli.android.apps.files.file.cloud.FileUploadOnlineApi;
+import com.mercandalli.android.apps.files.file.cloud.ProgressRequestBody;
 import com.mercandalli.android.apps.files.file.cloud.response.FileResponse;
 import com.mercandalli.android.apps.files.file.cloud.response.FilesResponse;
 import com.mercandalli.android.apps.files.file.filespace.FileSpaceModel;
@@ -61,7 +65,6 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -70,7 +73,7 @@ import retrofit2.Response;
  * A {@link FileModel} Manager.
  */
 /* package */
-class FileManagerImpl implements FileManager /*implements FileUploadTypedFile.FileUploadListener*/ {
+class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallbacks /*implements FileUploadTypedFile.FileUploadListener*/ {
 
     private static final String LIKE = " LIKE ?";
     private static final String MIME_TEXT = "text/plain";
@@ -80,14 +83,22 @@ class FileManagerImpl implements FileManager /*implements FileUploadTypedFile.Fi
     private final FileOnlineApi mFileOnlineApi;
 
     private final FileLocalApi mFileLocalApi;
+    private final FileUploadOnlineApi mFileUploadOnlineApi;
     private final Handler mUiHandler;
     private final Thread mUiThread;
 
-    /* package */ FileManagerImpl(final Context contextApp, final FileOnlineApi fileOnlineApi) {
+    private NotificationCompat.Builder mNotificationBuilder;
+    private NotificationManager mNotificationManager;
+
+    /* package */ FileManagerImpl(
+            final Context contextApp,
+            final FileOnlineApi fileOnlineApi,
+            final FileUploadOnlineApi fileUploadOnlineApi) {
         Preconditions.checkNotNull(contextApp);
 
         mContextApp = contextApp;
         mFileOnlineApi = fileOnlineApi;
+        mFileUploadOnlineApi = fileUploadOnlineApi;
         mFileLocalApi = new FileLocalApi();
 
         final Looper mainLooper = Looper.getMainLooper();
@@ -213,17 +224,17 @@ class FileManagerImpl implements FileManager /*implements FileUploadTypedFile.Fi
             return;
         }
 
-        final Map<String, RequestBody> params = new HashMap<>();
+        final Map<String, ProgressRequestBody> params = new HashMap<>();
 
         final String filename = file.getName();
-        RequestBody photo = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        ProgressRequestBody photo = ProgressRequestBody.create(MediaType.parse("multipart/form-data"), file, this);
         params.put("file\"; filename=\"" + filename, photo);
 
-        params.put("url", RequestBody.create(MediaType.parse(MIME_TEXT), fileModel.getName()));
-        params.put("id_file_parent", RequestBody.create(MediaType.parse(MIME_TEXT), "" + idFileParent));
-        params.put("directory", RequestBody.create(MediaType.parse(MIME_TEXT), "false"));
+        params.put("url", ProgressRequestBody.create(MediaType.parse(MIME_TEXT), fileModel.getName()));
+        params.put("id_file_parent", ProgressRequestBody.create(MediaType.parse(MIME_TEXT), "" + idFileParent));
+        params.put("directory", ProgressRequestBody.create(MediaType.parse(MIME_TEXT), "false"));
 
-        final Call<FilesResponse> call = mFileOnlineApi.uploadFile(params);
+        final Call<FilesResponse> call = mFileUploadOnlineApi.uploadFile(params);
         //new FileUploadTypedFile("*/*", fileModel, this),
         //fileModel.getName(),
         //"" + idFileParent,
@@ -824,5 +835,42 @@ class FileManagerImpl implements FileManager /*implements FileUploadTypedFile.Fi
             parameters.add(new StringPair("id_file_parent", "" + fileModel.getIdFileParent()));
         }
         return parameters;
+    }
+
+    @Override
+    public void onUploadProgressUpdate(final long progress, final long length) {
+        if (mNotificationBuilder == null) {
+            mNotificationBuilder = new NotificationCompat.Builder(mContextApp);
+            mNotificationBuilder.setContentTitle("Upload: "/* + fileModel.getName()*/)
+                    .setContentText("Upload in progress: " + FileUtils.humanReadableByteCount(progress)
+                            + " / " + FileUtils.humanReadableByteCount(length))
+                    .setSmallIcon(R.drawable.ic_notification_cloud);
+        } else {
+            mNotificationBuilder.setContentText("Upload in progress: " +
+                    FileUtils.humanReadableByteCount(progress) + " / " +
+                    FileUtils.humanReadableByteCount(length));
+        }
+        mNotificationBuilder.setProgress((int) (length / 1_000.0f), (int) (progress / 1_000.0f), false);
+
+        if (mNotificationManager == null) {
+            mNotificationManager = (NotificationManager) mContextApp.getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+        mNotificationManager.notify(1, mNotificationBuilder.build());
+    }
+
+    @Override
+    public void onUploadError() {
+
+    }
+
+    @Override
+    public void onUploadFinish() {
+        if (mNotificationBuilder == null || mNotificationManager == null) {
+            return;
+        }
+        mNotificationBuilder.setContentText("Upload complete")
+                // Removes the progress bar
+                .setProgress(0, 0, false);
+        mNotificationManager.notify(1, mNotificationBuilder.build());
     }
 }

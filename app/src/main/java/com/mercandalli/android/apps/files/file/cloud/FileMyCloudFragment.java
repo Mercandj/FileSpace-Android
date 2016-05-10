@@ -189,6 +189,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                                             mFilesToCutList.clear();
                                                             mFileCloudFabManager.updateFabButtons();
                                                         }
+                                                        refreshCurrentList();
                                                     }
                                                 });
                                             }
@@ -206,6 +207,7 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                                             mFilesToCutList.clear();
                                                             mFileCloudFabManager.updateFabButtons();
                                                         }
+                                                        refreshCurrentList();
                                                     }
                                                 });
                                             }

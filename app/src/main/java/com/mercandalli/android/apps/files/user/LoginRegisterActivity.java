@@ -111,11 +111,12 @@ public class LoginRegisterActivity extends ApplicationActivity implements ViewPa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_login);
 
-        RegisterLoginPagerAdapter mPagerAdapter = new RegisterLoginPagerAdapter(getSupportFragmentManager(), this);
+        final RegisterLoginPagerAdapter registerLoginPagerAdapter = new RegisterLoginPagerAdapter(
+                getSupportFragmentManager(), this);
 
         PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.activity_register_login_tabs);
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.setAdapter(registerLoginPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
         mViewPager.setOffscreenPageLimit(NB_FRAGMENT - 1);
 

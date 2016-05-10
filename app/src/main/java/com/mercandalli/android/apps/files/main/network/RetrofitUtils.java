@@ -17,18 +17,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitUtils {
 
-    private static OkHttpClient getOkHttpClientUpload() {
-        final OkHttpClient.Builder builder = (new OkHttpClient.Builder())
-                .connectTimeout(10, TimeUnit.MINUTES)
-                .readTimeout(10, TimeUnit.MINUTES);
-        if (BuildConfig.DEBUG) {
-            final HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            builder.addInterceptor(interceptor);
-        }
-        return builder.build();
-    }
-
     private static OkHttpClient getOkHttpClient() {
         final OkHttpClient.Builder builder = (new OkHttpClient.Builder())
                 .connectTimeout(60, TimeUnit.SECONDS)
@@ -69,6 +57,28 @@ public class RetrofitUtils {
         return builder.build();
     }
 
+    private static OkHttpClient getAuthorizedOkHttpClientUpload() {
+        final OkHttpClient.Builder builder = (new OkHttpClient.Builder())
+                .connectTimeout(12, TimeUnit.MINUTES)
+                .readTimeout(12, TimeUnit.MINUTES)
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request original = chain.request();
+
+                        // Customize the request
+                        Request request = original.newBuilder()
+                                .header("Authorization", "Basic " + Config.getUserToken())
+                                .method(original.method(), original.body())
+                                .build();
+
+                        // Customize or return the response
+                        return chain.proceed(request);
+                    }
+                });
+        return builder.build();
+    }
+
     public static Retrofit getRetrofit() {
         return (new Retrofit.Builder())
                 .baseUrl(Constants.URL_DOMAIN)
@@ -82,6 +92,14 @@ public class RetrofitUtils {
                 .baseUrl(Constants.URL_DOMAIN)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(getAuthorizedOkHttpClient())
+                .build();
+    }
+
+    public static Retrofit getAuthorizedRetrofitUpload() {
+        return (new Retrofit.Builder())
+                .baseUrl(Constants.URL_DOMAIN)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(getAuthorizedOkHttpClientUpload())
                 .build();
     }
 }
