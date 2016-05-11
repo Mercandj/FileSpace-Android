@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -42,9 +42,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.admin.AdminFragment;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
-import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
-import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.extras.genealogy.GenealogyFragment;
 import com.mercandalli.android.apps.files.extras.robotics.RoboticsFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudPagerFragment;
@@ -55,7 +53,8 @@ import com.mercandalli.android.apps.files.storage.StorageFragment;
 import com.mercandalli.android.apps.files.support.SupportFragment;
 import com.mercandalli.android.apps.files.user.ProfileFragment;
 import com.mercandalli.android.apps.files.user.community.CommunityFragment;
-import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
+import com.mercandalli.android.library.base.dialog.DialogUtils;
+import com.mercandalli.android.library.base.precondition.Preconditions;
 
 import static com.mercandalli.android.apps.files.main.FileApp.logPerformance;
 
@@ -240,13 +239,18 @@ abstract class NavDrawerActivity extends ApplicationActivity implements
         Preconditions.checkNotNull(navDrawerRow);
 
         if (NavDrawerView.NavDrawerRow.LOGOUT.equals(navDrawerRow)) {
-            DialogUtils.alert(this, "Log out", "Do you want to log out?", "Yes", new IListener() {
-                @Override
-                public void execute() {
-                    Config.reset(NavDrawerActivity.this);
-                    NavDrawerActivity.this.finish();
-                }
-            }, getString(android.R.string.cancel), null);
+            DialogUtils.alert(
+                    this,
+                    "Log out",
+                    "Do you want to log out?",
+                    "Yes",
+                    new DialogUtils.OnDialogUtilsListener() {
+                        @Override
+                        public void onDialogUtilsCalledBack() {
+                            Config.reset(NavDrawerActivity.this);
+                            NavDrawerActivity.this.finish();
+                        }
+                    }, getString(android.R.string.cancel), null);
             return;
         }
 

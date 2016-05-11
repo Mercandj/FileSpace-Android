@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
+import com.mercandalli.android.library.base.precondition.Preconditions;
 
 public class LicenseActivity extends AppCompatActivity {
 

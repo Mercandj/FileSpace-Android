@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -41,14 +41,13 @@ import com.mercandalli.android.apps.files.common.dialog.DialogDatePicker;
 import com.mercandalli.android.apps.files.common.dialog.DialogTimePicker;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.main.ApplicationActivity;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileApp;
+import com.mercandalli.android.library.base.dialog.DialogUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -98,13 +97,18 @@ public class FileAddDialog extends Dialog implements
         findViewById(R.id.dialog_add_file_text_doc).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogUtils.prompt(mActivity, mActivity.getString(R.string.dialog_file_create_txt), mActivity.getString(R.string.dialog_file_name_interrogation), mActivity.getString(R.string.dialog_file_create), new IStringListener() {
-                    @Override
-                    public void execute(String text) {
-                        //TODO create a online txt with content
-                        Toast.makeText(getContext(), getContext().getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
-                    }
-                }, mActivity.getString(android.R.string.cancel), null);
+                DialogUtils.prompt(
+                        mActivity,
+                        mActivity.getString(R.string.dialog_file_create_txt),
+                        mActivity.getString(R.string.dialog_file_name_interrogation),
+                        mActivity.getString(R.string.dialog_file_create),
+                        new DialogUtils.OnDialogUtilsStringListener() {
+                            @Override
+                            public void onDialogUtilsStringCalledBack(String text) {
+                                //TODO create a online txt with content
+                                Toast.makeText(getContext(), getContext().getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
+                            }
+                        }, mActivity.getString(android.R.string.cancel), null);
                 FileAddDialog.this.dismiss();
             }
         });
@@ -236,25 +240,30 @@ public class FileAddDialog extends Dialog implements
                 FileAddDialog.this.dismiss();
                 break;
             case R.id.dialog_add_file_add_directory:
-                DialogUtils.prompt(mActivity, mActivity.getString(R.string.dialog_file_create_folder), mActivity.getString(R.string.dialog_file_name_interrogation), mActivity.getString(R.string.dialog_file_create), new IStringListener() {
-                    @Override
-                    public void execute(String text) {
-                        FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
-                        fileModelBuilder.name(text);
-                        fileModelBuilder.isDirectory(true);
-                        fileModelBuilder.idFileParent(mFileParentId);
-                        List<StringPair> parameters = FileApp.get().getFileAppComponent()
-                                .provideFileManager().getForUpload(fileModelBuilder.build());
-                        (new TaskPost(mActivity, Constants.URL_DOMAIN + Config.ROUTE_FILE, new IPostExecuteListener() {
+                DialogUtils.prompt(
+                        mActivity,
+                        mActivity.getString(R.string.dialog_file_create_folder),
+                        mActivity.getString(R.string.dialog_file_name_interrogation),
+                        mActivity.getString(R.string.dialog_file_create),
+                        new DialogUtils.OnDialogUtilsStringListener() {
                             @Override
-                            public void onPostExecute(JSONObject json, String body) {
-                                if (mListener != null) {
-                                    mListener.execute();
-                                }
+                            public void onDialogUtilsStringCalledBack(String text) {
+                                FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
+                                fileModelBuilder.name(text);
+                                fileModelBuilder.isDirectory(true);
+                                fileModelBuilder.idFileParent(mFileParentId);
+                                List<StringPair> parameters = FileApp.get().getFileAppComponent()
+                                        .provideFileManager().getForUpload(fileModelBuilder.build());
+                                (new TaskPost(mActivity, Constants.URL_DOMAIN + Config.ROUTE_FILE, new IPostExecuteListener() {
+                                    @Override
+                                    public void onPostExecute(JSONObject json, String body) {
+                                        if (mListener != null) {
+                                            mListener.execute();
+                                        }
+                                    }
+                                }, parameters)).execute();
                             }
-                        }, parameters)).execute();
-                    }
-                }, mActivity.getString(android.R.string.cancel), null);
+                        }, mActivity.getString(android.R.string.cancel), null);
                 FileAddDialog.this.dismiss();
                 break;
             case R.id.dialog_add_file_upload_file:

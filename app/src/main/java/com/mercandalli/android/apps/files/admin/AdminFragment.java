@@ -43,9 +43,9 @@ import com.mercandalli.android.apps.files.admin.notification.simple.SendNotifica
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.EmptyFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
-import com.mercandalli.android.library.baselibrary.view.NonSwipeableViewPager;
+import com.mercandalli.android.library.base.view.NonSwipeableViewPager;
 
-import static com.mercandalli.android.library.baselibrary.view.StatusBarUtils.setStatusBarColor;
+import static com.mercandalli.android.library.base.view.StatusBarUtils.setStatusBarColor;
 
 public class AdminFragment extends BackFragment implements ViewPager.OnPageChangeListener {
 

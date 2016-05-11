@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -45,10 +45,8 @@ import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter
 import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.FileManager;
@@ -62,6 +60,7 @@ import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
+import com.mercandalli.android.library.base.dialog.DialogUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -179,39 +178,49 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
                                         break;
 
                                     case 1:
-                                        DialogUtils.prompt(getActivity(), "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
-                                            @Override
-                                            public void execute(String text) {
-                                                mFileManager.rename(fileModel, text, new IListener() {
+                                        DialogUtils.prompt(
+                                                getActivity(),
+                                                "Rename",
+                                                "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?",
+                                                "Ok",
+                                                new DialogUtils.OnDialogUtilsStringListener() {
                                                     @Override
-                                                    public void execute() {
-                                                        if (mFilesToCutList.size() != 0) {
-                                                            mFilesToCutList.clear();
-                                                            mFileCloudFabManager.updateFabButtons();
-                                                        }
-                                                        refreshCurrentList();
+                                                    public void onDialogUtilsStringCalledBack(String text) {
+                                                        mFileManager.rename(fileModel, text, new IListener() {
+                                                            @Override
+                                                            public void execute() {
+                                                                if (mFilesToCutList.size() != 0) {
+                                                                    mFilesToCutList.clear();
+                                                                    mFileCloudFabManager.updateFabButtons();
+                                                                }
+                                                                refreshCurrentList();
+                                                            }
+                                                        });
                                                     }
-                                                });
-                                            }
-                                        }, "Cancel", null, fileModel.getFullName());
+                                                }, "Cancel", null, fileModel.getFullName());
                                         break;
 
                                     case 2:
-                                        DialogUtils.alert(getActivity(), "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
-                                            @Override
-                                            public void execute() {
-                                                mFileManager.delete(fileModel, new IListener() {
+                                        DialogUtils.alert(
+                                                getActivity(),
+                                                "Delete",
+                                                "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?",
+                                                "Yes",
+                                                new DialogUtils.OnDialogUtilsListener() {
                                                     @Override
-                                                    public void execute() {
-                                                        if (mFilesToCutList.size() != 0) {
-                                                            mFilesToCutList.clear();
-                                                            mFileCloudFabManager.updateFabButtons();
-                                                        }
-                                                        refreshCurrentList();
+                                                    public void onDialogUtilsCalledBack() {
+                                                        mFileManager.delete(fileModel, new IListener() {
+                                                            @Override
+                                                            public void execute() {
+                                                                if (mFilesToCutList.size() != 0) {
+                                                                    mFilesToCutList.clear();
+                                                                    mFileCloudFabManager.updateFabButtons();
+                                                                }
+                                                                refreshCurrentList();
+                                                            }
+                                                        });
                                                     }
-                                                });
-                                            }
-                                        }, "No", null);
+                                                }, "No", null);
                                         break;
 
                                     case 3:

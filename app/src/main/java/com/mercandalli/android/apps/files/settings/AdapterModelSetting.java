@@ -29,7 +29,7 @@ import android.widget.ToggleButton;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.library.baselibrary.view.ViewUtils;
+import com.mercandalli.android.library.base.view.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;

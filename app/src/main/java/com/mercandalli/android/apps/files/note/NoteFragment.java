@@ -12,18 +12,13 @@ import android.widget.EditText;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
-import com.mercandalli.android.apps.files.common.listener.IListener;
-import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.file.filespace.FileSpaceModel;
 import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.library.baselibrary.java.StringUtils;
-import com.mercandalli.android.library.baselibrary.rating.Rating;
+import com.mercandalli.android.library.base.dialog.DialogUtils;
+import com.mercandalli.android.library.base.java.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 
-/**
- * Created by Jonathan on 21/07/2015.
- */
 public class NoteFragment extends BackFragment {
 
     private EditText mInputEdiText;
@@ -82,13 +77,18 @@ public class NoteFragment extends BackFragment {
      * Delete the current note. Delete the {@link #mInputEdiText} content.
      */
     public void delete() {
-        DialogUtils.alert(getContext(), "Delete note", "Delete the current note?", getString(android.R.string.yes), new IListener() {
-            @Override
-            public void execute() {
-                mInputEdiText.setText("");
-                Config.setUserNoteWorkspace1(getContext(), "");
-            }
-        }, getString(android.R.string.no), null);
+        DialogUtils.alert(
+                getContext(),
+                "Delete note",
+                "Delete the current note?",
+                getString(android.R.string.yes),
+                new DialogUtils.OnDialogUtilsListener() {
+                    @Override
+                    public void onDialogUtilsCalledBack() {
+                        mInputEdiText.setText("");
+                        Config.setUserNoteWorkspace1(getContext(), "");
+                    }
+                }, getString(android.R.string.no), null);
     }
 
     /**

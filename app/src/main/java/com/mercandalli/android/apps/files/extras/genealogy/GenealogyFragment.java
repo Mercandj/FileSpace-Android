@@ -43,9 +43,9 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
-import com.mercandalli.android.library.baselibrary.view.NonSwipeableViewPager;
+import com.mercandalli.android.library.base.view.NonSwipeableViewPager;
 
-import static com.mercandalli.android.library.baselibrary.view.StatusBarUtils.setStatusBarColor;
+import static com.mercandalli.android.library.base.view.StatusBarUtils.setStatusBarColor;
 
 public class GenealogyFragment extends BackFragment implements ViewPager.OnPageChangeListener {
 

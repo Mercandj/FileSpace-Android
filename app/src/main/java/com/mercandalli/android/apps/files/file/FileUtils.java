@@ -27,7 +27,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
+import com.mercandalli.android.library.base.precondition.Preconditions;
 
 import java.io.File;
 import java.io.FileInputStream;

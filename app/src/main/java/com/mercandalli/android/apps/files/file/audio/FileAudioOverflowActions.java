@@ -12,14 +12,13 @@ import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.IListener;
-import com.mercandalli.android.apps.files.common.listener.IStringListener;
-import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataEditionDialog;
 import com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataUtils;
 import com.mercandalli.android.apps.files.main.FileApp;
-import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
+import com.mercandalli.android.library.base.dialog.DialogUtils;
+import com.mercandalli.android.library.base.precondition.Preconditions;
 
 /**
  * A simple class that open a Dialog with the actions related to the {@link FileModel}.
@@ -119,19 +118,24 @@ class FileAudioOverflowActions implements PopupMenu.OnMenuItemClickListener {
         if (fileModel.isDirectory()) {
             Toast.makeText(mActivity, mActivity.getString(R.string.not_implemented), Toast.LENGTH_SHORT).show();
         } else {
-            DialogUtils.alert(mActivity, mUploadString, "Upload file " + fileModel.getName(), mUploadString, new IListener() {
-                @Override
-                public void execute() {
-                    if (fileModel.getFile() != null) {
-                        mFileManager.upload(fileModel, -1, new IListener() {
-                            @Override
-                            public void execute() {
-                                mFileLocalActionCallback.refreshData();
+            DialogUtils.alert(
+                    mActivity,
+                    mUploadString,
+                    "Upload file " + fileModel.getName(),
+                    mUploadString,
+                    new DialogUtils.OnDialogUtilsListener() {
+                        @Override
+                        public void onDialogUtilsCalledBack() {
+                            if (fileModel.getFile() != null) {
+                                mFileManager.upload(fileModel, -1, new IListener() {
+                                    @Override
+                                    public void execute() {
+                                        mFileLocalActionCallback.refreshData();
+                                    }
+                                });
                             }
-                        });
-                    }
-                }
-            }, mActivity.getString(android.R.string.cancel), null);
+                        }
+                    }, mActivity.getString(android.R.string.cancel), null);
         }
     }
 
@@ -145,17 +149,22 @@ class FileAudioOverflowActions implements PopupMenu.OnMenuItemClickListener {
     }
 
     private void rename(final FileModel fileModel) {
-        DialogUtils.prompt(mActivity, mRenameString, "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
-            @Override
-            public void execute(String text) {
-                mFileManager.rename(fileModel, text, new IListener() {
+        DialogUtils.prompt(
+                mActivity,
+                mRenameString,
+                "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?",
+                "Ok",
+                new DialogUtils.OnDialogUtilsStringListener() {
                     @Override
-                    public void execute() {
-                        mFileLocalActionCallback.refreshData();
+                    public void onDialogUtilsStringCalledBack(String text) {
+                        mFileManager.rename(fileModel, text, new IListener() {
+                            @Override
+                            public void execute() {
+                                mFileLocalActionCallback.refreshData();
+                            }
+                        });
                     }
-                });
-            }
-        }, "Cancel", null, fileModel.getFullName());
+                }, "Cancel", null, fileModel.getFullName());
     }
 
     private void delete(final FileModel fileModel) {
@@ -164,9 +173,9 @@ class FileAudioOverflowActions implements PopupMenu.OnMenuItemClickListener {
                 mDeleteString,
                 "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?",
                 mActivity.getResources().getString(android.R.string.yes),
-                new IListener() {
+                new DialogUtils.OnDialogUtilsListener() {
                     @Override
-                    public void execute() {
+                    public void onDialogUtilsCalledBack() {
                         mFileManager.delete(fileModel, new IListener() {
                             @Override
                             public void execute() {

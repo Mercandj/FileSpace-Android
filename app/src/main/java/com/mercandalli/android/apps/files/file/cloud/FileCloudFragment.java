@@ -43,10 +43,8 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.FileManager;
@@ -60,6 +58,7 @@ import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
+import com.mercandalli.android.library.base.dialog.DialogUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -283,37 +282,47 @@ public class FileCloudFragment extends InjectedFabFragment implements
                                 break;
 
                             case 1:
-                                DialogUtils.prompt(getActivity(), "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
-                                    @Override
-                                    public void execute(String text) {
-                                        mFileManager.rename(fileModel, text, new IListener() {
+                                DialogUtils.prompt(
+                                        getActivity(),
+                                        "Rename",
+                                        "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?",
+                                        "Ok",
+                                        new DialogUtils.OnDialogUtilsStringListener() {
                                             @Override
-                                            public void execute() {
-                                                if (filesToCut != null && filesToCut.size() != 0) {
-                                                    filesToCut.clear();
-                                                    //refreshFab();
-                                                }
+                                            public void onDialogUtilsStringCalledBack(String text) {
+                                                mFileManager.rename(fileModel, text, new IListener() {
+                                                    @Override
+                                                    public void execute() {
+                                                        if (filesToCut != null && filesToCut.size() != 0) {
+                                                            filesToCut.clear();
+                                                            //refreshFab();
+                                                        }
+                                                    }
+                                                });
                                             }
-                                        });
-                                    }
-                                }, "Cancel", null, fileModel.getFullName());
+                                        }, "Cancel", null, fileModel.getFullName());
                                 break;
 
                             case 2:
-                                DialogUtils.alert(getContext(), "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
-                                    @Override
-                                    public void execute() {
-                                        mFileManager.delete(fileModel, new IListener() {
+                                DialogUtils.alert(
+                                        getContext(),
+                                        "Delete",
+                                        "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?",
+                                        "Yes",
+                                        new DialogUtils.OnDialogUtilsListener() {
                                             @Override
-                                            public void execute() {
-                                                if (filesToCut != null && filesToCut.size() != 0) {
-                                                    filesToCut.clear();
-                                                    //refreshFab();
-                                                }
+                                            public void onDialogUtilsCalledBack() {
+                                                mFileManager.delete(fileModel, new IListener() {
+                                                    @Override
+                                                    public void execute() {
+                                                        if (filesToCut != null && filesToCut.size() != 0) {
+                                                            filesToCut.clear();
+                                                            //refreshFab();
+                                                        }
+                                                    }
+                                                });
                                             }
-                                        });
-                                    }
-                                }, "No", null);
+                                        }, "No", null);
                                 break;
 
                             case 3:

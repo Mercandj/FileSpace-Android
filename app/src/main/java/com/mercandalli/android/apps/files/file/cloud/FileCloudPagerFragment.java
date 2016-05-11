@@ -52,7 +52,7 @@ import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 
-import static com.mercandalli.android.library.baselibrary.view.StatusBarUtils.setStatusBarColor;
+import static com.mercandalli.android.library.base.view.StatusBarUtils.setStatusBarColor;
 
 public class FileCloudPagerFragment extends BackFragment implements
         ViewPager.OnPageChangeListener,

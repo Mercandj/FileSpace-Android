@@ -10,7 +10,7 @@ import com.mercandalli.android.apps.files.file.FileTypeModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
 import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
-import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
+import com.mercandalli.android.library.base.precondition.Preconditions;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -22,9 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.mercandalli.android.library.baselibrary.java.FileUtils.getExtensionFromPath;
-import static com.mercandalli.android.library.baselibrary.java.FileUtils.getNameFromPath;
-import static com.mercandalli.android.library.baselibrary.java.FileUtils.getParentPathFromPath;
+import static com.mercandalli.android.library.base.java.FileUtils.getExtensionFromPath;
+import static com.mercandalli.android.library.base.java.FileUtils.getNameFromPath;
+import static com.mercandalli.android.library.base.java.FileUtils.getParentPathFromPath;
 
 /**
  * {@inheritDoc}

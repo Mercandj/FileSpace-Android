@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -40,16 +40,15 @@ import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
-import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
-import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
-import com.mercandalli.android.library.baselibrary.java.StringUtils;
+import com.mercandalli.android.library.base.dialog.DialogUtils;
+import com.mercandalli.android.library.base.java.StringUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -225,17 +224,22 @@ public class GenealogyListFragment extends BackFragment {
                                             });
                                             break;
                                         case 1:
-                                            DialogUtils.alert(mActivity, "Delete", "Delete " + (modelGenealogyUser.first_name_1) + " ?", "Yes", new IListener() {
-                                                @Override
-                                                public void execute() {
-                                                    modelGenealogyUser.delete(new IPostExecuteListener() {
+                                            DialogUtils.alert(
+                                                    mActivity,
+                                                    "Delete",
+                                                    "Delete " + (modelGenealogyUser.first_name_1) + " ?",
+                                                    "Yes",
+                                                    new DialogUtils.OnDialogUtilsListener() {
                                                         @Override
-                                                        public void onPostExecute(JSONObject json, String body) {
-                                                            refreshList();
+                                                        public void onDialogUtilsCalledBack() {
+                                                            modelGenealogyUser.delete(new IPostExecuteListener() {
+                                                                @Override
+                                                                public void onPostExecute(JSONObject json, String body) {
+                                                                    refreshList();
+                                                                }
+                                                            });
                                                         }
-                                                    });
-                                                }
-                                            }, "No", null);
+                                                    }, "No", null);
                                             break;
                                         case 2:
                                             DialogUtils.alert(mActivity,

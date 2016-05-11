@@ -32,7 +32,7 @@ import com.mercandalli.android.apps.files.main.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mercandalli.android.library.baselibrary.view.ViewUtils.applyFont;
+import static com.mercandalli.android.library.base.view.ViewUtils.applyFont;
 
 public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelInformation.ViewHolder> {
 

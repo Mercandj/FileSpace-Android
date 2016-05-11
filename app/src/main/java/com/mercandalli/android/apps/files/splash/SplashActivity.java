@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.MainActivity;
-import com.mercandalli.android.library.baselibrary.permission.Permission;
+import com.mercandalli.android.library.base.permission.Permission;
 
 /**
  * The first {@link Activity} launched.

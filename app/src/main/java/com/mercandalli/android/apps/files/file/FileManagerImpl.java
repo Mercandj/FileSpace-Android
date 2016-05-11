@@ -47,8 +47,8 @@ import com.mercandalli.android.apps.files.file.text.FileTextActivity;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
-import com.mercandalli.android.library.baselibrary.java.StringUtils;
-import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
+import com.mercandalli.android.library.base.java.StringUtils;
+import com.mercandalli.android.library.base.precondition.Preconditions;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 

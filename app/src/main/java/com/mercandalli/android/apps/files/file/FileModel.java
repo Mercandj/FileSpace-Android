@@ -13,7 +13,7 @@ import com.mercandalli.android.apps.files.main.Constants;
 import java.io.File;
 import java.util.Date;
 
-import static com.mercandalli.android.library.baselibrary.java.FileUtils.getExtensionFromPath;
+import static com.mercandalli.android.library.base.java.FileUtils.getExtensionFromPath;
 
 /**
  * The main file buildModel.

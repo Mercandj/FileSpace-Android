@@ -23,7 +23,7 @@ import android.util.Log;
 
 import com.mercandalli.android.apps.files.common.util.PointLong;
 import com.mercandalli.android.apps.files.common.util.TimeUtils;
-import com.mercandalli.android.library.baselibrary.java.StringUtils;
+import com.mercandalli.android.library.base.java.StringUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;

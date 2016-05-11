@@ -35,5 +35,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
     
     // Mercandalli main library
-    compile 'com.mercandalli.android.library:baselibrary:1.0.0'
+    compile 'com.mercandalli.android.library:base:1.0.0'
 }

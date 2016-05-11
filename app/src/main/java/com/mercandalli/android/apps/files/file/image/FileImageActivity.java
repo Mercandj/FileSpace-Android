@@ -49,7 +49,7 @@ import com.mercandalli.android.apps.files.common.util.ColorUtils;
 import com.mercandalli.android.apps.files.common.util.ImageUtils;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.main.ApplicationActivity;
-import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
+import com.mercandalli.android.library.base.precondition.Preconditions;
 
 import java.io.File;
 import java.util.Date;

@@ -21,7 +21,7 @@ import com.mercandalli.android.apps.files.main.FileApp;
 
 import java.io.File;
 
-import static com.mercandalli.android.library.baselibrary.java.StringUtils.isEquals;
+import static com.mercandalli.android.library.base.java.StringUtils.isEquals;
 
 public class FileAudioMetaDataEditionDialog extends DialogFragment {
 

@@ -18,8 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.mercandalli.android.library.baselibrary.java.FileUtils.getNameFromPath;
-import static com.mercandalli.android.library.baselibrary.java.FileUtils.getParentPathFromPath;
+import static com.mercandalli.android.library.base.java.FileUtils.getNameFromPath;
+import static com.mercandalli.android.library.base.java.FileUtils.getParentPathFromPath;
 
 /**
  * A MockUp to test.

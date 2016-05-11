@@ -44,7 +44,7 @@ import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
 import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.library.baselibrary.java.StringUtils;
+import com.mercandalli.android.library.base.java.StringUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;

@@ -30,8 +30,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.library.baselibrary.java.StringUtils;
-import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
+import com.mercandalli.android.library.base.java.StringUtils;
+import com.mercandalli.android.library.base.precondition.Preconditions;
 
 import java.util.ArrayList;
 import java.util.List;

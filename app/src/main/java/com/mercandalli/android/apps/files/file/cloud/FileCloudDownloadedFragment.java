@@ -43,8 +43,6 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
 import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
-import com.mercandalli.android.apps.files.common.listener.IStringListener;
-import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
@@ -53,6 +51,7 @@ import com.mercandalli.android.apps.files.file.cloud.fab.FileCloudFabManager;
 import com.mercandalli.android.apps.files.file.local.FileLocalApi;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
+import com.mercandalli.android.library.base.dialog.DialogUtils;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -256,63 +255,78 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
                                 if (fileModel.isDirectory()) {
                                     Toast.makeText(getContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
                                 } else {
-                                    DialogUtils.alert(getActivity(), getString(R.string.upload), "Upload file " + fileModel.getName(), getString(R.string.upload), new IListener() {
-                                        @Override
-                                        public void execute() {
-                                            if (fileModel.getFile() != null) {
-                                                mFileManager.upload(fileModel, -1, new IListener() {
-                                                    @Override
-                                                    public void execute() {
+                                    DialogUtils.alert(
+                                            getActivity(),
+                                            getString(R.string.upload),
+                                            "Upload file " + fileModel.getName(),
+                                            getString(R.string.upload),
+                                            new DialogUtils.OnDialogUtilsListener() {
+                                                @Override
+                                                public void onDialogUtilsCalledBack() {
+                                                    if (fileModel.getFile() != null) {
+                                                        mFileManager.upload(fileModel, -1, new IListener() {
+                                                            @Override
+                                                            public void execute() {
 
+                                                            }
+                                                        });
                                                     }
-                                                });
-                                            }
-                                        }
-                                    }, getString(android.R.string.cancel), null);
+                                                }
+                                            }, getString(android.R.string.cancel), null);
                                 }
                                 break;
                             case 1:
                                 mFileManager.openLocalAs(getActivity(), fileModel);
                                 break;
                             case 2:
-                                DialogUtils.prompt(getActivity(), "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
-                                    @Override
-                                    public void execute(String text) {
-                                        mFileManager.rename(fileModel, text, new IListener() {
+                                DialogUtils.prompt(
+                                        getActivity(),
+                                        "Rename",
+                                        "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?",
+                                        "Ok",
+                                        new DialogUtils.OnDialogUtilsStringListener() {
                                             @Override
-                                            public void execute() {
-                                                if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
-                                                    mFilesToCutList.clear();
-                                                    //refreshFab();
-                                                }
-                                                if (mFilesToCopyList != null && mFilesToCopyList.size() != 0) {
-                                                    mFilesToCopyList.clear();
-                                                    //refreshFab();
-                                                }
+                                            public void onDialogUtilsStringCalledBack(String text) {
+                                                mFileManager.rename(fileModel, text, new IListener() {
+                                                    @Override
+                                                    public void execute() {
+                                                        if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
+                                                            mFilesToCutList.clear();
+                                                            //refreshFab();
+                                                        }
+                                                        if (mFilesToCopyList != null && mFilesToCopyList.size() != 0) {
+                                                            mFilesToCopyList.clear();
+                                                            //refreshFab();
+                                                        }
+                                                    }
+                                                });
                                             }
-                                        });
-                                    }
-                                }, "Cancel", null, fileModel.getFullName());
+                                        }, "Cancel", null, fileModel.getFullName());
                                 break;
                             case 3:
-                                DialogUtils.alert(getActivity(), "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
-                                    @Override
-                                    public void execute() {
-                                        mFileManager.delete(fileModel, new IListener() {
+                                DialogUtils.alert(
+                                        getActivity(),
+                                        "Delete",
+                                        "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?",
+                                        "Yes",
+                                        new DialogUtils.OnDialogUtilsListener() {
                                             @Override
-                                            public void execute() {
-                                                if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
-                                                    mFilesToCutList.clear();
-                                                    //refreshFab();
-                                                }
-                                                if (mFilesToCopyList != null && mFilesToCopyList.size() != 0) {
-                                                    mFilesToCopyList.clear();
-                                                    //refreshFab();
-                                                }
+                                            public void onDialogUtilsCalledBack() {
+                                                mFileManager.delete(fileModel, new IListener() {
+                                                    @Override
+                                                    public void execute() {
+                                                        if (mFilesToCutList != null && mFilesToCutList.size() != 0) {
+                                                            mFilesToCutList.clear();
+                                                            //refreshFab();
+                                                        }
+                                                        if (mFilesToCopyList != null && mFilesToCopyList.size() != 0) {
+                                                            mFilesToCopyList.clear();
+                                                            //refreshFab();
+                                                        }
+                                                    }
+                                                });
                                             }
-                                        });
-                                    }
-                                }, "No", null);
+                                        }, "No", null);
                                 break;
                             case 4:
                                 FileCloudDownloadedFragment.this.mFilesToCopyList.add(fileModel);

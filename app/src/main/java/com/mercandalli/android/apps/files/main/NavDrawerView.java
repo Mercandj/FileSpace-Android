@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.user.UserModel;
-import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
-import com.mercandalli.android.library.baselibrary.view.ViewUtils;
+import com.mercandalli.android.library.base.precondition.Preconditions;
+import com.mercandalli.android.library.base.view.ViewUtils;
 
 import java.util.HashMap;
 import java.util.Map;

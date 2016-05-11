@@ -47,9 +47,7 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
-import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
-import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
@@ -57,7 +55,8 @@ import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileApp;
-import com.mercandalli.android.library.baselibrary.rating.Rating;
+import com.mercandalli.android.library.base.dialog.DialogUtils;
+import com.mercandalli.android.library.base.rating.Rating;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -227,12 +226,14 @@ public class FileLocalFragment extends BackFragment implements
                                 public void onClick(DialogInterface dialog, int item) {
                                     switch (item) {
                                         case 0:
-                                            DialogUtils.prompt(context,
+                                            DialogUtils.prompt(
+                                                    context,
                                                     context.getString(R.string.file_model_local_new_folder_file),
                                                     context.getString(R.string.file_model_local_new_folder_file_description),
-                                                    getString(R.string.ok), new IStringListener() {
+                                                    getString(R.string.ok),
+                                                    new DialogUtils.OnDialogUtilsStringListener() {
                                                         @Override
-                                                        public void execute(String text) {
+                                                        public void onDialogUtilsStringCalledBack(String text) {
                                                             createFile(mCurrentDirectory.getPath() + File.separator, text);
                                                             refreshCurrentList();
                                                         }

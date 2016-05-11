@@ -26,7 +26,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 
 import com.mercandalli.android.apps.files.common.util.StringPair;
-import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
+import com.mercandalli.android.library.base.precondition.Preconditions;
 
 import java.util.List;
 

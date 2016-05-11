@@ -10,10 +10,10 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.library.baselibrary.network.NetworkUtils;
-import com.mercandalli.android.library.baselibrary.notification.NotificationUtils;
-import com.mercandalli.android.library.baselibrary.push.PushManager;
-import com.mercandalli.android.library.baselibrary.store.StoreUtils;
+import com.mercandalli.android.library.base.network.NetworkUtils;
+import com.mercandalli.android.library.base.notification.NotificationUtils;
+import com.mercandalli.android.library.base.push.PushManager;
+import com.mercandalli.android.library.base.store.StoreUtils;
 
 /**
  * Manage the notification push: id...

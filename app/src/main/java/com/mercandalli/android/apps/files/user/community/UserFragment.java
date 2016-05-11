@@ -38,13 +38,10 @@ import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
-import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IModelUserListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
 import com.mercandalli.android.apps.files.main.Config;
@@ -52,6 +49,7 @@ import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.user.AdapterModelUser;
 import com.mercandalli.android.apps.files.user.UserModel;
+import com.mercandalli.android.library.base.dialog.DialogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -185,38 +183,47 @@ public class UserFragment extends BackFragment {
                                 public void onClick(DialogInterface dialog, int item) {
                                     switch (item) {
                                         case 0:
-                                            DialogUtils.prompt(getContext(), "Send Message", "Write your message", "Send", new IStringListener() {
-                                                @Override
-                                                public void execute(String text) {
-                                                    String url = Constants.URL_DOMAIN + Config.ROUTE_USER_CONVERSATION + "/" + userModel.id;
-                                                    List<StringPair> parameters = new ArrayList<>();
-                                                    parameters.add(new StringPair("message", "" + text));
-
-                                                    new TaskPost(getActivity(), url, new IPostExecuteListener() {
+                                            DialogUtils.prompt(
+                                                    getContext(),
+                                                    "Send Message",
+                                                    "Write your message", "Send",
+                                                    new DialogUtils.OnDialogUtilsStringListener() {
                                                         @Override
-                                                        public void onPostExecute(JSONObject json, String body) {
+                                                        public void onDialogUtilsStringCalledBack(String text) {
+                                                            String url = Constants.URL_DOMAIN + Config.ROUTE_USER_CONVERSATION + "/" + userModel.id;
+                                                            List<StringPair> parameters = new ArrayList<>();
+                                                            parameters.add(new StringPair("message", "" + text));
 
+                                                            new TaskPost(getActivity(), url, new IPostExecuteListener() {
+                                                                @Override
+                                                                public void onPostExecute(JSONObject json, String body) {
+
+                                                                }
+                                                            }, parameters).execute();
                                                         }
-                                                    }, parameters).execute();
-                                                }
-                                            }, getString(android.R.string.cancel), null);
+                                                    }, getString(android.R.string.cancel), null);
                                             break;
                                         case 1:
-                                            DialogUtils.alert(getContext(), "Delete " + userModel.username + "?", "This process cannot be undone.", getString(R.string.delete), new IListener() {
-                                                @Override
-                                                public void execute() {
-                                                    if (Config.isUserAdmin()) {
-                                                        userModel.delete(getActivity(), new IPostExecuteListener() {
-                                                            @Override
-                                                            public void onPostExecute(JSONObject json, String body) {
-                                                                UserFragment.this.refreshList();
+                                            DialogUtils.alert(
+                                                    getContext(),
+                                                    "Delete " + userModel.username + "?",
+                                                    "This process cannot be undone.",
+                                                    getString(R.string.delete),
+                                                    new DialogUtils.OnDialogUtilsListener() {
+                                                        @Override
+                                                        public void onDialogUtilsCalledBack() {
+                                                            if (Config.isUserAdmin()) {
+                                                                userModel.delete(getActivity(), new IPostExecuteListener() {
+                                                                    @Override
+                                                                    public void onPostExecute(JSONObject json, String body) {
+                                                                        UserFragment.this.refreshList();
+                                                                    }
+                                                                });
+                                                            } else {
+                                                                Toast.makeText(getActivity(), "Not permitted.", Toast.LENGTH_SHORT).show();
                                                             }
-                                                        });
-                                                    } else {
-                                                        Toast.makeText(getActivity(), "Not permitted.", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-                                            }, getString(android.R.string.cancel), null);
+                                                        }
+                                                    }, getString(android.R.string.cancel), null);
                                             break;
                                     }
                                 }

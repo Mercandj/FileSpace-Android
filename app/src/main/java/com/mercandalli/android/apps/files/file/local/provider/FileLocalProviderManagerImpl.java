@@ -12,7 +12,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
-import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
+import com.mercandalli.android.library.base.precondition.Preconditions;
 
 import java.util.ArrayList;
 import java.util.List;

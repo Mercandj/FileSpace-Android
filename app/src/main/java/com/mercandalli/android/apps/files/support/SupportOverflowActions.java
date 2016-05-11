@@ -9,10 +9,10 @@ import android.view.View;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.IListener;
-import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.main.FileApp;
-import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
+import com.mercandalli.android.library.base.dialog.DialogUtils;
+import com.mercandalli.android.library.base.precondition.Preconditions;
 
 /**
  * A simple class that open a Dialog with the actions related to the {@link FileModel}.
@@ -68,9 +68,9 @@ public class SupportOverflowActions implements PopupMenu.OnMenuItemClickListener
                 mDeleteString,
                 "Delete " + supportComment.getComment() + " ?",
                 mActivity.getResources().getString(android.R.string.yes),
-                new IListener() {
+                new DialogUtils.OnDialogUtilsListener() {
                     @Override
-                    public void execute() {
+                    public void onDialogUtilsCalledBack() {
                         mSupportManager.deleteSupportComment(supportComment);
                     }
                 },

@@ -8,7 +8,7 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.mercandalli.android.apps.files.BuildConfig;
 import com.mercandalli.android.apps.files.analytics.AnalyticsTrackers;
-import com.mercandalli.android.library.baselibrary.main.BaseManager;
+import com.mercandalli.android.library.base.main.BaseManager;
 
 import java.lang.ref.WeakReference;
 
@@ -45,8 +45,8 @@ public class FileApp extends MultiDexApplication {
 
         BaseManager.getInstance().initialize(
                 this,
-                Constants.URL_DOMAIN,
-                Constants.URL_FOLDER_API,
+                Constants.BASE_URL_DOMAIN,
+                Constants.BASE_URL_FOLDER_API,
                 Constants.GCM_SENDER,
                 BuildConfig.DEBUG);
 

@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mercandalli.android.library.baselibrary.device.Device;
+import com.mercandalli.android.library.base.device.Device;
 
 import java.util.ArrayList;
 import java.util.List;

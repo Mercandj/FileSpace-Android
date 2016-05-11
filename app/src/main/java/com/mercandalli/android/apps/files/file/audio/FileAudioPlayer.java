@@ -22,8 +22,8 @@ import com.google.android.gms.wearable.Wearable;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.shared.SharedAudioData;
 import com.mercandalli.android.apps.files.shared.SharedAudioPlayerUtils;
-import com.mercandalli.android.library.baselibrary.java.StringUtils;
-import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
+import com.mercandalli.android.library.base.java.StringUtils;
+import com.mercandalli.android.library.base.precondition.Preconditions;
 
 import java.io.IOException;
 import java.util.ArrayList;

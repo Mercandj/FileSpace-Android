@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.mercandalli.android.apps.files.admin.notification.simple.SendNotificationSimpleResponse;
 import com.mercandalli.android.apps.files.main.network.RetrofitUtils;
-import com.mercandalli.android.library.baselibrary.device.Device;
+import com.mercandalli.android.library.base.device.Device;
 
 import retrofit2.Call;
 import retrofit2.Callback;

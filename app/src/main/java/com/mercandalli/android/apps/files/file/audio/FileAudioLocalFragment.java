@@ -57,8 +57,8 @@ import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
-import com.mercandalli.android.library.baselibrary.java.StringUtils;
-import com.mercandalli.android.library.baselibrary.rating.Rating;
+import com.mercandalli.android.library.base.java.StringUtils;
+import com.mercandalli.android.library.base.rating.Rating;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

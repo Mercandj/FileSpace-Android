@@ -41,7 +41,6 @@ import com.mercandalli.android.apps.files.common.listener.ILocationListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.GpsUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.main.Config;
@@ -49,6 +48,7 @@ import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.user.UserLocationModel;
 import com.mercandalli.android.apps.files.user.UserModel;
+import com.mercandalli.android.library.base.dialog.DialogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -112,10 +112,14 @@ public class UserLocationFragment extends BackFragment {
         this.circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogUtils.alert(getContext(), "Share your location", "If you share your location you will see all the positions of every users", getString(android.R.string.yes),
-                        new IListener() {
+                DialogUtils.alert(
+                        getContext(),
+                        "Share your location",
+                        "If you share your location you will see all the positions of every users",
+                        getString(android.R.string.yes),
+                        new DialogUtils.OnDialogUtilsListener() {
                             @Override
-                            public void execute() {
+                            public void onDialogUtilsCalledBack() {
                                 location = GpsUtils.getGpsLocation(getContext(), new ILocationListener() {
                                     @Override
                                     public void execute(Location location) {

@@ -35,7 +35,7 @@ import com.mercandalli.android.apps.files.main.FileApp;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mercandalli.android.library.baselibrary.input.KeyboardUtils.hideSoftInput;
+import static com.mercandalli.android.library.base.input.KeyboardUtils.hideSoftInput;
 
 public class SearchActivity extends AppCompatActivity implements
         FileModelAdapter.OnFileClickListener,

@@ -33,7 +33,7 @@ import android.view.ViewGroup;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 
-import static com.mercandalli.android.library.baselibrary.view.StatusBarUtils.setStatusBarColor;
+import static com.mercandalli.android.library.base.view.StatusBarUtils.setStatusBarColor;
 
 /**
  * Created by Jonathan on 03/01/2015.

@@ -38,10 +38,8 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IModelUserListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.common.view.divider.DividerItemDecoration;
 import com.mercandalli.android.apps.files.main.Config;
@@ -50,6 +48,7 @@ import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.user.AdapterModelConversationUser;
 import com.mercandalli.android.apps.files.user.ConversationUserModel;
 import com.mercandalli.android.apps.files.user.UserModel;
+import com.mercandalli.android.library.base.dialog.DialogUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -160,21 +159,26 @@ public class TalkFragment extends BackFragment {
             final AdapterModelConversationUser adapter = new AdapterModelConversationUser(mConversationUserModels, new IModelUserListener() {
                 @Override
                 public void execute(final UserModel userModel) {
-                    DialogUtils.prompt(getContext(), "Send Message", "Write your message", "Send", new IStringListener() {
-                        @Override
-                        public void execute(String text) {
-                            String url = Constants.URL_DOMAIN + Config.ROUTE_USER_MESSAGE + "/" + userModel.id;
-                            List<StringPair> parameters = new ArrayList<>();
-                            parameters.add(new StringPair("message", "" + text));
-
-                            new TaskPost(getActivity(), url, new IPostExecuteListener() {
+                    DialogUtils.prompt(
+                            getContext(),
+                            "Send Message",
+                            "Write your message",
+                            "Send",
+                            new DialogUtils.OnDialogUtilsStringListener() {
                                 @Override
-                                public void onPostExecute(JSONObject json, String body) {
+                                public void onDialogUtilsStringCalledBack(String text) {
+                                    String url = Constants.URL_DOMAIN + Config.ROUTE_USER_MESSAGE + "/" + userModel.id;
+                                    List<StringPair> parameters = new ArrayList<>();
+                                    parameters.add(new StringPair("message", "" + text));
 
+                                    new TaskPost(getActivity(), url, new IPostExecuteListener() {
+                                        @Override
+                                        public void onPostExecute(JSONObject json, String body) {
+
+                                        }
+                                    }, parameters).execute();
                                 }
-                            }, parameters).execute();
-                        }
-                    }, "Cancel", null);
+                            }, "Cancel", null);
                 }
             });
             mRecyclerView.setAdapter(adapter);

@@ -24,13 +24,13 @@ import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
-import com.mercandalli.android.library.baselibrary.java.StringUtils;
+import com.mercandalli.android.library.base.java.StringUtils;
 
 import java.util.List;
 
 import static com.mercandalli.android.apps.files.support.SupportUtils.getDevice;
-import static com.mercandalli.android.library.baselibrary.device.DeviceUtils.getDeviceId;
-import static com.mercandalli.android.library.baselibrary.input.KeyboardUtils.hideSoftInput;
+import static com.mercandalli.android.library.base.device.DeviceUtils.getDeviceId;
+import static com.mercandalli.android.library.base.input.KeyboardUtils.hideSoftInput;
 
 public class SupportFragment extends BackFragment implements
         SupportCommentAdapter.OnSupportCommentLongClickListener,

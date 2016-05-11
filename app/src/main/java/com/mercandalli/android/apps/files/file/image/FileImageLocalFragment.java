@@ -29,9 +29,7 @@ import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter
 import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
-import com.mercandalli.android.apps.files.common.listener.IStringListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.common.util.DialogUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
@@ -44,7 +42,8 @@ import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
-import com.mercandalli.android.library.baselibrary.java.StringUtils;
+import com.mercandalli.android.library.base.dialog.DialogUtils;
+import com.mercandalli.android.library.base.java.StringUtils;
 
 import org.json.JSONObject;
 
@@ -238,40 +237,54 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
                                         if (fileModel.isDirectory()) {
                                             Toast.makeText(getContext(), R.string.not_implemented, Toast.LENGTH_SHORT).show();
                                         } else {
-                                            DialogUtils.alert(getActivity(), getString(R.string.upload), "Upload file " + fileModel.getName(), getString(R.string.upload), new IListener() {
-                                                @Override
-                                                public void execute() {
-                                                    if (fileModel.getFile() != null) {
-                                                        List<StringPair> parameters = mFileManager.getForUpload(fileModel);
-                                                        (new TaskPost(getActivity(), Constants.URL_DOMAIN + Config.ROUTE_FILE, new IPostExecuteListener() {
-                                                            @Override
-                                                            public void onPostExecute(JSONObject json, String body) {
+                                            DialogUtils.alert(
+                                                    getActivity(),
+                                                    getString(R.string.upload), "Upload file " + fileModel.getName(),
+                                                    getString(R.string.upload),
+                                                    new DialogUtils.OnDialogUtilsListener() {
+                                                        @Override
+                                                        public void onDialogUtilsCalledBack() {
+                                                            if (fileModel.getFile() != null) {
+                                                                List<StringPair> parameters = mFileManager.getForUpload(fileModel);
+                                                                (new TaskPost(getActivity(), Constants.URL_DOMAIN + Config.ROUTE_FILE, new IPostExecuteListener() {
+                                                                    @Override
+                                                                    public void onPostExecute(JSONObject json, String body) {
 
+                                                                    }
+                                                                }, parameters, fileModel.getFile())).execute();
                                                             }
-                                                        }, parameters, fileModel.getFile())).execute();
-                                                    }
-                                                }
-                                            }, getString(android.R.string.cancel), null);
+                                                        }
+                                                    }, getString(android.R.string.cancel), null);
                                         }
                                         break;
                                     case 1:
                                         mFileManager.openLocalAs(getActivity(), fileModel);
                                         break;
                                     case 2:
-                                        DialogUtils.prompt(getActivity(), "Rename", "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Ok", new IStringListener() {
-                                            @Override
-                                            public void execute(String text) {
-                                                mFileManager.rename(fileModel, text, mRefreshActivityAdapterListener);
-                                            }
-                                        }, "Cancel", null, fileModel.getFullName());
+                                        DialogUtils.prompt(
+                                                getActivity(),
+                                                "Rename",
+                                                "Rename " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?",
+                                                "Ok",
+                                                new DialogUtils.OnDialogUtilsStringListener() {
+                                                    @Override
+                                                    public void onDialogUtilsStringCalledBack(String text) {
+                                                        mFileManager.rename(fileModel, text, mRefreshActivityAdapterListener);
+                                                    }
+                                                }, "Cancel", null, fileModel.getFullName());
                                         break;
                                     case 3:
-                                        DialogUtils.alert(getActivity(), "Delete", "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?", "Yes", new IListener() {
-                                            @Override
-                                            public void execute() {
-                                                mFileManager.delete(fileModel, mRefreshActivityAdapterListener);
-                                            }
-                                        }, "No", null);
+                                        DialogUtils.alert(
+                                                getActivity(),
+                                                "Delete",
+                                                "Delete " + (fileModel.isDirectory() ? "directory" : "file") + " " + fileModel.getName() + " ?",
+                                                "Yes",
+                                                new DialogUtils.OnDialogUtilsListener() {
+                                                    @Override
+                                                    public void onDialogUtilsCalledBack() {
+                                                        mFileManager.delete(fileModel, mRefreshActivityAdapterListener);
+                                                    }
+                                                }, "No", null);
                                         break;
                                     case 4:
                                         DialogUtils.alert(getActivity(),

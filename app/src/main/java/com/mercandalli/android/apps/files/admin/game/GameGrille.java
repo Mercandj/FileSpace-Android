@@ -1,6 +1,6 @@
 package com.mercandalli.android.apps.files.admin.game;
 
-import com.mercandalli.android.library.baselibrary.java.MathUtils;
+import com.mercandalli.android.library.base.java.MathUtils;
 
 import java.util.ArrayList;
 import java.util.List;

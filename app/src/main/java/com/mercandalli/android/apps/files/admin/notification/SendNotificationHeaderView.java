@@ -35,7 +35,7 @@ import android.widget.Toast;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.admin.notification.simple.SendNotificationSimpleResponse;
 import com.mercandalli.android.apps.files.main.network.RetrofitUtils;
-import com.mercandalli.android.library.baselibrary.push.PushManager;
+import com.mercandalli.android.library.base.push.PushManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.mercandalli.android.library.baselibrary.view.ViewUtils.dpToPx;
+import static com.mercandalli.android.library.base.view.ViewUtils.dpToPx;
 
 public class SendNotificationHeaderView extends CardView implements
         AdapterView.OnItemSelectedListener,

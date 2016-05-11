@@ -43,9 +43,9 @@ import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
 import com.mercandalli.android.apps.files.main.FileApp;
-import com.mercandalli.android.library.baselibrary.java.StringUtils;
-import com.mercandalli.android.library.baselibrary.precondition.Preconditions;
-import com.mercandalli.android.library.baselibrary.view.ViewUtils;
+import com.mercandalli.android.library.base.java.StringUtils;
+import com.mercandalli.android.library.base.precondition.Preconditions;
+import com.mercandalli.android.library.base.view.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
 
-import static com.mercandalli.android.library.baselibrary.view.ViewUtils.spToPx;
+import static com.mercandalli.android.library.base.view.ViewUtils.spToPx;
 
 
 public class StorageProgressBarWrapper extends FrameLayout {

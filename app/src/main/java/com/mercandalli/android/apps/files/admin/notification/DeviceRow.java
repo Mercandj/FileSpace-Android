@@ -30,10 +30,10 @@ import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.IListener;
-import com.mercandalli.android.apps.files.common.util.DialogUtils;
-import com.mercandalli.android.library.baselibrary.device.Device;
+import com.mercandalli.android.library.base.device.Device;
+import com.mercandalli.android.library.base.dialog.DialogUtils;
 
-import static com.mercandalli.android.library.baselibrary.view.ViewUtils.dpToPx;
+import static com.mercandalli.android.library.base.view.ViewUtils.dpToPx;
 
 /* package */ class DeviceRow extends CardView implements View.OnClickListener {
 
@@ -89,9 +89,9 @@ import static com.mercandalli.android.library.baselibrary.view.ViewUtils.dpToPx;
                                 mDevice.getAndroidAppVersionName() + "(" +
                                 mDevice.getAndroidAppVersionCode() + ") ?",
                         getResources().getString(android.R.string.yes),
-                        new IListener() {
+                        new DialogUtils.OnDialogUtilsListener() {
                             @Override
-                            public void execute() {
+                            public void onDialogUtilsCalledBack() {
                                 SendNotificationManager.getInstance().delete(mDevice);
                             }
                         },

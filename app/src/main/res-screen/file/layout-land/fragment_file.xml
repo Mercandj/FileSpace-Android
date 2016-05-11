@@ -27,7 +27,7 @@
         app:tabTextAppearance="@style/TextAppearanceTabLayout"
         app:tabTextColor="@android:color/white" />
 
-    <com.mercandalli.android.library.baselibrary.view.RtlViewPager
+    <com.mercandalli.android.library.base.view.RtlViewPager
         android:id="@+id/fragment_file_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
