@@ -56,6 +56,7 @@ import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.library.base.dialog.DialogUtils;
+import com.mercandalli.android.library.base.event.EventManager;
 import com.mercandalli.android.library.base.rating.Rating;
 
 import java.io.File;
@@ -302,6 +303,7 @@ public class FileLocalFragment extends BackFragment implements
             adapter.notifyItemChanged(position);
         } else */
         if (mFilesList.get(position).isDirectory()) {
+            EventManager.getInstance().sendBasicEvent("test", "click", "folder", "", this, "");
             Rating.askRating(
                     getContext(),
                     5,
