@@ -303,7 +303,14 @@ public class FileLocalFragment extends BackFragment implements
             adapter.notifyItemChanged(position);
         } else */
         if (mFilesList.get(position).isDirectory()) {
-            EventManager.getInstance().sendBasicEvent("test", "click", "folder", "", this, "");
+            EventManager.getInstance().sendBasicEvent(
+                    "key_filespace_folder_local_clicked",
+                    "test",
+                    "click",
+                    "folder",
+                    "",
+                    this,
+                    "");
             Rating.askRating(
                     getContext(),
                     5,
