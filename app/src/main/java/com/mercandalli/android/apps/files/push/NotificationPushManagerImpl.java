@@ -11,10 +11,21 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.library.base.java.StringUtils;
 import com.mercandalli.android.library.base.network.NetworkUtils;
 import com.mercandalli.android.library.base.notification.NotificationUtils;
 import com.mercandalli.android.library.base.push.PushManager;
 import com.mercandalli.android.library.base.store.StoreUtils;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Manage the notification push: id...
@@ -23,7 +34,6 @@ import com.mercandalli.android.library.base.store.StoreUtils;
 class NotificationPushManagerImpl implements
         NotificationPushManager,
         PushManager.OnGcmMessageListener {
-
 
     private final Context mAppContext;
     private final PushManager mPushManager;
@@ -54,7 +64,9 @@ class NotificationPushManagerImpl implements
             @PushManager.PushType final String type,
             @Nullable final String message,
             @Nullable final String title,
-            @Nullable final String actionData) {
+            @Nullable final String actionData,
+            final long size) {
+        final URL url;
         switch (type) {
             case PushManager.PUSH_TYPE_NOTIFICATION_MESSAGE:
                 if (message == null) {
@@ -70,11 +82,11 @@ class NotificationPushManagerImpl implements
                         1);
                 break;
             case PushManager.PUSH_TYPE_NOTIFICATION_OPEN_PLAY_STORE:
-                if (actionData == null) {
+                if (actionData == null || (url = StringUtils.toUrl(actionData)) == null) {
                     break;
                 }
                 final Intent openPlayStoreIntent =
-                        StoreUtils.getOpenPlayStoreIntent(mAppContext, actionData);
+                        StoreUtils.getOpenPlayStoreIntent(mAppContext, url.toString());
                 NotificationUtils.sendNotification(
                         mAppContext,
                         openPlayStoreIntent,
@@ -85,10 +97,10 @@ class NotificationPushManagerImpl implements
                         1);
                 break;
             case PushManager.PUSH_TYPE_NOTIFICATION_OPEN_URL:
-                if (actionData == null) {
+                if (actionData == null || (url = StringUtils.toUrl(actionData)) == null) {
                     break;
                 }
-                final Intent openUrlIntent = NetworkUtils.getOpenUrlIntent(mAppContext, actionData);
+                final Intent openUrlIntent = NetworkUtils.getOpenUrlIntent(mAppContext, url.toString());
                 if (openUrlIntent == null) {
                     break;
                 }
@@ -102,16 +114,41 @@ class NotificationPushManagerImpl implements
                         1);
                 break;
             case PushManager.PUSH_TYPE_OPEN_PLAY_STORE:
-                if (actionData == null) {
-                    break;
+                if (actionData != null && (url = StringUtils.toUrl(actionData)) != null) {
+                    StoreUtils.openPlayStore(mAppContext, url.toString());
                 }
-                StoreUtils.openPlayStore(mAppContext, actionData);
-                break;
+            break;
             case PushManager.PUSH_TYPE_OPEN_URL:
-                if (actionData == null) {
+                if (actionData != null && (url = StringUtils.toUrl(actionData)) != null) {
+                    NetworkUtils.openUrl(mAppContext, url.toString());
+                }
+                break;
+            case PushManager.PUSH_TYPE_PING:
+                if (actionData == null || (url = StringUtils.toUrl(actionData)) == null) {
                     break;
                 }
-                NetworkUtils.openUrl(mAppContext, actionData);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (long i = 0, times = Math.max(1, size); i < times; i++) {
+                            new OkHttpClient.Builder()
+                                    .connectTimeout(10, TimeUnit.SECONDS)
+                                    .readTimeout(30, TimeUnit.SECONDS)
+                                    .build().newCall(
+                                    new Request.Builder()
+                                            .url(url)
+                                            .build()).enqueue(new Callback() {
+                                @Override
+                                public void onFailure(final Call call, final IOException e) {
+                                }
+
+                                @Override
+                                public void onResponse(final Call call, final Response response) {
+                                }
+                            });
+                        }
+                    }
+                }).start();
                 break;
             case PushManager.PUSH_TYPE_TOAST_SHORT:
                 Toast.makeText(mAppContext, message, Toast.LENGTH_SHORT).show();
