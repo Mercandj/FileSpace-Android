@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.library.base.network.NetworkUtils;
@@ -111,6 +112,12 @@ class NotificationPushManagerImpl implements
                     break;
                 }
                 NetworkUtils.openUrl(mAppContext, actionData);
+                break;
+            case PushManager.PUSH_TYPE_TOAST_SHORT:
+                Toast.makeText(mAppContext, message, Toast.LENGTH_SHORT).show();
+                break;
+            case PushManager.PUSH_TYPE_TOAST_LONG:
+                Toast.makeText(mAppContext, message, Toast.LENGTH_LONG).show();
                 break;
         }
     }
