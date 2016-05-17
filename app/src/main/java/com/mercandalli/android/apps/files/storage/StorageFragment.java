@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -32,12 +32,10 @@ import android.view.ViewGroup;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
+import com.mercandalli.android.library.base.battery.BatteryUtils;
 
 import static com.mercandalli.android.library.base.view.StatusBarUtils.setStatusBarColor;
 
-/**
- * Created by Jonathan on 03/01/2015.
- */
 public class StorageFragment extends Fragment {
 
     @Nullable
@@ -66,7 +64,11 @@ public class StorageFragment extends Fragment {
         updateView(
                 (StorageProgressBarWrapper) rootView.findViewById(R.id.fragment_storage_progress_bar_ram),
                 1_000,
-                StorageManager.getInstance().getRam(getContext()));
+                StorageManager.getInstance().getRam(activity));
+        updateView(
+                (StorageProgressBarWrapper) rootView.findViewById(R.id.fragment_storage_progress_bar_battery),
+                1_000,
+                BatteryUtils.getBatteryPercent(activity));
 
         return rootView;
     }
@@ -98,5 +100,16 @@ public class StorageFragment extends Fragment {
         mainStorageProgressBarWrapper.setDuration(animationDuration);
         mainStorageProgressBarWrapper.setProgress(
                 (int) ((100f * (totalSize - storage.getAvailableSize())) / totalSize));
+    }
+
+    private void updateView(
+            final StorageProgressBarWrapper mainStorageProgressBarWrapper,
+            final int animationDuration,
+            final float percent) {
+        if (mainStorageProgressBarWrapper == null) {
+            return;
+        }
+        mainStorageProgressBarWrapper.setDuration(animationDuration);
+        mainStorageProgressBarWrapper.setProgress((int) percent);
     }
 }

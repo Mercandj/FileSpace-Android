@@ -19,62 +19,98 @@
         android:layout_marginTop="?attr/actionBarSize"
         android:orientation="horizontal">
 
+        <LinearLayout
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginEnd="26dp"
+                android:layout_marginLeft="26dp"
+                android:layout_marginRight="26dp"
+                android:layout_marginStart="26dp"
+                android:layout_weight="0.5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Storage" />
+
+                <com.mercandalli.android.apps.files.storage.StorageProgressBarWrapper
+                    android:id="@+id/fragment_storage_progress_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:spb_textLabelSize="6sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginEnd="26dp"
+                android:layout_marginLeft="26dp"
+                android:layout_marginRight="26dp"
+                android:layout_marginStart="26dp"
+                android:layout_weight="0.5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Ram" />
+
+                <com.mercandalli.android.apps.files.storage.StorageProgressBarWrapper
+                    android:id="@+id/fragment_storage_progress_bar_ram"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:spb_textLabelSize="6sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginEnd="26dp"
+                android:layout_marginLeft="26dp"
+                android:layout_marginRight="26dp"
+                android:layout_marginStart="26dp"
+                android:layout_weight="0.5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="Battery" />
+
+                <com.mercandalli.android.apps.files.storage.StorageProgressBarWrapper
+                    android:id="@+id/fragment_storage_progress_bar_battery"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:spb_textLabelSize="6sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.7">
 
-            <com.mercandalli.android.apps.files.storage.StorageProgressBarWrapper
-                android:id="@+id/fragment_storage_progress_bar"
+            <FrameLayout
                 android:layout_width="220dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                app:spb_textLabelSize="18sp" />
+                android:layout_gravity="center_horizontal" />
 
         </FrameLayout>
 
-        <LinearLayout
-            android:layout_width="150dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <com.mercandalli.android.apps.files.storage.StorageProgressBarWrapper
-                android:id="@+id/fragment_storage_progress_bar_ram"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="26dp"
-                android:layout_marginLeft="26dp"
-                android:layout_marginRight="26dp"
-                android:layout_marginStart="26dp"
-                android:layout_weight="0.5"
-                app:spb_textLabelSize="8sp" />
-
-            <com.mercandalli.android.apps.files.storage.StorageProgressBarWrapper
-                android:id="@+id/fragment_storage_progress_bar_music"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="26dp"
-                android:layout_marginLeft="26dp"
-                android:layout_marginRight="26dp"
-                android:layout_marginStart="26dp"
-                android:layout_weight="0.5"
-                app:spb_textLabelSize="8sp" />
-
-            <com.mercandalli.android.apps.files.storage.StorageProgressBarWrapper
-                android:id="@+id/fragment_storage_progress_bar_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="26dp"
-                android:layout_marginLeft="26dp"
-                android:layout_marginRight="26dp"
-                android:layout_marginStart="26dp"
-                android:layout_weight="0.5"
-                app:spb_textLabelSize="8sp" />
-
-        </LinearLayout>
-
     </LinearLayout>
-
 
     <View
         android:layout_width="match_parent"
