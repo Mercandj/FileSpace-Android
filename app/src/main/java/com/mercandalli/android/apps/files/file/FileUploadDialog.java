@@ -21,6 +21,7 @@ package com.mercandalli.android.apps.files.file;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ public class FileUploadDialog extends Dialog {
     @Inject
     FileManager mFileManager;
 
+    @NonNull
     private final Activity mActivity;
     private FileChooserDialog mFileChooserDialog;
     private FileModel mFileModel;
@@ -55,9 +57,9 @@ public class FileUploadDialog extends Dialog {
     }
 
     public FileUploadDialog(
-            final Activity activity,
+            @NonNull final Activity activity,
             final int idFileParent,
-            final @Nullable IListener listener) {
+            @Nullable final IListener listener) {
         super(activity);
 
         FileApp.get().getFileAppComponent().inject(this);

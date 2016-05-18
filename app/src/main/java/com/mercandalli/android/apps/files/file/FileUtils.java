@@ -36,8 +36,10 @@ import java.io.IOException;
 
 public class FileUtils {
 
+    @NonNull
     private static final String TAG = "FileUtils";
 
+    @Nullable
     private static String sSdCardPath = null;
 
     public static boolean isAudioPath(@NonNull final String pathBrut) {
