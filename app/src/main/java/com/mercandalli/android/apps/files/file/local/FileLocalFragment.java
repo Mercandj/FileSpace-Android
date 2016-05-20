@@ -57,7 +57,6 @@ import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.library.base.dialog.DialogUtils;
 import com.mercandalli.android.library.base.event.EventManager;
-import com.mercandalli.android.library.base.rating.Rating;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -83,6 +82,7 @@ public class FileLocalFragment extends BackFragment implements
     /**
      * A key for the view pager position.
      */
+    @NonNull
     private static final String ARG_POSITION_IN_VIEW_PAGER = "FileLocalFragment.Args.ARG_POSITION_IN_VIEW_PAGER";
 
     @NonNull
@@ -312,12 +312,6 @@ public class FileLocalFragment extends BackFragment implements
                     "",
                     this,
                     "");
-            Rating.askRating(
-                    getContext(),
-                    5,
-                    R.style.RatingDialog,
-                    getString(R.string.rating_popup_title),
-                    getFragmentManager());
             mCurrentDirectory = new File(mFilesList.get(position).getUrl());
             refreshCurrentList();
         } else {
