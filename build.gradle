@@ -33,9 +33,11 @@ allprojects {
     repositories {
         jcenter()
 
+        /*
         maven {
             url localMavenUrl
         }
+        */
     }
 }
 

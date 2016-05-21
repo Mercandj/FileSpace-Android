@@ -168,7 +168,7 @@ dependencies {
     }
 
     // Mercandalli main library
-    compile 'com.mercandalli.android.library:base:1.0.0'
+    compile 'com.mercandalli.android.library.base:base-core:1.0.0-beta1'
 
     // Testing-only dependencies
     androidTestCompile 'com.android.support:support-annotations:23.4.0'
