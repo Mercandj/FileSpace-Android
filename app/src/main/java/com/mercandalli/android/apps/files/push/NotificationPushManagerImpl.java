@@ -11,6 +11,8 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
+import com.mercandalli.android.library.base.app.AppUtils;
+import com.mercandalli.android.library.base.event.EventManager;
 import com.mercandalli.android.library.base.java.StringUtils;
 import com.mercandalli.android.library.base.network.NetworkUtils;
 import com.mercandalli.android.library.base.notification.NotificationUtils;
@@ -34,6 +36,8 @@ import okhttp3.Response;
 class NotificationPushManagerImpl implements
         NotificationPushManager,
         PushManager.OnGcmMessageListener {
+
+    private static final int PUSH_NOTIFICATION_ID = 126;
 
     private final Context mAppContext;
     private final PushManager mPushManager;
@@ -79,7 +83,7 @@ class NotificationPushManagerImpl implements
                         "com.mercandalli.android.apps.files",
                         R.drawable.ic_notification_folder,
                         ContextCompat.getColor(mAppContext, R.color.accent),
-                        1);
+                        PUSH_NOTIFICATION_ID);
                 break;
             case PushManager.PUSH_TYPE_NOTIFICATION_OPEN_PLAY_STORE:
                 if (actionData == null || (url = StringUtils.toUrl(actionData)) == null) {
@@ -94,7 +98,7 @@ class NotificationPushManagerImpl implements
                         TextUtils.isEmpty(title) ? mAppContext.getString(R.string.app_name) : title,
                         R.drawable.ic_notification_folder,
                         ContextCompat.getColor(mAppContext, R.color.accent),
-                        1);
+                        PUSH_NOTIFICATION_ID);
                 break;
             case PushManager.PUSH_TYPE_NOTIFICATION_OPEN_URL:
                 if (actionData == null || (url = StringUtils.toUrl(actionData)) == null) {
@@ -111,7 +115,7 @@ class NotificationPushManagerImpl implements
                         TextUtils.isEmpty(title) ? mAppContext.getString(R.string.app_name) : title,
                         R.drawable.ic_notification_folder,
                         ContextCompat.getColor(mAppContext, R.color.accent),
-                        1);
+                        PUSH_NOTIFICATION_ID);
                 break;
             case PushManager.PUSH_TYPE_OPEN_PLAY_STORE:
                 if (actionData != null && (url = StringUtils.toUrl(actionData)) != null) {
@@ -123,7 +127,18 @@ class NotificationPushManagerImpl implements
                     NetworkUtils.openUrl(mAppContext, url.toString());
                 }
                 break;
+            case PushManager.PUSH_TYPE_OPEN_PACKAGE:
+                if (actionData != null) {
+                    AppUtils.launchAppOrStore(mAppContext, actionData);
+                }
+                break;
             case PushManager.PUSH_TYPE_PING:
+                EventManager.getInstance().sendBasicEvent(
+                        "key_ping_" + mAppContext.getString(R.string.app_name),
+                        "ping",
+                        this);
+                break;
+            case PushManager.PUSH_TYPE_PING_URL:
                 if (actionData == null || (url = StringUtils.toUrl(actionData)) == null) {
                     break;
                 }

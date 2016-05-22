@@ -3,6 +3,7 @@ apply plugin: 'io.fabric'
 apply plugin: 'com.neenbedankt.android-apt'
 apply from: '../config/jenkins/jenkins.gradle'
 apply from: '../config/quality/quality.gradle'
+apply from: '../config/dependency/dependencies.gradle'
 apply plugin: 'spoon'
 
 android {
@@ -168,7 +169,7 @@ dependencies {
     }
 
     // Mercandalli main library
-    compile 'com.mercandalli.android.library.base:base-core:1.0.0-beta1'
+    compile rootProject.ext.dependencies.base
 
     // Testing-only dependencies
     androidTestCompile 'com.android.support:support-annotations:23.4.0'
