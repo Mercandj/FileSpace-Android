@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.library.base.app.AppUtils;
 import com.mercandalli.android.library.base.event.EventManager;
+import com.mercandalli.android.library.base.java.ContextUtils;
 import com.mercandalli.android.library.base.java.StringUtils;
 import com.mercandalli.android.library.base.network.NetworkUtils;
 import com.mercandalli.android.library.base.notification.NotificationUtils;
@@ -39,10 +40,13 @@ class NotificationPushManagerImpl implements
 
     private static final int PUSH_NOTIFICATION_ID = 126;
 
+    @NonNull
     private final Context mAppContext;
+
+    @NonNull
     private final PushManager mPushManager;
 
-    /* package */ NotificationPushManagerImpl(final Application application) {
+    /* package */ NotificationPushManagerImpl(@NonNull final Application application) {
         mAppContext = application.getApplicationContext();
         mPushManager = PushManager.getInstance();
         mPushManager.addOnGcmMessageListener(this);
@@ -62,7 +66,7 @@ class NotificationPushManagerImpl implements
     }
 
     @Override
-    public void onGcmMessageReceived(
+    public boolean onGcmMessageReceived(
             @Nullable final String from,
             @NonNull final Bundle data,
             @PushManager.PushType final String type,
@@ -82,6 +86,7 @@ class NotificationPushManagerImpl implements
                         TextUtils.isEmpty(title) ? mAppContext.getString(R.string.app_name) : title,
                         "com.mercandalli.android.apps.files",
                         R.drawable.ic_notification_folder,
+                        ContextUtils.extractIconBitmap(mAppContext),
                         ContextCompat.getColor(mAppContext, R.color.accent),
                         PUSH_NOTIFICATION_ID);
                 break;
@@ -97,6 +102,7 @@ class NotificationPushManagerImpl implements
                         message,
                         TextUtils.isEmpty(title) ? mAppContext.getString(R.string.app_name) : title,
                         R.drawable.ic_notification_folder,
+                        ContextUtils.extractIconBitmap(mAppContext),
                         ContextCompat.getColor(mAppContext, R.color.accent),
                         PUSH_NOTIFICATION_ID);
                 break;
@@ -114,6 +120,7 @@ class NotificationPushManagerImpl implements
                         message,
                         TextUtils.isEmpty(title) ? mAppContext.getString(R.string.app_name) : title,
                         R.drawable.ic_notification_folder,
+                        ContextUtils.extractIconBitmap(mAppContext),
                         ContextCompat.getColor(mAppContext, R.color.accent),
                         PUSH_NOTIFICATION_ID);
                 break;
@@ -121,7 +128,7 @@ class NotificationPushManagerImpl implements
                 if (actionData != null && (url = StringUtils.toUrl(actionData)) != null) {
                     StoreUtils.openPlayStore(mAppContext, url.toString());
                 }
-            break;
+                break;
             case PushManager.PUSH_TYPE_OPEN_URL:
                 if (actionData != null && (url = StringUtils.toUrl(actionData)) != null) {
                     NetworkUtils.openUrl(mAppContext, url.toString());
@@ -172,5 +179,6 @@ class NotificationPushManagerImpl implements
                 Toast.makeText(mAppContext, message, Toast.LENGTH_LONG).show();
                 break;
         }
+        return true;
     }
 }
