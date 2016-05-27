@@ -12,6 +12,7 @@
             android:id="@+id/view_nav_drawer_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:foreground="?selectableItemBackground"
             android:background="@color/status_bar" />
 
         <FrameLayout

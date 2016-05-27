@@ -80,7 +80,7 @@ class FileImageManagerImpl implements FileImageManager {
 
         mFileLocalProviderManager.getFileImagePaths(new FileLocalProviderManager.GetFileImageListener() {
             @Override
-            public void onGetFileImage(final List<String> fileImagePaths) {
+            public void onGetFileImage(@NonNull final List<String> fileImagePaths) {
 
                 final List<FileModel> fileModels = new ArrayList<>();
                 for (final String path : fileImagePaths) {
@@ -122,7 +122,7 @@ class FileImageManagerImpl implements FileImageManager {
         mFileLocalProviderManager.getFileImagePaths(
                 new FileLocalProviderManager.GetFileImageListener() {
                     @Override
-                    public void onGetFileImage(final List<String> fileImagePaths) {
+                    public void onGetFileImage(@NonNull final List<String> fileImagePaths) {
                         // Used to count the number of music inside.
                         final Map<String, MutableInt> directories = new HashMap<>();
 

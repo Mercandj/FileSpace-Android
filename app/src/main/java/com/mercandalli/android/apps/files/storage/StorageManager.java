@@ -5,9 +5,11 @@ import android.content.Context;
 import android.os.Environment;
 import android.os.StatFs;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 public final class StorageManager {
 
+    @Nullable
     private static StorageManager sInstance;
 
     @NonNull
@@ -22,7 +24,6 @@ public final class StorageManager {
     private Storage mStorageRam;
 
     private StorageManager() {
-
     }
 
     @NonNull

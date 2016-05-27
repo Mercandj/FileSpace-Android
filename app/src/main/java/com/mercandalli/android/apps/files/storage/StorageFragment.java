@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -29,17 +29,32 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
+import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
+import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.library.base.battery.BatteryUtils;
+
+import java.util.List;
 
 import static com.mercandalli.android.library.base.view.StatusBarUtils.setStatusBarColor;
 
-public class StorageFragment extends Fragment {
+public class StorageFragment extends Fragment implements
+        FileLocalProviderManager.GetFilePathsListener,
+        FileLocalProviderManager.GetFileAudioListener,
+        FileLocalProviderManager.GetFileImageListener {
 
     @Nullable
     private SetToolbarCallback mSetToolbarCallback;
+
+    @Nullable
+    private TextView mNumberFiles;
+    @Nullable
+    private TextView mNumberMusics;
+    @Nullable
+    private TextView mNumberPhotos;
 
     public static StorageFragment newInstance() {
         return new StorageFragment();
@@ -70,7 +85,27 @@ public class StorageFragment extends Fragment {
                 1_000,
                 BatteryUtils.getBatteryPercent(activity));
 
+        mNumberFiles = (TextView) rootView.findViewById(R.id.fragment_storage_number_files);
+        mNumberMusics = (TextView) rootView.findViewById(R.id.fragment_storage_number_musics);
+        mNumberPhotos = (TextView) rootView.findViewById(R.id.fragment_storage_number_photos);
+
+        final FileLocalProviderManager fileLocalProviderManager =
+                FileApp.get().getFileAppComponent().provideFileLocalProviderManager();
+        fileLocalProviderManager.getFilePaths(this);
+        fileLocalProviderManager.getFileAudioPaths(this);
+        fileLocalProviderManager.getFileImagePaths(this);
+
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        final FileLocalProviderManager fileLocalProviderManager =
+                FileApp.get().getFileAppComponent().provideFileLocalProviderManager();
+        fileLocalProviderManager.removeGetFilePathsListener(this);
+        fileLocalProviderManager.removeGetFileAudioListener(this);
+        fileLocalProviderManager.removeGetFileImageListener(this);
+        super.onDestroyView();
     }
 
     @Override
@@ -85,8 +120,8 @@ public class StorageFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        super.onDetach();
         mSetToolbarCallback = null;
+        super.onDetach();
     }
 
     private void updateView(
@@ -111,5 +146,26 @@ public class StorageFragment extends Fragment {
         }
         mainStorageProgressBarWrapper.setDuration(animationDuration);
         mainStorageProgressBarWrapper.setProgress((int) percent);
+    }
+
+    @Override
+    public void onGetFile(@NonNull final List<String> filePaths) {
+        if (mNumberFiles != null) {
+            mNumberFiles.setText(filePaths.size() + " files");
+        }
+    }
+
+    @Override
+    public void onGetFileAudio(@NonNull final List<String> fileAudioPaths) {
+        if (mNumberMusics != null) {
+            mNumberMusics.setText(fileAudioPaths.size() + " musics");
+        }
+    }
+
+    @Override
+    public void onGetFileImage(@NonNull final List<String> fileImagePaths) {
+        if (mNumberPhotos != null) {
+            mNumberPhotos.setText(fileImagePaths.size() + " photos");
+        }
     }
 }

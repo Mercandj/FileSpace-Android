@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -106,7 +107,43 @@
             <FrameLayout
                 android:layout_width="220dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/fragment_storage_number_files"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="18sp"
+                        tools:text="10 files" />
+
+                    <TextView
+                        android:id="@+id/fragment_storage_number_musics"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="14dp"
+                        android:textSize="18sp"
+                        tools:text="10 musics" />
+
+                    <TextView
+                        android:id="@+id/fragment_storage_number_photos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="14dp"
+                        android:textSize="18sp"
+                        tools:text="10 photos" />
+
+                </LinearLayout>
+
+            </FrameLayout>
 
         </FrameLayout>
 
