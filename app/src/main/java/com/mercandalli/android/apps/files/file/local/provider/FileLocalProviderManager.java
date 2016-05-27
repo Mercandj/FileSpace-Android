@@ -1,6 +1,7 @@
 package com.mercandalli.android.apps.files.file.local.provider;
 
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.lang.annotation.Retention;
@@ -23,13 +24,17 @@ public interface FileLocalProviderManager {
 
     void load(@Nullable final FileProviderListener fileProviderListener);
 
-    void getFilePaths(final GetFileListener getFileListener);
+    void getFilePaths(final GetFilePathsListener getFilePathsListener);
+    void removeGetFilePathsListener(final GetFilePathsListener getFilePathsListener);
 
     void getFileAudioPaths(final GetFileAudioListener getFileAudioListener);
+    void removeGetFileAudioListener(final GetFileAudioListener getFileAudioListener);
 
     void getFileImagePaths(final GetFileImageListener getFileImageListener);
+    void removeGetFileImageListener(final GetFileImageListener getFileImageListener);
 
     void getFileVideoPaths(final GetFileVideoListener getFileVideoListener);
+    void removeGetFileVideoListener(final GetFileVideoListener getFileVideoListener);
 
     boolean registerFileProviderListener(final FileProviderListener fileProviderListener);
 
@@ -37,20 +42,20 @@ public interface FileLocalProviderManager {
 
     void clearCache();
 
-    interface GetFileListener {
-        void onGetFile(final List<String> filePaths);
+    interface GetFilePathsListener {
+        void onGetFile(@NonNull final List<String> filePaths);
     }
 
     interface GetFileAudioListener {
-        void onGetFileAudio(final List<String> fileAudioPaths);
+        void onGetFileAudio(@NonNull final List<String> fileAudioPaths);
     }
 
     interface GetFileImageListener {
-        void onGetFileImage(final List<String> fileImagePaths);
+        void onGetFileImage(@NonNull final List<String> fileImagePaths);
     }
 
     interface GetFileVideoListener {
-        void onGetFileVideo(final List<String> fileVideoPaths);
+        void onGetFileVideo(@NonNull final List<String> fileVideoPaths);
     }
 
     abstract class FileProviderListener {
@@ -62,28 +67,28 @@ public interface FileLocalProviderManager {
         /**
          * Audio, image.
          */
-        protected void onFileProviderAllBasicLoaded(final List<String> filePaths) {
+        protected void onFileProviderAllBasicLoaded(@NonNull final List<String> filePaths) {
             // To override
         }
 
         /**
          * Audio.
          */
-        public void onFileProviderAudioLoaded(final List<String> fileAudioPaths) {
+        public void onFileProviderAudioLoaded(@NonNull final List<String> fileAudioPaths) {
             // To override
         }
 
         /**
          * Image.
          */
-        protected void onFileProviderImageLoaded(final List<String> fileImagePaths) {
+        protected void onFileProviderImageLoaded(@NonNull final List<String> fileImagePaths) {
             // To override
         }
 
         /**
          * Video.
          */
-        protected void onFileProviderVideoLoaded(final List<String> fileImagePaths) {
+        protected void onFileProviderVideoLoaded(@NonNull final List<String> fileImagePaths) {
             // To override
         }
 

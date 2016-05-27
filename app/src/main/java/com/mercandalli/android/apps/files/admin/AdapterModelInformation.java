@@ -19,6 +19,8 @@
  */
 package com.mercandalli.android.apps.files.admin;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,11 +38,13 @@ import static com.mercandalli.android.library.base.view.ViewUtils.applyFont;
 
 public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelInformation.ViewHolder> {
 
-    private final List<ModelInformation> mModelInformations;
+    @NonNull
+    private final List<ModelInformation> mModelInformations = new ArrayList<>();
+
+    @Nullable
     private OnItemClickListener mItemClickListener;
 
     public AdapterModelInformation(final List<ModelInformation> modelInformations) {
-        this.mModelInformations = new ArrayList<>();
         this.mModelInformations.addAll(modelInformations);
     }
 

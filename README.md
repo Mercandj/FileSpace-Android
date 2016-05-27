@@ -59,8 +59,14 @@ OpenSource : just mention developer name if you use the code.
 ## DEV INFO
 
 2016-04-02
+Uncomment dexcount-gradle and launch ```gradlew :app:assembleDebug```
 Total methods in app-debug.apk: 61501 (93,84% used)
 Total fields in app-debug.apk:  35492 (54,16% used)
 Methods remaining in app-debug.apk: 4034
 Fields remaining in app-debug.apk:  30043
 
+2016-05-18
+Total methods in app-debug.apk: 61799 (94,30% used)
+Total fields in app-debug.apk:  35665 (54,42% used)
+Methods remaining in app-debug.apk: 3736
+Fields remaining in app-debug.apk:  29870

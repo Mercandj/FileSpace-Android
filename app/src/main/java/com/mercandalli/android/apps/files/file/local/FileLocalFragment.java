@@ -57,7 +57,6 @@ import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.library.base.dialog.DialogUtils;
 import com.mercandalli.android.library.base.event.EventManager;
-import com.mercandalli.android.library.base.rating.Rating;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -83,7 +82,17 @@ public class FileLocalFragment extends BackFragment implements
     /**
      * A key for the view pager position.
      */
+    @NonNull
     private static final String ARG_POSITION_IN_VIEW_PAGER = "FileLocalFragment.Args.ARG_POSITION_IN_VIEW_PAGER";
+
+    @NonNull
+    public static FileLocalFragment newInstance(final int positionInViewPager) {
+        final FileLocalFragment fileLocalFragment = new FileLocalFragment();
+        final Bundle args = new Bundle();
+        args.putInt(ARG_POSITION_IN_VIEW_PAGER, positionInViewPager);
+        fileLocalFragment.setArguments(args);
+        return fileLocalFragment;
+    }
 
     private RecyclerView mRecyclerView;
     private final List<FileModel> mFilesList = new ArrayList<>();
@@ -117,14 +126,6 @@ public class FileLocalFragment extends BackFragment implements
     private int mPositionInViewPager;
 
     private boolean mIsFabHidden;
-
-    public static FileLocalFragment newInstance(final int positionInViewPager) {
-        final FileLocalFragment fileLocalFragment = new FileLocalFragment();
-        final Bundle args = new Bundle();
-        args.putInt(ARG_POSITION_IN_VIEW_PAGER, positionInViewPager);
-        fileLocalFragment.setArguments(args);
-        return fileLocalFragment;
-    }
 
     /**
      * Default Constructor.
@@ -311,12 +312,6 @@ public class FileLocalFragment extends BackFragment implements
                     "",
                     this,
                     "");
-            Rating.askRating(
-                    getContext(),
-                    5,
-                    R.style.RatingDialog,
-                    getString(R.string.rating_popup_title),
-                    getFragmentManager());
             mCurrentDirectory = new File(mFilesList.get(position).getUrl());
             refreshCurrentList();
         } else {
@@ -381,28 +376,6 @@ public class FileLocalFragment extends BackFragment implements
     @Override
     public void clearFileToCopy() {
         mFilesToCopyList.clear();
-    }
-
-    public void goHome() {
-        mCurrentDirectory = createInitialDirectory();
-        this.refreshCurrentList();
-    }
-
-    public boolean hasItemSelected() {
-        /*
-        for (FileModel file : mFilesList)
-            if (file.selected)
-                return true;
-                */
-        return false;
-    }
-
-    public void deselectAll() {
-        /*
-        for (FileModel file : mFilesList)
-            file.selected = false;
-            */
-        updateAdapter();
     }
 
     /**
@@ -490,6 +463,28 @@ public class FileLocalFragment extends BackFragment implements
     @Override
     public void scrollTop() {
         mRecyclerView.smoothScrollToPosition(0);
+    }
+
+    public void goHome() {
+        mCurrentDirectory = createInitialDirectory();
+        this.refreshCurrentList();
+    }
+
+    public boolean hasItemSelected() {
+        /*
+        for (FileModel file : mFilesList)
+            if (file.selected)
+                return true;
+                */
+        return false;
+    }
+
+    public void deselectAll() {
+        /*
+        for (FileModel file : mFilesList)
+            file.selected = false;
+            */
+        updateAdapter();
     }
 
     private void findViews(final View rootView) {

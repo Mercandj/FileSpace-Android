@@ -29,19 +29,32 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
+import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
+import com.mercandalli.android.apps.files.main.FileApp;
+import com.mercandalli.android.library.base.battery.BatteryUtils;
+
+import java.util.List;
 
 import static com.mercandalli.android.library.base.view.StatusBarUtils.setStatusBarColor;
 
-/**
- * Created by Jonathan on 03/01/2015.
- */
-public class StorageFragment extends Fragment {
+public class StorageFragment extends Fragment implements
+        FileLocalProviderManager.GetFilePathsListener,
+        FileLocalProviderManager.GetFileAudioListener,
+        FileLocalProviderManager.GetFileImageListener {
 
     @Nullable
     private SetToolbarCallback mSetToolbarCallback;
+
+    @Nullable
+    private TextView mNumberFiles;
+    @Nullable
+    private TextView mNumberMusics;
+    @Nullable
+    private TextView mNumberPhotos;
 
     public static StorageFragment newInstance() {
         return new StorageFragment();
@@ -66,9 +79,33 @@ public class StorageFragment extends Fragment {
         updateView(
                 (StorageProgressBarWrapper) rootView.findViewById(R.id.fragment_storage_progress_bar_ram),
                 1_000,
-                StorageManager.getInstance().getRam(getContext()));
+                StorageManager.getInstance().getRam(activity));
+        updateView(
+                (StorageProgressBarWrapper) rootView.findViewById(R.id.fragment_storage_progress_bar_battery),
+                1_000,
+                BatteryUtils.getBatteryPercent(activity));
+
+        mNumberFiles = (TextView) rootView.findViewById(R.id.fragment_storage_number_files);
+        mNumberMusics = (TextView) rootView.findViewById(R.id.fragment_storage_number_musics);
+        mNumberPhotos = (TextView) rootView.findViewById(R.id.fragment_storage_number_photos);
+
+        final FileLocalProviderManager fileLocalProviderManager =
+                FileApp.get().getFileAppComponent().provideFileLocalProviderManager();
+        fileLocalProviderManager.getFilePaths(this);
+        fileLocalProviderManager.getFileAudioPaths(this);
+        fileLocalProviderManager.getFileImagePaths(this);
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        final FileLocalProviderManager fileLocalProviderManager =
+                FileApp.get().getFileAppComponent().provideFileLocalProviderManager();
+        fileLocalProviderManager.removeGetFilePathsListener(this);
+        fileLocalProviderManager.removeGetFileAudioListener(this);
+        fileLocalProviderManager.removeGetFileImageListener(this);
+        super.onDestroyView();
     }
 
     @Override
@@ -83,8 +120,8 @@ public class StorageFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        super.onDetach();
         mSetToolbarCallback = null;
+        super.onDetach();
     }
 
     private void updateView(
@@ -98,5 +135,37 @@ public class StorageFragment extends Fragment {
         mainStorageProgressBarWrapper.setDuration(animationDuration);
         mainStorageProgressBarWrapper.setProgress(
                 (int) ((100f * (totalSize - storage.getAvailableSize())) / totalSize));
+    }
+
+    private void updateView(
+            final StorageProgressBarWrapper mainStorageProgressBarWrapper,
+            final int animationDuration,
+            final float percent) {
+        if (mainStorageProgressBarWrapper == null) {
+            return;
+        }
+        mainStorageProgressBarWrapper.setDuration(animationDuration);
+        mainStorageProgressBarWrapper.setProgress((int) percent);
+    }
+
+    @Override
+    public void onGetFile(@NonNull final List<String> filePaths) {
+        if (mNumberFiles != null) {
+            mNumberFiles.setText(filePaths.size() + " files");
+        }
+    }
+
+    @Override
+    public void onGetFileAudio(@NonNull final List<String> fileAudioPaths) {
+        if (mNumberMusics != null) {
+            mNumberMusics.setText(fileAudioPaths.size() + " musics");
+        }
+    }
+
+    @Override
+    public void onGetFileImage(@NonNull final List<String> fileImagePaths) {
+        if (mNumberPhotos != null) {
+            mNumberPhotos.setText(fileImagePaths.size() + " photos");
+        }
     }
 }

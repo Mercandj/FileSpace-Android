@@ -1,0 +1,4 @@
+rootProject.ext.dependencies = [
+        base: "com.mercandalli.android.library.base:base-core:1.0.0-beta17"
+]
+

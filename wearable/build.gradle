@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply from: '../config/quality/quality.gradle'
+apply from: '../config/dependency/dependencies.gradle'
 
 android {
     compileSdkVersion 23
@@ -33,7 +34,7 @@ dependencies {
     compile 'com.google.android.support:wearable:1.4.0'
     compile 'com.google.android.gms:play-services-wearable:8.4.0'
     compile 'com.google.android.gms:play-services-appindexing:8.4.0'
-    
+
     // Mercandalli main library
-    compile 'com.mercandalli.android.library:base:1.0.0'
+    compile rootProject.ext.dependencies.base
 }

@@ -47,7 +47,8 @@
             android:text="PLAYLIST"
             android:textColor="@android:color/white"
             android:textSize="@dimen/default_text_12"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/view_file_header_audio_recent"

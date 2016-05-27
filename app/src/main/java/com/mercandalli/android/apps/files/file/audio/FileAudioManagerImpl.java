@@ -98,7 +98,7 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
         mIsGetAllLocalMusicLaunched = true;
         mFileLocalProviderManager.getFileAudioPaths(new FileLocalProviderManager.GetFileAudioListener() {
             @Override
-            public void onGetFileAudio(final List<String> fileAudioPaths) {
+            public void onGetFileAudio(@NonNull final List<String> fileAudioPaths) {
                 new Thread() {
                     @Override
                     public void run() {
@@ -133,7 +133,7 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
 
         mFileLocalProviderManager.getFileAudioPaths(new FileLocalProviderManager.GetFileAudioListener() {
             @Override
-            public void onGetFileAudio(final List<String> fileAudioPaths) {
+            public void onGetFileAudio(@NonNull final List<String> fileAudioPaths) {
                 new Thread() {
                     @Override
                     public void run() {
@@ -203,7 +203,7 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
 
         mFileLocalProviderManager.getFileAudioPaths(new FileLocalProviderManager.GetFileAudioListener() {
             @Override
-            public void onGetFileAudio(final List<String> fileAudioPaths) {
+            public void onGetFileAudio(@NonNull final List<String> fileAudioPaths) {
                 new Thread() {
                     @Override
                     public void run() {

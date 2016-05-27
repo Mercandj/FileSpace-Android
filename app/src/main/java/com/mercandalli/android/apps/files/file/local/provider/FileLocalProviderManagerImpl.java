@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -27,7 +28,6 @@ import static com.mercandalli.android.apps.files.file.FileUtils.isVideoPath;
  */
 public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
 
-
     private static final String STRING_SQL_OR = " OR ";
     private static final String STRING_SQL_LIKE = " LIKE ?";
     private static final String TAG = "FileLocalProviderMa";
@@ -40,7 +40,7 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
     private final List<String> mFileAudioPaths = new ArrayList<>();
     private final List<String> mFileImagePaths = new ArrayList<>();
     private final List<String> mFileVideoPaths = new ArrayList<>();
-    private final List<GetFileListener> mGetFileListeners = new ArrayList<>();
+    private final List<GetFilePathsListener> mGetFilePathsListeners = new ArrayList<>();
     private final List<GetFileAudioListener> mGetFileAudioListeners = new ArrayList<>();
     private final List<GetFileImageListener> mGetFileImageListeners = new ArrayList<>();
     private final List<GetFileVideoListener> mGetFileVideoListeners = new ArrayList<>();
@@ -155,19 +155,26 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
     }
 
     @Override
-    public void getFilePaths(final GetFileListener getFileListener) {
+    public void getFilePaths(final GetFilePathsListener getFilePathsListener) {
         if (mIsLoaded) {
-            getFileListener.onGetFile(new ArrayList<>(mFilePaths));
+            getFilePathsListener.onGetFile(new ArrayList<>(mFilePaths));
             return;
         }
-        synchronized (mGetFileListeners) {
+        synchronized (mGetFilePathsListeners) {
             //noinspection SimplifiableIfStatement
-            if (getFileListener == null || mGetFileListeners.contains(getFileListener)) {
+            if (getFilePathsListener == null || mGetFilePathsListeners.contains(getFilePathsListener)) {
                 // We don't allow to register null listener
                 // And a listener can only be added once.
                 return;
             }
-            mGetFileListeners.add(getFileListener);
+            mGetFilePathsListeners.add(getFilePathsListener);
+        }
+    }
+
+    @Override
+    public void removeGetFilePathsListener(final GetFilePathsListener getFilePathsListener) {
+        synchronized (mGetFilePathsListeners) {
+            mGetFilePathsListeners.remove(getFilePathsListener);
         }
     }
 
@@ -189,6 +196,13 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
     }
 
     @Override
+    public void removeGetFileAudioListener(final GetFileAudioListener getFileAudioListener) {
+        synchronized (mGetFileAudioListeners) {
+            mGetFileAudioListeners.remove(getFileAudioListener);
+        }
+    }
+
+    @Override
     public void getFileImagePaths(final GetFileImageListener getFileImageListener) {
         if (mIsLoaded) {
             getFileImageListener.onGetFileImage(new ArrayList<>(mFileImagePaths));
@@ -206,6 +220,13 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
     }
 
     @Override
+    public void removeGetFileImageListener(final GetFileImageListener getFileImageListener) {
+        synchronized (mGetFileImageListeners) {
+            mGetFileImageListeners.remove(getFileImageListener);
+        }
+    }
+
+    @Override
     public void getFileVideoPaths(final GetFileVideoListener getFileVideoListener) {
         if (mIsLoaded) {
             getFileVideoListener.onGetFileVideo(new ArrayList<>(mFileVideoPaths));
@@ -219,6 +240,13 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
                 return;
             }
             mGetFileVideoListeners.add(getFileVideoListener);
+        }
+    }
+
+    @Override
+    public void removeGetFileVideoListener(final GetFileVideoListener getFileVideoListener) {
+        synchronized (mGetFileVideoListeners) {
+            mGetFileVideoListeners.remove(getFileVideoListener);
         }
     }
 
@@ -247,12 +275,11 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
         }
     }
 
-
     private void notifyLoadSucceeded(
-            final List<String> filePaths,
-            final List<String> fileAudioPaths,
-            final List<String> fileImagePaths,
-            final List<String> fileVideoPaths,
+            @NonNull final List<String> filePaths,
+            @NonNull final List<String> fileAudioPaths,
+            @NonNull final List<String> fileImagePaths,
+            @NonNull final List<String> fileVideoPaths,
             @Nullable final FileProviderListener fileProviderListener) {
 
         if (mUiThread != Thread.currentThread()) {
@@ -282,11 +309,11 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
             fileProviderListener.onFileProviderVideoLoaded(fileVideoPaths);
         }
 
-        synchronized (mGetFileListeners) {
-            for (final GetFileListener getFileListener : mGetFileListeners) {
-                getFileListener.onGetFile(filePaths);
+        synchronized (mGetFilePathsListeners) {
+            for (final GetFilePathsListener getFilePathsListener : mGetFilePathsListeners) {
+                getFilePathsListener.onGetFile(filePaths);
             }
-            mGetFileListeners.clear();
+            mGetFilePathsListeners.clear();
         }
 
         synchronized (mGetFileAudioListeners) {
