@@ -33,6 +33,8 @@
         android:protectionLevel="signature"
         android:required="false" />
 
+    <uses-permission android:name="com.mercandalli.android.apps.files.permission.C2D_MESSAGE" />
+
     <uses-permission
         android:name="com.google.android.c2dm.intent.RECEIVE"
         android:required="false" />

@@ -43,6 +43,7 @@ import com.mercandalli.android.apps.files.file.filespace.FileSpaceModel;
 import com.mercandalli.android.apps.files.file.filespace.FileTimerActivity;
 import com.mercandalli.android.apps.files.file.image.FileImageActivity;
 import com.mercandalli.android.apps.files.file.local.FileLocalApi;
+import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
 import com.mercandalli.android.apps.files.file.text.FileTextActivity;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileApp;
@@ -90,6 +91,8 @@ class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallback
     private NotificationCompat.Builder mNotificationBuilder;
     private NotificationManager mNotificationManager;
 
+    private final FileLocalProviderManager mFileLocalProviderManager;
+
     /* package */ FileManagerImpl(
             final Context contextApp,
             final FileOnlineApi fileOnlineApi,
@@ -100,6 +103,8 @@ class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallback
         mFileOnlineApi = fileOnlineApi;
         mFileUploadOnlineApi = fileUploadOnlineApi;
         mFileLocalApi = new FileLocalApi();
+
+        mFileLocalProviderManager = FileApp.get().getFileAppComponent().provideFileLocalProviderManager();
 
         final Looper mainLooper = Looper.getMainLooper();
         mUiHandler = new Handler(mainLooper);
@@ -610,34 +615,37 @@ class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallback
         new AsyncTask<Void, Void, List<FileModel>>() {
             @Override
             protected List<FileModel> doInBackground(Void... params) {
-                final String[] PROJECTION = new String[]{MediaStore.Files.FileColumns.DATA};
-
+                final String[] projection = new String[]{MediaStore.Files.FileColumns.DATA};
                 final Uri allSongsUri = MediaStore.Files.getContentUri("external");
                 final List<String> searchArray = new ArrayList<>();
-
                 final String selection = MediaStore.Files.FileColumns.DISPLAY_NAME + LIKE;
                 searchArray.add("%" + search + "%");
 
-                final List<FileModel> result = new ArrayList<>();
-
-                final Cursor cursor = context.getContentResolver().query(allSongsUri, PROJECTION, selection,
+                final Cursor cursor = context.getContentResolver().query(allSongsUri, projection, selection,
                         searchArray.toArray(new String[searchArray.size()]), null);
 
-                if (cursor == null) {
-                    return result;
+                final List<String> paths = new ArrayList<>();
+                if (cursor != null) {
+                    if (cursor.moveToFirst()) {
+                        do {
+                            paths.add(cursor.getString(cursor.getColumnIndex(
+                                    MediaStore.Files.FileColumns.DATA)));
+                        } while (cursor.moveToNext());
+                    }
+                    cursor.close();
                 }
-                if (cursor.moveToFirst()) {
-                    do {
-                        final File file = new File(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
+                mFileLocalProviderManager.getFilePaths();
+                final List<FileModel> result = new ArrayList<>();
+                for (final String path : paths) {
+                    if (path != null && path.toLowerCase().contains(search.toLowerCase())) {
+                        final File file = new File(path);
                         if (file.exists()) {
                             result.add(new FileModel.FileModelBuilder()
                                     .file(file)
                                     .build());
                         }
-                    } while (cursor.moveToNext());
+                    }
                 }
-                cursor.close();
-
                 return result;
             }
 

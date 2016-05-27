@@ -24,6 +24,8 @@ public interface FileLocalProviderManager {
 
     void load(@Nullable final FileProviderListener fileProviderListener);
 
+    @NonNull
+    List<String> getFilePaths();
     void getFilePaths(final GetFilePathsListener getFilePathsListener);
     void removeGetFilePathsListener(final GetFilePathsListener getFilePathsListener);
 

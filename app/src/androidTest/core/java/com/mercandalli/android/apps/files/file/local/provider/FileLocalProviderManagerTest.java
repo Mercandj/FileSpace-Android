@@ -82,6 +82,12 @@ class FileLocalProviderManagerTest implements FileLocalProviderManager {
         mFileLocalProviderManager.load(fileProviderListener);
     }
 
+    @NonNull
+    @Override
+    public List<String> getFilePaths() {
+        return mFileLocalProviderManager.getFilePaths();
+    }
+
     @Override
     public void getFilePaths(GetFilePathsListener getFilePathsListener) {
         mFileLocalProviderManager.getFilePaths(getFilePathsListener);

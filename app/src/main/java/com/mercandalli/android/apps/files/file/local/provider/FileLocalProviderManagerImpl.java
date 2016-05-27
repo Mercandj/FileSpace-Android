@@ -154,6 +154,12 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
         }.start();
     }
 
+    @NonNull
+    @Override
+    public List<String> getFilePaths() {
+        return new ArrayList<>(mFilePaths);
+    }
+
     @Override
     public void getFilePaths(final GetFilePathsListener getFilePathsListener) {
         if (mIsLoaded) {
