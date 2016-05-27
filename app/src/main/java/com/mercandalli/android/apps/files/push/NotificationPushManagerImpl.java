@@ -91,11 +91,11 @@ class NotificationPushManagerImpl implements
                         PUSH_NOTIFICATION_ID);
                 break;
             case PushManager.PUSH_TYPE_NOTIFICATION_OPEN_PLAY_STORE:
-                if (actionData == null || (url = StringUtils.toUrl(actionData)) == null) {
+                if (actionData == null) {
                     break;
                 }
                 final Intent openPlayStoreIntent =
-                        StoreUtils.getOpenPlayStoreIntent(mAppContext, url.toString());
+                        StoreUtils.getOpenPlayStoreIntent(mAppContext, actionData);
                 NotificationUtils.sendNotification(
                         mAppContext,
                         openPlayStoreIntent,
@@ -125,8 +125,8 @@ class NotificationPushManagerImpl implements
                         PUSH_NOTIFICATION_ID);
                 break;
             case PushManager.PUSH_TYPE_OPEN_PLAY_STORE:
-                if (actionData != null && (url = StringUtils.toUrl(actionData)) != null) {
-                    StoreUtils.openPlayStore(mAppContext, url.toString());
+                if (actionData != null) {
+                    StoreUtils.openPlayStore(mAppContext, actionData);
                 }
                 break;
             case PushManager.PUSH_TYPE_OPEN_URL:
