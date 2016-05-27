@@ -2,6 +2,8 @@ package com.mercandalli.android.apps.files.main;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
@@ -19,7 +21,10 @@ import io.fabric.sdk.android.Fabric;
  */
 public class FileApp extends MultiDexApplication {
 
+    @NonNull
     private static final String TAG = "FileApp";
+
+    @Nullable
     private static FileApp sApplication;
 
     private static long sTimeLaunch;
@@ -28,6 +33,7 @@ public class FileApp extends MultiDexApplication {
         return sApplication;
     }
 
+    @Nullable
     protected FileAppComponent mFileAppComponent;
 
     @Override
@@ -66,15 +72,13 @@ public class FileApp extends MultiDexApplication {
                 // Google Analytics.
                 AnalyticsTrackers.initialize(context);
                 AnalyticsTrackers.getInstance().get(AnalyticsTrackers.Target.APP);
-
-                // Init the notifications.
-                getFileAppComponent().provideNotificationPushManager().initialize();
             }
         }).start();
 
         logPerformance(TAG, "FileApp#onCreate() - Fabric Fabric Analytics");
     }
 
+    @Nullable
     public FileAppComponent getFileAppComponent() {
         return mFileAppComponent;
     }

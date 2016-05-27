@@ -19,18 +19,26 @@
  */
 package com.mercandalli.android.apps.files.main;
 
+import android.support.annotation.NonNull;
+
 import com.mercandalli.android.apps.files.BuildConfig;
 
 public class Constants {
 
+    @NonNull
     public static final String GCM_SENDER = "807253530972";
 
+    @NonNull
     public static final String URL_DOMAIN = "http://mercandalli.com/";
+    @NonNull
     public static final String URL_DOMAIN_API = "http://mercandalli.com/FileSpace-API/";
+    @NonNull
     public static final String URL_FOLDER_API = "FileSpace-API/";
 
 
+    @NonNull
     public static final String BASE_URL_DOMAIN = "http://mercandalli.com/";
+    @NonNull
     public static final String BASE_URL_FOLDER_API = "base/api/";
 
     public static final int TAB_VIEW_TYPE_NORMAL = 0;
@@ -41,9 +49,11 @@ public class Constants {
 
     public static final boolean ADS_VISIBLE = true;
 
+    @NonNull
     public static final String AD_MOB_KEY_NAV_DRAWER = BuildConfig.DEBUG ?
             "ca-app-pub-3940256099942544/1033173712" : "ca-app-pub-4616471093567176/1180013643";
 
+    @NonNull
     public static final String AD_MOB_KEY_SETTINGS = BuildConfig.DEBUG ?
             "ca-app-pub-3940256099942544/1033173712" : "ca-app-pub-4616471093567176/3476162047";
 }

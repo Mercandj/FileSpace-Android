@@ -26,8 +26,6 @@ import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderM
 import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderModule;
 import com.mercandalli.android.apps.files.main.version.VersionManager;
 import com.mercandalli.android.apps.files.main.version.VersionModule;
-import com.mercandalli.android.apps.files.push.NotificationPushManager;
-import com.mercandalli.android.apps.files.push.NotificationPushModule;
 import com.mercandalli.android.apps.files.support.SupportFragment;
 import com.mercandalli.android.apps.files.support.SupportManager;
 import com.mercandalli.android.apps.files.support.SupportModule;
@@ -48,7 +46,6 @@ import dagger.Component;
                 VersionModule.class,
                 FileLocalFabModule.class,
                 FileCloudFabModule.class,
-                NotificationPushModule.class,
                 AudioPlayListModule.class
         }
 )
@@ -95,8 +92,6 @@ public interface FileAppComponent {
     FileLocalFabManager provideFileLocalFabManager();
 
     FileCloudFabManager provideFileCloudFabManager();
-
-    NotificationPushManager provideNotificationPushManager();
 
     FileLocalProviderManager provideFileLocalProviderManager();
 }

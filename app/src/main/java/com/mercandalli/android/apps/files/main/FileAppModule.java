@@ -1,6 +1,7 @@
 package com.mercandalli.android.apps.files.main;
 
 import android.app.Application;
+import android.support.annotation.NonNull;
 
 import dagger.Module;
 import dagger.Provides;
@@ -11,9 +12,10 @@ import dagger.Provides;
 @Module
 public class FileAppModule {
 
+    @NonNull
     private FileApp mFileApp;
 
-    public FileAppModule(FileApp fileApp) {
+    public FileAppModule(@NonNull final FileApp fileApp) {
         this.mFileApp = fileApp;
     }
 

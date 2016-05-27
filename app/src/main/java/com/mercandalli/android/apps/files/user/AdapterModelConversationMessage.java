@@ -37,7 +37,7 @@ import com.mercandalli.android.apps.files.main.Config;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdapterModelConversationMessage extends
+/* package */ class AdapterModelConversationMessage extends
         RecyclerView.Adapter<AdapterModelConversationMessage.ViewHolder> {
 
     private List<UserConversationMessageModel> mUsers;
