@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="file_local_tab_files">Files</string>
+    <string name="file_local_tab_sdcard">SdCard</string>
+    <string name="file_local_tab_musics">Musics</string>
+    <string name="file_local_tab_photos">Photos</string>
+    <string name="file_local_tab_videos">Videos</string>
+
+</resources>

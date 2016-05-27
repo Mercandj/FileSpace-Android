@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -21,6 +21,7 @@ package com.mercandalli.android.apps.files.user.community;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +37,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
-import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.ILocationListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskGet;
@@ -57,18 +57,19 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class UserLocationFragment extends BackFragment {
 
-    private View rootView;
     private MapView mapView;
     private TextView text;
     private ImageButton circle;
 
     private Location location;
 
-    // Google Map
-    private GoogleMap map;
+    /**
+     * Google Map
+     */
+    @Nullable
+    private GoogleMap mGoogleMap;
 
     public static UserLocationFragment newInstance() {
         return new UserLocationFragment();
@@ -76,21 +77,21 @@ public class UserLocationFragment extends BackFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.rootView = inflater.inflate(R.layout.fragment_admin_add_user_location, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_admin_add_user_location, container, false);
 
         this.text = (TextView) rootView.findViewById(R.id.text);
         this.text.setText("Touch the circle to see user positions");
 
         this.circle = (ImageButton) rootView.findViewById(R.id.circle);
 
-        if (map == null) {
+        if (mGoogleMap == null) {
             mapView = (MapView) rootView.findViewById(R.id.mapView);
 
             mapView.onCreate(savedInstanceState);
             mapView.onResume(); //without this, map showed but was empty
 
             if (mapView != null) {
-                map = mapView.getMap();
+                mGoogleMap = mapView.getMap();
 
                 /*
                 map.getUiSettings().setMyLocationButtonEnabled(false);
@@ -168,7 +169,7 @@ public class UserLocationFragment extends BackFragment {
 
         refreshMap();
 
-        return this.rootView;
+        return rootView;
     }
 
     public void refreshMap() {
@@ -214,7 +215,7 @@ public class UserLocationFragment extends BackFragment {
     }
 
     public boolean addLocation(UserLocationModel userLocation) {
-        if (map == null || userLocation == null) {
+        if (mGoogleMap == null || userLocation == null) {
             return false;
         }
         if (userLocation.latitude == 0 && userLocation.longitude == 0) {
@@ -225,7 +226,7 @@ public class UserLocationFragment extends BackFragment {
         // Changing marker icon
         marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
         // adding marker
-        map.addMarker(marker);
+        mGoogleMap.addMarker(marker);
         return true;
     }
 

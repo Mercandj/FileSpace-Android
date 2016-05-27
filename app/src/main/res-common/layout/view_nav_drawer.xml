@@ -41,7 +41,7 @@
                 android:layout_marginRight="47dp"
                 android:layout_marginStart="78dp"
                 android:gravity="center_vertical"
-                android:text="@string/tab_files"
+                android:text="@string/file_local_tab_files"
                 android:textColor="#000"
                 android:textSize="@dimen/view_nav_drawer_text_section" />
 

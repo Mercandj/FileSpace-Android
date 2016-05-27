@@ -27,6 +27,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.FloatingActionButton;
@@ -88,6 +89,7 @@ public class FileLocalPagerFragment extends BackFragment implements
 
     private SetToolbarCallback mSetToolbarCallback;
 
+    @NonNull
     private final int[] mImageResId = {
             R.drawable.ic_folder_open_white_24dp,
             R.drawable.ic_sd_storage_white_24dp,
@@ -96,12 +98,13 @@ public class FileLocalPagerFragment extends BackFragment implements
             R.drawable.ic_video_library_white_24dp
     };
 
+    @NonNull
     private final int[] mTitleIds = {
-            R.string.tab_files,
-            R.string.tab_sdcard,
-            R.string.tab_musics,
-            R.string.tab_photos,
-            R.string.tab_videos
+            R.string.file_local_tab_files,
+            R.string.file_local_tab_sdcard,
+            R.string.file_local_tab_musics,
+            R.string.file_local_tab_photos,
+            R.string.file_local_tab_videos
     };
 
     @Override
