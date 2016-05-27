@@ -1,35 +1,30 @@
 {
   "project_info": {
-    "project_id": "jarvis-86921",
     "project_number": "807253530972",
-    "name": "FileSpace"
+    "project_id": "jarvis-86921"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:807253530972:android:845f8c035dd909a6",
-        "client_id": "android:mercandalli.com.filespace",
-        "client_type": 1,
         "android_client_info": {
           "package_name": "mercandalli.com.filespace"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "807253530972-qroa7sr91vde0f5aib80e636gfdvs773.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [],
       "services": {
         "analytics_service": {
           "status": 1
         },
-        "cloud_messaging_service": {
-          "status": 2,
-          "apns_config": []
-        },
         "appinvite_service": {
           "status": 1,
           "other_platform_oauth_client": []
-        },
-        "google_signin_service": {
-          "status": 1
         },
         "ads_service": {
           "status": 1
@@ -39,8 +34,6 @@
     {
       "client_info": {
         "mobilesdk_app_id": "1:807253530972:android:0c4262a2429cce0f",
-        "client_id": "android:com.mercandalli.android.apps.files",
-        "client_type": 1,
         "android_client_info": {
           "package_name": "com.mercandalli.android.apps.files"
         }
@@ -53,23 +46,24 @@
             "package_name": "com.mercandalli.android.apps.files",
             "certificate_hash": "C6251DEB3F1438DADFA55610A0070554B361E0E2"
           }
+        },
+        {
+          "client_id": "807253530972-qroa7sr91vde0f5aib80e636gfdvs773.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
-      "api_key": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9AlFJqu2eDD6sse663aPhUrVzdlJK3uA"
+        }
+      ],
       "services": {
         "analytics_service": {
           "status": 1
         },
-        "cloud_messaging_service": {
-          "status": 2,
-          "apns_config": []
-        },
         "appinvite_service": {
           "status": 1,
           "other_platform_oauth_client": []
-        },
-        "google_signin_service": {
-          "status": 2
         },
         "ads_service": {
           "status": 1
@@ -77,6 +71,5 @@
       }
     }
   ],
-  "client_info": [],
-  "ARTIFACT_VERSION": "1"
+  "configuration_version": "1"
 }
