@@ -2,6 +2,8 @@ package com.mercandalli.android.apps.files;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.wearable.activity.WearableActivity;
 import android.view.View;
 import android.widget.TextView;
@@ -15,12 +17,14 @@ import java.util.Locale;
  */
 public class MainActivity extends WearableActivity implements View.OnClickListener {
 
+    @NonNull
     private static final SimpleDateFormat AMBIENT_DATE_FORMAT =
             new SimpleDateFormat("HH:mm", Locale.US);
 
     /**
      * The title.
      */
+    @Nullable
     private TextView mTitleTextView;
 
     @Override

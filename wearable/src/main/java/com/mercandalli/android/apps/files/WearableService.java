@@ -2,6 +2,7 @@ package com.mercandalli.android.apps.files;
 
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageEvent;
@@ -19,7 +20,10 @@ public class WearableService extends WearableListenerService {
 
     public static final long CONNECTION_TIME_OUT_MS = 5000;
 
-    public static void sendPhoneAudioData(final GoogleApiClient client, final String telNodeId, final SharedAudioData sharedAudioData) {
+    public static void sendPhoneAudioData(
+            final GoogleApiClient client,
+            final String telNodeId,
+            final SharedAudioData sharedAudioData) {
         if (telNodeId != null) {
             new Thread(new Runnable() {
                 @Override
@@ -66,8 +70,9 @@ public class WearableService extends WearableListenerService {
      *
      * @param message The message.
      */
-    private void forwardMessageToActivity(String message) {
-        Intent messageIntent = new Intent();
+    private void forwardMessageToActivity(final String message) {
+        Toast.makeText(getApplication(), "Message received", Toast.LENGTH_SHORT).show();
+        final Intent messageIntent = new Intent();
         messageIntent.setAction(Intent.ACTION_SEND);
         messageIntent.putExtra("message", message);
         LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);

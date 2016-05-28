@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
@@ -66,6 +67,7 @@ public class FileAddDialog extends Dialog implements
         View.OnClickListener,
         FileChooserDialog.FileChooserDialogSelection {
 
+    @NonNull
     private final Activity mActivity;
     private IListener mDismissListener;
     private final int mFileParentId;
@@ -73,10 +75,10 @@ public class FileAddDialog extends Dialog implements
 
     @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
     public FileAddDialog(
-            final Activity activity,
+            @NonNull final Activity activity,
             final int id_file_parent,
-            final @Nullable IListener listener,
-            final @Nullable IListener dismissListener) {
+            @Nullable final IListener listener,
+            @Nullable final IListener dismissListener) {
         super(activity, R.style.DialogFullscreen);
         mActivity = activity;
         mDismissListener = dismissListener;
@@ -91,7 +93,6 @@ public class FileAddDialog extends Dialog implements
         rootView.setOnClickListener(this);
 
         findViewById(R.id.dialog_add_file_upload_file).setOnClickListener(this);
-
         findViewById(R.id.dialog_add_file_add_directory).setOnClickListener(this);
 
         findViewById(R.id.dialog_add_file_text_doc).setOnClickListener(new View.OnClickListener() {

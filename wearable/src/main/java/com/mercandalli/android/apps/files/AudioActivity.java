@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
@@ -32,20 +34,31 @@ import java.util.concurrent.TimeUnit;
  */
 public class AudioActivity extends WearableActivity implements View.OnClickListener {
 
+    @NonNull
     private static final SimpleDateFormat AMBIENT_DATE_FORMAT =
             new SimpleDateFormat("HH:mm", Locale.US);
 
+    @Nullable
     private BoxInsetLayout mContainerView;
+    @Nullable
     private TextView mTextView;
+    @Nullable
     private TextView mClockView;
+    @Nullable
     private ProgressBar mProgressBar;
+    @Nullable
     private ImageView mPlayPauseImageView;
+    @Nullable
     private ImageView mNextImageView;
+    @Nullable
     private ImageView mPreviousImageView;
 
+    @Nullable
     private GoogleApiClient mGoogleApiClient;
+    @Nullable
     private String mTelNodeId;
 
+    @Nullable
     private SharedAudioData mSharedAudioData;
 
     @Override
@@ -127,7 +140,7 @@ public class AudioActivity extends WearableActivity implements View.OnClickListe
 
     private void updateDisplay() {
         if (isAmbient()) {
-            mContainerView.setBackgroundColor(getResources().getColor(android.R.color.black));
+            mContainerView.setBackgroundColor(Color.BLACK);
             mTextView.setTextColor(Color.WHITE);
             mClockView.setVisibility(View.VISIBLE);
 

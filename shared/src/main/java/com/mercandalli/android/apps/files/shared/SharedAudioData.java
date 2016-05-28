@@ -20,8 +20,11 @@ public class SharedAudioData {
     private static final String WEAR_KEY_FILE_ARTIST = "at";
 
     private int mId;
+    @Nullable
     private String mTitle;
+    @Nullable
     private String mArtist;
+    @Nullable
     private String mAlbum;
 
     @SharedAudioPlayerUtils.Status

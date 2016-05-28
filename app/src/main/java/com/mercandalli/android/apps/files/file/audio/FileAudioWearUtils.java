@@ -9,9 +9,13 @@ import java.util.concurrent.TimeUnit;
 
 public class FileAudioWearUtils {
 
-    public static final long CONNECTION_TIME_OUT_MS = 5000;
+    public static final long CONNECTION_TIME_OUT_MS = 5_000;
 
-    public static void sendWearMessage(final GoogleApiClient client, final String watchNodeId, final @SharedAudioPlayerUtils.Status int currentStatus, final FileAudioModel fileAudioModel) {
+    public static void sendWearMessage(
+            final GoogleApiClient client,
+            final String watchNodeId,
+            @SharedAudioPlayerUtils.Status final int currentStatus,
+            final FileAudioModel fileAudioModel) {
         Preconditions.checkNotNull(client);
         Preconditions.checkNotNull(fileAudioModel);
         if (watchNodeId != null) {

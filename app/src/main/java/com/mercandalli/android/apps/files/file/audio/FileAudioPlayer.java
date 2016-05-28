@@ -9,8 +9,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -38,27 +40,41 @@ public class FileAudioPlayer implements
         MediaPlayer.OnCompletionListener,
         AudioManager.OnAudioFocusChangeListener {
 
+    @NonNull
     private static final String TAG = "FileAudioPlayer";
 
     @SharedAudioPlayerUtils.Status
     private int mCurrentStatus = SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_UNKNOWN;
 
+    @Nullable
     private FileAudioModel mCurrentMusic;
+
+    @Nullable
     private FileAudioModel mPreparingMusic;
+
+    @NonNull
     private final List<FileAudioModel> mFileAudioModelList = new ArrayList<>();
     private int mCurrentMusicIndex;
 
+    @NonNull
     private final MediaPlayer mMediaPlayer;
+    @NonNull
     private final Context mAppContext;
+    @NonNull
     private final AudioManager mAudioManager;
 
+    @NonNull
     private final UpdaterPosition mUpdatePositionRunnable = new UpdaterPosition();
+    @NonNull
     private final List<OnPlayerStatusChangeListener> mOnPlayerStatusChangeListeners = new ArrayList<>();
 
+    @NonNull
     private final Handler mHandler = new Handler();
+    @Nullable
     private String mWatchNodeId;
 
     public FileAudioPlayer(final Application application) {
+        Preconditions.checkNotNull(application);
         mAppContext = application.getApplicationContext();
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setOnPreparedListener(this);
@@ -88,7 +104,7 @@ public class FileAudioPlayer implements
     }
 
     @Override
-    public void onAudioFocusChange(int focusChange) {
+    public void onAudioFocusChange(final int focusChange) {
         if ((mCurrentStatus == SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING) &&
                 (focusChange == AudioManager.AUDIOFOCUS_LOSS ||
                         focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT)) {
@@ -258,6 +274,7 @@ public class FileAudioPlayer implements
         return mCurrentMusicIndex;
     }
 
+    @NonNull
     public List<FileAudioModel> getFileAudioModelList() {
         return mFileAudioModelList;
     }
@@ -335,7 +352,7 @@ public class FileAudioPlayer implements
             final Intent intent = new Intent(mAppContext, FileAudioActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-            RemoteViews remoteViews = new RemoteViews(mAppContext.getPackageName(), R.layout.notification_musique);
+            final RemoteViews remoteViews = new RemoteViews(mAppContext.getPackageName(), R.layout.notification_musique);
             remoteViews.setTextViewText(R.id.titre_notif, mCurrentMusic.getName());
             remoteViews.setOnClickPendingIntent(R.id.titre_notif, NotificationAudioPlayerReceiver.getNotificationIntentActivity(mAppContext));
             remoteViews.setOnClickPendingIntent(R.id.close, NotificationAudioPlayerReceiver.getNotificationIntentClose(mAppContext));
@@ -343,9 +360,9 @@ public class FileAudioPlayer implements
             remoteViews.setOnClickPendingIntent(R.id.activity_file_audio_next, NotificationAudioPlayerReceiver.getNotificationIntentNext(mAppContext));
             remoteViews.setOnClickPendingIntent(R.id.prev, NotificationAudioPlayerReceiver.getNotificationIntentPrevious(mAppContext));
 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                Notification.Builder mNotifyBuilder = new Notification.Builder(mAppContext);
-                Notification foregroundNote = mNotifyBuilder.setSmallIcon(R.drawable.audio)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                final Notification.Builder notifyBuilder = new Notification.Builder(mAppContext);
+                Notification foregroundNote = notifyBuilder.setSmallIcon(R.drawable.audio)
                     /*
                     .setContentTitle("Music")
                     .setContentText( "Text" )*/

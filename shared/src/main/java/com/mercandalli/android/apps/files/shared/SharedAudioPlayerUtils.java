@@ -37,8 +37,13 @@ public class SharedAudioPlayerUtils {
     public static final int AUDIO_PLAYER_ACTION_NEXT = 2;
     public static final int AUDIO_PLAYER_ACTION_PREVIOUS = 3;
 
-    public static String sendTrackData(int audioId, String title, String album, String artist, @Status int status) {
-        SharedAudioData sharedAudioData = new SharedAudioData(audioId, title, album, artist);
+    public static String sendTrackData(
+            final int audioId,
+            final String title,
+            final String album,
+            final String artist,
+            @Status final int status) {
+        final SharedAudioData sharedAudioData = new SharedAudioData(audioId, title, album, artist);
         sharedAudioData.setStatus(status);
         return sharedAudioData.toJson().toString();
     }
