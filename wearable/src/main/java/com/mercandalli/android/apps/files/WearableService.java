@@ -2,7 +2,6 @@ package com.mercandalli.android.apps.files;
 
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageEvent;
@@ -10,6 +9,7 @@ import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 import com.mercandalli.android.apps.files.shared.SharedAudioData;
 import com.mercandalli.android.apps.files.shared.SharedAudioPlayerUtils;
+import com.mercandalli.android.library.base.java.StringUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -30,8 +30,8 @@ public class WearableService extends WearableListenerService {
                 public void run() {
                     client.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
                     Wearable.MessageApi.sendMessage(client, telNodeId,
-                            SharedAudioPlayerUtils.sendTrackData(sharedAudioData),
-                            null);
+                            "/prefix",
+                            SharedAudioPlayerUtils.sendTrackData(sharedAudioData).getBytes());
                     client.disconnect();
                 }
             }).start();
@@ -52,7 +52,7 @@ public class WearableService extends WearableListenerService {
                 public void run() {
                     client.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
                     Wearable.MessageApi.sendMessage(client, telNodeId,
-                            " ",
+                            "/prefix",
                             null);
                     client.disconnect();
                 }
@@ -61,8 +61,10 @@ public class WearableService extends WearableListenerService {
     }
 
     @Override
-    public void onMessageReceived(MessageEvent messageEvent) {
-        forwardMessageToActivity(messageEvent.getPath());
+    public void onMessageReceived(final MessageEvent messageEvent) {
+        forwardMessageToActivity(
+                messageEvent.getPath(),
+                StringUtils.byteArrayToString(messageEvent.getData()));
     }
 
     /**
@@ -70,8 +72,7 @@ public class WearableService extends WearableListenerService {
      *
      * @param message The message.
      */
-    private void forwardMessageToActivity(final String message) {
-        Toast.makeText(getApplication(), "Message received", Toast.LENGTH_SHORT).show();
+    private void forwardMessageToActivity(final String path, final String message) {
         final Intent messageIntent = new Intent();
         messageIntent.setAction(Intent.ACTION_SEND);
         messageIntent.putExtra("message", message);

@@ -5,6 +5,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
+import com.mercandalli.android.library.base.java.StringUtils;
 
 /**
  * The listener to communicate with the wearable.
@@ -12,11 +13,15 @@ import com.google.android.gms.wearable.WearableListenerService;
 public class WearableService extends WearableListenerService {
 
     @Override
-    public void onMessageReceived(MessageEvent messageEvent) {
-        showToast(messageEvent.getPath());
+    public void onMessageReceived(final MessageEvent messageEvent) {
+        showToast(
+                messageEvent.getPath(),
+                StringUtils.byteArrayToString(messageEvent.getData()));
     }
 
-    private void showToast(String message) {
+    private void showToast(
+            final String path,
+            final String message) {
         //Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 
         // Broadcast message to wearable activity for display

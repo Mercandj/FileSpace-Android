@@ -40,7 +40,10 @@ public class MainActivity extends WearableActivity implements View.OnClickListen
     public void onClick(final View v) {
         final int viewId = v.getId();
         switch (viewId) {
-            case R.id.activity_main_audios:
+            case R.id.activity_main_local_files:
+                onFilesClicked();
+                break;
+            case R.id.activity_main_phone_audios:
                 onAudioClicked();
                 break;
             default:
@@ -53,9 +56,9 @@ public class MainActivity extends WearableActivity implements View.OnClickListen
      */
     private void findViews() {
         mTitleTextView = (TextView) findViewById(R.id.activity_main_title);
-        (findViewById(R.id.activity_main_files)).setOnClickListener(this);
-        (findViewById(R.id.activity_main_audios)).setOnClickListener(this);
-        (findViewById(R.id.activity_main_photos)).setOnClickListener(this);
+        (findViewById(R.id.activity_main_local_files)).setOnClickListener(this);
+        (findViewById(R.id.activity_main_phone_audios)).setOnClickListener(this);
+        (findViewById(R.id.activity_main_phone_photos)).setOnClickListener(this);
     }
 
     /**
@@ -70,6 +73,12 @@ public class MainActivity extends WearableActivity implements View.OnClickListen
      */
     private void onAudioClicked() {
         final Intent startIntent = new Intent(this, AudioActivity.class);
+        startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startIntent);
+    }
+
+    private void onFilesClicked() {
+        final Intent startIntent = new Intent(this, FileLocalActivity.class);
         startIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(startIntent);
     }

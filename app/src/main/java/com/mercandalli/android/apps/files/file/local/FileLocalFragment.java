@@ -95,13 +95,16 @@ public class FileLocalFragment extends BackFragment implements
     }
 
     private RecyclerView mRecyclerView;
+    @NonNull
     private final List<FileModel> mFilesList = new ArrayList<>();
     private ProgressBar mProgressBar;
     private File mCurrentDirectory = createInitialDirectory();
     private TextView mMessageTextView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    @NonNull
     private final List<FileModel> mFilesToCutList = new ArrayList<>();
+    @NonNull
     private final List<FileModel> mFilesToCopyList = new ArrayList<>();
 
     /* Managers */
@@ -114,7 +117,9 @@ public class FileLocalFragment extends BackFragment implements
     private ScaleAnimationAdapter mScaleAnimationAdapter;
 
     private boolean mIsFabAnimating = false;
+    @NonNull
     private final Handler mHandler = new Handler();
+    @NonNull
     private final Runnable mRunnable = new Runnable() {
         @Override
         public void run() {

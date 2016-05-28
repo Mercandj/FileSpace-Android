@@ -24,14 +24,14 @@ public class FileAudioWearUtils {
                 public void run() {
                     client.blockingConnect(CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
                     Wearable.MessageApi.sendMessage(client, watchNodeId,
+                            "/prefix",
                             SharedAudioPlayerUtils.sendTrackData(
                                     fileAudioModel.getId(),
                                     fileAudioModel.getName(),
                                     fileAudioModel.getAlbum(),
                                     fileAudioModel.getArtist(),
                                     currentStatus
-                            ),
-                            null);
+                            ).getBytes());
                     client.disconnect();
                 }
             }).start();
