@@ -9,12 +9,8 @@ FileSpace - ANDROID
 	</a>
 </p>
 
-**_Unfinished project, still in development_** [API Required](https://github.com/Mercandj/FileSpace-API)
+**_Unfinished project, still in development_**
 
-<br /><br />
-**_Now you cannot compile this project without the 'com.mercandalli.android.library:baselibrary:1.0.0'_**
-<br />
-**_This library is not open source (not finished). If you have this library, copy and paste gradle.properties.template to gradle.properties and update "localMavenUrl" to your maven folder_**
 <br /><br />
 
 
@@ -39,7 +35,7 @@ Remote and secure file manager.
 
 ## REQUIRED
 
-* [FileSpace Rest API PHP](https://github.com/Mercandj/FileSpace-API)
+* [Optional: FileSpace Rest API PHP](https://github.com/Mercandj/FileSpace-API)
 
 ## GRADLE
 
