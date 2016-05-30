@@ -30,8 +30,7 @@
 
     <permission
         android:name="com.mercandalli.android.apps.files.permission.C2D_MESSAGE"
-        android:protectionLevel="signature"
-        android:required="false" />
+        android:protectionLevel="signature" />
 
     <uses-permission android:name="com.mercandalli.android.apps.files.permission.C2D_MESSAGE" />
 
