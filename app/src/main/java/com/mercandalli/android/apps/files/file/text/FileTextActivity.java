@@ -22,6 +22,7 @@ package com.mercandalli.android.apps.files.file.text;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -44,10 +45,14 @@ import org.json.JSONObject;
  */
 public class FileTextActivity extends ApplicationActivity implements IPostExecuteListener {
 
+    @NonNull
     private static final String EXTRA_MODEL_FILE_URL = "FileTextActivity.Extra.EXTRA_MODEL_FILE_URL";
+    @NonNull
     private static final String EXTRA_MODEL_FILE_ONLINE = "FileTextActivity.Extra.EXTRA_MODEL_FILE_ONLINE";
+    @NonNull
     private static final String EXTRA_MODEL_FILE_ARTICLE_CONTENT_1 = "FileTextActivity.Extra.EXTRA_MODEL_FILE_ARTICLE_CONTENT_1";
 
+    @NonNull
     private static final String KEY_SAVED_TEXT = "FileTextActivity.Saved.mInitialText";
 
     private String mInitialText;
