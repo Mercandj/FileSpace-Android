@@ -32,8 +32,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':shared')
     compile 'com.google.android.support:wearable:1.4.0'
-    compile 'com.google.android.gms:play-services-wearable:9.0.1'
-    compile 'com.google.android.gms:play-services-appindexing:9.0.1'
+    compile 'com.google.android.gms:play-services-wearable:9.0.2'
+    compile 'com.google.android.gms:play-services-appindexing:9.0.2'
 
     // Mercandalli main library
     compile rootProject.ext.dependencies.base
