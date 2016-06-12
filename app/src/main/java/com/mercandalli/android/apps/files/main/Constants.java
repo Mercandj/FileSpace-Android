@@ -35,12 +35,6 @@ public class Constants {
     @NonNull
     public static final String URL_FOLDER_API = "FileSpace-API/";
 
-
-    @NonNull
-    public static final String BASE_URL_DOMAIN = "http://mercandalli.com/";
-    @NonNull
-    public static final String BASE_URL_FOLDER_API = "base/api/";
-
     public static final int TAB_VIEW_TYPE_NORMAL = 0;
     public static final int TAB_VIEW_TYPE_SECTION = 1;
 
