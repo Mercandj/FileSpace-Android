@@ -19,6 +19,8 @@
  */
 package com.mercandalli.android.apps.files.user;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,8 +42,11 @@ import java.util.List;
 /* package */ class AdapterModelConversationMessage extends
         RecyclerView.Adapter<AdapterModelConversationMessage.ViewHolder> {
 
-    private List<UserConversationMessageModel> mUsers;
+    @NonNull
+    private final List<UserConversationMessageModel> mUsers;
+    @Nullable
     private OnItemClickListener mItemClickListener;
+    @Nullable
     private OnItemLongClickListener mItemLongClickListener;
 
     public AdapterModelConversationMessage(List<UserConversationMessageModel> users) {
