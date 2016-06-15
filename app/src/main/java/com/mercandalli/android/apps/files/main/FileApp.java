@@ -51,10 +51,7 @@ public class FileApp extends MultiDexApplication {
 
         BaseManager.getInstance().initialize(
                 this,
-                Constants.BASE_URL_DOMAIN,
-                Constants.BASE_URL_FOLDER_API,
-                Constants.GCM_SENDER,
-                BuildConfig.DEBUG);
+                Constants.GCM_SENDER);
 
         logPerformance(TAG, "FileApp#onCreate() - Fabric Dagger");
 
