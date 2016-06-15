@@ -86,7 +86,6 @@ repositories {
 }
 
 spoon {
-
     // Enable debug output
     debug = true
 
@@ -112,7 +111,6 @@ spoon {
     // It's also possible to configure tests sharding using convenient properties:
     // numShards = 2
     // shardIndex = 0
-
     adbTimeout = 30
 }
 

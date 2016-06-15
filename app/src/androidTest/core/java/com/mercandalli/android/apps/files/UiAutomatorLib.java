@@ -74,6 +74,10 @@ public class UiAutomatorLib {
     public static UiDevice getDevice() {
         return UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
     }
+
+    public static void pressBack() {
+        getDevice().pressBack();
+    }
     //endregion UI AUTOMATOR base
 
     //region - find object and determine object stats
@@ -137,7 +141,18 @@ public class UiAutomatorLib {
     //region - click & swipe
 
     /**
-     * Call clickAndWaitForNewWindow.*
+     * Call clickAndWaitForNewWindow.
+     *
+     * @param id The view id.
+     * @throws UiObjectNotFoundException
+     */
+    public static boolean click(
+            @IdRes final int id) throws UiObjectNotFoundException {
+        return findObjectById(id).click();
+    }
+
+    /**
+     * Call clickAndWaitForNewWindow.
      *
      * @param id The view id.
      * @throws UiObjectNotFoundException
@@ -258,7 +273,7 @@ public class UiAutomatorLib {
 
     public static boolean isObjectExistsContains(final String textContains) {
         return getDevice().findObject(new UiSelector()
-                        .textContains(textContains))
+                .textContains(textContains))
                 .exists();
     }
     //endregion - assert

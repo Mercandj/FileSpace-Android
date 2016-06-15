@@ -1,5 +1,6 @@
 package com.mercandalli.android.apps.files;
 
+import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
@@ -35,6 +36,7 @@ public final class LocalAudioFileAndroidTest {
      * Has to be public.
      */
     @Rule
+    @NonNull
     public final ActivityTestRule<SplashActivity> activityRule = new ActivityTestRule<SplashActivity>(SplashActivity.class) {
         @Override
         protected void beforeActivityLaunched() {

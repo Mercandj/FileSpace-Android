@@ -1,5 +1,6 @@
 package com.mercandalli.android.apps.files;
 
+import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.matcher.ViewMatchers;
@@ -31,6 +32,7 @@ public class NoteAndroidTest {
      * Has to be public.
      */
     @Rule
+    @NonNull
     public final ActivityTestRule<SplashActivity> activityRule = new ActivityTestRule<SplashActivity>(SplashActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
