@@ -78,15 +78,22 @@ public class FileLocalPagerFragment extends BackFragment implements
     }
 
     //region Views
+    @Nullable
     private TabLayout mTabLayout;
+    @Nullable
     private RtlViewPager mViewPager;
+    @Nullable
     private FileManagerFragmentPagerAdapter mPagerAdapter;
+    @Nullable
     private FloatingActionButton mFab1;
+    @Nullable
     private FloatingActionButton mFab2;
     //endregion Views
 
+    @Nullable
     private FileLocalFabManager mFileLocalFabManager;
 
+    @Nullable
     private SetToolbarCallback mSetToolbarCallback;
 
     @NonNull
@@ -234,17 +241,17 @@ public class FileLocalPagerFragment extends BackFragment implements
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_search).setVisible(true);
-        menu.findItem(R.id.action_share).setVisible(false);
-        menu.findItem(R.id.action_delete).setVisible(false);
-        menu.findItem(R.id.action_add).setVisible(false);
-        menu.findItem(R.id.action_home).setVisible(false);
+        setMenuVisibility(menu.findItem(R.id.action_search), true);
+        setMenuVisibility(menu.findItem(R.id.action_share), false);
+        setMenuVisibility(menu.findItem(R.id.action_delete), false);
+        setMenuVisibility(menu.findItem(R.id.action_add), false);
+        setMenuVisibility(menu.findItem(R.id.action_home), false);
 
         final Fragment fragment = getCurrentFragment();
         if (fragment instanceof HomeIconVisible) {
-            menu.findItem(R.id.action_home).setVisible(((HomeIconVisible) fragment).isHomeVisible());
+            setMenuVisibility(menu.findItem(R.id.action_home), ((HomeIconVisible) fragment).isHomeVisible());
         } else {
-            menu.findItem(R.id.action_home).setVisible(false);
+            setMenuVisibility(menu.findItem(R.id.action_home), false);
         }
     }
 
@@ -413,6 +420,14 @@ public class FileLocalPagerFragment extends BackFragment implements
     }
 
     //region Inner class and interface
+
+    private boolean setMenuVisibility(@Nullable final MenuItem menuItem, final boolean visible) {
+        if (menuItem == null) {
+            return false;
+        }
+        menuItem.setVisible(visible);
+        return true;
+    }
 
     /**
      * A simple {@link FragmentPagerAdapter}.

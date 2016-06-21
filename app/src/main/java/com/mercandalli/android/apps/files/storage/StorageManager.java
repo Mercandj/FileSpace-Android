@@ -20,7 +20,10 @@ public final class StorageManager {
         return sInstance;
     }
 
+    @Nullable
     private Storage mStorageDisk;
+
+    @Nullable
     private Storage mStorageRam;
 
     private StorageManager() {
@@ -40,6 +43,9 @@ public final class StorageManager {
 
     @NonNull
     public Storage getRam(Context context) {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            return new Storage(0, 0);
+        }
         if (mStorageRam == null) {
             ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
             ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);

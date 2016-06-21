@@ -116,9 +116,13 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     private int mCurrentPage = PAGE_FOLDERS;
 
     private RecyclerView mRecyclerView;
+    @NonNull
     private final List<FileModel> mFileModels = new ArrayList<>();
+    @NonNull
     private final List<FileAudioModel> mFileAudioModels = new ArrayList<>();
+    @NonNull
     private final List<Artist> mArtists = new ArrayList<>();
+    @NonNull
     private final List<Album> mAlbums = new ArrayList<>();
     private TextView mMessageTextView;
 

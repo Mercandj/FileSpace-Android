@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -22,6 +22,7 @@ package com.mercandalli.android.apps.files.file.audio;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -51,10 +52,11 @@ import java.util.List;
 /* package */
 class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapter.ViewHolder> {
 
-    private List<FileAudioModel> mFiles;
+    @NonNull
+    private final List<FileAudioModel> mFiles = new ArrayList<>();
     private OnItemClickListener mItemClickListener;
     private OnItemLongClickListener mItemLongClickListener;
-    private FileAudioModelListener moreListener;
+    private FileAudioModelListener mMoreListener;
 
     private boolean mShowSize;
     private boolean mHasHeader;
@@ -71,13 +73,13 @@ class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapter.ViewH
     private static final int TYPE_ITEM = 2;
 
     /* Header */
-    private List<FileModelCardHeaderItem> mHeaderItems;
+    @NonNull
+    private final List<FileModelCardHeaderItem> mHeaderItems = new ArrayList<>();
     private FileModelCardAdapter.OnHeaderClickListener mOnHeaderClickListener;
 
     public FileAudioRowAdapter(Context context, List<FileAudioModel> files, FileAudioModelListener moreListener) {
-        this.mFiles = new ArrayList<>();
         this.mFiles.addAll(files);
-        this.moreListener = moreListener;
+        this.mMoreListener = moreListener;
         this.mHasHeader = false;
 
         mStringDirectory = context.getString(R.string.file_model_adapter_directory);
@@ -98,7 +100,6 @@ class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapter.ViewH
             final FileAudioModelListener moreListener) {
         this(context, files, moreListener);
         this.mHasHeader = true;
-        mHeaderItems = new ArrayList<>();
         mHeaderItems.addAll(headerItems);
         mOnHeaderClickListener = onHeaderClickListener;
     }
@@ -168,14 +169,14 @@ class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapter.ViewH
             fileViewHolder.icon.setImageResource(R.drawable.file_default);
         }
 
-        if (moreListener == null) {
+        if (mMoreListener == null) {
             fileViewHolder.more.setVisibility(View.GONE);
         }
         fileViewHolder.more.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (moreListener != null) {
-                    moreListener.executeFileAudioModel(file, v);
+                if (mMoreListener != null) {
+                    mMoreListener.executeFileAudioModel(file, v);
                 }
             }
         });

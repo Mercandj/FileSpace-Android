@@ -1,5 +1,6 @@
 package com.mercandalli.android.apps.files.file.audio.artist;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
@@ -10,6 +11,7 @@ import java.util.List;
 
 public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder> {
 
+    @NonNull
     private final List<Artist> mArtists = new ArrayList<>();
 
     @Override

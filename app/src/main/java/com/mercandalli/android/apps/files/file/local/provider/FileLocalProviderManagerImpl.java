@@ -32,22 +32,34 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
     private static final String STRING_SQL_LIKE = " LIKE ?";
     private static final String TAG = "FileLocalProviderMa";
 
+    @NonNull
     private final Handler mUiHandler;
+    @NonNull
     private final Thread mUiThread;
+    @NonNull
     private final Context mContextApp;
 
+    @NonNull
     private final List<String> mFilePaths = new ArrayList<>();
+    @NonNull
     private final List<String> mFileAudioPaths = new ArrayList<>();
+    @NonNull
     private final List<String> mFileImagePaths = new ArrayList<>();
+    @NonNull
     private final List<String> mFileVideoPaths = new ArrayList<>();
+    @NonNull
     private final List<GetFilePathsListener> mGetFilePathsListeners = new ArrayList<>();
+    @NonNull
     private final List<GetFileAudioListener> mGetFileAudioListeners = new ArrayList<>();
+    @NonNull
     private final List<GetFileImageListener> mGetFileImageListeners = new ArrayList<>();
+    @NonNull
     private final List<GetFileVideoListener> mGetFileVideoListeners = new ArrayList<>();
 
     private boolean mIsLoadLaunched = false;
     private boolean mIsLoaded = false;
 
+    @NonNull
     protected final List<FileProviderListener> mFileProviderListeners = new ArrayList<>();
 
     /**
@@ -55,7 +67,7 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
      *
      * @param contextApp The {@link Context} of this application.
      */
-    public FileLocalProviderManagerImpl(final Context contextApp) {
+    public FileLocalProviderManagerImpl(@NonNull final Context contextApp) {
         Preconditions.checkNotNull(contextApp);
         mContextApp = contextApp;
 

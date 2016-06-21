@@ -232,7 +232,10 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
                 // Used to count the number of music inside.
                 final Map<String, Album> albums = new HashMap<>();
 
-                final String[] PROJECTION = new String[]{MediaStore.Files.FileColumns.DATA, MediaStore.Audio.Albums._ID, MediaStore.Audio.Albums.ALBUM};
+                final String[] projection = new String[]{
+                        MediaStore.Files.FileColumns.DATA,
+                        MediaStore.Audio.Albums._ID,
+                        MediaStore.Audio.Albums.ALBUM};
 
                 final Uri allSongsUri = MediaStore.Files.getContentUri("external");
                 final List<String> searchArray = new ArrayList<>();
@@ -247,7 +250,7 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
                 }
                 selection.append(" )");
 
-                final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, PROJECTION, selection.toString(), searchArray.toArray(new String[searchArray.size()]), null);
+                final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, projection, selection.toString(), searchArray.toArray(new String[searchArray.size()]), null);
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         do {
