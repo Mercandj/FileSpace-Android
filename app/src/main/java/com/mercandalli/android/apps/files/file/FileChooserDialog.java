@@ -34,6 +34,7 @@ import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.view.divider.SpacesItemDecoration;
 import com.mercandalli.android.apps.files.main.FileApp;
+import com.mercandalli.android.apps.files.settings.SettingsManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -117,6 +118,7 @@ public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFile
     private void refreshList() {
         mFileManager.getFiles(
                 new FileModel.FileModelBuilder().file(mCurrentFile).build(),
+                SettingsManager.getInstance(getContext()).isSuperUser(),
                 new ResultCallback<List<FileModel>>() {
                     @Override
                     public void success(List<FileModel> result) {

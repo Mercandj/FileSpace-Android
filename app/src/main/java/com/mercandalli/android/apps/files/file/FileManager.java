@@ -25,6 +25,7 @@ public interface FileManager {
      */
     void getFiles(
             final File fileParent,
+            final boolean isSuperUser,
             final ResultCallback<List<FileModel>> resultCallback);
 
     /**
@@ -32,6 +33,7 @@ public interface FileManager {
      */
     void getFiles(
             final FileModel fileParent,
+            final boolean isSuperUser,
             final ResultCallback<List<FileModel>> resultCallback);
 
     /**
@@ -39,6 +41,7 @@ public interface FileManager {
      */
     void getFiles(
             final FileModel fileParent,
+            final boolean isSuperUser,
             boolean areMyFiles,
             final ResultCallback<List<FileModel>> resultCallback);
 

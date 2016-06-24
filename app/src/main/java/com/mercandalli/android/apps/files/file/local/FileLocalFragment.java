@@ -55,6 +55,7 @@ import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileApp;
+import com.mercandalli.android.apps.files.settings.SettingsManager;
 import com.mercandalli.android.library.base.dialog.DialogUtils;
 import com.mercandalli.android.library.base.event.EventManager;
 
@@ -98,7 +99,7 @@ public class FileLocalFragment extends BackFragment implements
     @NonNull
     private final List<FileModel> mFilesList = new ArrayList<>();
     private ProgressBar mProgressBar;
-    private File mCurrentDirectory = createInitialDirectory();
+    private FileModel mCurrentDirectory = createInitialDirectory();
     private TextView mMessageTextView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -185,9 +186,11 @@ public class FileLocalFragment extends BackFragment implements
         if (hasItemSelected()) {
             deselectAll();
             return true;
-        } else if (!mCurrentDirectory.getPath().equals(initialPath())) {
-            if (mCurrentDirectory.getParent() != null) {
-                mCurrentDirectory = new File(mCurrentDirectory.getParentFile().getPath());
+        } else if (!mCurrentDirectory.getFile().getPath().equals(initialPath())) {
+            if (mCurrentDirectory.getFile().getParent() != null) {
+                mCurrentDirectory = new FileModel.FileModelBuilder()
+                        .file(new File(mCurrentDirectory.getFile().getParentFile().getPath()))
+                        .build();
                 refreshCurrentList();
                 return true;
             }
@@ -216,11 +219,11 @@ public class FileLocalFragment extends BackFragment implements
             case 0:
                 if ((mFilesToCopyList.size() != 0) || (mFilesToCutList.size() != 0)) {
                     for (final FileModel file : mFilesToCopyList) {
-                        mFileManager.copyLocalFile((Activity) context, file, mCurrentDirectory.getAbsolutePath() + File.separator);
+                        mFileManager.copyLocalFile((Activity) context, file, mCurrentDirectory.getFile().getAbsolutePath() + File.separator);
                     }
                     mFilesToCopyList.clear();
                     for (final FileModel file : mFilesToCutList) {
-                        mFileManager.renameLocalByPath(file, mCurrentDirectory.getAbsolutePath() + File.separator + file.getFullName());
+                        mFileManager.renameLocalByPath(file, mCurrentDirectory.getFile().getAbsolutePath() + File.separator + file.getFullName());
                     }
                     mFilesToCutList.clear();
                     refreshCurrentList();
@@ -241,7 +244,7 @@ public class FileLocalFragment extends BackFragment implements
                                                     new DialogUtils.OnDialogUtilsStringListener() {
                                                         @Override
                                                         public void onDialogUtilsStringCalledBack(String text) {
-                                                            createFile(mCurrentDirectory.getPath() + File.separator, text);
+                                                            createFile(mCurrentDirectory.getFile().getPath() + File.separator, text);
                                                             refreshCurrentList();
                                                         }
                                                     }, getString(android.R.string.cancel), null, null, context.getString(R.string.name));
@@ -255,8 +258,11 @@ public class FileLocalFragment extends BackFragment implements
                 break;
 
             case 1:
-                if (mCurrentDirectory.getParent() != null) {
-                    mCurrentDirectory = new File(mCurrentDirectory.getParentFile().getPath());
+                if (mCurrentDirectory.getFile() != null &&
+                        mCurrentDirectory.getFile().getParent() != null) {
+                    mCurrentDirectory = new FileModel.FileModelBuilder()
+                            .file(new File(mCurrentDirectory.getFile().getParentFile().getPath()))
+                            .build();
                     refreshCurrentList();
                 }
                 refreshFab();
@@ -278,7 +284,7 @@ public class FileLocalFragment extends BackFragment implements
                 return true;
             case 1:
                 return mCurrentDirectory != null &&
-                        mCurrentDirectory.getParent() != null;
+                        mCurrentDirectory.getFile().getParent() != null;
         }
         return false;
     }
@@ -317,7 +323,9 @@ public class FileLocalFragment extends BackFragment implements
                     "",
                     this,
                     "");
-            mCurrentDirectory = new File(mFilesList.get(position).getUrl());
+            mCurrentDirectory = new FileModel.FileModelBuilder()
+                    .file(new File(mFilesList.get(position).getUrl()))
+                    .build();
             refreshCurrentList();
         } else {
             mFileManager.execute((Activity) getContext(), position, mFilesList, view);
@@ -340,7 +348,7 @@ public class FileLocalFragment extends BackFragment implements
 
     @Override
     public boolean isHomeVisible() {
-        return !mCurrentDirectory.getPath().equals(initialPath());
+        return !mCurrentDirectory.getUrl().equals(initialPath());
     }
 
     @Override
@@ -404,34 +412,37 @@ public class FileLocalFragment extends BackFragment implements
         mMessageTextView.setVisibility(View.GONE);
         mRecyclerView.scrollToPosition(0);
 
-        mFileManager.getFiles(mCurrentDirectory, new ResultCallback<List<FileModel>>() {
-            @Override
-            public void success(final List<FileModel> result) {
-                mFilesList.clear();
-                mFilesList.addAll(result);
-                if (mFilesList.size() == 0) {
-                    mMessageTextView.setText(getString(R.string.no_file_local_folder, "" + mCurrentDirectory.getName()));
-                    mMessageTextView.setVisibility(View.VISIBLE);
-                } else {
-                    mMessageTextView.setVisibility(View.GONE);
-                }
-                mProgressBar.setVisibility(View.GONE);
-                mRecyclerView.setVisibility(View.VISIBLE);
-                mIsRefreshing = false;
-                updateAdapter();
-            }
+        mFileManager.getFiles(
+                mCurrentDirectory,
+                SettingsManager.getInstance(context).isSuperUser(),
+                new ResultCallback<List<FileModel>>() {
+                    @Override
+                    public void success(final List<FileModel> result) {
+                        mFilesList.clear();
+                        mFilesList.addAll(result);
+                        if (mFilesList.size() == 0) {
+                            mMessageTextView.setText(getString(R.string.no_file_local_folder, "" + mCurrentDirectory.getName()));
+                            mMessageTextView.setVisibility(View.VISIBLE);
+                        } else {
+                            mMessageTextView.setVisibility(View.GONE);
+                        }
+                        mProgressBar.setVisibility(View.GONE);
+                        mRecyclerView.setVisibility(View.VISIBLE);
+                        mIsRefreshing = false;
+                        updateAdapter();
+                    }
 
-            @Override
-            public void failure() {
-                mFilesList.clear();
-                mMessageTextView.setText("Failed to load");
-                mMessageTextView.setVisibility(View.VISIBLE);
-                mProgressBar.setVisibility(View.GONE);
-                mRecyclerView.setVisibility(View.VISIBLE);
-                mIsRefreshing = false;
-                updateAdapter();
-            }
-        });
+                    @Override
+                    public void failure() {
+                        mFilesList.clear();
+                        mMessageTextView.setText("Failed to load");
+                        mMessageTextView.setVisibility(View.VISIBLE);
+                        mProgressBar.setVisibility(View.GONE);
+                        mRecyclerView.setVisibility(View.VISIBLE);
+                        mIsRefreshing = false;
+                        updateAdapter();
+                    }
+                });
     }
 
     /**
@@ -504,7 +515,8 @@ public class FileLocalFragment extends BackFragment implements
         mRecyclerView.setHasFixedSize(true);
         mSwipeRefreshLayout.setEnabled(true);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+        mSwipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
@@ -553,13 +565,13 @@ public class FileLocalFragment extends BackFragment implements
     }
 
     @NonNull
-    protected File createInitialDirectory() {
+    protected FileModel createInitialDirectory() {
         final File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +
                 File.separator + Config.getLocalFolderName());
         if (!file.exists()) {
             file.mkdir();
         }
-        return file;
+        return new FileModel.FileModelBuilder().file(file).build();
     }
 
     protected String initialPath() {

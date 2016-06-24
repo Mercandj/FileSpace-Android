@@ -50,13 +50,13 @@ android {
         main {
             // https://medium.com/google-developer-experts/android-project-structure-alternative-way-29ce766682f0#.sjnhetuhb
             res.srcDirs = [
-                    'src/main/res-common',
-                    'src/main/res-screen/admin',
-                    'src/main/res-screen/file',
-                    'src/main/res-screen/main',
-                    'src/main/res-screen/note',
-                    'src/main/res-screen/storage',
-                    'src/main/res-screen/support'
+                    'src/main/res/admin',
+                    'src/main/res/common',
+                    'src/main/res/file',
+                    'src/main/res/main',
+                    'src/main/res/note',
+                    'src/main/res/storage',
+                    'src/main/res/support'
             ]
         }
 

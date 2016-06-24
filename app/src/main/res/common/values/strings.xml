@@ -191,6 +191,7 @@
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
+    <string name="settings_super_user">Super user</string>
     <string name="settings_about">About</string>
     <string name="settings_licences">Licences</string>
     <string name="settings_ad">Make the developer happy</string>

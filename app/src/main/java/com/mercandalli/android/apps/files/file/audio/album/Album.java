@@ -1,5 +1,6 @@
 package com.mercandalli.android.apps.files.file.audio.album;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.mercandalli.android.library.base.precondition.Preconditions;
@@ -9,8 +10,11 @@ import java.util.List;
 
 public class Album {
 
+    @NonNull
     protected final String mUuid;
+    @NonNull
     protected final String mName;
+    @NonNull
     protected final List<String> mFilePaths = new ArrayList<>();
 
     public Album(final String uuid, final String name) {

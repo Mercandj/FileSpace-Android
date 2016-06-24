@@ -25,6 +25,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -57,18 +58,18 @@ public class SettingsFragment extends BackFragment {
 
     private static final String BUNDLE_ARG_TITLE = "HomeFragment.Args.BUNDLE_ARG_TITLE";
 
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private List<ModelSetting> list;
-    private int click_version;
-    private boolean isDeveloper = false;
+    private RecyclerView mRecyclerView;
+    @NonNull
+    private List<ModelSetting> mModelSettings = new ArrayList<>();
+    private int mClickVersion;
+    private boolean mIsDeveloper = false;
     private SetToolbarCallback mSetToolbarCallback;
     private String mTitle;
 
     private InterstitialAd mInterstitialAd;
     private int mThanhYou;
 
-    public static SettingsFragment newInstance(String title) {
+    public static SettingsFragment newInstance(final String title) {
         final SettingsFragment fragment = new SettingsFragment();
         final Bundle args = new Bundle();
         args.putString(BUNDLE_ARG_TITLE, title);
@@ -111,11 +112,11 @@ public class SettingsFragment extends BackFragment {
         mSetToolbarCallback.setToolbar(toolbar);
         setStatusBarColor(getActivity(), R.color.status_bar);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(mLayoutManager);
-        click_version = 0;
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(layoutManager);
+        mClickVersion = 0;
 
         if (Constants.ADS_VISIBLE) {
             // Create an InterstitialAd object. This same object can be re-used whenever you want to
@@ -156,16 +157,16 @@ public class SettingsFragment extends BackFragment {
 
     public void refreshList() {
         final Context context = getContext();
-        list = new ArrayList<>();
-        list.add(new ModelSetting(context.getString(R.string.settings_title), Constants.TAB_VIEW_TYPE_SECTION));
+        mModelSettings.clear();
+        mModelSettings.add(new ModelSetting(context.getString(R.string.settings_title), Constants.TAB_VIEW_TYPE_SECTION));
         if (Config.isLogged()) {
-            list.add(new ModelSetting("Auto connection", new OnCheckedChangeListener() {
+            mModelSettings.add(new ModelSetting("Auto connection", new OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     Config.setAutoConnection(context, isChecked);
                 }
             }, Config.isAutoConnection()));
-            list.add(new ModelSetting("Web application", new View.OnClickListener() {
+            mModelSettings.add(new ModelSetting("Web application", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     NetUtils.search(context, Config.WEB_APPLICATION);
@@ -173,7 +174,7 @@ public class SettingsFragment extends BackFragment {
             }));
         }
         if (Config.isLogged()) {
-            list.add(new ModelSetting("Change password", new View.OnClickListener() {
+            mModelSettings.add(new ModelSetting("Change password", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //TODO Change password
@@ -181,8 +182,8 @@ public class SettingsFragment extends BackFragment {
                 }
             }));
         }
-        if (isDeveloper) {
-            list.add(new ModelSetting("Login / Sign in", new View.OnClickListener() {
+        if (mIsDeveloper) {
+            mModelSettings.add(new ModelSetting("Login / Sign in", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, LoginRegisterActivity.class);
@@ -192,20 +193,31 @@ public class SettingsFragment extends BackFragment {
                 }
             }));
         }
-        list.add(new ModelSetting(getString(R.string.settings_about), new View.OnClickListener() {
+        mModelSettings.add(new ModelSetting(getString(R.string.settings_about), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new DialogAuthorLabel(getActivity());
             }
         }));
-        list.add(new ModelSetting(getString(R.string.settings_licences), new View.OnClickListener() {
+        mModelSettings.add(new ModelSetting(getString(R.string.settings_super_user), new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+                final Context tmpContext = buttonView.getContext();
+                if (!SettingsManager.getInstance(tmpContext)
+                        .setIsSuperUser(isChecked)) {
+                    buttonView.setChecked(false);
+                    Toast.makeText(tmpContext, "Your device is not rooted", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, SettingsManager.getInstance(context).isSuperUser()));
+        mModelSettings.add(new ModelSetting(getString(R.string.settings_licences), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 LicenseActivity.start(context);
             }
         }));
         if (Constants.ADS_VISIBLE) {
-            list.add(new ModelSetting(getString(R.string.settings_ad), new View.OnClickListener() {
+            mModelSettings.add(new ModelSetting(getString(R.string.settings_ad), new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (mInterstitialAd.isLoaded()) {
@@ -220,17 +232,17 @@ public class SettingsFragment extends BackFragment {
 
         try {
             PackageInfo pInfo = getContext().getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            list.add(new ModelSetting("Last update date GMT", TimeUtils.getGMTDate(pInfo.lastUpdateTime)));
-            list.add(new ModelSetting("Version", pInfo.versionName, new View.OnClickListener() {
+            mModelSettings.add(new ModelSetting("Last update date GMT", TimeUtils.getGMTDate(pInfo.lastUpdateTime)));
+            mModelSettings.add(new ModelSetting("Version", pInfo.versionName, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (click_version == 11) {
+                    if (mClickVersion == 11) {
                         Toast.makeText(context, "Development settings activated.", Toast.LENGTH_SHORT).show();
-                        isDeveloper = true;
+                        mIsDeveloper = true;
                         refreshList();
-                    } else if (click_version < 11) {
-                        if (click_version >= 1) {
-                            final Toast t = Toast.makeText(context, "" + (11 - click_version), Toast.LENGTH_SHORT);
+                    } else if (mClickVersion < 11) {
+                        if (mClickVersion >= 1) {
+                            final Toast t = Toast.makeText(context, "" + (11 - mClickVersion), Toast.LENGTH_SHORT);
                             t.show();
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
@@ -240,7 +252,7 @@ public class SettingsFragment extends BackFragment {
                                 }
                             }, 700);
                         }
-                        click_version++;
+                        mClickVersion++;
                     }
                 }
             }));
@@ -252,17 +264,17 @@ public class SettingsFragment extends BackFragment {
     }
 
     public void updateAdapter() {
-        if (recyclerView != null && list != null) {
-            AdapterModelSetting adapter = new AdapterModelSetting(list);
+        if (mRecyclerView != null) {
+            AdapterModelSetting adapter = new AdapterModelSetting(mModelSettings);
             adapter.setOnItemClickListener(new AdapterModelSetting.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    if (position < list.size() && list.get(position).onClickListener != null) {
-                        list.get(position).onClickListener.onClick(view);
+                    if (position < mModelSettings.size() && mModelSettings.get(position).onClickListener != null) {
+                        mModelSettings.get(position).onClickListener.onClick(view);
                     }
                 }
             });
-            recyclerView.setAdapter(adapter);
+            mRecyclerView.setAdapter(adapter);
         }
     }
 

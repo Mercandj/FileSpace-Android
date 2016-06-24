@@ -15,6 +15,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.Spanned;
@@ -80,12 +81,17 @@ class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallback
     private static final String MIME_TEXT = "text/plain";
     private static final String FAILED_FILE_IS_NULL = "Failed: File is null.";
 
+    @NonNull
     private final Context mContextApp;
+    @NonNull
     private final FileOnlineApi mFileOnlineApi;
-
+    @NonNull
     private final FileLocalApi mFileLocalApi;
+    @NonNull
     private final FileUploadOnlineApi mFileUploadOnlineApi;
+    @NonNull
     private final Handler mUiHandler;
+    @NonNull
     private final Thread mUiThread;
 
     private NotificationCompat.Builder mNotificationBuilder;
@@ -94,15 +100,15 @@ class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallback
     private final FileLocalProviderManager mFileLocalProviderManager;
 
     /* package */ FileManagerImpl(
-            final Context contextApp,
-            final FileOnlineApi fileOnlineApi,
-            final FileUploadOnlineApi fileUploadOnlineApi) {
+            @NonNull final Context contextApp,
+            @NonNull final FileOnlineApi fileOnlineApi,
+            @NonNull final FileUploadOnlineApi fileUploadOnlineApi) {
         Preconditions.checkNotNull(contextApp);
 
         mContextApp = contextApp;
         mFileOnlineApi = fileOnlineApi;
         mFileUploadOnlineApi = fileUploadOnlineApi;
-        mFileLocalApi = new FileLocalApi();
+        mFileLocalApi = FileLocalApi.getInstance();
 
         mFileLocalProviderManager = FileApp.get().getFileAppComponent().provideFileLocalProviderManager();
 
@@ -117,11 +123,22 @@ class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallback
     @Override
     public void getFiles(
             final File fileParent,
+            final boolean isSuperUser,
             final ResultCallback<List<FileModel>> resultCallback) {
         new Thread() {
             @Override
             public void run() {
-                notifyGetFilesSucceeded(mFileLocalApi.getFiles(fileParent), resultCallback);
+                final List<FileModel> files = mFileLocalApi.getFiles(fileParent);
+                if (!isSuperUser || !files.isEmpty()) {
+                    notifyGetFilesSucceeded(files, resultCallback);
+                } else {
+                    mFileLocalApi.getFilesSuperUser(fileParent, new FileLocalApi.GetFilesSuperUser() {
+                        @Override
+                        public void onGetFilesSuperUser(final List<FileModel> files) {
+                            notifyGetFilesSucceeded(files, resultCallback);
+                        }
+                    });
+                }
             }
         }.start();
     }
@@ -132,8 +149,9 @@ class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallback
     @Override
     public void getFiles(
             final FileModel fileParent,
+            final boolean isSuperUser,
             final ResultCallback<List<FileModel>> resultCallback) {
-        getFiles(fileParent, true, resultCallback);
+        getFiles(fileParent, isSuperUser, true, resultCallback);
     }
 
     /**
@@ -142,6 +160,7 @@ class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallback
     @Override
     public void getFiles(
             final FileModel fileParent,
+            final boolean isSuperUser,
             final boolean areMyFiles,
             final ResultCallback<List<FileModel>> resultCallback) {
 
@@ -149,7 +168,18 @@ class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallback
             new Thread() {
                 @Override
                 public void run() {
-                    notifyGetFilesSucceeded(mFileLocalApi.getFiles(fileParent.getFile()), resultCallback);
+                    final File fileParentFile = fileParent.getFile();
+                    final List<FileModel> files = mFileLocalApi.getFiles(fileParentFile);
+                    if (!isSuperUser || !files.isEmpty()) {
+                        notifyGetFilesSucceeded(files, resultCallback);
+                    } else {
+                        mFileLocalApi.getFilesSuperUser(fileParentFile, new FileLocalApi.GetFilesSuperUser() {
+                            @Override
+                            public void onGetFilesSuperUser(final List<FileModel> files) {
+                                notifyGetFilesSucceeded(files, resultCallback);
+                            }
+                        });
+                    }
                 }
             }.start();
             return;

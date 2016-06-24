@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -50,7 +50,9 @@ import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
 import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
 import com.mercandalli.android.apps.files.file.audio.album.Album;
+import com.mercandalli.android.apps.files.file.audio.album.AlbumCard;
 import com.mercandalli.android.apps.files.file.audio.artist.Artist;
+import com.mercandalli.android.apps.files.file.audio.artist.ArtistCard;
 import com.mercandalli.android.apps.files.file.audio.playlist.AudioPlayList;
 import com.mercandalli.android.apps.files.file.audio.playlist.AudioPlayListManager;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
@@ -58,6 +60,7 @@ import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.library.base.java.StringUtils;
+import com.mercandalli.android.library.base.view.GenericRecyclerAdapter;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -147,11 +150,13 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     /**
      * A simple {@link Handler}. Called by {@link #showProgressBar()} or {@link #hideProgressBar()}.
      */
+    @NonNull
     private final Handler mProgressBarActivationHandler;
 
     /**
      * A simple {@link Runnable}. Called by {@link #showProgressBar()} or {@link #hideProgressBar()}.
      */
+    @NonNull
     private final Runnable mProgressBarActivationRunnable;
 
     private FileModel mCurrentFolder;
@@ -171,6 +176,12 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
 
     @Inject
     AudioPlayListManager mAudioPlayListManager;
+
+    @Nullable
+    private GenericRecyclerAdapter<Album, AlbumCard> mAlbumCardGenericRecyclerAdapter;
+
+    @Nullable
+    private GenericRecyclerAdapter<Artist, ArtistCard> mArtistCardGenericRecyclerAdapter;
 
     public static FileAudioLocalFragment newInstance(final int positionInViewPager) {
         final FileAudioLocalFragment fileAudioLocalFragment = new FileAudioLocalFragment();
@@ -261,6 +272,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_artist, false));
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_album, false));
         mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_all, false));
+
+        mAlbumCardGenericRecyclerAdapter = new GenericRecyclerAdapter<>(AlbumCard.class);
+        mArtistCardGenericRecyclerAdapter = new GenericRecyclerAdapter<>(ArtistCard.class);
 
         mFileAudioRowAdapter = new FileAudioRowAdapter(context, mHeaderIds, this, mFileAudioModels, this);
         mFileAudioRowAdapter.setOnItemClickListener(new FileAudioRowAdapter.OnItemClickListener() {
@@ -497,9 +511,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
             mSwipeRefreshLayout.setRefreshing(false);
             mFileLocalFabManager.updateFabButtons();
 
-            final boolean isEmpty = (mFileModels.size() == 0 && mCurrentPage == PAGE_FOLDERS) ||
-                    (mFileAudioModels.size() == 0 && mCurrentPage != PAGE_FOLDERS);
-            if (isEmpty) {
+            if (isEmpty()) {
                 mMessageTextView.setText(getString(R.string.no_music));
                 mMessageTextView.setVisibility(View.VISIBLE);
             } else {
@@ -508,6 +520,10 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
 
             if (mCurrentPage == PAGE_FOLDERS) {
                 mFileModelCardAdapter.setList(mFileModels);
+            } else if (mCurrentPage == PAGE_ALBUM) {
+                mAlbumCardGenericRecyclerAdapter.setModels(mAlbums);
+            } else if (mCurrentPage == PAGE_ARTIST) {
+                mArtistCardGenericRecyclerAdapter.setModels(mArtists);
             } else {
                 mFileAudioRowAdapter.setList(mFileAudioModels);
             }
@@ -600,10 +616,8 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
             return;
         }
         hideProgressBar();
-
         mFileModels.clear();
         mFileModels.addAll(fileModels);
-
         mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mFileModelCardAdapter);
         mScaleAnimationAdapter.setDuration(220);
         mScaleAnimationAdapter.setOffsetDuration(32);
@@ -664,8 +678,14 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         if (mCurrentPage != PAGE_ARTIST) {
             return;
         }
+        hideProgressBar();
         mArtists.clear();
         mArtists.addAll(artists);
+        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mArtistCardGenericRecyclerAdapter);
+        mScaleAnimationAdapter.setDuration(220);
+        mScaleAnimationAdapter.setOffsetDuration(32);
+        mScaleAnimationAdapter.setNoAnimatedPosition(FileAudioLocalFragment.this);
+        mRecyclerView.setAdapter(mScaleAnimationAdapter);
         updateAdapter();
     }
 
@@ -685,8 +705,14 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         if (mCurrentPage != PAGE_ALBUM) {
             return;
         }
+        hideProgressBar();
         mAlbums.clear();
         mAlbums.addAll(albums);
+        mScaleAnimationAdapter = new ScaleAnimationAdapter(mRecyclerView, mAlbumCardGenericRecyclerAdapter);
+        mScaleAnimationAdapter.setDuration(220);
+        mScaleAnimationAdapter.setOffsetDuration(32);
+        mScaleAnimationAdapter.setNoAnimatedPosition(FileAudioLocalFragment.this);
+        mRecyclerView.setAdapter(mScaleAnimationAdapter);
         updateAdapter();
     }
 
@@ -783,5 +809,24 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mProgressBarActivationHandler.removeCallbacks(mProgressBarActivationRunnable);
         mProgressBar.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private boolean isEmpty() {
+        switch (mCurrentPage) {
+            case PAGE_ALL:
+                return mFileAudioModels.isEmpty();
+            case PAGE_FOLDERS:
+                return mFileModels.isEmpty();
+            case PAGE_FOLDER_INSIDE:
+                return mFileModels.isEmpty();
+            case PAGE_ALBUM:
+                return mAlbums.isEmpty();
+            case PAGE_ARTIST:
+                return mArtists.isEmpty();
+            case PAGE_PLAYLIST:
+                return mFileAudioModels.isEmpty();
+            default:
+                return mFileAudioModels.isEmpty();
+        }
     }
 }

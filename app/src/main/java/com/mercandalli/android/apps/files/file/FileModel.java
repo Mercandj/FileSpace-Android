@@ -130,6 +130,16 @@ public class FileModel implements Parcelable {
             return this;
         }
 
+        public FileModelBuilder nameWithExt(final String nameWithExt) {
+            if (mIsDirectory) {
+                mName = nameWithExt;
+            } else {
+                mName = (nameWithExt.lastIndexOf('.') == -1) ? nameWithExt : nameWithExt.substring(0, nameWithExt.lastIndexOf('.'));
+            }
+            mType = new FileTypeModel(getExtensionFromPath(nameWithExt));
+            return this;
+        }
+
         public FileModelBuilder file(final File file) {
             if (file == null) {
                 throw new IllegalStateException("file is null in FileModelBuilder#file(File).");

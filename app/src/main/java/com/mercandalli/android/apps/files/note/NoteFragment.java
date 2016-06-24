@@ -95,6 +95,9 @@ public class NoteFragment extends BackFragment {
      * Share the current note. Share the {@link #mInputEdiText}.
      */
     public void share() {
+        if (!isAdded()) {
+            return;
+        }
         final Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, mInputEdiText.getText().toString());

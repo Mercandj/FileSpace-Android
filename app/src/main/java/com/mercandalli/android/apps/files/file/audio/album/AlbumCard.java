@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.file.audio.artist;
+package com.mercandalli.android.apps.files.file.audio.album;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -12,34 +12,34 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.library.base.precondition.Preconditions;
 import com.mercandalli.android.library.base.view.GenericRecyclerAdapter;
 
-public class ArtistCard extends CardView implements View.OnClickListener, GenericRecyclerAdapter.GenericView<Artist> {
+public class AlbumCard extends CardView implements View.OnClickListener, GenericRecyclerAdapter.GenericView<Album> {
 
-    private Artist mArtist;
+    private Album mAlbum;
 
     /**
      * An {@link OnArtistCardClickListener} for click.
      */
     private OnArtistCardClickListener mOnArtistCardClickListener;
 
-    public ArtistCard(Context context) {
+    public AlbumCard(Context context) {
         super(context);
         init(context);
     }
 
-    public ArtistCard(Context context, AttributeSet attrs) {
+    public AlbumCard(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public ArtistCard(Context context, AttributeSet attrs, int defStyleAttr) {
+    public AlbumCard(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context);
     }
 
     @Override
     public void onClick(View v) {
-        if (mOnArtistCardClickListener != null && mArtist != null) {
-            mOnArtistCardClickListener.onArtistCardClicked(mArtist, v);
+        if (mOnArtistCardClickListener != null && mAlbum != null) {
+            mOnArtistCardClickListener.onArtistCardClicked(mAlbum, v);
         }
     }
 
@@ -49,7 +49,7 @@ public class ArtistCard extends CardView implements View.OnClickListener, Generi
     }
 
     /**
-     * Initialize this {@link ArtistCard}.
+     * Initialize this {@link AlbumCard}.
      *
      * @param context the {@link Context} passed in the constructor.
      */
@@ -64,7 +64,7 @@ public class ArtistCard extends CardView implements View.OnClickListener, Generi
     }
 
     /**
-     * Find the different{@link View}s used in this {@link ArtistCard}.
+     * Find the different{@link View}s used in this {@link AlbumCard}.
      *
      * @param rootView the root {@link View} inflated.
      */
@@ -78,16 +78,17 @@ public class ArtistCard extends CardView implements View.OnClickListener, Generi
 
     @NonNull
     @Override
-    public GenericRecyclerAdapter.GenericView<Artist> newInstance(@NonNull final Context context) {
-        return new ArtistCard(context);
+    public GenericRecyclerAdapter.GenericView<Album> newInstance(@NonNull final Context context) {
+        return new AlbumCard(context);
     }
 
     @Override
-    public void setModel(final Artist artist) {
-        mArtist = artist;
+    public void setModel(final Album album) {
+        Preconditions.checkNotNull(album);
+        mAlbum = album;
     }
 
     interface OnArtistCardClickListener {
-        void onArtistCardClicked(Artist artist, View v);
+        void onArtistCardClicked(Album artist, View v);
     }
 }
