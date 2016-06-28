@@ -7,7 +7,7 @@ import com.mercandalli.android.library.base.precondition.Preconditions;
 
 import java.util.concurrent.TimeUnit;
 
-public class FileAudioWearUtils {
+/* package */ class FileAudioWearUtils {
 
     public static final long CONNECTION_TIME_OUT_MS = 5_000;
 

@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p/>
+ * <p>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p/>
+ * <p>
  * LICENSE:
- * <p/>
+ * <p>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p/>
+ * <p>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -207,6 +207,8 @@ public class SettingsFragment extends BackFragment {
                         .setIsSuperUser(isChecked)) {
                     buttonView.setChecked(false);
                     Toast.makeText(tmpContext, "Your device is not rooted", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(tmpContext, "This is an experimental mode", Toast.LENGTH_SHORT).show();
                 }
             }
         }, SettingsManager.getInstance(context).isSuperUser()));

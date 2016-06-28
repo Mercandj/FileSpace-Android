@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -96,6 +96,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
      * A key for the view pager position.
      */
     private static final String ARG_POSITION_IN_VIEW_PAGER = "FileLocalFragment.Args.ARG_POSITION_IN_VIEW_PAGER";
+    private HeaderView mHeaderView;
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({
@@ -118,7 +119,6 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     @CurrentPage
     private int mCurrentPage = PAGE_FOLDERS;
 
-    private RecyclerView mRecyclerView;
     @NonNull
     private final List<FileModel> mFileModels = new ArrayList<>();
     @NonNull
@@ -127,9 +127,9 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     private final List<Artist> mArtists = new ArrayList<>();
     @NonNull
     private final List<Album> mAlbums = new ArrayList<>();
-    private TextView mMessageTextView;
 
-    private List<FileModelCardHeaderItem> mHeaderIds;
+    private RecyclerView mRecyclerView;
+    private TextView mMessageTextView;
 
     /**
      * A simple {@link ProgressBar}. Call {@link #showProgressBar()} or {@link #hideProgressBar()}.
@@ -265,18 +265,14 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         mRecyclerView.setHasFixedSize(true);
         updateLayoutManager();
 
-        mHeaderIds = new ArrayList<>();
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_folder, true));
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_playlist, false));
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_recent, false));
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_artist, false));
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_album, false));
-        mHeaderIds.add(new FileModelCardHeaderItem(R.id.view_file_header_audio_all, false));
-
+        mHeaderView = new HeaderView(context);
+        mHeaderView.addOnHeaderClickListener(this);
         mAlbumCardGenericRecyclerAdapter = new GenericRecyclerAdapter<>(AlbumCard.class);
+        mAlbumCardGenericRecyclerAdapter.setHeader(mHeaderView);
         mArtistCardGenericRecyclerAdapter = new GenericRecyclerAdapter<>(ArtistCard.class);
+        mArtistCardGenericRecyclerAdapter.setHeader(mHeaderView);
 
-        mFileAudioRowAdapter = new FileAudioRowAdapter(context, mHeaderIds, this, mFileAudioModels, this);
+        mFileAudioRowAdapter = new FileAudioRowAdapter(context, this, mFileAudioModels, this);
         mFileAudioRowAdapter.setOnItemClickListener(new FileAudioRowAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -298,12 +294,18 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
             }
         });
 
-        mFileModelCardAdapter = new FileModelCardAdapter(context, mHeaderIds, this, mFileModels, null, new FileModelCardAdapter.OnFileClickListener() {
-            @Override
-            public void onFileCardClick(View view, int position) {
-                refreshListFoldersInside(mFileModels.get(position));
-            }
-        }, null);
+        mFileModelCardAdapter = new FileModelCardAdapter(
+                context,
+                FileAudioHeaderManager.getInstance().getHeaderIds(),
+                this,
+                mFileModels,
+                null,
+                new FileModelCardAdapter.OnFileClickListener() {
+                    @Override
+                    public void onFileCardClick(View view, int position) {
+                        refreshListFoldersInside(mFileModels.get(position));
+                    }
+                }, null);
         mFileModelCardAdapter.setOnFileSubtitleAdapter(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -330,6 +332,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
      */
     @Override
     public void onDestroyView() {
+        mHeaderView.removeOnHeaderClickListener(this);
         mFileAudioManager.removeGetAllLocalMusicListener(this);
         mFileAudioManager.removeGetLocalMusicFoldersListener(this);
         mFileAudioManager.removeGetLocalMusicListener(this);
@@ -424,8 +427,7 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
      */
     @Override
     public boolean onHeaderClick(View v, List<FileModelCardHeaderItem> fileModelCardHeaderItems) {
-        mHeaderIds.clear();
-        mHeaderIds.addAll(fileModelCardHeaderItems);
+        FileAudioHeaderManager.getInstance().setHeaderIds(fileModelCardHeaderItems);
         final int viewId = v.getId();
         switch (viewId) {
             case R.id.view_file_header_audio_folder:

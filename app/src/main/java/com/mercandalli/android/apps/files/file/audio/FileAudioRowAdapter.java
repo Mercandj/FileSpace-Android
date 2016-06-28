@@ -73,8 +73,6 @@ class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapter.ViewH
     private static final int TYPE_ITEM = 2;
 
     /* Header */
-    @NonNull
-    private final List<FileModelCardHeaderItem> mHeaderItems = new ArrayList<>();
     private FileModelCardAdapter.OnHeaderClickListener mOnHeaderClickListener;
 
     public FileAudioRowAdapter(Context context, List<FileAudioModel> files, FileAudioModelListener moreListener) {
@@ -94,13 +92,11 @@ class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapter.ViewH
      */
     public FileAudioRowAdapter(
             final Context context,
-            final List<FileModelCardHeaderItem> headerItems,
             final FileModelCardAdapter.OnHeaderClickListener onHeaderClickListener,
             final List<FileAudioModel> files,
             final FileAudioModelListener moreListener) {
         this(context, files, moreListener);
         this.mHasHeader = true;
-        mHeaderItems.addAll(headerItems);
         mOnHeaderClickListener = onHeaderClickListener;
     }
 
@@ -117,7 +113,6 @@ class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapter.ViewH
         if (viewType == TYPE_HEADER) {
             return new HeaderViewHolder(
                     LayoutInflater.from(parent.getContext()).inflate(R.layout.view_file_header_audio, parent, false),
-                    mHeaderItems,
                     mOnHeaderClickListener
             );
         } else if (viewType == TYPE_ROW_CARDS_HEADER) {
@@ -135,7 +130,7 @@ class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapter.ViewH
 
         if (viewHolder instanceof HeaderViewHolder) {
             final HeaderViewHolder headerViewHolder = (HeaderViewHolder) viewHolder;
-            headerViewHolder.setFileModelCardHeaderItems(mHeaderItems);
+            headerViewHolder.setFileModelCardHeaderItems(FileAudioHeaderManager.getInstance().getHeaderIds());
             return;
         }
 
@@ -352,14 +347,13 @@ class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapter.ViewH
 
         public HeaderViewHolder(
                 final View itemView,
-                final List<FileModelCardHeaderItem> headerItems,
                 final FileModelCardAdapter.OnHeaderClickListener onHeaderClickListener) {
             super(itemView);
             Preconditions.checkNotNull(onHeaderClickListener);
             mPrimaryColor = ContextCompat.getColor(itemView.getContext(), R.color.primary);
             mOnHeaderClickListener = onHeaderClickListener;
             mFileModelCardHeaderItems = new ArrayList<>();
-            mFileModelCardHeaderItems.addAll(headerItems);
+            mFileModelCardHeaderItems.addAll(FileAudioHeaderManager.getInstance().getHeaderIds());
             updateView();
         }
 
@@ -380,6 +374,7 @@ class FileAudioRowAdapter extends RecyclerView.Adapter<FileAudioRowAdapter.ViewH
             for (FileModelCardHeaderItem f : mFileModelCardHeaderItems) {
                 f.setSelected(f.getId() == viewId);
             }
+            FileAudioHeaderManager.getInstance().setHeaderIds(mFileModelCardHeaderItems);
             mOnHeaderClickListener.onHeaderClick(v, mFileModelCardHeaderItems);
             updateView();
         }

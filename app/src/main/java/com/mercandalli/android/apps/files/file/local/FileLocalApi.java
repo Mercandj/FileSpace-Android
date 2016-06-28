@@ -5,8 +5,8 @@ import android.support.annotation.Nullable;
 
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
-import com.mercandalli.android.library.base.root.RootFile;
-import com.mercandalli.android.library.base.root.RootManager;
+import com.mercandalli.android.library.base.su.SuperUserFile;
+import com.mercandalli.android.library.base.su.SuperUserManager;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -72,31 +72,33 @@ public class FileLocalApi {
             final File directoryFile,
             final GetFilesSuperUser getFilesSuperUser) {
         final WeakReference<GetFilesSuperUser> weakReference = new WeakReference<>(getFilesSuperUser);
-        RootManager.getInstance().getFolderChildren(directoryFile.getAbsolutePath(), new RootManager.FolderChildrenListener() {
-            @Override
-            public void onGetFolderChildrenSucceeded(@NonNull final String s, @NonNull final List<RootFile> list) {
-                final GetFilesSuperUser reference = weakReference.get();
-                if (reference != null) {
-                    List<FileModel> fileModels = new ArrayList<>();
-                    for (final RootFile rootFile : list) {
-                        fileModels.add(new FileModel.FileModelBuilder()
-                                .isDirectory(rootFile.isDirectory())
-                                .nameWithExt(rootFile.getName())
-                                .url(rootFile.getAbsolutePath())
-                                .build());
+        SuperUserManager.getInstance().getFolderChildren(
+                directoryFile.getAbsolutePath(),
+                new SuperUserManager.FolderChildrenListener() {
+                    @Override
+                    public void onGetFolderChildrenSucceeded(@NonNull final String s, @NonNull final List<SuperUserFile> list) {
+                        final GetFilesSuperUser reference = weakReference.get();
+                        if (reference != null) {
+                            List<FileModel> fileModels = new ArrayList<>();
+                            for (final SuperUserFile superUserFile : list) {
+                                fileModels.add(new FileModel.FileModelBuilder()
+                                        .isDirectory(superUserFile.isDirectory())
+                                        .nameWithExt(superUserFile.getName())
+                                        .url(superUserFile.getAbsolutePath())
+                                        .build());
+                            }
+                            reference.onGetFilesSuperUser(fileModels);
+                        }
                     }
-                    reference.onGetFilesSuperUser(fileModels);
-                }
-            }
 
-            @Override
-            public void onGetFolderChildrenFailed(@NonNull final String s) {
-                final GetFilesSuperUser reference = weakReference.get();
-                if (reference != null) {
-                    reference.onGetFilesSuperUser(new ArrayList<FileModel>());
-                }
-            }
-        });
+                    @Override
+                    public void onGetFolderChildrenFailed(@NonNull final String s) {
+                        final GetFilesSuperUser reference = weakReference.get();
+                        if (reference != null) {
+                            reference.onGetFilesSuperUser(new ArrayList<FileModel>());
+                        }
+                    }
+                });
     }
 
     public interface GetFilesSuperUser {

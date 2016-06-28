@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.mercandalli.android.library.base.root.RootManager;
+import com.mercandalli.android.library.base.su.SuperUserManager;
 
 public final class SettingsManager {
 
@@ -48,7 +48,7 @@ public final class SettingsManager {
      * @return True if the value change.
      */
     public boolean setIsSuperUser(final boolean isSuperUser) {
-        if (!RootManager.getInstance().isRooted()) {
+        if (!SuperUserManager.getInstance().isRooted()) {
             return false;
         }
         mIsSuperUser = isSuperUser;

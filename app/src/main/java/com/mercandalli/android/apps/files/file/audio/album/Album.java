@@ -17,7 +17,7 @@ public class Album {
     @NonNull
     protected final List<String> mFilePaths = new ArrayList<>();
 
-    public Album(final String uuid, final String name) {
+    public Album(@NonNull final String uuid, final String name) {
         Preconditions.checkNotNull(uuid);
         mUuid = uuid;
         mName = name;
