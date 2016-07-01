@@ -40,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class DialogCreateArticle extends Dialog {
@@ -66,7 +67,7 @@ public class DialogCreateArticle extends Dialog {
             @Override
             public void onClick(View v) {
 
-                SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
                 dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
 
                 String nowAsISO = dateFormatGmt.format(new Date());
@@ -78,7 +79,7 @@ public class DialogCreateArticle extends Dialog {
                     json.put("article_title_1", article_title_1.getText().toString());
                     json.put("article_content_1", article_content_1.getText().toString());
 
-                    SimpleDateFormat dateFormatGmtTZ = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm'Z'");
+                    SimpleDateFormat dateFormatGmtTZ = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm'Z'", Locale.US);
                     dateFormatGmtTZ.setTimeZone(TimeZone.getTimeZone("UTC"));
                     nowAsISO = dateFormatGmtTZ.format(new Date());
 

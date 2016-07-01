@@ -61,6 +61,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class FileAddDialog extends Dialog implements
@@ -152,9 +153,9 @@ public class FileAddDialog extends Dialog implements
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                 Log.d("TIme Picker", hourOfDay + ":" + minute);
 
-                                final SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                final SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
                                 dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
-                                final SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                final SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 
                                 String nowAsISO = dateFormatGmt.format(new Date());
 
@@ -164,7 +165,7 @@ public class FileAddDialog extends Dialog implements
                                     json.put("date_creation", nowAsISO);
                                     json.put("timer_date", "" + dateFormatGmt.format(dateFormatLocal.parse(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth + " " + hourOfDay + ":" + minute + ":00")));
 
-                                    final SimpleDateFormat dateFormatGmtTZ = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm'Z'");
+                                    final SimpleDateFormat dateFormatGmtTZ = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm'Z'", Locale.US);
                                     dateFormatGmtTZ.setTimeZone(TimeZone.getTimeZone("UTC"));
                                     nowAsISO = dateFormatGmtTZ.format(new Date());
 
@@ -212,7 +213,7 @@ public class FileAddDialog extends Dialog implements
 
     public FileModel createImageFile() {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_FileSpace_";
         File storageDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + Config.getLocalFolderName());
         FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
@@ -249,11 +250,11 @@ public class FileAddDialog extends Dialog implements
                         new DialogUtils.OnDialogUtilsStringListener() {
                             @Override
                             public void onDialogUtilsStringCalledBack(String text) {
-                                FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
+                                final FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
                                 fileModelBuilder.name(text);
                                 fileModelBuilder.isDirectory(true);
                                 fileModelBuilder.idFileParent(mFileParentId);
-                                List<StringPair> parameters = FileApp.get().getFileAppComponent()
+                                final List<StringPair> parameters = FileApp.get().getFileAppComponent()
                                         .provideFileManager().getForUpload(fileModelBuilder.build());
                                 (new TaskPost(mActivity, Constants.URL_DOMAIN + Config.ROUTE_FILE, new IPostExecuteListener() {
                                     @Override

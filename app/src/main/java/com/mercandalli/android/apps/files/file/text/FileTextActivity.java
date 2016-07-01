@@ -62,7 +62,10 @@ public class FileTextActivity extends ApplicationActivity implements IPostExecut
     private EditText mEditText;
     private ProgressBar mProgressBar;
 
-    public static void start(Activity activity, final FileModel fileModel, boolean isOnline) {
+    public static void start(
+            @NonNull final Activity activity,
+            final FileModel fileModel,
+            final boolean isOnline) {
         final Intent intent = new Intent(activity, FileTextActivity.class);
         intent.putExtra(EXTRA_MODEL_FILE_URL, "" + fileModel.getOnlineUrl());
 

@@ -46,9 +46,11 @@ import com.mercandalli.android.apps.files.file.image.FileImageActivity;
 import com.mercandalli.android.apps.files.file.local.FileLocalApi;
 import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
 import com.mercandalli.android.apps.files.file.text.FileTextActivity;
+import com.mercandalli.android.apps.files.file.video.FileVideoActivity;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
+import com.mercandalli.android.apps.files.settings.SettingsManager;
 import com.mercandalli.android.library.base.java.StringUtils;
 import com.mercandalli.android.library.base.precondition.Preconditions;
 import com.squareup.picasso.NetworkPolicy;
@@ -64,6 +66,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -442,11 +445,15 @@ class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallback
      * {@inheritDoc}
      */
     @Override
-    public void execute(final Activity activity, final int position, final List fileModelList, View view) {
-        if (fileModelList == null || position >= fileModelList.size()) {
+    public void execute(
+            @NonNull final Activity activity,
+            final int position,
+            @NonNull final List<FileModel> fileModelList,
+            final View view) {
+        if (position >= fileModelList.size()) {
             return;
         }
-        final FileModel fileModel = (FileModel) fileModelList.get(position);
+        final FileModel fileModel = fileModelList.get(position);
         if (fileModel.isOnline()) {
             executeOnline(activity, position, fileModelList, view);
         } else {
@@ -745,11 +752,11 @@ class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallback
 //    }
 
     private void executeOnline(
-            final Activity activity,
+            @NonNull final Activity activity,
             final int position,
-            final List<FileModel> fileModelList,
+            @NonNull final List<FileModel> fileModelList,
             final View view) {
-        if (fileModelList == null || position >= fileModelList.size()) {
+        if (position >= fileModelList.size()) {
             return;
         }
 
@@ -782,7 +789,7 @@ class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallback
                     intent.putExtra("URL_FILE", "" + fileModel.getOnlineUrl());
                     intent.putExtra("LOGIN", "" + Config.getUser().getAccessLogin());
                     intent.putExtra("CLOUD", true);
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
                     intent.putExtra("TIMER_DATE", "" + dateFormat.format(fileSpaceModel.getTimer().timer_date));
                     activity.startActivity(intent);
                     activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
@@ -803,19 +810,27 @@ class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallback
     }
 
     private void executeLocal(
-            final Activity activity,
+            @NonNull final Activity activity,
             final int position,
-            final List fileModelList,
+            @NonNull final List<FileModel> fileModelList,
             final View view) {
-        if (fileModelList == null || position >= fileModelList.size()) {
+        if (position >= fileModelList.size()) {
             return;
         }
-        final FileModel fileModel = (FileModel) fileModelList.get(position);
+        final FileModel fileModel = fileModelList.get(position);
         if (fileModel.isOnline()) {
             return;
         }
 
         final String mime = FileTypeModelENUM.openAs(fileModel.getType());
+
+        if (FileTypeModelENUM.OPEN_AS_VIDEO.equals(mime) &&
+                SettingsManager.getInstance(activity).isDevUser() &&
+                SettingsManager.getInstance(activity).isSuperUser()) {
+            FileVideoActivity.startVideo(activity, fileModel.getFile());
+            return;
+        }
+
         switch (mime) {
             case FileTypeModelENUM.NOT_OPEN:
                 break;
@@ -823,8 +838,9 @@ class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallback
                 int musicCurrentPosition = position;
                 final List<String> filesPath = new ArrayList<>();
                 for (int i = 0; i < fileModelList.size(); i++) {
-                    final FileModel f = (FileModel) fileModelList.get(i);
-                    if (f.getType() != null && f.getType().equals(FileTypeModelENUM.AUDIO.type) && f.getFile() != null) {
+                    final FileModel f = fileModelList.get(i);
+                    if (f.getType() != null && f.getType().equals(FileTypeModelENUM.AUDIO.type) &&
+                            f.getFile() != null) {
                         filesPath.add(f.getFile().getAbsolutePath());
                     } else if (i < position) {
                         musicCurrentPosition--;
@@ -839,7 +855,8 @@ class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallback
                 try {
                     activity.startActivity(intent);
                 } catch (ActivityNotFoundException e) {
-                    Toast.makeText(activity, "Oops, there is an error. Try with \"Open as...\"", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, "Oops, there is an error. Try with \"Open as...\"",
+                            Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -64,6 +65,8 @@ public class FileAudioActivity extends AppCompatActivity implements
     private boolean mIsOnline;
 
     private int mCurrentPosition;
+
+    @NonNull
     private final List<FileAudioModel> mFileAudioModelList = new ArrayList<>();
 
     private Slider mSliderNumber;
@@ -74,6 +77,8 @@ public class FileAudioActivity extends AppCompatActivity implements
     private FileAudioPlayer mFileAudioPlayer;
 
     private boolean mFirstStart;
+
+    @NonNull
     private final FileAudioCast mFileAudioCast = new FileAudioCast();
 
     /**

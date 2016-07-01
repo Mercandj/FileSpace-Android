@@ -122,8 +122,8 @@ public class TalkFragment extends BackFragment {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
-                                            ConversationUserModel modelUser = new ConversationUserModel(getActivity(), array.getJSONObject(i));
-                                            mConversationUserModels.add(modelUser);
+                                            mConversationUserModels.add(
+                                                    new ConversationUserModel(array.getJSONObject(i)));
                                         }
                                     }
                                 } else {

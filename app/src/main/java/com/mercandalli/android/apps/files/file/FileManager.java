@@ -2,6 +2,7 @@ package com.mercandalli.android.apps.files.file;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.text.Spanned;
 import android.view.View;
 import android.widget.ImageView;
@@ -100,9 +101,10 @@ public interface FileManager {
      * Default click action. Call and {@link android.content.Intent} or a specific {@link Activity}.
      */
     void execute(
-            final Activity activity,
+            @NonNull final Activity activity,
             final int position,
-            final List fileModelList, View view);
+            @NonNull final List<FileModel> fileModelList,
+            final View view);
 
     /**
      * Open local file as... (Open a dialog to select).

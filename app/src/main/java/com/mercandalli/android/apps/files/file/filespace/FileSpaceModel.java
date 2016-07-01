@@ -31,6 +31,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import static com.mercandalli.android.apps.files.file.filespace.FileSpaceModel.FileSpaceTypeENUM.create;
@@ -56,13 +57,13 @@ public class FileSpaceModel {
     private final SimpleDateFormat mDateFormatLocalMillis;
 
     public FileSpaceModel() {
-        mDateFormatGmt = new SimpleDateFormat(DATE_FORMAT);
+        mDateFormatGmt = new SimpleDateFormat(DATE_FORMAT, Locale.US);
         mDateFormatGmt.setTimeZone(TimeZone.getTimeZone(UTC));
-        mDateFormatLocal = new SimpleDateFormat(DATE_FORMAT);
+        mDateFormatLocal = new SimpleDateFormat(DATE_FORMAT, Locale.US);
 
-        mDateFormatGmtMillis = new SimpleDateFormat(DATE_FORMAT_MS);
+        mDateFormatGmtMillis = new SimpleDateFormat(DATE_FORMAT_MS, Locale.US);
         mDateFormatGmtMillis.setTimeZone(TimeZone.getTimeZone(UTC));
-        mDateFormatLocalMillis = new SimpleDateFormat(DATE_FORMAT_MS);
+        mDateFormatLocalMillis = new SimpleDateFormat(DATE_FORMAT_MS, Locale.US);
 
     }
 

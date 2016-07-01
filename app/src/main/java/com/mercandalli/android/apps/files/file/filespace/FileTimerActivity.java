@@ -36,6 +36,7 @@ import com.mercandalli.android.apps.files.main.ApplicationActivity;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Jonathan on 09/05/2015.
@@ -75,7 +76,7 @@ public class FileTimerActivity extends ApplicationActivity {
         this.login = extras.getString("LOGIN");
         this.online = extras.getBoolean("CLOUD");
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         try {
             this.timer_date = dateFormat.parse("" + extras.getString("TIMER_DATE"));
             mFileSpaceModel = new FileSpaceModel.FileSpaceModelBuilder().type("timer").build();

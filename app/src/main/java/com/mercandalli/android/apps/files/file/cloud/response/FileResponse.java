@@ -12,6 +12,7 @@ import com.mercandalli.android.library.base.java.StringUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class FileResponse {
@@ -54,7 +55,7 @@ public class FileResponse {
     public FileModel createModel() {
 
         Date dateCreation = null;
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
         try {
             dateCreation = dateFormatGmt.parse(mDateCreation);

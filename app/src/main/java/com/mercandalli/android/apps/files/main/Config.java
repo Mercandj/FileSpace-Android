@@ -235,7 +235,7 @@ public class Config {
     }
 
     public static String getUserToken() {
-        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
         df.setTimeZone(TimeZone.getTimeZone("gmt"));
         final String currentDate = df.format(new Date());
 

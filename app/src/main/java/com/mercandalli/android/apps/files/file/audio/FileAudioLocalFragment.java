@@ -289,7 +289,11 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
                 if (fileModel.isDirectory()) {
                     refreshListFoldersInside(fileModel);
                 } else {
-                    mFileManager.execute((Activity) context, position, mFileAudioModels, view);
+                    mFileManager.execute(
+                            (Activity) context,
+                            position,
+                            new ArrayList<FileModel>(mFileAudioModels),
+                            view);
                 }
             }
         });

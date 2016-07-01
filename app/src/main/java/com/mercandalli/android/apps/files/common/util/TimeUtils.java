@@ -21,6 +21,7 @@ package com.mercandalli.android.apps.files.common.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -85,23 +86,23 @@ public class TimeUtils {
     }
 
     public static String getCurrentDate() {
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return dateFormatGmt.format(new Date()).toString();
+        return dateFormatGmt.format(new Date());
     }
 
     public static String getGMTDate(long time) {
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return dateFormatGmt.format(new Date(time)).toString();
+        return dateFormatGmt.format(new Date(time));
     }
 
-    public static String getDate(Date date) {
+    public static String getDate(final Date date) {
         if (date == null) {
             return null;
         }
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return dateFormat.format(date).toString();
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        return dateFormat.format(date);
     }
 
 }

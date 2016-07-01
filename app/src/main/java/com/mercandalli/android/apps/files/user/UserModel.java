@@ -38,6 +38,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class UserModel {
@@ -67,7 +68,7 @@ public class UserModel {
     }
 
     public UserModel(JSONObject json) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
         try {
             if (json.has("id")) {
                 this.id = json.getInt("id");
@@ -135,7 +136,7 @@ public class UserModel {
     }
 
     public String getAdapterSubtitle() {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.US);
         String date = dateFormat.format(date_last_connection.getTime());
         return date + "   " + FileUtils.humanReadableByteCount(size_files) + "   " + this.num_files + " file" + (this.num_files > 1 ? "s" : "");
     }
@@ -147,7 +148,7 @@ public class UserModel {
     public String getAccessPassword() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
         String currentDate = dateFormatGmt.format(calendar.getTime());
         return HashUtils.sha1(HashUtils.sha1(this.password) + currentDate);

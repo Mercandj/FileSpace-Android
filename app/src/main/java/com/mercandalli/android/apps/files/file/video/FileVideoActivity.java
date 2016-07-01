@@ -20,8 +20,8 @@ public class FileVideoActivity extends ApplicationActivity {
     private static final String EXTRA_FILE_VIDEO_PATH = "FileVideoActivity.extra.EXTRA_FILE_VIDEO_PATH";
 
     public static void startVideo(
-            final Activity activity,
-            final File file) {
+            @NonNull final Activity activity,
+            @NonNull final File file) {
         final Intent intent = new Intent(activity, FileVideoActivity.class);
         intent.putExtra(EXTRA_FILE_VIDEO_PATH, file.getAbsolutePath());
         activity.startActivity(intent);
@@ -34,11 +34,11 @@ public class FileVideoActivity extends ApplicationActivity {
     private VideoView mVideoView;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_video);
 
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
         if (extras != null) {
             mPath = extras.getString(EXTRA_FILE_VIDEO_PATH);
         }

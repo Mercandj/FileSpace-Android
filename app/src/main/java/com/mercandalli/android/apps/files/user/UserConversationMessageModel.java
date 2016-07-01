@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 public class UserConversationMessageModel {
@@ -42,7 +43,7 @@ public class UserConversationMessageModel {
     public UserConversationMessageModel(
             final Activity activity,
             final JSONObject json) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
         try {
             if (json.has("id")) {
                 this.id = json.getInt("id");
@@ -80,9 +81,9 @@ public class UserConversationMessageModel {
 
     public String getAdapterSubtitle() {
         String date = date_creation.toString();
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
-        SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         try {
             date = TimeUtils.printDifferencePast(date_creation, dateFormatLocal.parse(dateFormatGmt.format(new Date())));
         } catch (ParseException e) {

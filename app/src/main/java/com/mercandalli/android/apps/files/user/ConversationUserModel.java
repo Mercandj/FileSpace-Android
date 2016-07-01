@@ -21,6 +21,7 @@ package com.mercandalli.android.apps.files.user;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.mercandalli.android.apps.files.R;
@@ -35,6 +36,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ConversationUserModel {
 
@@ -43,12 +45,12 @@ public class ConversationUserModel {
     public int id_user;
     public int num_messages;
     public Date date_creation;
-    private final List<UserModel> users;
+    @NonNull
+    private final List<UserModel> mUserModels = new ArrayList<>();
     public boolean to_all = false, to_yourself = false;
 
-    public ConversationUserModel(Activity activity, JSONObject json) {
-        this.users = new ArrayList<>();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    public ConversationUserModel(final JSONObject json) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
         try {
             if (json.has("id")) {
                 this.id = json.getInt("id");
@@ -65,7 +67,7 @@ public class ConversationUserModel {
             if (json.has("users")) {
                 JSONArray users_json = json.getJSONArray("users");
                 for (int i = 0; i < users_json.length(); i++) {
-                    this.users.add(new UserModel(users_json.getJSONObject(i)));
+                    this.mUserModels.add(new UserModel(users_json.getJSONObject(i)));
                 }
             }
             if (json.has("to_all")) {
@@ -89,7 +91,7 @@ public class ConversationUserModel {
         } else if (this.to_yourself) {
             res += "yourself";
         } else {
-            for (UserModel user : users) {
+            for (final UserModel user : mUserModels) {
                 res += user.username + " ";
             }
         }

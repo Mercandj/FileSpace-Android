@@ -215,7 +215,7 @@ class SaveTestResultTask extends DefaultTask {
     }
 
     private static String getUserToken(final String username, final String password) {
-        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
         df.setTimeZone(TimeZone.getTimeZone("gmt"));
         final String currentDate = df.format(new Date());
 
@@ -243,7 +243,7 @@ class SaveTestResultTask extends DefaultTask {
 
 class Time {
     public static String getCurrentDate() {
-        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.getDefault());
+        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.US);
         df.setTimeZone(TimeZone.getTimeZone("gmt"));
         return df.format(new Date());
     }

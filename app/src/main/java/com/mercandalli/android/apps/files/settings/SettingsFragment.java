@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -233,14 +233,24 @@ public class SettingsFragment extends BackFragment {
         }
 
         try {
-            PackageInfo pInfo = getContext().getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            mModelSettings.add(new ModelSetting("Last update date GMT", TimeUtils.getGMTDate(pInfo.lastUpdateTime)));
-            mModelSettings.add(new ModelSetting("Version", pInfo.versionName, new View.OnClickListener() {
+            final PackageInfo packageInfo = getContext().getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            mModelSettings.add(new ModelSetting("Last update date GMT", TimeUtils.getGMTDate(packageInfo.lastUpdateTime)));
+            mModelSettings.add(new ModelSetting("Version", packageInfo.versionName, new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (mClickVersion == 11) {
-                        Toast.makeText(context, "Development settings activated.", Toast.LENGTH_SHORT).show();
-                        mIsDeveloper = true;
+                        if (SettingsManager.getInstance(context).isDevUser()) {
+                            Toast.makeText(context, "Development settings disable.",
+                                    Toast.LENGTH_SHORT).show();
+                            mIsDeveloper = false;
+                            SettingsManager.getInstance(context).setIsDevUser(mIsDeveloper);
+                            mClickVersion = 0;
+                        } else {
+                            Toast.makeText(context, "Development settings activated.",
+                                    Toast.LENGTH_SHORT).show();
+                            mIsDeveloper = true;
+                            SettingsManager.getInstance(context).setIsDevUser(mIsDeveloper);
+                        }
                         refreshList();
                     } else if (mClickVersion < 11) {
                         if (mClickVersion >= 1) {

@@ -16,7 +16,12 @@ public final class SettingsManager {
     private static final String SHARED_PREFERENCES_KEY = "SettingsManager.SHARED_PREFERENCES_KEY";
 
     @NonNull
-    private static final String SHARED_PREFERENCES_IS_SUPER_USER_ENABLE = "SettingsManager.SHARED_PREFERENCES_IS_SUPER_USER_ENABLE";
+    private static final String SHARED_PREFERENCES_IS_SUPER_USER_ENABLE =
+            "SettingsManager.SHARED_PREFERENCES_IS_SUPER_USER_ENABLE";
+
+    @NonNull
+    private static final String SHARED_PREFERENCES_IS_DEV_USER_ENABLE =
+            "SettingsManager.SHARED_PREFERENCES_IS_DEV_USER_ENABLE";
 
     @Nullable
     private static SettingsManager sInstance;
@@ -30,6 +35,7 @@ public final class SettingsManager {
     }
 
     private boolean mIsSuperUser;
+    private boolean mIsDevUser;
 
     @NonNull
     private final SharedPreferences mSharedPreferences;
@@ -38,6 +44,7 @@ public final class SettingsManager {
         mSharedPreferences = context.getSharedPreferences(
                 SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE);
         mIsSuperUser = mSharedPreferences.getBoolean(SHARED_PREFERENCES_IS_SUPER_USER_ENABLE, false);
+        mIsDevUser = mSharedPreferences.getBoolean(SHARED_PREFERENCES_IS_DEV_USER_ENABLE, false);
     }
 
     public boolean isSuperUser() {
@@ -54,6 +61,21 @@ public final class SettingsManager {
         mIsSuperUser = isSuperUser;
         final SharedPreferences.Editor edit = mSharedPreferences.edit();
         edit.putBoolean(SHARED_PREFERENCES_IS_SUPER_USER_ENABLE, mIsSuperUser);
+        edit.apply();
+        return true;
+    }
+
+    public boolean isDevUser() {
+        return mIsDevUser;
+    }
+
+    /**
+     * @return True if the value change.
+     */
+    public boolean setIsDevUser(final boolean isDevUser) {
+        mIsDevUser = isDevUser;
+        final SharedPreferences.Editor edit = mSharedPreferences.edit();
+        edit.putBoolean(SHARED_PREFERENCES_IS_DEV_USER_ENABLE, mIsDevUser);
         edit.apply();
         return true;
     }

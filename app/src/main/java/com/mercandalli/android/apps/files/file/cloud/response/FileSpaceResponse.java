@@ -3,13 +3,13 @@ package com.mercandalli.android.apps.files.file.cloud.response;
 import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
+import com.mercandalli.android.apps.files.file.filespace.FileSpaceModel;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
-
-import com.mercandalli.android.apps.files.file.filespace.FileSpaceModel;
 
 public class FileSpaceResponse {
 
@@ -32,7 +32,7 @@ public class FileSpaceResponse {
 
         Date dateCreation = null;
         Date timerDate = null;
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
         try {
             if (mDateCreation != null) {

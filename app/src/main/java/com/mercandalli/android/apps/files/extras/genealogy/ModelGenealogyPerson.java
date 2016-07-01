@@ -41,6 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ModelGenealogyPerson {
 
@@ -67,9 +68,9 @@ public class ModelGenealogyPerson {
         this.valid = valid;
     }
 
-    public ModelGenealogyPerson(Activity activity, JSONObject json) {
+    public ModelGenealogyPerson(final Activity activity, final JSONObject json) {
         mActivity = activity;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
         try {
             if (json.has("id")) {
                 this.mId = json.getInt("id");
@@ -115,9 +116,9 @@ public class ModelGenealogyPerson {
             }
             if (json.has("brothers_sisters_from_mother")) {
                 this.brothers_sisters_from_mother = new ArrayList<>();
-                JSONArray json_b_s = json.getJSONArray("brothers_sisters_from_mother");
-                for (int i = 0; i < json_b_s.length(); i++) {
-                    this.brothers_sisters_from_mother.add(new ModelGenealogyPerson(activity, json_b_s.getJSONObject(i)));
+                final JSONArray jsonBrothersSisters = json.getJSONArray("brothers_sisters_from_mother");
+                for (int i = 0; i < jsonBrothersSisters.length(); i++) {
+                    this.brothers_sisters_from_mother.add(new ModelGenealogyPerson(activity, jsonBrothersSisters.getJSONObject(i)));
                 }
             }
             if (json.has("brothers_sisters_from_father")) {
