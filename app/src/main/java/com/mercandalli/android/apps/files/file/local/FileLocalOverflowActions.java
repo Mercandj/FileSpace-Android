@@ -13,7 +13,6 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
-import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.library.base.dialog.DialogUtils;
 import com.mercandalli.android.library.base.precondition.Preconditions;
 
@@ -44,7 +43,7 @@ public class FileLocalOverflowActions implements PopupMenu.OnMenuItemClickListen
 
         mActivity = (Activity) context;
         mFileLocalActionCallback = fileLocalActionCallback;
-        mFileManager = FileApp.get().getFileAppComponent().provideFileManager();
+        mFileManager = FileManager.getInstance(context);
         mUploadString = context.getString(R.string.upload);
         mRenameString = context.getString(R.string.rename);
         mDeleteString = context.getString(R.string.delete);

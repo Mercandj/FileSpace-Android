@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.main.FileApp;
+import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
 import com.mercandalli.android.apps.files.main.MainActivity;
 import com.mercandalli.android.library.base.permission.Permission;
 
@@ -98,7 +98,7 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
     }
 
     private void launchMainActivity() {
-        FileApp.get().getFileAppComponent().provideFileProviderManager().load();
+        FileLocalProviderManager.getInstance(this).load();
         MainActivity.start(this);
         finish();
     }

@@ -1,5 +1,6 @@
 package com.mercandalli.android.apps.files.file.local.provider;
 
+import android.content.Context;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,7 +9,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
-public interface FileLocalProviderManager {
+public abstract class FileLocalProviderManager {
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({
@@ -17,50 +18,61 @@ public interface FileLocalProviderManager {
     @interface LoadingError {
     }
 
-    int LOADING_ERROR_ALREADY_LAUNCHED = -1;
-    int LOADING_ERROR_ANDROID_API = -2;
+    public static final int LOADING_ERROR_ALREADY_LAUNCHED = -1;
+    public static final int LOADING_ERROR_ANDROID_API = -2;
 
-    void load();
-
-    void load(@Nullable final FileProviderListener fileProviderListener);
+    @Nullable
+    private static FileLocalProviderManager sInstance;
 
     @NonNull
-    List<String> getFilePaths();
-    void getFilePaths(final GetFilePathsListener getFilePathsListener);
-    void removeGetFilePathsListener(final GetFilePathsListener getFilePathsListener);
+    public static FileLocalProviderManager getInstance(@NonNull final Context context) {
+        if (sInstance == null) {
+            sInstance = new FileLocalProviderManagerImpl(context);
+        }
+        return sInstance;
+    }
 
-    void getFileAudioPaths(final GetFileAudioListener getFileAudioListener);
-    void removeGetFileAudioListener(final GetFileAudioListener getFileAudioListener);
+    public abstract void load();
 
-    void getFileImagePaths(final GetFileImageListener getFileImageListener);
-    void removeGetFileImageListener(final GetFileImageListener getFileImageListener);
+    public abstract void load(@Nullable final FileProviderListener fileProviderListener);
 
-    void getFileVideoPaths(final GetFileVideoListener getFileVideoListener);
-    void removeGetFileVideoListener(final GetFileVideoListener getFileVideoListener);
+    @NonNull
+    public abstract List<String> getFilePaths();
+    public abstract  void getFilePaths(final GetFilePathsListener getFilePathsListener);
+    public abstract void removeGetFilePathsListener(final GetFilePathsListener getFilePathsListener);
 
-    boolean registerFileProviderListener(final FileProviderListener fileProviderListener);
+    public abstract void getFileAudioPaths(final GetFileAudioListener getFileAudioListener);
+    public abstract void removeGetFileAudioListener(final GetFileAudioListener getFileAudioListener);
 
-    boolean unregisterFileProviderListener(final FileProviderListener fileProviderListener);
+    public abstract void getFileImagePaths(final GetFileImageListener getFileImageListener);
+    public abstract void removeGetFileImageListener(final GetFileImageListener getFileImageListener);
 
-    void clearCache();
+    public abstract void getFileVideoPaths(final GetFileVideoListener getFileVideoListener);
+    public abstract void removeGetFileVideoListener(final GetFileVideoListener getFileVideoListener);
 
-    interface GetFilePathsListener {
+    public abstract boolean registerFileProviderListener(final FileProviderListener fileProviderListener);
+
+    public abstract boolean unregisterFileProviderListener(final FileProviderListener fileProviderListener);
+
+    public abstract void clearCache();
+
+    public interface GetFilePathsListener {
         void onGetFile(@NonNull final List<String> filePaths);
     }
 
-    interface GetFileAudioListener {
+    public interface GetFileAudioListener {
         void onGetFileAudio(@NonNull final List<String> fileAudioPaths);
     }
 
-    interface GetFileImageListener {
+    public interface GetFileImageListener {
         void onGetFileImage(@NonNull final List<String> fileImagePaths);
     }
 
-    interface GetFileVideoListener {
+    public interface GetFileVideoListener {
         void onGetFileVideo(@NonNull final List<String> fileVideoPaths);
     }
 
-    abstract class FileProviderListener {
+    public static abstract class FileProviderListener {
 
         public void onFileProviderReloadStarted() {
             // To override

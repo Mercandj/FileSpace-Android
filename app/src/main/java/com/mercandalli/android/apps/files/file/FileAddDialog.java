@@ -47,7 +47,6 @@ import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.main.ApplicationActivity;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.library.base.dialog.DialogUtils;
 
 import org.json.JSONException;
@@ -254,8 +253,8 @@ public class FileAddDialog extends Dialog implements
                                 fileModelBuilder.name(text);
                                 fileModelBuilder.isDirectory(true);
                                 fileModelBuilder.idFileParent(mFileParentId);
-                                final List<StringPair> parameters = FileApp.get().getFileAppComponent()
-                                        .provideFileManager().getForUpload(fileModelBuilder.build());
+                                final List<StringPair> parameters =
+                                        FileManager.getInstance(mActivity).getForUpload(fileModelBuilder.build());
                                 (new TaskPost(mActivity, Constants.URL_DOMAIN + Config.ROUTE_FILE, new IPostExecuteListener() {
                                     @Override
                                     public void onPostExecute(JSONObject json, String body) {

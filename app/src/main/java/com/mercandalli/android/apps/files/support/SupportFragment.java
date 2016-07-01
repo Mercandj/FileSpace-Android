@@ -22,7 +22,6 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.library.base.java.StringUtils;
 
@@ -88,7 +87,7 @@ public class SupportFragment extends BackFragment implements
             throw new IllegalStateException("Missing args. Please use newInstance()");
         }
         mTitle = args.getString(BUNDLE_ARG_TITLE);
-        mSupportManager = FileApp.get().getFileAppComponent().provideSupportManager();
+        mSupportManager = SupportManager.getInstance(getContext());
         mSupportManager.registerGetSupportManagerCallback(this);
     }
 
@@ -129,7 +128,10 @@ public class SupportFragment extends BackFragment implements
     }
 
     @Override
-    public void onGetSupportSucceeded(@Nullable final String deviceIdAsked, final List<SupportComment> supportComments, final boolean adminIdSelection) {
+    public void onGetSupportSucceeded(
+            @Nullable final String deviceIdAsked,
+            final List<SupportComment> supportComments,
+            final boolean adminIdSelection) {
         mSwipeRefreshLayout.setRefreshing(false);
         mCurrentDeviceId = deviceIdAsked;
         syncVisibility(false);

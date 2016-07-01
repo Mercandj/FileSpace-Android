@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -46,7 +46,6 @@ import android.widget.TextView;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
-import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
@@ -54,7 +53,6 @@ import com.mercandalli.android.apps.files.file.FileModelAdapter;
 import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
 import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.settings.SettingsManager;
 import com.mercandalli.android.library.base.dialog.DialogUtils;
 import com.mercandalli.android.library.base.event.EventManager;
@@ -66,7 +64,7 @@ import java.util.List;
 import static com.mercandalli.android.apps.files.file.FileUtils.createFile;
 
 /**
- * A {@link InjectedFabFragment} used to buildDisplay the local {@link FileModel} provide by the
+ * A {@link BackFragment} used to buildDisplay the local {@link FileModel} provide by the
  * {@link FileLocalApi}.
  */
 public class FileLocalFragment extends BackFragment implements
@@ -135,8 +133,8 @@ public class FileLocalFragment extends BackFragment implements
 
     /**
      * Default Constructor.
-     * <p>
-     * <p>
+     * <p/>
+     * <p/>
      * lint [ValidFragment]
      * http://developer.android.com/reference/android/app/Fragment.html#Fragment()
      * Every fragment must have an empty constructor, so it can be instantiated when restoring its activity's state.
@@ -147,8 +145,8 @@ public class FileLocalFragment extends BackFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFileManager = FileApp.get().getFileAppComponent().provideFileManager();
-        mFileLocalFabManager = FileApp.get().getFileAppComponent().provideFileLocalFabManager();
+        mFileManager = FileManager.getInstance(getContext());
+        mFileLocalFabManager = FileLocalFabManager.getInstance();
 
         final Bundle args = getArguments();
         if (!args.containsKey(ARG_POSITION_IN_VIEW_PAGER)) {

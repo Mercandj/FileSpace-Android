@@ -54,7 +54,6 @@ import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.FileAudioLocalFragment;
 import com.mercandalli.android.apps.files.file.image.FileImageLocalFragment;
 import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
-import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.library.base.view.RtlViewPager;
 
 import static com.mercandalli.android.library.base.view.StatusBarUtils.setStatusBarColor;
@@ -133,7 +132,7 @@ public class FileLocalPagerFragment extends BackFragment implements
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFileLocalFabManager = FileApp.get().getFileAppComponent().provideFileLocalFabManager();
+        mFileLocalFabManager = FileLocalFabManager.getInstance();
         mFileLocalFabManager.setFabContainer(this);
     }
 

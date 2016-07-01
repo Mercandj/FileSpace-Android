@@ -1,6 +1,6 @@
 package com.mercandalli.android.apps.files.file.audio.playlist;
 
-import android.app.Application;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
@@ -12,14 +12,14 @@ import java.util.List;
  * {@inheritDoc}
  */
 /* package */
-class AudioPlayListManagerImpl implements AudioPlayListManager {
+class AudioPlayListManagerImpl extends AudioPlayListManager {
 
     @NonNull
     private final AudioPlayListDbHelper mAudioPlayListDbHelper;
     private SQLiteDatabase mDatabase;
 
-    public AudioPlayListManagerImpl(@NonNull final Application application) {
-        mAudioPlayListDbHelper = new AudioPlayListDbHelper(application.getBaseContext());
+    public AudioPlayListManagerImpl(@NonNull final Context context) {
+        mAudioPlayListDbHelper = new AudioPlayListDbHelper(context.getApplicationContext());
     }
 
     @Override

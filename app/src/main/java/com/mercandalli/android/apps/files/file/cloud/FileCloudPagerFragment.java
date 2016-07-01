@@ -49,14 +49,14 @@ import com.mercandalli.android.apps.files.file.FileAddDialog;
 import com.mercandalli.android.apps.files.file.cloud.fab.FileCloudFabManager;
 import com.mercandalli.android.apps.files.file.local.SearchActivity;
 import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
-import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 
 import static com.mercandalli.android.library.base.view.StatusBarUtils.setStatusBarColor;
 
 public class FileCloudPagerFragment extends BackFragment implements
         ViewPager.OnPageChangeListener,
-        FileCloudFabManager.FabContainer, View.OnClickListener {
+        FileCloudFabManager.FabContainer,
+        View.OnClickListener {
 
     private static final String BUNDLE_ARG_TITLE = "FileOnlineFragment.Args.BUNDLE_ARG_TITLE";
 
@@ -106,7 +106,7 @@ public class FileCloudPagerFragment extends BackFragment implements
             throw new IllegalStateException("Missing args. Please use newInstance()");
         }
         mTitle = args.getString(BUNDLE_ARG_TITLE);
-        mFileCloudFabManager = FileApp.get().getFileAppComponent().provideFileCloudFabManager();
+        mFileCloudFabManager = FileCloudFabManager.getInstance();
         mFileCloudFabManager.setFabContainer(this, INIT_VIEW_PAGER_POSITION);
     }
 

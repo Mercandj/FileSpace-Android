@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.file.audio.FileAudioManager;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
-import com.mercandalli.android.apps.files.main.FileApp;
 
 import java.io.File;
 
@@ -59,8 +58,7 @@ public class FileAudioMetaDataEditionDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         final Context context = getContext();
-        final FileAudioManager fileAudioManager = FileApp.get().getFileAppComponent()
-                .provideFileAudioManager();
+        final FileAudioManager fileAudioManager = FileAudioManager.getInstance(context);
 
         @SuppressLint("InflateParams")
         final View rootView = LayoutInflater.from(context).inflate(R.layout.dialog_edit_meta_data, null);

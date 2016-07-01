@@ -8,10 +8,8 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
-import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,11 +28,8 @@ import static com.mercandalli.android.library.base.java.FileUtils.getParentPathF
     private static final String TAG = "FileAudioManagerMockImp";
     private static final String LIKE = " LIKE ?";
 
-    public FileAudioManagerMock(
-            final Context contextApp,
-            final FileLocalProviderManager fileLocalProviderManager,
-            final FileManager fileManager) {
-        super(contextApp, fileLocalProviderManager, fileManager);
+    public FileAudioManagerMock(final Context contextApp) {
+        super(contextApp);
     }
 
     /**

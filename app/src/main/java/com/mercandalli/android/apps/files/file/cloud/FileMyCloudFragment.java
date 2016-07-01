@@ -42,7 +42,7 @@ import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
-import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
+import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
@@ -58,7 +58,6 @@ import com.mercandalli.android.apps.files.file.cloud.fab.FileCloudFabManager;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.library.base.dialog.DialogUtils;
 
@@ -69,9 +68,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import javax.inject.Inject;
-
-public class FileMyCloudFragment extends InjectedFabFragment implements
+public class FileMyCloudFragment extends BackFragment implements
         FileLocalPagerFragment.ListController,
         SwipeRefreshLayout.OnRefreshListener,
         FileCloudFabManager.FabController {
@@ -96,11 +93,8 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
 
     private ScaleAnimationAdapter scaleAnimationAdapter;
 
-    @Inject
-    FileManager mFileManager;
-
-    @Inject
-    FileCloudFabManager mFileCloudFabManager;
+    private FileManager mFileManager;
+    private FileCloudFabManager mFileCloudFabManager;
 
     public static FileMyCloudFragment newInstance(final int positionInViewPager) {
         final FileMyCloudFragment fileMyCloudLocalFragment = new FileMyCloudFragment();
@@ -119,6 +113,8 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
         }
         mPositionInViewPager = args.getInt(ARG_POSITION_IN_VIEW_PAGER);
         mFileCloudFabManager.addFabController(mPositionInViewPager, this);
+        mFileManager = FileManager.getInstance(getContext());
+        mFileCloudFabManager = FileCloudFabManager.getInstance();
     }
 
     @Override
@@ -562,10 +558,6 @@ public class FileMyCloudFragment extends InjectedFabFragment implements
         return R.drawable.add;
     }
 */
-    @Override
-    protected void inject(FileAppComponent fileAppComponent) {
-        fileAppComponent.inject(this);
-    }
 
     @Override
     public void onRefresh() {

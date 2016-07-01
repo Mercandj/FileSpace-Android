@@ -33,9 +33,6 @@ public class FileApp extends MultiDexApplication {
         return sApplication;
     }
 
-    @Nullable
-    protected FileAppComponent mFileAppComponent;
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -45,9 +42,6 @@ public class FileApp extends MultiDexApplication {
         sApplication = this;
 
         logPerformance(TAG, "FileApp#onCreate()");
-
-        // Dagger - Object graph creation
-        setupGraph();
 
         BaseManager.getInstance().initialize(
                 this,
@@ -73,19 +67,6 @@ public class FileApp extends MultiDexApplication {
         }).start();
 
         logPerformance(TAG, "FileApp#onCreate() - Fabric Fabric Analytics");
-    }
-
-    @Nullable
-    public FileAppComponent getFileAppComponent() {
-        return mFileAppComponent;
-    }
-
-    protected void setupGraph() {
-        mFileAppComponent = DaggerFileAppComponent.builder()
-                .fileAppModule(new FileAppModule(this))
-                .build();
-
-        mFileAppComponent.inject(this);
     }
 
     //region - Performance

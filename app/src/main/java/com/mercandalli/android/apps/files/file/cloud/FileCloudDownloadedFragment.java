@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -41,7 +41,7 @@ import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
-import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
+import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
@@ -50,7 +50,6 @@ import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.cloud.fab.FileCloudFabManager;
 import com.mercandalli.android.apps.files.file.local.FileLocalApi;
 import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.library.base.dialog.DialogUtils;
 
 import java.io.File;
@@ -59,13 +58,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.inject.Inject;
-
 /**
- * A {@link InjectedFabFragment} used to buildDisplay the local {@link FileModel} provide by the
+ * A {@link BackFragment} used to buildDisplay the local {@link FileModel} provide by the
  * {@link FileLocalApi}.
  */
-public class FileCloudDownloadedFragment extends InjectedFabFragment implements
+public class FileCloudDownloadedFragment extends BackFragment implements
         FileModelAdapter.OnFileClickListener,
         FileModelAdapter.OnFileLongClickListener,
         FileModelListener,
@@ -90,11 +87,9 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
     private FileModelAdapter mFileModelAdapter;
     private int mPositionInViewPager;
 
-    @Inject
-    FileManager mFileManager;
+    private FileManager mFileManager;
 
-    @Inject
-    FileCloudFabManager mFileCloudFabManager;
+    private FileCloudFabManager mFileCloudFabManager;
 
     public static FileCloudDownloadedFragment newInstance(final int positionInViewPager) {
         final FileCloudDownloadedFragment fileCloudDownloadedFragment = new FileCloudDownloadedFragment();
@@ -111,6 +106,8 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
         if (!args.containsKey(ARG_POSITION_IN_VIEW_PAGER)) {
             throw new IllegalStateException("Missing args. Please use newInstance()");
         }
+        mFileManager = FileManager.getInstance(getContext());
+        mFileCloudFabManager = FileCloudFabManager.getInstance();
         mPositionInViewPager = args.getInt(ARG_POSITION_IN_VIEW_PAGER);
         mFileCloudFabManager.addFabController(mPositionInViewPager, this);
     }
@@ -201,11 +198,6 @@ public class FileCloudDownloadedFragment extends InjectedFabFragment implements
     @Override
     public int getFabImageResource(@IntRange(from = 0, to = FileCloudFabManager.NUMBER_MAX_OF_FAB - 1) final int fabPosition) {
         return 0;
-    }
-
-    @Override
-    protected void inject(FileAppComponent fileAppComponent) {
-        fileAppComponent.inject(this);
     }
 
     @Override

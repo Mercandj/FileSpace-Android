@@ -1,6 +1,7 @@
 package com.mercandalli.android.apps.files.support;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.View;
@@ -10,7 +11,6 @@ import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.library.base.precondition.Preconditions;
 
 public class SupportCommentCardView extends CardView implements View.OnClickListener {
@@ -76,9 +76,9 @@ public class SupportCommentCardView extends CardView implements View.OnClickList
                 supportComment.getComment());
     }
 
-    private void init(final Context context) {
+    private void init(@NonNull final Context context) {
         Preconditions.checkNotNull(context);
-        mSupportManager = FileApp.get().getFileAppComponent().provideSupportManager();
+        mSupportManager = SupportManager.getInstance(context);
         inflate(context, R.layout.tab_support_comment_card, this);
         setUseCompatPadding(true);
         setContentPadding(0, 0, 0, 0);

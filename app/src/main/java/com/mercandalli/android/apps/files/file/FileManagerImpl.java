@@ -48,8 +48,8 @@ import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderM
 import com.mercandalli.android.apps.files.file.text.FileTextActivity;
 import com.mercandalli.android.apps.files.file.video.FileVideoActivity;
 import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
+import com.mercandalli.android.apps.files.main.network.RetrofitUtils;
 import com.mercandalli.android.apps.files.settings.SettingsManager;
 import com.mercandalli.android.library.base.java.StringUtils;
 import com.mercandalli.android.library.base.precondition.Preconditions;
@@ -78,7 +78,7 @@ import retrofit2.Response;
  * A {@link FileModel} Manager.
  */
 /* package */
-class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallbacks /*implements FileUploadTypedFile.FileUploadListener*/ {
+class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadCallbacks /*implements FileUploadTypedFile.FileUploadListener*/ {
 
     private static final String LIKE = " LIKE ?";
     private static final String MIME_TEXT = "text/plain";
@@ -102,18 +102,15 @@ class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallback
 
     private final FileLocalProviderManager mFileLocalProviderManager;
 
-    /* package */ FileManagerImpl(
-            @NonNull final Context contextApp,
-            @NonNull final FileOnlineApi fileOnlineApi,
-            @NonNull final FileUploadOnlineApi fileUploadOnlineApi) {
-        Preconditions.checkNotNull(contextApp);
+    protected FileManagerImpl(@NonNull final Context context) {
+        Preconditions.checkNotNull(context);
 
-        mContextApp = contextApp;
-        mFileOnlineApi = fileOnlineApi;
-        mFileUploadOnlineApi = fileUploadOnlineApi;
+        mContextApp = context.getApplicationContext();
+        mFileOnlineApi = RetrofitUtils.getAuthorizedRetrofit().create(FileOnlineApi.class);
+        mFileUploadOnlineApi = RetrofitUtils.getAuthorizedRetrofitUpload().create(FileUploadOnlineApi.class);
         mFileLocalApi = FileLocalApi.getInstance();
 
-        mFileLocalProviderManager = FileApp.get().getFileAppComponent().provideFileLocalProviderManager();
+        mFileLocalProviderManager = FileLocalProviderManager.getInstance(context);
 
         final Looper mainLooper = Looper.getMainLooper();
         mUiHandler = new Handler(mainLooper);
@@ -383,7 +380,7 @@ class FileManagerImpl implements FileManager, ProgressRequestBody.UploadCallback
                 //noinspection ResultOfMethodCallIgnored
                 file.delete();
             }
-            FileApp.get().getFileAppComponent().provideFileProviderManager().load();
+            FileLocalProviderManager.getInstance(mContextApp).load();
             listener.execute();
         }
     }

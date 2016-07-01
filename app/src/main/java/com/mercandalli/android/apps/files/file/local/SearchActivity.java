@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -30,7 +31,6 @@ import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
 import com.mercandalli.android.apps.files.file.FileModelListener;
-import com.mercandalli.android.apps.files.main.FileApp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,11 +54,13 @@ public class SearchActivity extends AppCompatActivity implements
     /**
      * A {@link List} of result.
      */
+    @NonNull
     private final List<FileModel> mFileModelList = new ArrayList<>();
 
     private RecyclerView mRecyclerView;
     private FileModelAdapter mFileModelAdapter;
 
+    @NonNull
     private final Handler mSearchDelayHandler = new Handler();
 
     private Runnable mSearchDelayRunnable;
@@ -79,7 +81,7 @@ public class SearchActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        mFileManager = FileApp.get().getFileAppComponent().provideFileManager();
+        mFileManager = FileManager.getInstance(this);
 
         mFileLocalOverflowActions = new FileLocalOverflowActions(this, this);
         mFileLocalOverflowActions.setShowCopyCut(false);

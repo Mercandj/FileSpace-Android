@@ -16,7 +16,6 @@ import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataEditionDialog;
 import com.mercandalli.android.apps.files.file.audio.metadata.FileAudioMetaDataUtils;
-import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.library.base.dialog.DialogUtils;
 import com.mercandalli.android.library.base.precondition.Preconditions;
 
@@ -50,7 +49,7 @@ class FileAudioOverflowActions implements PopupMenu.OnMenuItemClickListener {
         mActivity = (Activity) context;
         mFragmentManager = fragmentManager;
         mFileLocalActionCallback = fileLocalActionCallback;
-        mFileManager = FileApp.get().getFileAppComponent().provideFileManager();
+        mFileManager = FileManager.getInstance(context);
         mUploadString = context.getString(R.string.upload);
         mRenameString = context.getString(R.string.rename);
         mDeleteString = context.getString(R.string.delete);

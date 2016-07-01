@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
-import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
+import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
@@ -41,7 +41,6 @@ import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.library.base.dialog.DialogUtils;
 import com.mercandalli.android.library.base.java.StringUtils;
 
@@ -52,12 +51,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 /**
  * A {@link android.support.v4.app.Fragment} that displays the local {@link FileAudioModel}s.
  */
-public class FileImageLocalFragment extends InjectedFabFragment implements
+public class FileImageLocalFragment extends BackFragment implements
         FileModelCardAdapter.OnFileSubtitleAdapter,
         FileModelCardAdapter.OnHeaderClickListener,
         FileImageManager.GetAllLocalImageListener,
@@ -126,14 +123,11 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
 
     private int mPositionInViewPager;
 
-    @Inject
-    FileLocalFabManager mFileLocalFabManager;
+    private FileLocalFabManager mFileLocalFabManager;
 
-    @Inject
-    FileManager mFileManager;
+    private FileManager mFileManager;
 
-    @Inject
-    FileImageManager mFileImageManager;
+    private FileImageManager mFileImageManager;
 
     public static FileImageLocalFragment newInstance(final int positionInViewPager) {
         final FileImageLocalFragment fileAudioLocalFragment = new FileImageLocalFragment();
@@ -170,6 +164,9 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
         if (!args.containsKey(ARG_POSITION_IN_VIEW_PAGER)) {
             throw new IllegalStateException("Missing args. Please use newInstance()");
         }
+        mFileLocalFabManager = FileLocalFabManager.getInstance();
+        mFileManager = FileManager.getInstance(getContext());
+        mFileImageManager = FileImageManager.getInstance(getContext());
         mPositionInViewPager = args.getInt(ARG_POSITION_IN_VIEW_PAGER);
         mFileLocalFabManager.addFabController(mPositionInViewPager, this);
     }
@@ -378,11 +375,6 @@ public class FileImageLocalFragment extends InjectedFabFragment implements
     public int getFabImageResource(
             final @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition) {
         return R.drawable.arrow_up;
-    }
-
-    @Override
-    protected void inject(FileAppComponent fileAppComponent) {
-        fileAppComponent.inject(this);
     }
 
     @Nullable

@@ -15,7 +15,7 @@ import java.util.List;
  * This class manage the listeners.
  */
 /* package */
-abstract class FileAudioManagerNotifier implements FileAudioManager {
+abstract class FileAudioManagerNotifier extends FileAudioManager {
 
     /* Listeners */
     @NonNull

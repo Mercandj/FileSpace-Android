@@ -1,14 +1,14 @@
 /**
  * This mFileModel is part of FileSpace for Android, an app for managing your server (mFileModelList, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -43,7 +43,6 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.view.PlayPauseView;
 import com.mercandalli.android.apps.files.common.view.slider.Slider;
 import com.mercandalli.android.apps.files.file.audio.cast.FileAudioCast;
-import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.shared.SharedAudioPlayerUtils;
 import com.mercandalli.android.library.base.precondition.Preconditions;
 
@@ -123,7 +122,7 @@ public class FileAudioActivity extends AppCompatActivity implements
 
         // Initialize View, player and ChromeCast.
         setContentView(R.layout.activity_file_audio);
-        mFileAudioPlayer = FileApp.get().getFileAppComponent().provideFileAudioPlayer();
+        mFileAudioPlayer = FileAudioPlayer.getInstance(this);
         mFileAudioPlayer.registerOnPlayerStatusChangeListener(this);
 
         mFileAudioCast.onCreate(this);

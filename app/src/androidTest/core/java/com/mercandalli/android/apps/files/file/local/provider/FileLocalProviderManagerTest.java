@@ -13,7 +13,7 @@ import java.util.List;
  * Block espresso with {@link CountingIdlingResource} during load.
  */
 /* package */
-class FileLocalProviderManagerTest implements FileLocalProviderManager {
+class FileLocalProviderManagerTest extends FileLocalProviderManager {
 
     private static final String TAG = "FileLocalProvManTest";
 

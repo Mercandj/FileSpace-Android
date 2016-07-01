@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -42,15 +43,12 @@ import com.mercandalli.android.apps.files.file.FileTypeModel;
 import com.mercandalli.android.apps.files.file.FileTypeModelENUM;
 import com.mercandalli.android.apps.files.file.FileUtils;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
-import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.library.base.java.StringUtils;
 import com.mercandalli.android.library.base.precondition.Preconditions;
 import com.mercandalli.android.library.base.view.ViewUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 /**
  * The adapter for {@link FileAudioModel} rows.
@@ -79,10 +77,9 @@ public class FileImageAdapter extends RecyclerView.Adapter<FileImageAdapter.View
     private List<FileModelCardHeaderItem> mHeaderIds;
     private FileModelCardAdapter.OnHeaderClickListener mOnHeaderClickListener;
 
-    @Inject
-    FileManager mFileManager;
+    private FileManager mFileManager;
 
-    public FileImageAdapter(Context context, List<FileModel> files, FileModelListener moreListener) {
+    public FileImageAdapter(@NonNull Context context, List<FileModel> files, FileModelListener moreListener) {
         mFileModels = new ArrayList<>();
         mFileModels.addAll(files);
         mMoreListener = moreListener;
@@ -92,7 +89,7 @@ public class FileImageAdapter extends RecyclerView.Adapter<FileImageAdapter.View
         mStringFile = context.getString(R.string.file_model_adapter_file);
         mStringFiles = context.getString(R.string.file_model_adapter_files);
 
-        FileApp.get().getFileAppComponent().inject(this);
+        mFileManager = FileManager.getInstance(context);
         setHasStableIds(true);
 
         mImageMargin = (int) ViewUtils.dpToPx(context, 4);

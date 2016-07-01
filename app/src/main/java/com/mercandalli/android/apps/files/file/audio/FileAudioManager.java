@@ -1,6 +1,8 @@
 package com.mercandalli.android.apps.files.file.audio;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Spanned;
 
 import com.mercandalli.android.apps.files.file.FileModel;
@@ -13,43 +15,54 @@ import java.util.List;
 /**
  * The {@link FileModel} Manager manage {@link FileModel}.
  */
-public interface FileAudioManager {
+public abstract class FileAudioManager {
+
+    @Nullable
+    private static FileAudioManager sInstance;
+
+    @NonNull
+    public static FileAudioManager getInstance(@NonNull final Context context) {
+        if (sInstance == null) {
+            sInstance = new FileAudioManagerImpl(context);
+        }
+        return sInstance;
+    }
 
     /**
      * Get all the {@link FileAudioModel} in the device.
      */
-    void getAllLocalMusic();
+    public abstract void getAllLocalMusic();
 
     /**
      * Get all the {@link FileAudioModel} in a folder.
      */
-    void getLocalMusic(final FileModel fileModelDirectParent);
+    public abstract void getLocalMusic(final FileModel fileModelDirectParent);
 
     /**
      * Get all local folders that contain music.
      */
-    void getLocalMusicFolders();
+    public abstract void getLocalMusicFolders();
 
     /**
      * Get all the {@link Album}s.
-     * <p>
+     * <p/>
      * Call {@link #addGetAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener)} and
      * {@link #removeGetAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener)} to get the result.
      */
-    void getAllLocalMusicAlbums();
+    public abstract void getAllLocalMusicAlbums();
 
     /**
      * Get all the {@link Artist}s.
-     * <p>
+     * <p/>
      * Call {@link #addGetAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener)} and
      * {@link #removeGetAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener)} to get the result.
      */
-    void getAllLocalMusicArtists();
+    public abstract void getAllLocalMusicArtists();
 
     /**
      * Edit the metadata.
      */
-    boolean setFileAudioMetaData(
+    public abstract boolean setFileAudioMetaData(
             final File fileAudio,
             final String newTitle,
             final String newArtist,
@@ -59,7 +72,7 @@ public interface FileAudioManager {
      * Edit the metadata.
      */
     @SuppressWarnings("unused")
-    boolean setFileAudioMetaData(
+    public abstract boolean setFileAudioMetaData(
             final FileAudioModel fileAudio,
             final String newTitle,
             final String newArtist,
@@ -68,40 +81,40 @@ public interface FileAudioManager {
     /**
      * Get the {@link FileAudioModel} overview.
      */
-    Spanned toSpanned(
+    public abstract Spanned toSpanned(
             final Context context,
             final FileAudioModel fileAudioModel);
 
     /**
      * Clear all the cache.
      */
-    void clearCache();
+    public abstract void clearCache();
 
     //region Register/Unregister.
 
-    boolean addGetAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener);
+    public abstract boolean addGetAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener);
 
-    boolean removeGetAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener);
+    public abstract boolean removeGetAllLocalMusicListener(GetAllLocalMusicListener getAllLocalMusicListener);
 
-    boolean addGetLocalMusicFoldersListener(GetLocalMusicFoldersListener getLocalImageFoldersListener);
+    public abstract boolean addGetLocalMusicFoldersListener(GetLocalMusicFoldersListener getLocalImageFoldersListener);
 
-    boolean removeGetLocalMusicFoldersListener(GetLocalMusicFoldersListener getLocalImageFoldersListener);
+    public abstract boolean removeGetLocalMusicFoldersListener(GetLocalMusicFoldersListener getLocalImageFoldersListener);
 
-    boolean addGetLocalMusicListener(GetLocalMusicListener getLocalImageListener);
+    public abstract boolean addGetLocalMusicListener(GetLocalMusicListener getLocalImageListener);
 
-    boolean removeGetLocalMusicListener(GetLocalMusicListener getLocalImageListener);
+    public abstract boolean removeGetLocalMusicListener(GetLocalMusicListener getLocalImageListener);
 
-    boolean addMusicChangeListener(MusicsChangeListener musicsChangeListener);
+    public abstract boolean addMusicChangeListener(MusicsChangeListener musicsChangeListener);
 
-    boolean removeMusicChangeListener(MusicsChangeListener musicsChangeListener);
+    public abstract boolean removeMusicChangeListener(MusicsChangeListener musicsChangeListener);
 
-    boolean addGetAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener);
+    public abstract boolean addGetAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener);
 
-    boolean removeGetAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener);
+    public abstract boolean removeGetAllLocalMusicArtistsListener(GetAllLocalMusicArtistsListener getAllLocalMusicArtistsListener);
 
-    boolean addGetAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener);
+    public abstract boolean addGetAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener);
 
-    boolean removeGetAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener);
+    public abstract boolean removeGetAllLocalMusicAlbumsListener(GetAllLocalMusicAlbumsListener getAllLocalMusicAlbumsListener);
 
     //endregion Register/Unregister.
 
@@ -111,7 +124,7 @@ public interface FileAudioManager {
      * http://stackoverflow.com/questions/81346/most-efficient-way-to-increment-a-map-value-in-java
      * Used to count with a map.
      */
-    class MutableInt {
+    public class MutableInt {
         int value = 1; // note that we start at 1 since we're counting
 
         public void increment() {
@@ -121,7 +134,7 @@ public interface FileAudioManager {
 
     //region Interface Listener.
 
-    interface GetAllLocalMusicListener {
+    public interface GetAllLocalMusicListener {
 
         /**
          * Called when the call of {@link #getAllLocalMusic()} succeeded.
@@ -133,7 +146,7 @@ public interface FileAudioManager {
         void onAllLocalMusicFailed();
     }
 
-    interface GetLocalMusicFoldersListener {
+    public interface GetLocalMusicFoldersListener {
 
         /**
          * Called when the call of {@link #getLocalMusicFolders()} succeeded.
@@ -145,7 +158,7 @@ public interface FileAudioManager {
         void onLocalMusicFoldersFailed();
     }
 
-    interface GetLocalMusicListener {
+    public interface GetLocalMusicListener {
 
         /**
          * Called when the call of {@link #getLocalMusic(FileModel)} succeeded.
@@ -157,7 +170,7 @@ public interface FileAudioManager {
         void onLocalMusicFailed();
     }
 
-    interface GetAllLocalMusicArtistsListener {
+    public interface GetAllLocalMusicArtistsListener {
 
         /**
          * Called when the call of {@link #getAllLocalMusicArtists()} succeeded.
@@ -169,7 +182,7 @@ public interface FileAudioManager {
         void onAllLocalMusicArtistsFailed();
     }
 
-    interface GetAllLocalMusicAlbumsListener {
+    public interface GetAllLocalMusicAlbumsListener {
 
         /**
          * Called when the call of {@link #getAllLocalMusicAlbums()} succeeded.
@@ -181,7 +194,7 @@ public interface FileAudioManager {
         void onAllLocalMusicAlbumsFailed();
     }
 
-    interface MusicsChangeListener {
+    public interface MusicsChangeListener {
 
         /**
          * At least one music on the device change.

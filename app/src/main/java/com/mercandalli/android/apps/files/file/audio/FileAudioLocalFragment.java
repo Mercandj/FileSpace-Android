@@ -44,7 +44,7 @@ import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
-import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
+import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
@@ -58,7 +58,6 @@ import com.mercandalli.android.apps.files.file.audio.playlist.AudioPlayListManag
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
 import com.mercandalli.android.apps.files.main.Config;
-import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.library.base.java.StringUtils;
 import com.mercandalli.android.library.base.view.GenericRecyclerAdapter;
 
@@ -67,12 +66,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 /**
  * A {@link android.support.v4.app.Fragment} that displays the local {@link FileAudioModel}s.
  */
-public class FileAudioLocalFragment extends InjectedFabFragment implements
+public class FileAudioLocalFragment extends BackFragment implements
         FileAudioOverflowActions.FileAudioActionCallback,
         FileAudioManager.GetAllLocalMusicListener,
         FileAudioManager.GetLocalMusicFoldersListener,
@@ -165,17 +162,10 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
 
     private int mPositionInViewPager;
 
-    @Inject
-    FileLocalFabManager mFileLocalFabManager;
-
-    @Inject
-    FileManager mFileManager;
-
-    @Inject
-    FileAudioManager mFileAudioManager;
-
-    @Inject
-    AudioPlayListManager mAudioPlayListManager;
+    private FileLocalFabManager mFileLocalFabManager;
+    private FileManager mFileManager;
+    private FileAudioManager mFileAudioManager;
+    private AudioPlayListManager mAudioPlayListManager;
 
     @Nullable
     private GenericRecyclerAdapter<Album, AlbumCard> mAlbumCardGenericRecyclerAdapter;
@@ -215,6 +205,11 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
         if (!args.containsKey(ARG_POSITION_IN_VIEW_PAGER)) {
             throw new IllegalStateException("Missing args. Please use newInstance()");
         }
+        final Context context = getContext();
+        mFileLocalFabManager = FileLocalFabManager.getInstance();
+        mFileManager = FileManager.getInstance(context);
+        mFileAudioManager = FileAudioManager.getInstance(context);
+        mAudioPlayListManager = AudioPlayListManager.getInstance(context);
         mPositionInViewPager = args.getInt(ARG_POSITION_IN_VIEW_PAGER);
         mFileLocalFabManager.addFabController(mPositionInViewPager, this);
     }
@@ -404,14 +399,6 @@ public class FileAudioLocalFragment extends InjectedFabFragment implements
     public int getFabImageResource(
             @IntRange(from = 0, to = FileLocalFabManager.NUMBER_MAX_OF_FAB - 1) final int fabPosition) {
         return R.drawable.arrow_up;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected void inject(FileAppComponent fileAppComponent) {
-        fileAppComponent.inject(this);
     }
 
     /**

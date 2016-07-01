@@ -1,26 +1,39 @@
 package com.mercandalli.android.apps.files.file.audio.playlist;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.List;
 
 /**
  * The playlist manager.
  */
-public interface AudioPlayListManager {
+public abstract class AudioPlayListManager {
 
-    void add(@NonNull final AudioPlayList audioPlayList);
+    @Nullable
+    private static AudioPlayListManager sInstance;
 
     @NonNull
-    List<AudioPlayList> get();
+    public static AudioPlayListManager getInstance(@NonNull final Context context) {
+        if (sInstance == null) {
+            sInstance = new AudioPlayListManagerImpl(context);
+        }
+        return sInstance;
+    }
 
-    void getPlayLists();
+    public abstract void add(@NonNull final AudioPlayList audioPlayList);
 
-    boolean addGetPlayListsListener(GetPlayListsListener getPlayListsListener);
+    @NonNull
+    public abstract List<AudioPlayList> get();
 
-    boolean removeGetPlayListsListener(GetPlayListsListener getPlayListsListener);
+    public abstract void getPlayLists();
 
-    interface GetPlayListsListener {
+    public abstract boolean addGetPlayListsListener(GetPlayListsListener getPlayListsListener);
+
+    public abstract boolean removeGetPlayListsListener(GetPlayListsListener getPlayListsListener);
+
+    public interface GetPlayListsListener {
         void onGetPlayListsSucceeded(@NonNull final List<AudioPlayList> audioPlayLists);
 
         void onGetPlayListsFailed();

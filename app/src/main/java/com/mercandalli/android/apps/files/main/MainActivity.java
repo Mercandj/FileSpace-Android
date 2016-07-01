@@ -45,30 +45,22 @@ public class MainActivity extends NavDrawerActivity implements
         activity.startActivity(new Intent(activity, MainActivity.class));
     }
 
-    /**
-     * The {@link VersionManager} to check if an update is needed.
-     */
-    private VersionManager mVersionManager;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final FileAppComponent fileAppComponent = FileApp.get().getFileAppComponent();
-        mVersionManager = fileAppComponent.provideVersionManager();
-        mVersionManager.registerUpdateCheckedListener(this);
+        VersionManager.getInstance(this).registerUpdateCheckedListener(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mVersionManager.checkIfUpdateNeeded();
-
+        VersionManager.getInstance(this).checkIfUpdateNeeded();
         logPerformance(TAG, "MainActivity#onResume() - End");
     }
 
     @Override
     protected void onDestroy() {
-        mVersionManager.unregisterUpdateCheckedListener(this);
+        VersionManager.getInstance(this).unregisterUpdateCheckedListener(this);
         super.onDestroy();
     }
 

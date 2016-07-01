@@ -1,14 +1,14 @@
 /**
  * This file is part of FileSpace for Android, an app for managing your server (files, talks...).
- * <p>
+ * <p/>
  * Copyright (c) 2014-2015 FileSpace for Android contributors (http://mercandalli.com)
- * <p>
+ * <p/>
  * LICENSE:
- * <p>
+ * <p/>
  * FileSpace for Android is free software: you can redistribute it and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation, either version 2 of the License, or (at your option) any
  * later version.
- * <p>
+ * <p/>
  * FileSpace for Android is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
  * details.
@@ -40,7 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.fragment.InjectedFabFragment;
+import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
@@ -56,7 +56,6 @@ import com.mercandalli.android.apps.files.file.cloud.fab.FileCloudFabManager;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.apps.files.main.FileAppComponent;
 import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.library.base.dialog.DialogUtils;
 
@@ -66,12 +65,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 /**
  * A {@link android.support.v4.app.Fragment} used by {@link FileLocalPagerFragment} to buildDisplay the public cloud {@link FileModel}.
  */
-public class FileCloudFragment extends InjectedFabFragment implements
+public class FileCloudFragment extends BackFragment implements
         FileLocalPagerFragment.ListController,
         FileModelAdapter.OnFileClickListener,
         FileModelAdapter.OnFileLongClickListener,
@@ -95,11 +92,8 @@ public class FileCloudFragment extends InjectedFabFragment implements
     private int mPositionInViewPager;
     private boolean mForceFab0Hidden = false;
 
-    @Inject
-    FileManager mFileManager;
-
-    @Inject
-    FileCloudFabManager mFileCloudFabManager;
+    private FileManager mFileManager;
+    private FileCloudFabManager mFileCloudFabManager;
 
     public static FileCloudFragment newInstance(final int positionInViewPager) {
         final FileCloudFragment fileCloudFragment = new FileCloudFragment();
@@ -116,6 +110,8 @@ public class FileCloudFragment extends InjectedFabFragment implements
         if (!args.containsKey(ARG_POSITION_IN_VIEW_PAGER)) {
             throw new IllegalStateException("Missing args. Please use newInstance()");
         }
+        mFileManager = FileManager.getInstance(getContext());
+        mFileCloudFabManager = FileCloudFabManager.getInstance();
         mPositionInViewPager = args.getInt(ARG_POSITION_IN_VIEW_PAGER);
         mFileCloudFabManager.addFabController(mPositionInViewPager, this);
     }
@@ -370,11 +366,6 @@ public class FileCloudFragment extends InjectedFabFragment implements
                 });
         AlertDialog menuDrop = menuAlert.create();
         menuDrop.show();
-    }
-
-    @Override
-    protected void inject(FileAppComponent fileAppComponent) {
-        fileAppComponent.inject(this);
     }
 
     /**

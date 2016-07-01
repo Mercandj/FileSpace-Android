@@ -8,9 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.common.listener.IListener;
 import com.mercandalli.android.apps.files.file.FileModel;
-import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.library.base.dialog.DialogUtils;
 import com.mercandalli.android.library.base.precondition.Preconditions;
 
@@ -30,7 +28,7 @@ public class SupportOverflowActions implements PopupMenu.OnMenuItemClickListener
         Preconditions.checkNotNull(context);
 
         mActivity = (Activity) context;
-        mSupportManager = FileApp.get().getFileAppComponent().provideSupportManager();
+        mSupportManager = SupportManager.getInstance(context);
         mDeleteString = context.getString(R.string.delete);
     }
 

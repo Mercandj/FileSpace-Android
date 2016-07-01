@@ -1,11 +1,24 @@
 package com.mercandalli.android.apps.files.support;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SupportManager {
+
+    @Nullable
+    private static SupportManager sInstance;
+
+    @NonNull
+    public static SupportManager getInstance(@NonNull final Context context) {
+        if (sInstance == null) {
+            sInstance = new SupportManagerImpl(context);
+        }
+        return sInstance;
+    }
 
     private final List<GetSupportManagerCallback> mGetSupportManagerCallbacks = new ArrayList<>();
 

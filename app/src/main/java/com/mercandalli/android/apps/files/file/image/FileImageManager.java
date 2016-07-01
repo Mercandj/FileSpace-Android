@@ -1,41 +1,56 @@
 package com.mercandalli.android.apps.files.file.image;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.mercandalli.android.apps.files.file.FileModel;
 
 import java.util.List;
 
-public interface FileImageManager {
+public abstract class FileImageManager {
+
+    @Nullable
+    private static FileImageManager sInstance;
+
+    @NonNull
+    public static FileImageManager getInstance(@NonNull final Context context) {
+        if (sInstance == null) {
+            sInstance = new FileImageManagerImpl(context);
+        }
+        return sInstance;
+    }
 
     /**
      * Get all the {@link FileModel} image in the device.
      */
-    void getAllLocalImage();
+    public abstract void getAllLocalImage();
 
     /**
      * Get all local folders that contain image.
      */
-    void getLocalImageFolders();
+    public abstract void getLocalImageFolders();
 
     /**
      * Get all the {@link FileModel} image in a folder.
      */
-    void getLocalImage(final FileModel fileModelDirectParent);
+    public abstract void getLocalImage(final FileModel fileModelDirectParent);
 
-    void clearCache();
+    public abstract void clearCache();
 
-    boolean registerAllLocalImageListener(GetAllLocalImageListener getAllLocalImageListener);
+    public abstract boolean registerAllLocalImageListener(GetAllLocalImageListener getAllLocalImageListener);
 
-    boolean unregisterAllLocalImageListener(GetAllLocalImageListener getAllLocalImageListener);
+    public abstract boolean unregisterAllLocalImageListener(GetAllLocalImageListener getAllLocalImageListener);
 
-    boolean registerLocalImageFoldersListener(GetLocalImageFoldersListener getLocalImageFoldersListener);
+    public abstract boolean registerLocalImageFoldersListener(GetLocalImageFoldersListener getLocalImageFoldersListener);
 
-    boolean unregisterLocalImageFoldersListener(GetLocalImageFoldersListener getLocalImageFoldersListener);
+    public abstract boolean unregisterLocalImageFoldersListener(GetLocalImageFoldersListener getLocalImageFoldersListener);
 
-    boolean registerLocalImageListener(GetLocalImageListener getLocalImageListener);
+    public abstract boolean registerLocalImageListener(GetLocalImageListener getLocalImageListener);
 
-    boolean unregisterLocalImageListener(GetLocalImageListener getLocalImageListener);
+    public abstract boolean unregisterLocalImageListener(GetLocalImageListener getLocalImageListener);
 
-    interface GetAllLocalImageListener {
+    public interface GetAllLocalImageListener {
 
         /**
          * Called when the call of {@link #getAllLocalImage()} succeeded.

@@ -26,7 +26,7 @@ import static com.mercandalli.android.apps.files.file.FileUtils.isVideoPath;
  * Tha main {@link FileLocalProviderManager} implementation.
  * Manage {@link List}s of path.
  */
-public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
+public class FileLocalProviderManagerImpl extends FileLocalProviderManager {
 
     private static final String STRING_SQL_OR = " OR ";
     private static final String STRING_SQL_LIKE = " LIKE ?";
@@ -67,7 +67,7 @@ public class FileLocalProviderManagerImpl implements FileLocalProviderManager {
      *
      * @param contextApp The {@link Context} of this application.
      */
-    public FileLocalProviderManagerImpl(@NonNull final Context contextApp) {
+    protected FileLocalProviderManagerImpl(@NonNull final Context contextApp) {
         Preconditions.checkNotNull(contextApp);
         mContextApp = contextApp;
 

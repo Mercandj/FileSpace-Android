@@ -1,8 +1,10 @@
 package com.mercandalli.android.apps.files.main.version;
 
-import android.app.Application;
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import com.mercandalli.android.apps.files.main.network.RetrofitUtils;
 import com.mercandalli.android.library.base.precondition.Preconditions;
 
 import java.util.ArrayList;
@@ -18,13 +20,26 @@ import retrofit2.Response;
  */
 public class VersionManager {
 
+    @Nullable
+    private static VersionManager sInstance;
+
+    @NonNull
+    public static VersionManager getInstance(@NonNull final Context context) {
+        if (sInstance == null) {
+            sInstance = new VersionManager(context);
+        }
+        return sInstance;
+    }
+
+    @NonNull
     @SuppressWarnings({"unused", "FieldCanBeLocal"})
-    private Context mContextApp;
+    private final Context mContextApp;
 
     /**
      * The network API.
      */
-    private VersionApi mVersionApi;
+    @NonNull
+    private final VersionApi mVersionApi;
 
     /**
      * Is the update already called.
@@ -36,13 +51,13 @@ public class VersionManager {
     /**
      * A {@link List} of listeners called after {@link #checkIfUpdateNeeded()}.
      */
+    @NonNull
     private final List<UpdateCheckedListener> mUpdateCheckedListeners = new ArrayList<>();
 
-    /* package */ VersionManager(Application application, VersionApi versionApi) {
-        Preconditions.checkNotNull(application);
-        Preconditions.checkNotNull(versionApi);
-        mContextApp = application.getApplicationContext();
-        mVersionApi = versionApi;
+    /* package */ VersionManager(@NonNull final Context context) {
+        Preconditions.checkNotNull(context);
+        mContextApp = context.getApplicationContext();
+        mVersionApi = RetrofitUtils.getRetrofit().create(VersionApi.class);
     }
 
     /**
@@ -78,7 +93,7 @@ public class VersionManager {
         });
     }
 
-    public boolean registerUpdateCheckedListener(UpdateCheckedListener updateCheckedListener) {
+    public boolean registerUpdateCheckedListener(final UpdateCheckedListener updateCheckedListener) {
         synchronized (mUpdateCheckedListeners) {
             //noinspection SimplifiableIfStatement
             if (updateCheckedListener == null || mUpdateCheckedListeners.contains(updateCheckedListener)) {
@@ -90,7 +105,7 @@ public class VersionManager {
         }
     }
 
-    public boolean unregisterUpdateCheckedListener(UpdateCheckedListener updateCheckedListener) {
+    public boolean unregisterUpdateCheckedListener(final UpdateCheckedListener updateCheckedListener) {
         synchronized (mUpdateCheckedListeners) {
             return mUpdateCheckedListeners.remove(updateCheckedListener);
         }

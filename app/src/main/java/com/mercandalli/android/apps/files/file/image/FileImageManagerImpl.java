@@ -30,7 +30,7 @@ import static com.mercandalli.android.library.base.java.FileUtils.getParentPathF
  * {@inheritDoc}
  */
 /* package */
-class FileImageManagerImpl implements FileImageManager {
+class FileImageManagerImpl extends FileImageManager {
 
     private final Context mContextApp;
     protected final FileLocalProviderManager mFileLocalProviderManager;
@@ -51,13 +51,10 @@ class FileImageManagerImpl implements FileImageManager {
     private boolean mIsGetAllLocalImageLaunched;
     private boolean mIsGetLocalImageFoldersLaunched;
 
-    public FileImageManagerImpl(
-            final Context contextApp,
-            final FileLocalProviderManager fileLocalProviderManager) {
+    protected FileImageManagerImpl(@NonNull final Context contextApp) {
         Preconditions.checkNotNull(contextApp);
-        Preconditions.checkNotNull(fileLocalProviderManager);
-        mContextApp = contextApp;
-        mFileLocalProviderManager = fileLocalProviderManager;
+        mContextApp = contextApp.getApplicationContext();
+        mFileLocalProviderManager = FileLocalProviderManager.getInstance(contextApp);
     }
 
     @Override

@@ -12,7 +12,7 @@ import java.util.Map;
  * A {@link FileCloudFabManager} implementation.
  */
 /* package */
-class FileCloudFabManagerImpl implements FileCloudFabManager {
+class FileCloudFabManagerImpl extends FileCloudFabManager {
 
     @Nullable
     private FabContainer mFabContainer;

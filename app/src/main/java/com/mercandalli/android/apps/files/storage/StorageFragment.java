@@ -34,7 +34,6 @@ import android.widget.TextView;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
 import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
-import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.library.base.battery.BatteryUtils;
 
 import java.util.List;
@@ -90,7 +89,7 @@ public class StorageFragment extends Fragment implements
         mNumberPhotos = (TextView) rootView.findViewById(R.id.fragment_storage_number_photos);
 
         final FileLocalProviderManager fileLocalProviderManager =
-                FileApp.get().getFileAppComponent().provideFileLocalProviderManager();
+                FileLocalProviderManager.getInstance(activity);
         fileLocalProviderManager.getFilePaths(this);
         fileLocalProviderManager.getFileAudioPaths(this);
         fileLocalProviderManager.getFileImagePaths(this);
@@ -101,7 +100,7 @@ public class StorageFragment extends Fragment implements
     @Override
     public void onDestroyView() {
         final FileLocalProviderManager fileLocalProviderManager =
-                FileApp.get().getFileAppComponent().provideFileLocalProviderManager();
+                FileLocalProviderManager.getInstance(getContext());
         fileLocalProviderManager.removeGetFilePathsListener(this);
         fileLocalProviderManager.removeGetFileAudioListener(this);
         fileLocalProviderManager.removeGetFileImageListener(this);

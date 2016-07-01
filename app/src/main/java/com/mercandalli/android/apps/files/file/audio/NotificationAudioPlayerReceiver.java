@@ -4,8 +4,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
-import com.mercandalli.android.apps.files.main.FileApp;
+import android.support.annotation.NonNull;
 
 /**
  * A {@link BroadcastReceiver} to receive the {@link FileAudioModel} notification actions.
@@ -41,7 +40,7 @@ public class NotificationAudioPlayerReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         final String action = intent.getAction();
-        final FileAudioPlayer fileAudioPlayer = FileApp.get().getFileAppComponent().provideFileAudioPlayer();
+        final FileAudioPlayer fileAudioPlayer = FileAudioPlayer.getInstance(context);
         if (fileAudioPlayer.isEmpty()) {
             fileAudioPlayer.setNotification(false);
             return;
@@ -71,27 +70,27 @@ public class NotificationAudioPlayerReceiver extends BroadcastReceiver {
         }
     }
 
-    public static PendingIntent getNotificationIntentActivity(Context context) {
+    public static PendingIntent getNotificationIntentActivity(@NonNull final Context context) {
         return getPendingIntent(context, ACTION_ACTIVITY);
     }
 
-    public static PendingIntent getNotificationIntentPlayPause(Context context) {
+    public static PendingIntent getNotificationIntentPlayPause(@NonNull final Context context) {
         return getPendingIntent(context, ACTION_PLAY_PAUSE);
     }
 
-    public static PendingIntent getNotificationIntentPrevious(Context context) {
+    public static PendingIntent getNotificationIntentPrevious(@NonNull final Context context) {
         return getPendingIntent(context, ACTION_PREVIOUS);
     }
 
-    public static PendingIntent getNotificationIntentNext(Context context) {
+    public static PendingIntent getNotificationIntentNext(@NonNull final Context context) {
         return getPendingIntent(context, ACTION_NEXT);
     }
 
-    public static PendingIntent getNotificationIntentClose(Context context) {
+    public static PendingIntent getNotificationIntentClose(@NonNull final Context context) {
         return getPendingIntent(context, ACTION_CLOSE);
     }
 
-    private static PendingIntent getPendingIntent(Context context, String action) {
+    private static PendingIntent getPendingIntent(@NonNull final Context context, String action) {
         final Intent intent = new Intent(context, NotificationAudioPlayerReceiver.class);
         intent.setAction(action);
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);

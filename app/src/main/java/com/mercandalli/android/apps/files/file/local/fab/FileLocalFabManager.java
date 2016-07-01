@@ -3,18 +3,30 @@ package com.mercandalli.android.apps.files.file.local.fab;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 
 /**
  * Manage the {@link FloatingActionButton}s visibility, images, clicks...
  */
-public interface FileLocalFabManager {
+public abstract class FileLocalFabManager {
 
     /**
      * The number of {@link FloatingActionButton} maximum.
      */
     @SuppressWarnings("UnnecessaryInterfaceModifier")
-    static final int NUMBER_MAX_OF_FAB = 2;
+    public static final int NUMBER_MAX_OF_FAB = 2;
+
+    @Nullable
+    private static FileLocalFabManager sInstance;
+
+    @NonNull
+    public static FileLocalFabManager getInstance() {
+        if (sInstance == null) {
+            sInstance = new FileLocalFabManagerImpl();
+        }
+        return sInstance;
+    }
 
     /**
      * The {@link android.support.v4.view.ViewPager.OnPageChangeListener#onPageSelected(int)} call
@@ -22,12 +34,12 @@ public interface FileLocalFabManager {
      *
      * @param viewPagerPosition The new {@link android.support.v4.view.ViewPager} current page position.
      */
-    void onCurrentViewPagerPageChange(final int viewPagerPosition);
+    public abstract void onCurrentViewPagerPageChange(final int viewPagerPosition);
 
     /**
      * Update the {@link FloatingActionButton}s in the current page.
      */
-    void updateFabButtons();
+    public abstract void updateFabButtons();
 
     /**
      * Set the {@link FabContainer}. Build to be the {@link android.support.v4.view.ViewPager}
@@ -35,7 +47,7 @@ public interface FileLocalFabManager {
      *
      * @param fabContainer The {@link FabContainer}.
      */
-    void setFabContainer(final FabContainer fabContainer);
+    public abstract void setFabContainer(final FabContainer fabContainer);
 
     /**
      * Add a {@link FabController}.
@@ -44,7 +56,7 @@ public interface FileLocalFabManager {
      * @param fabController       The {@link FabController} to add.
      * @return <code>true</code> if the {@link FabController} is added.
      */
-    boolean addFabController(final int positionInViewPager, final FabController fabController);
+    public abstract boolean addFabController(final int positionInViewPager, final FabController fabController);
 
     /**
      * Remove a {@link FabController}.
@@ -52,7 +64,7 @@ public interface FileLocalFabManager {
      * @param positionInViewPager The position in the {@link android.support.v4.view.ViewPager}.
      * @return <code>true</code> if the {@link FabController} is removed.
      */
-    boolean removeFabController(final int positionInViewPager);
+    public abstract boolean removeFabController(final int positionInViewPager);
 
     /**
      * The {@link FabContainer} call this method when a {@link FloatingActionButton} is clicked to
@@ -61,7 +73,7 @@ public interface FileLocalFabManager {
      * @param fabPosition The {@link FloatingActionButton} position.
      * @param fab         THe {@link android.view.View} clicked.
      */
-    void onFabClick(
+    public abstract void onFabClick(
             final @IntRange(from = 0, to = NUMBER_MAX_OF_FAB - 1) int fabPosition,
             final @NonNull FloatingActionButton fab);
 
@@ -70,7 +82,7 @@ public interface FileLocalFabManager {
      * {@link FloatingActionButton} container and the {@link android.support.v4.view.ViewPager}
      * container are the same.
      */
-    interface FabContainer {
+    public interface FabContainer {
 
         /**
          * Update the current {@link FabController} with the {@link FloatingActionButton} properties
@@ -86,7 +98,7 @@ public interface FileLocalFabManager {
      * Control the {@link FloatingActionButton}. It is often a {@link android.support.v7.widget.RecyclerView}
      * container.
      */
-    interface FabController {
+    public interface FabController {
 
         /**
          * Notify the current {@link FabController} that a {@link FloatingActionButton} has been clicked.
@@ -122,7 +134,7 @@ public interface FileLocalFabManager {
     /**
      * All the {@link FloatingActionButton} data.
      */
-    final class FabState {
+    public final class FabState {
 
         /**
          * Is the {@link FloatingActionButton} visible.

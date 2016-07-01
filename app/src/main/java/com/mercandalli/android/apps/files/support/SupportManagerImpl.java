@@ -1,8 +1,10 @@
 package com.mercandalli.android.apps.files.support;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.network.RetrofitUtils;
 import com.mercandalli.android.library.base.precondition.Preconditions;
 
 import java.util.ArrayList;
@@ -14,13 +16,17 @@ import retrofit2.Response;
 
 public class SupportManagerImpl extends SupportManager {
 
+    @NonNull
     private final Context mContextApp;
+
+    @NonNull
     private final SupportOnlineApi mSupportOnlineApi;
 
     @SuppressWarnings({"UnusedParameters", "unused"})
-    /* package */ SupportManagerImpl(final Context contextApp, final SupportOnlineApi supportOnlineApi) {
-        mContextApp = contextApp;
-        mSupportOnlineApi = supportOnlineApi;
+    /* package */ SupportManagerImpl(@NonNull final Context context) {
+        Preconditions.checkNotNull(context);
+        mContextApp = context.getApplicationContext();
+        mSupportOnlineApi = RetrofitUtils.getAuthorizedRetrofit().create(SupportOnlineApi.class);
     }
 
     @Override
@@ -55,7 +61,7 @@ public class SupportManagerImpl extends SupportManager {
     }
 
     @Override
-    /* package */ void addSupportComment(final SupportComment supportComment) {
+    /* package */ void addSupportComment(@NonNull final SupportComment supportComment) {
         Preconditions.checkNotNull(supportComment);
         final Call<SupportCommentsResponse> call = mSupportOnlineApi.postSupportComment(
                 supportComment.getIdDevice(),

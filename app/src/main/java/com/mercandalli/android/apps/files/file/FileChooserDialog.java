@@ -33,18 +33,14 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.animation.ScaleAnimationAdapter;
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.view.divider.SpacesItemDecoration;
-import com.mercandalli.android.apps.files.main.FileApp;
 import com.mercandalli.android.apps.files.settings.SettingsManager;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFileClickListener {
 
-    @Inject
     protected FileManager mFileManager;
 
     private RecyclerView mRecyclerView;
@@ -56,7 +52,7 @@ public class FileChooserDialog extends Dialog implements FileModelAdapter.OnFile
     public FileChooserDialog(final Activity activity, FileChooserDialogSelection listener) {
         super(activity);
 
-        FileApp.get().getFileAppComponent().inject(this);
+        mFileManager = FileManager.getInstance(activity);
 
         mFileModelListener = listener;
         mFileModelList = new ArrayList<>();

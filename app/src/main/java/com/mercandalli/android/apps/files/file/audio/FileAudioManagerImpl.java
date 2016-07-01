@@ -70,16 +70,11 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
      *
      * @param contextApp The {@link Context} of this application.
      */
-    public FileAudioManagerImpl(
-            final @NonNull Context contextApp,
-            final @NonNull FileLocalProviderManager fileLocalProviderManager,
-            final @NonNull FileManager fileManager) {
+    public FileAudioManagerImpl(final @NonNull Context contextApp) {
         Preconditions.checkNotNull(contextApp);
-        Preconditions.checkNotNull(fileLocalProviderManager);
-        Preconditions.checkNotNull(fileManager);
-        mContextApp = contextApp;
-        mFileLocalProviderManager = fileLocalProviderManager;
-        mFileManager = fileManager;
+        mContextApp = contextApp.getApplicationContext();
+        mFileLocalProviderManager = FileLocalProviderManager.getInstance(contextApp);
+        mFileManager = FileManager.getInstance(contextApp);
 
         mFileLocalProviderManager.registerFileProviderListener(new FileLocalProviderManager.FileProviderListener() {
             @Override

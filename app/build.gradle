@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-apply plugin: 'com.neenbedankt.android-apt'
 apply from: '../config/jenkins/jenkins.gradle'
 apply from: '../config/quality/quality.gradle'
 apply from: '../config/dependency/dependencies.gradle'
@@ -135,10 +134,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:9.0.2'
     compile 'com.google.android.gms:play-services-auth:9.0.2'
     compile 'com.android.support:multidex:1.0.1'
-
-    // Dagger
-    compile 'com.google.dagger:dagger:2.4'
-    apt 'com.google.dagger:dagger-compiler:2.4'
 
     // Network
     compile('com.squareup.retrofit2:retrofit:2.0.2') {

@@ -1,6 +1,5 @@
 package com.mercandalli.android.apps.files.file.audio;
 
-import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
@@ -40,6 +39,17 @@ public class FileAudioPlayer implements
         MediaPlayer.OnCompletionListener,
         AudioManager.OnAudioFocusChangeListener {
 
+    @Nullable
+    private static FileAudioPlayer sInstance;
+
+    @NonNull
+    public static FileAudioPlayer getInstance(@NonNull final Context context) {
+        if (sInstance == null) {
+            sInstance = new FileAudioPlayer(context);
+        }
+        return sInstance;
+    }
+
     @NonNull
     private static final String TAG = "FileAudioPlayer";
 
@@ -73,9 +83,9 @@ public class FileAudioPlayer implements
     @Nullable
     private String mWatchNodeId;
 
-    public FileAudioPlayer(final Application application) {
-        Preconditions.checkNotNull(application);
-        mAppContext = application.getApplicationContext();
+    private FileAudioPlayer(final Context context) {
+        Preconditions.checkNotNull(context);
+        mAppContext = context.getApplicationContext();
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setOnPreparedListener(this);
         mMediaPlayer.setOnCompletionListener(this);

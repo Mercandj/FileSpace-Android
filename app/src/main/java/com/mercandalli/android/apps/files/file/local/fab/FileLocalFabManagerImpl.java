@@ -12,7 +12,7 @@ import java.util.Map;
  * A {@link FileLocalFabManager} implementation.
  */
 /* package */
-class FileLocalFabManagerImpl implements FileLocalFabManager {
+class FileLocalFabManagerImpl extends FileLocalFabManager {
 
     @Nullable
     private FabContainer mFabContainer;
