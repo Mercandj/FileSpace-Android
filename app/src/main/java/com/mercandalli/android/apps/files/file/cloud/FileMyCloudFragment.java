@@ -80,11 +80,14 @@ public class FileMyCloudFragment extends BackFragment implements
 
     private RecyclerView mRecyclerView;
     private FileModelAdapter mFileModelAdapter;
+    @NonNull
     private final ArrayList<FileModel> mFilesList = new ArrayList<>();
     private ProgressBar mProgressBar;
     private TextView mMessageTextView;
 
+    @NonNull
     private final Stack<Integer> mIdFileDirectoryStack = new Stack<>();
+    @NonNull
     private final List<FileModel> mFilesToCutList = new ArrayList<>();
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -112,9 +115,9 @@ public class FileMyCloudFragment extends BackFragment implements
             throw new IllegalStateException("Missing args. Please use newInstance()");
         }
         mPositionInViewPager = args.getInt(ARG_POSITION_IN_VIEW_PAGER);
+        mFileCloudFabManager = FileCloudFabManager.getInstance();
         mFileCloudFabManager.addFabController(mPositionInViewPager, this);
         mFileManager = FileManager.getInstance(getContext());
-        mFileCloudFabManager = FileCloudFabManager.getInstance();
     }
 
     @Override
