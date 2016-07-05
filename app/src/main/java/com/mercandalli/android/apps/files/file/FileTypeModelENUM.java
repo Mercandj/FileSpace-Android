@@ -32,7 +32,7 @@ public enum FileTypeModelENUM {
     TEXT(new FileTypeModel(R.string.file_model_type_text, new String[]{"txt", "csv", "rtf", "text", "json"})),
     IMAGE(new FileTypeModel(R.string.file_model_type_picture, new String[]{"jpeg", "jpg", "png", "gif", "raw", "psd", "bmp", "tiff", "tif"})),
     AUDIO(new FileTypeModel(R.string.file_model_type_audio, new String[]{"mp3", "wav", "m4a", "aiff", "wma", "caf", "flac", "m4p", "amr", "ogg"})),
-    VIDEO(new FileTypeModel(R.string.file_model_type_video, new String[]{"m4v", "3gp", "wmv", "mp4", "mpeg", "mpg", "rm", "mov", "avi", "mkv", "flv", "ogg"})),
+    VIDEO(new FileTypeModel(R.string.file_model_type_video, new String[]{"m4v", "3gp", "wmv", "mp4", "mpeg", "mpg", "rm", "mov", "avi", "mkv", "flv", "ogg", "webm"})),
     ARCHIVE(new FileTypeModel(R.string.file_model_type_archive, new String[]{"zip", "gzip", "rar", "tar", "tar.gz", "gz", "7z"})),
     FILESPACE(new FileTypeModel(R.string.file_model_type_file_space, new String[]{"filespace", "jarvis"})),
     WORD(new FileTypeModel(R.string.file_model_type_word, new String[]{"doc", "docx"})),
