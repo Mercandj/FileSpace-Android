@@ -3,8 +3,6 @@ package com.mercandalli.android.apps.files.file.audio;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -23,7 +21,6 @@ import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderM
 import com.mercandalli.android.library.base.precondition.Preconditions;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,8 +38,6 @@ import static com.mercandalli.android.library.base.java.FileUtils.getParentPathF
  */
 /* package */
 class FileAudioManagerImpl extends FileAudioManagerNotifier {
-
-    private static final String LIKE = " LIKE ?";
 
     @NonNull
     protected final Context mContextApp;
@@ -62,6 +57,7 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
 
     @NonNull
     private final Handler mUiHandler;
+
     @NonNull
     private final Thread mUiThread;
 
@@ -159,12 +155,9 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
 
         final List<FileAudioModel> files = new ArrayList<>();
         final List<File> fs = Arrays.asList(file.listFiles(
-                new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        return (new FileTypeModel(getExtensionFromPath(name)))
-                                .equals(FileTypeModelENUM.AUDIO.type);
-                    }
+                (dir, name) -> {
+                    return (new FileTypeModel(getExtensionFromPath(name)))
+                            .equals(FileTypeModelENUM.AUDIO.type);
                 }
         ));
         for (final File f : fs) {
@@ -215,62 +208,11 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
     @Override
     @SuppressLint("NewApi")
     public void getAllLocalMusicAlbums() {
-
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.GINGERBREAD_MR1) {
             notifyAllLocalMusicAlbumsListenerFailed();
             return;
         }
-
-        new AsyncTask<Void, Void, List<Album>>() {
-            @Override
-            protected List<Album> doInBackground(Void... params) {
-                // Used to count the number of music inside.
-                final Map<String, Album> albums = new HashMap<>();
-
-                final String[] projection = new String[]{
-                        MediaStore.Files.FileColumns.DATA,
-                        MediaStore.Audio.Albums._ID,
-                        MediaStore.Audio.Albums.ALBUM};
-
-                final Uri allSongsUri = MediaStore.Files.getContentUri("external");
-                final List<String> searchArray = new ArrayList<>();
-
-                final StringBuilder selection = new StringBuilder("( " +
-                        MediaStore.Files.FileColumns.MEDIA_TYPE + " = " +
-                        MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO);
-
-                for (String end : FileTypeModelENUM.AUDIO.type.getExtensions()) {
-                    selection.append(" OR " + MediaStore.Files.FileColumns.DATA + LIKE);
-                    searchArray.add('%' + end);
-                }
-                selection.append(" )");
-
-                final Cursor cursor = mContextApp.getContentResolver().query(allSongsUri, projection, selection.toString(), searchArray.toArray(new String[searchArray.size()]), null);
-                if (cursor != null) {
-                    if (cursor.moveToFirst()) {
-                        do {
-                            final String id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums._ID));
-                            Album album;
-                            if (albums.containsKey(id)) {
-                                album = albums.get(id);
-                            } else {
-                                album = new Album(id, cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM)));
-                            }
-                            album.addFilePath(cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)));
-                            albums.put(id, album);
-                        } while (cursor.moveToNext());
-                    }
-                    cursor.close();
-                }
-                return new ArrayList<>(albums.values());
-            }
-
-            @Override
-            protected void onPostExecute(final List<Album> fileModels) {
-                notifyAllLocalMusicAlbumsListenerSucceeded(fileModels);
-                super.onPostExecute(fileModels);
-            }
-        }.execute();
+        new Thread(this::getAllLocalMusicAlbumsInternal).start();
     }
 
     /**
@@ -419,6 +361,15 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
     }
 
     private void notifyAllLocalMusicAlbumsListenerSucceeded(final List<Album> albums) {
+        if (mUiThread != Thread.currentThread()) {
+            mUiHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    notifyAllLocalMusicAlbumsListenerSucceeded(albums);
+                }
+            });
+            return;
+        }
         synchronized (mGetAllLocalMusicAlbumsListeners) {
             for (int i = 0, size = mGetAllLocalMusicAlbumsListeners.size(); i < size; i++) {
                 mGetAllLocalMusicAlbumsListeners.get(i).onAllLocalMusicAlbumsSucceeded(albums);
@@ -495,4 +446,38 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
         }
     }
     //endregion notify listeners
+
+    private void getAllLocalMusicAlbumsInternal() {
+        // Used to count the number of music inside.
+        final Map<Integer, Album> albums = new HashMap<>();
+
+        final Cursor cursor = mContextApp.getContentResolver().query(
+                MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
+                new String[]{
+                        MediaStore.Audio.Albums._ID,
+                        MediaStore.Audio.Albums.ALBUM,
+                        MediaStore.Audio.Albums.NUMBER_OF_SONGS},
+                null,
+                null,
+                null);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                    final int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Albums._ID));
+                    final String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM));
+                    final int numberOfSongs = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS));
+                    if (!albums.containsKey(id) && name != null) {
+                        albums.put(id,
+                                new Album(
+                                        id,
+                                        name,
+                                        numberOfSongs));
+                    }
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+        }
+        notifyAllLocalMusicAlbumsListenerSucceeded(new ArrayList<>(albums.values()));
+    }
 }

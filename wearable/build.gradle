@@ -3,13 +3,13 @@ apply from: '../config/quality/quality.gradle'
 apply from: '../config/dependency/dependencies.gradle'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 24
     buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "com.mercandalli.android.apps.files"
         minSdkVersion 21
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
     }
@@ -32,8 +32,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':shared')
     compile 'com.google.android.support:wearable:1.4.0'
-    compile 'com.google.android.gms:play-services-wearable:9.0.2'
-    compile 'com.google.android.gms:play-services-appindexing:9.0.2'
+    compile 'com.google.android.gms:play-services-wearable:9.2.0'
+    compile 'com.google.android.gms:play-services-appindexing:9.2.0'
 
     // Mercandalli main library
     compile rootProject.ext.dependencies.base

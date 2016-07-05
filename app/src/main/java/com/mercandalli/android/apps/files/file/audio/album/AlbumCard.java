@@ -44,12 +44,12 @@ public class AlbumCard extends CardView implements
     @Override
     public void setModel(@NonNull final Album album) {
         mAlbum = album;
-        ((TextView) findViewById(R.id.view_album_card_title)).setText("Name: " + album.getName());
-        ((TextView) findViewById(R.id.view_album_card_subtitle)).setText("Size: " + album.getFilePaths().size());
+        ((TextView) findViewById(R.id.view_album_card_title)).setText(album.getName());
+        ((TextView) findViewById(R.id.view_album_card_subtitle)).setText(String.valueOf(album.getNumberOfSongs()));
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
 
     }
 
@@ -58,7 +58,7 @@ public class AlbumCard extends CardView implements
      *
      * @param context the {@link Context} passed in the constructor.
      */
-    private void init(Context context) {
+    private void init(@NonNull final Context context) {
         inflate(context, R.layout.view_album_card_view, this);
         setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
