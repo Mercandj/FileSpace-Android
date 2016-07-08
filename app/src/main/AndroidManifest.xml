@@ -123,10 +123,12 @@
                 <action android:name="com.android.music.PLAYBACK_VIEWER" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.APP_MUSIC" />
             </intent-filter>
+            -->
         </activity>
 
         <receiver
