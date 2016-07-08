@@ -21,6 +21,7 @@ import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderM
 import com.mercandalli.android.library.base.precondition.Preconditions;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -155,9 +156,12 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
 
         final List<FileAudioModel> files = new ArrayList<>();
         final List<File> fs = Arrays.asList(file.listFiles(
-                (dir, name) -> {
-                    return (new FileTypeModel(getExtensionFromPath(name)))
-                            .equals(FileTypeModelENUM.AUDIO.type);
+                new FilenameFilter() {
+                    @Override
+                    public boolean accept(final File file, final String name) {
+                        return (new FileTypeModel(getExtensionFromPath(name)))
+                                .equals(FileTypeModelENUM.AUDIO.type);
+                    }
                 }
         ));
         for (final File f : fs) {
@@ -212,7 +216,12 @@ class FileAudioManagerImpl extends FileAudioManagerNotifier {
             notifyAllLocalMusicAlbumsListenerFailed();
             return;
         }
-        new Thread(this::getAllLocalMusicAlbumsInternal).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getAllLocalMusicAlbumsInternal();
+            }
+        }).start();
     }
 
     /**
