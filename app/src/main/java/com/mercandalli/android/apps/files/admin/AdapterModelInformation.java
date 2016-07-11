@@ -110,14 +110,6 @@ public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelIn
         notifyItemInserted(position);
     }
 
-    public void removeItem(int position) {
-        if (mModelInformations.size() <= 0) {
-            return;
-        }
-        mModelInformations.remove(position);
-        notifyItemRemoved(position);
-    }
-
     public void setOnItemClickListener(final OnItemClickListener itemClickListener) {
         mItemClickListener = itemClickListener;
     }

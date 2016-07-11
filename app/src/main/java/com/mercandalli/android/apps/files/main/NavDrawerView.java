@@ -173,8 +173,6 @@ class NavDrawerView extends FrameLayout implements View.OnClickListener {
         CLOUD(R.id.view_nav_drawer_cloud, NavDrawerSimpleRow.CLOUD, false, true),
         WORKSPACE(R.id.view_nav_drawer_workspace, NavDrawerSimpleRow.NOTES, true, true),
         COMMUNITY(R.id.view_nav_drawer_community, NavDrawerSimpleRow.COMMUNITY, false, true),
-        ROBOTICS(R.id.view_nav_drawer_robotics, NavDrawerSimpleRow.ROBOTICS, false, false),
-        GENEALOGY(R.id.view_nav_drawer_genealogy, NavDrawerSimpleRow.GENEALOGY, false, false),
         ADMIN(R.id.view_nav_drawer_admin, NavDrawerSimpleRow.ADMIN, false, false),
         SETTINGS(R.id.view_nav_drawer_settings, NavDrawerSimpleRow.SETTINGS, true, true),
         LOYALTY(R.id.view_nav_drawer_loyalty, NavDrawerSimpleRow.LOYALTY, Constants.ADS_VISIBLE, Constants.ADS_VISIBLE, false),
@@ -233,16 +231,6 @@ class NavDrawerView extends FrameLayout implements View.OnClickListener {
                 R.id.view_nav_drawer_community_icon,
                 R.drawable.q_ic_drawer_community,
                 R.drawable.q_ic_drawer_community_pressed),
-
-        ROBOTICS(R.id.view_nav_drawer_robotics_title,
-                R.id.view_nav_drawer_robotics_icon,
-                R.drawable.q_ic_drawer_robotics,
-                R.drawable.q_ic_drawer_robotics_pressed),
-
-        GENEALOGY(R.id.view_nav_drawer_genealogy_title,
-                R.id.view_nav_drawer_genealogy_icon,
-                R.drawable.q_ic_drawer_robotics,
-                R.drawable.q_ic_drawer_robotics_pressed),
 
         ADMIN(R.id.view_nav_drawer_admin_title,
                 R.id.view_nav_drawer_admin_icon,

@@ -22,6 +22,7 @@ package com.mercandalli.android.apps.files.admin;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -37,9 +38,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.apps.files.admin.game.GameFragment;
-import com.mercandalli.android.apps.files.admin.notification.SendNotificationFragment;
-import com.mercandalli.android.apps.files.admin.notification.simple.SendNotificationSimpleFragment;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.fragment.EmptyFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
@@ -51,8 +49,10 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
 
     private static final String BUNDLE_ARG_TITLE = "AdminFragment.Args.BUNDLE_ARG_TITLE";
 
-    private static final int NB_FRAGMENT = 10;
+    private static final int NB_FRAGMENT = 4;
     private static final int INIT_FRAGMENT = 0;
+
+    @NonNull
     public static final BackFragment LIST_BACK_FRAGMENT[] = new BackFragment[NB_FRAGMENT];
     private NonSwipeableViewPager mViewPager;
     private FileManagerFragmentPagerAdapter mPagerAdapter;
@@ -175,28 +175,16 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
             BackFragment backFragment;
             switch (i) {
                 case 0:
-                    backFragment = SendNotificationFragment.newInstance();
-                    break;
-                case 1:
-                    backFragment = SendNotificationSimpleFragment.newInstance();
-                    break;
-                case 2:
                     backFragment = ServerDataFragment.newInstance();
                     break;
-                case 3:
+                case 1:
                     backFragment = ServerLogsFragment.newInstance();
                     break;
-                case 4:
+                case 2:
                     backFragment = UserAddFragment.newInstance();
                     break;
-                case 5:
+                case 3:
                     backFragment = RequestFragment.newInstance();
-                    break;
-                case 8:
-                    backFragment = GameFragment.newInstance();
-                    break;
-                case 9:
-                    backFragment = StatisticsFragment.newInstance();
                     break;
                 default:
                     backFragment = EmptyFragment.newInstance();
@@ -213,40 +201,17 @@ public class AdminFragment extends BackFragment implements ViewPager.OnPageChang
 
         @Override
         public CharSequence getPageTitle(int i) {
-            String title = "null";
             switch (i) {
                 case 0:
-                    title = "NOTIF REAL";
-                    break;
+                    return "SERVER DATA";
                 case 1:
-                    title = "NOTIF SIMPLE";
-                    break;
+                    return "SERVER LOGS";
                 case 2:
-                    title = "SERVER DATA";
-                    break;
+                    return "USER ADD";
                 case 3:
-                    title = "SERVER LOGS";
-                    break;
-                case 4:
-                    title = "USER ADD";
-                    break;
-                case 5:
-                    title = "USER DATA";
-                    break;
-                case 6:
-                    title = "USER LICENCES";
-                    break;
-                case 7:
-                    title = "REQUEST";
-                    break;
-                case 8:
-                    title = "GAME";
-                    break;
-                case 9:
-                    title = "STATS";
-                    break;
+                    return "REQUEST";
             }
-            return title;
+            return "null";
         }
     }
 

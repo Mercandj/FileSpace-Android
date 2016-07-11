@@ -19,6 +19,7 @@
  */
 package com.mercandalli.android.apps.files.settings;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,11 +37,13 @@ import java.util.List;
 
 public class AdapterModelSetting extends RecyclerView.Adapter<AdapterModelSetting.ViewHolder> {
 
-    private final List<ModelSetting> mItemsData;
+    @NonNull
+    private final List<ModelSetting> mItemsData = new ArrayList<>();
     private OnItemClickListener mItemClickListener;
 
     public AdapterModelSetting(final List<ModelSetting> itemsData) {
-        mItemsData = new ArrayList<>(itemsData);
+        mItemsData.clear();
+        mItemsData.addAll(itemsData);
     }
 
     @Override

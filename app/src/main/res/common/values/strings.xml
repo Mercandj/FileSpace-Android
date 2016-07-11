@@ -103,12 +103,6 @@
 
     <string name="failed_google_plus">Google+ connection failed.</string>
 
-    <string name="genealogy_first_name_1">First name 1</string>
-    <string name="genealogy_first_name_2">First name 2</string>
-    <string name="genealogy_first_name_3">First name 3</string>
-    <string name="genealogy_last_name">Last name</string>
-    <string name="genealogy_add_person">Add person</string>
-
     <string name="activity_search_empty">No result.</string>
 
     <!-- NEW tags -->
@@ -121,7 +115,6 @@
     <string name="tab_notes">Notes</string>
     <string name="tab_community">Community</string>
     <string name="tab_robotics">Robotics</string>
-    <string name="tab_genealogy">Genealogy</string>
     <string name="tab_admin">Admin</string>
     <string name="tab_request">Request</string>
     <string name="tab_other">Other</string>

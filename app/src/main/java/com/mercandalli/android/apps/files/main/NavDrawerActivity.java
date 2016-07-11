@@ -43,8 +43,6 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.admin.AdminFragment;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.SetToolbarCallback;
-import com.mercandalli.android.apps.files.extras.genealogy.GenealogyFragment;
-import com.mercandalli.android.apps.files.extras.robotics.RoboticsFragment;
 import com.mercandalli.android.apps.files.file.cloud.FileCloudPagerFragment;
 import com.mercandalli.android.apps.files.file.local.FileLocalPagerFragment;
 import com.mercandalli.android.apps.files.note.WorkspaceFragment;
@@ -276,12 +274,6 @@ abstract class NavDrawerActivity extends ApplicationActivity implements
                     break;
                 case COMMUNITY:
                     fragment = CommunityFragment.newInstance(getString(R.string.tab_community));
-                    break;
-                case ROBOTICS:
-                    fragment = RoboticsFragment.newInstance(getString(R.string.tab_robotics));
-                    break;
-                case GENEALOGY:
-                    fragment = GenealogyFragment.newInstance(getString(R.string.tab_genealogy));
                     break;
                 case ADMIN:
                     fragment = AdminFragment.newInstance(getString(R.string.tab_admin));

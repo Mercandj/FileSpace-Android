@@ -38,6 +38,7 @@ import com.romainpiel.shimmer.ShimmerTextView;
 public class DialogAuthorLabel extends Dialog {
 
     private Activity mActivity;
+
     ShimmerTextView myShimmerTextView, version_tv;
 
     public DialogAuthorLabel(
