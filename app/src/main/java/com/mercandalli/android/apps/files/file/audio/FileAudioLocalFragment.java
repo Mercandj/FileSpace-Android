@@ -66,6 +66,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mercandalli.android.library.base.view.ViewUtils.setViewVisibility;
+
 /**
  * A {@link android.support.v4.app.Fragment} that displays the local {@link FileAudioModel}s.
  */
@@ -93,7 +95,6 @@ public class FileAudioLocalFragment extends BackFragment implements
      * A key for the view pager position.
      */
     private static final String ARG_POSITION_IN_VIEW_PAGER = "FileLocalFragment.Args.ARG_POSITION_IN_VIEW_PAGER";
-    private HeaderView mHeaderView;
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef({
@@ -125,30 +126,11 @@ public class FileAudioLocalFragment extends BackFragment implements
     @NonNull
     private final List<Album> mAlbums = new ArrayList<>();
 
-    private RecyclerView mRecyclerView;
-    private TextView mMessageTextView;
-
-    /**
-     * A simple {@link ProgressBar}. Call {@link #showProgressBar()} or {@link #hideProgressBar()}.
-     */
-    private ProgressBar mProgressBar;
-
-    private FileAudioRowAdapter mFileAudioRowAdapter;
-    private FileModelCardAdapter mFileModelCardAdapter;
-
-    private ScaleAnimationAdapter mScaleAnimationAdapter;
-
-    private String mStringDirectory;
-    private String mStringMusic;
-    private String mStringMusics;
-
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-
     /**
      * A simple {@link Handler}. Called by {@link #showProgressBar()} or {@link #hideProgressBar()}.
      */
     @NonNull
-    private final Handler mProgressBarActivationHandler;
+    private final Handler mProgressBarActivationHandler = new Handler();
 
     /**
      * A simple {@link Runnable}. Called by {@link #showProgressBar()} or {@link #hideProgressBar()}.
@@ -156,20 +138,52 @@ public class FileAudioLocalFragment extends BackFragment implements
     @NonNull
     private final Runnable mProgressBarActivationRunnable;
 
-    private FileModel mCurrentFolder;
+    @Nullable
+    private HeaderView mHeaderView;
+    @Nullable
+    private RecyclerView mRecyclerView;
+    @Nullable
+    private TextView mMessageTextView;
 
-    private FileAudioOverflowActions mFileAudioOverflowActions;
-
-    private int mPositionInViewPager;
-
-    private FileLocalFabManager mFileLocalFabManager;
-    private FileManager mFileManager;
-    private FileAudioManager mFileAudioManager;
-    private AudioPlayListManager mAudioPlayListManager;
+    /**
+     * A simple {@link ProgressBar}. Call {@link #showProgressBar()} or {@link #hideProgressBar()}.
+     */
+    @Nullable
+    private ProgressBar mProgressBar;
 
     @Nullable
-    private GenericRecyclerAdapter<Album, AlbumCard> mAlbumCardGenericRecyclerAdapter;
+    private FileAudioRowAdapter mFileAudioRowAdapter;
+    @Nullable
+    private FileModelCardAdapter mFileModelCardAdapter;
 
+    @Nullable
+    private ScaleAnimationAdapter mScaleAnimationAdapter;
+
+    @Nullable
+    private String mStringDirectory;
+    @Nullable
+    private String mStringMusic;
+    @Nullable
+    private String mStringMusics;
+
+    @Nullable
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    private int mPositionInViewPager;
+    @Nullable
+    private FileModel mCurrentFolder;
+    @Nullable
+    private FileAudioOverflowActions mFileAudioOverflowActions;
+    @Nullable
+    private FileLocalFabManager mFileLocalFabManager;
+    @Nullable
+    private FileManager mFileManager;
+    @Nullable
+    private FileAudioManager mFileAudioManager;
+    @Nullable
+    private AudioPlayListManager mAudioPlayListManager;
+    @Nullable
+    private GenericRecyclerAdapter<Album, AlbumCard> mAlbumCardGenericRecyclerAdapter;
     @Nullable
     private GenericRecyclerAdapter<Artist, ArtistCard> mArtistCardGenericRecyclerAdapter;
 
@@ -185,12 +199,11 @@ public class FileAudioLocalFragment extends BackFragment implements
      * Do not use this constructor. Call {@link #newInstance(int)} instead.
      */
     public FileAudioLocalFragment() {
-        mProgressBarActivationHandler = new Handler();
         mProgressBarActivationRunnable = new Runnable() {
             @Override
             public void run() {
-                mProgressBar.setVisibility(View.VISIBLE);
-                mRecyclerView.setVisibility(View.GONE);
+                setViewVisibility(mProgressBar, View.VISIBLE);
+                setViewVisibility(mRecyclerView, View.GONE);
             }
         };
     }
@@ -408,7 +421,8 @@ public class FileAudioLocalFragment extends BackFragment implements
     @Override
     public String onFileSubtitleModify(final FileModel fileModel) {
         if (fileModel != null && fileModel.isDirectory() && fileModel.getCountAudio() != 0) {
-            return mStringDirectory + ": " + StringUtils.longToShortString(fileModel.getCountAudio()) + " " + (fileModel.getCountAudio() > 1 ? mStringMusics : mStringMusic);
+            return mStringDirectory + ": " + StringUtils.longToShortString(fileModel.getCountAudio())
+                    + " " + (fileModel.getCountAudio() > 1 ? mStringMusics : mStringMusic);
         }
         return null;
     }
@@ -726,38 +740,38 @@ public class FileAudioLocalFragment extends BackFragment implements
     }
 
     //region refresh
-    public void refreshListFolders() {
+    private void refreshListFolders() {
         mCurrentFolder = null;
         mCurrentPage = PAGE_FOLDERS;
         showProgressBar();
         refreshCurrentList();
     }
 
-    public void refreshListPlaylist() {
+    private void refreshListPlaylist() {
         mCurrentPage = PAGE_PLAYLIST;
         showProgressBar();
         refreshCurrentList();
     }
 
-    public void refreshListAllMusic() {
+    private void refreshListAllMusic() {
         mCurrentPage = PAGE_ALL;
         showProgressBar();
         refreshCurrentList();
     }
 
-    public void refreshListArtist() {
+    private void refreshListArtist() {
         mCurrentPage = PAGE_ARTIST;
         showProgressBar();
         refreshCurrentList();
     }
 
-    public void refreshListAlbum() {
+    private void refreshListAlbum() {
         mCurrentPage = PAGE_ALBUM;
         showProgressBar();
         refreshCurrentList();
     }
 
-    public void refreshListFoldersInside(final FileModel fileModel) {
+    private void refreshListFoldersInside(final FileModel fileModel) {
         mCurrentFolder = fileModel;
         mCurrentPage = PAGE_FOLDER_INSIDE;
         mFileAudioModels.clear();
@@ -766,7 +780,7 @@ public class FileAudioLocalFragment extends BackFragment implements
     //endregion refresh
 
     private void updateLayoutManager() {
-        if (mCurrentPage == PAGE_FOLDERS) {
+        if (mCurrentPage == PAGE_FOLDERS || mCurrentPage == PAGE_ALBUM) {
             final GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),
                     getResources().getInteger(R.integer.column_number_small_card));
             gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {

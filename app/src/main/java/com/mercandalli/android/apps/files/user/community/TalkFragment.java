@@ -167,7 +167,7 @@ public class TalkFragment extends BackFragment {
                             new DialogUtils.OnDialogUtilsStringListener() {
                                 @Override
                                 public void onDialogUtilsStringCalledBack(String text) {
-                                    String url = Constants.URL_DOMAIN + Config.ROUTE_USER_MESSAGE + "/" + userModel.id;
+                                    String url = Constants.URL_DOMAIN + Config.ROUTE_USER_MESSAGE + "/" + userModel.getId();
                                     List<StringPair> parameters = new ArrayList<>();
                                     parameters.add(new StringPair("message", "" + text));
 

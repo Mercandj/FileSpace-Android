@@ -23,6 +23,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
@@ -78,6 +79,7 @@ abstract class NavDrawerActivity extends ApplicationActivity implements
     private NavigationView mNavigationView;
     private NavDrawerView mNavDrawerView;
 
+    @NonNull
     private final FragmentManager mFragmentManager = getSupportFragmentManager();
 
     /**
@@ -233,7 +235,7 @@ abstract class NavDrawerActivity extends ApplicationActivity implements
         return mFragmentManager.findFragmentByTag(mCurrentFragmentTag);
     }
 
-    /* package */ void selectItem(final NavDrawerView.NavDrawerRow navDrawerRow) {
+    private void selectItem(final NavDrawerView.NavDrawerRow navDrawerRow) {
         Preconditions.checkNotNull(navDrawerRow);
 
         if (NavDrawerView.NavDrawerRow.LOGOUT.equals(navDrawerRow)) {

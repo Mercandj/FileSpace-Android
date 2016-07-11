@@ -81,16 +81,20 @@ public class FileCloudFragment extends BackFragment implements
      */
     private static final String ARG_POSITION_IN_VIEW_PAGER = "FileCloudFragment.Args.ARG_POSITION_IN_VIEW_PAGER";
 
+    @NonNull
+    private final List<FileModel> mFilesList = new ArrayList<>();
+
+    @NonNull
+    private final List<FileModel> mFilesToCut = new ArrayList<>();
+
     private RecyclerView mRecyclerView;
     private FileModelAdapter mAdapterModelFile;
-    private List<FileModel> mFilesList = new ArrayList<>();
+
     private ProgressBar mProgressBar;
     private TextView mMessageTextView;
 
-    private List<FileModel> filesToCut = new ArrayList<>();
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private int mPositionInViewPager;
-    private boolean mForceFab0Hidden = false;
 
     private FileManager mFileManager;
     private FileCloudFabManager mFileCloudFabManager;
@@ -156,8 +160,8 @@ public class FileCloudFragment extends BackFragment implements
         if (hasItemSelected()) {
             deselectAll();
             return true;
-        } else if (filesToCut != null && filesToCut.size() != 0) {
-            filesToCut.clear();
+        } else if (!mFilesToCut.isEmpty()) {
+            mFilesToCut.clear();
             //refreshFab();
             return true;
         }
@@ -171,7 +175,6 @@ public class FileCloudFragment extends BackFragment implements
             final @NonNull FloatingActionButton floatingActionButton) {
         switch (fabPosition) {
             case 0:
-                mForceFab0Hidden = true;
                 FileCloudFragment.this.mFileCloudFabManager.updateFabButtons();
                 new FileAddDialog(getActivity(), -1, new IListener() {
                     @Override
@@ -181,7 +184,6 @@ public class FileCloudFragment extends BackFragment implements
                 }, new IListener() { // Dismiss
                     @Override
                     public void execute() {
-                        mForceFab0Hidden = false;
                         FileCloudFragment.this.mFileCloudFabManager.updateFabButtons();
                     }
                 });
@@ -206,7 +208,7 @@ public class FileCloudFragment extends BackFragment implements
             final @IntRange(from = 0, to = FileCloudFabManager.NUMBER_MAX_OF_FAB - 1) int fabPosition) {
         switch (fabPosition) {
             case 0:
-                if (filesToCut != null && filesToCut.size() != 0) {
+                if (!mFilesToCut.isEmpty()) {
                     return R.drawable.ic_menu_paste_holo_dark;
                 } else {
                     return R.drawable.add;
@@ -289,8 +291,8 @@ public class FileCloudFragment extends BackFragment implements
                                                 mFileManager.rename(fileModel, text, new IListener() {
                                                     @Override
                                                     public void execute() {
-                                                        if (filesToCut != null && filesToCut.size() != 0) {
-                                                            filesToCut.clear();
+                                                        if (!mFilesToCut.isEmpty()) {
+                                                            mFilesToCut.clear();
                                                             //refreshFab();
                                                         }
                                                     }
@@ -311,8 +313,8 @@ public class FileCloudFragment extends BackFragment implements
                                                 mFileManager.delete(fileModel, new IListener() {
                                                     @Override
                                                     public void execute() {
-                                                        if (filesToCut != null && filesToCut.size() != 0) {
-                                                            filesToCut.clear();
+                                                        if (!mFilesToCut.isEmpty()) {
+                                                            mFilesToCut.clear();
                                                             //refreshFab();
                                                         }
                                                     }
@@ -322,7 +324,7 @@ public class FileCloudFragment extends BackFragment implements
                                 break;
 
                             case 3:
-                                FileCloudFragment.this.filesToCut.add(fileModel);
+                                FileCloudFragment.this.mFilesToCut.add(fileModel);
                                 Toast.makeText(getContext(), "File ready to cut.", Toast.LENGTH_SHORT).show();
                                 break;
 
@@ -389,6 +391,7 @@ public class FileCloudFragment extends BackFragment implements
             mFileManager.getFiles(
                     new FileModel.FileModelBuilder().id(-1).isOnline(true).build(),
                     false,
+                    false,
                     new ResultCallback<List<FileModel>>() {
                         @Override
                         public void success(List<FileModel> result) {
@@ -419,13 +422,13 @@ public class FileCloudFragment extends BackFragment implements
     }
 
     public void updateAdapter() {
-        if (mRecyclerView != null && mFilesList != null && this.isAdded()) {
+        if (mRecyclerView != null && this.isAdded()) {
 
             mProgressBar.setVisibility(View.GONE);
 
             if (!NetUtils.isInternetConnection(getContext())) {
                 mMessageTextView.setText(getString(R.string.no_internet_connection));
-            } else if (mFilesList.size() == 0) {
+            } else if (mFilesList.isEmpty()) {
                 /*
                 if (this.url == null)
                     this.mMessageTextView.setText(getString(R.string.no_file_server));

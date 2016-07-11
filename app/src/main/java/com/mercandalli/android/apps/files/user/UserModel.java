@@ -45,11 +45,13 @@ public class UserModel {
 
     private static final String ADMIN = "admin";
 
-    public int id, id_file_profile_picture = -1;
+    private int mId = -1;
+    private int mIdFileProfilePicture = -1;
     public String username;
     public String password;
     public String regId;
-    public Date date_creation, date_last_connection;
+    public Date date_creation;
+    private Date mDateLastConnection;
     public long size_files, file_profile_picture_size = -1, num_files, server_max_size_end_user;
     private boolean admin = false;
     public String mPictureUrl;
@@ -59,8 +61,9 @@ public class UserModel {
 
     }
 
-    public UserModel(int id, String username, String password, String regId, boolean admin) {
-        this.id = id;
+    public UserModel(
+            int id, String username, String password, String regId, boolean admin) {
+        mId = id;
         this.username = username;
         this.password = password;
         this.regId = regId;
@@ -71,7 +74,7 @@ public class UserModel {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.US);
         try {
             if (json.has("id")) {
-                this.id = json.getInt("id");
+                this.mId = json.getInt("id");
             }
             if (json.has("username")) {
                 this.username = json.getString("username");
@@ -86,7 +89,7 @@ public class UserModel {
                 this.date_creation = dateFormat.parse(json.getString("date_creation"));
             }
             if (json.has("date_last_connection") && !json.isNull("date_last_connection")) {
-                this.date_last_connection = dateFormat.parse(json.getString("date_last_connection"));
+                this.mDateLastConnection = dateFormat.parse(json.getString("date_last_connection"));
             }
             if (json.has("size_files") && !json.isNull("size_files")) {
                 this.size_files = json.getLong("size_files");
@@ -95,16 +98,16 @@ public class UserModel {
                 this.server_max_size_end_user = json.getLong("server_max_size_end_user");
             }
             if (json.has(ADMIN)) {
-                Object admin_obj = json.get(ADMIN);
-                if (admin_obj instanceof Integer) {
+                final Object adminObj = json.get(ADMIN);
+                if (adminObj instanceof Integer) {
                     this.admin = json.getInt(ADMIN) == 1;
-                } else if (admin_obj instanceof Boolean) {
+                } else if (adminObj instanceof Boolean) {
                     this.admin = json.getBoolean(ADMIN);
                 }
             }
 
             if (json.has("id_file_profile_picture")) {
-                this.id_file_profile_picture = json.getInt("id_file_profile_picture");
+                this.mIdFileProfilePicture = json.getInt("id_file_profile_picture");
             }
             if (json.has("file_profile_picture_size")) {
                 this.file_profile_picture_size = json.getLong("file_profile_picture_size");
@@ -121,14 +124,14 @@ public class UserModel {
 
         if (hasPicture()) {
             FileModel.FileModelBuilder fileModelBuilder = new FileModel.FileModelBuilder();
-            fileModelBuilder.id(this.id_file_profile_picture);
+            fileModelBuilder.id(this.mIdFileProfilePicture);
             fileModelBuilder.size(this.file_profile_picture_size);
             mPictureUrl = fileModelBuilder.build().getOnlineUrl();
         }
     }
 
     public boolean hasPicture() {
-        return id_file_profile_picture != -1 && file_profile_picture_size != -1;
+        return mIdFileProfilePicture != -1 && file_profile_picture_size != -1;
     }
 
     public String getAdapterTitle() {
@@ -137,7 +140,7 @@ public class UserModel {
 
     public String getAdapterSubtitle() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.US);
-        String date = dateFormat.format(date_last_connection.getTime());
+        String date = dateFormat.format(mDateLastConnection.getTime());
         return date + "   " + FileUtils.humanReadableByteCount(size_files) + "   " + this.num_files + " file" + (this.num_files > 1 ? "s" : "");
     }
 
@@ -146,9 +149,9 @@ public class UserModel {
     }
 
     public String getAccessPassword() {
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
+        final SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
         String currentDate = dateFormatGmt.format(calendar.getTime());
         return HashUtils.sha1(HashUtils.sha1(this.password) + currentDate);
@@ -159,13 +162,25 @@ public class UserModel {
     }
 
     public void delete(Activity activity, IPostExecuteListener listener) {
-        if (Config.isUserAdmin() && this.id != Config.getUserId()) {
-            String url = Constants.URL_DOMAIN + Config.ROUTE_USER_DELETE + "/" + this.id;
+        if (Config.isUserAdmin() && this.mId != Config.getUserId()) {
+            String url = Constants.URL_DOMAIN + Config.ROUTE_USER_DELETE + "/" + this.mId;
             new TaskPost(activity, url, listener).execute();
             return;
         }
         if (listener != null) {
             listener.onPostExecute(null, null);
         }
+    }
+
+    public int getId() {
+        return mId;
+    }
+
+    public int getIdFileProfilePicture() {
+        return mIdFileProfilePicture;
+    }
+
+    public Date getDateLastConnection() {
+        return mDateLastConnection;
     }
 }

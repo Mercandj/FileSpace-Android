@@ -24,6 +24,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -71,6 +72,8 @@ public class ProfileFragment extends Fragment {
     private TextView mUsernameTextView;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
+
+    @NonNull
     private final List<ModelSetting> mModelSettings = new ArrayList<>();
 
     private ImageView mIconBack;
@@ -119,7 +122,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    public void refreshView() {
+    private void refreshView() {
         if (NetUtils.isInternetConnection(getContext()) && Config.isLogged()) {
             List<StringPair> parameters = null;
             new TaskGet(
@@ -140,7 +143,7 @@ public class ProfileFragment extends Fragment {
                                         mModelSettings.add(new ModelSetting("Files size", FileUtils.humanReadableByteCount(mUserModel.size_files) + " / " + FileUtils.humanReadableByteCount(mUserModel.server_max_size_end_user)));
                                         mModelSettings.add(new ModelSetting("Files count", "" + mUserModel.num_files));
                                         mModelSettings.add(new ModelSetting("Creation date", "" + TimeUtils.getDate(mUserModel.date_creation)));
-                                        mModelSettings.add(new ModelSetting("Connection date", "" + TimeUtils.getDate(mUserModel.date_last_connection)));
+                                        mModelSettings.add(new ModelSetting("Connection date", "" + TimeUtils.getDate(mUserModel.getDateLastConnection())));
                                         if (mUserModel.isAdmin()) {
                                             mModelSettings.add(new ModelSetting("Admin", "" + mUserModel.isAdmin()));
 

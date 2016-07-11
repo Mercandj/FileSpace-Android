@@ -36,7 +36,8 @@ import java.util.List;
 
 import static com.mercandalli.android.library.base.view.ViewUtils.applyFont;
 
-public class AdapterModelInformation extends RecyclerView.Adapter<AdapterModelInformation.ViewHolder> {
+/* package */ class AdapterModelInformation extends
+        RecyclerView.Adapter<AdapterModelInformation.ViewHolder> {
 
     @NonNull
     private final List<ModelInformation> mModelInformations = new ArrayList<>();

@@ -66,24 +66,12 @@ public class Config {
     public static final String ROUTE_SUPPORT_COMMENT_DEVICE_ID = START_ROUTE + "support/comment/device_id";
     public static final String ROUTE_VERSION_SUPPORTED = START_ROUTE + "version/supported";
     public static final String ROUTE_INFORMATION = START_ROUTE + "information";
-    public static final String ROUTE_ROBOTICS = START_ROUTE + "robotics";
-    public static final String ROUTE_GENEALOGY = START_ROUTE + "genealogy";
-    public static final String ROUTE_GENEALOGY_DELETE = START_ROUTE + "genealogy_delete";
-    public static final String ROUTE_GENEALOGY_PUT = START_ROUTE + "genealogy_put";
-    public static final String ROUTE_GENEALOGY_CHILDREN = START_ROUTE + "genealogy_children";
-    public static final String ROUTE_GENEALOGY_STATISTICS = START_ROUTE + "genealogy_statistics";
     public static final String ROUTE_USER = START_ROUTE + "user";
     public static final String ROUTE_USER_DELETE = START_ROUTE + "user_delete";
     public static final String ROUTE_USER_PUT = START_ROUTE + "user_put";
     public static final String ROUTE_USER_MESSAGE = START_ROUTE + "user_message";
     public static final String ROUTE_USER_CONVERSATION = START_ROUTE + "user_conversation";
     public static final String ROUTE_USER_CONNECTION = START_ROUTE + "user_connection";
-    public static final String ROUTE_DEVICE_ADD = START_ROUTE + "device/add";
-    public static final String ROUTE_DEVICE_SEND_PUSH_BY_GCM = START_ROUTE + "device/push/gcm";
-    public static final String ROUTE_DEVICE_SEND_PUSH_TO_DEV = START_ROUTE + "device/push/dev";
-    public static final String ROUTE_DEVICE_SEND_PUSH_TO_ALL = START_ROUTE + "device/push/all";
-    public static final String ROUTE_DEVICE_DELETE = START_ROUTE + "device/delete";
-    public static final String ROUTE_DEVICE_GET_ALL = START_ROUTE + "device/all";
 
     /**
      * Static int to save/load

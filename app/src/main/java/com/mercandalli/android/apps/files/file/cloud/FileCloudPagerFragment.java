@@ -257,35 +257,6 @@ public class FileCloudPagerFragment extends BackFragment implements
         }
     }
 
-    public void updateAdapterListServer() {
-        Fragment fabFragment = getCurrentFragment();
-        if (fabFragment != null) {
-            if (fabFragment instanceof FileCloudFragment) {
-                FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
-                fragmentFileManagerFragment.updateAdapter();
-            } else if (fabFragment instanceof FileMyCloudFragment) {
-                FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fabFragment;
-                fragmentFileManagerFragment.updateAdapter();
-            }
-        }
-    }
-
-    public void refreshData() {
-        final Fragment fabFragment = getCurrentFragment();
-        if (fabFragment != null) {
-            if (fabFragment instanceof FileCloudFragment) {
-                FileCloudFragment fragmentFileManagerFragment = (FileCloudFragment) fabFragment;
-                fragmentFileManagerFragment.refreshCurrentList();
-            } else if (fabFragment instanceof FileMyCloudFragment) {
-                FileMyCloudFragment fragmentFileManagerFragment = (FileMyCloudFragment) fabFragment;
-                fragmentFileManagerFragment.refreshCurrentList();
-            } else if (fabFragment instanceof FileCloudDownloadedFragment) {
-                FileCloudDownloadedFragment fragmentFileManagerFragment = (FileCloudDownloadedFragment) fabFragment;
-                fragmentFileManagerFragment.refreshCurrentList();
-            }
-        }
-    }
-
     public void add() {
         new FileAddDialog(getActivity(), -1, new IListener() {
             @Override
@@ -295,7 +266,7 @@ public class FileCloudPagerFragment extends BackFragment implements
         }, null);
     }
 
-    public void goHome() {
+    private void goHome() {
         Fragment fabFragment = getCurrentFragment();
         if (fabFragment != null) {
             if (fabFragment instanceof FileCloudFragment) {
@@ -389,19 +360,15 @@ public class FileCloudPagerFragment extends BackFragment implements
 
         @Override
         public CharSequence getPageTitle(int i) {
-            String title = "null";
             switch (i) {
                 case 0:
-                    title = getString(R.string.file_fragment_public_cloud);
-                    break;
+                    return getString(R.string.file_fragment_public_cloud);
                 case 1:
-                    title = getString(R.string.file_fragment_my_cloud);
-                    break;
+                    return getString(R.string.file_fragment_my_cloud);
                 case 2:
-                    title = "DOWNLOADED";
-                    break;
+                    return "DOWNLOADED";
             }
-            return title;
+            return "null";
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.mercandalli.android.apps.files.analytics;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
@@ -50,13 +51,16 @@ public final class AnalyticsTrackers {
         return sInstance;
     }
 
+    @NonNull
     private final Context mContext;
+
+    @NonNull
     private final Map<Target, Tracker> mTrackers = new HashMap<>();
 
     /**
      * Don't instantiate directly - use {@link #getInstance()} instead.
      */
-    private AnalyticsTrackers(final Context context) {
+    private AnalyticsTrackers(@NonNull final Context context) {
         mContext = context.getApplicationContext();
     }
 

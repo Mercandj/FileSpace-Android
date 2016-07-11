@@ -1,6 +1,8 @@
 package com.mercandalli.android.apps.files.file;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import com.mercandalli.android.apps.files.R;
@@ -12,10 +14,14 @@ public class FileTypeModel {
 
     @StringRes
     private int mTitleId = R.string.file_model_type_unknown;
-    private String mTitle;
-    private String[] mExtensions;
 
-    public FileTypeModel(final String value) {
+    @Nullable
+    private String mTitle;
+
+    @NonNull
+    private final String[] mExtensions;
+
+    public FileTypeModel(@NonNull final String value) {
         mExtensions = new String[]{value.toLowerCase()};
         label:
         for (FileTypeModelENUM t : FileTypeModelENUM.values()) {
@@ -28,14 +34,9 @@ public class FileTypeModel {
         }
     }
 
-    public FileTypeModel(@StringRes int title, String value) {
+    public FileTypeModel(@StringRes int title, @NonNull final String... value) {
         mTitleId = title;
-        mExtensions = new String[]{value};
-    }
-
-    public FileTypeModel(@StringRes int title, String[] extensions) {
-        mTitleId = title;
-        mExtensions = extensions;
+        mExtensions = value;
     }
 
     @Override
@@ -52,7 +53,7 @@ public class FileTypeModel {
             return false;
         }
         String[] objExtensions = ((FileTypeModel) o).getExtensions();
-        if (this.mExtensions == null || objExtensions == null) {
+        if (this.mExtensions.length == 0 || objExtensions == null) {
             return false;
         }
         for (String myExt : this.mExtensions) {

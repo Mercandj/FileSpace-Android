@@ -24,24 +24,196 @@ public class FileModel implements Parcelable {
     protected int mId;
     protected int mIdUser;
     protected int mIdFileParent;
+    @Nullable
     protected String mName;
+    @Nullable
     protected String mUrl;
     protected long mSize;
     protected boolean mIsPublic;
+    @Nullable
     protected FileTypeModel mType;
     protected boolean mIsDirectory;
+    @Nullable
     protected Date mDateCreation;
     protected boolean mIsApkUpdate;
+    @Nullable
     protected FileSpaceModel mContent;
     protected boolean mIsOnline;
 
     //region Local attrs
+    @Nullable
     protected File mFile;
     protected long mLastModified;
     // Nb of files inside this folder
     protected int mCount;
     private int mCountAudio;
     private int mCountImage;
+
+    @Override
+    public String toString() {
+        return "FileModel[" + mId + "] " + mName;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj == this || obj instanceof FileModel && mId == ((FileModel) obj).getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return mId;
+    }
+
+    public boolean isOnline() {
+        return mIsOnline;
+    }
+
+    public String getFullName() {
+        return mName + (mIsDirectory ? "" : ("." + mType));
+    }
+
+    public String getCopyName() {
+        return mName + " - Copy" + (mIsDirectory ? "" : ("." + mType));
+    }
+
+    @NonNull
+    public String getOnlineUrl() {
+        return Constants.URL_DOMAIN + Config.ROUTE_FILE + "/" + getId();
+    }
+
+    public boolean isAudio() {
+        return !(mIsDirectory || mType == null) && FileTypeModelENUM.AUDIO.type.equals(mType);
+    }
+
+    /*
+     * GETTER and SETTER
+     */
+
+    public int getId() {
+        return mId;
+    }
+
+    public int getIdUser() {
+        return mIdUser;
+    }
+
+    public int getIdFileParent() {
+        return mIdFileParent;
+    }
+
+    public void setIdFileParent(int mIdFileParent) {
+        this.mIdFileParent = mIdFileParent;
+    }
+
+    @Nullable
+    public String getName() {
+        return mName;
+    }
+
+    @Nullable
+    public String getUrl() {
+        return mUrl;
+    }
+
+    public long getSize() {
+        if (mSize == 0 && mIsDirectory && mUrl != null &&
+                mUrl.startsWith(Environment.getExternalStorageDirectory().getAbsolutePath())) {
+            mSize = FileUtils.getLocalFolderSize(mFile);
+        }
+        return mSize;
+    }
+
+    public boolean isPublic() {
+        return mIsPublic;
+    }
+
+    @Nullable
+    public FileTypeModel getType() {
+        return mType;
+    }
+
+    public boolean isDirectory() {
+        return mIsDirectory;
+    }
+
+    @Nullable
+    public Date getDateCreation() {
+        return mDateCreation;
+    }
+
+    public boolean isApkUpdate() {
+        return mIsApkUpdate;
+    }
+
+    @Nullable
+    public FileSpaceModel getContent() {
+        return mContent;
+    }
+
+    @Nullable
+    public File getFile() {
+        if (mFile != null) {
+            return mFile;
+        } else if (!isOnline() && mUrl != null) {
+            mFile = new File(mUrl);
+            return mFile;
+        }
+        return null;
+    }
+
+    public long getLastModified() {
+        return mLastModified;
+    }
+
+    /**
+     * @return If is a directory return then umber of children.
+     */
+    public int getCount() {
+        return mCount;
+    }
+
+    public int getCountAudio() {
+        return mCountAudio;
+    }
+
+    public int getCountImage() {
+        return mCountImage;
+    }
+
+
+    /* Parcelable */
+
+    @NonNull
+    public static final Creator<FileModel> CREATOR = new Creator<FileModel>() {
+        @Override
+        public FileModel createFromParcel(Parcel in) {
+            return new FileModelBuilder().parcel(in).build();
+        }
+
+        @Override
+        public FileModel[] newArray(int size) {
+            return new FileModel[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
+        dest.writeString(mUrl);
+        dest.writeString(mName);
+        dest.writeLong(mSize);
+        dest.writeBooleanArray(new boolean[]{this.isDirectory()});
+        dest.writeString(mType.getFirstExtension());
+    }
+
+    /* Builder */
+
+
 
     /**
      * A Builder to instantiate immutable object.
@@ -52,18 +224,24 @@ public class FileModel implements Parcelable {
         protected int mId;
         protected int mIdUser;
         protected int mIdFileParent;
+        @Nullable
         protected String mName;
+        @Nullable
         protected String mUrl;
         protected long mSize;
         protected boolean mIsPublic;
+        @Nullable
         protected FileTypeModel mType;
         protected boolean mIsDirectory;
+        @Nullable
         protected Date mDateCreation;
         protected boolean mIsApkUpdate;
         protected boolean mIsOnline;
+        @Nullable
         protected FileSpaceModel mContent;
 
         //region Local attrs
+        @Nullable
         protected File mFile;
         protected long mLastModified;
         protected int mCount;
@@ -235,162 +413,5 @@ public class FileModel implements Parcelable {
             fileModel.mIsOnline = mIsOnline;
             return fileModel;
         }
-    }
-
-    @Override
-    public String toString() {
-        return "FileModel[" + mId + "] " + mName;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj == this || obj instanceof FileModel && mId == ((FileModel) obj).getId();
-    }
-
-    @Override
-    public int hashCode() {
-        return mId;
-    }
-
-    public boolean isOnline() {
-        return mIsOnline;
-    }
-
-    public String getFullName() {
-        return mName + (mIsDirectory ? "" : ("." + mType));
-    }
-
-    public String getCopyName() {
-        return mName + " - Copy" + (mIsDirectory ? "" : ("." + mType));
-    }
-
-    @NonNull
-    public String getOnlineUrl() {
-        return Constants.URL_DOMAIN + Config.ROUTE_FILE + "/" + getId();
-    }
-
-    public boolean isAudio() {
-        return !(mIsDirectory || mType == null) && FileTypeModelENUM.AUDIO.type.equals(mType);
-    }
-
-    /*
-     * GETTER and SETTER
-     */
-
-    public int getId() {
-        return mId;
-    }
-
-    public int getIdUser() {
-        return mIdUser;
-    }
-
-    public int getIdFileParent() {
-        return mIdFileParent;
-    }
-
-    public void setIdFileParent(int mIdFileParent) {
-        this.mIdFileParent = mIdFileParent;
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public String getUrl() {
-        return mUrl;
-    }
-
-    public long getSize() {
-        if (mSize == 0 && mIsDirectory && mUrl != null &&
-                mUrl.startsWith(Environment.getExternalStorageDirectory().getAbsolutePath())) {
-            mSize = FileUtils.getLocalFolderSize(mFile);
-        }
-        return mSize;
-    }
-
-    public boolean isPublic() {
-        return mIsPublic;
-    }
-
-    @Nullable
-    public FileTypeModel getType() {
-        return mType;
-    }
-
-    public boolean isDirectory() {
-        return mIsDirectory;
-    }
-
-    public Date getDateCreation() {
-        return mDateCreation;
-    }
-
-    public boolean isApkUpdate() {
-        return mIsApkUpdate;
-    }
-
-    public FileSpaceModel getContent() {
-        return mContent;
-    }
-
-    @Nullable
-    public File getFile() {
-        if (mFile != null) {
-            return mFile;
-        } else if (!isOnline() && mUrl != null) {
-            mFile = new File(mUrl);
-            return mFile;
-        }
-        return null;
-    }
-
-    public long getLastModified() {
-        return mLastModified;
-    }
-
-    /**
-     * @return If is a directory return then umber of children.
-     */
-    public int getCount() {
-        return mCount;
-    }
-
-    public int getCountAudio() {
-        return mCountAudio;
-    }
-
-    public int getCountImage() {
-        return mCountImage;
-    }
-
-
-    /* Parcelable */
-
-    public static final Creator<FileModel> CREATOR = new Creator<FileModel>() {
-        @Override
-        public FileModel createFromParcel(Parcel in) {
-            return new FileModelBuilder().parcel(in).build();
-        }
-
-        @Override
-        public FileModel[] newArray(int size) {
-            return new FileModel[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(mId);
-        dest.writeString(mUrl);
-        dest.writeString(mName);
-        dest.writeLong(mSize);
-        dest.writeBooleanArray(new boolean[]{this.isDirectory()});
-        dest.writeString(mType.getFirstExtension());
     }
 }

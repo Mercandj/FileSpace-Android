@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import com.mercandalli.android.library.base.permission.Permission;
  */
 public class SplashActivity extends AppCompatActivity implements Permission.OnPermissionResult {
 
+    @NonNull
     private static final String[] PERMISSIONS = new String[]{
             Manifest.permission.WRITE_EXTERNAL_STORAGE//,
             //Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -29,18 +31,19 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
     private static final String SHARED_PREFERENCES_INIT = "SplashActivity.Permission";
     private static final String KEY_IS_FIRST_LAUNCH = "SplashActivity.Key.KEY_IS_FIRST_LAUNCH";
 
-    public static void start(Activity activity) {
+    public static void start(@NonNull final Activity activity) {
         final Intent intent = new Intent(activity, SplashActivity.class);
         intent.putExtra(EXTRA_START_BY_INTENT, true);
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 
+    @Nullable
     private Permission mPermission;
     private boolean mIsFirstLaunch;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         boolean start = false;
@@ -66,9 +69,17 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        mPermission.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (mPermission != null) {
+            mPermission.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        } else {
+            Toast.makeText(this, R.string.activity_splash_no_permission, Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     @Override
@@ -88,10 +99,9 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
 
     private void end() {
         launchMainActivity();
-
         if (mIsFirstLaunch) {
-            final SharedPreferences.Editor editor = getSharedPreferences(SHARED_PREFERENCES_INIT, MODE_PRIVATE)
-                    .edit();
+            final SharedPreferences.Editor editor =
+                    getSharedPreferences(SHARED_PREFERENCES_INIT, MODE_PRIVATE).edit();
             editor.putBoolean(KEY_IS_FIRST_LAUNCH, false);
             editor.apply();
         }

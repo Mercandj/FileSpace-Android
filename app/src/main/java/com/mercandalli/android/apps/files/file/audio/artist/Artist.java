@@ -9,8 +9,11 @@ import java.util.List;
 
 public class Artist {
 
+    @NonNull
     protected final String mUuid;
     protected final String mName;
+
+    @NonNull
     protected final List<String> mFilePaths = new ArrayList<>();
 
     public Artist(final String uuid, final String name) {

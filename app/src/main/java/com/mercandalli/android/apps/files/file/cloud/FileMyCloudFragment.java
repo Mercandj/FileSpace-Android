@@ -78,17 +78,18 @@ public class FileMyCloudFragment extends BackFragment implements
      */
     private static final String ARG_POSITION_IN_VIEW_PAGER = "FileMyCloudFragment.Args.ARG_POSITION_IN_VIEW_PAGER";
 
-    private RecyclerView mRecyclerView;
-    private FileModelAdapter mFileModelAdapter;
     @NonNull
     private final ArrayList<FileModel> mFilesList = new ArrayList<>();
-    private ProgressBar mProgressBar;
-    private TextView mMessageTextView;
-
     @NonNull
     private final Stack<Integer> mIdFileDirectoryStack = new Stack<>();
     @NonNull
     private final List<FileModel> mFilesToCutList = new ArrayList<>();
+
+    private RecyclerView mRecyclerView;
+    private FileModelAdapter mFileModelAdapter;
+    private ProgressBar mProgressBar;
+    private TextView mMessageTextView;
+
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private int mPositionInViewPager;
@@ -131,7 +132,8 @@ public class FileMyCloudFragment extends BackFragment implements
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.fragment_file_files_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+        mSwipeRefreshLayout.setColorSchemeResources(
+                android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);

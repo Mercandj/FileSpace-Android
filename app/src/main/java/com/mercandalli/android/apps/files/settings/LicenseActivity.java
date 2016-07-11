@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +18,7 @@ public class LicenseActivity extends AppCompatActivity {
 
     private static final String URL = "file:///android_asset/licenses.html";
 
-    public static void start(Context context) {
+    public static void start(@NonNull final Context context) {
         Preconditions.checkNotNull(context);
         final Intent intent = new Intent(context, LicenseActivity.class);
         if (!(context instanceof Activity)) {

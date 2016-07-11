@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -16,7 +18,8 @@ import android.view.animation.Interpolator;
  * {@link RecyclerView} adapter with animation.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> implements Animator.AnimatorListener {
+public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> implements
+        Animator.AnimatorListener {
 
     /**
      * The {@link RecyclerView.Adapter} with animated {@link ViewHolder}.
@@ -41,6 +44,7 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
     /**
      * The animation {@link Interpolator}.
      */
+    @NonNull
     private Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
 
     /**
@@ -49,11 +53,12 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
     private int mViewHolderPerLine;
 
     private int mLastPosition = -1;
-    private boolean isFirstOnly = false;
+    private boolean mIsFirstOnly = false;
     private int mCounter;
     private boolean mAnimsInitialized;
     private final float mFrom;
 
+    @Nullable
     private NoAnimatedPosition mNoAnimatedPosition;
 
     public ScaleAnimationAdapter(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
@@ -112,7 +117,7 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         this.mAdapter.onBindViewHolder(holder, position);
-        if (this.isFirstOnly && position <= this.mLastPosition) {
+        if (this.mIsFirstOnly && position <= this.mLastPosition) {
             clear(holder.itemView);
         } else if (mNoAnimatedPosition == null || mNoAnimatedPosition.isAnimatedItem(position)) {
             final Animator[] animators = this.getAnimators(holder.itemView);
@@ -190,7 +195,7 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
         this.mOffsetDuration = mOffsetDuration;
     }
 
-    public void setInterpolator(Interpolator interpolator) {
+    public void setInterpolator(@NonNull final Interpolator interpolator) {
         this.mInterpolator = interpolator;
     }
 
@@ -221,7 +226,7 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
         return new Animator[]{ObjectAnimator.ofFloat(view, "scaleX", this.mFrom, 1.0F), ObjectAnimator.ofFloat(view, "scaleY", this.mFrom, 1.0F)};
     }
 
-    private static void clear(View v) {
+    private static void clear(@NonNull final View v) {
         ViewCompat.setAlpha(v, 1.0F);
         ViewCompat.setScaleY(v, 1.0F);
         ViewCompat.setScaleX(v, 1.0F);
@@ -230,7 +235,7 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
         ViewCompat.animate(v).setInterpolator(null);
     }
 
-    public void setNoAnimatedPosition(NoAnimatedPosition noAnimatedPosition) {
+    public void setNoAnimatedPosition(@Nullable final NoAnimatedPosition noAnimatedPosition) {
         mNoAnimatedPosition = noAnimatedPosition;
     }
 

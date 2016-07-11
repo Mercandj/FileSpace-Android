@@ -162,6 +162,10 @@
     <string name="file_model_type_excel">Excel</string>
     <string name="file_model_type_vcf">Business card</string>
     <string name="file_model_type_pdf">Pdf</string>
+    <string name="file_model_type_rom_n64">Nintendo 64 ROM</string>
+    <string name="file_model_type_rom_gb">Game Boy ROM</string>
+    <string name="file_model_type_rom_gbc">Game Boy Color ROM</string>
+    <string name="file_model_type_rom_gba">Game Boy Advance ROM</string>
     <string name="file_model_type_source">Source code</string>
     <string name="file_model_type_source_java">Java source code</string>
     <string name="file_model_type_nomedia">Android file to hide</string>
@@ -171,6 +175,7 @@
     <string name="file_model_type_index">Index</string>
     <string name="file_model_type_keystore">KeyStore</string>
     <string name="file_model_type_trace">Debugging Trace</string>
+    <string name="file_model_type_database">Database</string>
     <string name="file_model_type_directory">Directory</string>
     <!-- FileModel Local New File -->
     <string name="file_model_local_new_title">Action</string>

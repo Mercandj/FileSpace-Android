@@ -22,6 +22,8 @@ package com.mercandalli.android.apps.files.user.community;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -63,15 +65,23 @@ import java.util.List;
  */
 public class UserFragment extends BackFragment {
 
-    private View rootView;
+    @Nullable
+    private View mRootView;
 
-    private RecyclerView recyclerView;
-    private AdapterModelUser mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    List<UserModel> list;
-    private ProgressBar circularProgressBar;
-    private TextView message;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    @Nullable
+    private RecyclerView mRecyclerView;
+
+    @NonNull
+    private final List<UserModel> mUserModels = new ArrayList<>();
+
+    @Nullable
+    private ProgressBar mCircularProgressBar;
+
+    @Nullable
+    private TextView mMessageTextView;
+
+    @Nullable
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public static UserFragment newInstance() {
         return new UserFragment();
@@ -83,27 +93,27 @@ public class UserFragment extends BackFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.rootView = inflater.inflate(R.layout.fragment_user, container, false);
-        this.circularProgressBar = (ProgressBar) rootView.findViewById(R.id.circularProgressBar);
-        this.message = (TextView) rootView.findViewById(R.id.message);
+        this.mRootView = inflater.inflate(R.layout.fragment_user, container, false);
+        this.mCircularProgressBar = (ProgressBar) mRootView.findViewById(R.id.circularProgressBar);
+        this.mMessageTextView = (TextView) mRootView.findViewById(R.id.message);
 
-        this.recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
-        this.recyclerView.setHasFixedSize(true);
-        this.mLayoutManager = new LinearLayoutManager(getActivity());
-        this.recyclerView.setLayoutManager(mLayoutManager);
-        this.recyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
-        this.recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
+        this.mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.my_recycler_view);
+        this.mRecyclerView.setHasFixedSize(true);
+        final RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        this.mRecyclerView.setLayoutManager(layoutManager);
+        this.mRecyclerView.setItemAnimator(/*new SlideInFromLeftItemAnimator(mRecyclerView)*/new DefaultItemAnimator());
+        this.mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 
-        rootView.findViewById(R.id.circle).setVisibility(View.GONE);
+        mRootView.findViewById(R.id.circle).setVisibility(View.GONE);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setColorSchemeResources(
+        mSwipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setColorSchemeResources(
                 android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshList();
@@ -112,7 +122,7 @@ public class UserFragment extends BackFragment {
 
         refreshList();
 
-        return rootView;
+        return mRootView;
     }
 
     public void refreshList() {
@@ -127,14 +137,14 @@ public class UserFragment extends BackFragment {
                     new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
-                            list = new ArrayList<>();
+                            mUserModels.clear();
                             try {
                                 if (json != null) {
                                     if (json.has("result")) {
                                         JSONArray array = json.getJSONArray("result");
                                         for (int i = 0; i < array.length(); i++) {
                                             UserModel userModel = new UserModel(array.getJSONObject(i));
-                                            list.add(userModel);
+                                            mUserModels.add(userModel);
                                         }
                                     }
                                 } else {
@@ -149,36 +159,34 @@ public class UserFragment extends BackFragment {
                     null
             ).execute();
         } else {
-            this.circularProgressBar.setVisibility(View.GONE);
-            this.message.setText(Config.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
-            this.message.setVisibility(View.VISIBLE);
-            this.swipeRefreshLayout.setRefreshing(false);
+            this.mCircularProgressBar.setVisibility(View.GONE);
+            this.mMessageTextView.setText(Config.isLogged() ? getString(R.string.no_internet_connection) : getString(R.string.no_logged));
+            this.mMessageTextView.setVisibility(View.VISIBLE);
+            this.mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
-    int i;
-
     public void updateAdapter() {
-        if (this.recyclerView != null && this.list != null && this.isAdded()) {
-            this.circularProgressBar.setVisibility(View.GONE);
+        if (mRecyclerView != null && isAdded()) {
+            mCircularProgressBar.setVisibility(View.GONE);
 
-            if (this.list.size() == 0) {
-                this.message.setText(getString(R.string.no_user));
-                this.message.setVisibility(View.VISIBLE);
+            if (mUserModels.size() == 0) {
+                mMessageTextView.setText(getString(R.string.no_user));
+                mMessageTextView.setVisibility(View.VISIBLE);
             } else {
-                this.message.setVisibility(View.GONE);
+                mMessageTextView.setVisibility(View.GONE);
             }
 
-            this.mAdapter = new AdapterModelUser(list, new IModelUserListener() {
+            final AdapterModelUser adapterModelUser = new AdapterModelUser(mUserModels, new IModelUserListener() {
                 @Override
                 public void execute(final UserModel userModel) {
-                    final AlertDialog.Builder menuAleart = new AlertDialog.Builder(getContext());
+                    final AlertDialog.Builder menuAlert = new AlertDialog.Builder(getContext());
                     String[] menuList = {getString(R.string.talk)};
                     if (Config.isUserAdmin()) {
                         menuList = new String[]{getString(R.string.talk), getString(R.string.delete)};
                     }
-                    menuAleart.setTitle(getString(R.string.action));
-                    menuAleart.setItems(menuList,
+                    menuAlert.setTitle(getString(R.string.action));
+                    menuAlert.setItems(menuList,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int item) {
                                     switch (item) {
@@ -190,7 +198,7 @@ public class UserFragment extends BackFragment {
                                                     new DialogUtils.OnDialogUtilsStringListener() {
                                                         @Override
                                                         public void onDialogUtilsStringCalledBack(String text) {
-                                                            String url = Constants.URL_DOMAIN + Config.ROUTE_USER_CONVERSATION + "/" + userModel.id;
+                                                            String url = Constants.URL_DOMAIN + Config.ROUTE_USER_CONVERSATION + "/" + userModel.getId();
                                                             List<StringPair> parameters = new ArrayList<>();
                                                             parameters.add(new StringPair("message", "" + text));
 
@@ -228,19 +236,19 @@ public class UserFragment extends BackFragment {
                                     }
                                 }
                             });
-                    AlertDialog menuDrop = menuAleart.create();
+                    AlertDialog menuDrop = menuAlert.create();
                     menuDrop.show();
                 }
             });
-            this.recyclerView.setAdapter(mAdapter);
+            mRecyclerView.setAdapter(adapterModelUser);
 
-            if ((rootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
-                (rootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
+            if ((mRootView.findViewById(R.id.circle)).getVisibility() == View.GONE) {
+                (mRootView.findViewById(R.id.circle)).setVisibility(View.VISIBLE);
                 Animation animOpen = AnimationUtils.loadAnimation(getContext(), R.anim.circle_button_bottom_open);
-                (rootView.findViewById(R.id.circle)).startAnimation(animOpen);
+                (mRootView.findViewById(R.id.circle)).startAnimation(animOpen);
             }
 
-            (rootView.findViewById(R.id.circle)).setOnClickListener(new View.OnClickListener() {
+            (mRootView.findViewById(R.id.circle)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // TODO Fab UserFragment
@@ -248,15 +256,14 @@ public class UserFragment extends BackFragment {
                 }
             });
 
-            this.mAdapter.setOnItemClickListener(new AdapterModelUser.OnItemClickListener() {
+            adapterModelUser.setOnItemClickListener(new AdapterModelUser.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
 
                 }
             });
 
-            this.swipeRefreshLayout.setRefreshing(false);
-            i = 0;
+            mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
