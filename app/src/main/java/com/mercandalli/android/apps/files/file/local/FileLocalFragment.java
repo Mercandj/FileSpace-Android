@@ -324,6 +324,7 @@ public class FileLocalFragment extends BackFragment implements
             mCurrentDirectory = new FileModel.FileModelBuilder()
                     .file(new File(mFilesList.get(position).getUrl()))
                     .build();
+            showFab();
             refreshCurrentList();
         } else {
             mFileManager.execute((Activity) getContext(), position, mFilesList, view);
@@ -542,21 +543,9 @@ public class FileLocalFragment extends BackFragment implements
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if (dy <= 0) {
-                    if (!mIsFabAnimating) {
-                        mIsFabAnimating = true;
-                        mIsFabHidden = false;
-                        mFileLocalFabManager.updateFabButtons();
-                        mHandler.removeCallbacks(mRunnable);
-                        mHandler.postDelayed(mRunnable, 250);
-                    }
+                    showFab();
                 } else {
-                    if (!mIsFabAnimating) {
-                        mIsFabAnimating = true;
-                        mIsFabHidden = true;
-                        mFileLocalFabManager.updateFabButtons();
-                        mHandler.removeCallbacks(mRunnable);
-                        mHandler.postDelayed(mRunnable, 250);
-                    }
+                    hideFab();
                 }
             }
         });
@@ -574,5 +563,25 @@ public class FileLocalFragment extends BackFragment implements
 
     protected String initialPath() {
         return Environment.getExternalStorageDirectory().getAbsolutePath();
+    }
+
+    private void hideFab() {
+        if (!mIsFabAnimating) {
+            mIsFabAnimating = true;
+            mIsFabHidden = true;
+            mFileLocalFabManager.updateFabButtons();
+            mHandler.removeCallbacks(mRunnable);
+            mHandler.postDelayed(mRunnable, 250);
+        }
+    }
+
+    private void showFab() {
+        if (!mIsFabAnimating) {
+            mIsFabAnimating = true;
+            mIsFabHidden = false;
+            mFileLocalFabManager.updateFabButtons();
+            mHandler.removeCallbacks(mRunnable);
+            mHandler.postDelayed(mRunnable, 250);
+        }
     }
 }
