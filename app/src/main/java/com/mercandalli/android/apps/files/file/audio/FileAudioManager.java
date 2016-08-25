@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.text.Spanned;
 
 import com.mercandalli.android.apps.files.file.FileModel;
-import com.mercandalli.android.apps.files.file.audio.album.Album;
 import com.mercandalli.android.apps.files.file.audio.artist.Artist;
 
 import java.io.File;

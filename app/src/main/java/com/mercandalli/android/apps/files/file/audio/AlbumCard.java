@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.file.audio.album;
+package com.mercandalli.android.apps.files.file.audio;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.library.base.view.GenericRecyclerAdapter;
 
-public class AlbumCard extends CardView implements
+/* package */ class AlbumCard extends CardView implements
         GenericRecyclerAdapter.GenericView<Album>,
         View.OnClickListener {
 
@@ -50,7 +50,10 @@ public class AlbumCard extends CardView implements
 
     @Override
     public void onClick(final View v) {
-
+        if (mAlbum == null) {
+            return;
+        }
+        AlbumManager.getInstance(getContext()).onAlbumCardClicked(mAlbum);
     }
 
     /**

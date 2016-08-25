@@ -49,8 +49,6 @@ import com.mercandalli.android.apps.files.file.FileManager;
 import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelCardAdapter;
 import com.mercandalli.android.apps.files.file.FileModelCardHeaderItem;
-import com.mercandalli.android.apps.files.file.audio.album.Album;
-import com.mercandalli.android.apps.files.file.audio.album.AlbumCard;
 import com.mercandalli.android.apps.files.file.audio.artist.Artist;
 import com.mercandalli.android.apps.files.file.audio.artist.ArtistCard;
 import com.mercandalli.android.apps.files.file.audio.playlist.AudioPlayList;
@@ -486,6 +484,9 @@ public class FileAudioLocalFragment extends BackFragment implements
      */
     @Override
     public void refreshCurrentList() {
+        if (mFileAudioManager == null || mAudioPlayListManager == null) {
+            return;
+        }
         showProgressBar();
         switch (mCurrentPage) {
             case PAGE_ALL:

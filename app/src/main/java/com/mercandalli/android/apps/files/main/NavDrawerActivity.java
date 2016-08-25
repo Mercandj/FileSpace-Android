@@ -175,7 +175,8 @@ abstract class NavDrawerActivity extends ApplicationActivity implements
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0 && backPressed() || super.onKeyDown(keyCode, event);
+        return keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0 && backPressed() ||
+                super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -330,7 +331,7 @@ abstract class NavDrawerActivity extends ApplicationActivity implements
      * Load a new interstitial ad asynchronously.
      */
     private void requestNewInterstitial() {
-        if (mInterstitialAd == null) {
+        if (mInterstitialAd == null || mInterstitialAd.isLoaded()) {
             return;
         }
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
@@ -365,9 +366,7 @@ abstract class NavDrawerActivity extends ApplicationActivity implements
                     }
                 }
             });
-            if (!mInterstitialAd.isLoaded()) {
-                requestNewInterstitial();
-            }
+            requestNewInterstitial();
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.mercandalli.android.apps.files.file.audio.album;
+package com.mercandalli.android.apps.files.file.audio;
 
 import android.support.annotation.NonNull;
 
@@ -7,7 +7,7 @@ import com.mercandalli.android.library.base.precondition.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Album {
+/* package */ class Album {
 
     protected final int mAlbumId;
     @NonNull
