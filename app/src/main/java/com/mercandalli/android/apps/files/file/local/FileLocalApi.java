@@ -76,7 +76,7 @@ public class FileLocalApi {
                 directoryFile.getAbsolutePath(),
                 new SuperUserManager.FolderChildrenListener() {
                     @Override
-                    public void onGetFolderChildrenSucceeded(@NonNull final String s, @NonNull final List<SuperUserFile> list) {
+                    public boolean onGetFolderChildrenSucceeded(@NonNull final String s, @NonNull final List<SuperUserFile> list) {
                         final GetFilesSuperUser reference = weakReference.get();
                         if (reference != null) {
                             List<FileModel> fileModels = new ArrayList<>();
@@ -89,14 +89,16 @@ public class FileLocalApi {
                             }
                             reference.onGetFilesSuperUser(fileModels);
                         }
+                        return true;
                     }
 
                     @Override
-                    public void onGetFolderChildrenFailed(@NonNull final String s) {
+                    public boolean onGetFolderChildrenFailed(@NonNull final String s) {
                         final GetFilesSuperUser reference = weakReference.get();
                         if (reference != null) {
                             reference.onGetFilesSuperUser(new ArrayList<FileModel>());
                         }
+                        return true;
                     }
                 });
     }
