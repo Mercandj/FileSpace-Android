@@ -11,13 +11,17 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
+import android.os.FileUriExposedException;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.FileProvider;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
@@ -73,6 +77,8 @@ import okhttp3.MediaType;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.os.Build.VERSION_CODES.N;
 
 /**
  * A {@link FileModel} Manager.
@@ -463,7 +469,8 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
      */
     @Override
     public void openLocalAs(final Activity activity, final FileModel fileModel) {
-        if (fileModel.isOnline()) {
+        final File file = fileModel.getFile();
+        if (fileModel.isOnline() || file == null) {
             return;
         }
         final AlertDialog.Builder menuAlert = new AlertDialog.Builder(activity);
@@ -497,8 +504,8 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
                         }
                         final Intent intent = new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
-                        intent.setDataAndType(Uri.fromFile(fileModel.getFile()), typeMime);
-                        activity.startActivity(intent);
+                        intent.setDataAndType(getUriFromFile(activity, file), typeMime);
+                        startActivity(activity, intent);
                     }
                 });
         AlertDialog menuDrop = menuAlert.create();
@@ -815,7 +822,8 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
             return;
         }
         final FileModel fileModel = fileModelList.get(position);
-        if (fileModel.isOnline()) {
+        final File file = fileModel.getFile();
+        if (fileModel.isOnline() || file == null) {
             return;
         }
 
@@ -824,7 +832,7 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
         if (FileTypeModelENUM.OPEN_AS_VIDEO.equals(mime) &&
                 SettingsManager.getInstance(activity).isDevUser() &&
                 SettingsManager.getInstance(activity).isSuperUser()) {
-            FileVideoActivity.startVideo(activity, fileModel.getFile());
+            FileVideoActivity.startVideo(activity, file);
             return;
         }
 
@@ -848,14 +856,8 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
             default:
                 final Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.fromFile(fileModel.getFile()), mime);
-                try {
-                    activity.startActivity(intent);
-                } catch (ActivityNotFoundException e) {
-                    Toast.makeText(activity, "Oops, there is an error. Try with \"Open as...\"",
-                            Toast.LENGTH_SHORT).show();
-                }
-                break;
+                intent.setDataAndType(getUriFromFile(activity, file), mime);
+                startActivity(activity, intent);
         }
     }
 
@@ -924,5 +926,48 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
                 // Removes the progress bar
                 .setProgress(0, 0, false);
         mNotificationManager.notify(1, mNotificationBuilder.build());
+    }
+
+    private static void startActivity(
+            @NonNull final Activity activity,
+            @NonNull final Intent intent) {
+        try {
+            if (Build.VERSION.SDK_INT >= N) {
+                startActivityOverN(activity, intent);
+            } else {
+                activity.startActivity(intent);
+            }
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(activity, "Oops, there is an error. Try with \"Open as...\"",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @RequiresApi(api = N)
+    private static void startActivityOverN(
+            final @NonNull Activity activity,
+            final @NonNull Intent intent) {
+        try {
+            activity.startActivity(intent);
+        } catch (FileUriExposedException e) {
+            Toast.makeText(activity, "Oops, there is an error.",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private static Uri getUriFromFile(
+            @NonNull final Context context,
+            @NonNull final File file) {
+        if (Build.VERSION.SDK_INT >= N) {
+            return getUriFromFileOverN(context, file);
+        }
+        return Uri.fromFile(file);
+    }
+
+    private static Uri getUriFromFileOverN(@NonNull final Context context, @NonNull final File file) {
+        return FileProvider.getUriForFile(
+                context,
+                context.getApplicationContext().getPackageName() + ".provider",
+                file);
     }
 }

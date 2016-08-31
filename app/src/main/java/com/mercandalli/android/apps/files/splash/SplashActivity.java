@@ -2,6 +2,7 @@ package com.mercandalli.android.apps.files.splash;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -31,11 +32,13 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
     private static final String SHARED_PREFERENCES_INIT = "SplashActivity.Permission";
     private static final String KEY_IS_FIRST_LAUNCH = "SplashActivity.Key.KEY_IS_FIRST_LAUNCH";
 
-    public static void start(@NonNull final Activity activity) {
-        final Intent intent = new Intent(activity, SplashActivity.class);
+    public static void start(@NonNull final Context context) {
+        final Intent intent = new Intent(context, SplashActivity.class);
         intent.putExtra(EXTRA_START_BY_INTENT, true);
-        activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        context.startActivity(intent);
+        if (context instanceof Activity) {
+            ((Activity) context).overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        }
     }
 
     @Nullable

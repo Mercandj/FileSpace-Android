@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.mercandalli.android.apps.files"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.mercandalli.android.apps.files">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -215,6 +215,32 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="9e044dd857b2ddabd24e6e1dfce92efabe4ed0d9" />
+
+        <!-- region - Tile on Android >= 7.0 notification quick settings -->
+        <service
+            android:name=".tile.QuickSettingsTileService"
+            android:icon="@drawable/ic_folder_open_white_24dp"
+            android:label="Launch FileSpace"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+        <!-- endregion - Tile on Android >= 7.0 notification quick settings -->
+
+        <!-- region - File path with Android N -->
+        <!-- http://stackoverflow.com/questions/38200282/android-os-fileuriexposedexception-file-storage-emulated-0-test-txt-exposed -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+        <!-- endregion - File path with Android N -->
+
     </application>
 
 </manifest>

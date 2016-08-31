@@ -40,9 +40,9 @@ public class NotificationAudioPlayerReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         final String action = intent.getAction();
-        final FileAudioPlayer fileAudioPlayer = FileAudioPlayer.getInstance(context);
-        if (fileAudioPlayer.isEmpty()) {
-            fileAudioPlayer.setNotification(false);
+        final FileAudioPlayerManager fileAudioPlayerManager = FileAudioPlayerManager.getInstance(context);
+        if (fileAudioPlayerManager.isEmpty()) {
+            fileAudioPlayerManager.setNotification(false);
             return;
         }
         switch (action) {
@@ -50,21 +50,21 @@ public class NotificationAudioPlayerReceiver extends BroadcastReceiver {
                 FileAudioActivity.resume(context);
                 break;
             case ACTION_PLAY_PAUSE:
-                if (fileAudioPlayer.isPlaying()) {
-                    fileAudioPlayer.pause();
+                if (fileAudioPlayerManager.isPlaying()) {
+                    fileAudioPlayerManager.pause();
                 } else {
-                    fileAudioPlayer.play();
+                    fileAudioPlayerManager.play();
                 }
                 break;
             case ACTION_NEXT:
-                fileAudioPlayer.next();
+                fileAudioPlayerManager.next();
                 break;
             case ACTION_PREVIOUS:
-                fileAudioPlayer.previous();
+                fileAudioPlayerManager.previous();
                 break;
             case ACTION_CLOSE:
-                if (fileAudioPlayer.isPlaying()) {
-                    fileAudioPlayer.pause();
+                if (fileAudioPlayerManager.isPlaying()) {
+                    fileAudioPlayerManager.pause();
                 }
                 break;
         }

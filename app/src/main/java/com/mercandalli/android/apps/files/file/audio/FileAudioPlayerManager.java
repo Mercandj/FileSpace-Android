@@ -29,29 +29,29 @@ import com.mercandalli.android.library.base.precondition.Preconditions;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.concurrent.TimeUnit;
 
 /**
  * The {@link FileAudioModel} player.
  */
-public class FileAudioPlayer implements
+public class FileAudioPlayerManager implements
         MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener,
         AudioManager.OnAudioFocusChangeListener {
 
+    private static final String TAG = "FileAudioPlayerManager";
+
     @Nullable
-    private static FileAudioPlayer sInstance;
+    private static FileAudioPlayerManager sInstance;
 
     @NonNull
-    public static FileAudioPlayer getInstance(@NonNull final Context context) {
+    public static FileAudioPlayerManager getInstance(@NonNull final Context context) {
         if (sInstance == null) {
-            sInstance = new FileAudioPlayer(context);
+            sInstance = new FileAudioPlayerManager(context);
         }
         return sInstance;
     }
-
-    @NonNull
-    private static final String TAG = "FileAudioPlayer";
 
     @SharedAudioPlayerUtils.Status
     private int mCurrentStatus = SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_UNKNOWN;
@@ -83,8 +83,7 @@ public class FileAudioPlayer implements
     @Nullable
     private String mWatchNodeId;
 
-    private FileAudioPlayer(final Context context) {
-        Preconditions.checkNotNull(context);
+    private FileAudioPlayerManager(final Context context) {
         mAppContext = context.getApplicationContext();
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setOnPreparedListener(this);
@@ -169,7 +168,7 @@ public class FileAudioPlayer implements
         if (mCurrentMusic == null || !StringUtils.isEquals(currentMusic.getPath(), mCurrentMusic.getPath())) {
             prepare(currentMusic);
         }
-        notifyAudioChanged();
+        notifyAudioChanged(SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_NEXT);
     }
 
     /**
@@ -187,7 +186,7 @@ public class FileAudioPlayer implements
         if (mCurrentMusic == null || !StringUtils.isEquals(currentMusic.getPath(), mCurrentMusic.getPath())) {
             prepare(currentMusic);
         }
-        notifyAudioChanged();
+        notifyAudioChanged(SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_PREVIOUS);
     }
 
     /**
@@ -239,7 +238,7 @@ public class FileAudioPlayer implements
         } else if (mCurrentStatus == SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED) {
             play();
         }
-        notifyAudioChanged();
+        notifyAudioChanged(SharedAudioPlayerUtils.AUDIO_PLAYER_ACTION_PLAY);
     }
 
     public int getDuration() {
@@ -266,7 +265,7 @@ public class FileAudioPlayer implements
         return mFileAudioModelList.isEmpty();
     }
 
-    public void registerOnPlayerStatusChangeListener(OnPlayerStatusChangeListener listener) {
+    public void addOnPlayerStatusChangeListener(OnPlayerStatusChangeListener listener) {
         synchronized (mOnPlayerStatusChangeListeners) {
             if (!mOnPlayerStatusChangeListeners.contains(listener)) {
                 mOnPlayerStatusChangeListeners.add(listener);
@@ -274,7 +273,7 @@ public class FileAudioPlayer implements
         }
     }
 
-    public void unregisterOnPreviewPlayerStatusChangeListener(OnPlayerStatusChangeListener listener) {
+    public void removeOnPreviewPlayerStatusChangeListener(OnPlayerStatusChangeListener listener) {
         synchronized (mOnPlayerStatusChangeListeners) {
             mOnPlayerStatusChangeListeners.remove(listener);
         }
@@ -295,18 +294,31 @@ public class FileAudioPlayer implements
         mHandler.removeCallbacks(mUpdatePositionRunnable);
         if (isPlaying()) {
             synchronized (mOnPlayerStatusChangeListeners) {
-                for (int i = 0, size = mOnPlayerStatusChangeListeners.size(); i < size; i++) {
-                    mOnPlayerStatusChangeListeners.get(i).onPlayerProgressChanged(getCurrentProgress(), getDuration());
+                final ListIterator<OnPlayerStatusChangeListener> listIterator =
+                        mOnPlayerStatusChangeListeners.listIterator();
+                while (listIterator.hasNext()) {
+                    final OnPlayerStatusChangeListener next = listIterator.next();
+                    if (next.onPlayerProgressChanged(getCurrentProgress(), getDuration())) {
+                        listIterator.remove();
+                    }
                 }
             }
         }
-        mHandler.postDelayed(mUpdatePositionRunnable, 1000);
+        mHandler.postDelayed(mUpdatePositionRunnable, 1_000);
     }
 
-    private void notifyAudioChanged() {
+    private void notifyAudioChanged(@SharedAudioPlayerUtils.Action final int action) {
         synchronized (mOnPlayerStatusChangeListeners) {
-            for (int i = 0, size = mOnPlayerStatusChangeListeners.size(); i < size; i++) {
-                mOnPlayerStatusChangeListeners.get(i).onAudioChanged(mCurrentMusicIndex, mFileAudioModelList);
+            final ListIterator<OnPlayerStatusChangeListener> listIterator =
+                    mOnPlayerStatusChangeListeners.listIterator();
+            while (listIterator.hasNext()) {
+                final OnPlayerStatusChangeListener next = listIterator.next();
+                if (next.onAudioChanged(
+                        mCurrentMusicIndex,
+                        mFileAudioModelList,
+                        action)) {
+                    listIterator.remove();
+                }
             }
         }
     }
@@ -346,8 +358,13 @@ public class FileAudioPlayer implements
 
         if (notifyListeners) {
             synchronized (mOnPlayerStatusChangeListeners) {
-                for (int i = 0, size = mOnPlayerStatusChangeListeners.size(); i < size; i++) {
-                    mOnPlayerStatusChangeListeners.get(i).onPlayerStatusChanged(mCurrentStatus);
+                final ListIterator<OnPlayerStatusChangeListener> listIterator =
+                        mOnPlayerStatusChangeListeners.listIterator();
+                while (listIterator.hasNext()) {
+                    final OnPlayerStatusChangeListener next = listIterator.next();
+                    if (next.onPlayerStatusChanged(mCurrentStatus)) {
+                        listIterator.remove();
+                    }
                 }
             }
         }
@@ -356,7 +373,8 @@ public class FileAudioPlayer implements
     /**
      * Display or hide the notification.
      */
-    /* package */ void setNotification(final boolean activated) {
+    /* package */
+    void setNotification(final boolean activated) {
         if (activated && mCurrentMusic != null) {
 
             final Intent intent = new Intent(mAppContext, FileAudioActivity.class);
@@ -422,7 +440,7 @@ public class FileAudioPlayer implements
 
     private void sendWearMessage(
             final Context context,
-            final @SharedAudioPlayerUtils.Status int currentStatus,
+            @SharedAudioPlayerUtils.Status final int currentStatus,
             final FileAudioModel fileAudioModel) {
         Preconditions.checkNotNull(context);
         Preconditions.checkNotNull(fileAudioModel);
@@ -447,23 +465,6 @@ public class FileAudioPlayer implements
     }
 
     /* INNER */
-
-    public interface OnPlayerStatusChangeListener {
-
-        /**
-         * The player status change.
-         *
-         * @param status The new status.
-         */
-        void onPlayerStatusChanged(@SharedAudioPlayerUtils.Status int status);
-
-        /**
-         * The player progress change.
-         */
-        void onPlayerProgressChanged(int progress, int duration);
-
-        void onAudioChanged(int musicPosition, List<FileAudioModel> musics);
-    }
 
     private class UpdaterPosition implements Runnable {
         @Override
@@ -505,5 +506,34 @@ public class FileAudioPlayer implements
                     break;
             }
         }
+    }
+
+    public interface OnPlayerStatusChangeListener {
+
+        /**
+         * The player status change.
+         *
+         * @param status The new status.
+         * @return <code>true</code> if the caller has to remove the listener, otherwise keep this
+         * listener in the {@link List} of listeners.
+         */
+        boolean onPlayerStatusChanged(@SharedAudioPlayerUtils.Status final int status);
+
+        /**
+         * The player progress change.
+         *
+         * @return <code>true</code> if the caller has to remove the listener, otherwise keep this
+         * listener in the {@link List} of listeners.
+         */
+        boolean onPlayerProgressChanged(final int progress, final int duration);
+
+        /**
+         * @return <code>true</code> if the caller has to remove the listener, otherwise keep this
+         * listener in the {@link List} of listeners.
+         */
+        boolean onAudioChanged(
+                final int musicPosition,
+                final List<FileAudioModel> musics,
+                @SharedAudioPlayerUtils.Action final int action);
     }
 }

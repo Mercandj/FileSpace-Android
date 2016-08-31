@@ -69,8 +69,13 @@ public class FileAddDialog extends Dialog implements
 
     @NonNull
     private final Activity mActivity;
+
+    @Nullable
     private IListener mDismissListener;
+
     private final int mFileParentId;
+
+    @Nullable
     private IListener mListener;
 
     @SuppressWarnings("PMD.AvoidUsingHardCodedIP")
@@ -127,8 +132,12 @@ public class FileAddDialog extends Dialog implements
                         if (listener != null) {
                             ApplicationActivity.sPhotoFileListener = listener;
                         }
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(ApplicationActivity.sPhotoFile.getFile()));
-                        mActivity.startActivityForResult(takePictureIntent, ApplicationActivity.REQUEST_TAKE_PHOTO);
+                        takePictureIntent.putExtra(
+                                MediaStore.EXTRA_OUTPUT,
+                                Uri.fromFile(ApplicationActivity.sPhotoFile.getFile()));
+                        mActivity.startActivityForResult(
+                                takePictureIntent,
+                                ApplicationActivity.REQUEST_TAKE_PHOTO);
                     }
                 }
                 FileAddDialog.this.dismiss();

@@ -160,23 +160,21 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
 
         @Override
         public BackFragment getItem(int i) {
-            BackFragment backFragment = null;
             switch (i) {
                 case 0:
-                    backFragment = UserFragment.newInstance();
+                    mBackFragmentArray[i] = UserFragment.newInstance();
                     break;
                 case 1:
-                    backFragment = TalkFragment.newInstance();
+                    mBackFragmentArray[i] = TalkFragment.newInstance();
                     break;
                 case 2:
-                    backFragment = UserLocationFragment.newInstance();
+                    mBackFragmentArray[i] = UserLocationFragment.newInstance();
                     break;
                 default:
-                    backFragment = UserFragment.newInstance();
+                    mBackFragmentArray[i] = UserFragment.newInstance();
                     break;
             }
-            mBackFragmentArray[i] = backFragment;
-            return backFragment;
+            return mBackFragmentArray[i];
         }
 
         @Override
@@ -186,22 +184,16 @@ public class CommunityFragment extends BackFragment implements ViewPager.OnPageC
 
         @Override
         public CharSequence getPageTitle(int i) {
-            String title = "null";
             switch (i) {
                 case 0:
-                    title = "USERS";
-                    break;
+                    return "USERS";
                 case 1:
-                    title = "TALKS";
-                    break;
+                    return "TALKS";
                 case 2:
-                    title = "LOCATIONS";
-                    break;
+                    return "LOCATIONS";
                 default:
-                    title = "USERS";
-                    break;
+                    return "USERS";
             }
-            return title;
         }
     }
 

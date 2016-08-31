@@ -45,7 +45,7 @@ import static com.mercandalli.android.library.base.view.ViewUtils.applyFont;
     @Nullable
     private OnItemClickListener mItemClickListener;
 
-    public AdapterModelInformation(final List<ModelInformation> modelInformations) {
+    /* package */ AdapterModelInformation(final List<ModelInformation> modelInformations) {
         this.mModelInformations.addAll(modelInformations);
     }
 

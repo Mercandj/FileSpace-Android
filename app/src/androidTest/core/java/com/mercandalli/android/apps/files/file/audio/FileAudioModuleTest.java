@@ -19,7 +19,7 @@ public class FileAudioModuleTest extends FileAudioModule {
     }
 
     @Override
-    FileAudioPlayer provideFileAudioPlayer(Application application) {
-        return new FileAudioPlayer(application);
+    FileAudioPlayerManager provideFileAudioPlayer(Application application) {
+        return new FileAudioPlayerManager(application);
     }
 }

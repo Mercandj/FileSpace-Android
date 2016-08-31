@@ -55,7 +55,7 @@ import java.util.List;
  */
 public class FileAudioActivity extends AppCompatActivity implements
         View.OnClickListener,
-        FileAudioPlayer.OnPlayerStatusChangeListener {
+        FileAudioPlayerManager.OnPlayerStatusChangeListener {
 
     /* package */ static final String EXTRA_IS_ONLINE = "FileAudioActivity.Extra.EXTRA_IS_ONLINE";
     /* package */ static final String EXTRA_FILE_CURRENT_POSITION = "FileAudioActivity.Extra.EXTRA_FILE_CURRENT_POSITION";
@@ -73,7 +73,7 @@ public class FileAudioActivity extends AppCompatActivity implements
     private TextView mSizeTextView;
     private PlayPauseView mPlayPauseView;
 
-    private FileAudioPlayer mFileAudioPlayer;
+    private FileAudioPlayerManager mFileAudioPlayerManager;
 
     private boolean mFirstStart;
 
@@ -122,8 +122,8 @@ public class FileAudioActivity extends AppCompatActivity implements
 
         // Initialize View, player and ChromeCast.
         setContentView(R.layout.activity_file_audio);
-        mFileAudioPlayer = FileAudioPlayer.getInstance(this);
-        mFileAudioPlayer.registerOnPlayerStatusChangeListener(this);
+        mFileAudioPlayerManager = FileAudioPlayerManager.getInstance(this);
+        mFileAudioPlayerManager.addOnPlayerStatusChangeListener(this);
 
         mFileAudioCast.onCreate(this);
 
@@ -167,7 +167,7 @@ public class FileAudioActivity extends AppCompatActivity implements
 
             @Override
             public void onValueChangedUp(int value) {
-                mFileAudioPlayer.seekTo(value);
+                mFileAudioPlayerManager.seekTo(value);
             }
         });
 
@@ -210,10 +210,10 @@ public class FileAudioActivity extends AppCompatActivity implements
             }
 
             if (mFirstStart) {
-                mFileAudioPlayer.startMusic(mCurrentPosition, mFileAudioModelList);
+                mFileAudioPlayerManager.startMusic(mCurrentPosition, mFileAudioModelList);
                 mFileAudioCast.startMusic(mCurrentPosition, mFileAudioModelList);
             } else {
-                syncSongs(mFileAudioPlayer.getCurrentMusicIndex(), mFileAudioPlayer.getFileAudioModelList());
+                syncSongs(mFileAudioPlayerManager.getCurrentMusicIndex(), mFileAudioPlayerManager.getFileAudioModelList());
             }
         }
 
@@ -222,7 +222,7 @@ public class FileAudioActivity extends AppCompatActivity implements
 
     @Override
     protected void onDestroy() {
-        mFileAudioPlayer.unregisterOnPreviewPlayerStatusChangeListener(this);
+        mFileAudioPlayerManager.removeOnPreviewPlayerStatusChangeListener(this);
         super.onDestroy();
     }
 
@@ -245,17 +245,17 @@ public class FileAudioActivity extends AppCompatActivity implements
         final int idView = v.getId();
         switch (idView) {
             case R.id.activity_file_audio_play:
-                if (mFileAudioPlayer.isPlaying()) {
-                    mFileAudioPlayer.pause();
+                if (mFileAudioPlayerManager.isPlaying()) {
+                    mFileAudioPlayerManager.pause();
                 } else {
-                    mFileAudioPlayer.play();
+                    mFileAudioPlayerManager.play();
                 }
                 break;
             case R.id.activity_file_audio_next:
-                mFileAudioPlayer.next();
+                mFileAudioPlayerManager.next();
                 break;
             case R.id.activity_file_audio_previous:
-                mFileAudioPlayer.previous();
+                mFileAudioPlayerManager.previous();
                 break;
         }
     }
@@ -290,7 +290,7 @@ public class FileAudioActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onPlayerStatusChanged(@SharedAudioPlayerUtils.Status final int status) {
+    public boolean onPlayerStatusChanged(@SharedAudioPlayerUtils.Status final int status) {
         switch (status) {
             case SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED:
                 if (!mPlayPauseView.isPlay() && !mPlayPauseView.isAnimationPlaying()) {
@@ -307,19 +307,25 @@ public class FileAudioActivity extends AppCompatActivity implements
             case SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_UNKNOWN:
                 break;
         }
+        return false;
     }
 
     @Override
-    public void onPlayerProgressChanged(final int progress, final int duration) {
+    public boolean onPlayerProgressChanged(final int progress, final int duration) {
         mSliderNumber.setProgress(progress);
         mSliderNumber.setMax(duration);
         mSizeTextView.setText(String.format("%s / %s", getTimeStr(progress), getTimeStr(duration)));
+        return false;
     }
 
     @Override
-    public void onAudioChanged(final int musicPosition, final List<FileAudioModel> musics) {
+    public boolean onAudioChanged(
+            final int musicPosition,
+            final List<FileAudioModel> musics,
+            @SharedAudioPlayerUtils.Action final int action) {
         Preconditions.checkNotNull(musics);
         syncSongs(musicPosition, musics);
+        return false;
     }
 
     public void finishActivity() {
