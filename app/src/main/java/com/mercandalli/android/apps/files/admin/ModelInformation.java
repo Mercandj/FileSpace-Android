@@ -26,26 +26,26 @@ import com.mercandalli.android.apps.files.main.Constants;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ModelInformation {
+/* package */ class ModelInformation {
 
     private static final String TAG = "ModelInformation";
     public String title;
     public String value;
     public int viewType = Constants.TAB_VIEW_TYPE_NORMAL;
 
-    public ModelInformation(String title, String value) {
+    /* package */ ModelInformation(final String title, final String value) {
         super();
         this.title = title;
         this.value = value;
     }
 
-    public ModelInformation(String title, int viewType) {
+    /* package */ ModelInformation(final String title, final int viewType) {
         super();
         this.title = title;
         this.viewType = viewType;
     }
 
-    public ModelInformation(JSONObject json) {
+    /* package */ ModelInformation(final JSONObject json) {
         super();
         try {
             if (json.has("title")) {

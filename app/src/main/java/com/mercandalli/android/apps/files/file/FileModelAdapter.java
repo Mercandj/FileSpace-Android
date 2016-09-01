@@ -20,6 +20,7 @@
 package com.mercandalli.android.apps.files.file;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -42,6 +43,8 @@ import java.util.List;
 public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.ViewHolder> {
 
     private final Context mContext;
+
+    @NonNull
     private final List<FileModel> mFiles;
     private final OnFileClickListener mOnFileClickListener;
     private final OnFileLongClickListener mOnFileLongClickListener;
@@ -59,8 +62,7 @@ public class FileModelAdapter extends RecyclerView.Adapter<FileModelAdapter.View
             final OnFileLongClickListener onFileLongClickListener) {
         Preconditions.checkNotNull(files);
         mContext = context;
-        mFiles = new ArrayList<>();
-        mFiles.addAll(files);
+        mFiles = new ArrayList<>(files);
         mMoreListener = moreListener;
         mOnFileClickListener = onFileClickListener;
         mOnFileLongClickListener = onFileLongClickListener;

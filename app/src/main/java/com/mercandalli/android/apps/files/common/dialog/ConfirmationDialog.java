@@ -10,15 +10,16 @@ import com.mercandalli.android.apps.files.R;
 
 public class ConfirmationDialog {
     public static Dialog newInstance(
-            String titleResourceId,
-            String content,
+            final String titleResourceId,
+            final String content,
             @StringRes int positiveId,
             @StringRes int negativeId,
             @StringRes int neutralId,
             Context context,
             final DialogCallback callback) {
 
-        AlertDialog.Builder builder = getBaseDialog(titleResourceId, content, positiveId, context, callback);
+        final AlertDialog.Builder builder = getBaseDialog(
+                titleResourceId, content, positiveId, context, callback);
 
         builder.setNegativeButton(negativeId, new DialogInterface.OnClickListener() {
             @Override
@@ -45,17 +46,20 @@ public class ConfirmationDialog {
             @StringRes int negativeId,
             Context context,
             final DialogCallback callback) {
-
-        AlertDialog.Builder builder = getBaseDialog(titleResourceId, content, positiveId, context, callback);
-
-        builder.setNegativeButton(negativeId, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                callback.onNegativeClick();
-            }
-        });
-
-        return builder.create();
+        return getBaseDialog(
+                titleResourceId,
+                content,
+                positiveId,
+                context,
+                callback)
+                .setNegativeButton(
+                        negativeId,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                callback.onNegativeClick();
+                            }
+                        }).create();
     }
 
     public static Dialog newInstance(
@@ -64,10 +68,12 @@ public class ConfirmationDialog {
             @StringRes int positiveId,
             Context context,
             final DialogCallback callback) {
-
-        AlertDialog.Builder builder = getBaseDialog(titleResourceId, content, positiveId, context, callback);
-
-        return builder.create();
+        return getBaseDialog(
+                titleResourceId,
+                content,
+                positiveId,
+                context,
+                callback).create();
     }
 
     private static AlertDialog.Builder getBaseDialog(

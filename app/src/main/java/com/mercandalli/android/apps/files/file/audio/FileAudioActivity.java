@@ -98,7 +98,8 @@ public class FileAudioActivity extends AppCompatActivity implements
         intent.putExtra(EXTRA_FILES_PATH, new ArrayList<>(fileMusicPath));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && animationView != null) {
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, animationView, "transitionIcon");
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    activity, animationView, "transitionIcon");
             args = options.toBundle();
         }
 

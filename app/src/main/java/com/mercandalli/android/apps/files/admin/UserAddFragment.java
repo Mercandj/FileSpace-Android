@@ -35,10 +35,10 @@ import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.fragment.BackFragment;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.net.TaskPost;
-import com.mercandalli.android.apps.files.main.Constants;
-import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.common.util.StringPair;
 import com.mercandalli.android.apps.files.main.Config;
+import com.mercandalli.android.apps.files.main.Constants;
+import com.mercandalli.android.apps.files.main.network.NetUtils;
 import com.mercandalli.android.apps.files.user.UserModel;
 import com.mercandalli.android.library.base.java.HashUtils;
 import com.mercandalli.android.library.base.java.StringUtils;
@@ -51,9 +51,8 @@ import java.util.List;
 
 public class UserAddFragment extends BackFragment {
 
-    private View rootView;
     private TextView username, password;
-    private ImageButton circle;
+    private ImageButton mCircle;
 
     private UserModel newUser;
     private boolean requestLaunched = false;
@@ -64,13 +63,13 @@ public class UserAddFragment extends BackFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.rootView = inflater.inflate(R.layout.fragment_admin_add_user, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_admin_add_user, container, false);
 
-        this.circle = (ImageButton) this.rootView.findViewById(R.id.circle);
-        this.circle.setVisibility(View.GONE);
+        mCircle = (ImageButton) rootView.findViewById(R.id.circle);
+        mCircle.setVisibility(View.GONE);
 
-        this.username = (TextView) this.rootView.findViewById(R.id.username);
-        this.password = (TextView) this.rootView.findViewById(R.id.password);
+        this.username = (TextView) rootView.findViewById(R.id.username);
+        this.password = (TextView) rootView.findViewById(R.id.password);
 
         this.newUser = new UserModel();
 
@@ -82,9 +81,9 @@ public class UserAddFragment extends BackFragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!StringUtils.isNullOrEmpty(s.toString()) && !StringUtils.isNullOrEmpty(password.getText().toString())) {
-                    circle.setVisibility(View.VISIBLE);
+                    mCircle.setVisibility(View.VISIBLE);
                 } else {
-                    circle.setVisibility(View.GONE);
+                    mCircle.setVisibility(View.GONE);
                 }
                 newUser.username = s.toString();
             }
@@ -101,9 +100,9 @@ public class UserAddFragment extends BackFragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!StringUtils.isNullOrEmpty(s.toString()) && !StringUtils.isNullOrEmpty(username.getText().toString())) {
-                    circle.setVisibility(View.VISIBLE);
+                    mCircle.setVisibility(View.VISIBLE);
                 } else {
-                    circle.setVisibility(View.GONE);
+                    mCircle.setVisibility(View.GONE);
                 }
                 newUser.password = HashUtils.sha1(s.toString());
             }
@@ -113,7 +112,7 @@ public class UserAddFragment extends BackFragment {
             }
         });
 
-        this.circle.setOnClickListener(new OnClickListener() {
+        mCircle.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Register : POST /user
@@ -123,7 +122,7 @@ public class UserAddFragment extends BackFragment {
 
                 if (NetUtils.isInternetConnection(getContext()) && !StringUtils.isNullOrEmpty(newUser.username) && !StringUtils.isNullOrEmpty(newUser.password)) {
                     requestLaunched = true;
-                    (new TaskPost(getActivity(),  Constants.URL_DOMAIN + Config.ROUTE_USER, new IPostExecuteListener() {
+                    (new TaskPost(getActivity(), Constants.URL_DOMAIN + Config.ROUTE_USER, new IPostExecuteListener() {
                         @Override
                         public void onPostExecute(JSONObject json, String body) {
                             try {
@@ -153,7 +152,7 @@ public class UserAddFragment extends BackFragment {
             }
         });
 
-        return this.rootView;
+        return rootView;
     }
 
     @Override

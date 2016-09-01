@@ -35,7 +35,6 @@ import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 
 import org.json.JSONObject;
 
-
 public class RequestFragment extends BackFragment {
 
     private View rootView;

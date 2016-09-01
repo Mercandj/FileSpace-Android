@@ -23,6 +23,11 @@ public class NotificationAudioPlayerReceiver extends BroadcastReceiver {
     private static final String ACTION_PLAY_PAUSE = "NotificationAudioPlayerReceiver.Actions.ACTION_PLAY_PAUSE";
 
     /**
+     * The action pause.
+     */
+    private static final String ACTION_PAUSE = "NotificationAudioPlayerReceiver.Actions.ACTION_PAUSE";
+
+    /**
      * The action previous.
      */
     private static final String ACTION_PREVIOUS = "NotificationAudioPlayerReceiver.Actions.ACTION_PREVIOUS";
@@ -56,6 +61,9 @@ public class NotificationAudioPlayerReceiver extends BroadcastReceiver {
                     fileAudioPlayerManager.play();
                 }
                 break;
+            case ACTION_PAUSE:
+                fileAudioPlayerManager.pause();
+                break;
             case ACTION_NEXT:
                 fileAudioPlayerManager.next();
                 break;
@@ -78,6 +86,10 @@ public class NotificationAudioPlayerReceiver extends BroadcastReceiver {
         return getPendingIntent(context, ACTION_PLAY_PAUSE);
     }
 
+    public static PendingIntent getNotificationIntentPause(@NonNull final Context context) {
+        return getPendingIntent(context, ACTION_PAUSE);
+    }
+
     public static PendingIntent getNotificationIntentPrevious(@NonNull final Context context) {
         return getPendingIntent(context, ACTION_PREVIOUS);
     }
@@ -90,7 +102,10 @@ public class NotificationAudioPlayerReceiver extends BroadcastReceiver {
         return getPendingIntent(context, ACTION_CLOSE);
     }
 
-    private static PendingIntent getPendingIntent(@NonNull final Context context, String action) {
+    private static PendingIntent getPendingIntent(
+            @NonNull final Context context,
+            @NonNull
+            final String action) {
         final Intent intent = new Intent(context, NotificationAudioPlayerReceiver.class);
         intent.setAction(action);
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);

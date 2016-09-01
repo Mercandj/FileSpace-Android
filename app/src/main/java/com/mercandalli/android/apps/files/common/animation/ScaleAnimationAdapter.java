@@ -24,12 +24,14 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
     /**
      * The {@link RecyclerView.Adapter} with animated {@link ViewHolder}.
      */
-    private RecyclerView.Adapter mAdapter;
+    @NonNull
+    private final RecyclerView.Adapter mAdapter;
 
     /**
      * The {@link RecyclerView} with animated {@link ViewHolder}.
      */
-    private RecyclerView mRecyclerView;
+    @NonNull
+    private final RecyclerView mRecyclerView;
 
     /**
      * The animation duration for each {@link RecyclerView}.
@@ -69,7 +71,11 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
         this(recyclerView, adapter, cardPerLine, 0.0F);
     }
 
-    public ScaleAnimationAdapter(RecyclerView recyclerView, RecyclerView.Adapter adapter, int cardPerLine, float from) {
+    public ScaleAnimationAdapter(
+            @NonNull final RecyclerView recyclerView,
+            @NonNull final RecyclerView.Adapter adapter,
+            int cardPerLine,
+            float from) {
         setHasStableIds(true);
         mRecyclerView = recyclerView;
         mAdapter = adapter;
@@ -205,10 +211,6 @@ public class ScaleAnimationAdapter extends RecyclerView.Adapter<ViewHolder> impl
 
     private RecyclerView getRecyclerView() {
         return mRecyclerView;
-    }
-
-    public void setRecyclerView(RecyclerView recyclerView) {
-        this.mRecyclerView = recyclerView;
     }
 
     public int getItemViewType(int position) {

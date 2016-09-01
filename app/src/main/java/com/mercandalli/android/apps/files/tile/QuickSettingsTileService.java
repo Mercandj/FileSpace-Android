@@ -7,7 +7,6 @@ import android.service.quicksettings.TileService;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.util.Log;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.file.audio.FileAudioModel;
@@ -17,6 +16,9 @@ import com.mercandalli.android.apps.files.splash.SplashActivity;
 
 import java.util.List;
 
+/**
+ * The >= Android N notification tile.
+ */
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class QuickSettingsTileService extends TileService implements
         FileAudioPlayerManager.OnPlayerStatusChangeListener {
@@ -34,17 +36,13 @@ public class QuickSettingsTileService extends TileService implements
     @Override
     public void onClick() {
         super.onClick();
-        Log.d("vbarthel", "onClick");
-        //getFileAudioPlayer().next();
         syncTile(true);
         SplashActivity.start(getApplicationContext());
-        //syncTile();
     }
 
     @Override
     public void onStartListening() {
         super.onStartListening();
-        Log.d("vbarthel", "onStartListening");
         getFileAudioPlayerManager().addOnPlayerStatusChangeListener(this);
     }
 
@@ -52,13 +50,12 @@ public class QuickSettingsTileService extends TileService implements
     public void onStopListening() {
         super.onStopListening();
         getFileAudioPlayerManager().removeOnPreviewPlayerStatusChangeListener(this);
-        Log.d("vbarthel", "onStopListening");
     }
 
     @Override
     public void onTileAdded() {
-        Log.d("vbarthel", "onTileAdded");
         super.onTileAdded();
+        syncTile(false);
     }
 
     @Override
@@ -89,7 +86,6 @@ public class QuickSettingsTileService extends TileService implements
             qsTile.setLabel(loopTitle);
             qsTile.setIcon(loopIcon);
             qsTile.setState(loopTileState);
-
             qsTile.updateTile();
         }
     }

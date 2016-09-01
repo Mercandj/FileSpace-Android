@@ -176,6 +176,7 @@
     <string name="file_model_type_keystore">KeyStore</string>
     <string name="file_model_type_trace">Debugging Trace</string>
     <string name="file_model_type_database">Database</string>
+    <string name="file_model_type_log">Log</string>
     <string name="file_model_type_directory">Directory</string>
     <!-- FileModel Local New File -->
     <string name="file_model_local_new_title">Action</string>

@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="64dp"
+    android:layout_height="wrap_content"
     android:background="#454545">
 
     <ImageView
@@ -10,14 +10,16 @@
         android:layout_height="40dp"
         android:layout_gravity="center_vertical"
         android:padding="8dp"
-        android:src="@drawable/audio" />
+        android:src="@drawable/ic_music_note_white_24dp" />
 
     <TextView
         android:id="@+id/titre_notif"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
+        android:layout_marginBottom="16dp"
         android:layout_marginRight="144dp"
+        android:layout_marginTop="16dp"
         android:ellipsize="marquee"
         android:focusable="false"
         android:gravity="center_vertical"
@@ -26,7 +28,7 @@
         android:paddingLeft="60dp"
         android:scrollHorizontally="true"
         android:textColor="#fff"
-        android:textSize="16sp"
+        android:textSize="14sp"
         tools:ignore="RtlHardcoded,RtlSymmetry"
         tools:text="Titre" />
 

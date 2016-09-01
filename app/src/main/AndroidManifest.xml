@@ -220,7 +220,7 @@
         <service
             android:name=".tile.QuickSettingsTileService"
             android:icon="@drawable/ic_folder_open_white_24dp"
-            android:label="Launch FileSpace"
+            android:label="Open FileSpace"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
                 <action android:name="android.service.quicksettings.action.QS_TILE" />

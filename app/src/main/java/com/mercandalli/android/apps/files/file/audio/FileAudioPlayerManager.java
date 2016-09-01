@@ -1,17 +1,16 @@
 package com.mercandalli.android.apps.files.file.audio;
 
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -23,6 +22,7 @@ import com.google.android.gms.wearable.Wearable;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.shared.SharedAudioData;
 import com.mercandalli.android.apps.files.shared.SharedAudioPlayerUtils;
+import com.mercandalli.android.library.base.graphics.BitmapUtils;
 import com.mercandalli.android.library.base.java.StringUtils;
 import com.mercandalli.android.library.base.precondition.Preconditions;
 
@@ -31,6 +31,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.concurrent.TimeUnit;
+
+import static com.mercandalli.android.apps.files.file.audio.NotificationAudioPlayerReceiver.getNotificationIntentActivity;
+import static com.mercandalli.android.apps.files.file.audio.NotificationAudioPlayerReceiver.getNotificationIntentClose;
+import static com.mercandalli.android.apps.files.file.audio.NotificationAudioPlayerReceiver.getNotificationIntentNext;
+import static com.mercandalli.android.apps.files.file.audio.NotificationAudioPlayerReceiver.getNotificationIntentPause;
+import static com.mercandalli.android.apps.files.file.audio.NotificationAudioPlayerReceiver.getNotificationIntentPlayPause;
+import static com.mercandalli.android.apps.files.file.audio.NotificationAudioPlayerReceiver.getNotificationIntentPrevious;
 
 /**
  * The {@link FileAudioModel} player.
@@ -41,6 +48,8 @@ public class FileAudioPlayerManager implements
         AudioManager.OnAudioFocusChangeListener {
 
     private static final String TAG = "FileAudioPlayerManager";
+
+    private static final int NOTIFICATION_ID = 0;
 
     @Nullable
     private static FileAudioPlayerManager sInstance;
@@ -62,41 +71,46 @@ public class FileAudioPlayerManager implements
     @Nullable
     private FileAudioModel mPreparingMusic;
 
+    private int mCurrentMusicIndex;
+
+    @Nullable
+    private String mWatchNodeId;
+
     @NonNull
     private final List<FileAudioModel> mFileAudioModelList = new ArrayList<>();
-    private int mCurrentMusicIndex;
 
     @NonNull
     private final MediaPlayer mMediaPlayer;
+
     @NonNull
-    private final Context mAppContext;
+    private final Context mContext;
+
     @NonNull
     private final AudioManager mAudioManager;
 
     @NonNull
     private final UpdaterPosition mUpdatePositionRunnable = new UpdaterPosition();
+
     @NonNull
     private final List<OnPlayerStatusChangeListener> mOnPlayerStatusChangeListeners = new ArrayList<>();
 
     @NonNull
     private final Handler mHandler = new Handler();
-    @Nullable
-    private String mWatchNodeId;
 
-    private FileAudioPlayerManager(final Context context) {
-        mAppContext = context.getApplicationContext();
+    private FileAudioPlayerManager(@NonNull final Context context) {
+        mContext = context.getApplicationContext();
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setOnPreparedListener(this);
         mMediaPlayer.setOnCompletionListener(this);
         mCurrentStatus = SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED;
-        mAudioManager = (AudioManager) mAppContext.getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         notifyPositionChanged();
-        retrieveDeviceNode(mAppContext);
+        retrieveDeviceNode(mContext);
 
         // Register the local broadcast receiver, defined in step 3.
         final IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
         final MessageReceiver messageReceiver = new MessageReceiver();
-        LocalBroadcastManager.getInstance(mAppContext).registerReceiver(messageReceiver, messageFilter);
+        LocalBroadcastManager.getInstance(mContext).registerReceiver(messageReceiver, messageFilter);
     }
 
     @Override
@@ -129,7 +143,8 @@ public class FileAudioPlayerManager implements
             return;
         }
         if (SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PAUSED == mCurrentStatus) {
-            final int request = mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+            final int request = mAudioManager.requestAudioFocus(
+                    this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
             if (request == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
                 mMediaPlayer.start();
                 setCurrentStatus(SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING);
@@ -353,8 +368,7 @@ public class FileAudioPlayerManager implements
     private void setCurrentStatus(final int currentStatus, final boolean notifyListeners) {
         mCurrentStatus = currentStatus;
         setNotification(currentStatus == SharedAudioPlayerUtils.AUDIO_PLAYER_STATUS_PLAYING);
-
-        sendWearMessage(mAppContext, currentStatus, mFileAudioModelList.get(mCurrentMusicIndex));
+        sendWearMessage(mContext, currentStatus, mFileAudioModelList.get(mCurrentMusicIndex));
 
         if (notifyListeners) {
             synchronized (mOnPlayerStatusChangeListeners) {
@@ -376,51 +390,56 @@ public class FileAudioPlayerManager implements
     /* package */
     void setNotification(final boolean activated) {
         if (activated && mCurrentMusic != null) {
-
-            final Intent intent = new Intent(mAppContext, FileAudioActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-            final RemoteViews remoteViews = new RemoteViews(mAppContext.getPackageName(), R.layout.notification_musique);
-            remoteViews.setTextViewText(R.id.titre_notif, mCurrentMusic.getName());
-            remoteViews.setOnClickPendingIntent(R.id.titre_notif, NotificationAudioPlayerReceiver.getNotificationIntentActivity(mAppContext));
-            remoteViews.setOnClickPendingIntent(R.id.close, NotificationAudioPlayerReceiver.getNotificationIntentClose(mAppContext));
-            remoteViews.setOnClickPendingIntent(R.id.activity_file_audio_play, NotificationAudioPlayerReceiver.getNotificationIntentPlayPause(mAppContext));
-            remoteViews.setOnClickPendingIntent(R.id.activity_file_audio_next, NotificationAudioPlayerReceiver.getNotificationIntentNext(mAppContext));
-            remoteViews.setOnClickPendingIntent(R.id.prev, NotificationAudioPlayerReceiver.getNotificationIntentPrevious(mAppContext));
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                final Notification.Builder notifyBuilder = new Notification.Builder(mAppContext);
-                Notification foregroundNote = notifyBuilder.setSmallIcon(R.drawable.audio)
-                    /*
-                    .setContentTitle("Music")
-                    .setContentText( "Text" )*/
-                        //.setContentIntent(pIntent)
-                        .setAutoCancel(false)
-                        .setOngoing(true)
-                        .setContent(remoteViews)
-                        .build();
-                foregroundNote.contentView = remoteViews;
-
-                if (mMediaPlayer.isPlaying()) {
-                    NotificationManager notificationManager = (NotificationManager) mAppContext.getSystemService(Context.NOTIFICATION_SERVICE);
-                    notificationManager.notify(0, foregroundNote);
-                }
+            if (mMediaPlayer.isPlaying()) {
+                final RemoteViews remoteViews = new RemoteViews(mContext.getPackageName(),
+                        R.layout.notification_musique);
+                remoteViews.setTextViewText(R.id.titre_notif,
+                        mCurrentMusic.getName());
+                remoteViews.setOnClickPendingIntent(R.id.titre_notif,
+                        getNotificationIntentActivity(mContext));
+                remoteViews.setOnClickPendingIntent(R.id.close,
+                        getNotificationIntentClose(mContext));
+                remoteViews.setOnClickPendingIntent(R.id.activity_file_audio_play,
+                        getNotificationIntentPlayPause(mContext));
+                remoteViews.setOnClickPendingIntent(R.id.activity_file_audio_next,
+                        getNotificationIntentNext(mContext));
+                remoteViews.setOnClickPendingIntent(R.id.prev,
+                        getNotificationIntentPrevious(mContext));
+                NotificationManagerCompat.from(mContext).notify(NOTIFICATION_ID,
+                        new NotificationCompat.Builder(mContext)
+                                .setSmallIcon(R.drawable.ic_music_note_white_24dp)
+                                .setAutoCancel(false)
+                                //.setOngoing(true)
+                                .setContent(remoteViews)
+                                .addAction(R.mipmap.ic_launcher,
+                                        "Next",
+                                        getNotificationIntentNext(mContext))
+                                .addAction(R.mipmap.ic_launcher,
+                                        "Play/Pause",
+                                        getNotificationIntentPlayPause(mContext))
+                                .addAction(R.mipmap.ic_launcher,
+                                        "Previous",
+                                        getNotificationIntentPrevious(mContext))
+                                .extend(new NotificationCompat.WearableExtender()
+                                        .setBackground(BitmapUtils.drawableToBitmap(mContext.getResources()
+                                                .getDrawable(R.drawable.ic_music_note_white_24dp))))
+                                .setDeleteIntent(getNotificationIntentPause(mContext))
+                                .build());
             }
-
         } else {
-            NotificationManager notificationManager = (NotificationManager) mAppContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.cancel(0);
+            NotificationManagerCompat.from(mContext).cancel(NOTIFICATION_ID);
         }
     }
 
-    private GoogleApiClient getGoogleApiClient(final Context context) {
+    @NonNull
+    private GoogleApiClient getGoogleApiClient(@NonNull final Context context) {
         Preconditions.checkNotNull(context);
         return new GoogleApiClient.Builder(context)
                 .addApi(Wearable.API)
                 .build();
     }
 
-    private void retrieveDeviceNode(final Context context) {
+    private void retrieveDeviceNode(@NonNull final Context context) {
         Preconditions.checkNotNull(context);
         final GoogleApiClient client = getGoogleApiClient(context);
         new Thread(new Runnable() {
@@ -429,7 +448,7 @@ public class FileAudioPlayerManager implements
                 client.blockingConnect(FileAudioWearUtils.CONNECTION_TIME_OUT_MS, TimeUnit.MILLISECONDS);
                 NodeApi.GetConnectedNodesResult result =
                         Wearable.NodeApi.getConnectedNodes(client).await();
-                List<Node> nodes = result.getNodes();
+                final List<Node> nodes = result.getNodes();
                 if (nodes.size() > 0) {
                     mWatchNodeId = nodes.get(0).getId();
                 }
@@ -439,12 +458,13 @@ public class FileAudioPlayerManager implements
     }
 
     private void sendWearMessage(
-            final Context context,
+            @NonNull final Context context,
             @SharedAudioPlayerUtils.Status final int currentStatus,
-            final FileAudioModel fileAudioModel) {
+            @NonNull final FileAudioModel fileAudioModel) {
         Preconditions.checkNotNull(context);
         Preconditions.checkNotNull(fileAudioModel);
-        FileAudioWearUtils.sendWearMessage(getGoogleApiClient(context), mWatchNodeId, currentStatus, fileAudioModel);
+        FileAudioWearUtils.sendWearMessage(
+                getGoogleApiClient(context), mWatchNodeId, currentStatus, fileAudioModel);
     }
 
     /**
@@ -479,7 +499,7 @@ public class FileAudioPlayerManager implements
             final String message = intent.getStringExtra("message");
 
             if (message.isEmpty() || message.replaceAll(" ", "").isEmpty()) {
-                sendWearMessage(mAppContext, mCurrentStatus, mFileAudioModelList.get(mCurrentMusicIndex));
+                sendWearMessage(mContext, mCurrentStatus, mFileAudioModelList.get(mCurrentMusicIndex));
                 return;
             }
 

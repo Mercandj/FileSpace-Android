@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.common.listener.IListener;
+import com.mercandalli.android.apps.files.common.listener.IListenerUtils;
 import com.mercandalli.android.apps.files.common.listener.IPostExecuteListener;
 import com.mercandalli.android.apps.files.common.listener.ResultCallback;
 import com.mercandalli.android.apps.files.common.net.TaskGetDownload;
@@ -65,6 +66,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -380,14 +382,23 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
                 listener.execute();
                 return;
             }
-            if (file.isDirectory()) {
-                FileUtils.deleteDirectory(file);
-            } else {
-                //noinspection ResultOfMethodCallIgnored
-                file.delete();
-            }
-            FileLocalProviderManager.getInstance(mContextApp).load();
-            listener.execute();
+            final WeakReference<IListener> weakReference = new WeakReference<>(listener);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if (file.isDirectory()) {
+                        FileUtils.deleteDirectory(file);
+                    } else {
+                        //noinspection ResultOfMethodCallIgnored
+                        file.delete();
+                    }
+                    FileLocalProviderManager.getInstance(mContextApp).load();
+                    final IListener iListener = weakReference.get();
+                    if (iListener != null) {
+                        IListenerUtils.executeOnUiThread(iListener);
+                    }
+                }
+            }).start();
         }
     }
 
@@ -505,6 +516,7 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
                         final Intent intent = new Intent();
                         intent.setAction(Intent.ACTION_VIEW);
                         intent.setDataAndType(getUriFromFile(activity, file), typeMime);
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         startActivity(activity, intent);
                     }
                 });
@@ -720,41 +732,6 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
         }
     }
 
-//    /**
-//     * {@inheritDoc}
-//     */
-//    @Override
-//    public void onFileUploadProgress(final FileModel fileModel, long progress, long length) {
-//        if (mNotificationBuilder == null) {
-//            mNotificationBuilder = new NotificationCompat.Builder(mContextApp);
-//            mNotificationBuilder.setContentTitle("Upload: " + fileModel.getName())
-//                    .setContentText("Upload in progress: " + FileUtils.humanReadableByteCount(progress)
-//                            + " / " + FileUtils.humanReadableByteCount(length))
-//                    .setSmallIcon(R.drawable.ic_notification);
-//        } else {
-//            mNotificationBuilder.setContentText("Upload in progress: " +
-//                    FileUtils.humanReadableByteCount(progress) + " / " +
-//                    FileUtils.humanReadableByteCount(length));
-//        }
-//        mNotificationBuilder.setProgress((int) (length / 1_000.0f), (int) (progress / 1_000.0f), false);
-//
-//        if (mNotifyManager == null) {
-//            mNotifyManager = (NotificationManager) mContextApp.getSystemService(Context.NOTIFICATION_SERVICE);
-//        }
-//        mNotifyManager.notify(1, mNotificationBuilder.build());
-//    }
-//
-//    /**
-//     * {@inheritDoc}
-//     */
-//    @Override
-//    public void onFileUploadFinished(FileModel fileModel) {
-//        mNotificationBuilder.setContentText("Upload complete")
-//                // Removes the progress bar
-//                .setProgress(0, 0, false);
-//        mNotifyManager.notify(1, mNotificationBuilder.build());
-//    }
-
     private void executeOnline(
             @NonNull final Activity activity,
             final int position,
@@ -856,6 +833,7 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
             default:
                 final Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_VIEW);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 intent.setDataAndType(getUriFromFile(activity, file), mime);
                 startActivity(activity, intent);
         }

@@ -59,6 +59,7 @@ public enum FileTypeModelENUM {
     KEYSTORE(new FileTypeModel(R.string.file_model_type_keystore, "keystore", "jdk")),
     TRACE(new FileTypeModel(R.string.file_model_type_trace, "trace")),
     DATABASE(new FileTypeModel(R.string.file_model_type_database, "db")),
+    LOG(new FileTypeModel(R.string.file_model_type_log, "log")),
 
     DIRECTORY(new FileTypeModel(R.string.file_model_type_directory, "dir", ""));
 

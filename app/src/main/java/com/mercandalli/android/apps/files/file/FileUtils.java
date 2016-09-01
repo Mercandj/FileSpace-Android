@@ -145,7 +145,6 @@ public class FileUtils {
                 }
             }
         }
-
         // The directory is now empty so delete it
         return directory.delete();
     }

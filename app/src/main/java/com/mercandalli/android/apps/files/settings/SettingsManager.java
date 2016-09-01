@@ -40,7 +40,11 @@ public final class SettingsManager {
     @NonNull
     private final SharedPreferences mSharedPreferences;
 
+    @NonNull
+    private final Context mContext;
+
     private SettingsManager(@NonNull final Context context) {
+        mContext = context.getApplicationContext();
         mSharedPreferences = context.getSharedPreferences(
                 SHARED_PREFERENCES_KEY, Context.MODE_PRIVATE);
         mIsSuperUser = mSharedPreferences.getBoolean(SHARED_PREFERENCES_IS_SUPER_USER_ENABLE, false);
@@ -55,7 +59,7 @@ public final class SettingsManager {
      * @return True if the value change.
      */
     public boolean setIsSuperUser(final boolean isSuperUser) {
-        if (!SuperUserManager.getInstance().isRooted()) {
+        if (!SuperUserManager.getInstance().isRooted(mContext)) {
             return false;
         }
         mIsSuperUser = isSuperUser;
