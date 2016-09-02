@@ -27,7 +27,7 @@ public abstract class FileManager {
 
     @NonNull
     public static FileManager getInstance(@NonNull final Context context) {
-        if(sInstance == null) {
+        if (sInstance == null) {
             sInstance = new FileManagerImpl(context);
         }
         return sInstance;

@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
-import android.os.FileUriExposedException;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
@@ -93,7 +92,7 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
     private static final String FAILED_FILE_IS_NULL = "Failed: File is null.";
 
     @NonNull
-    private final Context mContextApp;
+    private final Context mContext;
     @NonNull
     private final FileOnlineApi mFileOnlineApi;
     @NonNull
@@ -110,10 +109,8 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
 
     private final FileLocalProviderManager mFileLocalProviderManager;
 
-    protected FileManagerImpl(@NonNull final Context context) {
-        Preconditions.checkNotNull(context);
-
-        mContextApp = context.getApplicationContext();
+    /* package */ FileManagerImpl(@NonNull final Context context) {
+        mContext = context.getApplicationContext();
         mFileOnlineApi = RetrofitUtils.getAuthorizedRetrofit().create(FileOnlineApi.class);
         mFileUploadOnlineApi = RetrofitUtils.getAuthorizedRetrofitUpload().create(FileUploadOnlineApi.class);
         mFileLocalApi = FileLocalApi.getInstance();
@@ -198,7 +195,7 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
             public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
                 if (response.isSuccessful()) {
                     final FilesResponse filesResponse = response.body();
-                    final List<FileResponse> result = filesResponse.getResult(mContextApp);
+                    final List<FileResponse> result = filesResponse.getResult(mContext);
                     final List<FileModel> fileModelList = new ArrayList<>();
                     for (FileResponse fileResponse : result) {
                         fileModelList.add(fileResponse.createModel());
@@ -225,11 +222,11 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
             final FileModel fileModel,
             final IListener listener) {
 
-        if (!NetUtils.isInternetConnection(mContextApp) || !fileModel.isOnline()) {
+        if (!NetUtils.isInternetConnection(mContext) || !fileModel.isOnline()) {
             return;
         }
         if (fileModel.isDirectory()) {
-            Toast.makeText(mContextApp, "Directory download not supported yet.", Toast.LENGTH_SHORT)
+            Toast.makeText(mContext, "Directory download not supported yet.", Toast.LENGTH_SHORT)
                     .show();
             return;
         }
@@ -253,17 +250,17 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
             final int idFileParent,
             @Nullable final IListener listener) {
 
-        if (!NetUtils.isInternetConnection(mContextApp) || fileModel.isOnline()) {
+        if (!NetUtils.isInternetConnection(mContext) || fileModel.isOnline()) {
             return;
         }
         if (fileModel.isDirectory()) {
-            Toast.makeText(mContextApp, "Directory download not supported yet.", Toast.LENGTH_SHORT)
+            Toast.makeText(mContext, "Directory download not supported yet.", Toast.LENGTH_SHORT)
                     .show();
             return;
         }
         final File file = fileModel.getFile();
         if (file == null) {
-            Toast.makeText(mContextApp, FAILED_FILE_IS_NULL, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, FAILED_FILE_IS_NULL, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -310,7 +307,7 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
                 public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
                     if (response.isSuccessful()) {
                         final FilesResponse filesResponse = response.body();
-                        filesResponse.getResult(mContextApp);
+                        filesResponse.getResult(mContext);
                         listener.execute();
                     }
                 }
@@ -323,7 +320,7 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
         } else {
             final File file = fileModel.getFile();
             if (file == null) {
-                Toast.makeText(mContextApp, FAILED_FILE_IS_NULL, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, FAILED_FILE_IS_NULL, Toast.LENGTH_SHORT).show();
                 return;
             }
             final File parent = file.getParentFile();
@@ -345,7 +342,7 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
         //noinspection ResultOfMethodCallIgnored
         final File file = fileModel.getFile();
         if (file == null) {
-            Toast.makeText(mContextApp, FAILED_FILE_IS_NULL, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, FAILED_FILE_IS_NULL, Toast.LENGTH_SHORT).show();
             return;
         }
         //noinspection ResultOfMethodCallIgnored
@@ -365,7 +362,7 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
                 public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
                     if (response.isSuccessful()) {
                         final FilesResponse filesResponse = response.body();
-                        filesResponse.getResult(mContextApp);
+                        filesResponse.getResult(mContext);
                         listener.execute();
                     }
                 }
@@ -378,7 +375,7 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
         } else {
             final File file = fileModel.getFile();
             if (file == null) {
-                Toast.makeText(mContextApp, FAILED_FILE_IS_NULL, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, FAILED_FILE_IS_NULL, Toast.LENGTH_SHORT).show();
                 listener.execute();
                 return;
             }
@@ -392,7 +389,7 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
                         //noinspection ResultOfMethodCallIgnored
                         file.delete();
                     }
-                    FileLocalProviderManager.getInstance(mContextApp).load();
+                    FileLocalProviderManager.getInstance(mContext).load();
                     final IListener iListener = weakReference.get();
                     if (iListener != null) {
                         IListenerUtils.executeOnUiThread(iListener);
@@ -417,7 +414,7 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
             public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
                 if (response.isSuccessful()) {
                     final FilesResponse filesResponse = response.body();
-                    filesResponse.getResult(mContextApp);
+                    filesResponse.getResult(mContext);
                     listener.execute();
                 }
             }
@@ -443,7 +440,7 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
             public void onResponse(Call<FilesResponse> call, Response<FilesResponse> response) {
                 if (response.isSuccessful()) {
                     final FilesResponse filesResponse = response.body();
-                    filesResponse.getResult(mContextApp);
+                    filesResponse.getResult(mContext);
                     listener.execute();
                 }
             }
@@ -872,7 +869,7 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
     @Override
     public void onUploadProgressUpdate(final long progress, final long length) {
         if (mNotificationBuilder == null) {
-            mNotificationBuilder = new NotificationCompat.Builder(mContextApp);
+            mNotificationBuilder = new NotificationCompat.Builder(mContext);
             mNotificationBuilder.setContentTitle("Upload: "/* + fileModel.getName()*/)
                     .setContentText("Upload in progress: " + FileUtils.humanReadableByteCount(progress)
                             + " / " + FileUtils.humanReadableByteCount(length))
@@ -885,7 +882,7 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
         mNotificationBuilder.setProgress((int) (length / 1_000.0f), (int) (progress / 1_000.0f), false);
 
         if (mNotificationManager == null) {
-            mNotificationManager = (NotificationManager) mContextApp.getSystemService(Context.NOTIFICATION_SERVICE);
+            mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         }
         mNotificationManager.notify(1, mNotificationBuilder.build());
     }
@@ -927,7 +924,8 @@ class FileManagerImpl extends FileManager implements ProgressRequestBody.UploadC
             final @NonNull Intent intent) {
         try {
             activity.startActivity(intent);
-        } catch (FileUriExposedException e) {
+        } catch (Exception e) { // Catch a FileUriExposedException.
+            // Test on KitKat if your replace Exception by FileUriExposedException.
             Toast.makeText(activity, "Oops, there is an error.",
                     Toast.LENGTH_SHORT).show();
         }
