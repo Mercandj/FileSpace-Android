@@ -52,6 +52,7 @@ import com.mercandalli.android.apps.files.file.FileModel;
 import com.mercandalli.android.apps.files.file.FileModelAdapter;
 import com.mercandalli.android.apps.files.file.FileModelListener;
 import com.mercandalli.android.apps.files.file.local.fab.FileLocalFabManager;
+import com.mercandalli.android.apps.files.intent.IntentManager;
 import com.mercandalli.android.apps.files.main.Config;
 import com.mercandalli.android.apps.files.settings.SettingsManager;
 import com.mercandalli.android.library.base.dialog.DialogUtils;
@@ -553,8 +554,11 @@ public class FileLocalFragment extends BackFragment implements
 
     @NonNull
     protected FileModel createInitialDirectory() {
-        final File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +
-                File.separator + Config.getLocalFolderName());
+        final String initialFolderPath = IntentManager.getInstance().getInitialFolderPath();
+        final File file = new File(initialFolderPath != null ?
+                initialFolderPath :
+                Environment.getExternalStorageDirectory().getAbsolutePath() +
+                        File.separator + Config.getLocalFolderName());
         if (!file.exists()) {
             file.mkdir();
         }

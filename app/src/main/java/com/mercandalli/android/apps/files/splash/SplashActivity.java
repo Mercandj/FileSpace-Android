@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.apps.files.file.local.provider.FileLocalProviderManager;
+import com.mercandalli.android.apps.files.intent.IntentManager;
 import com.mercandalli.android.apps.files.main.MainActivity;
 import com.mercandalli.android.library.base.permission.Permission;
 
@@ -57,6 +58,10 @@ public class SplashActivity extends AppCompatActivity implements Permission.OnPe
                 extras.containsKey(EXTRA_START_BY_INTENT) &&
                 extras.getBoolean(EXTRA_START_BY_INTENT)) {
             start = true;
+        }
+
+        if (extras != null && extras.containsKey("folder-path")) {
+            IntentManager.getInstance().setInitialFolderPath(extras.getString("folder-path"));
         }
 
         mPermission = new Permission(PERMISSIONS);
