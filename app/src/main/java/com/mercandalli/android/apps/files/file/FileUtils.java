@@ -174,6 +174,11 @@ public class FileUtils {
         return false;
     }
 
+    @NonNull
+    public static File createFileStorage(@NonNull final String pathName) {
+        return new File(Environment.getExternalStorageDirectory().toString() + "/" + pathName);
+    }
+
     @Nullable
     public static String getSdCardPath() {
         if (sSdCardPath != null) {
