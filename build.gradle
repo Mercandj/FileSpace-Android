@@ -18,7 +18,7 @@ buildscript {
 
         // Check dependencies.
         // https://github.com/ben-manes/gradle-versions-plugin
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
 
         // Count methods.
         // https://github.com/KeepSafe/dexcount-gradle-plugin

@@ -1,3 +1,9 @@
+// Dependencies file to be used in this project.
+
+// Base
+def baseVersion = "1.0.0-beta110"
+
+// Dependencies
 rootProject.ext.dependencies = [
-        base: "com.mercandalli.android.library.base:base-core:1.0.0-beta85"
+        base: "com.mercandalli.android.library.base:base-core:$baseVersion"
 ]

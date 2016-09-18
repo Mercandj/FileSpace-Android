@@ -29,7 +29,7 @@ Remote and secure file manager.
 
 ## ANDROID DESCRIPTION
 
-* Android : SDK supported : min 16 (Jelly Bean), max 23 (Marshmallow)
+* Android : SDK supported : min 10 (Gingerbread), max 24 (Nougat)
 * Material design app
 
 
