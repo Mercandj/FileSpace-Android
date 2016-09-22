@@ -4,9 +4,9 @@ import android.os.Parcel;
 import android.support.annotation.Nullable;
 
 import com.mercandalli.android.apps.files.file.FileModel;
-import com.mercandalli.android.library.base.audio.metadata.read.AudioMetaDataRead;
-import com.mercandalli.android.library.base.audio.metadata.read.MusicMetadata;
-import com.mercandalli.android.library.base.audio.metadata.read.MusicMetadataSet;
+import com.mercandalli.android.apps.files.file.audio.metadata.read.AudioMetaDataRead;
+import com.mercandalli.android.apps.files.file.audio.metadata.read.MusicMetadata;
+import com.mercandalli.android.apps.files.file.audio.metadata.read.MusicMetadataSet;
 
 import java.io.File;
 
