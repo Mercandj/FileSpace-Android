@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.library.base.view.GenericRecyclerAdapter;
+import com.mercandalli.android.library.base.generic.GenericRecyclerAdapter;
 
 public class ArtistCard extends CardView implements
         GenericRecyclerAdapter.GenericView<Artist>,

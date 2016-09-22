@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mercandalli.android.apps.files.R;
-import com.mercandalli.android.library.base.view.GenericRecyclerAdapter;
+import com.mercandalli.android.library.base.generic.GenericRecyclerAdapter;
 
 /* package */ class AlbumCard extends CardView implements
         GenericRecyclerAdapter.GenericView<Album>,
