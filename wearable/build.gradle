@@ -4,7 +4,7 @@ apply from: '../config/dependency/dependencies.gradle'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "24.0.3"
 
     defaultConfig {
         applicationId "com.mercandalli.android.apps.files"
@@ -32,8 +32,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':shared')
     compile 'com.google.android.support:wearable:2.0.0-alpha2'
-    compile 'com.google.android.gms:play-services-wearable:9.6.0'
-    compile 'com.google.android.gms:play-services-appindexing:9.6.0'
+    compile 'com.google.android.gms:play-services-wearable:9.6.1'
+    compile 'com.google.android.gms:play-services-appindexing:9.6.1'
 
     // Mercandalli main library
     compile rootProject.ext.dependencies.base

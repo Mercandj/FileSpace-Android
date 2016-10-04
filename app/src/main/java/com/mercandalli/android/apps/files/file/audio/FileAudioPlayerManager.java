@@ -1,5 +1,6 @@
 package com.mercandalli.android.apps.files.file.audio;
 
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -421,9 +423,14 @@ public class FileAudioPlayerManager implements
                                         "Previous",
                                         getNotificationIntentPrevious(mContext))
                                 .extend(new NotificationCompat.WearableExtender()
-                                        .setBackground(BitmapUtils.drawableToBitmap(mContext.getResources()
-                                                .getDrawable(R.drawable.ic_music_note_white_24dp))))
+                                        .setBackground(BitmapUtils.drawableToBitmap(
+                                                ContextCompat.getDrawable(
+                                                        mContext,
+                                                        R.drawable.ic_music_note_white_24dp))))
                                 .setDeleteIntent(getNotificationIntentPause(mContext))
+                                .setContentIntent(PendingIntent.getActivity(mContext, 0,
+                                        new Intent(mContext, FileAudioActivity.class),
+                                        PendingIntent.FLAG_UPDATE_CURRENT))
                                 .build());
             }
         } else {

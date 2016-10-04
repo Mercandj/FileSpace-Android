@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.library.base.generic.GenericRecyclerAdapter;
 
+import java.util.List;
+
 /* package */ class AlbumCard extends CardView implements
         GenericRecyclerAdapter.GenericView<Album>,
         View.OnClickListener {
@@ -42,7 +44,7 @@ import com.mercandalli.android.library.base.generic.GenericRecyclerAdapter;
     }
 
     @Override
-    public void setModel(@NonNull final Album album) {
+    public void setModel(@NonNull final Album album, @NonNull final List<Album> list) {
         mAlbum = album;
         ((TextView) findViewById(R.id.view_album_card_title)).setText(album.getName());
         ((TextView) findViewById(R.id.view_album_card_subtitle)).setText(String.valueOf(album.getNumberOfSongs()));

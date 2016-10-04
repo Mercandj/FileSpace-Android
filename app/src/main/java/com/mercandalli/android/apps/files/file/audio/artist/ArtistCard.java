@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import com.mercandalli.android.apps.files.R;
 import com.mercandalli.android.library.base.generic.GenericRecyclerAdapter;
 
+import java.util.List;
+
 public class ArtistCard extends CardView implements
         GenericRecyclerAdapter.GenericView<Artist>,
         View.OnClickListener {
@@ -41,13 +43,13 @@ public class ArtistCard extends CardView implements
     }
 
     @Override
-    public void onClick(View v) {
-
+    public void setModel(@NonNull final Artist artist, @NonNull final List<Artist> list) {
+        mArtist = artist;
     }
 
     @Override
-    public void setModel(@NonNull final Artist artist) {
-        mArtist = artist;
+    public void onClick(View v) {
+
     }
 
     /**
