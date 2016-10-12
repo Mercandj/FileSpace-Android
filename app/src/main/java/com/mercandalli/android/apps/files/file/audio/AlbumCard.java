@@ -37,12 +37,6 @@ import java.util.List;
         init(context);
     }
 
-    @NonNull
-    @Override
-    public GenericRecyclerAdapter.GenericView<Album> newInstance(@NonNull final Context context) {
-        return new AlbumCard(context);
-    }
-
     @Override
     public void setModel(@NonNull final Album album, @NonNull final List<Album> list) {
         mAlbum = album;

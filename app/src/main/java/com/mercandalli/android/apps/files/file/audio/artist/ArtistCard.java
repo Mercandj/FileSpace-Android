@@ -36,12 +36,6 @@ public class ArtistCard extends CardView implements
         init(context);
     }
 
-    @NonNull
-    @Override
-    public GenericRecyclerAdapter.GenericView<Artist> newInstance(@NonNull final Context context) {
-        return new ArtistCard(context);
-    }
-
     @Override
     public void setModel(@NonNull final Artist artist, @NonNull final List<Artist> list) {
         mArtist = artist;

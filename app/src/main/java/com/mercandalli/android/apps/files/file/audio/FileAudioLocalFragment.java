@@ -112,6 +112,15 @@ public class FileAudioLocalFragment extends BackFragment implements
     private static final int PAGE_ALBUM = 4;
     private static final int PAGE_ALL = 5;
 
+    @NonNull
+    public static FileAudioLocalFragment newInstance(final int positionInViewPager) {
+        final FileAudioLocalFragment fileAudioLocalFragment = new FileAudioLocalFragment();
+        final Bundle args = new Bundle();
+        args.putInt(ARG_POSITION_IN_VIEW_PAGER, positionInViewPager);
+        fileAudioLocalFragment.setArguments(args);
+        return fileAudioLocalFragment;
+    }
+
     @CurrentPage
     private int mCurrentPage = PAGE_FOLDERS;
 
@@ -180,18 +189,14 @@ public class FileAudioLocalFragment extends BackFragment implements
     private FileAudioManager mFileAudioManager;
     @Nullable
     private AudioPlayListManager mAudioPlayListManager;
-    @Nullable
-    private GenericRecyclerAdapter<Album, AlbumCard> mAlbumCardGenericRecyclerAdapter;
-    @Nullable
-    private GenericRecyclerAdapter<Artist, ArtistCard> mArtistCardGenericRecyclerAdapter;
 
-    public static FileAudioLocalFragment newInstance(final int positionInViewPager) {
-        final FileAudioLocalFragment fileAudioLocalFragment = new FileAudioLocalFragment();
-        final Bundle args = new Bundle();
-        args.putInt(ARG_POSITION_IN_VIEW_PAGER, positionInViewPager);
-        fileAudioLocalFragment.setArguments(args);
-        return fileAudioLocalFragment;
-    }
+    @NonNull
+    private GenericRecyclerAdapter<Album, AlbumCard> mAlbumCardGenericRecyclerAdapter
+            = createAlbumCardGenericRecyclerAdapter();
+
+    @NonNull
+    private final GenericRecyclerAdapter<Artist, ArtistCard> mArtistCardGenericRecyclerAdapter
+            = createArtistCardGenericRecyclerAdapter();
 
     /**
      * Do not use this constructor. Call {@link #newInstance(int)} instead.
@@ -205,6 +210,8 @@ public class FileAudioLocalFragment extends BackFragment implements
             }
         };
     }
+
+    //region Override methods
 
     /**
      * {@inheritDoc}
@@ -273,9 +280,7 @@ public class FileAudioLocalFragment extends BackFragment implements
 
         mHeaderView = new HeaderView(context);
         mHeaderView.addOnHeaderClickListener(this);
-        mAlbumCardGenericRecyclerAdapter = new GenericRecyclerAdapter<>(AlbumCard.class);
         mAlbumCardGenericRecyclerAdapter.setHeader(mHeaderView);
-        mArtistCardGenericRecyclerAdapter = new GenericRecyclerAdapter<>(ArtistCard.class);
         mArtistCardGenericRecyclerAdapter.setHeader(mHeaderView);
 
         mFileAudioRowAdapter = new FileAudioRowAdapter(context, this, mFileAudioModels, this);
@@ -739,6 +744,7 @@ public class FileAudioLocalFragment extends BackFragment implements
     public void scrollTop() {
         mRecyclerView.smoothScrollToPosition(0);
     }
+    //endregion Override methods
 
     //region refresh
     private void refreshListFolders() {
@@ -836,5 +842,27 @@ public class FileAudioLocalFragment extends BackFragment implements
             default:
                 return mFileAudioModels.isEmpty();
         }
+    }
+
+    @NonNull
+    private GenericRecyclerAdapter<Album, AlbumCard> createAlbumCardGenericRecyclerAdapter() {
+        return new GenericRecyclerAdapter<>(new GenericRecyclerAdapter.ViewFabric<AlbumCard>() {
+            @NonNull
+            @Override
+            public AlbumCard newInstance(@NonNull final Context context) {
+                return new AlbumCard(context);
+            }
+        });
+    }
+
+    @NonNull
+    private GenericRecyclerAdapter<Artist, ArtistCard> createArtistCardGenericRecyclerAdapter() {
+        return new GenericRecyclerAdapter<>(new GenericRecyclerAdapter.ViewFabric<ArtistCard>() {
+            @NonNull
+            @Override
+            public ArtistCard newInstance(@NonNull final Context context) {
+                return new ArtistCard(context);
+            }
+        });
     }
 }
