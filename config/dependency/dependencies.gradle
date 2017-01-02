@@ -1,7 +1,7 @@
 // Dependencies file to be used in this project.
 
 // Base
-def baseVersion = "1.0.0-beta126"
+def baseVersion = "1.0.0-beta127"
 
 // Dependencies
 rootProject.ext.dependencies = [
