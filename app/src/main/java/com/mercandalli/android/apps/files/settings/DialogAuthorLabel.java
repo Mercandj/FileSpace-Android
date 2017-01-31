@@ -69,7 +69,7 @@ public class DialogAuthorLabel extends Dialog {
 
     private void countDown(final ShimmerTextView tv, final int count) {
         if (count == 0) {
-            tv.setText(""); //Note: the TextView will be visible again here.
+            tv.setText("");
             return;
         }
         tv.setText(String.format("%d", count));
@@ -128,12 +128,11 @@ public class DialogAuthorLabel extends Dialog {
             public void onAnimationRepeat(Animation animation) {
 
             }
-
         });
         tv.startAnimation(animation);
     }
 
-    public Shimmer getShimmer(final ShimmerTextView tv) {
+    private Shimmer getShimmer(final ShimmerTextView tv) {
         Shimmer shimmer = new Shimmer();
         shimmer.setRepeatCount(0)
                 .setDuration(1200)
